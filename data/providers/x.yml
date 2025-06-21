@@ -1,0 +1,29 @@
+name: X AI
+id: x
+pricing_url: https://docs.x.ai/docs/modelss
+api_pattern: 'https://api\.x\.ai'
+models:
+  - id: grok-beta
+    matches:
+      equals: grok-beta
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+  - id: grok-vision-beta
+    matches:
+      equals: grok-vision-beta
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+  - id: grok-2-1212
+    matches:
+      equals: grok-2-1212
+    prices:
+      input_mtok: 2
+      output_mtok: 10
+  - id: grok-2-vision-1212
+    matches:
+      equals: grok-2-vision-1212
+    prices:
+      input_mtok: 2
+      output_mtok: 10

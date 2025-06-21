@@ -1,0 +1,23 @@
+name: Perplexity
+id: perplexity
+pricing_url: https://docs.perplexity.ai/guides/pricing
+api_pattern: 'https://api\.perplexity\.ai'
+models:
+  - id: sonar-reasoning
+    matches:
+      equals: sonar-reasoning
+    prices:
+      input_mtok: 10
+      output_mtok: 50
+  - id: sonar
+    matches:
+      equals: sonar
+    prices:
+      input_mtok: 10
+      output_mtok: 10
+  - id: sonar-pro
+    matches:
+      equals: sonar-pro
+    prices:
+      input_mtok: 30
+      output_mtok: 150

@@ -1,0 +1,29 @@
+name: Avian
+id: avian
+pricing_url: https://avian.io/pricing/
+api_pattern: 'https://api\.avian\.io'
+models:
+  - id: Meta-Llama-3.1-405B-Instruct
+    matches:
+      equals: Meta-Llama-3.1-405B-Instruct
+    prices:
+      input_mtok: 1.5
+      output_mtok: 1.5
+  - id: Meta-Llama-3.3-70B-Instruct
+    matches:
+      equals: Meta-Llama-3.3-70B-Instruct
+    prices:
+      input_mtok: 0.45
+      output_mtok: 0.45
+  - id: Meta-Llama-3.1-70B-Instruct
+    matches:
+      equals: Meta-Llama-3.1-70B-Instruct
+    prices:
+      input_mtok: 0.45
+      output_mtok: 0.45
+  - id: Meta-Llama-3.1-8B-Instruct
+    matches:
+      equals: Meta-Llama-3.1-8B-Instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1

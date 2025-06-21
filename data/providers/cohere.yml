@@ -1,0 +1,11 @@
+name: Cohere
+id: cohere
+pricing_url: https://cohere.com/pricing
+api_pattern: 'https://api\.cohere\.ai'
+models:
+  - id: cohere/command-r
+    matches:
+      equals: cohere/command-r
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5

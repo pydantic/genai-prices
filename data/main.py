@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import gzip
 from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Any
 
 import pydantic_core
-from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter
+from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter, ValidationError
 from yaml import safe_load
 
 
@@ -150,13 +151,32 @@ LogicClause = Annotated[
 providers_schema = TypeAdapter(list[Provider])
 
 
+def file_size(file: Path) -> str:
+    size = file.stat().st_size
+    if size < 1024:
+        return f'{size} bytes'
+    elif size < 1024 * 1024:
+        return f'{size / 1024:.1f} KB'
+    else:
+        return f'{size / (1024 * 1024):.1f} MB'
+
+
 def main():
     this_dir = Path(__file__).parent
     root_dir = this_dir.parent
     # write the schema JSON file used by the yaml language server
     schema_json_path = this_dir / 'schema.json'
-    schema_json_path.write_bytes(pydantic_core.to_json(Provider.model_json_schema(), indent=2) + b'\n')
-    print('Prices schema written to', schema_json_path.relative_to(root_dir))
+    json_schema = Provider.model_json_schema()
+    if schema_json_path.exists():
+        current_json_schema = pydantic_core.from_json(schema_json_path.read_bytes())
+    else:
+        current_json_schema = None
+
+    if current_json_schema != json_schema:
+        schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
+        print('Prices schema written to', schema_json_path.relative_to(root_dir))
+    else:
+        print('Prices schema unchanged')
 
     providers: list[Provider] = []
 
@@ -165,12 +185,34 @@ def main():
         if file.suffix not in ('.yml', '.yaml'):
             raise ValueError(f'All {providers_dir} files must be YAML files')
         data = safe_load(file.read_bytes())
-        provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
-        providers.append(provider)
+        try:
+            provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
+        except ValidationError as e:
+            raise ValueError(f'Error validating provider {file.name}:\n{e}') from e
+        else:
+            providers.append(provider)
 
     prices_json_path = this_dir / 'prices.json'
-    prices_json_path.write_bytes(providers_schema.dump_json(providers) + b'\n')
-    print('Prices data written to', prices_json_path.relative_to(root_dir))
+    if prices_json_path.exists():
+        try:
+            current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
+        except ValidationError:
+            current_prices = None
+    else:
+        current_prices = None
+
+    if current_prices != providers:
+        json_data = providers_schema.dump_json(providers)
+        prices_json_path.write_bytes(json_data + b'\n')
+        gz_path = prices_json_path.with_suffix('.json.gz')
+        with gzip.open(gz_path, 'wb') as f:
+            f.write(json_data)
+
+        print(
+            f'Prices data written to {prices_json_path.relative_to(root_dir)} ({file_size(prices_json_path)}) and {gz_path.relative_to(root_dir)} ({file_size(gz_path)})'
+        )
+    else:
+        print('Prices data unchanged')
 
 
 if __name__ == '__main__':

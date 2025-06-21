@@ -1,0 +1,41 @@
+name: Mistral
+id: mistral
+pricing_url: https://mistral.ai/pricing#api-pricing
+api_pattern: 'https://api\.mistral\.ai'
+models:
+  - id: open-mistral-7b
+    matches:
+      equals: open-mistral-7b
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.25
+  - id: open-mixtral-8x7b
+    matches:
+      equals: open-mixtral-8x7b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.7
+  - id: mistral-small-latest
+    matches:
+      equals: mistral-small-latest
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+  - id: mistral-medium-latest
+    matches:
+      equals: mistral-medium-latest
+    prices:
+      input_mtok: 2.7
+      output_mtok: 8.1
+  - id: mistral-large-latest
+    matches:
+      equals: mistral-large-latest
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: mistral-embed
+    matches:
+      equals: mistral-embed
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
