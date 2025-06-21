@@ -1,0 +1,215 @@
+name: Novita
+id: novita
+pricing_url: https://novita.ai/pricing
+api_pattern: 'https://api\.novita\.ai'
+models:
+  - id: deepseek/deepseek-r1
+    matches:
+      equals: deepseek/deepseek-r1
+    prices:
+      input_mtok: 4
+      output_mtok: 4
+  - id: deepseek/deepseek_v3
+    matches:
+      equals: deepseek/deepseek_v3
+    prices:
+      input_mtok: 0.89
+      output_mtok: 0.89
+  - id: meta-llama/llama-3.3-70b-instruct
+    matches:
+      equals: meta-llama/llama-3.3-70b-instruct
+    prices:
+      input_mtok: 0.39
+      output_mtok: 0.39
+  - id: deepseek/deepseek-r1-distill-llama-70b
+    matches:
+      equals: deepseek/deepseek-r1-distill-llama-70b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+  - id: meta-llama/llama-3.1-8b-instruct
+    matches:
+      equals: meta-llama/llama-3.1-8b-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.05
+  - id: meta-llama/llama-3.1-70b-instruct
+    matches:
+      equals: meta-llama/llama-3.1-70b-instruct
+    prices:
+      input_mtok: 0.34
+      output_mtok: 0.39
+  - id: mistralai/mistral-nemo
+    matches:
+      equals: mistralai/mistral-nemo
+    prices:
+      input_mtok: 0.17
+      output_mtok: 0.17
+  - id: deepseek/deepseek-r1-distill-qwen-14b
+    matches:
+      equals: deepseek/deepseek-r1-distill-qwen-14b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+  - id: deepseek/deepseek-r1-distill-qwen-32b
+    matches:
+      equals: deepseek/deepseek-r1-distill-qwen-32b
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.3
+  - id: Sao10K/L3-8B-Stheno-v3.2
+    matches:
+      equals: Sao10K/L3-8B-Stheno-v3.2
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.05
+  - id: gryphe/mythomax-l2-13b
+    matches:
+      equals: gryphe/mythomax-l2-13b
+    prices:
+      input_mtok: 0.09
+      output_mtok: 0.09
+  - id: deepseek/deepseek-r1-distill-llama-8b
+    matches:
+      equals: deepseek/deepseek-r1-distill-llama-8b
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+  - id: qwen/qwen-2.5-72b-instruct
+    matches:
+      equals: qwen/qwen-2.5-72b-instruct
+    prices:
+      input_mtok: 0.38
+      output_mtok: 0.4
+  - id: meta-llama/llama-3-8b-instruct
+    matches:
+      equals: meta-llama/llama-3-8b-instruct
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+  - id: microsoft/wizardlm-2-8x22b
+    matches:
+      equals: microsoft/wizardlm-2-8x22b
+    prices:
+      input_mtok: 0.62
+      output_mtok: 0.62
+  - id: google/gemma-2-9b-it
+    matches:
+      equals: google/gemma-2-9b-it
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.08
+  - id: mistralai/mistral-7b-instruct
+    matches:
+      equals: mistralai/mistral-7b-instruct
+    prices:
+      input_mtok: 0.059
+      output_mtok: 0.059
+  - id: meta-llama/llama-3-70b-instruct
+    matches:
+      equals: meta-llama/llama-3-70b-instruct
+    prices:
+      input_mtok: 0.51
+      output_mtok: 0.74
+  - id: openchat/openchat-7b
+    matches:
+      equals: openchat/openchat-7b
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.06
+  - id: nousresearch/hermes-2-pro-llama-3-8b
+    matches:
+      equals: nousresearch/hermes-2-pro-llama-3-8b
+    prices:
+      input_mtok: 0.14
+      output_mtok: 0.14
+  - id: sao10k/l3-70b-euryale-v2.1
+    matches:
+      equals: sao10k/l3-70b-euryale-v2.1
+    prices:
+      input_mtok: 1.48
+      output_mtok: 1.48
+  - id: cognitivecomputations/dolphin-mixtral-8x22b
+    matches:
+      equals: cognitivecomputations/dolphin-mixtral-8x22b
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: jondurbin/airoboros-l2-70b
+    matches:
+      equals: jondurbin/airoboros-l2-70b
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.5
+  - id: nousresearch/nous-hermes-llama2-13b
+    matches:
+      equals: nousresearch/nous-hermes-llama2-13b
+    prices:
+      input_mtok: 0.17
+      output_mtok: 0.17
+  - id: teknium/openhermes-2.5-mistral-7b
+    matches:
+      equals: teknium/openhermes-2.5-mistral-7b
+    prices:
+      input_mtok: 0.17
+      output_mtok: 0.17
+  - id: sophosympatheia/midnight-rose-70b
+    matches:
+      equals: sophosympatheia/midnight-rose-70b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+  - id: meta-llama/llama-3.1-8b-instruct-max
+    matches:
+      equals: meta-llama/llama-3.1-8b-instruct-max
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.05
+  - id: sao10k/l3-8b-lunaris
+    matches:
+      equals: sao10k/l3-8b-lunaris
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.05
+  - id: qwen/qwen-2-vl-72b-instruct
+    matches:
+      equals: qwen/qwen-2-vl-72b-instruct
+    prices:
+      input_mtok: 0.45
+      output_mtok: 0.45
+  - id: meta-llama/llama-3.2-1b-instruct
+    matches:
+      equals: meta-llama/llama-3.2-1b-instruct
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.02
+  - id: meta-llama/llama-3.2-11b-vision-instruct
+    matches:
+      equals: meta-llama/llama-3.2-11b-vision-instruct
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.06
+  - id: meta-llama/llama-3.2-3b-instruct
+    matches:
+      equals: meta-llama/llama-3.2-3b-instruct
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.05
+  - id: meta-llama/llama-3.1-8b-instruct-bf16
+    matches:
+      equals: meta-llama/llama-3.1-8b-instruct-bf16
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.06
+  - id: sao10k/l31-70b-euryale-v2.2
+    matches:
+      equals: sao10k/l31-70b-euryale-v2.2
+    prices:
+      input_mtok: 1.48
+      output_mtok: 1.48
+  - id: qwen/qwen-2-7b-instruct
+    matches:
+      equals: qwen/qwen-2-7b-instruct
+    prices:
+      input_mtok: 0.054
+      output_mtok: 0.054

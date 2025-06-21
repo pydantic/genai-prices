@@ -194,9 +194,17 @@
       "description": "Information about an LLM model",
       "properties": {
         "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
           "description": "Name of the model",
-          "title": "Name",
-          "type": "string"
+          "title": "Name"
         },
         "description": {
           "anyOf": [
@@ -273,7 +281,6 @@
         }
       },
       "required": [
-        "name",
         "id",
         "matches",
         "prices"
@@ -365,7 +372,7 @@
           "description": "price in USD per million output/completion tokens",
           "title": "Output Mtok"
         },
-        "response_audio_mtok": {
+        "output_audio_mtok": {
           "anyOf": [
             {
               "type": "number"
@@ -379,7 +386,7 @@
           ],
           "default": null,
           "description": "price in USD per million output audio tokens",
-          "title": "Response Audio Mtok"
+          "title": "Output Audio Mtok"
         }
       },
       "title": "ModelPrice",
@@ -462,12 +469,33 @@
       "type": "string"
     },
     "pricing_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
       "description": "Link to pricing page for the provider",
-      "format": "uri",
-      "maxLength": 2083,
-      "minLength": 1,
-      "title": "Pricing Url",
-      "type": "string"
+      "title": "Pricing Url"
+    },
+    "api_pattern": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Pattern to identify provider via HTTP API URL.",
+      "title": "Api Pattern"
     },
     "description": {
       "anyOf": [
@@ -494,7 +522,6 @@
   "required": [
     "name",
     "id",
-    "pricing_url",
     "models"
   ],
   "title": "Provider",

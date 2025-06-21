@@ -1,0 +1,1711 @@
+name: OpenRouter
+id: openrouter
+pricing_url: https://openrouter.ai/models
+api_pattern: 'https://(api\.)?openrouter\.ai'
+models:
+  - id: google/gemini-2.5-pro-preview-03-25
+    matches:
+      equals: google/gemini-2.5-pro-preview-03-25
+    prices:
+      input_mtok: 1.25
+      output_mtok: 10
+  - id: "thudm/glm-z1-32b:free"
+    matches:
+      equals: "thudm/glm-z1-32b:free"
+    prices: {}
+  - id: "thudm/glm-4-32b:free"
+    matches:
+      equals: "thudm/glm-4-32b:free"
+    prices: {}
+  - id: google/gemini-2.5-flash-preview
+    matches:
+      equals: google/gemini-2.5-flash-preview
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+  - id: "google/gemini-2.5-flash-preview:thinking"
+    matches:
+      equals: "google/gemini-2.5-flash-preview:thinking"
+    prices:
+      input_mtok: 0.15
+      output_mtok: 3.5
+  - id: openai/o4-mini-high
+    matches:
+      equals: openai/o4-mini-high
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+  - id: openai/o3
+    matches:
+      equals: openai/o3
+    prices:
+      input_mtok: 10
+      output_mtok: 40
+  - id: openai/o4-mini
+    matches:
+      equals: openai/o4-mini
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+  - id: "shisa-ai/shisa-v2-llama3.3-70b:free"
+    matches:
+      equals: "shisa-ai/shisa-v2-llama3.3-70b:free"
+    prices: {}
+  - id: qwen/qwen2.5-coder-7b-instruct
+    matches:
+      equals: qwen/qwen2.5-coder-7b-instruct
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: openai/gpt-4.1
+    matches:
+      equals: openai/gpt-4.1
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+  - id: openai/gpt-4.1-mini
+    matches:
+      equals: openai/gpt-4.1-mini
+    prices:
+      input_mtok: 0.4
+      output_mtok: 1.6
+  - id: openai/gpt-4.1-nano
+    matches:
+      equals: openai/gpt-4.1-nano
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.4
+  - id: eleutherai/llemma_7b
+    matches:
+      equals: eleutherai/llemma_7b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+  - id: alfredpros/codellama-7b-instruct-solidity
+    matches:
+      equals: alfredpros/codellama-7b-instruct-solidity
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+  - id: "arliai/qwq-32b-arliai-rpr-v1:free"
+    matches:
+      equals: "arliai/qwq-32b-arliai-rpr-v1:free"
+    prices: {}
+  - id: "agentica-org/deepcoder-14b-preview:free"
+    matches:
+      equals: "agentica-org/deepcoder-14b-preview:free"
+    prices: {}
+  - id: "moonshotai/kimi-vl-a3b-thinking:free"
+    matches:
+      equals: "moonshotai/kimi-vl-a3b-thinking:free"
+    prices: {}
+  - id: x-ai/grok-3-mini-beta
+    matches:
+      equals: x-ai/grok-3-mini-beta
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.5
+  - id: x-ai/grok-3-beta
+    matches:
+      equals: x-ai/grok-3-beta
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: "nvidia/llama-3.1-nemotron-nano-8b-v1:free"
+    matches:
+      equals: "nvidia/llama-3.1-nemotron-nano-8b-v1:free"
+    prices: {}
+  - id: "nvidia/llama-3.3-nemotron-super-49b-v1:free"
+    matches:
+      equals: "nvidia/llama-3.3-nemotron-super-49b-v1:free"
+    prices: {}
+  - id: "nvidia/llama-3.1-nemotron-ultra-253b-v1:free"
+    matches:
+      equals: "nvidia/llama-3.1-nemotron-ultra-253b-v1:free"
+    prices: {}
+  - id: "meta-llama/llama-4-maverick:free"
+    matches:
+      equals: "meta-llama/llama-4-maverick:free"
+    prices: {}
+  - id: meta-llama/llama-4-maverick
+    matches:
+      equals: meta-llama/llama-4-maverick
+    prices:
+      input_mtok: 0.17
+      output_mtok: 0.85
+  - id: "meta-llama/llama-4-scout:free"
+    matches:
+      equals: "meta-llama/llama-4-scout:free"
+    prices: {}
+  - id: meta-llama/llama-4-scout
+    matches:
+      equals: meta-llama/llama-4-scout
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.3
+  - id: all-hands/openhands-lm-32b-v0.1
+    matches:
+      equals: all-hands/openhands-lm-32b-v0.1
+    prices:
+      input_mtok: 2.6
+      output_mtok: 3.4
+  - id: mistral/ministral-8b
+    matches:
+      equals: mistral/ministral-8b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+  - id: "deepseek/deepseek-v3-base:free"
+    matches:
+      equals: "deepseek/deepseek-v3-base:free"
+    prices: {}
+  - id: scb10x/llama3.1-typhoon2-8b-instruct
+    matches:
+      equals: scb10x/llama3.1-typhoon2-8b-instruct
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+  - id: scb10x/llama3.1-typhoon2-70b-instruct
+    matches:
+      equals: scb10x/llama3.1-typhoon2-70b-instruct
+    prices:
+      input_mtok: 0.88
+      output_mtok: 0.88
+  - id: "allenai/molmo-7b-d:free"
+    matches:
+      equals: "allenai/molmo-7b-d:free"
+    prices: {}
+  - id: "bytedance-research/ui-tars-72b:free"
+    matches:
+      equals: "bytedance-research/ui-tars-72b:free"
+    prices: {}
+  - id: "qwen/qwen2.5-vl-3b-instruct:free"
+    matches:
+      equals: "qwen/qwen2.5-vl-3b-instruct:free"
+    prices: {}
+  - id: "google/gemini-2.5-pro-exp-03-25:free"
+    matches:
+      equals: "google/gemini-2.5-pro-exp-03-25:free"
+    prices: {}
+  - id: "qwen/qwen2.5-vl-32b-instruct:free"
+    matches:
+      equals: "qwen/qwen2.5-vl-32b-instruct:free"
+    prices: {}
+  - id: qwen/qwen2.5-vl-32b-instruct
+    matches:
+      equals: qwen/qwen2.5-vl-32b-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: "deepseek/deepseek-chat-v3-0324:free"
+    matches:
+      equals: "deepseek/deepseek-chat-v3-0324:free"
+    prices: {}
+  - id: deepseek/deepseek-chat-v3-0324
+    matches:
+      equals: deepseek/deepseek-chat-v3-0324
+    prices:
+      input_mtok: 0.27
+      output_mtok: 1.1
+  - id: "featherless/qwerky-72b:free"
+    matches:
+      equals: "featherless/qwerky-72b:free"
+    prices: {}
+  - id: openai/o1-pro
+    matches:
+      equals: openai/o1-pro
+    prices:
+      input_mtok: 150
+      output_mtok: 600
+  - id: "mistralai/mistral-small-3.1-24b-instruct:free"
+    matches:
+      equals: "mistralai/mistral-small-3.1-24b-instruct:free"
+    prices: {}
+  - id: mistralai/mistral-small-3.1-24b-instruct
+    matches:
+      equals: mistralai/mistral-small-3.1-24b-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.3
+  - id: "open-r1/olympiccoder-7b:free"
+    matches:
+      equals: "open-r1/olympiccoder-7b:free"
+    prices: {}
+  - id: "open-r1/olympiccoder-32b:free"
+    matches:
+      equals: "open-r1/olympiccoder-32b:free"
+    prices: {}
+  - id: steelskull/l3.3-electra-r1-70b
+    matches:
+      equals: steelskull/l3.3-electra-r1-70b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.95
+  - id: "google/gemma-3-1b-it:free"
+    matches:
+      equals: "google/gemma-3-1b-it:free"
+    prices: {}
+  - id: "google/gemma-3-4b-it:free"
+    matches:
+      equals: "google/gemma-3-4b-it:free"
+    prices: {}
+  - id: google/gemma-3-4b-it
+    matches:
+      equals: google/gemma-3-4b-it
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.04
+  - id: ai21/jamba-1.6-large
+    matches:
+      equals: ai21/jamba-1.6-large
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+  - id: ai21/jamba-1.6-mini
+    matches:
+      equals: ai21/jamba-1.6-mini
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.4
+  - id: "google/gemma-3-12b-it:free"
+    matches:
+      equals: "google/gemma-3-12b-it:free"
+    prices: {}
+  - id: google/gemma-3-12b-it
+    matches:
+      equals: google/gemma-3-12b-it
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+  - id: cohere/command-a
+    matches:
+      equals: cohere/command-a
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: openai/gpt-4o-mini-search-preview
+    matches:
+      equals: openai/gpt-4o-mini-search-preview
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+  - id: openai/gpt-4o-search-preview
+    matches:
+      equals: openai/gpt-4o-search-preview
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: "rekaai/reka-flash-3:free"
+    matches:
+      equals: "rekaai/reka-flash-3:free"
+    prices: {}
+  - id: "google/gemma-3-27b-it:free"
+    matches:
+      equals: "google/gemma-3-27b-it:free"
+    prices: {}
+  - id: google/gemma-3-27b-it
+    matches:
+      equals: google/gemma-3-27b-it
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.2
+  - id: thedrummer/anubis-pro-105b-v1
+    matches:
+      equals: thedrummer/anubis-pro-105b-v1
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1
+  - id: latitudegames/wayfarer-large-70b-llama-3.3
+    matches:
+      equals: latitudegames/wayfarer-large-70b-llama-3.3
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.9
+  - id: thedrummer/skyfall-36b-v2
+    matches:
+      equals: thedrummer/skyfall-36b-v2
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.8
+  - id: microsoft/phi-4-multimodal-instruct
+    matches:
+      equals: microsoft/phi-4-multimodal-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+  - id: perplexity/sonar-reasoning-pro
+    matches:
+      equals: perplexity/sonar-reasoning-pro
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+  - id: perplexity/sonar-pro
+    matches:
+      equals: perplexity/sonar-pro
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: perplexity/sonar-deep-research
+    matches:
+      equals: perplexity/sonar-deep-research
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+  - id: "deepseek/deepseek-r1-zero:free"
+    matches:
+      equals: "deepseek/deepseek-r1-zero:free"
+    prices: {}
+  - id: "qwen/qwq-32b:free"
+    matches:
+      equals: "qwen/qwq-32b:free"
+    prices: {}
+  - id: qwen/qwq-32b
+    matches:
+      equals: qwen/qwq-32b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.2
+  - id: "moonshotai/moonlight-16b-a3b-instruct:free"
+    matches:
+      equals: "moonshotai/moonlight-16b-a3b-instruct:free"
+    prices: {}
+  - id: "nousresearch/deephermes-3-llama-3-8b-preview:free"
+    matches:
+      equals: "nousresearch/deephermes-3-llama-3-8b-preview:free"
+    prices: {}
+  - id: openai/gpt-4.5-preview
+    matches:
+      equals: openai/gpt-4.5-preview
+    prices:
+      input_mtok: 75
+      output_mtok: 150
+  - id: google/gemini-2.0-flash-lite-001
+    matches:
+      equals: google/gemini-2.0-flash-lite-001
+    prices:
+      input_mtok: 0.075
+      output_mtok: 0.3
+  - id: anthropic/claude-3.7-sonnet
+    matches:
+      equals: anthropic/claude-3.7-sonnet
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: "anthropic/claude-3.7-sonnet:thinking"
+    matches:
+      equals: "anthropic/claude-3.7-sonnet:thinking"
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: "anthropic/claude-3.7-sonnet:beta"
+    matches:
+      equals: "anthropic/claude-3.7-sonnet:beta"
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: perplexity/r1-1776
+    matches:
+      equals: perplexity/r1-1776
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+  - id: mistralai/mistral-saba
+    matches:
+      equals: mistralai/mistral-saba
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+  - id: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free"
+    matches:
+      equals: "cognitivecomputations/dolphin3.0-r1-mistral-24b:free"
+    prices: {}
+  - id: "cognitivecomputations/dolphin3.0-mistral-24b:free"
+    matches:
+      equals: "cognitivecomputations/dolphin3.0-mistral-24b:free"
+    prices: {}
+  - id: meta-llama/llama-guard-3-8b
+    matches:
+      equals: meta-llama/llama-guard-3-8b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+  - id: openai/o3-mini-high
+    matches:
+      equals: openai/o3-mini-high
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+  - id: deepseek/deepseek-r1-distill-llama-8b
+    matches:
+      equals: deepseek/deepseek-r1-distill-llama-8b
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+  - id: google/gemini-2.0-flash-001
+    matches:
+      equals: google/gemini-2.0-flash-001
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.4
+  - id: qwen/qwen-vl-plus
+    matches:
+      equals: qwen/qwen-vl-plus
+    prices:
+      input_mtok: 0.21
+      output_mtok: 0.63
+  - id: aion-labs/aion-1.0
+    matches:
+      equals: aion-labs/aion-1.0
+    prices:
+      input_mtok: 4
+      output_mtok: 8
+  - id: aion-labs/aion-1.0-mini
+    matches:
+      equals: aion-labs/aion-1.0-mini
+    prices:
+      input_mtok: 0.7
+      output_mtok: 1.4
+  - id: aion-labs/aion-rp-llama-3.1-8b
+    matches:
+      equals: aion-labs/aion-rp-llama-3.1-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: qwen/qwen-vl-max
+    matches:
+      equals: qwen/qwen-vl-max
+    prices:
+      input_mtok: 0.8
+      output_mtok: 3.2
+  - id: qwen/qwen-turbo
+    matches:
+      equals: qwen/qwen-turbo
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.2
+  - id: "qwen/qwen2.5-vl-72b-instruct:free"
+    matches:
+      equals: "qwen/qwen2.5-vl-72b-instruct:free"
+    prices: {}
+  - id: qwen/qwen2.5-vl-72b-instruct
+    matches:
+      equals: qwen/qwen2.5-vl-72b-instruct
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.7
+  - id: qwen/qwen-plus
+    matches:
+      equals: qwen/qwen-plus
+    prices:
+      input_mtok: 0.4
+      output_mtok: 1.2
+  - id: qwen/qwen-max
+    matches:
+      equals: qwen/qwen-max
+    prices:
+      input_mtok: 1.6
+      output_mtok: 6.4
+  - id: openai/o3-mini
+    matches:
+      equals: openai/o3-mini
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+  - id: deepseek/deepseek-r1-distill-qwen-1.5b
+    matches:
+      equals: deepseek/deepseek-r1-distill-qwen-1.5b
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+  - id: "mistralai/mistral-small-24b-instruct-2501:free"
+    matches:
+      equals: "mistralai/mistral-small-24b-instruct-2501:free"
+    prices: {}
+  - id: mistralai/mistral-small-24b-instruct-2501
+    matches:
+      equals: mistralai/mistral-small-24b-instruct-2501
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.14
+  - id: "deepseek/deepseek-r1-distill-qwen-32b:free"
+    matches:
+      equals: "deepseek/deepseek-r1-distill-qwen-32b:free"
+    prices: {}
+  - id: deepseek/deepseek-r1-distill-qwen-32b
+    matches:
+      equals: deepseek/deepseek-r1-distill-qwen-32b
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.18
+  - id: "deepseek/deepseek-r1-distill-qwen-14b:free"
+    matches:
+      equals: "deepseek/deepseek-r1-distill-qwen-14b:free"
+    prices: {}
+  - id: deepseek/deepseek-r1-distill-qwen-14b
+    matches:
+      equals: deepseek/deepseek-r1-distill-qwen-14b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+  - id: perplexity/sonar-reasoning
+    matches:
+      equals: perplexity/sonar-reasoning
+    prices:
+      input_mtok: 1
+      output_mtok: 5
+  - id: perplexity/sonar
+    matches:
+      equals: perplexity/sonar
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+  - id: liquid/lfm-7b
+    matches:
+      equals: liquid/lfm-7b
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.01
+  - id: liquid/lfm-3b
+    matches:
+      equals: liquid/lfm-3b
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.02
+  - id: "deepseek/deepseek-r1-distill-llama-70b:free"
+    matches:
+      equals: "deepseek/deepseek-r1-distill-llama-70b:free"
+    prices: {}
+  - id: deepseek/deepseek-r1-distill-llama-70b
+    matches:
+      equals: deepseek/deepseek-r1-distill-llama-70b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.4
+  - id: "google/gemini-2.0-flash-thinking-exp:free"
+    matches:
+      equals: "google/gemini-2.0-flash-thinking-exp:free"
+    prices: {}
+  - id: "deepseek/deepseek-r1:free"
+    matches:
+      equals: "deepseek/deepseek-r1:free"
+    prices: {}
+  - id: deepseek/deepseek-r1
+    matches:
+      equals: deepseek/deepseek-r1
+    prices:
+      input_mtok: 0.5
+      output_mtok: 3
+  - id: "sophosympatheia/rogue-rose-103b-v0.2:free"
+    matches:
+      equals: "sophosympatheia/rogue-rose-103b-v0.2:free"
+    prices: {}
+  - id: minimax/minimax-01
+    matches:
+      equals: minimax/minimax-01
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.1
+  - id: mistralai/codestral-2501
+    matches:
+      equals: mistralai/codestral-2501
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.9
+  - id: microsoft/phi-4
+    matches:
+      equals: microsoft/phi-4
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.14
+  - id: "deepseek/deepseek-chat:free"
+    matches:
+      equals: "deepseek/deepseek-chat:free"
+    prices: {}
+  - id: deepseek/deepseek-chat
+    matches:
+      equals: deepseek/deepseek-chat
+    prices:
+      input_mtok: 0.38
+      output_mtok: 0.89
+  - id: "google/gemini-2.0-flash-thinking-exp-1219:free"
+    matches:
+      equals: "google/gemini-2.0-flash-thinking-exp-1219:free"
+    prices: {}
+  - id: sao10k/l3.3-euryale-70b
+    matches:
+      equals: sao10k/l3.3-euryale-70b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.8
+  - id: openai/o1
+    matches:
+      equals: openai/o1
+    prices:
+      input_mtok: 15
+      output_mtok: 60
+  - id: eva-unit-01/eva-llama-3.33-70b
+    matches:
+      equals: eva-unit-01/eva-llama-3.33-70b
+    prices:
+      input_mtok: 4
+      output_mtok: 6
+  - id: x-ai/grok-2-vision-1212
+    matches:
+      equals: x-ai/grok-2-vision-1212
+    prices:
+      input_mtok: 2
+      output_mtok: 10
+  - id: x-ai/grok-2-1212
+    matches:
+      equals: x-ai/grok-2-1212
+    prices:
+      input_mtok: 2
+      output_mtok: 10
+  - id: cohere/command-r7b-12-2024
+    matches:
+      equals: cohere/command-r7b-12-2024
+    prices:
+      input_mtok: 0.0375
+      output_mtok: 0.15
+  - id: "google/gemini-2.0-flash-exp:free"
+    matches:
+      equals: "google/gemini-2.0-flash-exp:free"
+    prices: {}
+  - id: "meta-llama/llama-3.3-70b-instruct:free"
+    matches:
+      equals: "meta-llama/llama-3.3-70b-instruct:free"
+    prices: {}
+  - id: meta-llama/llama-3.3-70b-instruct
+    matches:
+      equals: meta-llama/llama-3.3-70b-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.25
+  - id: amazon/nova-lite-v1
+    matches:
+      equals: amazon/nova-lite-v1
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.24
+  - id: amazon/nova-micro-v1
+    matches:
+      equals: amazon/nova-micro-v1
+    prices:
+      input_mtok: 0.035
+      output_mtok: 0.14
+  - id: amazon/nova-pro-v1
+    matches:
+      equals: amazon/nova-pro-v1
+    prices:
+      input_mtok: 0.8
+      output_mtok: 3.2
+  - id: "qwen/qwq-32b-preview:free"
+    matches:
+      equals: "qwen/qwq-32b-preview:free"
+    prices: {}
+  - id: qwen/qwq-32b-preview
+    matches:
+      equals: qwen/qwq-32b-preview
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: "google/learnlm-1.5-pro-experimental:free"
+    matches:
+      equals: "google/learnlm-1.5-pro-experimental:free"
+    prices: {}
+  - id: eva-unit-01/eva-qwen-2.5-72b
+    matches:
+      equals: eva-unit-01/eva-qwen-2.5-72b
+    prices:
+      input_mtok: 0.9
+      output_mtok: 1.2
+  - id: openai/gpt-4o-2024-11-20
+    matches:
+      equals: openai/gpt-4o-2024-11-20
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: mistralai/mistral-large-2411
+    matches:
+      equals: mistralai/mistral-large-2411
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+  - id: mistralai/mistral-large-2407
+    matches:
+      equals: mistralai/mistral-large-2407
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+  - id: mistralai/pixtral-large-2411
+    matches:
+      equals: mistralai/pixtral-large-2411
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+  - id: x-ai/grok-vision-beta
+    matches:
+      equals: x-ai/grok-vision-beta
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+  - id: infermatic/mn-inferor-12b
+    matches:
+      equals: infermatic/mn-inferor-12b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+  - id: "qwen/qwen-2.5-coder-32b-instruct:free"
+    matches:
+      equals: "qwen/qwen-2.5-coder-32b-instruct:free"
+    prices: {}
+  - id: qwen/qwen-2.5-coder-32b-instruct
+    matches:
+      equals: qwen/qwen-2.5-coder-32b-instruct
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.15
+  - id: raifle/sorcererlm-8x22b
+    matches:
+      equals: raifle/sorcererlm-8x22b
+    prices:
+      input_mtok: 4.5
+      output_mtok: 4.5
+  - id: eva-unit-01/eva-qwen-2.5-32b
+    matches:
+      equals: eva-unit-01/eva-qwen-2.5-32b
+    prices:
+      input_mtok: 2.6
+      output_mtok: 3.4
+  - id: thedrummer/unslopnemo-12b
+    matches:
+      equals: thedrummer/unslopnemo-12b
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.5
+  - id: "anthropic/claude-3.5-haiku:beta"
+    matches:
+      equals: "anthropic/claude-3.5-haiku:beta"
+    prices:
+      input_mtok: 0.8
+      output_mtok: 4
+  - id: anthropic/claude-3.5-haiku
+    matches:
+      equals: anthropic/claude-3.5-haiku
+    prices:
+      input_mtok: 0.8
+      output_mtok: 4
+  - id: "anthropic/claude-3.5-haiku-20241022:beta"
+    matches:
+      equals: "anthropic/claude-3.5-haiku-20241022:beta"
+    prices:
+      input_mtok: 0.8
+      output_mtok: 4
+  - id: anthropic/claude-3.5-haiku-20241022
+    matches:
+      equals: anthropic/claude-3.5-haiku-20241022
+    prices:
+      input_mtok: 0.8
+      output_mtok: 4
+  - id: neversleep/llama-3.1-lumimaid-70b
+    matches:
+      equals: neversleep/llama-3.1-lumimaid-70b
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2.25
+  - id: anthracite-org/magnum-v4-72b
+    matches:
+      equals: anthracite-org/magnum-v4-72b
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2.25
+  - id: "anthropic/claude-3.5-sonnet:beta"
+    matches:
+      equals: "anthropic/claude-3.5-sonnet:beta"
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: anthropic/claude-3.5-sonnet
+    matches:
+      equals: anthropic/claude-3.5-sonnet
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: x-ai/grok-beta
+    matches:
+      equals: x-ai/grok-beta
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+  - id: mistralai/ministral-8b
+    matches:
+      equals: mistralai/ministral-8b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+  - id: mistralai/ministral-3b
+    matches:
+      equals: mistralai/ministral-3b
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+  - id: "qwen/qwen-2.5-7b-instruct:free"
+    matches:
+      equals: "qwen/qwen-2.5-7b-instruct:free"
+    prices: {}
+  - id: qwen/qwen-2.5-7b-instruct
+    matches:
+      equals: qwen/qwen-2.5-7b-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+  - id: "nvidia/llama-3.1-nemotron-70b-instruct:free"
+    matches:
+      equals: "nvidia/llama-3.1-nemotron-70b-instruct:free"
+    prices: {}
+  - id: nvidia/llama-3.1-nemotron-70b-instruct
+    matches:
+      equals: nvidia/llama-3.1-nemotron-70b-instruct
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.3
+  - id: inflection/inflection-3-productivity
+    matches:
+      equals: inflection/inflection-3-productivity
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: inflection/inflection-3-pi
+    matches:
+      equals: inflection/inflection-3-pi
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: google/gemini-flash-1.5-8b
+    matches:
+      equals: google/gemini-flash-1.5-8b
+    prices:
+      input_mtok: 0.0375
+      output_mtok: 0.15
+  - id: thedrummer/rocinante-12b
+    matches:
+      equals: thedrummer/rocinante-12b
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.5
+  - id: anthracite-org/magnum-v2-72b
+    matches:
+      equals: anthracite-org/magnum-v2-72b
+    prices:
+      input_mtok: 3
+      output_mtok: 3
+  - id: liquid/lfm-40b
+    matches:
+      equals: liquid/lfm-40b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+  - id: "meta-llama/llama-3.2-3b-instruct:free"
+    matches:
+      equals: "meta-llama/llama-3.2-3b-instruct:free"
+    prices: {}
+  - id: meta-llama/llama-3.2-3b-instruct
+    matches:
+      equals: meta-llama/llama-3.2-3b-instruct
+    prices:
+      input_mtok: 0.015
+      output_mtok: 0.025
+  - id: "meta-llama/llama-3.2-1b-instruct:free"
+    matches:
+      equals: "meta-llama/llama-3.2-1b-instruct:free"
+    prices: {}
+  - id: meta-llama/llama-3.2-1b-instruct
+    matches:
+      equals: meta-llama/llama-3.2-1b-instruct
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.01
+  - id: meta-llama/llama-3.2-90b-vision-instruct
+    matches:
+      equals: meta-llama/llama-3.2-90b-vision-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: "meta-llama/llama-3.2-11b-vision-instruct:free"
+    matches:
+      equals: "meta-llama/llama-3.2-11b-vision-instruct:free"
+    prices: {}
+  - id: meta-llama/llama-3.2-11b-vision-instruct
+    matches:
+      equals: meta-llama/llama-3.2-11b-vision-instruct
+    prices:
+      input_mtok: 0.049
+      output_mtok: 0.049
+  - id: "qwen/qwen-2.5-72b-instruct:free"
+    matches:
+      equals: "qwen/qwen-2.5-72b-instruct:free"
+    prices: {}
+  - id: qwen/qwen-2.5-72b-instruct
+    matches:
+      equals: qwen/qwen-2.5-72b-instruct
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.39
+  - id: qwen/qwen-2.5-vl-72b-instruct
+    matches:
+      equals: qwen/qwen-2.5-vl-72b-instruct
+    prices:
+      input_mtok: 0.6
+      output_mtok: 0.6
+  - id: neversleep/llama-3.1-lumimaid-8b
+    matches:
+      equals: neversleep/llama-3.1-lumimaid-8b
+    prices:
+      input_mtok: 0.09375
+      output_mtok: 0.75
+  - id: openai/o1-preview
+    matches:
+      equals: openai/o1-preview
+    prices:
+      input_mtok: 15
+      output_mtok: 60
+  - id: openai/o1-preview-2024-09-12
+    matches:
+      equals: openai/o1-preview-2024-09-12
+    prices:
+      input_mtok: 15
+      output_mtok: 60
+  - id: openai/o1-mini
+    matches:
+      equals: openai/o1-mini
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+  - id: openai/o1-mini-2024-09-12
+    matches:
+      equals: openai/o1-mini-2024-09-12
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+  - id: mistralai/pixtral-12b
+    matches:
+      equals: mistralai/pixtral-12b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+  - id: cohere/command-r-plus-08-2024
+    matches:
+      equals: cohere/command-r-plus-08-2024
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: cohere/command-r-08-2024
+    matches:
+      equals: cohere/command-r-08-2024
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+  - id: "qwen/qwen-2.5-vl-7b-instruct:free"
+    matches:
+      equals: "qwen/qwen-2.5-vl-7b-instruct:free"
+    prices: {}
+  - id: qwen/qwen-2.5-vl-7b-instruct
+    matches:
+      equals: qwen/qwen-2.5-vl-7b-instruct
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: sao10k/l3.1-euryale-70b
+    matches:
+      equals: sao10k/l3.1-euryale-70b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.8
+  - id: google/gemini-flash-1.5-8b-exp
+    matches:
+      equals: google/gemini-flash-1.5-8b-exp
+    prices: {}
+  - id: ai21/jamba-1-5-mini
+    matches:
+      equals: ai21/jamba-1-5-mini
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.4
+  - id: ai21/jamba-1-5-large
+    matches:
+      equals: ai21/jamba-1-5-large
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+  - id: microsoft/phi-3.5-mini-128k-instruct
+    matches:
+      equals: microsoft/phi-3.5-mini-128k-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+  - id: nousresearch/hermes-3-llama-3.1-70b
+    matches:
+      equals: nousresearch/hermes-3-llama-3.1-70b
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.3
+  - id: nousresearch/hermes-3-llama-3.1-405b
+    matches:
+      equals: nousresearch/hermes-3-llama-3.1-405b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+  - id: openai/chatgpt-4o-latest
+    matches:
+      equals: openai/chatgpt-4o-latest
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+  - id: sao10k/l3-lunaris-8b
+    matches:
+      equals: sao10k/l3-lunaris-8b
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.05
+  - id: aetherwiing/mn-starcannon-12b
+    matches:
+      equals: aetherwiing/mn-starcannon-12b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+  - id: openai/gpt-4o-2024-08-06
+    matches:
+      equals: openai/gpt-4o-2024-08-06
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: "meta-llama/llama-3.1-405b:free"
+    matches:
+      equals: "meta-llama/llama-3.1-405b:free"
+    prices: {}
+  - id: meta-llama/llama-3.1-405b
+    matches:
+      equals: meta-llama/llama-3.1-405b
+    prices:
+      input_mtok: 2
+      output_mtok: 2
+  - id: nothingiisreal/mn-celeste-12b
+    matches:
+      equals: nothingiisreal/mn-celeste-12b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+  - id: perplexity/llama-3.1-sonar-small-128k-online
+    matches:
+      equals: perplexity/llama-3.1-sonar-small-128k-online
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: perplexity/llama-3.1-sonar-large-128k-online
+    matches:
+      equals: perplexity/llama-3.1-sonar-large-128k-online
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+  - id: "meta-llama/llama-3.1-8b-instruct:free"
+    matches:
+      equals: "meta-llama/llama-3.1-8b-instruct:free"
+    prices: {}
+  - id: meta-llama/llama-3.1-8b-instruct
+    matches:
+      equals: meta-llama/llama-3.1-8b-instruct
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.03
+  - id: meta-llama/llama-3.1-405b-instruct
+    matches:
+      equals: meta-llama/llama-3.1-405b-instruct
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+  - id: meta-llama/llama-3.1-70b-instruct
+    matches:
+      equals: meta-llama/llama-3.1-70b-instruct
+    prices:
+      input_mtok: 0.119
+      output_mtok: 0.39
+  - id: mistralai/codestral-mamba
+    matches:
+      equals: mistralai/codestral-mamba
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.25
+  - id: "mistralai/mistral-nemo:free"
+    matches:
+      equals: "mistralai/mistral-nemo:free"
+    prices: {}
+  - id: mistralai/mistral-nemo
+    matches:
+      equals: mistralai/mistral-nemo
+    prices:
+      input_mtok: 0.035
+      output_mtok: 0.08
+  - id: openai/gpt-4o-mini
+    matches:
+      equals: openai/gpt-4o-mini
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+  - id: openai/gpt-4o-mini-2024-07-18
+    matches:
+      equals: openai/gpt-4o-mini-2024-07-18
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+  - id: google/gemma-2-27b-it
+    matches:
+      equals: google/gemma-2-27b-it
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+  - id: alpindale/magnum-72b
+    matches:
+      equals: alpindale/magnum-72b
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2.25
+  - id: "google/gemma-2-9b-it:free"
+    matches:
+      equals: "google/gemma-2-9b-it:free"
+    prices: {}
+  - id: google/gemma-2-9b-it
+    matches:
+      equals: google/gemma-2-9b-it
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.07
+  - id: 01-ai/yi-large
+    matches:
+      equals: 01-ai/yi-large
+    prices:
+      input_mtok: 3
+      output_mtok: 3
+  - id: ai21/jamba-instruct
+    matches:
+      equals: ai21/jamba-instruct
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.7
+  - id: "anthropic/claude-3.5-sonnet-20240620:beta"
+    matches:
+      equals: "anthropic/claude-3.5-sonnet-20240620:beta"
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: anthropic/claude-3.5-sonnet-20240620
+    matches:
+      equals: anthropic/claude-3.5-sonnet-20240620
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: sao10k/l3-euryale-70b
+    matches:
+      equals: sao10k/l3-euryale-70b
+    prices:
+      input_mtok: 1.48
+      output_mtok: 1.48
+  - id: cognitivecomputations/dolphin-mixtral-8x22b
+    matches:
+      equals: cognitivecomputations/dolphin-mixtral-8x22b
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: qwen/qwen-2-72b-instruct
+    matches:
+      equals: qwen/qwen-2-72b-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: "mistralai/mistral-7b-instruct:free"
+    matches:
+      equals: "mistralai/mistral-7b-instruct:free"
+    prices: {}
+  - id: mistralai/mistral-7b-instruct
+    matches:
+      equals: mistralai/mistral-7b-instruct
+    prices:
+      input_mtok: 0.029
+      output_mtok: 0.059
+  - id: mistralai/mistral-7b-instruct-v0.3
+    matches:
+      equals: mistralai/mistral-7b-instruct-v0.3
+    prices:
+      input_mtok: 0.029
+      output_mtok: 0.059
+  - id: nousresearch/hermes-2-pro-llama-3-8b
+    matches:
+      equals: nousresearch/hermes-2-pro-llama-3-8b
+    prices:
+      input_mtok: 0.025
+      output_mtok: 0.04
+  - id: microsoft/phi-3-mini-128k-instruct
+    matches:
+      equals: microsoft/phi-3-mini-128k-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+  - id: microsoft/phi-3-medium-128k-instruct
+    matches:
+      equals: microsoft/phi-3-medium-128k-instruct
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+  - id: neversleep/llama-3-lumimaid-70b
+    matches:
+      equals: neversleep/llama-3-lumimaid-70b
+    prices:
+      input_mtok: 3.375
+      output_mtok: 4.5
+  - id: google/gemini-flash-1.5
+    matches:
+      equals: google/gemini-flash-1.5
+    prices:
+      input_mtok: 0.075
+      output_mtok: 0.3
+  - id: openai/gpt-4o
+    matches:
+      equals: openai/gpt-4o
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+  - id: "openai/gpt-4o:extended"
+    matches:
+      equals: "openai/gpt-4o:extended"
+    prices:
+      input_mtok: 6
+      output_mtok: 18
+  - id: openai/gpt-4o-2024-05-13
+    matches:
+      equals: openai/gpt-4o-2024-05-13
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+  - id: meta-llama/llama-guard-2-8b
+    matches:
+      equals: meta-llama/llama-guard-2-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: "neversleep/llama-3-lumimaid-8b:extended"
+    matches:
+      equals: "neversleep/llama-3-lumimaid-8b:extended"
+    prices:
+      input_mtok: 0.09375
+      output_mtok: 0.75
+  - id: neversleep/llama-3-lumimaid-8b
+    matches:
+      equals: neversleep/llama-3-lumimaid-8b
+    prices:
+      input_mtok: 0.09375
+      output_mtok: 0.75
+  - id: sao10k/fimbulvetr-11b-v2
+    matches:
+      equals: sao10k/fimbulvetr-11b-v2
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+  - id: meta-llama/llama-3-8b-instruct
+    matches:
+      equals: meta-llama/llama-3-8b-instruct
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.06
+  - id: meta-llama/llama-3-70b-instruct
+    matches:
+      equals: meta-llama/llama-3-70b-instruct
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.4
+  - id: mistralai/mixtral-8x22b-instruct
+    matches:
+      equals: mistralai/mixtral-8x22b-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: microsoft/wizardlm-2-8x22b
+    matches:
+      equals: microsoft/wizardlm-2-8x22b
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.5
+  - id: microsoft/wizardlm-2-7b
+    matches:
+      equals: microsoft/wizardlm-2-7b
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.07
+  - id: google/gemini-pro-1.5
+    matches:
+      equals: google/gemini-pro-1.5
+    prices:
+      input_mtok: 1.25
+      output_mtok: 5
+  - id: openai/gpt-4-turbo
+    matches:
+      equals: openai/gpt-4-turbo
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+  - id: cohere/command-r-plus
+    matches:
+      equals: cohere/command-r-plus
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: cohere/command-r-plus-04-2024
+    matches:
+      equals: cohere/command-r-plus-04-2024
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: sophosympatheia/midnight-rose-70b
+    matches:
+      equals: sophosympatheia/midnight-rose-70b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+  - id: cohere/command
+    matches:
+      equals: cohere/command
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: cohere/command-r
+    matches:
+      equals: cohere/command-r
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+  - id: "anthropic/claude-3-haiku:beta"
+    matches:
+      equals: "anthropic/claude-3-haiku:beta"
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.25
+  - id: anthropic/claude-3-haiku
+    matches:
+      equals: anthropic/claude-3-haiku
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.25
+  - id: "anthropic/claude-3-opus:beta"
+    matches:
+      equals: "anthropic/claude-3-opus:beta"
+    prices:
+      input_mtok: 15
+      output_mtok: 75
+  - id: anthropic/claude-3-opus
+    matches:
+      equals: anthropic/claude-3-opus
+    prices:
+      input_mtok: 15
+      output_mtok: 75
+  - id: "anthropic/claude-3-sonnet:beta"
+    matches:
+      equals: "anthropic/claude-3-sonnet:beta"
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: anthropic/claude-3-sonnet
+    matches:
+      equals: anthropic/claude-3-sonnet
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+  - id: cohere/command-r-03-2024
+    matches:
+      equals: cohere/command-r-03-2024
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+  - id: mistralai/mistral-large
+    matches:
+      equals: mistralai/mistral-large
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+  - id: openai/gpt-3.5-turbo-0613
+    matches:
+      equals: openai/gpt-3.5-turbo-0613
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: openai/gpt-4-turbo-preview
+    matches:
+      equals: openai/gpt-4-turbo-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+  - id: nousresearch/nous-hermes-2-mixtral-8x7b-dpo
+    matches:
+      equals: nousresearch/nous-hermes-2-mixtral-8x7b-dpo
+    prices:
+      input_mtok: 0.6
+      output_mtok: 0.6
+  - id: mistralai/mistral-medium
+    matches:
+      equals: mistralai/mistral-medium
+    prices:
+      input_mtok: 2.75
+      output_mtok: 8.1
+  - id: mistralai/mistral-small
+    matches:
+      equals: mistralai/mistral-small
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+  - id: mistralai/mistral-tiny
+    matches:
+      equals: mistralai/mistral-tiny
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.25
+  - id: mistralai/mistral-7b-instruct-v0.2
+    matches:
+      equals: mistralai/mistral-7b-instruct-v0.2
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: cognitivecomputations/dolphin-mixtral-8x7b
+    matches:
+      equals: cognitivecomputations/dolphin-mixtral-8x7b
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.5
+  - id: google/gemini-pro-vision
+    matches:
+      equals: google/gemini-pro-vision
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+  - id: google/gemini-pro
+    matches:
+      equals: google/gemini-pro
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+  - id: mistralai/mixtral-8x7b-instruct
+    matches:
+      equals: mistralai/mixtral-8x7b-instruct
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.24
+  - id: openchat/openchat-7b
+    matches:
+      equals: openchat/openchat-7b
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.07
+  - id: neversleep/noromaid-20b
+    matches:
+      equals: neversleep/noromaid-20b
+    prices:
+      input_mtok: 0.75
+      output_mtok: 1.5
+  - id: "anthropic/claude-2.1:beta"
+    matches:
+      equals: "anthropic/claude-2.1:beta"
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: anthropic/claude-2.1
+    matches:
+      equals: anthropic/claude-2.1
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: "anthropic/claude-2:beta"
+    matches:
+      equals: "anthropic/claude-2:beta"
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: anthropic/claude-2
+    matches:
+      equals: anthropic/claude-2
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: undi95/toppy-m-7b
+    matches:
+      equals: undi95/toppy-m-7b
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.07
+  - id: alpindale/goliath-120b
+    matches:
+      equals: alpindale/goliath-120b
+    prices:
+      input_mtok: 6.5625
+      output_mtok: 9.375
+  - id: openrouter/auto
+    matches:
+      equals: openrouter/auto
+    prices:
+      input_mtok: -1000000
+      output_mtok: -1000000
+  - id: openai/gpt-3.5-turbo-1106
+    matches:
+      equals: openai/gpt-3.5-turbo-1106
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: openai/gpt-4-1106-preview
+    matches:
+      equals: openai/gpt-4-1106-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+  - id: google/palm-2-chat-bison-32k
+    matches:
+      equals: google/palm-2-chat-bison-32k
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: google/palm-2-codechat-bison-32k
+    matches:
+      equals: google/palm-2-codechat-bison-32k
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: jondurbin/airoboros-l2-70b
+    matches:
+      equals: jondurbin/airoboros-l2-70b
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.5
+  - id: xwin-lm/xwin-lm-70b
+    matches:
+      equals: xwin-lm/xwin-lm-70b
+    prices:
+      input_mtok: 3.75
+      output_mtok: 3.75
+  - id: openai/gpt-3.5-turbo-instruct
+    matches:
+      equals: openai/gpt-3.5-turbo-instruct
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+  - id: mistralai/mistral-7b-instruct-v0.1
+    matches:
+      equals: mistralai/mistral-7b-instruct-v0.1
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+  - id: pygmalionai/mythalion-13b
+    matches:
+      equals: pygmalionai/mythalion-13b
+    prices:
+      input_mtok: 0.5625
+      output_mtok: 1.125
+  - id: openai/gpt-3.5-turbo-16k
+    matches:
+      equals: openai/gpt-3.5-turbo-16k
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+  - id: openai/gpt-4-32k
+    matches:
+      equals: openai/gpt-4-32k
+    prices:
+      input_mtok: 60
+      output_mtok: 120
+  - id: openai/gpt-4-32k-0314
+    matches:
+      equals: openai/gpt-4-32k-0314
+    prices:
+      input_mtok: 60
+      output_mtok: 120
+  - id: nousresearch/nous-hermes-llama2-13b
+    matches:
+      equals: nousresearch/nous-hermes-llama2-13b
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+  - id: mancer/weaver
+    matches:
+      equals: mancer/weaver
+    prices:
+      input_mtok: 1.125
+      output_mtok: 1.125
+  - id: "huggingfaceh4/zephyr-7b-beta:free"
+    matches:
+      equals: "huggingfaceh4/zephyr-7b-beta:free"
+    prices: {}
+  - id: "anthropic/claude-2.0:beta"
+    matches:
+      equals: "anthropic/claude-2.0:beta"
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: anthropic/claude-2.0
+    matches:
+      equals: anthropic/claude-2.0
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+  - id: undi95/remm-slerp-l2-13b
+    matches:
+      equals: undi95/remm-slerp-l2-13b
+    prices:
+      input_mtok: 0.5625
+      output_mtok: 1.125
+  - id: google/palm-2-chat-bison
+    matches:
+      equals: google/palm-2-chat-bison
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: google/palm-2-codechat-bison
+    matches:
+      equals: google/palm-2-codechat-bison
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+  - id: gryphe/mythomax-l2-13b
+    matches:
+      equals: gryphe/mythomax-l2-13b
+    prices:
+      input_mtok: 0.065
+      output_mtok: 0.065
+  - id: meta-llama/llama-2-13b-chat
+    matches:
+      equals: meta-llama/llama-2-13b-chat
+    prices:
+      input_mtok: 0.22
+      output_mtok: 0.22
+  - id: meta-llama/llama-2-70b-chat
+    matches:
+      equals: meta-llama/llama-2-70b-chat
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+  - id: openai/gpt-3.5-turbo
+    matches:
+      equals: openai/gpt-3.5-turbo
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+  - id: openai/gpt-3.5-turbo-0125
+    matches:
+      equals: openai/gpt-3.5-turbo-0125
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+  - id: openai/gpt-4
+    matches:
+      equals: openai/gpt-4
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+  - id: openai/gpt-4-0314
+    matches:
+      equals: openai/gpt-4-0314
+    prices:
+      input_mtok: 30
+      output_mtok: 60

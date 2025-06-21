@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import difflib
+import gzip
 from datetime import datetime
+from operator import attrgetter
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Union
 
+import devtools
 import pydantic_core
-from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter
+from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter, ValidationError
 from yaml import safe_load
 
 
@@ -20,8 +24,10 @@ class Provider(Model):
     """Common name of the organization"""
     id: str
     """Unique identifier for the provider"""
-    pricing_url: HttpUrl
+    pricing_url: HttpUrl | None = None
     """Link to pricing page for the provider"""
+    api_pattern: str | None = None
+    """Pattern to identify provider via HTTP API URL."""
     description: str | None = None
     """Description of the provider"""
     models: list[ModelInfo]
@@ -31,7 +37,7 @@ class Provider(Model):
 class ModelInfo(Model):
     """Information about an LLM model"""
 
-    name: str
+    name: str | None = None
     """Name of the model"""
     description: str | None = None
     """Description of the model"""
@@ -64,7 +70,7 @@ class ModelPrice(Model):
 
     output_mtok: float | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
-    response_audio_mtok: float | TieredPrices | None = None
+    output_audio_mtok: float | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
 
@@ -136,16 +142,28 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 LogicClause = Annotated[
-    Annotated[ClauseStartsWith, Tag('starts_with')]
-    | Annotated[ClauseEndsWith, Tag('ends_with')]
-    | Annotated[ClauseContains, Tag('contains')]
-    | Annotated[ClauseRegex, Tag('regex')]
-    | Annotated[ClauseEquals, Tag('equals')]
-    | Annotated[ClauseOr, Tag('or')]
-    | Annotated[ClauseAnd, Tag('and')],
+    Union[
+        Annotated[ClauseStartsWith, Tag('starts_with')],
+        Annotated[ClauseEndsWith, Tag('ends_with')],
+        Annotated[ClauseContains, Tag('contains')],
+        Annotated[ClauseRegex, Tag('regex')],
+        Annotated[ClauseEquals, Tag('equals')],
+        Annotated[ClauseOr, Tag('or')],
+        Annotated[ClauseAnd, Tag('and')],
+    ],
     Discriminator(clause_discriminator),
 ]
 providers_schema = TypeAdapter(list[Provider])
+
+
+def file_size(file: Path) -> str:
+    size = file.stat().st_size
+    if size < 1024:
+        return f'{size} bytes'
+    elif size < 1024 * 1024:
+        return f'{size / 1024:.1f} KB'
+    else:
+        return f'{size / (1024 * 1024):.1f} MB'
 
 
 def main():
@@ -172,18 +190,46 @@ def main():
         if file.suffix not in ('.yml', '.yaml'):
             raise ValueError(f'All {providers_dir} files must be YAML files')
         data = safe_load(file.read_bytes())
-        provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
-        providers.append(provider)
+        try:
+            provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
+        except ValidationError as e:
+            raise ValueError(f'Error validating provider {file.name}:\n{e}') from e
+        else:
+            providers.append(provider)
 
+    providers.sort(key=attrgetter('id'))
     prices_json_path = this_dir / 'prices.json'
     if prices_json_path.exists():
-        current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
+        try:
+            current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
+        except ValidationError as e:
+            print(f'warning, error loading current prices:\n{e}')
+            current_prices = None
     else:
         current_prices = None
 
     if current_prices != providers:
-        prices_json_path.write_bytes(providers_schema.dump_json(providers) + b'\n')
-        print('Prices data written to', prices_json_path.relative_to(root_dir))
+        if current_prices is not None:
+            diff = difflib.unified_diff(
+                str(devtools.pformat(current_prices)).splitlines(keepends=True),
+                str(devtools.pformat(providers)).splitlines(keepends=True),
+                fromfile='current_prices',
+                tofile='new_prices',
+            )
+            print('Prices have the following changes:')
+            print('=' * 80)
+            print(''.join(diff))
+            print('=' * 80)
+
+        json_data = providers_schema.dump_json(providers, by_alias=True)
+        prices_json_path.write_bytes(json_data + b'\n')
+        gz_path = prices_json_path.with_suffix('.json.gz')
+        with gzip.open(gz_path, 'wb') as f:
+            f.write(json_data)
+
+        print(
+            f'Prices data written to {prices_json_path.relative_to(root_dir)} ({file_size(prices_json_path)}) and {gz_path.relative_to(root_dir)} ({file_size(gz_path)})'
+        )
     else:
         print('Prices data unchanged')
 
