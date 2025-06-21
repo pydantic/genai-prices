@@ -1,4 +1,4 @@
-# Pydantic LLM Pricing
+# LLM Pricing
 
 Database of prices for calling LLM models.
 

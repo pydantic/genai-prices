@@ -1,5 +1,5 @@
 [project]
-name = "pydantic-llm-pricing-base"
+name = "llm-pricing"
 version = "0.1.0"
 description = "Database of prices for calling LLM models."
 readme = "README.md"
