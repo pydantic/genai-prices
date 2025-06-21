@@ -4,13 +4,24 @@ import difflib
 import gzip
 import io
 from datetime import datetime
+from decimal import Decimal
 from operator import attrgetter
 from pathlib import Path
 from typing import Annotated, Any, Union
 
 import pydantic_core
-from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter, ValidationError
-from yaml import safe_load
+import yaml
+from pydantic import (
+    BaseModel,
+    Discriminator,
+    Field,
+    HttpUrl,
+    PlainSerializer,
+    Tag,
+    TypeAdapter,
+    ValidationError,
+    WithJsonSchema,
+)
 
 
 class Model(BaseModel, extra='forbid', use_attribute_docstrings=True):
@@ -55,29 +66,36 @@ class ModelInfo(Model):
     """
 
 
+DecimalFloat = Annotated[
+    Decimal,
+    WithJsonSchema({'type': 'number'}),
+    PlainSerializer(float, return_type=float, when_used='json'),
+]
+
+
 class ModelPrice(Model):
     """Set of prices for using a model"""
 
-    input_mtok: float | TieredPrices | None = None
+    input_mtok: DecimalFloat | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
-    input_audio_mtok: float | TieredPrices | None = None
+    input_audio_mtok: DecimalFloat | TieredPrices | None = None
     """price in USD per million audio input tokens"""
 
-    cache_write_mtok: float | TieredPrices | None = None
+    cache_write_mtok: DecimalFloat | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
-    cache_read_mtok: float | TieredPrices | None = None
+    cache_read_mtok: DecimalFloat | TieredPrices | None = None
     """price in USD per million tokens read from the cache"""
 
-    output_mtok: float | TieredPrices | None = None
+    output_mtok: DecimalFloat | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
-    output_audio_mtok: float | TieredPrices | None = None
+    output_audio_mtok: DecimalFloat | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
 
 class TieredPrices(Model):
     """Pricing model when the amount paid varies by number of tokens"""
 
-    base: float
+    base: DecimalFloat
     """Based price, e.g. price until the first tier."""
     tiers: list[Tier]
 
@@ -87,7 +105,7 @@ class Tier(Model):
 
     start: int
     """Start of the tier"""
-    price: float
+    price: DecimalFloat
     """Price for this tier"""
 
 
@@ -156,6 +174,17 @@ LogicClause = Annotated[
 providers_schema = TypeAdapter(list[Provider])
 
 
+class DecimalLoader(yaml.SafeLoader):
+    pass
+
+
+def decimal_constructor(loader: yaml.SafeLoader, node: yaml.ScalarNode) -> Decimal:
+    return Decimal(loader.construct_scalar(node))
+
+
+DecimalLoader.add_constructor('tag:yaml.org,2002:float', decimal_constructor)
+
+
 def pretty_size(size: int) -> str:
     if size < 1024:
         return f'{size} bytes'
@@ -171,16 +200,8 @@ def main():
     # write the schema JSON file used by the yaml language server
     schema_json_path = this_dir / 'schema.json'
     json_schema = Provider.model_json_schema()
-    if schema_json_path.exists():
-        current_json_schema = pydantic_core.from_json(schema_json_path.read_bytes())
-    else:
-        current_json_schema = None
-
-    if current_json_schema != json_schema:
-        schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
-        print('Prices schema written to', schema_json_path.relative_to(root_dir))
-    else:
-        print('Prices schema unchanged')
+    schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
+    print('Prices schema written to', schema_json_path.relative_to(root_dir))
 
     providers: list[Provider] = []
 
@@ -188,7 +209,8 @@ def main():
     for file in providers_dir.iterdir():
         if file.suffix not in ('.yml', '.yaml'):
             raise ValueError(f'All {providers_dir} files must be YAML files')
-        data = safe_load(file.read_bytes())
+        with file.open('rb') as f:
+            data = yaml.load(f, Loader=DecimalLoader)
         try:
             provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
         except ValidationError as e:

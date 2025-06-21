@@ -193,6 +193,11 @@
       "additionalProperties": false,
       "description": "Information about an LLM model",
       "properties": {
+        "id": {
+          "description": "Primary unique identifier for the model",
+          "title": "Id",
+          "type": "string"
+        },
         "name": {
           "anyOf": [
             {
@@ -218,11 +223,6 @@
           "default": null,
           "description": "Description of the model",
           "title": "Description"
-        },
-        "id": {
-          "description": "Primary unique identifier for the model",
-          "title": "Id",
-          "type": "string"
         },
         "matches": {
           "description": "Boolean logic for matching this model to any identifier which could be used to reference the model in API requests",
