@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import difflib
 import gzip
+import io
 from datetime import datetime
 from operator import attrgetter
 from pathlib import Path
@@ -156,14 +157,13 @@ LogicClause = Annotated[
 providers_schema = TypeAdapter(list[Provider])
 
 
-def file_size(file: Path) -> str:
-    size = file.stat().st_size
+def pretty_size(size: int) -> str:
     if size < 1024:
         return f'{size} bytes'
     elif size < 1024 * 1024:
-        return f'{size / 1024:.1f} KB'
+        return f'{size / 1024:.2f} KB'
     else:
-        return f'{size / (1024 * 1024):.1f} MB'
+        return f'{size / (1024 * 1024):.2f} MB'
 
 
 def main():
@@ -223,12 +223,15 @@ def main():
 
         json_data = providers_schema.dump_json(providers, by_alias=True)
         prices_json_path.write_bytes(json_data + b'\n')
-        gz_path = prices_json_path.with_suffix('.json.gz')
-        with gzip.open(gz_path, 'wb') as f:
+
+        buffer = io.BytesIO()
+        with gzip.GzipFile(fileobj=buffer, mode='wb') as f:
             f.write(json_data)
+        gz_len = len(buffer.getvalue())
 
         print(
-            f'Prices data written to {prices_json_path.relative_to(root_dir)} ({file_size(prices_json_path)}) and {gz_path.relative_to(root_dir)} ({file_size(gz_path)})'
+            f'Prices data written to {prices_json_path.relative_to(root_dir)}'
+            f' ({pretty_size(prices_json_path.stat().st_size)}, {pretty_size(gz_len)} gzipped)'
         )
     else:
         print('Prices data unchanged')
