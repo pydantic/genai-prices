@@ -40,11 +40,11 @@ repos:
         types: [python]
         language: system
         pass_filenames: false
-      - id: lint
-        name: Lint
+      - id: data
+        name: Build data
         entry: make
-        args: [lint]
-        types: [python]
+        args: [data]
+        files: "data/"
         language: system
         pass_filenames: false
       - id: typecheck
