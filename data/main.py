@@ -8,7 +8,6 @@ from operator import attrgetter
 from pathlib import Path
 from typing import Annotated, Any, Union
 
-import devtools
 import pydantic_core
 from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter, ValidationError
 from yaml import safe_load
@@ -38,12 +37,12 @@ class Provider(Model):
 class ModelInfo(Model):
     """Information about an LLM model"""
 
+    id: str
+    """Primary unique identifier for the model"""
     name: str | None = None
     """Name of the model"""
     description: str | None = None
     """Description of the model"""
-    id: str
-    """Primary unique identifier for the model"""
     matches: LogicClause
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     max_tokens: int | None = None
@@ -211,8 +210,8 @@ def main():
     if current_prices != providers:
         if current_prices is not None:
             diff = difflib.unified_diff(
-                str(devtools.pformat(current_prices)).splitlines(keepends=True),
-                str(devtools.pformat(providers)).splitlines(keepends=True),
+                providers_schema.dump_json(current_prices, indent=2).decode().splitlines(keepends=True),
+                providers_schema.dump_json(providers, indent=2).decode().splitlines(keepends=True),
                 fromfile='current_prices',
                 tofile='new_prices',
             )
