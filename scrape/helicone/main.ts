@@ -22,7 +22,7 @@ export interface ModelInfo {
   id: string;
   matches: LogicClause;
   max_tokens?: number;
-  prices: ModelPrice | ConditionalPrice[];
+  prices: ModelPrice; // | ConditionalPrice[];
 }
 
 export interface ModelPrice {
@@ -99,57 +99,102 @@ function mapProvider(
 ): Provider | undefined {
   if (provider === "NEBIUS") {
     console.warn("NEBIUS provider is not supported, it has weird pricing");
+    return;
   }
   if (!costs) {
     console.warn(`No costs found for provider ${provider}`);
-  } else if (!modelDetails) {
-    console.warn(`No model details found for provider ${provider}`);
-  } else {
-    return {
-      name: provider,
-      id: provider,
-      api_pattern: pattern.toString(),
-      models: costs.map((c) => mapModel(c, modelDetails)).filter((m) => !!m),
-    };
+    return;
   }
+  console.log("Processing provider", provider);
+
+  const models: ModelInfo[] = [];
+  for (const cost of costs) {
+    const model = mapModel(cost, modelDetails);
+    const matchingModel = models.find((m) =>
+      m.id === model.id &&
+      m.max_tokens === model.max_tokens
+    );
+    if (matchingModel) {
+      const pricesMatch = pricesEqual(matchingModel.prices, model.prices);
+      if (pricesMatch) {
+        if ("or" in matchingModel.matches) {
+          matchingModel.matches.or.push(model.matches);
+        } else {
+          const copy = { ...matchingModel.matches };
+          matchingModel.matches = { or: [copy, model.matches] };
+        }
+        continue;
+      }
+      console.warn(
+        `Prices do not match for model ${model.id}`,
+        matchingModel.prices,
+        model.prices,
+      );
+    }
+    models.push(model);
+  }
+  return {
+    name: provider.toLowerCase(),
+    id: provider.toLowerCase(),
+    api_pattern: pattern.toString().replaceAll(/\\\//g, "/").replace(
+      /^\/\^/,
+      "",
+    ),
+    models: costs.map((c) => mapModel(c, modelDetails)).filter((m) => !!m),
+  };
 }
 
 function mapModel(
   cost: ModelRow,
-  modelDetails: ModelDetailsMap,
-): ModelInfo | undefined {
+  modelDetails?: ModelDetailsMap,
+): ModelInfo {
   const details = findDetails(
     cost.model,
     modelDetails,
   );
+  const pricesUndefined = {
+    input_mtok: toMtok(cost.cost.prompt_token),
+    input_audio_mtok: toMtok(cost.cost.prompt_audio_token),
+    cache_write_mtok: toMtok(cost.cost.prompt_cache_write_token),
+    cache_read_mtok: toMtok(cost.cost.prompt_cache_read_token),
+    output_mtok: toMtok(cost.cost.completion_token),
+    output_audio_mtok: toMtok(cost.cost.completion_audio_token),
+  };
+  const prices = Object.fromEntries(
+    Object.entries(pricesUndefined).filter(([, v]) => v !== undefined),
+  );
+  const matches = mapMatches(cost.model);
   if (!details) {
-    console.warn(`No model details found for ${cost.model}`);
-    return;
+    return {
+      name: cost.model.value,
+      id: cost.model.value,
+      matches,
+      prices,
+    };
   }
   return {
     name: details.searchTerms[0],
     description: details.info.description,
-    id: details.matches[0],
-    matches: mapMatches(cost.model),
+    id: cost.model.value,
+    matches,
     max_tokens: details.info.maxTokens,
-    prices: {
-      input_mtok: cost.cost.prompt_token,
-      input_audio_mtok: cost.cost.prompt_audio_token,
-      cache_write_mtok: cost.cost.prompt_cache_write_token,
-      cache_read_mtok: cost.cost.prompt_cache_read_token,
-      output_mtok: cost.cost.completion_token,
-      output_audio_mtok: cost.cost.completion_audio_token,
-    },
+    prices,
   };
 }
+
+// round to 6 decimal places
+const round = (p: number) => Math.round(p * 1_000_000) / 1_000_000;
+// multiply by 1 million since we use mtok
+const toMtok = (p?: number) => p ? round(p * 1_000_000) : undefined;
 
 function findDetails(
   { operator, value }: {
     operator: "equals" | "startsWith" | "includes";
     value: string;
   },
-  modelDetails: ModelDetailsMap,
+  modelDetails?: ModelDetailsMap,
 ): ModelDetails | undefined {
+  if (!modelDetails) return;
   for (const details of Object.values(modelDetails)) {
     if (operator === "equals" && details.matches.includes(value)) {
       return details;
@@ -183,6 +228,19 @@ function mapMatches(
   }
 }
 
+function pricesEqual(p1: ModelPrice, p2: ModelPrice): boolean {
+  if (Object.keys(p1).length !== Object.keys(p2).length) {
+    return false;
+  }
+  for (const [key, value] of Object.entries(p1)) {
+    // deno-lint-ignore no-explicit-any
+    if (value !== (p2 as any)[key]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 if (import.meta.main) {
   for (const { pattern, provider, costs, modelDetails } of providers) {
     const pydanticProvider = mapProvider(
@@ -192,10 +250,12 @@ if (import.meta.main) {
       modelDetails,
     );
     if (pydanticProvider) {
+      // console.log(pydanticProvider);
       await Deno.writeTextFile(
-        `providers/${provider}.yml`,
+        `providers/${pydanticProvider.id}.yml`,
         stringify(pydanticProvider),
       );
+      // break;
     }
   }
 }

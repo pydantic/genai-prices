@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "run": "deno run --unstable-sloppy-imports --allow-write main.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"
