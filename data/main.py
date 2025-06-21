@@ -154,7 +154,7 @@ def main():
     # write the schema JSON file used by the yaml language server
     schema_json_path = this_dir / 'schema.json'
     schema_json_path.write_bytes(pydantic_core.to_json(Provider.model_json_schema(), indent=2))
-    print('Schema written to', schema_json_path.relative_to(root_dir))
+    print('Prices schema written to', schema_json_path.relative_to(root_dir))
 
     providers: list[Provider] = []
 
@@ -168,7 +168,7 @@ def main():
 
     prices_json_path = this_dir / 'prices.json'
     prices_json_path.write_bytes(providers_schema.dump_json(providers))
-    print('Prices written to', prices_json_path.relative_to(root_dir))
+    print('Prices data written to', prices_json_path.relative_to(root_dir))
 
 
 if __name__ == '__main__':
