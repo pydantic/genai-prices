@@ -9,11 +9,7 @@ classifiers = ["Private :: do not release"]
 dependencies = []
 
 [dependency-groups]
-dev = [
-    "devtools>=0.12.2",
-    "pyright>=1.1.402",
- "ruff>=0.12.0",
-]
+dev = ["devtools>=0.12.2", "pyright>=1.1.402", "ruff>=0.12.0"]
 
 [tool.uv.workspace]
 members = ["data"]
@@ -21,7 +17,7 @@ members = ["data"]
 [tool.ruff]
 line-length = 120
 target-version = "py39"
-include = ["data/schema.py"]
+include = ["data/**/*.py"]
 
 [tool.ruff.lint]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
@@ -36,3 +32,14 @@ convention = "google"
 # don't format python in docstrings, pytest-examples takes care of it
 docstring-code-format = false
 quote-style = "single"
+
+[tool.pyright]
+pythonVersion = "3.9"
+typeCheckingMode = "strict"
+reportUnnecessaryTypeIgnoreComment = true
+include = ["data"]
+venv = ".venv"
+
+[tool.codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = "data/prices.json"

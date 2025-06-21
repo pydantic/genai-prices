@@ -5,7 +5,7 @@ import gzip
 from datetime import datetime
 from operator import attrgetter
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Union
 
 import devtools
 import pydantic_core
@@ -142,13 +142,15 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 LogicClause = Annotated[
-    Annotated[ClauseStartsWith, Tag('starts_with')]
-    | Annotated[ClauseEndsWith, Tag('ends_with')]
-    | Annotated[ClauseContains, Tag('contains')]
-    | Annotated[ClauseRegex, Tag('regex')]
-    | Annotated[ClauseEquals, Tag('equals')]
-    | Annotated[ClauseOr, Tag('or')]
-    | Annotated[ClauseAnd, Tag('and')],
+    Union[
+        Annotated[ClauseStartsWith, Tag('starts_with')],
+        Annotated[ClauseEndsWith, Tag('ends_with')],
+        Annotated[ClauseContains, Tag('contains')],
+        Annotated[ClauseRegex, Tag('regex')],
+        Annotated[ClauseEquals, Tag('equals')],
+        Annotated[ClauseOr, Tag('or')],
+        Annotated[ClauseAnd, Tag('and')],
+    ],
     Discriminator(clause_discriminator),
 ]
 providers_schema = TypeAdapter(list[Provider])
@@ -214,7 +216,7 @@ def main():
                 fromfile='current_prices',
                 tofile='new_prices',
             )
-            print(f'Prices have the following changes:')
+            print('Prices have the following changes:')
             print('=' * 80)
             print(''.join(diff))
             print('=' * 80)
