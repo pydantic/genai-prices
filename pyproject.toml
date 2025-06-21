@@ -1,0 +1,29 @@
+[project]
+name = "pydantic-llm-pricing"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["pydantic>=2.11.7"]
+
+[dependency-groups]
+dev = ["pyright>=1.1.402", "ruff>=0.12.0"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+include = ["schema.py"]
+
+[tool.ruff.lint]
+extend-select = ["Q", "RUF100", "C90", "UP", "I"]
+flake8-quotes = { inline-quotes = "single", multiline-quotes = "double" }
+isort = { combine-as-imports = true }
+mccabe = { max-complexity = 15 }
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+# don't format python in docstrings, pytest-examples takes care of it
+docstring-code-format = false
+quote-style = "single"
