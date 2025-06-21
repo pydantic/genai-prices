@@ -1,18 +1,23 @@
 [project]
-name = "pydantic-llm-pricing"
+name = "pydantic-llm-pricing-base"
 version = "0.1.0"
-description = "Add your description here"
+description = "Database of prices for calling LLM models."
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = ["pydantic>=2.11.7"]
+requires-python = ">=3.9"
+# Do not publish this package to PyPI
+classifiers = ["Private :: do not release"]
+dependencies = []
 
 [dependency-groups]
 dev = ["pyright>=1.1.402", "ruff>=0.12.0"]
 
+[tool.uv.workspace]
+members = ["data"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py39"
-include = ["schema.py"]
+include = ["data/schema.py"]
 
 [tool.ruff.lint]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
