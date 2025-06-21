@@ -9,7 +9,11 @@ classifiers = ["Private :: do not release"]
 dependencies = []
 
 [dependency-groups]
-dev = ["pyright>=1.1.402", "ruff>=0.12.0"]
+dev = [
+    "devtools>=0.12.2",
+    "pyright>=1.1.402",
+ "ruff>=0.12.0",
+]
 
 [tool.uv.workspace]
 members = ["data"]

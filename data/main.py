@@ -196,13 +196,14 @@ def main():
     if prices_json_path.exists():
         try:
             current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
-        except ValidationError:
+        except ValidationError as e:
+            print(f'warning, error loading current prices:\n{e}')
             current_prices = None
     else:
         current_prices = None
 
     if current_prices != providers:
-        json_data = providers_schema.dump_json(providers)
+        json_data = providers_schema.dump_json(providers, by_alias=True)
         prices_json_path.write_bytes(json_data + b'\n')
         gz_path = prices_json_path.with_suffix('.json.gz')
         with gzip.open(gz_path, 'wb') as f:
