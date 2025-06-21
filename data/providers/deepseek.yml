@@ -1,0 +1,11 @@
+name: Deepseek
+id: deepseek
+pricing_url: https://api-docs.deepseek.com/quick_start/pricing
+api_pattern: 'https://api\.deepseek\.com'
+models:
+  - id: deepseek-chat
+    matches:
+      equals: deepseek-chat
+    prices:
+      input_mtok: 0.014
+      output_mtok: 0.028
