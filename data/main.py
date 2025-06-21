@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import difflib
 import gzip
 from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Any
 
+import devtools
 import pydantic_core
 from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter, ValidationError
 from yaml import safe_load
@@ -203,6 +205,18 @@ def main():
         current_prices = None
 
     if current_prices != providers:
+        if current_prices is not None:
+            diff = difflib.unified_diff(
+                str(devtools.pformat(current_prices)).splitlines(keepends=True),
+                str(devtools.pformat(providers)).splitlines(keepends=True),
+                fromfile='current_prices',
+                tofile='new_prices',
+            )
+            print(f'Prices have the following changes:')
+            print('=' * 80)
+            print(''.join(diff))
+            print('=' * 80)
+
         json_data = providers_schema.dump_json(providers, by_alias=True)
         prices_json_path.write_bytes(json_data + b'\n')
         gz_path = prices_json_path.with_suffix('.json.gz')
