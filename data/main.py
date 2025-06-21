@@ -33,7 +33,7 @@ class Provider(Model):
 class ModelInfo(Model):
     """Information about an LLM model"""
 
-    name: str
+    name: str | None = None
     """Name of the model"""
     description: str | None = None
     """Description of the model"""

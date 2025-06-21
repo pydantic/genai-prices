@@ -17,7 +17,7 @@ export interface Provider {
 }
 
 export interface ModelInfo {
-  name: string;
+  name?: string;
   description?: string;
   id: string;
   matches: LogicClause;
@@ -98,11 +98,11 @@ function mapProvider(
   modelDetails?: ModelDetailsMap,
 ): Provider | undefined {
   if (provider === "NEBIUS") {
-    console.warn("NEBIUS provider is not supported, it has weird pricing");
+    console.error("!!! NEBIUS provider is not supported, it has weird pricing");
     return;
   }
   if (!costs) {
-    console.warn(`No costs found for provider ${provider}`);
+    console.error(`!!! No costs found for provider ${provider}`);
     return;
   }
   console.log("Processing provider", provider);
@@ -125,8 +125,8 @@ function mapProvider(
         }
         continue;
       }
-      console.warn(
-        `Prices do not match for model ${model.id}`,
+      console.error(
+        `!!! Prices do not match for model ${model.id}`,
         matchingModel.prices,
         model.prices,
       );
@@ -136,10 +136,11 @@ function mapProvider(
   return {
     name: provider.toLowerCase(),
     id: provider.toLowerCase(),
-    api_pattern: pattern.toString().replaceAll(/\\\//g, "/").replace(
-      /^\/\^/,
-      "",
-    ),
+    api_pattern: pattern.toString()
+      .replaceAll(/\\\//g, "/")
+      .replace(/^\/\^/, "")
+      .replace(/\/$/, "")
+      .replace(/\$$/, ""),
     models: costs.map((c) => mapModel(c, modelDetails)).filter((m) => !!m),
   };
 }
@@ -166,7 +167,6 @@ function mapModel(
   const matches = mapMatches(cost.model);
   if (!details) {
     return {
-      name: cost.model.value,
       id: cost.model.value,
       matches,
       prices,

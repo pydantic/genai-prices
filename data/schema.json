@@ -194,9 +194,17 @@
       "description": "Information about an LLM model",
       "properties": {
         "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
           "description": "Name of the model",
-          "title": "Name",
-          "type": "string"
+          "title": "Name"
         },
         "description": {
           "anyOf": [
@@ -273,7 +281,6 @@
         }
       },
       "required": [
-        "name",
         "id",
         "matches",
         "prices"
