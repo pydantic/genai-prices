@@ -20,8 +20,10 @@ class Provider(Model):
     """Common name of the organization"""
     id: str
     """Unique identifier for the provider"""
-    pricing_url: HttpUrl
+    pricing_url: HttpUrl | None = None
     """Link to pricing page for the provider"""
+    api_pattern: str | None = None
+    """Pattern to identify provider via HTTP API URL."""
     description: str | None = None
     """Description of the provider"""
     models: list[ModelInfo]
@@ -64,7 +66,7 @@ class ModelPrice(Model):
 
     output_mtok: float | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
-    response_audio_mtok: float | TieredPrices | None = None
+    output_audio_mtok: float | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
 
@@ -153,17 +155,8 @@ def main():
     root_dir = this_dir.parent
     # write the schema JSON file used by the yaml language server
     schema_json_path = this_dir / 'schema.json'
-    json_schema = Provider.model_json_schema()
-    if schema_json_path.exists():
-        current_json_schema = pydantic_core.from_json(schema_json_path.read_bytes())
-    else:
-        current_json_schema = None
-
-    if current_json_schema != json_schema:
-        schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
-        print('Prices schema written to', schema_json_path.relative_to(root_dir))
-    else:
-        print('Prices schema unchanged')
+    schema_json_path.write_bytes(pydantic_core.to_json(Provider.model_json_schema(), indent=2) + b'\n')
+    print('Prices schema written to', schema_json_path.relative_to(root_dir))
 
     providers: list[Provider] = []
 
@@ -176,16 +169,8 @@ def main():
         providers.append(provider)
 
     prices_json_path = this_dir / 'prices.json'
-    if prices_json_path.exists():
-        current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
-    else:
-        current_prices = None
-
-    if current_prices != providers:
-        prices_json_path.write_bytes(providers_schema.dump_json(providers) + b'\n')
-        print('Prices data written to', prices_json_path.relative_to(root_dir))
-    else:
-        print('Prices data unchanged')
+    prices_json_path.write_bytes(providers_schema.dump_json(providers) + b'\n')
+    print('Prices data written to', prices_json_path.relative_to(root_dir))
 
 
 if __name__ == '__main__':
