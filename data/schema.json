@@ -211,8 +211,13 @@
           "description": "Description of the model",
           "title": "Description"
         },
+        "id": {
+          "description": "Primary unique identifier for the model",
+          "title": "Id",
+          "type": "string"
+        },
         "matches": {
-          "description": "Logic clause to match this model to an identifier",
+          "description": "Boolean logic for matching this model to any identifier which could be used to reference the model in API requests",
           "oneOf": [
             {
               "$ref": "#/$defs/ClauseStartsWith"
@@ -269,6 +274,7 @@
       },
       "required": [
         "name",
+        "id",
         "matches",
         "prices"
       ],
@@ -450,12 +456,17 @@
       "title": "Name",
       "type": "string"
     },
-    "info_url": {
-      "description": "URL to get more information about the provider",
+    "id": {
+      "description": "Unique identifier for the provider",
+      "title": "Id",
+      "type": "string"
+    },
+    "pricing_url": {
+      "description": "Link to pricing page for the provider",
       "format": "uri",
       "maxLength": 2083,
       "minLength": 1,
-      "title": "Info Url",
+      "title": "Pricing Url",
       "type": "string"
     },
     "description": {
@@ -482,7 +493,8 @@
   },
   "required": [
     "name",
-    "info_url",
+    "id",
+    "pricing_url",
     "models"
   ],
   "title": "Provider",

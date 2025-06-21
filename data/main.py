@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from pathlib import Path
 from typing import Annotated, Any
 
-from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag
+import pydantic_core
+from pydantic import BaseModel, Discriminator, Field, HttpUrl, Tag, TypeAdapter
+from yaml import safe_load
 
 
 class Model(BaseModel, extra='forbid', use_attribute_docstrings=True):
@@ -17,8 +18,10 @@ class Provider(Model):
 
     name: str
     """Common name of the organization"""
-    info_url: HttpUrl
-    """URL to get more information about the provider"""
+    id: str
+    """Unique identifier for the provider"""
+    pricing_url: HttpUrl
+    """Link to pricing page for the provider"""
     description: str | None = None
     """Description of the provider"""
     models: list[ModelInfo]
@@ -32,8 +35,10 @@ class ModelInfo(Model):
     """Name of the model"""
     description: str | None = None
     """Description of the model"""
+    id: str
+    """Primary unique identifier for the model"""
     matches: LogicClause
-    """Logic clause to match this model to an identifier"""
+    """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     max_tokens: int | None = None
     """Maximum number of tokens allowed for this model"""
     prices: ModelPrice | list[ConditionalPrice]
@@ -140,12 +145,31 @@ LogicClause = Annotated[
     | Annotated[ClauseAnd, Tag('and')],
     Discriminator(clause_discriminator),
 ]
+providers_schema = TypeAdapter(list[Provider])
 
 
-def write_schema():
+def main():
     this_dir = Path(__file__).parent
-    (this_dir / 'schema.json').write_text(json.dumps(Provider.model_json_schema(), indent=2))
+    root_dir = this_dir.parent
+    # write the schema JSON file used by the yaml language server
+    schema_json_path = this_dir / 'schema.json'
+    schema_json_path.write_bytes(pydantic_core.to_json(Provider.model_json_schema(), indent=2))
+    print('Schema written to', schema_json_path.relative_to(root_dir))
+
+    providers: list[Provider] = []
+
+    providers_dir = this_dir / 'providers'
+    for file in providers_dir.iterdir():
+        if file.suffix not in ('.yml', '.yaml'):
+            raise ValueError(f'All {providers_dir} files must be YAML files')
+        data = safe_load(file.read_bytes())
+        provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
+        providers.append(provider)
+
+    prices_json_path = this_dir / 'prices.json'
+    prices_json_path.write_bytes(providers_schema.dump_json(providers))
+    print('Prices written to', prices_json_path.relative_to(root_dir))
 
 
 if __name__ == '__main__':
-    write_schema()
+    main()
