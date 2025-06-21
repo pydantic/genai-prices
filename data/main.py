@@ -3,6 +3,7 @@ from __future__ import annotations
 import difflib
 import gzip
 from datetime import datetime
+from operator import attrgetter
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -194,6 +195,7 @@ def main():
         else:
             providers.append(provider)
 
+    providers.sort(key=attrgetter('id'))
     prices_json_path = this_dir / 'prices.json'
     if prices_json_path.exists():
         try:

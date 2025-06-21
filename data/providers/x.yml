@@ -1,6 +1,6 @@
 name: X AI
 id: x
-pricing_url: https://docs.x.ai/docs/modelss
+pricing_url: https://docs.x.ai/docs/models
 api_pattern: 'https://api\.x\.ai'
 models:
   - id: grok-beta
