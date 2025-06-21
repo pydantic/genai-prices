@@ -153,8 +153,17 @@ def main():
     root_dir = this_dir.parent
     # write the schema JSON file used by the yaml language server
     schema_json_path = this_dir / 'schema.json'
-    schema_json_path.write_bytes(pydantic_core.to_json(Provider.model_json_schema(), indent=2))
-    print('Prices schema written to', schema_json_path.relative_to(root_dir))
+    json_schema = Provider.model_json_schema()
+    if schema_json_path.exists():
+        current_json_schema = pydantic_core.from_json(schema_json_path.read_bytes())
+    else:
+        current_json_schema = None
+
+    if current_json_schema != json_schema:
+        schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
+        print('Prices schema written to', schema_json_path.relative_to(root_dir))
+    else:
+        print('Prices schema unchanged')
 
     providers: list[Provider] = []
 
@@ -167,8 +176,16 @@ def main():
         providers.append(provider)
 
     prices_json_path = this_dir / 'prices.json'
-    prices_json_path.write_bytes(providers_schema.dump_json(providers))
-    print('Prices data written to', prices_json_path.relative_to(root_dir))
+    if prices_json_path.exists():
+        current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
+    else:
+        current_prices = None
+
+    if current_prices != providers:
+        prices_json_path.write_bytes(providers_schema.dump_json(providers) + b'\n')
+        print('Prices data written to', prices_json_path.relative_to(root_dir))
+    else:
+        print('Prices data unchanged')
 
 
 if __name__ == '__main__':
