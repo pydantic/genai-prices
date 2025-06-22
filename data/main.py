@@ -21,6 +21,7 @@ from pydantic import (
     TypeAdapter,
     ValidationError,
     WithJsonSchema,
+    field_validator,
 )
 
 
@@ -43,6 +44,20 @@ class Provider(Model):
     """Description of the provider"""
     models: list[ModelInfo]
     """List of models provided by this organization"""
+
+    @field_validator('models', mode='after')
+    @classmethod
+    def validate_id(cls, models: list[ModelInfo]) -> list[ModelInfo]:
+        ids: set[str] = set()
+        duplicates: list[str] = []
+        for model in models:
+            if model.id in ids:
+                duplicates.append(model.id)
+            ids.add(model.id)
+
+        if duplicates:
+            raise ValueError(f'Duplicate model ids: {duplicates}')
+        return models
 
 
 class ModelInfo(Model):

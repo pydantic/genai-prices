@@ -430,23 +430,6 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.025
       output_mtok: 0.4
-  - id: gpt-4o-realtime
-    matches:
-      contains: gpt-4o-realtime
-    prices:
-      input_mtok: 5
-      input_audio_mtok: 40
-      cache_read_mtok: 2.5
-      output_mtok: 20
-      output_audio_mtok: 80
-  - id: gpt-4o-mini-realtime
-    matches:
-      contains: gpt-4o-mini-realtime
-    prices:
-      input_mtok: 0.15
-      input_audio_mtok: 10
-      output_mtok: 0.6
-      output_audio_mtok: 20
   - id: o4-mini
     matches:
       contains: o4-mini
