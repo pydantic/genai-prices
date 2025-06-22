@@ -3,60 +3,350 @@ id: azure
 pricing_url: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
 api_pattern: (https?://)?([^.]*\.)?(openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com)
 models:
-  - id: gpt-4-turbo-preview
+  - id: ada
     matches:
-      equals: gpt-4-turbo-preview
+      equals: ada
     prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-45-turbo
+      input_mtok: 0.4
+      output_mtok: 0.4
+
+  - id: babbage
     matches:
-      equals: gpt-45-turbo
+      equals: babbage
     prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt4-turbo-preview
+      input_mtok: 0.5
+      output_mtok: 0.5
+
+  - id: curie
     matches:
-      equals: gpt4-turbo-preview
+      equals: curie
     prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-4-preview-1106
+      input_mtok: 2
+      output_mtok: 2
+
+  - id: davinci
     matches:
-      equals: gpt-4-preview-1106
+      equals: davinci
     prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-35-turbo-1106
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: gpt-3.5-turbo
     matches:
-      equals: gpt-35-turbo-1106
+      equals: gpt-3.5-turbo
     prices:
       input_mtok: 1.5
       output_mtok: 2
-  - id: gpt35
+
+  - id: gpt-3.5-turbo-0125
     matches:
-      equals: gpt35
+      equals: gpt-3.5-turbo-0125
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: gpt-3.5-turbo-0301
+    matches:
+      equals: gpt-3.5-turbo-0301
     prices:
       input_mtok: 1.5
       output_mtok: 2
-  - id: gpt-35-turbo-0613
+
+  - id: gpt-3.5-turbo-0613
     matches:
-      equals: gpt-35-turbo-0613
+      equals: gpt-3.5-turbo-0613
     prices:
       input_mtok: 1.5
       output_mtok: 2
+
+  - id: gpt-3.5-turbo-1106
+    matches:
+      equals: gpt-3.5-turbo-1106
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+
+  - id: gpt-3.5-turbo-16k-0613
+    matches:
+      equals: gpt-3.5-turbo-16k-0613
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
+  - id: gpt-3.5-turbo-instruct
+    matches:
+      equals: gpt-3.5-turbo-instruct
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-3.5-turbo-instruct-0914
+    matches:
+      equals: gpt-3.5-turbo-instruct-0914
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
   - id: gpt-35-16k
     matches:
       equals: gpt-35-16k
     prices:
       input_mtok: 3
       output_mtok: 4
+
+  - id: gpt-35-turbo
+    matches:
+      equals: gpt-35-turbo
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-35-turbo-0613
+    matches:
+      equals: gpt-35-turbo-0613
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-35-turbo-1106
+    matches:
+      equals: gpt-35-turbo-1106
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-35-turbo-16k
+    matches:
+      equals: gpt-35-turbo-16k
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
+  - id: gpt-35-turbo-16k-0613
+    matches:
+      equals: gpt-35-turbo-16k-0613
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
+  - id: gpt-4
+    matches:
+      equals: gpt-4
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+
+  - id: gpt-4-0125-preview
+    matches:
+      equals: gpt-4-0125-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-0314
+    matches:
+      equals: gpt-4-0314
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+
+  - id: gpt-4-0613
+    matches:
+      equals: gpt-4-0613
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+
+  - id: gpt-4-1106-preview
+    matches:
+      equals: gpt-4-1106-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-1106-vision-preview
+    matches:
+      equals: gpt-4-1106-vision-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-32k
+    matches:
+      equals: gpt-4-32k
+    prices:
+      input_mtok: 60
+      output_mtok: 120
+
+  - id: gpt-4-32k-0314
+    matches:
+      equals: gpt-4-32k-0314
+    prices:
+      input_mtok: 60
+      output_mtok: 120
+
+  - id: gpt-4-32k-0613
+    matches:
+      equals: gpt-4-32k-0613
+    prices:
+      input_mtok: 60
+      output_mtok: 120
+
+  - id: gpt-4-preview-1106
+    matches:
+      equals: gpt-4-preview-1106
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-turbo
+    matches:
+      equals: gpt-4-turbo
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-turbo-0125-preview
+    matches:
+      equals: gpt-4-turbo-0125-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-turbo-2024-04-09
+    matches:
+      equals: gpt-4-turbo-2024-04-09
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-turbo-preview
+    matches:
+      equals: gpt-4-turbo-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
   - id: gpt-4-vision
     matches:
       equals: gpt-4-vision
     prices:
       input_mtok: 10
       output_mtok: 30
+
+  - id: gpt-4-vision-preview
+    matches:
+      equals: gpt-4-vision-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4.1
+    matches:
+      equals: gpt-4.1
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+
+  - id: gpt-4.1-2025-04-14
+    matches:
+      equals: gpt-4.1-2025-04-14
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+
+  - id: gpt-4.1-mini
+    matches:
+      equals: gpt-4.1-mini
+    prices:
+      input_mtok: 0.4
+      cache_read_mtok: 0.1
+      output_mtok: 1.6
+
+  - id: gpt-4.1-mini-2025-04-14
+    matches:
+      equals: gpt-4.1-mini-2025-04-14
+    prices:
+      input_mtok: 0.4
+      cache_read_mtok: 0.1
+      output_mtok: 1.6
+
+  - id: gpt-4.1-nano
+    matches:
+      equals: gpt-4.1-nano
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.025
+      output_mtok: 0.4
+
+  - id: gpt-4.1-nano-2025-04-14
+    matches:
+      equals: gpt-4.1-nano-2025-04-14
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.025
+      output_mtok: 0.4
+
+  - id: gpt-45-turbo
+    matches:
+      equals: gpt-45-turbo
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4o
+    matches:
+      equals: gpt-4o
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: gpt-4o-2024-05-13
+    matches:
+      equals: gpt-4o-2024-05-13
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: gpt-4o-2024-08-06
+    matches:
+      equals: gpt-4o-2024-08-06
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: gpt-4o-2024-11-20
+    matches:
+      equals: gpt-4o-2024-11-20
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: gpt-4o-mini
+    matches:
+      equals: gpt-4o-mini
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: gpt-4o-mini-2024-07-18
+    matches:
+      equals: gpt-4o-mini-2024-07-18
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: gpt-4o-mini-realtime
+    matches:
+      contains: gpt-4o-mini-realtime
+    prices:
+      input_mtok: 0.15
+      input_audio_mtok: 10
+      output_mtok: 0.6
+      output_audio_mtok: 20
+
   - id: gpt-4o-realtime
     matches:
       contains: gpt-4o-realtime
@@ -66,321 +356,63 @@ models:
       cache_read_mtok: 2.5
       output_mtok: 20
       output_audio_mtok: 80
-  - id: gpt-4o-mini-realtime
+
+  - id: gpt35
     matches:
-      contains: gpt-4o-mini-realtime
-    prices:
-      input_mtok: 0.15
-      input_audio_mtok: 10
-      output_mtok: 0.6
-      output_audio_mtok: 20
-  - id: ada
-    matches:
-      equals: ada
-    prices:
-      input_mtok: 0.4
-      output_mtok: 0.4
-  - id: text-ada-001
-    matches:
-      equals: text-ada-001
-    prices:
-      input_mtok: 0.4
-      output_mtok: 0.4
-  - id: babbage
-    matches:
-      equals: babbage
-    prices:
-      input_mtok: 0.5
-      output_mtok: 0.5
-  - id: curie
-    matches:
-      equals: curie
-    prices:
-      input_mtok: 2
-      output_mtok: 2
-  - id: text-curie-001
-    matches:
-      equals: text-curie-001
-    prices:
-      input_mtok: 2
-      output_mtok: 2
-  - id: davinci
-    matches:
-      equals: davinci
-    prices:
-      input_mtok: 20
-      output_mtok: 20
-  - id: text-davinci-001
-    matches:
-      equals: text-davinci-001
-    prices:
-      input_mtok: 20
-      output_mtok: 20
-  - id: text-davinci-002
-    matches:
-      equals: text-davinci-002
-    prices:
-      input_mtok: 20
-      output_mtok: 20
-  - id: text-davinci-003
-    matches:
-      equals: text-davinci-003
-    prices:
-      input_mtok: 20
-      output_mtok: 20
-  - id: gpt-3.5-turbo
-    matches:
-      equals: gpt-3.5-turbo
+      equals: gpt35
     prices:
       input_mtok: 1.5
       output_mtok: 2
-  - id: gpt-3.5-turbo-0301
+
+  - id: gpt4-turbo-preview
     matches:
-      equals: gpt-3.5-turbo-0301
-    prices:
-      input_mtok: 1.5
-      output_mtok: 2
-  - id: gpt-35-turbo
-    matches:
-      equals: gpt-35-turbo
-    prices:
-      input_mtok: 1.5
-      output_mtok: 2
-  - id: gpt-3.5-turbo-1106
-    matches:
-      equals: gpt-3.5-turbo-1106
-    prices:
-      input_mtok: 1
-      output_mtok: 2
-  - id: gpt-3.5-turbo-instruct
-    matches:
-      equals: gpt-3.5-turbo-instruct
-    prices:
-      input_mtok: 1.5
-      output_mtok: 2
-  - id: gpt-3.5-turbo-instruct-0914
-    matches:
-      equals: gpt-3.5-turbo-instruct-0914
-    prices:
-      input_mtok: 1.5
-      output_mtok: 2
-  - id: gpt-4
-    matches:
-      equals: gpt-4
-    prices:
-      input_mtok: 30
-      output_mtok: 60
-  - id: gpt-4-0314
-    matches:
-      equals: gpt-4-0314
-    prices:
-      input_mtok: 30
-      output_mtok: 60
-  - id: gpt-4-0613
-    matches:
-      equals: gpt-4-0613
-    prices:
-      input_mtok: 30
-      output_mtok: 60
-  - id: gpt-4-32k
-    matches:
-      equals: gpt-4-32k
-    prices:
-      input_mtok: 60
-      output_mtok: 120
-  - id: gpt-4-32k-0314
-    matches:
-      equals: gpt-4-32k-0314
-    prices:
-      input_mtok: 60
-      output_mtok: 120
-  - id: gpt-4-32k-0613
-    matches:
-      equals: gpt-4-32k-0613
-    prices:
-      input_mtok: 60
-      output_mtok: 120
-  - id: gpt-4-0125-preview
-    matches:
-      equals: gpt-4-0125-preview
+      equals: gpt4-turbo-preview
     prices:
       input_mtok: 10
       output_mtok: 30
-  - id: gpt-4-1106-preview
-    matches:
-      equals: gpt-4-1106-preview
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-4-1106-vision-preview
-    matches:
-      equals: gpt-4-1106-vision-preview
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-4o
-    matches:
-      equals: gpt-4o
-    prices:
-      input_mtok: 5
-      output_mtok: 15
-  - id: gpt-4o-2024-05-13
-    matches:
-      equals: gpt-4o-2024-05-13
-    prices:
-      input_mtok: 5
-      output_mtok: 15
-  - id: gpt-4o-mini
-    matches:
-      equals: gpt-4o-mini
-    prices:
-      input_mtok: 0.15
-      output_mtok: 0.6
-  - id: gpt-4o-mini-2024-07-18
-    matches:
-      equals: gpt-4o-mini-2024-07-18
-    prices:
-      input_mtok: 0.15
-      output_mtok: 0.6
-  - id: gpt-3.5-turbo-0613
-    matches:
-      equals: gpt-3.5-turbo-0613
-    prices:
-      input_mtok: 1.5
-      output_mtok: 2
-  - id: gpt-35-turbo-16k
-    matches:
-      equals: gpt-35-turbo-16k
-    prices:
-      input_mtok: 3
-      output_mtok: 4
-  - id: gpt-3.5-turbo-16k-0613
-    matches:
-      equals: gpt-3.5-turbo-16k-0613
-    prices:
-      input_mtok: 3
-      output_mtok: 4
-  - id: gpt-3.5-turbo-0125
-    matches:
-      equals: gpt-3.5-turbo-0125
-    prices:
-      input_mtok: 0.5
-      output_mtok: 1.5
-  - id: gpt-4-turbo
-    matches:
-      equals: gpt-4-turbo
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-4-turbo-2024-04-09
-    matches:
-      equals: gpt-4-turbo-2024-04-09
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-4-turbo-0125-preview
-    matches:
-      equals: gpt-4-turbo-0125-preview
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: text-embedding-ada-002
-    matches:
-      equals: text-embedding-ada-002
-    prices:
-      input_mtok: 0.1
-  - id: text-embedding-ada
-    matches:
-      equals: text-embedding-ada
-    prices:
-      input_mtok: 0.1
-  - id: text-embedding-ada-002-v2
-    matches:
-      equals: text-embedding-ada-002-v2
-    prices:
-      input_mtok: 0.1
-  - id: text-embedding-3-small
-    matches:
-      equals: text-embedding-3-small
-    prices:
-      input_mtok: 0.02
-  - id: text-embedding-3-large
-    matches:
-      equals: text-embedding-3-large
-    prices:
-      input_mtok: 0.13
-  - id: gpt-4-vision-preview
-    matches:
-      equals: gpt-4-vision-preview
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - id: gpt-35-turbo-16k-0613
-    matches:
-      equals: gpt-35-turbo-16k-0613
-    prices:
-      input_mtok: 3
-      output_mtok: 4
-  - id: gpt-4o-2024-08-06
-    matches:
-      equals: gpt-4o-2024-08-06
-    prices:
-      input_mtok: 2.5
-      output_mtok: 10
-  - id: gpt-4o-2024-11-20
-    matches:
-      equals: gpt-4o-2024-11-20
-    prices:
-      input_mtok: 2.5
-      output_mtok: 10
-  - id: o1-preview
-    matches:
-      equals: o1-preview
-    prices:
-      input_mtok: 15
-      output_mtok: 60
-  - id: o1-preview-2024-09-12
-    matches:
-      equals: o1-preview-2024-09-12
-    prices:
-      input_mtok: 15
-      output_mtok: 60
-  - id: o1-mini
-    matches:
-      equals: o1-mini
-    prices:
-      input_mtok: 3
-      output_mtok: 12
-  - id: o1-mini-2024-09-12
-    matches:
-      equals: o1-mini-2024-09-12
-    prices:
-      input_mtok: 3
-      output_mtok: 12
-  - id: o1-2024-12-17
-    matches:
-      equals: o1-2024-12-17
-    prices:
-      input_mtok: 15
-      output_mtok: 60
+
   - id: o1
     matches:
       equals: o1
     prices:
       input_mtok: 15
       output_mtok: 60
-  - id: o3-mini
+
+  - id: o1-2024-12-17
     matches:
-      equals: o3-mini
+      equals: o1-2024-12-17
     prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
-  - id: o3-mini-2025-01-31
+      input_mtok: 15
+      output_mtok: 60
+
+  - id: o1-mini
     matches:
-      equals: o3-mini-2025-01-31
+      equals: o1-mini
     prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
+      input_mtok: 3
+      output_mtok: 12
+
+  - id: o1-mini-2024-09-12
+    matches:
+      equals: o1-mini-2024-09-12
+    prices:
+      input_mtok: 3
+      output_mtok: 12
+
+  - id: o1-preview
+    matches:
+      equals: o1-preview
+    prices:
+      input_mtok: 15
+      output_mtok: 60
+
+  - id: o1-preview-2024-09-12
+    matches:
+      equals: o1-preview-2024-09-12
+    prices:
+      input_mtok: 15
+      output_mtok: 60
+
   - id: o3-2025-04-16
     matches:
       equals: o3-2025-04-16
@@ -388,57 +420,96 @@ models:
       input_mtok: 10
       cache_read_mtok: 2.5
       output_mtok: 40
-  - id: gpt-4.1
+
+  - id: o3-mini
     matches:
-      equals: gpt-4.1
+      equals: o3-mini
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 8
-  - id: gpt-4.1-2025-04-14
+      input_mtok: 1.1
+      output_mtok: 4.4
+
+  - id: o3-mini-2025-01-31
     matches:
-      equals: gpt-4.1-2025-04-14
+      equals: o3-mini-2025-01-31
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 8
-  - id: gpt-4.1-mini
-    matches:
-      equals: gpt-4.1-mini
-    prices:
-      input_mtok: 0.4
-      cache_read_mtok: 0.1
-      output_mtok: 1.6
-  - id: gpt-4.1-mini-2025-04-14
-    matches:
-      equals: gpt-4.1-mini-2025-04-14
-    prices:
-      input_mtok: 0.4
-      cache_read_mtok: 0.1
-      output_mtok: 1.6
-  - id: gpt-4.1-nano
-    matches:
-      equals: gpt-4.1-nano
-    prices:
-      input_mtok: 0.1
-      cache_read_mtok: 0.025
-      output_mtok: 0.4
-  - id: gpt-4.1-nano-2025-04-14
-    matches:
-      equals: gpt-4.1-nano-2025-04-14
-    prices:
-      input_mtok: 0.1
-      cache_read_mtok: 0.025
-      output_mtok: 0.4
+      input_mtok: 1.1
+      output_mtok: 4.4
+
   - id: o4-mini
     matches:
       contains: o4-mini
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
+
   - id: o4-mini-2025-04-16
     matches:
       contains: o4-mini-2025-04-16
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
+
+  - id: text-ada-001
+    matches:
+      equals: text-ada-001
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.4
+
+  - id: text-curie-001
+    matches:
+      equals: text-curie-001
+    prices:
+      input_mtok: 2
+      output_mtok: 2
+
+  - id: text-davinci-001
+    matches:
+      equals: text-davinci-001
+    prices:
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-davinci-002
+    matches:
+      equals: text-davinci-002
+    prices:
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-davinci-003
+    matches:
+      equals: text-davinci-003
+    prices:
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-embedding-3-large
+    matches:
+      equals: text-embedding-3-large
+    prices:
+      input_mtok: 0.13
+
+  - id: text-embedding-3-small
+    matches:
+      equals: text-embedding-3-small
+    prices:
+      input_mtok: 0.02
+
+  - id: text-embedding-ada
+    matches:
+      equals: text-embedding-ada
+    prices:
+      input_mtok: 0.1
+
+  - id: text-embedding-ada-002
+    matches:
+      equals: text-embedding-ada-002
+    prices:
+      input_mtok: 0.1
+
+  - id: text-embedding-ada-002-v2
+    matches:
+      equals: text-embedding-ada-002-v2
+    prices:
+      input_mtok: 0.1

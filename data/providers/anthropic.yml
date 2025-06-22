@@ -3,35 +3,24 @@ name: Anthropic
 id: anthropic
 pricing_url: https://www.anthropic.com/pricing#api
 api_pattern: 'https://api\.anthropic\.com'
+# see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 models:
-  - name: Claude Opus 4
-    description: Most intelligent model for complex tasks
-    # from https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py
-    id: claude-opus-4-0
+  - id: claude-2
+    name: Claude 2
+    description: >
+      Claude 2 is Anthropic's previous generation model, offering reliable performance
+      for various tasks.
+      This includes Claude 2.0 and Claude 2.1.
     matches:
-      starts_with: claude-opus-4
+      starts_with: claude-2
     max_tokens: 200000
     prices:
-      input_mtok: 15
-      cache_write_mtok: 18.75
-      cache_read_mtok: 1.5
-      output_mtok: 75
+      input_mtok: 8
+      output_mtok: 24
 
-  - name: Claude Sonnet 4
-    description: Optimal balance of intelligence, cost, and speed
-    id: claude-sonnet-4-0
-    matches:
-      starts_with: claude-sonnet-4
-    max_tokens: 200000
-    prices:
-      input_mtok: 3
-      cache_write_mtok: 3.75
-      cache_read_mtok: 0.3
-      output_mtok: 15
-
-  - name: Claude Haiku 3.5
+  - id: claude-3-5-haiku-latest
+    name: Claude Haiku 3.5
     description: Fastest, most cost-effective model
-    id: claude-3-5-haiku-latest
     matches:
       starts_with: claude-3-5-haiku
     max_tokens: 200000
@@ -41,19 +30,8 @@ models:
       cache_read_mtok: 0.08
       output_mtok: 4
 
-  - name: Claude Opus 3
-    id: claude-3-opus-latest
-    matches:
-      starts_with: claude-3-opus
-    max_tokens: 200000
-    prices:
-      input_mtok: 15
-      cache_write_mtok: 18.75
-      cache_read_mtok: 1.5
-      output_mtok: 75
-
-  - name: Claude Sonnet 3.7
-    id: claude-3-7-sonnet-latest
+  - id: claude-3-7-sonnet-latest
+    name: Claude Sonnet 3.7
     matches:
       starts_with: claude-3-7-sonnet
     max_tokens: 200000
@@ -63,8 +41,8 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
 
-  - name: Claude Haiku 3
-    id: claude-3-haiku-latest
+  - id: claude-3-haiku-latest
+    name: Claude Haiku 3
     description: Fastest, most cost-effective model
     matches:
       starts_with: claude-3-haiku
@@ -75,9 +53,20 @@ models:
       cache_read_mtok: 0.03
       output_mtok: 1.25
 
-  - name: Claude Sonnet 3
+  - id: claude-3-opus-latest
+    name: Claude Opus 3
+    matches:
+      starts_with: claude-3-opus
+    max_tokens: 200000
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-3-sonnet-20240229
+    name: Claude Sonnet 3
     description: Claude 3 Sonnet offers a strong balance of intelligence and speed, suitable for most use cases.
-    id: claude-3-sonnet-20240229
     matches:
       or:
         - equals: claude-3-sonnet-20240229
@@ -89,14 +78,26 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
 
-  - name: Claude 2
-    description: >
-      Claude 2 is Anthropic's previous generation model, offering reliable performance for various tasks.
-      This includes Claude 2.0 and Claude 2.1.
-    id: claude-2
+  - id: claude-opus-4-0
+    name: Claude Opus 4
+    description: Most intelligent model for complex tasks
     matches:
-      starts_with: claude-2
+      starts_with: claude-opus-4
     max_tokens: 200000
     prices:
-      input_mtok: 8
-      output_mtok: 24
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-sonnet-4-0
+    name: Claude Sonnet 4
+    description: Optimal balance of intelligence, cost, and speed
+    matches:
+      starts_with: claude-sonnet-4
+    max_tokens: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15

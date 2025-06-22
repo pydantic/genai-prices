@@ -11,12 +11,14 @@ models:
     prices:
       input_mtok: 0.4
       output_mtok: 0.4
+
   - id: babbage
     matches:
       equals: babbage
     prices:
       input_mtok: 0.5
       output_mtok: 0.5
+
   - id: curie
     matches:
       or:
@@ -25,6 +27,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 2
+
   - id: davinci
     matches:
       or:
@@ -33,18 +36,31 @@ models:
     prices:
       input_mtok: 20
       output_mtok: 20
-  - id: text-davinci-002
+
+  - id: "ft:gpt-3.5-turbo-"
+    description: GPT-3.5 Turbo fine tuned.
     matches:
-      equals: text-davinci-002
+      starts_with: "ft:gpt-3.5-turbo-"
     prices:
-      input_mtok: 20
-      output_mtok: 20
-  - id: text-davinci-003
+      input_mtok: 3
+      output_mtok: 6
+
+  - id: "ft:gpt-4o-2024-08-06:"
+    description: GPT-4o fine tuned.
     matches:
-      equals: text-davinci-003
+      starts_with: "ft:gpt-4o-2024-08-06:"
     prices:
-      input_mtok: 20
-      output_mtok: 20
+      input_mtok: 3.75
+      output_mtok: 15
+
+  - id: "ft:gpt-4o-mini-2024-07-18:"
+    description: GPT-4o Mini fine tuned.
+    matches:
+      starts_with: "ft:gpt-4o-mini-2024-07-18:"
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+
   - id: gpt-3.5-turbo
     name: gpt 3.5 turbo
     description: GPT-3.5 Turbo offers a balance between cost and performance.
@@ -60,8 +76,19 @@ models:
     prices:
       input_mtok: 1.5
       output_mtok: 2
-  - name: gpt 3.5
-    id: gpt-3.5-turbo-1106
+
+  - id: gpt-3.5-turbo-0125
+    name: gpt 3.5 turbo 0125
+    description: GPT-3.5 Turbo offers a balance between cost and performance.
+    matches:
+      equals: gpt-3.5-turbo-0125
+    max_tokens: 16385
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: gpt-3.5-turbo-1106
+    name: gpt 3.5
     description: GPT-3.5 Turbo offers a balance between cost and performance.
     matches:
       equals: gpt-3.5-turbo-1106
@@ -69,8 +96,22 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 2
-  - name: gpt 4
-    id: gpt-4
+
+  - id: gpt-35-turbo-16k
+    name: gpt 3.5 turbo 16k
+    description: GPT-3.5 Turbo offers a balance between cost and performance.
+    matches:
+      or:
+        - equals: gpt-35-turbo-16k
+        - equals: gpt-3.5-turbo-16k-0613
+        - equals: gpt-35-turbo-16k-0613
+    max_tokens: 16385
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
+  - id: gpt-4
+    name: gpt 4
     description: >-
       GPT-4 is the latest and most advanced model in the GPT series,
       demonstrating sophisticated capabilities in complex reasoning, theory of
@@ -84,8 +125,9 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 60
-  - name: gpt 4
-    id: gpt-4-32k
+
+  - id: gpt-4-32k
+    name: gpt 4
     description: >-
       GPT-4 is the latest and most advanced model in the GPT series,
       demonstrating sophisticated capabilities in complex reasoning, theory of
@@ -100,8 +142,83 @@ models:
       input_mtok: 60
       output_mtok: 120
 
-  - name: gpt 4o
-    id: gpt-4o
+  - id: gpt-4-turbo
+    name: gpt 4 turbo
+    description: GPT-4 Turbo offers a balance between cost and performance.
+    matches:
+      or:
+        - equals: gpt-4-turbo
+        - equals: gpt-4-turbo-2024-04-09
+        - equals: gpt-4-turbo-0125-preview
+        - equals: gpt-4-0125-preview
+        - equals: gpt-4-1106-preview
+    max_tokens: 128000
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-vision-preview
+    name: gpt 4 vision
+    description: GPT-4 Vision is a model that offers a balance between cost and performance.
+    matches:
+      or:
+        - equals: gpt-4-vision-preview
+        - equals: gpt-4-1106-vision-preview
+    max_tokens: 128000
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4.1
+    name: gpt 4.1
+    description: >-
+      GPT-4.1 is OpenAI's latest flagship model, offering major improvements in
+      coding, instruction following, and long context understanding with up to 1
+      million tokens of context.
+    matches:
+      or:
+        - equals: gpt-4.1
+        - equals: gpt-4.1-2025-04-14
+    max_tokens: 1000000
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+
+  - id: gpt-4.1-mini
+    name: gpt 4.1 mini
+    description: >-
+      GPT-4.1 Mini is a significant leap in small model performance, matching or
+      exceeding GPT-4o in many benchmarks while reducing latency by nearly half
+      and cost by 83%.
+    matches:
+      or:
+        - equals: gpt-4.1-mini
+        - equals: gpt-4.1-mini-2025-04-14
+    max_tokens: 1000000
+    prices:
+      input_mtok: 0.4
+      cache_read_mtok: 0.1
+      output_mtok: 1.6
+
+  - id: gpt-4.1-nano
+    name: gpt 4.1 nano
+    description: >-
+      GPT-4.1 Nano is OpenAI's fastest and cheapest model, delivering
+      exceptional performance for its size with a 1 million token context
+      window, ideal for classification and autocompletion tasks.
+    matches:
+      or:
+        - equals: gpt-4.1-nano
+        - equals: gpt-4.1-nano-2025-04-14
+    max_tokens: 1000000
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.025
+      output_mtok: 0.4
+
+  - id: gpt-4o
+    name: gpt 4o
     description: >-
       GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning,
       creativity, and technical tasks while maintaining consistent output
@@ -124,13 +241,13 @@ models:
       input_mtok: 2.5
       output_mtok: 10
 
-  - name: gpt 4o mini
+  - id: gpt-4o-mini
+    name: gpt 4o mini
     description: >-
       GPT-4o Mini is a cost-optimized variant of GPT-4o, designed for
       high-efficiency processing while maintaining strong performance. It excels
       in rapid inference and resource-efficient operations, making it ideal for
       production deployments requiring a balance of cost and capability.
-    id: gpt-4o-mini
     matches:
       or:
         - equals: gpt-4o-mini
@@ -140,171 +257,23 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
-  - name: gpt 3.5 turbo 16k
-    id: gpt-35-turbo-16k
-    description: GPT-3.5 Turbo offers a balance between cost and performance.
+  - id: gpt-4o-mini-2024-07-18.ft-
+    description: GPT-4o Mini fine tuned.
     matches:
-      or:
-        - equals: gpt-35-turbo-16k
-        - equals: gpt-3.5-turbo-16k-0613
-        - equals: gpt-35-turbo-16k-0613
-    max_tokens: 16385
+      starts_with: gpt-4o-mini-2024-07-18.ft-
     prices:
-      input_mtok: 3
-      output_mtok: 4
+      input_mtok: 0.3
+      output_mtok: 1.2
 
-  - name: gpt 3.5 turbo 0125
-    id: gpt-3.5-turbo-0125
-    description: GPT-3.5 Turbo offers a balance between cost and performance.
+  - id: gpt-4o-mini-realtime
     matches:
-      equals: gpt-3.5-turbo-0125
-    max_tokens: 16385
+      contains: gpt-4o-mini-realtime
     prices:
-      input_mtok: 0.5
-      output_mtok: 1.5
-  - name: gpt 4 turbo
-    id: gpt-4-turbo
-    description: GPT-4 Turbo offers a balance between cost and performance.
-    matches:
-      or:
-        - equals: gpt-4-turbo
-        - equals: gpt-4-turbo-2024-04-09
-        - equals: gpt-4-turbo-0125-preview
-        - equals: gpt-4-0125-preview
-        - equals: gpt-4-1106-preview
-    max_tokens: 128000
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-  - name: text embedding ada
-    id: text-embedding-ada-002
-    description: Text Embedding Ada is a model that offers a balance between cost and performance.
-    matches:
-      or:
-        - equals: text-embedding-ada
-        - equals: text-embedding-ada-002
-        - equals: text-embedding-ada-002-v2
-    max_tokens: 1536
-    prices:
-      input_mtok: 0.1
-  - name: text embedding 3
-    id: text-embedding-3-small
-    description: Text Embedding 3 is a model that offers a balance between cost and performance.
-    matches:
-      equals: text-embedding-3-small
-    max_tokens: 3072
-    prices:
-      input_mtok: 0.02
-  - name: text embedding 3
-    id: text-embedding-3-large
-    description: Text Embedding 3 is a model that offers a balance between cost and performance.
-    matches:
-      equals: text-embedding-3-large
-    max_tokens: 3072
-    prices:
-      input_mtok: 0.13
-  - name: gpt 4 vision
-    id: gpt-4-vision-preview
-    description: GPT-4 Vision is a model that offers a balance between cost and performance.
-    matches:
-      or:
-        - equals: gpt-4-vision-preview
-        - equals: gpt-4-1106-vision-preview
-    max_tokens: 128000
-    prices:
-      input_mtok: 10
-      output_mtok: 30
+      input_mtok: 0.15
+      input_audio_mtok: 10
+      output_mtok: 0.6
+      output_audio_mtok: 20
 
-  - name: o1 preview
-    id: o1-preview
-    description: O1 Preview is a model that offers a balance between cost and performance.
-    matches:
-      or:
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
-    max_tokens: 128000
-    prices:
-      input_mtok: 15
-      output_mtok: 60
-  - name: o1 mini
-    id: o1-mini
-    description: O1 Mini is a model that offers a balance between cost and performance.
-    matches:
-      or:
-        - equals: o1-mini
-        - equals: o1-mini-2024-09-12
-    max_tokens: 128000
-    prices:
-      input_mtok: 3
-      output_mtok: 12
-  - id: o1
-    matches:
-      or:
-        - equals: o1
-        - equals: o1-2024-12-17
-    prices:
-      input_mtok: 15
-      output_mtok: 60
-  - id: o3-mini
-    matches:
-      or:
-        - equals: o3-mini
-        - equals: o3-mini-2025-01-31
-    prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
-  - id: o3-2025-04-16
-    matches:
-      equals: o3-2025-04-16
-    prices:
-      input_mtok: 10
-      cache_read_mtok: 2.5
-      output_mtok: 40
-  - name: gpt 4.1
-    id: gpt-4.1
-    description: >-
-      GPT-4.1 is OpenAI's latest flagship model, offering major improvements in
-      coding, instruction following, and long context understanding with up to 1
-      million tokens of context.
-    matches:
-      or:
-        - equals: gpt-4.1
-        - equals: gpt-4.1-2025-04-14
-    max_tokens: 1000000
-    prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 8
-  - name: gpt 4.1 mini
-    id: gpt-4.1-mini
-    description: >-
-      GPT-4.1 Mini is a significant leap in small model performance, matching or
-      exceeding GPT-4o in many benchmarks while reducing latency by nearly half
-      and cost by 83%.
-    matches:
-      or:
-        - equals: gpt-4.1-mini
-        - equals: gpt-4.1-mini-2025-04-14
-    max_tokens: 1000000
-    prices:
-      input_mtok: 0.4
-      cache_read_mtok: 0.1
-      output_mtok: 1.6
-  - name: gpt 4.1 nano
-    id: gpt-4.1-nano
-    description: >-
-      GPT-4.1 Nano is OpenAI's fastest and cheapest model, delivering
-      exceptional performance for its size with a 1 million token context
-      window, ideal for classification and autocompletion tasks.
-    matches:
-      or:
-        - equals: gpt-4.1-nano
-        - equals: gpt-4.1-nano-2025-04-14
-    max_tokens: 1000000
-    prices:
-      input_mtok: 0.1
-      cache_read_mtok: 0.025
-      output_mtok: 0.4
   - id: gpt-4o-realtime
     matches:
       starts_with: gpt-4o-realtime
@@ -314,14 +283,57 @@ models:
       cache_read_mtok: 2.5
       output_mtok: 20
       output_audio_mtok: 80
-  - id: gpt-4o-mini-realtime
+
+  - id: o1
     matches:
-      contains: gpt-4o-mini-realtime
+      or:
+        - equals: o1
+        - equals: o1-2024-12-17
     prices:
-      input_mtok: 0.15
-      input_audio_mtok: 10
-      output_mtok: 0.6
-      output_audio_mtok: 20
+      input_mtok: 15
+      output_mtok: 60
+
+  - id: o1-mini
+    name: o1 mini
+    description: O1 Mini is a model that offers a balance between cost and performance.
+    matches:
+      or:
+        - equals: o1-mini
+        - equals: o1-mini-2024-09-12
+    max_tokens: 128000
+    prices:
+      input_mtok: 3
+      output_mtok: 12
+
+  - id: o1-preview
+    name: o1 preview
+    description: O1 Preview is a model that offers a balance between cost and performance.
+    matches:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    max_tokens: 128000
+    prices:
+      input_mtok: 15
+      output_mtok: 60
+
+  - id: o3-2025-04-16
+    matches:
+      equals: o3-2025-04-16
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 2.5
+      output_mtok: 40
+
+  - id: o3-mini
+    matches:
+      or:
+        - equals: o3-mini
+        - equals: o3-mini-2025-01-31
+    prices:
+      input_mtok: 1.1
+      output_mtok: 4.4
+
   - id: o4-mini
     matches:
       or:
@@ -330,31 +342,47 @@ models:
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
-  - id: "ft:gpt-3.5-turbo-"
-    description: GPT-3.5 Turbo fine tuned.
+
+  - id: text-davinci-002
     matches:
-      starts_with: "ft:gpt-3.5-turbo-"
+      equals: text-davinci-002
     prices:
-      input_mtok: 3
-      output_mtok: 6
-  - id: "ft:gpt-4o-mini-2024-07-18:"
-    description: GPT-4o Mini fine tuned.
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-davinci-003
     matches:
-      starts_with: "ft:gpt-4o-mini-2024-07-18:"
+      equals: text-davinci-003
     prices:
-      input_mtok: 0.3
-      output_mtok: 1.2
-  - id: gpt-4o-mini-2024-07-18.ft-
-    description: GPT-4o Mini fine tuned.
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-embedding-3-large
+    name: text embedding 3
+    description: Text Embedding 3 is a model that offers a balance between cost and performance.
     matches:
-      starts_with: gpt-4o-mini-2024-07-18.ft-
+      equals: text-embedding-3-large
+    max_tokens: 3072
     prices:
-      input_mtok: 0.3
-      output_mtok: 1.2
-  - id: "ft:gpt-4o-2024-08-06:"
-    description: GPT-4o fine tuned.
+      input_mtok: 0.13
+
+  - id: text-embedding-3-small
+    name: text embedding 3
+    description: Text Embedding 3 is a model that offers a balance between cost and performance.
     matches:
-      starts_with: "ft:gpt-4o-2024-08-06:"
+      equals: text-embedding-3-small
+    max_tokens: 3072
     prices:
-      input_mtok: 3.75
-      output_mtok: 15
+      input_mtok: 0.02
+
+  - id: text-embedding-ada-002
+    name: text embedding ada
+    description: Text Embedding Ada is a model that offers a balance between cost and performance.
+    matches:
+      or:
+        - equals: text-embedding-ada
+        - equals: text-embedding-ada-002
+        - equals: text-embedding-ada-002-v2
+    max_tokens: 1536
+    prices:
+      input_mtok: 0.1
