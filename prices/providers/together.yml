@@ -4,350 +4,350 @@ pricing_url: https://www.together.ai/pricing
 api_pattern: 'https://api\.together\.xyz'
 models:
   - id: Austism/chronos-hermes-13b
-    matches:
+    match:
       equals: Austism/chronos-hermes-13b
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: Gryphe/MythoMax-L2-13b
-    matches:
+    match:
       equals: Gryphe/MythoMax-L2-13b
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: Nexusflow/NexusRaven-V2-13B
-    matches:
+    match:
       equals: Nexusflow/NexusRaven-V2-13B
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: NousResearch/Nous-Capybara-7B-V1p9
-    matches:
+    match:
       equals: NousResearch/Nous-Capybara-7B-V1p9
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO
-    matches:
+    match:
       equals: NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: NousResearch/Nous-Hermes-2-Mixtral-8x7B-SFT
-    matches:
+    match:
       equals: NousResearch/Nous-Hermes-2-Mixtral-8x7B-SFT
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: NousResearch/Nous-Hermes-2-Yi-34B
-    matches:
+    match:
       equals: NousResearch/Nous-Hermes-2-Yi-34B
     prices:
       input_mtok: 0.8
       output_mtok: 0.8
 
   - id: NousResearch/Nous-Hermes-Llama2-13b
-    matches:
+    match:
       equals: NousResearch/Nous-Hermes-Llama2-13b
     prices:
       input_mtok: 0.225
       output_mtok: 0.225
 
   - id: NousResearch/Nous-Hermes-llama-2-7b
-    matches:
+    match:
       equals: NousResearch/Nous-Hermes-llama-2-7b
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: Open-Orca/Mistral-7B-OpenOrca
-    matches:
+    match:
       equals: Open-Orca/Mistral-7B-OpenOrca
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: Qwen/Qwen1.5-0.5B
-    matches:
+    match:
       equals: Qwen/Qwen1.5-0.5B
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-0.5B-Chat
-    matches:
+    match:
       equals: Qwen/Qwen1.5-0.5B-Chat
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-1.8B
-    matches:
+    match:
       equals: Qwen/Qwen1.5-1.8B
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-1.8B-Chat
-    matches:
+    match:
       equals: Qwen/Qwen1.5-1.8B-Chat
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-14B
-    matches:
+    match:
       equals: Qwen/Qwen1.5-14B
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: Qwen/Qwen1.5-14B-Chat
-    matches:
+    match:
       equals: Qwen/Qwen1.5-14B-Chat
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: Qwen/Qwen1.5-4B
-    matches:
+    match:
       equals: Qwen/Qwen1.5-4B
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-4B-Chat
-    matches:
+    match:
       equals: Qwen/Qwen1.5-4B-Chat
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-72B
-    matches:
+    match:
       equals: Qwen/Qwen1.5-72B
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: Qwen/Qwen1.5-7B
-    matches:
+    match:
       equals: Qwen/Qwen1.5-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: Qwen/Qwen1.5-7B-Chat
-    matches:
+    match:
       equals: Qwen/Qwen1.5-7B-Chat
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: Undi95/ReMM-SLERP-L2-13B
-    matches:
+    match:
       equals: Undi95/ReMM-SLERP-L2-13B
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: Undi95/Toppy-M-7B
-    matches:
+    match:
       equals: Undi95/Toppy-M-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: WizardLM/WizardLM-13B-V1.2
-    matches:
+    match:
       equals: WizardLM/WizardLM-13B-V1.2
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: allenai/OLMo-7B
-    matches:
+    match:
       equals: allenai/OLMo-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: allenai/OLMo-7B-Instruct
-    matches:
+    match:
       equals: allenai/OLMo-7B-Instruct
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: allenai/OLMo-7B-Twin-2T
-    matches:
+    match:
       equals: allenai/OLMo-7B-Twin-2T
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: codellama/CodeLlama-13b-Instruct-hf
-    matches:
+    match:
       equals: codellama/CodeLlama-13b-Instruct-hf
     prices:
       input_mtok: 0.225
       output_mtok: 0.225
 
   - id: codellama/CodeLlama-34b-Instruct-hf
-    matches:
+    match:
       equals: codellama/CodeLlama-34b-Instruct-hf
     prices:
       input_mtok: 0.776
       output_mtok: 0.776
 
   - id: codellama/CodeLlama-70b-Instruct-hf
-    matches:
+    match:
       equals: codellama/CodeLlama-70b-Instruct-hf
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: codellama/CodeLlama-7b-Instruct-hf
-    matches:
+    match:
       equals: codellama/CodeLlama-7b-Instruct-hf
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: deepseek-ai/deepseek-coder-33b-instruct
-    matches:
+    match:
       equals: deepseek-ai/deepseek-coder-33b-instruct
     prices:
       input_mtok: 0.8
       output_mtok: 0.8
 
   - id: garage-bAInd/Platypus2-70B-instruct
-    matches:
+    match:
       equals: garage-bAInd/Platypus2-70B-instruct
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: google/gemma-2b
-    matches:
+    match:
       equals: google/gemma-2b
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: google/gemma-2b-it
-    matches:
+    match:
       equals: google/gemma-2b-it
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: google/gemma-7b
-    matches:
+    match:
       equals: google/gemma-7b
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: google/gemma-7b-it
-    matches:
+    match:
       equals: google/gemma-7b-it
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: lmsys/vicuna-13b-v1.5
-    matches:
+    match:
       equals: lmsys/vicuna-13b-v1.5
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: lmsys/vicuna-7b-v1.5
-    matches:
+    match:
       equals: lmsys/vicuna-7b-v1.5
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: meta-llama/Llama-2-13b-chat-hf
-    matches:
+    match:
       equals: meta-llama/Llama-2-13b-chat-hf
     prices:
       input_mtok: 0.225
       output_mtok: 0.225
 
   - id: meta-llama/Llama-2-70b-chat-hf
-    matches:
+    match:
       equals: meta-llama/Llama-2-70b-chat-hf
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: meta-llama/Llama-2-7b-chat-hf
-    matches:
+    match:
       equals: meta-llama/Llama-2-7b-chat-hf
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: meta-llama/Llama-3-70b-chat-hf
-    matches:
+    match:
       equals: meta-llama/Llama-3-70b-chat-hf
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: meta-llama/Llama-3-8b-chat-hf
-    matches:
+    match:
       equals: meta-llama/Llama-3-8b-chat-hf
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: meta-llama/Llama-3.3-70B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Llama-3.3-70B-Instruct-Turbo
     prices:
       input_mtok: 0.88
       output_mtok: 0.88
 
   - id: meta-llama/Meta-Llama-3-70B-Instruct-Lite
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3-70B-Instruct-Lite
     prices:
       input_mtok: 0.54
       output_mtok: 0.54
 
   - id: meta-llama/Meta-Llama-3-70B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3-70B-Instruct-Turbo
     prices:
       input_mtok: 0.88
       output_mtok: 0.88
 
   - id: meta-llama/Meta-Llama-3-8B-Instruct-Lite
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3-8B-Instruct-Lite
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: meta-llama/Meta-Llama-3-8B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3-8B-Instruct-Turbo
     prices:
       input_mtok: 0.18
       output_mtok: 0.18
 
   - id: meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
     prices:
       input_mtok: 3.5
@@ -355,210 +355,210 @@ models:
 
   - id: meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo-2
     description: "`-2` suffix added since this name matches the above model but has different pricing"
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
     prices:
       input_mtok: 5
       output_mtok: 5
 
   - id: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
     prices:
       input_mtok: 0.88
       output_mtok: 0.88
 
   - id: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
     prices:
       input_mtok: 0.18
       output_mtok: 0.18
 
   - id: meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
-    matches:
+    match:
       equals: meta-llama/Meta-Llama-3.3-70B-Instruct-Turbo
     prices:
       input_mtok: 0.88
       output_mtok: 0.88
 
   - id: microsoft/WizardLM-2-8x22B
-    matches:
+    match:
       equals: microsoft/WizardLM-2-8x22B
     prices:
       input_mtok: 1.2
       output_mtok: 1.2
 
   - id: microsoft/phi-2
-    matches:
+    match:
       equals: microsoft/phi-2
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: mistralai/Mistral-7B-Instruct-v0.1
-    matches:
+    match:
       equals: mistralai/Mistral-7B-Instruct-v0.1
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: mistralai/Mistral-7B-Instruct-v0.2
-    matches:
+    match:
       equals: mistralai/Mistral-7B-Instruct-v0.2
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: mistralai/Mistral-7B-v0.1
-    matches:
+    match:
       equals: mistralai/Mistral-7B-v0.1
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: mistralai/Mixtral-8x22B-Instruct-v0.1
-    matches:
+    match:
       equals: mistralai/Mixtral-8x22B-Instruct-v0.1
     prices:
       input_mtok: 2.4
       output_mtok: 2.4
 
   - id: mistralai/Mixtral-8x7B-Instruct-v0.1
-    matches:
+    match:
       equals: mistralai/Mixtral-8x7B-Instruct-v0.1
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: mistralai/Mixtral-8x7B-v0.1
-    matches:
+    match:
       equals: mistralai/Mixtral-8x7B-v0.1
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
 
   - id: openchat/openchat-3.5-1210
-    matches:
+    match:
       equals: openchat/openchat-3.5-1210
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: snorkelai/Snorkel-Mistral-PairRM-DPO
-    matches:
+    match:
       equals: snorkelai/Snorkel-Mistral-PairRM-DPO
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: teknium/OpenHermes-2-Mistral-7B
-    matches:
+    match:
       equals: teknium/OpenHermes-2-Mistral-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: teknium/OpenHermes-2p5-Mistral-7B
-    matches:
+    match:
       equals: teknium/OpenHermes-2p5-Mistral-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/GPT-JT-Moderation-6B
-    matches:
+    match:
       equals: togethercomputer/GPT-JT-Moderation-6B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/Llama-2-7B-32K-Instruct
-    matches:
+    match:
       equals: togethercomputer/Llama-2-7B-32K-Instruct
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/RedPajama-INCITE-7B-Base
-    matches:
+    match:
       equals: togethercomputer/RedPajama-INCITE-7B-Base
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/RedPajama-INCITE-7B-Chat
-    matches:
+    match:
       equals: togethercomputer/RedPajama-INCITE-7B-Chat
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/RedPajama-INCITE-7B-Instruct
-    matches:
+    match:
       equals: togethercomputer/RedPajama-INCITE-7B-Instruct
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/RedPajama-INCITE-Base-3B-v1
-    matches:
+    match:
       equals: togethercomputer/RedPajama-INCITE-Base-3B-v1
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: togethercomputer/RedPajama-INCITE-Chat-3B-v1
-    matches:
+    match:
       equals: togethercomputer/RedPajama-INCITE-Chat-3B-v1
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: togethercomputer/RedPajama-INCITE-Instruct-3B-v1
-    matches:
+    match:
       equals: togethercomputer/RedPajama-INCITE-Instruct-3B-v1
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: togethercomputer/StripedHyena-Hessian-7B
-    matches:
+    match:
       equals: togethercomputer/StripedHyena-Hessian-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/StripedHyena-Nous-7B
-    matches:
+    match:
       equals: togethercomputer/StripedHyena-Nous-7B
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: togethercomputer/alpaca-7b
-    matches:
+    match:
       equals: togethercomputer/alpaca-7b
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: upstage/SOLAR-10.7B-Instruct-v1.0
-    matches:
+    match:
       equals: upstage/SOLAR-10.7B-Instruct-v1.0
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: zero-one-ai/Yi-34B
-    matches:
+    match:
       equals: zero-one-ai/Yi-34B
     prices:
       input_mtok: 0.8
       output_mtok: 0.8
 
   - id: zero-one-ai/Yi-6B
-    matches:
+    match:
       equals: zero-one-ai/Yi-6B
     prices:
       input_mtok: 0.2

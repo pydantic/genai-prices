@@ -4,56 +4,56 @@ pricing_url: https://groq.com/pricing/
 api_pattern: 'https://api\.groq\.com'
 models:
   - id: gemma-7b-it
-    matches:
+    match:
       equals: gemma-7b-it
     prices:
       input_mtok: 0.07
       output_mtok: 0.07
 
   - id: gemma2-9b-it
-    matches:
+    match:
       equals: gemma2-9b-it
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
 
   - id: llama2-70b-4096
-    matches:
+    match:
       equals: llama2-70b-4096
     prices:
       input_mtok: 0.7
       output_mtok: 0.8
 
   - id: llama3-70b-8192
-    matches:
+    match:
       equals: llama3-70b-8192
     prices:
       input_mtok: 0.59
       output_mtok: 0.79
 
   - id: llama3-8b-8192
-    matches:
+    match:
       equals: llama3-8b-8192
     prices:
       input_mtok: 0.05
       output_mtok: 0.08
 
   - id: llama3-groq-70b-8192-tool-use-preview
-    matches:
+    match:
       equals: llama3-groq-70b-8192-tool-use-preview
     prices:
       input_mtok: 0.89
       output_mtok: 0.89
 
   - id: llama3-groq-8b-8192-tool-use-preview
-    matches:
+    match:
       equals: llama3-groq-8b-8192-tool-use-preview
     prices:
       input_mtok: 0.19
       output_mtok: 0.19
 
   - id: mixtral-8x7b-32768
-    matches:
+    match:
       equals: mixtral-8x7b-32768
     prices:
       input_mtok: 0.24

@@ -1,3 +1,8 @@
+from pathlib import Path
+
+data_dir = Path(__file__).parent.parent.parent
+
+
 def pretty_size(size: int) -> str:
     if size < 1024:
         return f'{size} bytes'

@@ -5,7 +5,6 @@ import gzip
 import io
 from decimal import Decimal
 from operator import attrgetter
-from pathlib import Path
 from typing import Any, cast
 
 import pydantic_core
@@ -13,7 +12,7 @@ import ruamel.yaml
 from pydantic import ValidationError
 
 from .types import Provider, providers_schema
-from .utils import pretty_size
+from .utils import data_dir, pretty_size
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -27,7 +26,6 @@ yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)
 
 def build_prices():
     """Build schema.json and data.json."""
-    data_dir = Path(__file__).parent.parent.parent
     root_dir = data_dir.parent
     # write the schema JSON file used by the yaml language server
     schema_json_path = data_dir / 'schema.json'

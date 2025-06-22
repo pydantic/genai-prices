@@ -5,7 +5,7 @@ from .build import build_prices
 
 def main():
     if len(sys.argv) < 2:
-        print('Usage: uv run -m src [build-prices]')
+        print('Usage: uv run -m src [build-prices|update-openrouter]')
 
     command = sys.argv[1]
     if command == 'build-prices':

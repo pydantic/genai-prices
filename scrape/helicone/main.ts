@@ -20,7 +20,7 @@ export interface ModelInfo {
   name?: string;
   description?: string;
   id: string;
-  matches: LogicClause;
+  match: LogicClause;
   max_tokens?: number;
   prices: ModelPrice; // | ConditionalPrice[];
 }
@@ -117,11 +117,11 @@ function mapProvider(
     if (matchingModel) {
       const pricesMatch = pricesEqual(matchingModel.prices, model.prices);
       if (pricesMatch) {
-        if ("or" in matchingModel.matches) {
-          matchingModel.matches.or.push(model.matches);
+        if ("or" in matchingModel.match) {
+          matchingModel.match.or.push(model.match);
         } else {
-          const copy = { ...matchingModel.matches };
-          matchingModel.matches = { or: [copy, model.matches] };
+          const copy = { ...matchingModel.match };
+          matchingModel.match = { or: [copy, model.match] };
         }
         continue;
       }
@@ -164,11 +164,11 @@ function mapModel(
   const prices = Object.fromEntries(
     Object.entries(pricesUndefined).filter(([, v]) => v !== undefined),
   );
-  const matches = mapMatches(cost.model);
+  const match = mapMatches(cost.model);
   if (!details) {
     return {
       id: cost.model.value,
-      matches,
+      match,
       prices,
     };
   }
@@ -176,7 +176,7 @@ function mapModel(
     name: details.searchTerms[0],
     description: details.info.description,
     id: cost.model.value,
-    matches,
+    match,
     max_tokens: details.info.maxTokens,
     prices,
   };
