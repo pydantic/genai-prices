@@ -5,13 +5,13 @@ from dataclasses import dataclass
 from io import StringIO
 from operator import itemgetter
 from pathlib import Path
-from typing import Any, TypedDict, cast
+from typing import TypedDict, cast
 
 from ruamel.yaml import YAML, CommentedMap
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-from .types import ModelInfo, ModelPrice, Provider
-from .utils import data_dir
+from .types import ModelInfo, Provider
+from .utils import package_dir
 
 yaml = YAML()
 yaml.preserve_quotes = True
@@ -26,7 +26,7 @@ class ProvidersYaml:
     providers: dict[str, ProviderYaml]
 
     def __init__(self) -> None:
-        providers_dir = data_dir / 'providers'
+        providers_dir = package_dir / 'providers'
         self.providers = {}
         for file in providers_dir.iterdir():
             assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
@@ -54,7 +54,7 @@ class ProviderYaml:
         self.provider = Provider.model_validate(self.data)
         self.extra_prices = []
 
-    def update_model(self, lookup_id: str, model: ModelInfo) -> bool:
+    def update_model(self, lookup_id: str, model: ModelInfo) -> None:
         yaml_model = self._get_model(lookup_id)
         description = model.description
         if description:
@@ -68,21 +68,6 @@ class ProviderYaml:
         ]:
             if field not in yaml_model and value is not None:
                 yaml_model.insert(position, field, value)  # pyright: ignore[reportUnknownMemberType]
-
-        yaml_prices = cast(Any, yaml_model['prices'])
-        if not isinstance(yaml_prices, CommentedMap):
-            # prices in yaml are already a list of constrained prices
-            return False
-
-        if ModelPrice.model_validate(yaml_prices) == model.prices:
-            # prices match, nothing to do
-            return False
-
-        assert isinstance(model.prices, ModelPrice), f'Expected ModelPrice, got {type(model.prices)}'
-        yaml_prices.update(  # pyright: ignore[reportUnknownMemberType]
-            model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
-        )
-        return True
 
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self.extra_prices if m.id == model.id), None):

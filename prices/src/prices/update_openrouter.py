@@ -6,6 +6,7 @@ from decimal import Decimal
 import httpx
 from pydantic import BaseModel
 
+from . import source_prices
 from .types import ClauseEquals, ModelInfo, ModelPrice
 from .update import ProvidersYaml
 
@@ -95,28 +96,35 @@ def update_from_openrouter():
         else:
             or_providers[model.provider_id()] = [model]
 
+    prices: source_prices.SourcePricesType = {}
+
     for provider_id, or_models in or_providers.items():
+        if provider_id == 'openrouter':
+            continue
         if provider_yaml := providers_yaml.providers.get(provider_id):
             pyd_provider = provider_yaml.provider
             models_added = 0
             models_updated = 0
-            models_price_changed = 0
+            provider_prices: source_prices.ProvidePrices = {}
             for or_model in or_models:
                 model_info = or_model.model_info()
+                assert isinstance(model_info.prices, ModelPrice)
                 if matching_model := pyd_provider.find_model(model_info.id):
+                    provider_prices[matching_model.id] = model_info.prices
                     models_updated += 1
-                    price_changed = provider_yaml.update_model(matching_model.id, model_info)
-                    if price_changed:
-                        models_price_changed += 1
+                    provider_yaml.update_model(matching_model.id, model_info)
                 else:
+                    provider_prices[model_info.id] = model_info.prices
                     models_added += provider_yaml.add_model(model_info)
 
+            prices[pyd_provider.id] = provider_prices
             if models_added or models_updated:
                 print(f'Provider {provider_id}:')
                 if models_added:
                     print(f'  {models_added} models added')
                 if models_updated:
                     print(f'  {models_updated} models updated')
-                    print(f'  {models_price_changed} prices changed')
                 print('')
                 provider_yaml.save()
+
+    source_prices.write_source_prices('openrouter', prices)

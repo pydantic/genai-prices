@@ -1553,13 +1553,6 @@ models:
       input_mtok: 0.07
       output_mtok: 0.07
 
-  - id: openrouter/auto
-    match:
-      equals: openrouter/auto
-    prices:
-      input_mtok: -1000000
-      output_mtok: -1000000
-
   - id: perplexity/llama-3.1-sonar-large-128k-online
     match:
       equals: perplexity/llama-3.1-sonar-large-128k-online

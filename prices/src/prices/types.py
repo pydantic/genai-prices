@@ -5,6 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Union
 
+from annotated_types import Ge
 from pydantic import (
     BaseModel,
     Discriminator,
@@ -87,8 +88,9 @@ def serialize_decimal(v: Decimal) -> float | int:
     return float(v) if v % 1 != 0 else int(v)
 
 
-DecimalFloat = Annotated[
+MTok = Annotated[
     Decimal,
+    Ge(0),
     WithJsonSchema({'type': 'number'}),
     PlainSerializer(serialize_decimal, return_type=Union[float, int], when_used='json'),
 ]
@@ -97,26 +99,26 @@ DecimalFloat = Annotated[
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
-    input_mtok: DecimalFloat | TieredPrices | None = None
+    input_mtok: MTok | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
-    input_audio_mtok: DecimalFloat | TieredPrices | None = None
+    input_audio_mtok: MTok | TieredPrices | None = None
     """price in USD per million audio input tokens"""
 
-    cache_write_mtok: DecimalFloat | TieredPrices | None = None
+    cache_write_mtok: MTok | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
-    cache_read_mtok: DecimalFloat | TieredPrices | None = None
+    cache_read_mtok: MTok | TieredPrices | None = None
     """price in USD per million tokens read from the cache"""
 
-    output_mtok: DecimalFloat | TieredPrices | None = None
+    output_mtok: MTok | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
-    output_audio_mtok: DecimalFloat | TieredPrices | None = None
+    output_audio_mtok: MTok | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
 
 class TieredPrices(_Model):
     """Pricing model when the amount paid varies by number of tokens"""
 
-    base: DecimalFloat
+    base: MTok
     """Based price, e.g. price until the first tier."""
     tiers: list[Tier]
 
@@ -126,7 +128,7 @@ class Tier(_Model):
 
     start: int
     """Start of the tier"""
-    price: DecimalFloat
+    price: MTok
     """Price for this tier"""
 
 
