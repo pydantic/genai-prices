@@ -2,6 +2,8 @@ name: OpenRouter
 id: openrouter
 pricing_url: https://openrouter.ai/models
 api_pattern: 'https://(api\.)?openrouter\.ai'
+# we don't include description here since there are so many models, you can see descriptions at
+# https://openrouter.ai/api/v1/models which this data is based on
 models:
   - id: 01-ai/yi-large
     match:
@@ -56,6 +58,22 @@ models:
       input_mtok: 0.5
       output_mtok: 0.7
 
+  - id: aion-1.0
+    name: Aion-1.0
+    match:
+      equals: aion-1.0
+    prices:
+      input_mtok: 4
+      output_mtok: 8
+
+  - id: aion-1.0-mini
+    name: Aion-1.0-Mini
+    match:
+      equals: aion-1.0-mini
+    prices:
+      input_mtok: 0.7
+      output_mtok: 1.4
+
   - id: aion-labs/aion-1.0
     match:
       equals: aion-labs/aion-1.0
@@ -73,6 +91,14 @@ models:
   - id: aion-labs/aion-rp-llama-3.1-8b
     match:
       equals: aion-labs/aion-rp-llama-3.1-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: aion-rp-llama-3.1-8b
+    name: Aion-RP 1.0 (8B)
+    match:
+      equals: aion-rp-llama-3.1-8b
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
@@ -216,6 +242,22 @@ models:
       input_mtok: 3
       output_mtok: 15
 
+  - id: anubis-pro-105b-v1
+    name: Anubis Pro 105B V1
+    match:
+      equals: anubis-pro-105b-v1
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1
+
+  - id: arcee-blitz
+    name: Arcee Blitz
+    match:
+      equals: arcee-blitz
+    prices:
+      input_mtok: 0.45
+      output_mtok: 0.75
+
   - id: "arliai/qwq-32b-arliai-rpr-v1:free"
     match:
       equals: "arliai/qwq-32b-arliai-rpr-v1:free"
@@ -224,6 +266,293 @@ models:
     match:
       equals: "bytedance-research/ui-tars-72b:free"
     prices: {}
+  - id: caller-large
+    name: Caller Large
+    match:
+      equals: caller-large
+    prices:
+      input_mtok: 0.55
+      output_mtok: 0.85
+
+  - id: chatgpt-4o-latest
+    name: ChatGPT-4o
+    match:
+      equals: chatgpt-4o-latest
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: claude-2
+    name: Claude v2
+    match:
+      equals: claude-2
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+
+  - id: claude-2.0
+    name: Claude v2.0
+    match:
+      equals: claude-2.0
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+
+  - id: claude-2.0:beta
+    name: Claude v2.0 (self-moderated)
+    match:
+      equals: claude-2.0:beta
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+
+  - id: claude-2.1
+    name: Claude v2.1
+    match:
+      equals: claude-2.1
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+
+  - id: claude-2.1:beta
+    name: Claude v2.1 (self-moderated)
+    match:
+      equals: claude-2.1:beta
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+
+  - id: claude-2:beta
+    name: Claude v2 (self-moderated)
+    match:
+      equals: claude-2:beta
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+
+  - id: claude-3-haiku
+    name: Claude 3 Haiku
+    match:
+      equals: claude-3-haiku
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
+
+  - id: claude-3-haiku:beta
+    name: Claude 3 Haiku (self-moderated)
+    match:
+      equals: claude-3-haiku:beta
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
+
+  - id: claude-3-opus
+    name: Claude 3 Opus
+    match:
+      equals: claude-3-opus
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-3-opus:beta
+    name: Claude 3 Opus (self-moderated)
+    match:
+      equals: claude-3-opus:beta
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-3-sonnet
+    name: Claude 3 Sonnet
+    match:
+      equals: claude-3-sonnet
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3-sonnet:beta
+    name: Claude 3 Sonnet (self-moderated)
+    match:
+      equals: claude-3-sonnet:beta
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.5-haiku
+    name: Claude 3.5 Haiku
+    match:
+      equals: claude-3.5-haiku
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+
+  - id: claude-3.5-haiku-20241022
+    name: Claude 3.5 Haiku (2024-10-22)
+    match:
+      equals: claude-3.5-haiku-20241022
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+
+  - id: claude-3.5-haiku-20241022:beta
+    name: Claude 3.5 Haiku (2024-10-22) (self-moderated)
+    match:
+      equals: claude-3.5-haiku-20241022:beta
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+
+  - id: claude-3.5-haiku:beta
+    name: Claude 3.5 Haiku (self-moderated)
+    match:
+      equals: claude-3.5-haiku:beta
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+
+  - id: claude-3.5-sonnet
+    name: Claude 3.5 Sonnet
+    match:
+      equals: claude-3.5-sonnet
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.5-sonnet-20240620
+    name: Claude 3.5 Sonnet (2024-06-20)
+    match:
+      equals: claude-3.5-sonnet-20240620
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.5-sonnet-20240620:beta
+    name: Claude 3.5 Sonnet (2024-06-20) (self-moderated)
+    match:
+      equals: claude-3.5-sonnet-20240620:beta
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.5-sonnet:beta
+    name: Claude 3.5 Sonnet (self-moderated)
+    match:
+      equals: claude-3.5-sonnet:beta
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.7-sonnet
+    name: Claude 3.7 Sonnet
+    match:
+      equals: claude-3.7-sonnet
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.7-sonnet:beta
+    name: Claude 3.7 Sonnet (self-moderated)
+    match:
+      equals: claude-3.7-sonnet:beta
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.7-sonnet:thinking
+    name: Claude 3.7 Sonnet (thinking)
+    match:
+      equals: claude-3.7-sonnet:thinking
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-opus-4
+    name: Claude Opus 4
+    match:
+      equals: claude-opus-4
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-sonnet-4
+    name: Claude Sonnet 4
+    match:
+      equals: claude-sonnet-4
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: codellama-7b-instruct-solidity
+    name: CodeLLaMa 7B Instruct Solidity
+    match:
+      equals: codellama-7b-instruct-solidity
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: coder-large
+    name: Coder Large
+    match:
+      equals: coder-large
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.8
+
+  - id: codestral-2501
+    name: Codestral 2501
+    match:
+      equals: codestral-2501
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.9
+
+  - id: codex-mini
+    name: Codex Mini
+    match:
+      equals: codex-mini
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.375
+      output_mtok: 6
+
   - id: cognitivecomputations/dolphin-mixtral-8x22b
     match:
       equals: cognitivecomputations/dolphin-mixtral-8x22b
@@ -298,6 +627,270 @@ models:
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
+
+  - id: command
+    name: Command
+    match:
+      equals: command
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+
+  - id: command-a
+    name: Command A
+    match:
+      equals: command-a
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: command-r
+    name: Command R
+    match:
+      equals: command-r
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: command-r-03-2024
+    name: Command R (03-2024)
+    match:
+      equals: command-r-03-2024
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: command-r-08-2024
+    name: Command R (08-2024)
+    match:
+      equals: command-r-08-2024
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: command-r-plus
+    name: Command R+
+    match:
+      equals: command-r-plus
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
+  - id: command-r-plus-04-2024
+    name: Command R+ (04-2024)
+    match:
+      equals: command-r-plus-04-2024
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
+  - id: command-r-plus-08-2024
+    name: Command R+ (08-2024)
+    match:
+      equals: command-r-plus-08-2024
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: command-r7b-12-2024
+    name: Command R7B (12-2024)
+    match:
+      equals: command-r7b-12-2024
+    prices:
+      input_mtok: 0.0375
+      output_mtok: 0.15
+
+  - id: deepcoder-14b-preview:free
+    name: Deepcoder 14B Preview (free)
+    match:
+      equals: deepcoder-14b-preview:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deephermes-3-llama-3-8b-preview:free
+    name: DeepHermes 3 Llama 3 8B Preview (free)
+    match:
+      equals: deephermes-3-llama-3-8b-preview:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-chat
+    name: DeepSeek V3
+    match:
+      equals: deepseek-chat
+    prices:
+      input_mtok: 0.38
+      output_mtok: 0.89
+
+  - id: deepseek-chat-v3-0324
+    name: DeepSeek V3 0324
+    match:
+      equals: deepseek-chat-v3-0324
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.88
+
+  - id: deepseek-chat-v3-0324:free
+    name: DeepSeek V3 0324 (free)
+    match:
+      equals: deepseek-chat-v3-0324:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-chat:free
+    name: DeepSeek V3 (free)
+    match:
+      equals: deepseek-chat:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-prover-v2
+    name: DeepSeek Prover V2
+    match:
+      equals: deepseek-prover-v2
+    prices:
+      input_mtok: 0.5
+      output_mtok: 2.18
+
+  - id: deepseek-r1
+    name: R1
+    match:
+      equals: deepseek-r1
+    prices:
+      input_mtok: 0.45
+      output_mtok: 2.15
+
+  - id: deepseek-r1-0528
+    name: R1 0528
+    match:
+      equals: deepseek-r1-0528
+    prices:
+      input_mtok: 0.5
+      output_mtok: 2.15
+
+  - id: deepseek-r1-0528-qwen3-8b
+    name: Deepseek R1 0528 Qwen3 8B
+    match:
+      equals: deepseek-r1-0528-qwen3-8b
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+
+  - id: deepseek-r1-0528-qwen3-8b:free
+    name: Deepseek R1 0528 Qwen3 8B (free)
+    match:
+      equals: deepseek-r1-0528-qwen3-8b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-r1-0528:free
+    name: R1 0528 (free)
+    match:
+      equals: deepseek-r1-0528:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-r1-distill-llama-70b
+    name: R1 Distill Llama 70B
+    match:
+      equals: deepseek-r1-distill-llama-70b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.4
+
+  - id: deepseek-r1-distill-llama-70b:free
+    name: R1 Distill Llama 70B (free)
+    match:
+      equals: deepseek-r1-distill-llama-70b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-r1-distill-llama-8b
+    name: R1 Distill Llama 8B
+    match:
+      equals: deepseek-r1-distill-llama-8b
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+
+  - id: deepseek-r1-distill-qwen-1.5b
+    name: R1 Distill Qwen 1.5B
+    match:
+      equals: deepseek-r1-distill-qwen-1.5b
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+
+  - id: deepseek-r1-distill-qwen-14b
+    name: R1 Distill Qwen 14B
+    match:
+      equals: deepseek-r1-distill-qwen-14b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+
+  - id: deepseek-r1-distill-qwen-14b:free
+    name: R1 Distill Qwen 14B (free)
+    match:
+      equals: deepseek-r1-distill-qwen-14b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-r1-distill-qwen-32b
+    name: R1 Distill Qwen 32B
+    match:
+      equals: deepseek-r1-distill-qwen-32b
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.18
+
+  - id: deepseek-r1-distill-qwen-32b:free
+    name: R1 Distill Qwen 32B (free)
+    match:
+      equals: deepseek-r1-distill-qwen-32b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-r1-distill-qwen-7b
+    name: R1 Distill Qwen 7B
+    match:
+      equals: deepseek-r1-distill-qwen-7b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.2
+
+  - id: deepseek-r1:free
+    name: R1 (free)
+    match:
+      equals: deepseek-r1:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-r1t-chimera:free
+    name: DeepSeek R1T Chimera (free)
+    match:
+      equals: deepseek-r1t-chimera:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: deepseek-v3-base:free
+    name: DeepSeek V3 Base (free)
+    match:
+      equals: deepseek-v3-base:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
 
   - id: deepseek/deepseek-chat
     match:
@@ -387,12 +980,84 @@ models:
     match:
       equals: "deepseek/deepseek-v3-base:free"
     prices: {}
+  - id: devstral-small
+    name: Devstral Small
+    match:
+      equals: devstral-small
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.12
+
+  - id: devstral-small:free
+    name: Devstral Small (free)
+    match:
+      equals: devstral-small:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: dobby-mini-unhinged-plus-llama-3.1-8b
+    name: Dobby Mini Plus Llama 3.1 8B
+    match:
+      equals: dobby-mini-unhinged-plus-llama-3.1-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: dolphin-mixtral-8x22b
+    name: Dolphin 2.9.2 Mixtral 8x22B 🐬
+    match:
+      equals: dolphin-mixtral-8x22b
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: dolphin3.0-mistral-24b:free
+    name: Dolphin3.0 Mistral 24B (free)
+    match:
+      equals: dolphin3.0-mistral-24b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: dolphin3.0-r1-mistral-24b:free
+    name: Dolphin3.0 R1 Mistral 24B (free)
+    match:
+      equals: dolphin3.0-r1-mistral-24b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
   - id: eleutherai/llemma_7b
     match:
       equals: eleutherai/llemma_7b
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+
+  - id: eva-llama-3.33-70b
+    name: EVA Llama 3.33 70B
+    match:
+      equals: eva-llama-3.33-70b
+    prices:
+      input_mtok: 4
+      output_mtok: 6
+
+  - id: eva-qwen-2.5-32b
+    name: EVA Qwen2.5 32B
+    match:
+      equals: eva-qwen-2.5-32b
+    prices:
+      input_mtok: 2.6
+      output_mtok: 3.4
+
+  - id: eva-qwen-2.5-72b
+    name: EVA Qwen2.5 72B
+    match:
+      equals: eva-qwen-2.5-72b
+    prices:
+      input_mtok: 4
+      output_mtok: 6
 
   - id: eva-unit-01/eva-llama-3.33-70b
     match:
@@ -419,6 +1084,292 @@ models:
     match:
       equals: "featherless/qwerky-72b:free"
     prices: {}
+  - id: fimbulvetr-11b-v2
+    name: Fimbulvetr 11B v2
+    match:
+      equals: fimbulvetr-11b-v2
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: gemini-2.0-flash-001
+    name: Gemini 2.0 Flash
+    match:
+      equals: gemini-2.0-flash-001
+    prices:
+      input_mtok: 0.1
+      cache_write_mtok: 0.1833
+      cache_read_mtok: 0.025
+      output_mtok: 0.4
+
+  - id: gemini-2.0-flash-exp:free
+    name: Gemini 2.0 Flash Experimental (free)
+    match:
+      equals: gemini-2.0-flash-exp:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: gemini-2.0-flash-lite-001
+    name: Gemini 2.0 Flash Lite
+    match:
+      equals: gemini-2.0-flash-lite-001
+    prices:
+      input_mtok: 0.075
+      output_mtok: 0.3
+
+  - id: gemini-2.5-flash
+    name: Gemini 2.5 Flash
+    match:
+      equals: gemini-2.5-flash
+    prices:
+      input_mtok: 0.3
+      cache_write_mtok: 0.3833
+      cache_read_mtok: 0.075
+      output_mtok: 2.5
+
+  - id: gemini-2.5-flash-lite-preview-06-17
+    name: Gemini 2.5 Flash Lite Preview 06-17
+    match:
+      equals: gemini-2.5-flash-lite-preview-06-17
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.4
+
+  - id: gemini-2.5-flash-preview
+    name: Gemini 2.5 Flash Preview 04-17
+    match:
+      equals: gemini-2.5-flash-preview
+    prices:
+      input_mtok: 0.15
+      cache_write_mtok: 0.2333
+      cache_read_mtok: 0.0375
+      output_mtok: 0.6
+
+  - id: gemini-2.5-flash-preview-05-20
+    name: Gemini 2.5 Flash Preview 05-20
+    match:
+      equals: gemini-2.5-flash-preview-05-20
+    prices:
+      input_mtok: 0.15
+      cache_write_mtok: 0.2333
+      cache_read_mtok: 0.0375
+      output_mtok: 0.6
+
+  - id: gemini-2.5-flash-preview-05-20:thinking
+    name: Gemini 2.5 Flash Preview 05-20 (thinking)
+    match:
+      equals: gemini-2.5-flash-preview-05-20:thinking
+    prices:
+      input_mtok: 0.15
+      cache_write_mtok: 0.2333
+      cache_read_mtok: 0.0375
+      output_mtok: 3.5
+
+  - id: gemini-2.5-flash-preview:thinking
+    name: Gemini 2.5 Flash Preview 04-17 (thinking)
+    match:
+      equals: gemini-2.5-flash-preview:thinking
+    prices:
+      input_mtok: 0.15
+      cache_write_mtok: 0.2333
+      cache_read_mtok: 0.0375
+      output_mtok: 3.5
+
+  - id: gemini-2.5-pro
+    name: Gemini 2.5 Pro
+    match:
+      equals: gemini-2.5-pro
+    prices:
+      input_mtok: 1.25
+      cache_write_mtok: 1.625
+      cache_read_mtok: 0.31
+      output_mtok: 10
+
+  - id: gemini-2.5-pro-exp-03-25
+    name: Gemini 2.5 Pro Experimental
+    match:
+      equals: gemini-2.5-pro-exp-03-25
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: gemini-2.5-pro-preview
+    name: Gemini 2.5 Pro Preview 06-05
+    match:
+      equals: gemini-2.5-pro-preview
+    prices:
+      input_mtok: 1.25
+      cache_write_mtok: 1.625
+      cache_read_mtok: 0.31
+      output_mtok: 10
+
+  - id: gemini-2.5-pro-preview-05-06
+    name: Gemini 2.5 Pro Preview 05-06
+    match:
+      equals: gemini-2.5-pro-preview-05-06
+    prices:
+      input_mtok: 1.25
+      cache_write_mtok: 1.625
+      cache_read_mtok: 0.31
+      output_mtok: 10
+
+  - id: gemini-flash-1.5
+    name: Gemini 1.5 Flash
+    match:
+      equals: gemini-flash-1.5
+    prices:
+      input_mtok: 0.075
+      cache_write_mtok: 0.1583
+      cache_read_mtok: 0.01875
+      output_mtok: 0.3
+
+  - id: gemini-flash-1.5-8b
+    name: Gemini 1.5 Flash 8B
+    match:
+      equals: gemini-flash-1.5-8b
+    prices:
+      input_mtok: 0.0375
+      cache_write_mtok: 0.0583
+      cache_read_mtok: 0.01
+      output_mtok: 0.15
+
+  - id: gemini-pro-1.5
+    name: Gemini 1.5 Pro
+    match:
+      equals: gemini-pro-1.5
+    prices:
+      input_mtok: 1.25
+      output_mtok: 5
+
+  - id: gemma-2-27b-it
+    name: Gemma 2 27B
+    match:
+      equals: gemma-2-27b-it
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+
+  - id: gemma-2-9b-it
+    name: Gemma 2 9B
+    match:
+      equals: gemma-2-9b-it
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: gemma-2-9b-it:free
+    name: Gemma 2 9B (free)
+    match:
+      equals: gemma-2-9b-it:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: gemma-3-12b-it
+    name: Gemma 3 12B
+    match:
+      equals: gemma-3-12b-it
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+
+  - id: gemma-3-12b-it:free
+    name: Gemma 3 12B (free)
+    match:
+      equals: gemma-3-12b-it:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: gemma-3-27b-it
+    name: Gemma 3 27B
+    match:
+      equals: gemma-3-27b-it
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.2
+
+  - id: gemma-3-27b-it:free
+    name: Gemma 3 27B (free)
+    match:
+      equals: gemma-3-27b-it:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: gemma-3-4b-it
+    name: Gemma 3 4B
+    match:
+      equals: gemma-3-4b-it
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.04
+
+  - id: gemma-3-4b-it:free
+    name: Gemma 3 4B (free)
+    match:
+      equals: gemma-3-4b-it:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: gemma-3n-e4b-it:free
+    name: Gemma 3n 4B (free)
+    match:
+      equals: gemma-3n-e4b-it:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: glm-4-32b
+    name: GLM 4 32B
+    match:
+      equals: glm-4-32b
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.24
+
+  - id: glm-4-32b:free
+    name: GLM 4 32B (free)
+    match:
+      equals: glm-4-32b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: glm-z1-32b
+    name: GLM Z1 32B
+    match:
+      equals: glm-z1-32b
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.24
+
+  - id: glm-z1-32b:free
+    name: GLM Z1 32B (free)
+    match:
+      equals: glm-z1-32b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: glm-z1-rumination-32b
+    name: GLM Z1 Rumination 32B
+    match:
+      equals: glm-z1-rumination-32b
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.24
+
+  - id: goliath-120b
+    name: Goliath 120B
+    match:
+      equals: goliath-120b
+    prices:
+      input_mtok: 10
+      output_mtok: 12.5
+
   - id: google/gemini-2.0-flash-001
     match:
       equals: google/gemini-2.0-flash-001
@@ -581,12 +1532,305 @@ models:
       input_mtok: 1
       output_mtok: 2
 
+  - id: gpt-3.5-turbo
+    name: GPT-3.5 Turbo
+    match:
+      equals: gpt-3.5-turbo
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: gpt-3.5-turbo-0125
+    name: GPT-3.5 Turbo 16k
+    match:
+      equals: gpt-3.5-turbo-0125
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: gpt-3.5-turbo-0613
+    name: GPT-3.5 Turbo (older v0613)
+    match:
+      equals: gpt-3.5-turbo-0613
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+
+  - id: gpt-3.5-turbo-1106
+    name: GPT-3.5 Turbo 16k (older v1106)
+    match:
+      equals: gpt-3.5-turbo-1106
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+
+  - id: gpt-3.5-turbo-16k
+    name: GPT-3.5 Turbo 16k
+    match:
+      equals: gpt-3.5-turbo-16k
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
+  - id: gpt-3.5-turbo-instruct
+    name: GPT-3.5 Turbo Instruct
+    match:
+      equals: gpt-3.5-turbo-instruct
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-4
+    name: GPT-4
+    match:
+      equals: gpt-4
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+
+  - id: gpt-4-0314
+    name: GPT-4 (older v0314)
+    match:
+      equals: gpt-4-0314
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+
+  - id: gpt-4-1106-preview
+    name: GPT-4 Turbo (older v1106)
+    match:
+      equals: gpt-4-1106-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-turbo
+    name: GPT-4 Turbo
+    match:
+      equals: gpt-4-turbo
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4-turbo-preview
+    name: GPT-4 Turbo Preview
+    match:
+      equals: gpt-4-turbo-preview
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4.1
+    name: GPT-4.1
+    match:
+      equals: gpt-4.1
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+
+  - id: gpt-4.1-mini
+    name: GPT-4.1 Mini
+    match:
+      equals: gpt-4.1-mini
+    prices:
+      input_mtok: 0.4
+      cache_read_mtok: 0.1
+      output_mtok: 1.6
+
+  - id: gpt-4.1-nano
+    name: GPT-4.1 Nano
+    match:
+      equals: gpt-4.1-nano
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.025
+      output_mtok: 0.4
+
+  - id: gpt-4.5-preview
+    name: GPT-4.5 (Preview)
+    match:
+      equals: gpt-4.5-preview
+    prices:
+      input_mtok: 75
+      cache_read_mtok: 37.5
+      output_mtok: 150
+
+  - id: gpt-4o
+    name: GPT-4o
+    match:
+      equals: gpt-4o
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-4o-2024-05-13
+    name: GPT-4o (2024-05-13)
+    match:
+      equals: gpt-4o-2024-05-13
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: gpt-4o-2024-08-06
+    name: GPT-4o (2024-08-06)
+    match:
+      equals: gpt-4o-2024-08-06
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-4o-2024-11-20
+    name: GPT-4o (2024-11-20)
+    match:
+      equals: gpt-4o-2024-11-20
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-4o-mini
+    name: GPT-4o-mini
+    match:
+      equals: gpt-4o-mini
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.075
+      output_mtok: 0.6
+
+  - id: gpt-4o-mini-2024-07-18
+    name: GPT-4o-mini (2024-07-18)
+    match:
+      equals: gpt-4o-mini-2024-07-18
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.075
+      output_mtok: 0.6
+
+  - id: gpt-4o-mini-search-preview
+    name: GPT-4o-mini Search Preview
+    match:
+      equals: gpt-4o-mini-search-preview
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: gpt-4o-search-preview
+    name: GPT-4o Search Preview
+    match:
+      equals: gpt-4o-search-preview
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: gpt-4o:extended
+    name: GPT-4o (extended)
+    match:
+      equals: gpt-4o:extended
+    prices:
+      input_mtok: 6
+      output_mtok: 18
+
+  - id: grok-2-1212
+    name: Grok 2 1212
+    match:
+      equals: grok-2-1212
+    prices:
+      input_mtok: 2
+      output_mtok: 10
+
+  - id: grok-2-vision-1212
+    name: Grok 2 Vision 1212
+    match:
+      equals: grok-2-vision-1212
+    prices:
+      input_mtok: 2
+      output_mtok: 10
+
+  - id: grok-3
+    name: Grok 3
+    match:
+      equals: grok-3
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.75
+      output_mtok: 15
+
+  - id: grok-3-beta
+    name: Grok 3 Beta
+    match:
+      equals: grok-3-beta
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.75
+      output_mtok: 15
+
+  - id: grok-3-mini
+    name: Grok 3 Mini
+    match:
+      equals: grok-3-mini
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.075
+      output_mtok: 0.5
+
+  - id: grok-3-mini-beta
+    name: Grok 3 Mini Beta
+    match:
+      equals: grok-3-mini-beta
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.075
+      output_mtok: 0.5
+
+  - id: grok-beta
+    name: Grok Beta
+    match:
+      equals: grok-beta
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: grok-vision-beta
+    name: Grok Vision Beta
+    match:
+      equals: grok-vision-beta
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
   - id: gryphe/mythomax-l2-13b
     match:
       equals: gryphe/mythomax-l2-13b
     prices:
       input_mtok: 0.065
       output_mtok: 0.065
+
+  - id: hermes-2-pro-llama-3-8b
+    name: Hermes 2 Pro - Llama-3 8B
+    match:
+      equals: hermes-2-pro-llama-3-8b
+    prices:
+      input_mtok: 0.025
+      output_mtok: 0.04
+
+  - id: hermes-3-llama-3.1-405b
+    name: Hermes 3 405B Instruct
+    match:
+      equals: hermes-3-llama-3.1-405b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.8
+
+  - id: hermes-3-llama-3.1-70b
+    name: Hermes 3 70B Instruct
+    match:
+      equals: hermes-3-llama-3.1-70b
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.3
 
   - id: "huggingfaceh4/zephyr-7b-beta:free"
     match:
@@ -598,6 +1842,22 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+
+  - id: inflection-3-pi
+    name: Inflection 3 Pi
+    match:
+      equals: inflection-3-pi
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: inflection-3-productivity
+    name: Inflection 3 Productivity
+    match:
+      equals: inflection-3-productivity
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
 
   - id: inflection/inflection-3-pi
     match:
@@ -613,6 +1873,38 @@ models:
       input_mtok: 2.5
       output_mtok: 10
 
+  - id: internvl3-14b:free
+    name: InternVL3 14B (free)
+    match:
+      equals: internvl3-14b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: internvl3-2b:free
+    name: InternVL3 2B (free)
+    match:
+      equals: internvl3-2b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: jamba-1.6-large
+    name: Jamba 1.6 Large
+    match:
+      equals: jamba-1.6-large
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+
+  - id: jamba-1.6-mini
+    name: Jamba Mini 1.6
+    match:
+      equals: jamba-1.6-mini
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.4
+
   - id: jondurbin/airoboros-l2-70b
     match:
       equals: jondurbin/airoboros-l2-70b
@@ -620,12 +1912,84 @@ models:
       input_mtok: 0.5
       output_mtok: 0.5
 
+  - id: kimi-dev-72b:free
+    name: Kimi Dev 72b (free)
+    match:
+      equals: kimi-dev-72b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: kimi-vl-a3b-thinking:free
+    name: Kimi VL A3B Thinking (free)
+    match:
+      equals: kimi-vl-a3b-thinking:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: l3-euryale-70b
+    name: Llama 3 Euryale 70B v2.1
+    match:
+      equals: l3-euryale-70b
+    prices:
+      input_mtok: 1.48
+      output_mtok: 1.48
+
+  - id: l3-lunaris-8b
+    name: Llama 3 8B Lunaris
+    match:
+      equals: l3-lunaris-8b
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.05
+
+  - id: l3.1-euryale-70b
+    name: Llama 3.1 Euryale 70B v2.2
+    match:
+      equals: l3.1-euryale-70b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.8
+
+  - id: l3.3-euryale-70b
+    name: Llama 3.3 Euryale 70B
+    match:
+      equals: l3.3-euryale-70b
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.8
+
   - id: latitudegames/wayfarer-large-70b-llama-3.3
     match:
       equals: latitudegames/wayfarer-large-70b-llama-3.3
     prices:
       input_mtok: 0.8
       output_mtok: 0.9
+
+  - id: lfm-3b
+    name: LFM 3B
+    match:
+      equals: lfm-3b
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.02
+
+  - id: lfm-40b
+    name: LFM 40B MoE
+    match:
+      equals: lfm-40b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+
+  - id: lfm-7b
+    name: LFM 7B
+    match:
+      equals: lfm-7b
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.01
 
   - id: liquid/lfm-3b
     match:
@@ -648,12 +2012,380 @@ models:
       input_mtok: 0.01
       output_mtok: 0.01
 
+  - id: llama-3-70b-instruct
+    name: Llama 3 70B Instruct
+    match:
+      equals: llama-3-70b-instruct
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.4
+
+  - id: llama-3-8b-instruct
+    name: Llama 3 8B Instruct
+    match:
+      equals: llama-3-8b-instruct
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.06
+
+  - id: llama-3-lumimaid-70b
+    name: Llama 3 Lumimaid 70B
+    match:
+      equals: llama-3-lumimaid-70b
+    prices:
+      input_mtok: 4
+      output_mtok: 6
+
+  - id: llama-3-lumimaid-8b
+    name: Llama 3 Lumimaid 8B
+    match:
+      equals: llama-3-lumimaid-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.25
+
+  - id: llama-3.1-405b
+    name: Llama 3.1 405B (base)
+    match:
+      equals: llama-3.1-405b
+    prices:
+      input_mtok: 2
+      output_mtok: 2
+
+  - id: llama-3.1-405b-instruct
+    name: Llama 3.1 405B Instruct
+    match:
+      equals: llama-3.1-405b-instruct
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+
+  - id: llama-3.1-70b-instruct
+    name: Llama 3.1 70B Instruct
+    match:
+      equals: llama-3.1-70b-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.28
+
+  - id: llama-3.1-8b-instruct
+    name: Llama 3.1 8B Instruct
+    match:
+      equals: llama-3.1-8b-instruct
+    prices:
+      input_mtok: 0.016
+      output_mtok: 0.029
+
+  - id: llama-3.1-8b-instruct:free
+    name: Llama 3.1 8B Instruct (free)
+    match:
+      equals: llama-3.1-8b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.1-lumimaid-70b
+    name: Lumimaid v0.2 70B
+    match:
+      equals: llama-3.1-lumimaid-70b
+    prices:
+      input_mtok: 2.5
+      output_mtok: 3
+
+  - id: llama-3.1-lumimaid-8b
+    name: Lumimaid v0.2 8B
+    match:
+      equals: llama-3.1-lumimaid-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.25
+
+  - id: llama-3.1-nemotron-70b-instruct
+    name: Llama 3.1 Nemotron 70B Instruct
+    match:
+      equals: llama-3.1-nemotron-70b-instruct
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.3
+
+  - id: llama-3.1-nemotron-ultra-253b-v1
+    name: Llama 3.1 Nemotron Ultra 253B v1
+    match:
+      equals: llama-3.1-nemotron-ultra-253b-v1
+    prices:
+      input_mtok: 0.6
+      output_mtok: 1.8
+
+  - id: llama-3.1-nemotron-ultra-253b-v1:free
+    name: Llama 3.1 Nemotron Ultra 253B v1 (free)
+    match:
+      equals: llama-3.1-nemotron-ultra-253b-v1:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.1-sonar-large-128k-online
+    name: Llama 3.1 Sonar 70B Online
+    match:
+      equals: llama-3.1-sonar-large-128k-online
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+
+  - id: llama-3.1-sonar-small-128k-online
+    name: Llama 3.1 Sonar 8B Online
+    match:
+      equals: llama-3.1-sonar-small-128k-online
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: llama-3.2-11b-vision-instruct
+    name: Llama 3.2 11B Vision Instruct
+    match:
+      equals: llama-3.2-11b-vision-instruct
+    prices:
+      input_mtok: 0.049
+      output_mtok: 0.049
+
+  - id: llama-3.2-11b-vision-instruct:free
+    name: Llama 3.2 11B Vision Instruct (free)
+    match:
+      equals: llama-3.2-11b-vision-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.2-1b-instruct
+    name: Llama 3.2 1B Instruct
+    match:
+      equals: llama-3.2-1b-instruct
+    prices:
+      input_mtok: 0.005
+      output_mtok: 0.01
+
+  - id: llama-3.2-1b-instruct:free
+    name: Llama 3.2 1B Instruct (free)
+    match:
+      equals: llama-3.2-1b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.2-3b-instruct
+    name: Llama 3.2 3B Instruct
+    match:
+      equals: llama-3.2-3b-instruct
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.02
+
+  - id: llama-3.2-3b-instruct:free
+    name: Llama 3.2 3B Instruct (free)
+    match:
+      equals: llama-3.2-3b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.2-90b-vision-instruct
+    name: Llama 3.2 90B Vision Instruct
+    match:
+      equals: llama-3.2-90b-vision-instruct
+    prices:
+      input_mtok: 1.2
+      output_mtok: 1.2
+
+  - id: llama-3.3-70b-instruct
+    name: Llama 3.3 70B Instruct
+    match:
+      equals: llama-3.3-70b-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.24
+
+  - id: llama-3.3-70b-instruct:free
+    name: Llama 3.3 70B Instruct (free)
+    match:
+      equals: llama-3.3-70b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.3-8b-instruct:free
+    name: Llama 3.3 8B Instruct (free)
+    match:
+      equals: llama-3.3-8b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-3.3-nemotron-super-49b-v1
+    name: Llama 3.3 Nemotron Super 49B v1
+    match:
+      equals: llama-3.3-nemotron-super-49b-v1
+    prices:
+      input_mtok: 0.13
+      output_mtok: 0.4
+
+  - id: llama-3.3-nemotron-super-49b-v1:free
+    name: Llama 3.3 Nemotron Super 49B v1 (free)
+    match:
+      equals: llama-3.3-nemotron-super-49b-v1:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-4-maverick
+    name: Llama 4 Maverick
+    match:
+      equals: llama-4-maverick
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: llama-4-maverick:free
+    name: Llama 4 Maverick (free)
+    match:
+      equals: llama-4-maverick:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-4-scout
+    name: Llama 4 Scout
+    match:
+      equals: llama-4-scout
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.3
+
+  - id: llama-4-scout:free
+    name: Llama 4 Scout (free)
+    match:
+      equals: llama-4-scout:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: llama-guard-2-8b
+    name: LlamaGuard 2 8B
+    match:
+      equals: llama-guard-2-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: llama-guard-3-8b
+    name: Llama Guard 3 8B
+    match:
+      equals: llama-guard-3-8b
+    prices:
+      input_mtok: 0.02
+      output_mtok: 0.06
+
+  - id: llama-guard-4-12b
+    name: Llama Guard 4 12B
+    match:
+      equals: llama-guard-4-12b
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.05
+
+  - id: llama3.1-typhoon2-70b-instruct
+    name: Typhoon2 70B Instruct
+    match:
+      equals: llama3.1-typhoon2-70b-instruct
+    prices:
+      input_mtok: 0.88
+      output_mtok: 0.88
+
+  - id: llemma_7b
+    name: Llemma 7b
+    match:
+      equals: llemma_7b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: maestro-reasoning
+    name: Maestro Reasoning
+    match:
+      equals: maestro-reasoning
+    prices:
+      input_mtok: 0.9
+      output_mtok: 3.3
+
+  - id: magistral-medium-2506
+    name: Magistral Medium 2506
+    match:
+      equals: magistral-medium-2506
+    prices:
+      input_mtok: 2
+      output_mtok: 5
+
+  - id: magistral-medium-2506:thinking
+    name: Magistral Medium 2506 (thinking)
+    match:
+      equals: magistral-medium-2506:thinking
+    prices:
+      input_mtok: 2
+      output_mtok: 5
+
+  - id: magistral-small-2506
+    name: Magistral Small 2506
+    match:
+      equals: magistral-small-2506
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: magnum-72b
+    name: Magnum 72B
+    match:
+      equals: magnum-72b
+    prices:
+      input_mtok: 4
+      output_mtok: 6
+
+  - id: magnum-v2-72b
+    name: Magnum v2 72B
+    match:
+      equals: magnum-v2-72b
+    prices:
+      input_mtok: 3
+      output_mtok: 3
+
+  - id: magnum-v4-72b
+    name: Magnum v4 72B
+    match:
+      equals: magnum-v4-72b
+    prices:
+      input_mtok: 2.5
+      output_mtok: 3
+
+  - id: mai-ds-r1:free
+    name: MAI DS R1 (free)
+    match:
+      equals: mai-ds-r1:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
   - id: mancer/weaver
     match:
       equals: mancer/weaver
     prices:
       input_mtok: 1.125
       output_mtok: 1.125
+
+  - id: mercury-coder-small-beta
+    name: Mercury Coder Small Beta
+    match:
+      equals: mercury-coder-small-beta
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1
 
   - id: meta-llama/llama-2-13b-chat
     match:
@@ -855,12 +2587,220 @@ models:
       input_mtok: 0.5
       output_mtok: 0.5
 
+  - id: midnight-rose-70b
+    name: Midnight Rose 70B
+    match:
+      equals: midnight-rose-70b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 0.8
+
+  - id: minimax-01
+    name: MiniMax-01
+    match:
+      equals: minimax-01
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.1
+
+  - id: minimax-m1
+    name: MiniMax M1
+    match:
+      equals: minimax-m1
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.65
+
+  - id: minimax-m1:extended
+    name: MiniMax M1 (extended)
+    match:
+      equals: minimax-m1:extended
+    prices:
+      input_mtok: 0.55
+      output_mtok: 2.2
+
   - id: minimax/minimax-01
     match:
       equals: minimax/minimax-01
     prices:
       input_mtok: 0.2
       output_mtok: 1.1
+
+  - id: ministral-3b
+    name: Ministral 3B
+    match:
+      equals: ministral-3b
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+
+  - id: ministral-8b
+    name: Ministral 8B
+    match:
+      equals: ministral-8b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: mistral-7b-instruct
+    name: Mistral 7B Instruct
+    match:
+      equals: mistral-7b-instruct
+    prices:
+      input_mtok: 0.028
+      output_mtok: 0.054
+
+  - id: mistral-7b-instruct-v0.1
+    name: Mistral 7B Instruct v0.1
+    match:
+      equals: mistral-7b-instruct-v0.1
+    prices:
+      input_mtok: 0.11
+      output_mtok: 0.19
+
+  - id: mistral-7b-instruct-v0.2
+    name: Mistral 7B Instruct v0.2
+    match:
+      equals: mistral-7b-instruct-v0.2
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: mistral-7b-instruct-v0.3
+    name: Mistral 7B Instruct v0.3
+    match:
+      equals: mistral-7b-instruct-v0.3
+    prices:
+      input_mtok: 0.028
+      output_mtok: 0.054
+
+  - id: mistral-7b-instruct:free
+    name: Mistral 7B Instruct (free)
+    match:
+      equals: mistral-7b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: mistral-large
+    name: Mistral Large
+    match:
+      equals: mistral-large
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+
+  - id: mistral-large-2407
+    name: Mistral Large 2407
+    match:
+      equals: mistral-large-2407
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+
+  - id: mistral-large-2411
+    name: Mistral Large 2411
+    match:
+      equals: mistral-large-2411
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+
+  - id: mistral-medium
+    name: Mistral Medium
+    match:
+      equals: mistral-medium
+    prices:
+      input_mtok: 2.75
+      output_mtok: 8.1
+
+  - id: mistral-medium-3
+    name: Mistral Medium 3
+    match:
+      equals: mistral-medium-3
+    prices:
+      input_mtok: 0.4
+      output_mtok: 2
+
+  - id: mistral-nemo
+    name: Mistral Nemo
+    match:
+      equals: mistral-nemo
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.019
+
+  - id: mistral-nemo:free
+    name: Mistral Nemo (free)
+    match:
+      equals: mistral-nemo:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: mistral-saba
+    name: Saba
+    match:
+      equals: mistral-saba
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+
+  - id: mistral-small
+    name: Mistral Small
+    match:
+      equals: mistral-small
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+
+  - id: mistral-small-24b-instruct-2501
+    name: Mistral Small 3
+    match:
+      equals: mistral-small-24b-instruct-2501
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.09
+
+  - id: mistral-small-24b-instruct-2501:free
+    name: Mistral Small 3 (free)
+    match:
+      equals: mistral-small-24b-instruct-2501:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: mistral-small-3.1-24b-instruct
+    name: Mistral Small 3.1 24B
+    match:
+      equals: mistral-small-3.1-24b-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.15
+
+  - id: mistral-small-3.1-24b-instruct:free
+    name: Mistral Small 3.1 24B (free)
+    match:
+      equals: mistral-small-3.1-24b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: mistral-small-3.2-24b-instruct:free
+    name: Mistral Small 3.2 24B (free)
+    match:
+      equals: mistral-small-3.2-24b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: mistral-tiny
+    name: Mistral Tiny
+    match:
+      equals: mistral-tiny
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.25
 
   - id: mistral/ministral-8b
     match:
@@ -1023,6 +2963,46 @@ models:
       input_mtok: 2
       output_mtok: 6
 
+  - id: mixtral-8x22b-instruct
+    name: Mixtral 8x22B Instruct
+    match:
+      equals: mixtral-8x22b-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: mixtral-8x7b-instruct
+    name: Mixtral 8x7B Instruct
+    match:
+      equals: mixtral-8x7b-instruct
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.24
+
+  - id: mn-celeste-12b
+    name: Mistral Nemo 12B Celeste
+    match:
+      equals: mn-celeste-12b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: mn-inferor-12b
+    name: Mistral Nemo Inferor 12B
+    match:
+      equals: mn-inferor-12b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: mn-starcannon-12b
+    name: Starcannon 12B
+    match:
+      equals: mn-starcannon-12b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
   - id: "moonshotai/kimi-vl-a3b-thinking:free"
     match:
       equals: "moonshotai/kimi-vl-a3b-thinking:free"
@@ -1031,6 +3011,22 @@ models:
     match:
       equals: "moonshotai/moonlight-16b-a3b-instruct:free"
     prices: {}
+  - id: mythalion-13b
+    name: Mythalion 13B
+    match:
+      equals: mythalion-13b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: mythomax-l2-13b
+    name: MythoMax 13B
+    match:
+      equals: mythomax-l2-13b
+    prices:
+      input_mtok: 0.065
+      output_mtok: 0.065
+
   - id: neversleep/llama-3-lumimaid-70b
     match:
       equals: neversleep/llama-3-lumimaid-70b
@@ -1068,12 +3064,28 @@ models:
       input_mtok: 0.75
       output_mtok: 1.5
 
+  - id: noromaid-20b
+    name: Noromaid 20B
+    match:
+      equals: noromaid-20b
+    prices:
+      input_mtok: 1.25
+      output_mtok: 2
+
   - id: nothingiisreal/mn-celeste-12b
     match:
       equals: nothingiisreal/mn-celeste-12b
     prices:
       input_mtok: 0.8
       output_mtok: 1.2
+
+  - id: nous-hermes-2-mixtral-8x7b-dpo
+    name: Hermes 2 Mixtral 8x7B DPO
+    match:
+      equals: nous-hermes-2-mixtral-8x7b-dpo
+    prices:
+      input_mtok: 0.6
+      output_mtok: 0.6
 
   - id: "nousresearch/deephermes-3-llama-3-8b-preview:free"
     match:
@@ -1114,6 +3126,30 @@ models:
       input_mtok: 0.18
       output_mtok: 0.18
 
+  - id: nova-lite-v1
+    name: Nova Lite 1.0
+    match:
+      equals: nova-lite-v1
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.24
+
+  - id: nova-micro-v1
+    name: Nova Micro 1.0
+    match:
+      equals: nova-micro-v1
+    prices:
+      input_mtok: 0.035
+      output_mtok: 0.14
+
+  - id: nova-pro-v1
+    name: Nova Pro 1.0
+    match:
+      equals: nova-pro-v1
+    prices:
+      input_mtok: 0.8
+      output_mtok: 3.2
+
   - id: nvidia/llama-3.1-nemotron-70b-instruct
     match:
       equals: nvidia/llama-3.1-nemotron-70b-instruct
@@ -1137,6 +3173,112 @@ models:
     match:
       equals: "nvidia/llama-3.3-nemotron-super-49b-v1:free"
     prices: {}
+  - id: o1
+    name: o1
+    match:
+      equals: o1
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+
+  - id: o1-mini
+    name: o1-mini
+    match:
+      equals: o1-mini
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+
+  - id: o1-mini-2024-09-12
+    name: o1-mini (2024-09-12)
+    match:
+      equals: o1-mini-2024-09-12
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+
+  - id: o1-preview
+    name: o1-preview
+    match:
+      equals: o1-preview
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+
+  - id: o1-preview-2024-09-12
+    name: o1-preview (2024-09-12)
+    match:
+      equals: o1-preview-2024-09-12
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+
+  - id: o1-pro
+    name: o1-pro
+    match:
+      equals: o1-pro
+    prices:
+      input_mtok: 150
+      output_mtok: 600
+
+  - id: o3
+    name: o3
+    match:
+      equals: o3
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+
+  - id: o3-mini
+    name: o3 Mini
+    match:
+      equals: o3-mini
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+
+  - id: o3-mini-high
+    name: o3 Mini High
+    match:
+      equals: o3-mini-high
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+
+  - id: o3-pro
+    name: o3 Pro
+    match:
+      equals: o3-pro
+    prices:
+      input_mtok: 20
+      output_mtok: 80
+
+  - id: o4-mini
+    name: o4 Mini
+    match:
+      equals: o4-mini
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.275
+      output_mtok: 4.4
+
+  - id: o4-mini-high
+    name: o4 Mini High
+    match:
+      equals: o4-mini-high
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.275
+      output_mtok: 4.4
+
   - id: "open-r1/olympiccoder-32b:free"
     match:
       equals: "open-r1/olympiccoder-32b:free"
@@ -1344,6 +3486,14 @@ models:
       input_mtok: 0.07
       output_mtok: 0.07
 
+  - id: openhands-lm-32b-v0.1
+    name: OpenHands LM 32B V0.1
+    match:
+      equals: openhands-lm-32b-v0.1
+    prices:
+      input_mtok: 2.6
+      output_mtok: 3.4
+
   - id: perplexity/llama-3.1-sonar-large-128k-online
     match:
       equals: perplexity/llama-3.1-sonar-large-128k-online
@@ -1400,12 +3550,191 @@ models:
       input_mtok: 2
       output_mtok: 8
 
+  - id: phi-3-medium-128k-instruct
+    name: Phi-3 Medium 128K Instruct
+    match:
+      equals: phi-3-medium-128k-instruct
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+
+  - id: phi-3-mini-128k-instruct
+    name: Phi-3 Mini 128K Instruct
+    match:
+      equals: phi-3-mini-128k-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: phi-3.5-mini-128k-instruct
+    name: Phi-3.5 Mini 128K Instruct
+    match:
+      equals: phi-3.5-mini-128k-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: phi-4
+    name: Phi 4
+    match:
+      equals: phi-4
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.14
+
+  - id: phi-4-multimodal-instruct
+    name: Phi 4 Multimodal Instruct
+    match:
+      equals: phi-4-multimodal-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+
+  - id: phi-4-reasoning-plus
+    name: Phi 4 Reasoning Plus
+    match:
+      equals: phi-4-reasoning-plus
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.35
+
+  - id: phi-4-reasoning-plus:free
+    name: Phi 4 Reasoning Plus (free)
+    match:
+      equals: phi-4-reasoning-plus:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: phi-4-reasoning:free
+    name: Phi 4 Reasoning (free)
+    match:
+      equals: phi-4-reasoning:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: pixtral-12b
+    name: Pixtral 12B
+    match:
+      equals: pixtral-12b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: pixtral-large-2411
+    name: Pixtral Large 2411
+    match:
+      equals: pixtral-large-2411
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+
   - id: pygmalionai/mythalion-13b
     match:
       equals: pygmalionai/mythalion-13b
     prices:
       input_mtok: 0.5625
       output_mtok: 1.125
+
+  - id: qwen-2-72b-instruct
+    name: Qwen 2 72B Instruct
+    match:
+      equals: qwen-2-72b-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: qwen-2.5-72b-instruct
+    name: Qwen2.5 72B Instruct
+    match:
+      equals: qwen-2.5-72b-instruct
+    prices:
+      input_mtok: 0.12
+      output_mtok: 0.39
+
+  - id: qwen-2.5-72b-instruct:free
+    name: Qwen2.5 72B Instruct (free)
+    match:
+      equals: qwen-2.5-72b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen-2.5-7b-instruct
+    name: Qwen2.5 7B Instruct
+    match:
+      equals: qwen-2.5-7b-instruct
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.1
+
+  - id: qwen-2.5-coder-32b-instruct
+    name: Qwen2.5 Coder 32B Instruct
+    match:
+      equals: qwen-2.5-coder-32b-instruct
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.15
+
+  - id: qwen-2.5-coder-32b-instruct:free
+    name: Qwen2.5 Coder 32B Instruct (free)
+    match:
+      equals: qwen-2.5-coder-32b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen-2.5-vl-7b-instruct
+    name: Qwen2.5-VL 7B Instruct
+    match:
+      equals: qwen-2.5-vl-7b-instruct
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: qwen-max
+    name: Qwen-Max
+    match:
+      equals: qwen-max
+    prices:
+      input_mtok: 1.6
+      cache_read_mtok: 0.64
+      output_mtok: 6.4
+
+  - id: qwen-plus
+    name: Qwen-Plus
+    match:
+      equals: qwen-plus
+    prices:
+      input_mtok: 0.4
+      cache_read_mtok: 0.16
+      output_mtok: 1.2
+
+  - id: qwen-turbo
+    name: Qwen-Turbo
+    match:
+      equals: qwen-turbo
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.02
+      output_mtok: 0.2
+
+  - id: qwen-vl-max
+    name: Qwen VL Max
+    match:
+      equals: qwen-vl-max
+    prices:
+      input_mtok: 0.8
+      output_mtok: 3.2
+
+  - id: qwen-vl-plus
+    name: Qwen VL Plus
+    match:
+      equals: qwen-vl-plus
+    prices:
+      input_mtok: 0.21
+      output_mtok: 0.63
 
   - id: qwen/qwen-2-72b-instruct
     match:
@@ -1555,6 +3884,166 @@ models:
     match:
       equals: "qwen/qwq-32b:free"
     prices: {}
+  - id: qwen2.5-vl-32b-instruct
+    name: Qwen2.5 VL 32B Instruct
+    match:
+      equals: qwen2.5-vl-32b-instruct
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: qwen2.5-vl-32b-instruct:free
+    name: Qwen2.5 VL 32B Instruct (free)
+    match:
+      equals: qwen2.5-vl-32b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen2.5-vl-72b-instruct
+    name: Qwen2.5 VL 72B Instruct
+    match:
+      equals: qwen2.5-vl-72b-instruct
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.75
+
+  - id: qwen2.5-vl-72b-instruct:free
+    name: Qwen2.5 VL 72B Instruct (free)
+    match:
+      equals: qwen2.5-vl-72b-instruct:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen3-14b
+    name: Qwen3 14B
+    match:
+      equals: qwen3-14b
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.24
+
+  - id: qwen3-14b:free
+    name: Qwen3 14B (free)
+    match:
+      equals: qwen3-14b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen3-235b-a22b
+    name: Qwen3 235B A22B
+    match:
+      equals: qwen3-235b-a22b
+    prices:
+      input_mtok: 0.13
+      output_mtok: 0.6
+
+  - id: qwen3-235b-a22b:free
+    name: Qwen3 235B A22B (free)
+    match:
+      equals: qwen3-235b-a22b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen3-30b-a3b
+    name: Qwen3 30B A3B
+    match:
+      equals: qwen3-30b-a3b
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.29
+
+  - id: qwen3-30b-a3b:free
+    name: Qwen3 30B A3B (free)
+    match:
+      equals: qwen3-30b-a3b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen3-32b
+    name: Qwen3 32B
+    match:
+      equals: qwen3-32b
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.3
+
+  - id: qwen3-32b:free
+    name: Qwen3 32B (free)
+    match:
+      equals: qwen3-32b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwen3-8b
+    name: Qwen3 8B
+    match:
+      equals: qwen3-8b
+    prices:
+      input_mtok: 0.035
+      output_mtok: 0.138
+
+  - id: qwen3-8b:free
+    name: Qwen3 8B (free)
+    match:
+      equals: qwen3-8b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwerky-72b:free
+    name: Qwerky 72B (free)
+    match:
+      equals: qwerky-72b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwq-32b
+    name: QwQ 32B
+    match:
+      equals: qwq-32b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.2
+
+  - id: qwq-32b-arliai-rpr-v1:free
+    name: QwQ 32B RpR v1 (free)
+    match:
+      equals: qwq-32b-arliai-rpr-v1:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: qwq-32b-preview
+    name: QwQ 32B Preview
+    match:
+      equals: qwq-32b-preview
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: qwq-32b:free
+    name: QwQ 32B (free)
+    match:
+      equals: qwq-32b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: r1-1776
+    name: R1 1776
+    match:
+      equals: r1-1776
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+
   - id: raifle/sorcererlm-8x22b
     match:
       equals: raifle/sorcererlm-8x22b
@@ -1562,10 +4051,34 @@ models:
       input_mtok: 4.5
       output_mtok: 4.5
 
+  - id: reka-flash-3:free
+    name: Flash 3 (free)
+    match:
+      equals: reka-flash-3:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
   - id: "rekaai/reka-flash-3:free"
     match:
       equals: "rekaai/reka-flash-3:free"
     prices: {}
+  - id: remm-slerp-l2-13b
+    name: ReMM SLERP 13B
+    match:
+      equals: remm-slerp-l2-13b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
+  - id: rocinante-12b
+    name: Rocinante 12B
+    match:
+      equals: rocinante-12b
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.5
+
   - id: sao10k/fimbulvetr-11b-v2
     match:
       equals: sao10k/fimbulvetr-11b-v2
@@ -1601,6 +4114,14 @@ models:
       input_mtok: 0.7
       output_mtok: 0.8
 
+  - id: sarvam-m:free
+    name: Sarvam-M (free)
+    match:
+      equals: sarvam-m:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
   - id: scb10x/llama3.1-typhoon2-70b-instruct
     match:
       equals: scb10x/llama3.1-typhoon2-70b-instruct
@@ -1619,6 +4140,62 @@ models:
     match:
       equals: "shisa-ai/shisa-v2-llama3.3-70b:free"
     prices: {}
+  - id: shisa-v2-llama3.3-70b:free
+    name: Shisa V2 Llama 3.3 70B  (free)
+    match:
+      equals: shisa-v2-llama3.3-70b:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: skyfall-36b-v2
+    name: Skyfall 36B V2
+    match:
+      equals: skyfall-36b-v2
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.8
+
+  - id: sonar
+    name: Sonar
+    match:
+      equals: sonar
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+
+  - id: sonar-deep-research
+    name: Sonar Deep Research
+    match:
+      equals: sonar-deep-research
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+
+  - id: sonar-pro
+    name: Sonar Pro
+    match:
+      equals: sonar-pro
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
+  - id: sonar-reasoning
+    name: Sonar Reasoning
+    match:
+      equals: sonar-reasoning
+    prices:
+      input_mtok: 1
+      output_mtok: 5
+
+  - id: sonar-reasoning-pro
+    name: Sonar Reasoning Pro
+    match:
+      equals: sonar-reasoning-pro
+    prices:
+      input_mtok: 2
+      output_mtok: 8
+
   - id: sophosympatheia/midnight-rose-70b
     match:
       equals: sophosympatheia/midnight-rose-70b
@@ -1630,6 +4207,22 @@ models:
     match:
       equals: "sophosympatheia/rogue-rose-103b-v0.2:free"
     prices: {}
+  - id: sorcererlm-8x22b
+    name: SorcererLM 8x22B
+    match:
+      equals: sorcererlm-8x22b
+    prices:
+      input_mtok: 4.5
+      output_mtok: 4.5
+
+  - id: spotlight
+    name: Spotlight
+    match:
+      equals: spotlight
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+
   - id: steelskull/l3.3-electra-r1-70b
     match:
       equals: steelskull/l3.3-electra-r1-70b
@@ -1673,6 +4266,14 @@ models:
     match:
       equals: "thudm/glm-z1-32b:free"
     prices: {}
+  - id: toppy-m-7b
+    name: Toppy M 7B
+    match:
+      equals: toppy-m-7b
+    prices:
+      input_mtok: 0.8
+      output_mtok: 1.2
+
   - id: undi95/remm-slerp-l2-13b
     match:
       equals: undi95/remm-slerp-l2-13b
@@ -1686,6 +4287,54 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.07
+
+  - id: unslopnemo-12b
+    name: UnslopNemo 12B
+    match:
+      equals: unslopnemo-12b
+    prices:
+      input_mtok: 0.45
+      output_mtok: 0.45
+
+  - id: valkyrie-49b-v1
+    name: Valkyrie 49B V1
+    match:
+      equals: valkyrie-49b-v1
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.8
+
+  - id: virtuoso-large
+    name: Virtuoso Large
+    match:
+      equals: virtuoso-large
+    prices:
+      input_mtok: 0.75
+      output_mtok: 1.2
+
+  - id: virtuoso-medium-v2
+    name: Virtuoso Medium V2
+    match:
+      equals: virtuoso-medium-v2
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.8
+
+  - id: weaver
+    name: Weaver (alpha)
+    match:
+      equals: weaver
+    prices:
+      input_mtok: 1.5
+      output_mtok: 1.5
+
+  - id: wizardlm-2-8x22b
+    name: WizardLM-2 8x22B
+    match:
+      equals: wizardlm-2-8x22b
+    prices:
+      input_mtok: 0.48
+      output_mtok: 0.48
 
   - id: x-ai/grok-2-1212
     match:
@@ -1735,3 +4384,11 @@ models:
     prices:
       input_mtok: 3.75
       output_mtok: 3.75
+
+  - id: yi-large
+    name: Yi Large
+    match:
+      equals: yi-large
+    prices:
+      input_mtok: 3
+      output_mtok: 3

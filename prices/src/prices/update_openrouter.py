@@ -41,12 +41,16 @@ class OpenRouterModel(BaseModel):
     def model_name(self) -> str:
         return self.name.split(':', 1)[-1].strip()
 
-    def model_info(self) -> ModelInfo:
+    def model_info(self, inc_description: bool = True) -> ModelInfo:
         model_id = self.model_id()
 
-        description = self.description.split('\n\n', 1)[0]
-        # remove markdown links
-        description = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', description)
+        if inc_description:
+            description = self.description.split('\n\n', 1)[0]
+            # remove markdown links
+            description = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', description)
+        else:
+            description = None
+
         return ModelInfo(
             id=model_id,
             name=self.model_name(),
@@ -86,7 +90,7 @@ class OpenRouterResponse(BaseModel):
     data: list[OpenRouterModel]
 
 
-def update_from_openrouter():
+def update_from_openrouter():  # noqa: C901
     """Update provider prices based on OpenRouter API."""
     r = httpx.get('https://openrouter.ai/api/v1/models')
     r.raise_for_status()
@@ -96,56 +100,87 @@ def update_from_openrouter():
     providers_yaml = get_providers_yaml()
 
     or_providers: dict[str, list[OpenRouterModel]] = {}
-    for model in or_response.data:
-        if models := or_providers.get(model.provider_id()):
-            models.append(model)
+
+    # add all models to the openrouter provider
+    or_provider_yaml = providers_yaml['openrouter']
+    or_models_added = 0
+    or_models_updated = 0
+    for or_model in or_response.data:
+        provider_id = or_model.provider_id()
+        if provider_id == 'openrouter':
+            # this model is invalid
+            continue
+        if models := or_providers.get(provider_id):
+            models.append(or_model)
         else:
-            or_providers[model.provider_id()] = [model]
+            or_providers[provider_id] = [or_model]
+
+        # add all models to the openrouter provider
+        model_info = or_model.model_info(inc_description=False)
+        assert isinstance(model_info.prices, ModelPrice)
+        try:
+            or_provider_yaml.update_model(model_info.id, model_info)
+        except LookupError:
+            or_models_added += or_provider_yaml.add_model(model_info)
+        else:
+            or_models_updated += 1
+
+    if or_models_added or or_models_updated:
+        print('Provider openrouter:')
+        if or_models_added:
+            print(f'  {or_models_added} models added')
+        if or_models_updated:
+            print(f'  {or_models_updated} models updated')
+        print('')
+        or_provider_yaml.save()
 
     prices: source_prices.SourcePricesType = {}
 
     for provider_id, or_models in or_providers.items():
-        if provider_id == 'openrouter':
+        try:
+            provider_yaml = providers_yaml[provider_id]
+        except KeyError:
+            # ignore other providers, we could add them later
             continue
-        if provider_yaml := providers_yaml.get(provider_id):
-            pyd_provider = provider_yaml.provider
-            models_added = 0
-            models_updated = 0
-            provider_prices: source_prices.ProvidePrices = {}
 
-            def add_prices(id: str, prices: ModelPrice):
-                if existing := provider_prices.get(id):
-                    if existing == prices:
-                        return
-                    elif existing.all_unset():
-                        provider_prices[id] = prices
-                    elif prices.all_unset():
-                        return
-                    else:
-                        return
-                        # debug('prices differ', id, existing, prices)
-                else:
+        pyd_provider = provider_yaml.provider
+        models_added = 0
+        models_updated = 0
+        provider_prices: source_prices.ProvidePrices = {}
+
+        def add_prices(id: str, prices: ModelPrice):
+            if existing := provider_prices.get(id):
+                if existing == prices:
+                    return
+                elif existing.all_unset():
                     provider_prices[id] = prices
-
-            for or_model in or_models:
-                model_info = or_model.model_info()
-                assert isinstance(model_info.prices, ModelPrice)
-                if matching_model := pyd_provider.find_model(model_info.id):
-                    add_prices(matching_model.id, model_info.prices)
-                    models_updated += 1
-                    provider_yaml.update_model(matching_model.id, model_info)
+                elif prices.all_unset():
+                    return
                 else:
-                    add_prices(model_info.id, model_info.prices)
-                    models_added += provider_yaml.add_model(model_info)
+                    return
+                    # debug('prices differ', id, existing, prices)
+            else:
+                provider_prices[id] = prices
 
-            prices[pyd_provider.id] = provider_prices
-            if models_added or models_updated:
-                print(f'Provider {provider_id}:')
-                if models_added:
-                    print(f'  {models_added} models added')
-                if models_updated:
-                    print(f'  {models_updated} models updated')
-                print('')
-                provider_yaml.save()
+        for or_model in or_models:
+            model_info = or_model.model_info()
+            assert isinstance(model_info.prices, ModelPrice)
+            if matching_model := pyd_provider.find_model(model_info.id):
+                add_prices(matching_model.id, model_info.prices)
+                models_updated += 1
+                provider_yaml.update_model(matching_model.id, model_info)
+            else:
+                add_prices(model_info.id, model_info.prices)
+                models_added += provider_yaml.add_model(model_info)
+
+        prices[pyd_provider.id] = provider_prices
+        if models_added or models_updated:
+            print(f'Provider {provider_id}:')
+            if models_added:
+                print(f'  {models_added} models added')
+            if models_updated:
+                print(f'  {models_updated} models updated')
+            print('')
+            provider_yaml.save()
 
     source_prices.write_source_prices('openrouter', prices)
