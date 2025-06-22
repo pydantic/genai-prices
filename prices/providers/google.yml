@@ -137,6 +137,7 @@ models:
       enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       equals: gemini-2.5-flash
+    prices_checked: true
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
