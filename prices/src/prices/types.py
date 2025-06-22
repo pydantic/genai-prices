@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Union
@@ -51,6 +52,12 @@ class Provider(_Model):
             raise ValueError(f'Duplicate model ids: {duplicates}')
         return models
 
+    def find_model(self, model_id: str) -> ModelInfo | None:
+        for model in self.models:
+            if model.is_match(model_id):
+                return model
+        return None
+
 
 class ModelInfo(_Model):
     """Information about an LLM model"""
@@ -61,7 +68,7 @@ class ModelInfo(_Model):
     """Name of the model"""
     description: str | None = None
     """Description of the model"""
-    matches: LogicClause
+    match: LogicClause
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     max_tokens: int | None = None
     """Maximum number of tokens allowed for this model"""
@@ -71,6 +78,9 @@ class ModelInfo(_Model):
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
     E.g. later conditional prices take precedence over earlier ones.
     """
+
+    def is_match(self, model_id: str) -> bool:
+        return self.match.is_match(model_id)
 
 
 DecimalFloat = Annotated[
@@ -132,30 +142,51 @@ class StartDateConstraint(_Model):
 class ClauseStartsWith(_Model):
     starts_with: str
 
+    def is_match(self, text: str) -> bool:
+        return text.startswith(self.starts_with)
+
 
 class ClauseEndsWith(_Model):
     ends_with: str
+
+    def is_match(self, text: str) -> bool:
+        return text.endswith(self.ends_with)
 
 
 class ClauseContains(_Model):
     contains: str
 
+    def is_match(self, text: str) -> bool:
+        return self.contains in text
+
 
 class ClauseRegex(_Model):
-    regex: str
+    regex: re.Pattern[str]
     any: list[str] | None = None
+
+    def is_match(self, text: str) -> bool:
+        return bool(self.regex.search(text))
 
 
 class ClauseEquals(_Model):
     equals: str
 
+    def is_match(self, text: str) -> bool:
+        return text == self.equals
+
 
 class ClauseOr(_Model):
     or_: list[LogicClause] = Field(alias='or')
 
+    def is_match(self, text: str) -> bool:
+        return any(clause.is_match(text) for clause in self.or_)
+
 
 class ClauseAnd(_Model):
     and_: list[LogicClause] = Field(alias='and')
+
+    def is_match(self, text: str) -> bool:
+        return all(clause.is_match(text) for clause in self.and_)
 
 
 def clause_discriminator(v: Any) -> str | None:

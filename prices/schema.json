@@ -124,6 +124,7 @@
       "additionalProperties": false,
       "properties": {
         "regex": {
+          "format": "regex",
           "title": "Regex",
           "type": "string"
         },
@@ -224,7 +225,7 @@
           "description": "Description of the model",
           "title": "Description"
         },
-        "matches": {
+        "match": {
           "description": "Boolean logic for matching this model to any identifier which could be used to reference the model in API requests",
           "oneOf": [
             {
@@ -249,7 +250,7 @@
               "$ref": "#/$defs/ClauseAnd"
             }
           ],
-          "title": "Matches"
+          "title": "Match"
         },
         "max_tokens": {
           "anyOf": [
@@ -282,7 +283,7 @@
       },
       "required": [
         "id",
-        "matches",
+        "match",
         "prices"
       ],
       "title": "ModelInfo",

@@ -4,28 +4,28 @@ pricing_url: https://ai.google.dev/gemini-api/docs/pricing
 api_pattern: 'https://(.*\.)?googleapis\.com'
 models:
   - id: claude-3-5-haiku
-    matches:
+    match:
       contains: claude-3-5-haiku
     prices:
       input_mtok: 0.8
       output_mtok: 4
 
   - id: claude-3-5-sonnet
-    matches:
+    match:
       contains: claude-3-5-sonnet
     prices:
       input_mtok: 3
       output_mtok: 15
 
   - id: claude-3-7-sonnet
-    matches:
+    match:
       contains: claude-3-7-sonnet
     prices:
       input_mtok: 3
       output_mtok: 15
 
   - id: claude-3-opus
-    matches:
+    match:
       contains: claude-3-opus
     prices:
       input_mtok: 15
@@ -37,7 +37,7 @@ models:
       Google's first-generation advanced multimodal model that can understand
       text, code, and images. It provides strong reasoning capabilities and
       follows instructions effectively.
-    matches:
+    match:
       equals: gemini-1.0-pro-vision-001
     max_tokens: 32768
     prices:
@@ -50,7 +50,7 @@ models:
       A faster, more cost-effective variant of Gemini 1.5 that maintains strong
       capabilities while optimizing for performance and cost efficiency.
       Suitable for production deployments requiring high throughput.
-    matches:
+    match:
       contains: gemini-1.5-flash
     max_tokens: 1000000
     prices:
@@ -63,7 +63,7 @@ models:
       Google's most capable multimodal model with an extremely long context
       window of up to 1 million tokens. It excels at complex reasoning,
       long-form content processing, and multimodal understanding.
-    matches:
+    match:
       contains: gemini-1.5-pro
     max_tokens: 1000000
     prices:
@@ -76,7 +76,7 @@ models:
       The newest generation of Google's Gemini models, featuring improved
       reasoning, instruction following, and factual accuracy, with the Flash
       variant optimized for cost-efficiency and performance.
-    matches:
+    match:
       contains: gemini-2.0-flash
     max_tokens: 1000000
     prices:
@@ -89,7 +89,7 @@ models:
       A lighter, more cost-effective version of Gemini 2.0 Flash, designed for
       applications requiring high efficiency while maintaining good performance.
       Ideal for high-volume, cost-sensitive deployments.
-    matches:
+    match:
       contains: gemini-2.0-flash-lite
     max_tokens: 1000000
     prices:
@@ -97,7 +97,7 @@ models:
       output_mtok: 0.3
 
   - id: gemini-2.5-flash-preview
-    matches:
+    match:
       contains: gemini-2.5-flash-preview
     prices:
       input_mtok: 0.15
@@ -109,12 +109,12 @@ models:
       Google's most advanced 'thinking model' with enhanced reasoning
       capabilities. Currently in experimental phase, it leads on complex
       reasoning, code generation, and multimodal tasks.
-    matches:
+    match:
       equals: gemini-2.5-pro-exp-03-25
     max_tokens: 1000000
     prices: {}
   - id: gemini-2.5-pro-preview
-    matches:
+    match:
       contains: gemini-2.5-pro-preview
     prices:
       input_mtok: 1.25
@@ -126,7 +126,7 @@ models:
       A faster, more cost-effective variant of Gemini 1.5 that maintains strong
       capabilities while optimizing for performance and cost efficiency.
       Suitable for production deployments requiring high throughput.
-    matches:
+    match:
       equals: gemini-flash-1.5-8b
     max_tokens: 1000000
     prices:
@@ -139,7 +139,7 @@ models:
       Google's first-generation advanced multimodal model that can understand
       text, code, and images. It provides strong reasoning capabilities and
       follows instructions effectively.
-    matches:
+    match:
       or:
         - equals: gemini-pro
         - equals: gemini-1.0-pro

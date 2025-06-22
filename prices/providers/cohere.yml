@@ -4,7 +4,7 @@ pricing_url: https://cohere.com/pricing
 api_pattern: 'https://api\.cohere\.ai'
 models:
   - id: cohere/command-r
-    matches:
+    match:
       equals: cohere/command-r
     prices:
       input_mtok: 0.5

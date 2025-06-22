@@ -4,140 +4,140 @@ pricing_url: https://fireworks.ai/pricing
 api_pattern: 'https://api\.fireworks\.ai'
 models:
   - id: accounts/fireworks/models/SSD-1B
-    matches:
+    match:
       equals: accounts/fireworks/models/SSD-1B
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/SSD-1B-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/SSD-1B-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/japanese-stable-diffusion-xl
-    matches:
+    match:
       equals: accounts/fireworks/models/japanese-stable-diffusion-xl
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/japanese-stable-diffusion-xl-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/japanese-stable-diffusion-xl-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/llama-v3p1-405b-instruct
-    matches:
+    match:
       equals: accounts/fireworks/models/llama-v3p1-405b-instruct
     prices:
       input_mtok: 3
       output_mtok: 3
 
   - id: accounts/fireworks/models/mixtral-8x22b-instruct
-    matches:
+    match:
       equals: accounts/fireworks/models/mixtral-8x22b-instruct
     prices:
       input_mtok: 1.2
       output_mtok: 1.2
 
   - id: accounts/fireworks/models/mixtral-8x7b-instruct
-    matches:
+    match:
       equals: accounts/fireworks/models/mixtral-8x7b-instruct
     prices:
       input_mtok: 0.5
       output_mtok: 0.5
 
   - id: accounts/fireworks/models/playground-v2-1024px-aesthetic
-    matches:
+    match:
       equals: accounts/fireworks/models/playground-v2-1024px-aesthetic
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/playground-v2-1024px-aesthetic-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/playground-v2-1024px-aesthetic-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/playground-v2-5-1024px-aesthetic
-    matches:
+    match:
       equals: accounts/fireworks/models/playground-v2-5-1024px-aesthetic
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/playground-v2-5-1024px-aesthetic-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/playground-v2-5-1024px-aesthetic-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/sd3
-    matches:
+    match:
       equals: accounts/fireworks/models/sd3
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/sd3-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/sd3-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/sd3-medium
-    matches:
+    match:
       equals: accounts/fireworks/models/sd3-medium
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/sd3-medium-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/sd3-medium-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/sd3-turbo
-    matches:
+    match:
       equals: accounts/fireworks/models/sd3-turbo
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/sd3-turbo-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/sd3-turbo-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/stable-diffusion-xl-1024-v1-0
-    matches:
+    match:
       equals: accounts/fireworks/models/stable-diffusion-xl-1024-v1-0
     prices:
       input_mtok: 130
       output_mtok: 130
 
   - id: accounts/fireworks/models/stable-diffusion-xl-1024-v1-0-ControlNet
-    matches:
+    match:
       equals: accounts/fireworks/models/stable-diffusion-xl-1024-v1-0-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
 
   - id: accounts/fireworks/models/yi-large
-    matches:
+    match:
       equals: accounts/fireworks/models/yi-large
     prices:
       input_mtok: 3

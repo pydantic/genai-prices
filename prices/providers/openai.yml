@@ -4,7 +4,7 @@ pricing_url: https://openai.com/api/pricing/
 api_pattern: 'https://api\.openai\.com'
 models:
   - id: ada
-    matches:
+    match:
       or:
         - equals: ada
         - equals: text-ada-001
@@ -13,14 +13,14 @@ models:
       output_mtok: 0.4
 
   - id: babbage
-    matches:
+    match:
       equals: babbage
     prices:
       input_mtok: 0.5
       output_mtok: 0.5
 
   - id: curie
-    matches:
+    match:
       or:
         - equals: curie
         - equals: text-curie-001
@@ -29,7 +29,7 @@ models:
       output_mtok: 2
 
   - id: davinci
-    matches:
+    match:
       or:
         - equals: davinci
         - equals: text-davinci-001
@@ -39,7 +39,7 @@ models:
 
   - id: "ft:gpt-3.5-turbo-"
     description: GPT-3.5 Turbo fine tuned.
-    matches:
+    match:
       starts_with: "ft:gpt-3.5-turbo-"
     prices:
       input_mtok: 3
@@ -47,7 +47,7 @@ models:
 
   - id: "ft:gpt-4o-2024-08-06:"
     description: GPT-4o fine tuned.
-    matches:
+    match:
       starts_with: "ft:gpt-4o-2024-08-06:"
     prices:
       input_mtok: 3.75
@@ -55,7 +55,7 @@ models:
 
   - id: "ft:gpt-4o-mini-2024-07-18:"
     description: GPT-4o Mini fine tuned.
-    matches:
+    match:
       starts_with: "ft:gpt-4o-mini-2024-07-18:"
     prices:
       input_mtok: 0.3
@@ -64,7 +64,7 @@ models:
   - id: gpt-3.5-turbo
     name: gpt 3.5 turbo
     description: GPT-3.5 Turbo offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: gpt-3.5-turbo
         - equals: gpt-35-turbo
@@ -80,7 +80,7 @@ models:
   - id: gpt-3.5-turbo-0125
     name: gpt 3.5 turbo 0125
     description: GPT-3.5 Turbo offers a balance between cost and performance.
-    matches:
+    match:
       equals: gpt-3.5-turbo-0125
     max_tokens: 16385
     prices:
@@ -90,7 +90,7 @@ models:
   - id: gpt-3.5-turbo-1106
     name: gpt 3.5
     description: GPT-3.5 Turbo offers a balance between cost and performance.
-    matches:
+    match:
       equals: gpt-3.5-turbo-1106
     max_tokens: 16385
     prices:
@@ -100,7 +100,7 @@ models:
   - id: gpt-35-turbo-16k
     name: gpt 3.5 turbo 16k
     description: GPT-3.5 Turbo offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: gpt-35-turbo-16k
         - equals: gpt-3.5-turbo-16k-0613
@@ -116,7 +116,7 @@ models:
       GPT-4 is the latest and most advanced model in the GPT series,
       demonstrating sophisticated capabilities in complex reasoning, theory of
       mind, and narrative understanding.
-    matches:
+    match:
       or:
         - equals: gpt-4
         - equals: gpt-4-0314
@@ -132,7 +132,7 @@ models:
       GPT-4 is the latest and most advanced model in the GPT series,
       demonstrating sophisticated capabilities in complex reasoning, theory of
       mind, and narrative understanding.
-    matches:
+    match:
       or:
         - equals: gpt-4-32k
         - equals: gpt-4-32k-0314
@@ -145,7 +145,7 @@ models:
   - id: gpt-4-turbo
     name: gpt 4 turbo
     description: GPT-4 Turbo offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: gpt-4-turbo
         - equals: gpt-4-turbo-2024-04-09
@@ -160,7 +160,7 @@ models:
   - id: gpt-4-vision-preview
     name: gpt 4 vision
     description: GPT-4 Vision is a model that offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: gpt-4-vision-preview
         - equals: gpt-4-1106-vision-preview
@@ -175,7 +175,7 @@ models:
       GPT-4.1 is OpenAI's latest flagship model, offering major improvements in
       coding, instruction following, and long context understanding with up to 1
       million tokens of context.
-    matches:
+    match:
       or:
         - equals: gpt-4.1
         - equals: gpt-4.1-2025-04-14
@@ -191,7 +191,7 @@ models:
       GPT-4.1 Mini is a significant leap in small model performance, matching or
       exceeding GPT-4o in many benchmarks while reducing latency by nearly half
       and cost by 83%.
-    matches:
+    match:
       or:
         - equals: gpt-4.1-mini
         - equals: gpt-4.1-mini-2025-04-14
@@ -207,7 +207,7 @@ models:
       GPT-4.1 Nano is OpenAI's fastest and cheapest model, delivering
       exceptional performance for its size with a 1 million token context
       window, ideal for classification and autocompletion tasks.
-    matches:
+    match:
       or:
         - equals: gpt-4.1-nano
         - equals: gpt-4.1-nano-2025-04-14
@@ -223,7 +223,7 @@ models:
       GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning,
       creativity, and technical tasks while maintaining consistent output
       quality.
-    matches:
+    match:
       or:
         - equals: gpt-4o
         - equals: gpt-4o-2024-05-13
@@ -233,7 +233,7 @@ models:
       output_mtok: 15
 
   - id: gpt-4o-2024-08-06
-    matches:
+    match:
       or:
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
@@ -248,7 +248,7 @@ models:
       high-efficiency processing while maintaining strong performance. It excels
       in rapid inference and resource-efficient operations, making it ideal for
       production deployments requiring a balance of cost and capability.
-    matches:
+    match:
       or:
         - equals: gpt-4o-mini
         - equals: gpt-4o-mini-2024-07-18
@@ -259,14 +259,14 @@ models:
 
   - id: gpt-4o-mini-2024-07-18.ft-
     description: GPT-4o Mini fine tuned.
-    matches:
+    match:
       starts_with: gpt-4o-mini-2024-07-18.ft-
     prices:
       input_mtok: 0.3
       output_mtok: 1.2
 
   - id: gpt-4o-mini-realtime
-    matches:
+    match:
       contains: gpt-4o-mini-realtime
     prices:
       input_mtok: 0.15
@@ -275,7 +275,7 @@ models:
       output_audio_mtok: 20
 
   - id: gpt-4o-realtime
-    matches:
+    match:
       starts_with: gpt-4o-realtime
     prices:
       input_mtok: 5
@@ -285,7 +285,7 @@ models:
       output_audio_mtok: 80
 
   - id: o1
-    matches:
+    match:
       or:
         - equals: o1
         - equals: o1-2024-12-17
@@ -296,7 +296,7 @@ models:
   - id: o1-mini
     name: o1 mini
     description: O1 Mini is a model that offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
@@ -308,7 +308,7 @@ models:
   - id: o1-preview
     name: o1 preview
     description: O1 Preview is a model that offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: o1-preview
         - equals: o1-preview-2024-09-12
@@ -318,7 +318,7 @@ models:
       output_mtok: 60
 
   - id: o3-2025-04-16
-    matches:
+    match:
       equals: o3-2025-04-16
     prices:
       input_mtok: 10
@@ -326,7 +326,7 @@ models:
       output_mtok: 40
 
   - id: o3-mini
-    matches:
+    match:
       or:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
@@ -335,7 +335,7 @@ models:
       output_mtok: 4.4
 
   - id: o4-mini
-    matches:
+    match:
       or:
         - starts_with: o4-mini
         - equals: o4-mini-2025-04-16
@@ -344,14 +344,14 @@ models:
       output_mtok: 4.4
 
   - id: text-davinci-002
-    matches:
+    match:
       equals: text-davinci-002
     prices:
       input_mtok: 20
       output_mtok: 20
 
   - id: text-davinci-003
-    matches:
+    match:
       equals: text-davinci-003
     prices:
       input_mtok: 20
@@ -360,7 +360,7 @@ models:
   - id: text-embedding-3-large
     name: text embedding 3
     description: Text Embedding 3 is a model that offers a balance between cost and performance.
-    matches:
+    match:
       equals: text-embedding-3-large
     max_tokens: 3072
     prices:
@@ -369,7 +369,7 @@ models:
   - id: text-embedding-3-small
     name: text embedding 3
     description: Text Embedding 3 is a model that offers a balance between cost and performance.
-    matches:
+    match:
       equals: text-embedding-3-small
     max_tokens: 3072
     prices:
@@ -378,7 +378,7 @@ models:
   - id: text-embedding-ada-002
     name: text embedding ada
     description: Text Embedding Ada is a model that offers a balance between cost and performance.
-    matches:
+    match:
       or:
         - equals: text-embedding-ada
         - equals: text-embedding-ada-002
