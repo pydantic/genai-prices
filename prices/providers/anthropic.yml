@@ -6,11 +6,10 @@ api_pattern: 'https://api\.anthropic\.com'
 # see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 models:
   - id: claude-2
-    name: Claude 2
+    name: Claude 2.0 / 2.1
     description: >
       Claude 2 is Anthropic's previous generation model, offering reliable performance
-      for various tasks.
-      This includes Claude 2.0 and Claude 2.1.
+      for various tasks. This includes Claude 2.0 and Claude 2.1.
     match:
       starts_with: claude-2
     max_tokens: 200000
@@ -55,6 +54,8 @@ models:
 
   - id: claude-3-opus-latest
     name: Claude Opus 3
+    description: >-
+      Claude 3 Opus was Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.
     match:
       starts_with: claude-3-opus
     max_tokens: 200000
@@ -64,14 +65,76 @@ models:
       cache_read_mtok: 1.5
       output_mtok: 75
 
-  - id: claude-3-sonnet-20240229
-    name: Claude Sonnet 3
-    description: Claude 3 Sonnet offers a strong balance of intelligence and speed, suitable for most use cases.
+  - id: claude-3-sonnet
+    name: Claude 3 Sonnet
+    description: >-
+      Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      starts_with: claude-3-sonnet
+    max_tokens: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3-5-sonnet
+    name: Claude 3 Sonnet
+    description: >-
+      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      starts_with: claude-3-5-sonnet
+    max_tokens: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.5-haiku
+    name: Claude 3.5 Haiku
+    description: >-
+      Claude 3.5 Haiku features offers enhanced capabilities in speed, coding accuracy, and tool use. Engineered to excel in real-time applications, it delivers quick response times that are essential for
+      dynamic tasks such as chat interactions and immediate coding suggestions.
     match:
       or:
-        - equals: claude-3-sonnet-20240229
-        - starts_with: claude-3-5-sonnet
-    max_tokens: 200000
+        - equals: claude-3.5-haiku
+        - equals: claude-3.5-haiku-20241022
+        - equals: claude-3.5-haiku-20241022:beta
+        - equals: claude-3.5-haiku:beta
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+
+  - id: claude-3.5-sonnet
+    name: Claude 3.5 Sonnet
+    description: >-
+      New Claude 3.5 Sonnet delivers better-than-Opus capabilities, faster-than-Sonnet speeds, at the same Sonnet prices. Sonnet is particularly good at:
+    match:
+      or:
+        - equals: claude-3.5-sonnet
+        - equals: claude-3.5-sonnet-20240620
+        - equals: claude-3.5-sonnet-20240620:beta
+        - equals: claude-3.5-sonnet:beta
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3.7-sonnet
+    name: Claude 3.7 Sonnet
+    description: >-
+      Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities. It introduces a hybrid reasoning approach, allowing users to choose between
+      rapid responses and extended, step-by-step processing for complex tasks. The model demonstrates notable improvements in coding, particularly in front-end development and full-stack updates, and excels
+      in agentic workflows, where it can autonomously navigate multi-step processes.
+    match:
+      or:
+        - equals: claude-3.7-sonnet
+        - equals: claude-3.7-sonnet:beta
+        - equals: claude-3.7-sonnet:thinking
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75

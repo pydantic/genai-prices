@@ -260,6 +260,18 @@ models:
       input_mtok: 10
       output_mtok: 30
 
+  - id: mai-ds-r1:free
+    name: MAI DS R1 (free)
+    description: >-
+      MAI-DS-R1 is a post-trained variant of DeepSeek-R1 developed by the Microsoft AI team to improve the model's responsiveness on previously blocked topics while enhancing its safety profile. Built on
+      top of DeepSeek-R1's reasoning foundation, it integrates 110k examples from the Tulu-3 SFT dataset and 350k internally curated multilingual safety-alignment samples. The model retains strong reasoning,
+      coding, and problem-solving capabilities, while unblocking a wide range of prompts previously restricted in R1.
+    match:
+      equals: mai-ds-r1:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
   - id: o1
     match:
       or:
@@ -305,6 +317,97 @@ models:
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
+
+  - id: phi-3-medium-128k-instruct
+    name: Phi-3 Medium 128K Instruct
+    description: >-
+      Phi-3 128K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference
+      adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+    match:
+      equals: phi-3-medium-128k-instruct
+    prices:
+      input_mtok: 1
+      output_mtok: 1
+
+  - id: phi-3-mini-128k-instruct
+    name: Phi-3 Mini 128K Instruct
+    description: >-
+      Phi-3 Mini is a powerful 3.8B parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments,
+      it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+    match:
+      equals: phi-3-mini-128k-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: phi-3.5-mini-128k-instruct
+    name: Phi-3.5 Mini 128K Instruct
+    description: >-
+      Phi-3.5 models are lightweight, state-of-the-art open models. These models were trained with Phi-3 datasets that include both synthetic data and the filtered, publicly available websites data, with
+      a focus on high quality and reasoning-dense properties. Phi-3.5 Mini uses 3.8B parameters, and is a dense decoder-only transformer model using the same tokenizer as Phi-3 Mini.
+    match:
+      equals: phi-3.5-mini-128k-instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: phi-4
+    name: Phi 4
+    description: >-
+      Microsoft Research Phi-4 is designed to perform well in complex reasoning tasks and can operate efficiently in situations with limited memory or where quick responses are needed.
+    match:
+      equals: phi-4
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.14
+
+  - id: phi-4-multimodal-instruct
+    name: Phi 4 Multimodal Instruct
+    description: >-
+      Phi-4 Multimodal Instruct is a versatile 5.6B parameter foundation model that combines advanced reasoning and instruction-following capabilities across both text and visual inputs, providing accurate
+      text outputs. The unified architecture enables efficient, low-latency inference, suitable for edge and mobile deployments. Phi-4 Multimodal Instruct supports text inputs in multiple languages including
+      Arabic, Chinese, English, French, German, Japanese, Spanish, and more, with visual input optimized primarily for English. It delivers impressive performance on multimodal tasks involving mathematical,
+      scientific, and document reasoning, providing developers and enterprises a powerful yet compact model for sophisticated interactive applications. For more information, see the Phi-4 Multimodal blog
+      post.
+    match:
+      equals: phi-4-multimodal-instruct
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.1
+
+  - id: phi-4-reasoning-plus
+    name: Phi 4 Reasoning Plus
+    description: >-
+      Phi-4-reasoning-plus is an enhanced 14B parameter model from Microsoft, fine-tuned from Phi-4 with additional reinforcement learning to boost accuracy on math, science, and code reasoning tasks. It
+      uses the same dense decoder-only transformer architecture as Phi-4, but generates longer, more comprehensive outputs structured into a step-by-step reasoning trace and final answer.
+    match:
+      equals: phi-4-reasoning-plus
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.35
+
+  - id: phi-4-reasoning-plus:free
+    name: Phi 4 Reasoning Plus (free)
+    description: >-
+      Phi-4-reasoning-plus is an enhanced 14B parameter model from Microsoft, fine-tuned from Phi-4 with additional reinforcement learning to boost accuracy on math, science, and code reasoning tasks. It
+      uses the same dense decoder-only transformer architecture as Phi-4, but generates longer, more comprehensive outputs structured into a step-by-step reasoning trace and final answer.
+    match:
+      equals: phi-4-reasoning-plus:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
+
+  - id: phi-4-reasoning:free
+    name: Phi 4 Reasoning (free)
+    description: >-
+      Phi-4-reasoning is a 14B parameter dense decoder-only transformer developed by Microsoft, fine-tuned from Phi-4 to enhance complex reasoning capabilities. It uses a combination of supervised fine-tuning
+      on chain-of-thought traces and reinforcement learning, targeting math, science, and code reasoning tasks. With a 32k context window and high inference efficiency, it is optimized for structured responses
+      in a two-part format: reasoning trace followed by a final solution.
+    match:
+      equals: phi-4-reasoning:free
+    prices:
+      input_mtok: 0
+      output_mtok: 0
 
   - id: text-ada-001
     match:
@@ -361,3 +464,14 @@ models:
         - equals: text-embedding-ada-002-v2
     prices:
       input_mtok: 0.1
+
+  - id: wizardlm-2-8x22b
+    name: WizardLM-2 8x22B
+    description: >-
+      WizardLM-2 8x22B is Microsoft AI's most advanced Wizard model. It demonstrates highly competitive performance compared to leading proprietary models, and it consistently outperforms all existing state-of-the-art
+      opensource models.
+    match:
+      equals: wizardlm-2-8x22b
+    prices:
+      input_mtok: 0.48
+      output_mtok: 0.48

@@ -19,6 +19,28 @@ models:
       input_mtok: 0.5
       output_mtok: 0.5
 
+  - id: chatgpt-4o-latest
+    name: ChatGPT-4o
+    description: >-
+      OpenAI ChatGPT 4o is continually updated by OpenAI to point to the current version of GPT-4o used by ChatGPT. It therefore differs slightly from the API version of GPT-4o in that it has additional
+      RLHF. It is intended for research and evaluation.
+    match:
+      equals: chatgpt-4o-latest
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: codex-mini
+    name: Codex Mini
+    description: >-
+      codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we recommend starting with gpt-4.1.
+    match:
+      equals: codex-mini
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.375
+      output_mtok: 6
+
   - id: curie
     match:
       or:
@@ -72,6 +94,9 @@ models:
         - equals: gpt-3.5-turbo-instruct
         - equals: gpt-3.5-turbo-instruct-0914
         - equals: gpt-3.5-turbo-0613
+        - equals: gpt-3.5-turbo-0613
+        - equals: gpt-3.5-turbo-instruct
+        - equals: gpt-3.5-turbo
     max_tokens: 16385
     prices:
       input_mtok: 1.5
@@ -97,6 +122,16 @@ models:
       input_mtok: 1
       output_mtok: 2
 
+  - id: gpt-3.5-turbo-16k
+    name: GPT-3.5 Turbo 16k
+    description: >-
+      This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text in a single request at a higher cost. Training data: up to Sep 2021.
+    match:
+      equals: gpt-3.5-turbo-16k
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
   - id: gpt-35-turbo-16k
     name: gpt 3.5 turbo 16k
     description: GPT-3.5 Turbo offers a balance between cost and performance.
@@ -121,6 +156,8 @@ models:
         - equals: gpt-4
         - equals: gpt-4-0314
         - equals: gpt-4-0613
+        - equals: gpt-4
+        - equals: gpt-4-0314
     max_tokens: 8192
     prices:
       input_mtok: 30
@@ -152,6 +189,9 @@ models:
         - equals: gpt-4-turbo-0125-preview
         - equals: gpt-4-0125-preview
         - equals: gpt-4-1106-preview
+        - equals: gpt-4-turbo
+        - equals: gpt-4-1106-preview
+        - equals: gpt-4-turbo-preview
     max_tokens: 128000
     prices:
       input_mtok: 10
@@ -179,6 +219,7 @@ models:
       or:
         - equals: gpt-4.1
         - equals: gpt-4.1-2025-04-14
+        - equals: gpt-4.1
     max_tokens: 1000000
     prices:
       input_mtok: 2
@@ -195,6 +236,7 @@ models:
       or:
         - equals: gpt-4.1-mini
         - equals: gpt-4.1-mini-2025-04-14
+        - equals: gpt-4.1-mini
     max_tokens: 1000000
     prices:
       input_mtok: 0.4
@@ -211,11 +253,24 @@ models:
       or:
         - equals: gpt-4.1-nano
         - equals: gpt-4.1-nano-2025-04-14
+        - equals: gpt-4.1-nano
     max_tokens: 1000000
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.025
       output_mtok: 0.4
+
+  - id: gpt-4.5-preview
+    name: GPT-4.5 (Preview)
+    description: >-
+      GPT-4.5 (Preview) is a research preview of OpenAI's latest language model, designed to advance capabilities in reasoning, creativity, and multi-turn conversation. It builds on previous iterations
+      with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.
+    match:
+      equals: gpt-4.5-preview
+    prices:
+      input_mtok: 75
+      cache_read_mtok: 37.5
+      output_mtok: 150
 
   - id: gpt-4o
     name: gpt 4o
@@ -227,16 +282,24 @@ models:
       or:
         - equals: gpt-4o
         - equals: gpt-4o-2024-05-13
+        - equals: gpt-4o
+        - equals: gpt-4o-2024-05-13
     max_tokens: 128000
     prices:
       input_mtok: 5
       output_mtok: 15
 
   - id: gpt-4o-2024-08-06
+    name: GPT-4o (2024-11-20)
+    description: >-
+      The 2024-11-20 version of GPT-4o offers a leveled-up creative writing ability with more natural, engaging, and tailored writing to improve relevance & readability. It's also better at working with
+      uploaded files, providing deeper insights & more thorough responses.
     match:
       or:
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
+        - equals: gpt-4o-2024-11-20
+        - equals: gpt-4o-2024-08-06
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -252,6 +315,9 @@ models:
       or:
         - equals: gpt-4o-mini
         - equals: gpt-4o-mini-2024-07-18
+        - equals: gpt-4o-mini
+        - equals: gpt-4o-mini-2024-07-18
+        - equals: gpt-4o-mini-search-preview
     max_tokens: 128000
     prices:
       input_mtok: 0.15
@@ -284,6 +350,27 @@ models:
       output_mtok: 20
       output_audio_mtok: 80
 
+  - id: gpt-4o-search-preview
+    name: GPT-4o Search Preview
+    description: >-
+      GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.
+    match:
+      equals: gpt-4o-search-preview
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: gpt-4o:extended
+    name: GPT-4o (extended)
+    description: >-
+      GPT-4o ("o" for "omni") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of GPT-4 Turbo while being twice as fast and 50% more
+      cost-effective. GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.
+    match:
+      equals: gpt-4o:extended
+    prices:
+      input_mtok: 6
+      output_mtok: 18
+
   - id: o1
     name: o1
     description: O1 is a model that offers a balance between cost and performance.
@@ -291,6 +378,9 @@ models:
       or:
         - equals: o1
         - equals: o1-2024-12-17
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+        - equals: o1
         - equals: o1-preview
         - equals: o1-preview-2024-09-12
     max_tokens: 128000
@@ -305,10 +395,35 @@ models:
       or:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
+        - equals: o1-mini
+        - equals: o1-mini-2024-09-12
     max_tokens: 128000
     prices:
       input_mtok: 3
       output_mtok: 12
+
+  - id: o1-pro
+    name: o1-pro
+    description: >-
+      The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide consistently
+      better answers.
+    match:
+      equals: o1-pro
+    prices:
+      input_mtok: 150
+      output_mtok: 600
+
+  - id: o3
+    name: o3
+    description: >-
+      o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following.
+      Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required for this model. Set up here: https://openrouter.ai/settings/integrations
+    match:
+      equals: o3
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
 
   - id: o3-2025-04-16
     match:
@@ -319,19 +434,50 @@ models:
       output_mtok: 40
 
   - id: o3-mini
+    name: o3 Mini
+    description: >-
+      OpenAI o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science, mathematics, and coding.
     match:
       or:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
+        - equals: o3-mini
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
 
+  - id: o3-mini-high
+    name: o3 Mini High
+    description: >-
+      OpenAI o3-mini-high is the same model as o3-mini with reasoning_effort set to high.
+    match:
+      equals: o3-mini-high
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+
+  - id: o3-pro
+    name: o3 Pro
+    description: >-
+      The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently
+      better answers.
+    match:
+      equals: o3-pro
+    prices:
+      input_mtok: 20
+      output_mtok: 80
+
   - id: o4-mini
+    name: o4 Mini High
+    description: >-
+      OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.
     match:
       or:
         - starts_with: o4-mini
         - equals: o4-mini-2025-04-16
+        - equals: o4-mini-high
+        - equals: o4-mini
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
