@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema.json
 name: Novita
 id: novita
 pricing_url: https://novita.ai/pricing

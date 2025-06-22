@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema.json
 name: Mistral
 id: mistral
 pricing_url: https://mistral.ai/pricing#api-pricing
