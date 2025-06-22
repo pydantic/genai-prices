@@ -43,7 +43,7 @@ repos:
         name: Build prices
         entry: make
         args: [build]
-        files: "data/"
+        files: "prices/"
         language: system
         pass_filenames: false
       - id: typecheck
