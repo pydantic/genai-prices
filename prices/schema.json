@@ -127,21 +127,6 @@
           "format": "regex",
           "title": "Regex",
           "type": "string"
-        },
-        "any": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Any"
         }
       },
       "required": [
@@ -169,15 +154,7 @@
       "description": "Pricing together with constraints that define with those prices should be used",
       "properties": {
         "constraint": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/StartDateConstraint"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
+          "$ref": "#/$defs/StartDateConstraint",
           "description": "Timestamp when this price starts, none means this price is always valid"
         },
         "prices": {
@@ -200,28 +177,12 @@
           "type": "string"
         },
         "name": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
+          "type": "string",
           "description": "Name of the model",
           "title": "Name"
         },
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
+          "type": "string",
           "description": "Description of the model",
           "title": "Description"
         },
@@ -253,15 +214,7 @@
           "title": "Match"
         },
         "max_tokens": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
+          "type": "integer",
           "description": "Maximum number of tokens allowed for this model",
           "title": "Max Tokens"
         },
@@ -281,29 +234,13 @@
           "title": "Prices"
         },
         "price_discrepancies": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
+          "additionalProperties": true,
+          "type": "object",
           "description": "List of price discrepancies based on external sources.",
           "title": "Price Discrepancies"
         },
         "prices_checked": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
+          "type": "boolean",
           "description": "Flag indicating whether the prices have been checked for discrepancies.",
           "title": "Prices Checked"
         }
@@ -327,12 +264,8 @@
             },
             {
               "$ref": "#/$defs/TieredPrices"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
           "description": "price in USD per million text input/prompt token",
           "title": "Input Mtok"
         },
@@ -343,12 +276,8 @@
             },
             {
               "$ref": "#/$defs/TieredPrices"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
           "description": "price in USD per million audio input tokens",
           "title": "Input Audio Mtok"
         },
@@ -359,12 +288,8 @@
             },
             {
               "$ref": "#/$defs/TieredPrices"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
           "description": "price in USD per million tokens written to the cache",
           "title": "Cache Write Mtok"
         },
@@ -375,12 +300,8 @@
             },
             {
               "$ref": "#/$defs/TieredPrices"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
           "description": "price in USD per million tokens read from the cache",
           "title": "Cache Read Mtok"
         },
@@ -391,12 +312,8 @@
             },
             {
               "$ref": "#/$defs/TieredPrices"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
           "description": "price in USD per million output/completion tokens",
           "title": "Output Mtok"
         },
@@ -407,12 +324,8 @@
             },
             {
               "$ref": "#/$defs/TieredPrices"
-            },
-            {
-              "type": "null"
             }
           ],
-          "default": null,
           "description": "price in USD per million output audio tokens",
           "title": "Output Audio Mtok"
         }
@@ -497,44 +410,20 @@
       "type": "string"
     },
     "pricing_url": {
-      "anyOf": [
-        {
-          "format": "uri",
-          "maxLength": 2083,
-          "minLength": 1,
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
+      "format": "uri",
+      "maxLength": 2083,
+      "minLength": 1,
+      "type": "string",
       "description": "Link to pricing page for the provider",
       "title": "Pricing Url"
     },
     "api_pattern": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
+      "type": "string",
       "description": "Pattern to identify provider via HTTP API URL.",
       "title": "Api Pattern"
     },
     "description": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
+      "type": "string",
       "description": "Description of the provider",
       "title": "Description"
     },

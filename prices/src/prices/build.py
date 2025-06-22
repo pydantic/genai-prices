@@ -12,7 +12,7 @@ import ruamel.yaml
 from pydantic import ValidationError
 
 from .types import Provider, providers_schema
-from .utils import package_dir, pretty_size
+from .utils import package_dir, pretty_size, simplify_json_schema
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -30,6 +30,7 @@ def build_prices():
     # write the schema JSON file used by the yaml language server
     schema_json_path = package_dir / 'schema.json'
     json_schema = Provider.model_json_schema()
+    json_schema = simplify_json_schema(json_schema)
     schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
     print('Prices schema written to', schema_json_path.relative_to(root_dir))
 

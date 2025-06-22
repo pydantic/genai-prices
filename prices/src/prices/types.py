@@ -192,7 +192,6 @@ class ClauseContains(_Model):
 
 class ClauseRegex(_Model):
     regex: re.Pattern[str]
-    any: list[str] | None = None
 
     def is_match(self, text: str) -> bool:
         return bool(self.regex.search(text))
