@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema.json
 name: OpenRouter
 id: openrouter
 pricing_url: https://openrouter.ai/models

@@ -1,6 +1,8 @@
+# yaml-language-server: $schema=../schema.json
 name: Google
 id: google
 pricing_url: https://ai.google.dev/gemini-api/docs/pricing
+# also https://cloud.google.com/vertex-ai/generative-ai/pricing
 api_pattern: 'https://(.*\.)?googleapis\.com'
 models:
   - id: claude-3-5-haiku
@@ -70,7 +72,7 @@ models:
         output_mtok: 0
 
   - id: gemini-1.5-pro
-    name: gemini 1.5
+    name: gemini 1.5 Pro
     description: >-
       Google's most capable multimodal model with an extremely long context
       window of up to 1 million tokens. It excels at complex reasoning,
@@ -78,13 +80,18 @@ models:
     match:
       contains: gemini-1.5-pro
     max_tokens: 1000000
+    prices_checked: true
     prices:
-      input_mtok: 3.5
-      output_mtok: 10.5
-    price_discrepancies:
-      litellm:
-        input_mtok: 3.5
-        output_mtok: 1.05
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 128000
+            price: 2.50
+      output_mtok:
+        base: 5.00
+        tiers:
+          - start: 128000
+            price: 10.00
 
   - id: gemini-2.0-flash
     name: gemini 2.0 flash
@@ -132,7 +139,7 @@ models:
       equals: gemini-2.5-flash
     prices:
       input_mtok: 0.3
-      cache_write_mtok: 0.3833
+      input_audio_mtok: 1
       cache_read_mtok: 0.075
       output_mtok: 2.5
 
@@ -146,6 +153,8 @@ models:
       equals: gemini-2.5-flash-lite-preview-06-17
     prices:
       input_mtok: 0.1
+      input_audio_mtok: 0.50
+      cache_read_mtok: 0.025
       output_mtok: 0.4
 
   - id: gemini-2.5-flash-preview

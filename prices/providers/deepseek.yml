@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../schema.json
 name: Deepseek
 id: deepseek
 pricing_url: https://api-docs.deepseek.com/quick_start/pricing

@@ -64,8 +64,8 @@ def build_prices():
     if json_data != prices_json_path.read_bytes():
         if current_prices is not None:
             diff = difflib.unified_diff(
-                providers_schema.dump_json(current_prices, indent=2).decode().splitlines(keepends=True),
-                providers_schema.dump_json(providers, indent=2).decode().splitlines(keepends=True),
+                pretty_providers_json(current_prices),
+                pretty_providers_json(providers),
                 fromfile='current_prices',
                 tofile='new_prices',
             )
@@ -91,3 +91,11 @@ def build_prices():
         )
     else:
         print('Prices data unchanged')
+
+
+def pretty_providers_json(providers: list[Provider]) -> list[str]:
+    return (
+        providers_schema.dump_json(providers, by_alias=True, exclude_none=True, indent=2)
+        .decode()
+        .splitlines(keepends=True)
+    )
