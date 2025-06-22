@@ -12,7 +12,7 @@ import ruamel.yaml
 from pydantic import ValidationError
 
 from .types import Provider, providers_schema
-from .utils import data_dir, pretty_size
+from .utils import package_dir, pretty_size
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -26,16 +26,16 @@ yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)
 
 def build_prices():
     """Build schema.json and data.json."""
-    root_dir = data_dir.parent
+    root_dir = package_dir.parent
     # write the schema JSON file used by the yaml language server
-    schema_json_path = data_dir / 'schema.json'
+    schema_json_path = package_dir / 'schema.json'
     json_schema = Provider.model_json_schema()
     schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
     print('Prices schema written to', schema_json_path.relative_to(root_dir))
 
     providers: list[Provider] = []
 
-    providers_dir = data_dir / 'providers'
+    providers_dir = package_dir / 'providers'
     for file in providers_dir.iterdir():
         assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
         with file.open('rb') as f:
@@ -49,7 +49,7 @@ def build_prices():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    prices_json_path = data_dir / 'data.json'
+    prices_json_path = package_dir / 'data.json'
     if prices_json_path.exists():
         try:
             current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
