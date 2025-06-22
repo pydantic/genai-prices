@@ -69,7 +69,7 @@ class ModelInfo(_Model):
     """Name of the model"""
     description: str | None = None
     """Description of the model"""
-    match: LogicClause
+    match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     max_tokens: int | None = None
     """Maximum number of tokens allowed for this model"""
@@ -193,14 +193,14 @@ class ClauseEquals(_Model):
 
 
 class ClauseOr(_Model, populate_by_name=True):
-    or_: list[LogicClause] = Field(alias='or')
+    or_: list[MatchLogic] = Field(alias='or')
 
     def is_match(self, text: str) -> bool:
         return any(clause.is_match(text) for clause in self.or_)
 
 
 class ClauseAnd(_Model, populate_by_name=True):
-    and_: list[LogicClause] = Field(alias='and')
+    and_: list[MatchLogic] = Field(alias='and')
 
     def is_match(self, text: str) -> bool:
         return all(clause.is_match(text) for clause in self.and_)
@@ -211,12 +211,15 @@ def clause_discriminator(v: Any) -> str | None:
         # return the first key
         return next(iter(v))  # type: ignore
     elif isinstance(v, BaseModel):
-        return next(iter(v.__pydantic_fields__))
+        tag = next(iter(v.__pydantic_fields__))
+        if tag.endswith('_'):
+            tag = tag[:-1]
+        return tag
     else:
         return None
 
 
-LogicClause = Annotated[
+MatchLogic = Annotated[
     Union[
         Annotated[ClauseStartsWith, Tag('starts_with')],
         Annotated[ClauseEndsWith, Tag('ends_with')],
@@ -228,4 +231,6 @@ LogicClause = Annotated[
     ],
     Discriminator(clause_discriminator),
 ]
+match_logic_schema: TypeAdapter[MatchLogic] = TypeAdapter(MatchLogic)
+
 providers_schema = TypeAdapter(list[Provider])

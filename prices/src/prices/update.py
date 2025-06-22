@@ -10,7 +10,7 @@ from typing import TypedDict, cast
 from ruamel.yaml import YAML, CommentedMap
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-from .types import ModelInfo, Provider
+from .types import ClauseOr, ModelInfo, Provider, match_logic_schema
 from .utils import package_dir
 
 yaml = YAML()
@@ -21,18 +21,15 @@ yaml.sequence_dash_offset = 2
 yaml.width = 200
 
 
-@dataclass(init=False)
-class ProvidersYaml:
-    providers: dict[str, ProviderYaml]
+def get_providers_yaml() -> dict[str, ProviderYaml]:
+    providers_dir = package_dir / 'providers'
+    providers: dict[str, ProviderYaml] = {}
+    for file in providers_dir.iterdir():
+        assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
 
-    def __init__(self) -> None:
-        providers_dir = package_dir / 'providers'
-        self.providers = {}
-        for file in providers_dir.iterdir():
-            assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
-
-            provider = ProviderYaml(file)
-            self.providers[provider.provider_id] = provider
+        provider = ProviderYaml(file)
+        providers[provider.provider_id] = provider
+    return providers
 
 
 @dataclass(init=False)
@@ -41,7 +38,8 @@ class ProviderYaml:
     data: ProviderYamlDict
     privder_id: str
     provider: Provider
-    extra_prices: list[ModelInfo]
+    _extra_prices: list[ModelInfo]
+    _removed_models: set[str]
 
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -52,7 +50,8 @@ class ProviderYaml:
         self.provider_id = self.data['id']
         assert isinstance(self.provider_id, str), 'Provider ID must be a string'
         self.provider = Provider.model_validate(self.data)
-        self.extra_prices = []
+        self._extra_prices = []
+        self._removed_models = set()
 
     def update_model(self, lookup_id: str, model: ModelInfo) -> None:
         yaml_model = self._get_model(lookup_id)
@@ -67,12 +66,31 @@ class ProviderYaml:
             if field not in yaml_model and value is not None:
                 yaml_model.insert(position, field, value)  # pyright: ignore[reportUnknownMemberType]
 
+        current_match = match_logic_schema.validate_python(yaml_model['match'])
+        if model.match == current_match:
+            # matches are the same, nothing to do
+            return
+
+        if isinstance(current_match, ClauseOr):
+            match_or = current_match
+            if isinstance(model.match, ClauseOr):
+                match_or.or_.extend(model.match.or_)
+            else:
+                match_or.or_.append(model.match)
+        else:
+            match_or = ClauseOr.model_validate({'or': [current_match, model.match]})
+
+        yaml_model['match'] = match_or.model_dump(by_alias=True, mode='json')
+
     def add_model(self, model: ModelInfo) -> int:
-        if next((m for m in self.extra_prices if m.id == model.id), None):
+        if next((m for m in self._extra_prices if m.id == model.id), None):
             return 0
         else:
-            self.extra_prices.append(model)
+            self._extra_prices.append(model)
             return 1
+
+    def remove_model(self, model_id: str) -> None:
+        self._removed_models.add(model_id)
 
     def _get_model(self, model_id: str) -> CommentedMap:
         for model in self.data['models']:
@@ -81,13 +99,17 @@ class ProviderYaml:
         raise KeyError(model_id)
 
     def save(self) -> None:
-        new_models = [m.model_dump(by_alias=True, mode='json', exclude_none=True) for m in self.extra_prices]
+        existing_models = self.data['models']
+        if self._removed_models:
+            existing_models = [m for m in existing_models if m['id'] not in self._removed_models]
+
+        new_models = [m.model_dump(by_alias=True, mode='json', exclude_none=True) for m in self._extra_prices]
         for m in new_models:
             if description := m.get('description'):
                 m['description'] = FoldedScalarString(description.strip())
 
-        self.data['models'] += new_models
-        self.data['models'] = sorted(self.data['models'], key=itemgetter('id'))
+        existing_models += new_models
+        self.data['models'] = sorted(existing_models, key=itemgetter('id'))
 
         buffer = StringIO()
         yaml.dump(self.data, buffer)  # pyright: ignore[reportUnknownMemberType]

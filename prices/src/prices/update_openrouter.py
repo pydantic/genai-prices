@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from . import source_prices
 from .types import ClauseEquals, ModelInfo, ModelPrice
-from .update import ProvidersYaml
+from .update import get_providers_yaml
 
 map_providers = {
     'mistralai': 'mistral',
@@ -87,12 +87,13 @@ class OpenRouterResponse(BaseModel):
 
 
 def update_from_openrouter():
+    """Update provider prices based on OpenRouter API."""
     r = httpx.get('https://openrouter.ai/api/v1/models')
     r.raise_for_status()
 
     or_response = OpenRouterResponse.model_validate_json(r.content)
 
-    providers_yaml = ProvidersYaml()
+    providers_yaml = get_providers_yaml()
 
     or_providers: dict[str, list[OpenRouterModel]] = {}
     for model in or_response.data:
@@ -106,7 +107,7 @@ def update_from_openrouter():
     for provider_id, or_models in or_providers.items():
         if provider_id == 'openrouter':
             continue
-        if provider_yaml := providers_yaml.providers.get(provider_id):
+        if provider_yaml := providers_yaml.get(provider_id):
             pyd_provider = provider_yaml.provider
             models_added = 0
             models_updated = 0
