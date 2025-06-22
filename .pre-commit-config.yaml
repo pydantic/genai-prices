@@ -39,10 +39,10 @@ repos:
         types: [python]
         language: system
         pass_filenames: false
-      - id: data
-        name: Build data
+      - id: build
+        name: Build prices
         entry: make
-        args: [data]
+        args: [build]
         files: "data/"
         language: system
         pass_filenames: false
