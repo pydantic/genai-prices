@@ -7,6 +7,7 @@ from typing import Annotated, Any, Union
 
 from annotated_types import Ge
 from pydantic import (
+    AfterValidator,
     BaseModel,
     Discriminator,
     Field,
@@ -17,6 +18,8 @@ from pydantic import (
     WithJsonSchema,
     field_validator,
 )
+
+from .utils import check_unique
 
 
 class _Model(BaseModel, extra='forbid', use_attribute_docstrings=True):
@@ -199,14 +202,14 @@ class ClauseEquals(_Model):
 
 
 class ClauseOr(_Model, populate_by_name=True):
-    or_: list[MatchLogic] = Field(alias='or')
+    or_: Annotated[list[MatchLogic], AfterValidator(check_unique)] = Field(alias='or')
 
     def is_match(self, text: str) -> bool:
         return any(clause.is_match(text) for clause in self.or_)
 
 
 class ClauseAnd(_Model, populate_by_name=True):
-    and_: list[MatchLogic] = Field(alias='and')
+    and_: Annotated[list[MatchLogic], AfterValidator(check_unique)] = Field(alias='and')
 
     def is_match(self, text: str) -> bool:
         return all(clause.is_match(text) for clause in self.and_)

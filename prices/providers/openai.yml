@@ -91,12 +91,9 @@ models:
         - equals: gpt-3.5-turbo
         - equals: gpt-35-turbo
         - equals: gpt-3.5-turbo-0301
-        - equals: gpt-3.5-turbo-instruct
         - equals: gpt-3.5-turbo-instruct-0914
         - equals: gpt-3.5-turbo-0613
-        - equals: gpt-3.5-turbo-0613
         - equals: gpt-3.5-turbo-instruct
-        - equals: gpt-3.5-turbo
     max_tokens: 16385
     prices:
       input_mtok: 1.5
@@ -156,8 +153,6 @@ models:
         - equals: gpt-4
         - equals: gpt-4-0314
         - equals: gpt-4-0613
-        - equals: gpt-4
-        - equals: gpt-4-0314
     max_tokens: 8192
     prices:
       input_mtok: 30
@@ -189,8 +184,6 @@ models:
         - equals: gpt-4-turbo-0125-preview
         - equals: gpt-4-0125-preview
         - equals: gpt-4-1106-preview
-        - equals: gpt-4-turbo
-        - equals: gpt-4-1106-preview
         - equals: gpt-4-turbo-preview
     max_tokens: 128000
     prices:
@@ -219,7 +212,6 @@ models:
       or:
         - equals: gpt-4.1
         - equals: gpt-4.1-2025-04-14
-        - equals: gpt-4.1
     max_tokens: 1000000
     prices:
       input_mtok: 2
@@ -236,7 +228,6 @@ models:
       or:
         - equals: gpt-4.1-mini
         - equals: gpt-4.1-mini-2025-04-14
-        - equals: gpt-4.1-mini
     max_tokens: 1000000
     prices:
       input_mtok: 0.4
@@ -253,7 +244,6 @@ models:
       or:
         - equals: gpt-4.1-nano
         - equals: gpt-4.1-nano-2025-04-14
-        - equals: gpt-4.1-nano
     max_tokens: 1000000
     prices:
       input_mtok: 0.1
@@ -282,8 +272,6 @@ models:
       or:
         - equals: gpt-4o
         - equals: gpt-4o-2024-05-13
-        - equals: gpt-4o
-        - equals: gpt-4o-2024-05-13
     max_tokens: 128000
     prices:
       input_mtok: 5
@@ -298,8 +286,6 @@ models:
       or:
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
-        - equals: gpt-4o-2024-11-20
-        - equals: gpt-4o-2024-08-06
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -313,8 +299,6 @@ models:
       production deployments requiring a balance of cost and capability.
     match:
       or:
-        - equals: gpt-4o-mini
-        - equals: gpt-4o-mini-2024-07-18
         - equals: gpt-4o-mini
         - equals: gpt-4o-mini-2024-07-18
         - equals: gpt-4o-mini-search-preview
@@ -380,9 +364,6 @@ models:
         - equals: o1-2024-12-17
         - equals: o1-preview
         - equals: o1-preview-2024-09-12
-        - equals: o1
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
     max_tokens: 128000
     prices:
       input_mtok: 15
@@ -393,8 +374,6 @@ models:
     description: O1 Mini is a model that offers a balance between cost and performance.
     match:
       or:
-        - equals: o1-mini
-        - equals: o1-mini-2024-09-12
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
     max_tokens: 128000
@@ -441,7 +420,6 @@ models:
       or:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
-        - equals: o3-mini
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
