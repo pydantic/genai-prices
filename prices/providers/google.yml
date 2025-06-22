@@ -9,6 +9,10 @@ models:
     prices:
       input_mtok: 0.8
       output_mtok: 4
+    price_discrepancies:
+      litellm:
+        input_mtok: 1
+        output_mtok: 5
 
   - id: claude-3-5-sonnet
     match:
@@ -43,6 +47,10 @@ models:
     prices:
       input_mtok: 0.125
       output_mtok: 0.375
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.5
+        output_mtok: 1.5
 
   - id: gemini-1.5-flash
     name: gemini 1.5 flash
@@ -56,6 +64,10 @@ models:
     prices:
       input_mtok: 0.35
       output_mtok: 1.05
+    price_discrepancies:
+      litellm:
+        input_mtok: 0
+        output_mtok: 0
 
   - id: gemini-1.5-pro
     name: gemini 1.5
@@ -69,6 +81,10 @@ models:
     prices:
       input_mtok: 3.5
       output_mtok: 10.5
+    price_discrepancies:
+      litellm:
+        input_mtok: 3.5
+        output_mtok: 1.05
 
   - id: gemini-2.0-flash
     name: gemini 2.0 flash
@@ -86,6 +102,13 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.4
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.075
+        output_mtok: 0.3
+      litellm:
+        input_mtok: 0
+        output_mtok: 0
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
@@ -140,6 +163,15 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.15
+        cache_write_mtok: 0.2333
+        cache_read_mtok: 0.0375
+        output_mtok: 0.6
+      litellm:
+        input_mtok: 0.3
+        output_mtok: 2.5
 
   - id: gemini-2.5-pro
     name: Gemini 2.5 Pro
@@ -165,6 +197,13 @@ models:
       equals: gemini-2.5-pro-exp-03-25
     max_tokens: 1000000
     prices: {}
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0
+        output_mtok: 0
+      litellm:
+        input_mtok: 1.25
+        output_mtok: 10
 
   - id: gemini-2.5-pro-preview
     name: Gemini 2.5 Pro Preview 06-05
@@ -180,6 +219,12 @@ models:
     prices:
       input_mtok: 1.25
       output_mtok: 10
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1.25
+        cache_write_mtok: 1.625
+        cache_read_mtok: 0.31
+        output_mtok: 10
 
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
@@ -206,6 +251,12 @@ models:
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.0375
+        cache_write_mtok: 0.0583
+        cache_read_mtok: 0.01
+        output_mtok: 0.15
 
   - id: gemini-pro
     name: gemini 1.0 pro
@@ -221,6 +272,10 @@ models:
     prices:
       input_mtok: 0.125
       output_mtok: 0.375
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.5
+        output_mtok: 1.5
 
   - id: gemini-pro-1.5
     name: Gemini 1.5 Pro

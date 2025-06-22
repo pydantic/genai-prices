@@ -279,6 +279,33 @@
           ],
           "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.",
           "title": "Prices"
+        },
+        "price_discrepancies": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "List of price discrepancies based on external sources.",
+          "title": "Price Discrepancies"
+        },
+        "prices_checked": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Flag indicating whether the prices have been checked for discrepancies.",
+          "title": "Prices Checked"
         }
       },
       "required": [

@@ -30,6 +30,7 @@ models:
       cache_write_mtok: 1
       cache_read_mtok: 0.08
       output_mtok: 4
+    prices_checked: true
 
   - id: claude-3-5-sonnet
     name: Claude Sonnet 3.5

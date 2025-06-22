@@ -44,6 +44,10 @@ models:
     prices:
       input_mtok: 10
       output_mtok: 10
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1
+        output_mtok: 1
 
   - id: sonar-deep-research
     name: Sonar Deep Research
@@ -65,6 +69,10 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 150
+    price_discrepancies:
+      openrouter:
+        input_mtok: 3
+        output_mtok: 15
 
   - id: sonar-reasoning
     name: Sonar Reasoning
@@ -75,6 +83,10 @@ models:
     prices:
       input_mtok: 10
       output_mtok: 50
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1
+        output_mtok: 5
 
   - id: sonar-reasoning-pro
     name: Sonar Reasoning Pro

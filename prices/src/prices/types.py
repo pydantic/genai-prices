@@ -88,6 +88,10 @@ class ModelInfo(_Model):
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
     E.g. later conditional prices take precedence over earlier ones.
     """
+    price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
+    """List of price discrepancies based on external sources."""
+    prices_checked: bool | None = Field(default=None, exclude=True)
+    """Flag indicating whether the prices have been checked for discrepancies."""
 
     def is_match(self, model_id: str) -> bool:
         return self.match.is_match(model_id)
