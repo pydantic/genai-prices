@@ -197,24 +197,6 @@ models:
       cache_read_mtok: 0.31
       output_mtok: 10
 
-  - id: gemini-2.5-pro-exp-03-25
-    name: gemini 2.5 pro
-    description: >-
-      Google's most advanced 'thinking model' with enhanced reasoning
-      capabilities. Currently in experimental phase, it leads on complex
-      reasoning, code generation, and multimodal tasks.
-    match:
-      equals: gemini-2.5-pro-exp-03-25
-    max_tokens: 1000000
-    prices: {}
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0
-        output_mtok: 0
-      litellm:
-        input_mtok: 1.25
-        output_mtok: 10
-
   - id: gemini-2.5-pro-preview
     name: Gemini 2.5 Pro Preview 06-05
     description: >
@@ -224,17 +206,15 @@ models:
     match:
       or:
         - contains: gemini-2.5-pro-preview
-        - equals: gemini-2.5-pro-preview
         - equals: gemini-2.5-pro-preview-05-06
+        - equals: gemini-2.5-pro-exp-03-25 # added here as I can't find any prices for this model
     prices:
       input_mtok: 1.25
+      cache_write_mtok: 1.625
+      cache_read_mtok: 0.31
       output_mtok: 10
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1.25
-        cache_write_mtok: 1.625
-        cache_read_mtok: 0.31
-        output_mtok: 10
+    # I can't find any prices for these models, so just copying openrouter's prices
+    prices_checked: true
 
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
