@@ -175,14 +175,14 @@ class ClauseEquals(_Model):
         return text == self.equals
 
 
-class ClauseOr(_Model):
+class ClauseOr(_Model, populate_by_name=True):
     or_: list[LogicClause] = Field(alias='or')
 
     def is_match(self, text: str) -> bool:
         return any(clause.is_match(text) for clause in self.or_)
 
 
-class ClauseAnd(_Model):
+class ClauseAnd(_Model, populate_by_name=True):
     and_: list[LogicClause] = Field(alias='and')
 
     def is_match(self, text: str) -> bool:
@@ -193,6 +193,8 @@ def clause_discriminator(v: Any) -> str | None:
     if isinstance(v, dict):
         # return the first key
         return next(iter(v))  # type: ignore
+    elif isinstance(v, BaseModel):
+        return next(iter(v.__pydantic_fields__))
     else:
         return None
 

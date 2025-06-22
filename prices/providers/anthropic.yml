@@ -82,7 +82,9 @@ models:
     name: Claude Opus 4
     description: Most intelligent model for complex tasks
     match:
-      starts_with: claude-opus-4
+      or:
+        - starts_with: claude-opus-4
+        - starts_with: claude-4-opus-20250522
     max_tokens: 200000
     prices:
       input_mtok: 15
@@ -94,7 +96,9 @@ models:
     name: Claude Sonnet 4
     description: Optimal balance of intelligence, cost, and speed
     match:
-      starts_with: claude-sonnet-4
+      or:
+        - starts_with: claude-sonnet-4
+        - starts_with: claude-4-sonnet-20250522
     max_tokens: 200000
     prices:
       input_mtok: 3
