@@ -29,6 +29,19 @@ models:
       cache_read_mtok: 0.08
       output_mtok: 4
 
+  - id: claude-3-5-sonnet
+    name: Claude 3 Sonnet
+    description: >-
+      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      starts_with: claude-3-5-sonnet
+    max_tokens: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
   - id: claude-3-7-sonnet-latest
     name: Claude Sonnet 3.7
     match:
@@ -71,19 +84,6 @@ models:
       Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
     match:
       starts_with: claude-3-sonnet
-    max_tokens: 200000
-    prices:
-      input_mtok: 3
-      cache_write_mtok: 3.75
-      cache_read_mtok: 0.3
-      output_mtok: 15
-
-  - id: claude-3-5-sonnet
-    name: Claude 3 Sonnet
-    description: >-
-      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
-    match:
-      starts_with: claude-3-5-sonnet
     max_tokens: 200000
     prices:
       input_mtok: 3

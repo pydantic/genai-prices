@@ -131,7 +131,7 @@ class ProviderYaml:
         # remove new lines between item
         yaml_data = re.sub(r'\n\n( +\w+:)', r'\n\1', yaml_data)
         # inject a new line between models
-        yaml_data = re.sub(r'(\d)\n( +- *id:)', r'\1\n\n\2', yaml_data)
+        yaml_data = re.sub(r'(\d|\})\n( +- *id:)', r'\1\n\n\2', yaml_data)
         self.path.write_text(yaml_data)
 
 

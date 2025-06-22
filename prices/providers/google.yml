@@ -165,6 +165,7 @@ models:
       equals: gemini-2.5-pro-exp-03-25
     max_tokens: 1000000
     prices: {}
+
   - id: gemini-2.5-pro-preview
     name: Gemini 2.5 Pro Preview 06-05
     description: >
