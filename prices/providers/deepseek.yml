@@ -13,6 +13,10 @@ models:
     prices:
       input_mtok: 0.014
       output_mtok: 0.028
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.38
+        output_mtok: 0.89
 
   - id: deepseek-chat-v3-0324
     name: DeepSeek V3 0324

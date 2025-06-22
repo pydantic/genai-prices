@@ -95,6 +95,14 @@ class ProviderYaml:
             match_or = ClauseOr.model_validate({'or': [current_match, model.match]})
             yaml_model['match'] = match_or.model_dump(by_alias=True, mode='json')
 
+    def set_price_conflict(self, lookup_id: str, source: str, price: ModelPrice) -> None:
+        yaml_model = self._get_model(lookup_id)
+        data = price.model_dump(by_alias=True, mode='json', exclude_none=True)
+        if disc := yaml_model.get('price_discrepancies'):  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
+            disc[source] = data
+        else:
+            yaml_model['price_discrepancies'] = {source: data}
+
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self._extra_prices if m.id == model.id), None):
             return 0

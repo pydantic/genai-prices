@@ -98,6 +98,10 @@ models:
     prices:
       input_mtok: 1.5
       output_mtok: 2
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1
+        output_mtok: 2
 
   - id: gpt-3.5-turbo-0125
     name: gpt 3.5 turbo 0125
@@ -276,6 +280,14 @@ models:
     prices:
       input_mtok: 5
       output_mtok: 15
+    price_discrepancies:
+      openrouter:
+        input_mtok: 2.5
+        cache_read_mtok: 1.25
+        output_mtok: 10
+      litellm:
+        input_mtok: 2.5
+        output_mtok: 10
 
   - id: gpt-4o-2024-08-06
     name: GPT-4o (2024-11-20)
@@ -289,6 +301,11 @@ models:
     prices:
       input_mtok: 2.5
       output_mtok: 10
+    price_discrepancies:
+      openrouter:
+        input_mtok: 2.5
+        cache_read_mtok: 1.25
+        output_mtok: 10
 
   - id: gpt-4o-mini
     name: gpt 4o mini
@@ -323,6 +340,10 @@ models:
       input_audio_mtok: 10
       output_mtok: 0.6
       output_audio_mtok: 20
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.6
+        output_mtok: 2.4
 
   - id: gpt-4o-realtime
     match:
@@ -368,6 +389,11 @@ models:
     prices:
       input_mtok: 15
       output_mtok: 60
+    price_discrepancies:
+      openrouter:
+        input_mtok: 15
+        cache_read_mtok: 7.5
+        output_mtok: 60
 
   - id: o1-mini
     name: o1 mini
@@ -380,6 +406,14 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 12
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1.1
+        cache_read_mtok: 0.55
+        output_mtok: 4.4
+      litellm:
+        input_mtok: 1.1
+        output_mtok: 4.4
 
   - id: o1-pro
     name: o1-pro
@@ -411,6 +445,10 @@ models:
       input_mtok: 10
       cache_read_mtok: 2.5
       output_mtok: 40
+    price_discrepancies:
+      litellm:
+        input_mtok: 2
+        output_mtok: 8
 
   - id: o3-mini
     name: o3 Mini
@@ -423,6 +461,11 @@ models:
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1.1
+        cache_read_mtok: 0.55
+        output_mtok: 4.4
 
   - id: o3-mini-high
     name: o3 Mini High
@@ -459,6 +502,11 @@ models:
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
+    price_discrepancies:
+      openrouter:
+        input_mtok: 1.1
+        cache_read_mtok: 0.275
+        output_mtok: 4.4
 
   - id: text-davinci-002
     match:
@@ -482,6 +530,10 @@ models:
     max_tokens: 3072
     prices:
       input_mtok: 0.13
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.13
+        output_mtok: 0
 
   - id: text-embedding-3-small
     name: text embedding 3
@@ -491,6 +543,10 @@ models:
     max_tokens: 3072
     prices:
       input_mtok: 0.02
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.02
+        output_mtok: 0
 
   - id: text-embedding-ada-002
     name: text embedding ada
@@ -503,3 +559,7 @@ models:
     max_tokens: 1536
     prices:
       input_mtok: 0.1
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.1
+        output_mtok: 0

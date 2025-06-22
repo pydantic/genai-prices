@@ -44,6 +44,10 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.15
+        output_mtok: 0.6
 
   - id: command-r-08-2024
     name: Command R (08-2024)
@@ -67,6 +71,10 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 15
+    price_discrepancies:
+      litellm:
+        input_mtok: 2.5
+        output_mtok: 10
 
   - id: command-r-plus-08-2024
     name: Command R+ (08-2024)
@@ -88,3 +96,7 @@ models:
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.15
+        output_mtok: 0.0375

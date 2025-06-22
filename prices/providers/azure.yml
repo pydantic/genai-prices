@@ -235,6 +235,10 @@ models:
       input_audio_mtok: 10
       output_mtok: 0.6
       output_audio_mtok: 20
+    price_discrepancies:
+      litellm:
+        input_mtok: 0.66
+        output_mtok: 2.64
 
   - id: gpt-4o-realtime
     match:
@@ -245,6 +249,10 @@ models:
       cache_read_mtok: 2.5
       output_mtok: 20
       output_audio_mtok: 80
+    price_discrepancies:
+      litellm:
+        input_mtok: 5.5
+        output_mtok: 22
 
   - id: gpt35
     match:

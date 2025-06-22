@@ -59,7 +59,8 @@ def build_prices():
     else:
         current_prices = None
 
-    if current_prices != providers:
+    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True) + b'\n'
+    if json_data != prices_json_path.read_bytes():
         if current_prices is not None:
             diff = difflib.unified_diff(
                 providers_schema.dump_json(current_prices, indent=2).decode().splitlines(keepends=True),
@@ -67,13 +68,16 @@ def build_prices():
                 fromfile='current_prices',
                 tofile='new_prices',
             )
-            print('Prices have the following changes:')
-            print('=' * 80)
-            print(''.join(diff))
-            print('=' * 80)
+            diff_str = ''.join(diff)
+            if diff_str:
+                print('Prices have the following changes:')
+                print('=' * 80)
+                print(diff_str)
+                print('=' * 80)
+            else:
+                print('Prices have whitespace/dict ordering changes')
 
-        json_data = providers_schema.dump_json(providers, by_alias=True)
-        prices_json_path.write_bytes(json_data + b'\n')
+        prices_json_path.write_bytes(json_data)
 
         buffer = io.BytesIO()
         with gzip.GzipFile(fileobj=buffer, mode='wb') as f:
