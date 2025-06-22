@@ -27,9 +27,9 @@ lint: ## Lint the code
 	uv run ruff format --check
 	uv run ruff check
 
-.PHONY: data
-data: ## Build JSON Schema for data and validate and write data to prices.json
-	cd data && uv run main.py
+.PHONY: build
+build: ## Build JSON Schema for data and validate and write data to prices.json
+	uv run --package data -m src build-prices
 
 .PHONY: typecheck
 typecheck:
