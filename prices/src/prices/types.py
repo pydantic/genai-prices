@@ -42,15 +42,21 @@ class Provider(_Model):
     @field_validator('models', mode='after')
     @classmethod
     def validate_id(cls, models: list[ModelInfo]) -> list[ModelInfo]:
-        ids: set[str] = set()
+        unique_ids: set[str] = set()
         duplicates: list[str] = []
         for model in models:
-            if model.id in ids:
+            if model.id in unique_ids:
                 duplicates.append(model.id)
-            ids.add(model.id)
+            unique_ids.add(model.id)
 
         if duplicates:
             raise ValueError(f'Duplicate model ids: {duplicates}')
+
+        # check models are sorted by ID
+        ids = [model.id for model in models]
+        if ids != sorted(ids):
+            raise ValueError('Models are not sorted by ID')
+
         return models
 
     def find_model(self, model_id: str) -> ModelInfo | None:
