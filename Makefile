@@ -28,8 +28,8 @@ lint: ## Lint the code
 	uv run ruff check
 
 .PHONY: build
-build: ## Build JSON Schema for data and validate and write data to prices.json
-	uv run --package data -m src build-prices
+build: ## Build JSON Schema for data and validate and write data to prices/data.json
+	uv run -m prices build-prices
 
 .PHONY: typecheck
 typecheck:

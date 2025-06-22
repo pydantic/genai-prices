@@ -1,5 +1,9 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "data"
+name = "prices"
 version = "0.1.0"
 description = "raw data for pydantic-llm-pricing"
 readme = "README.md"
@@ -7,3 +11,6 @@ readme = "README.md"
 classifiers = ["Private :: do not release"]
 requires-python = ">=3.9"
 dependencies = ["httpx>=0.28.1", "pydantic>=2.11.7", "ruamel-yaml>=0.18.14"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/prices"]

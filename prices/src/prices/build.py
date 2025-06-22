@@ -26,8 +26,8 @@ yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)
 
 
 def build_prices():
-    """Build schema.json and prices.json."""
-    data_dir = Path(__file__).parent.parent
+    """Build schema.json and data.json."""
+    data_dir = Path(__file__).parent.parent.parent
     root_dir = data_dir.parent
     # write the schema JSON file used by the yaml language server
     schema_json_path = data_dir / 'schema.json'
@@ -51,7 +51,7 @@ def build_prices():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    prices_json_path = data_dir / 'prices.json'
+    prices_json_path = data_dir / 'data.json'
     if prices_json_path.exists():
         try:
             current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
