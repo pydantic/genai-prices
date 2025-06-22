@@ -7,10 +7,10 @@ from datetime import datetime
 from decimal import Decimal
 from operator import attrgetter
 from pathlib import Path
-from typing import Annotated, Any, Union
+from typing import Annotated, Any, Union, cast
 
 import pydantic_core
-import yaml
+import ruamel.yaml
 from pydantic import (
     BaseModel,
     Discriminator,
@@ -189,15 +189,13 @@ LogicClause = Annotated[
 providers_schema = TypeAdapter(list[Provider])
 
 
-class DecimalLoader(yaml.SafeLoader):
-    pass
+def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
+    s = cast(str, loader.construct_scalar(node))  # pyright: ignore[reportUnknownMemberType]
+    return Decimal(s)
 
 
-def decimal_constructor(loader: yaml.SafeLoader, node: yaml.ScalarNode) -> Decimal:
-    return Decimal(loader.construct_scalar(node))
-
-
-DecimalLoader.add_constructor('tag:yaml.org,2002:float', decimal_constructor)
+yaml = ruamel.yaml.YAML(typ='safe')
+yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)  # pyright: ignore[reportUnknownMemberType]
 
 
 def pretty_size(size: int) -> str:
@@ -222,10 +220,10 @@ def main():
 
     providers_dir = this_dir / 'providers'
     for file in providers_dir.iterdir():
-        if file.suffix not in ('.yml', '.yaml'):
-            raise ValueError(f'All {providers_dir} files must be YAML files')
+        assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
         with file.open('rb') as f:
-            data = yaml.load(f, Loader=DecimalLoader)
+            data = cast(Any, yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+
         try:
             provider = Provider.model_validate_json(pydantic_core.to_json(data), strict=True)
         except ValidationError as e:
