@@ -83,10 +83,14 @@ class ModelInfo(_Model):
         return self.match.is_match(model_id)
 
 
+def serialize_decimal(v: Decimal) -> float | int:
+    return float(v) if v % 1 != 0 else int(v)
+
+
 DecimalFloat = Annotated[
     Decimal,
     WithJsonSchema({'type': 'number'}),
-    PlainSerializer(float, return_type=float, when_used='json'),
+    PlainSerializer(serialize_decimal, return_type=Union[float, int], when_used='json'),
 ]
 
 

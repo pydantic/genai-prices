@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, TypedDict, cast
 
 from ruamel.yaml import YAML, CommentedMap
+from ruamel.yaml.scalarstring import FoldedScalarString
 
 from .types import ModelInfo, ModelPrice, Provider
 from .utils import data_dir
@@ -53,11 +54,16 @@ class ProviderYaml:
         self.provider = Provider.model_validate(self.data)
         self.extra_prices = []
 
-    def update_model(self, lookup_id: str, model: ModelInfo) -> None:
+    def update_model(self, lookup_id: str, model: ModelInfo) -> bool:
         yaml_model = self._get_model(lookup_id)
+        description = model.description
+        if description:
+            if '\n' in description:
+                description = description.split('\n', 1)[0]
+            description = FoldedScalarString(description)
         for field, value, position in [
             ('name', model.name, 1),
-            ('description', model.description, 2),
+            ('description', description, 2),
             ('max_tokens', model.max_tokens, 4),
         ]:
             if field not in yaml_model and value is not None:
@@ -66,18 +72,28 @@ class ProviderYaml:
         yaml_prices = cast(Any, yaml_model['prices'])
         if not isinstance(yaml_prices, CommentedMap):
             # prices in yaml are already a list of constrained prices
-            return
+            return False
 
         if ModelPrice.model_validate(yaml_prices) == model.prices:
             # prices match, nothing to do
-            return
+            return False
 
         assert isinstance(model.prices, ModelPrice), f'Expected ModelPrice, got {type(model.prices)}'
-        for key, value in model.prices.model_dump(by_alias=True).items():
-            yaml_prices[key] = value
+        yaml_prices.update(  # pyright: ignore[reportUnknownMemberType]
+            model.prices.model_dump(by_alias=True, mode='json', exclude_none=True)
+        )
+        return True
 
-    def add_model(self, model: ModelInfo) -> None:
-        self.extra_prices.append(model)
+    def add_model(self, model: ModelInfo) -> int:
+        if next((m for m in self.extra_prices if m.id == model.id), None):
+            # `existing_model := `
+            # if existing_model.match != model.match or existing_model.prices != model.prices:
+            #     debug(model, existing_model)
+            #     raise RuntimeError(f'Model {model.id} already exists with different prices')
+            return 0
+        else:
+            self.extra_prices.append(model)
+            return 1
 
     def _get_model(self, model_id: str) -> CommentedMap:
         for model in self.data['models']:
@@ -86,15 +102,17 @@ class ProviderYaml:
         raise KeyError(model_id)
 
     def save(self) -> None:
-        self.data['models'] += [m.model_dump(by_alias=True) for m in self.extra_prices]
+        self.data['models'] += [m.model_dump(by_alias=True, mode='json', exclude_none=True) for m in self.extra_prices]
         self.data['models'] = sorted(self.data['models'], key=itemgetter('id'))
 
         buffer = StringIO()
         yaml.dump(self.data, buffer)  # pyright: ignore[reportUnknownMemberType]
         yaml_data = buffer.getvalue()
 
+        # remove new lines between item
+        yaml_data = re.sub(r'\n\n( +\w+:)', r'\n\1', yaml_data)
         # inject a new line between models
-        yaml_data = re.sub(r'(\d)\n(\s+-\s*\w+:)', r'\1\n\2', yaml_data)
+        yaml_data = re.sub(r'(\d)\n( +- *id:)', r'\1\n\n\2', yaml_data)
         self.path.write_text(yaml_data)
 
 

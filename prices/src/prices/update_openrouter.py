@@ -98,9 +98,25 @@ def update_from_openrouter():
     for provider_id, or_models in or_providers.items():
         if provider_yaml := providers_yaml.providers.get(provider_id):
             pyd_provider = provider_yaml.provider
+            models_added = 0
+            models_updated = 0
+            models_price_changed = 0
             for or_model in or_models:
                 model_info = or_model.model_info()
                 if matching_model := pyd_provider.find_model(model_info.id):
-                    provider_yaml.update_model(matching_model.id, model_info)
+                    models_updated += 1
+                    price_changed = provider_yaml.update_model(matching_model.id, model_info)
+                    if price_changed:
+                        models_price_changed += 1
                 else:
-                    provider_yaml.add_model(model_info)
+                    models_added += provider_yaml.add_model(model_info)
+
+            if models_added or models_updated:
+                print(f'Provider {provider_id}:')
+                if models_added:
+                    print(f'  {models_added} models added')
+                if models_updated:
+                    print(f'  {models_updated} models updated')
+                    print(f'  {models_price_changed} prices changed')
+                print('')
+                provider_yaml.save()
