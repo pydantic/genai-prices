@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from . import source_prices
 from .types import ClauseEquals, ModelInfo, ModelPrice
 from .update import get_providers_yaml
+from .utils import mtok
 
 map_providers = {
     'mistralai': 'mistral',
@@ -79,19 +80,12 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
         )
 
 
-def mtok(v: Decimal | None) -> Decimal | None:
-    if v is None:
-        return None
-    else:
-        return v * 1_000_000
-
-
 class OpenRouterResponse(BaseModel):
     data: list[OpenRouterModel]
 
 
 def update_from_openrouter():  # noqa: C901
-    """Update provider prices based on OpenRouter API."""
+    """Update provider prices and metadata based on OpenRouter API."""
     r = httpx.get('https://openrouter.ai/api/v1/models')
     r.raise_for_status()
 

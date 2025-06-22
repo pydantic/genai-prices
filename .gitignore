@@ -8,6 +8,5 @@ wheels/
 
 # Virtual environments
 .venv
-/openrouter.json
 /scratch/
 /prices/source_prices/
