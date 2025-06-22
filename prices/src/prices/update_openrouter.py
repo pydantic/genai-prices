@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from decimal import Decimal
 
@@ -42,10 +43,14 @@ class OpenRouterModel(BaseModel):
 
     def model_info(self) -> ModelInfo:
         model_id = self.model_id()
+
+        description = self.description.split('\n\n', 1)[0]
+        # remove markdown links
+        description = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', description)
         return ModelInfo(
             id=model_id,
             name=self.model_name(),
-            description=self.description,
+            description=description,
             match=ClauseEquals(equals=model_id),
             prices=self.pricing.mmodel_price(),
         )

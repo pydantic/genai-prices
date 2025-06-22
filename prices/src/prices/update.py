@@ -58,8 +58,6 @@ class ProviderYaml:
         yaml_model = self._get_model(lookup_id)
         description = model.description
         if description:
-            if '\n' in description:
-                description = description.split('\n', 1)[0]
             description = FoldedScalarString(description)
         for field, value, position in [
             ('name', model.name, 1),
@@ -71,10 +69,6 @@ class ProviderYaml:
 
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self.extra_prices if m.id == model.id), None):
-            # `existing_model := `
-            # if existing_model.match != model.match or existing_model.prices != model.prices:
-            #     debug(model, existing_model)
-            #     raise RuntimeError(f'Model {model.id} already exists with different prices')
             return 0
         else:
             self.extra_prices.append(model)
@@ -87,7 +81,12 @@ class ProviderYaml:
         raise KeyError(model_id)
 
     def save(self) -> None:
-        self.data['models'] += [m.model_dump(by_alias=True, mode='json', exclude_none=True) for m in self.extra_prices]
+        new_models = [m.model_dump(by_alias=True, mode='json', exclude_none=True) for m in self.extra_prices]
+        for m in new_models:
+            if description := m.get('description'):
+                m['description'] = FoldedScalarString(description.strip())
+
+        self.data['models'] += new_models
         self.data['models'] = sorted(self.data['models'], key=itemgetter('id'))
 
         buffer = StringIO()
@@ -98,6 +97,9 @@ class ProviderYaml:
         yaml_data = re.sub(r'\n\n( +\w+:)', r'\n\1', yaml_data)
         # inject a new line between models
         yaml_data = re.sub(r'(\d)\n( +- *id:)', r'\1\n\n\2', yaml_data)
+        # replace fancy quotes with straight quotes
+        yaml_data = re.sub(r'[""]', '"', yaml_data)
+        yaml_data = re.sub(r'[' ']', "'", yaml_data)
         self.path.write_text(yaml_data)
 
 
