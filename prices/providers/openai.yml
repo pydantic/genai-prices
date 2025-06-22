@@ -285,10 +285,15 @@ models:
       output_audio_mtok: 80
 
   - id: o1
+    name: o1
+    description: O1 is a model that offers a balance between cost and performance.
     match:
       or:
         - equals: o1
         - equals: o1-2024-12-17
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    max_tokens: 128000
     prices:
       input_mtok: 15
       output_mtok: 60
@@ -304,18 +309,6 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 12
-
-  - id: o1-preview
-    name: o1 preview
-    description: O1 Preview is a model that offers a balance between cost and performance.
-    match:
-      or:
-        - equals: o1-preview
-        - equals: o1-preview-2024-09-12
-    max_tokens: 128000
-    prices:
-      input_mtok: 15
-      output_mtok: 60
 
   - id: o3-2025-04-16
     match:

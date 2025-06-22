@@ -75,56 +75,36 @@ models:
 
   - id: Qwen/Qwen1.5-0.5B
     match:
-      equals: Qwen/Qwen1.5-0.5B
-    prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
-
-  - id: Qwen/Qwen1.5-0.5B-Chat
-    match:
-      equals: Qwen/Qwen1.5-0.5B-Chat
+      or:
+        - equals: Qwen/Qwen1.5-0.5B
+        - equals: Qwen/Qwen1.5-0.5B-Chat
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-1.8B
     match:
-      equals: Qwen/Qwen1.5-1.8B
-    prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
-
-  - id: Qwen/Qwen1.5-1.8B-Chat
-    match:
-      equals: Qwen/Qwen1.5-1.8B-Chat
+      or:
+        - equals: Qwen/Qwen1.5-1.8B
+        - equals: Qwen/Qwen1.5-1.8B-Chat
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: Qwen/Qwen1.5-14B
     match:
-      equals: Qwen/Qwen1.5-14B
-    prices:
-      input_mtok: 0.3
-      output_mtok: 0.3
-
-  - id: Qwen/Qwen1.5-14B-Chat
-    match:
-      equals: Qwen/Qwen1.5-14B-Chat
+      or:
+        - equals: Qwen/Qwen1.5-14B
+        - equals: Qwen/Qwen1.5-14B-Chat
     prices:
       input_mtok: 0.3
       output_mtok: 0.3
 
   - id: Qwen/Qwen1.5-4B
     match:
-      equals: Qwen/Qwen1.5-4B
-    prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
-
-  - id: Qwen/Qwen1.5-4B-Chat
-    match:
-      equals: Qwen/Qwen1.5-4B-Chat
+      or:
+        - equals: Qwen/Qwen1.5-4B
+        - equals: Qwen/Qwen1.5-4B-Chat
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
@@ -138,14 +118,9 @@ models:
 
   - id: Qwen/Qwen1.5-7B
     match:
-      equals: Qwen/Qwen1.5-7B
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
-
-  - id: Qwen/Qwen1.5-7B-Chat
-    match:
-      equals: Qwen/Qwen1.5-7B-Chat
+      or:
+        - equals: Qwen/Qwen1.5-7B
+        - equals: Qwen/Qwen1.5-7B-Chat
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
@@ -173,21 +148,10 @@ models:
 
   - id: allenai/OLMo-7B
     match:
-      equals: allenai/OLMo-7B
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
-
-  - id: allenai/OLMo-7B-Instruct
-    match:
-      equals: allenai/OLMo-7B-Instruct
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
-
-  - id: allenai/OLMo-7B-Twin-2T
-    match:
-      equals: allenai/OLMo-7B-Twin-2T
+      or:
+        - equals: allenai/OLMo-7B
+        - equals: allenai/OLMo-7B-Instruct
+        - equals: allenai/OLMo-7B-Twin-2T
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
@@ -236,28 +200,18 @@ models:
 
   - id: google/gemma-2b
     match:
-      equals: google/gemma-2b
-    prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
-
-  - id: google/gemma-2b-it
-    match:
-      equals: google/gemma-2b-it
+      or:
+        - equals: google/gemma-2b
+        - equals: google/gemma-2b-it
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
 
   - id: google/gemma-7b
     match:
-      equals: google/gemma-7b
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
-
-  - id: google/gemma-7b-it
-    match:
-      equals: google/gemma-7b-it
+      or:
+        - equals: google/gemma-7b
+        - equals: google/gemma-7b-it
     prices:
       input_mtok: 0.2
       output_mtok: 0.2

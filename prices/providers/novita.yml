@@ -103,7 +103,9 @@ models:
 
   - id: meta-llama/llama-3.1-8b-instruct
     match:
-      equals: meta-llama/llama-3.1-8b-instruct
+      or:
+        - equals: meta-llama/llama-3.1-8b-instruct
+        - equals: meta-llama/llama-3.1-8b-instruct-max
     prices:
       input_mtok: 0.05
       output_mtok: 0.05
@@ -114,13 +116,6 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.06
-
-  - id: meta-llama/llama-3.1-8b-instruct-max
-    match:
-      equals: meta-llama/llama-3.1-8b-instruct-max
-    prices:
-      input_mtok: 0.05
-      output_mtok: 0.05
 
   - id: meta-llama/llama-3.2-11b-vision-instruct
     match:

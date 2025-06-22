@@ -146,161 +146,72 @@ models:
 
   - id: anthropic/claude-2
     match:
-      equals: anthropic/claude-2
-    prices:
-      input_mtok: 8
-      output_mtok: 24
-
-  - id: anthropic/claude-2.0
-    match:
-      equals: anthropic/claude-2.0
-    prices:
-      input_mtok: 8
-      output_mtok: 24
-
-  - id: "anthropic/claude-2.0:beta"
-    match:
-      equals: "anthropic/claude-2.0:beta"
-    prices:
-      input_mtok: 8
-      output_mtok: 24
-
-  - id: anthropic/claude-2.1
-    match:
-      equals: anthropic/claude-2.1
-    prices:
-      input_mtok: 8
-      output_mtok: 24
-
-  - id: "anthropic/claude-2.1:beta"
-    match:
-      equals: "anthropic/claude-2.1:beta"
-    prices:
-      input_mtok: 8
-      output_mtok: 24
-
-  - id: "anthropic/claude-2:beta"
-    match:
-      equals: "anthropic/claude-2:beta"
+      or:
+        - equals: anthropic/claude-2
+        - equals: anthropic/claude-2.0
+        - equals: anthropic/claude-2.0:beta
+        - equals: anthropic/claude-2.1
+        - equals: anthropic/claude-2.1:beta
+        - equals: anthropic/claude-2:beta
     prices:
       input_mtok: 8
       output_mtok: 24
 
   - id: anthropic/claude-3-haiku
     match:
-      equals: anthropic/claude-3-haiku
-    prices:
-      input_mtok: 0.25
-      output_mtok: 1.25
-
-  - id: "anthropic/claude-3-haiku:beta"
-    match:
-      equals: "anthropic/claude-3-haiku:beta"
+      or:
+        - equals: anthropic/claude-3-haiku
+        - equals: anthropic/claude-3-haiku:beta
     prices:
       input_mtok: 0.25
       output_mtok: 1.25
 
   - id: anthropic/claude-3-opus
     match:
-      equals: anthropic/claude-3-opus
-    prices:
-      input_mtok: 15
-      output_mtok: 75
-
-  - id: "anthropic/claude-3-opus:beta"
-    match:
-      equals: "anthropic/claude-3-opus:beta"
+      or:
+        - equals: anthropic/claude-3-opus
+        - equals: anthropic/claude-3-opus:beta
     prices:
       input_mtok: 15
       output_mtok: 75
 
   - id: anthropic/claude-3-sonnet
     match:
-      equals: anthropic/claude-3-sonnet
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: "anthropic/claude-3-sonnet:beta"
-    match:
-      equals: "anthropic/claude-3-sonnet:beta"
+      or:
+        - equals: anthropic/claude-3-sonnet
+        - equals: anthropic/claude-3-sonnet:beta
     prices:
       input_mtok: 3
       output_mtok: 15
 
   - id: anthropic/claude-3.5-haiku
     match:
-      equals: anthropic/claude-3.5-haiku
-    prices:
-      input_mtok: 0.8
-      output_mtok: 4
-
-  - id: anthropic/claude-3.5-haiku-20241022
-    match:
-      equals: anthropic/claude-3.5-haiku-20241022
-    prices:
-      input_mtok: 0.8
-      output_mtok: 4
-
-  - id: "anthropic/claude-3.5-haiku-20241022:beta"
-    match:
-      equals: "anthropic/claude-3.5-haiku-20241022:beta"
-    prices:
-      input_mtok: 0.8
-      output_mtok: 4
-
-  - id: "anthropic/claude-3.5-haiku:beta"
-    match:
-      equals: "anthropic/claude-3.5-haiku:beta"
+      or:
+        - equals: anthropic/claude-3.5-haiku
+        - equals: anthropic/claude-3.5-haiku-20241022
+        - equals: anthropic/claude-3.5-haiku-20241022:beta
+        - equals: anthropic/claude-3.5-haiku:beta
     prices:
       input_mtok: 0.8
       output_mtok: 4
 
   - id: anthropic/claude-3.5-sonnet
     match:
-      equals: anthropic/claude-3.5-sonnet
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: anthropic/claude-3.5-sonnet-20240620
-    match:
-      equals: anthropic/claude-3.5-sonnet-20240620
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: "anthropic/claude-3.5-sonnet-20240620:beta"
-    match:
-      equals: "anthropic/claude-3.5-sonnet-20240620:beta"
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: "anthropic/claude-3.5-sonnet:beta"
-    match:
-      equals: "anthropic/claude-3.5-sonnet:beta"
+      or:
+        - equals: anthropic/claude-3.5-sonnet
+        - equals: anthropic/claude-3.5-sonnet-20240620
+        - equals: anthropic/claude-3.5-sonnet-20240620:beta
+        - equals: anthropic/claude-3.5-sonnet:beta
     prices:
       input_mtok: 3
       output_mtok: 15
 
   - id: anthropic/claude-3.7-sonnet
     match:
-      equals: anthropic/claude-3.7-sonnet
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: "anthropic/claude-3.7-sonnet:beta"
-    match:
-      equals: "anthropic/claude-3.7-sonnet:beta"
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: "anthropic/claude-3.7-sonnet:thinking"
-    match:
-      equals: "anthropic/claude-3.7-sonnet:thinking"
+      or:
+        - equals: anthropic/claude-3.7-sonnet
+        - equals: anthropic/claude-3.7-sonnet:beta
+        - equals: anthropic/claude-3.7-sonnet:thinking
     prices:
       input_mtok: 3
       output_mtok: 15
@@ -351,14 +262,9 @@ models:
 
   - id: cohere/command-r
     match:
-      equals: cohere/command-r
-    prices:
-      input_mtok: 0.5
-      output_mtok: 1.5
-
-  - id: cohere/command-r-03-2024
-    match:
-      equals: cohere/command-r-03-2024
+      or:
+        - equals: cohere/command-r
+        - equals: cohere/command-r-03-2024
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -372,14 +278,9 @@ models:
 
   - id: cohere/command-r-plus
     match:
-      equals: cohere/command-r-plus
-    prices:
-      input_mtok: 3
-      output_mtok: 15
-
-  - id: cohere/command-r-plus-04-2024
-    match:
-      equals: cohere/command-r-plus-04-2024
+      or:
+        - equals: cohere/command-r-plus
+        - equals: cohere/command-r-plus-04-2024
     prices:
       input_mtok: 3
       output_mtok: 15
@@ -589,7 +490,9 @@ models:
     prices: {}
   - id: google/gemini-pro
     match:
-      equals: google/gemini-pro
+      or:
+        - equals: google/gemini-pro
+        - equals: google/gemini-pro-vision
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -600,13 +503,6 @@ models:
     prices:
       input_mtok: 1.25
       output_mtok: 5
-
-  - id: google/gemini-pro-vision
-    match:
-      equals: google/gemini-pro-vision
-    prices:
-      input_mtok: 0.5
-      output_mtok: 1.5
 
   - id: google/gemma-2-27b-it
     match:
@@ -669,28 +565,18 @@ models:
     prices: {}
   - id: google/palm-2-chat-bison
     match:
-      equals: google/palm-2-chat-bison
-    prices:
-      input_mtok: 1
-      output_mtok: 2
-
-  - id: google/palm-2-chat-bison-32k
-    match:
-      equals: google/palm-2-chat-bison-32k
+      or:
+        - equals: google/palm-2-chat-bison
+        - equals: google/palm-2-chat-bison-32k
     prices:
       input_mtok: 1
       output_mtok: 2
 
   - id: google/palm-2-codechat-bison
     match:
-      equals: google/palm-2-codechat-bison
-    prices:
-      input_mtok: 1
-      output_mtok: 2
-
-  - id: google/palm-2-codechat-bison-32k
-    match:
-      equals: google/palm-2-codechat-bison-32k
+      or:
+        - equals: google/palm-2-codechat-bison
+        - equals: google/palm-2-codechat-bison-32k
     prices:
       input_mtok: 1
       output_mtok: 2
@@ -1013,7 +899,9 @@ models:
 
   - id: mistralai/mistral-7b-instruct
     match:
-      equals: mistralai/mistral-7b-instruct
+      or:
+        - equals: mistralai/mistral-7b-instruct
+        - equals: mistralai/mistral-7b-instruct-v0.3
     prices:
       input_mtok: 0.029
       output_mtok: 0.059
@@ -1032,34 +920,16 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
-  - id: mistralai/mistral-7b-instruct-v0.3
-    match:
-      equals: mistralai/mistral-7b-instruct-v0.3
-    prices:
-      input_mtok: 0.029
-      output_mtok: 0.059
-
   - id: "mistralai/mistral-7b-instruct:free"
     match:
       equals: "mistralai/mistral-7b-instruct:free"
     prices: {}
   - id: mistralai/mistral-large
     match:
-      equals: mistralai/mistral-large
-    prices:
-      input_mtok: 2
-      output_mtok: 6
-
-  - id: mistralai/mistral-large-2407
-    match:
-      equals: mistralai/mistral-large-2407
-    prices:
-      input_mtok: 2
-      output_mtok: 6
-
-  - id: mistralai/mistral-large-2411
-    match:
-      equals: mistralai/mistral-large-2411
+      or:
+        - equals: mistralai/mistral-large
+        - equals: mistralai/mistral-large-2407
+        - equals: mistralai/mistral-large-2411
     prices:
       input_mtok: 2
       output_mtok: 6
@@ -1170,14 +1040,9 @@ models:
 
   - id: neversleep/llama-3-lumimaid-8b
     match:
-      equals: neversleep/llama-3-lumimaid-8b
-    prices:
-      input_mtok: 0.09375
-      output_mtok: 0.75
-
-  - id: "neversleep/llama-3-lumimaid-8b:extended"
-    match:
-      equals: "neversleep/llama-3-lumimaid-8b:extended"
+      or:
+        - equals: neversleep/llama-3-lumimaid-8b
+        - equals: neversleep/llama-3-lumimaid-8b:extended
     prices:
       input_mtok: 0.09375
       output_mtok: 0.75
@@ -1289,14 +1154,9 @@ models:
 
   - id: openai/gpt-3.5-turbo
     match:
-      equals: openai/gpt-3.5-turbo
-    prices:
-      input_mtok: 0.5
-      output_mtok: 1.5
-
-  - id: openai/gpt-3.5-turbo-0125
-    match:
-      equals: openai/gpt-3.5-turbo-0125
+      or:
+        - equals: openai/gpt-3.5-turbo
+        - equals: openai/gpt-3.5-turbo-0125
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -1331,14 +1191,9 @@ models:
 
   - id: openai/gpt-4
     match:
-      equals: openai/gpt-4
-    prices:
-      input_mtok: 30
-      output_mtok: 60
-
-  - id: openai/gpt-4-0314
-    match:
-      equals: openai/gpt-4-0314
+      or:
+        - equals: openai/gpt-4
+        - equals: openai/gpt-4-0314
     prices:
       input_mtok: 30
       output_mtok: 60
@@ -1352,28 +1207,18 @@ models:
 
   - id: openai/gpt-4-32k
     match:
-      equals: openai/gpt-4-32k
-    prices:
-      input_mtok: 60
-      output_mtok: 120
-
-  - id: openai/gpt-4-32k-0314
-    match:
-      equals: openai/gpt-4-32k-0314
+      or:
+        - equals: openai/gpt-4-32k
+        - equals: openai/gpt-4-32k-0314
     prices:
       input_mtok: 60
       output_mtok: 120
 
   - id: openai/gpt-4-turbo
     match:
-      equals: openai/gpt-4-turbo
-    prices:
-      input_mtok: 10
-      output_mtok: 30
-
-  - id: openai/gpt-4-turbo-preview
-    match:
-      equals: openai/gpt-4-turbo-preview
+      or:
+        - equals: openai/gpt-4-turbo
+        - equals: openai/gpt-4-turbo-preview
     prices:
       input_mtok: 10
       output_mtok: 30
@@ -1408,7 +1253,11 @@ models:
 
   - id: openai/gpt-4o
     match:
-      equals: openai/gpt-4o
+      or:
+        - equals: openai/gpt-4o
+        - equals: openai/gpt-4o-2024-08-06
+        - equals: openai/gpt-4o-2024-11-20
+        - equals: openai/gpt-4o-search-preview
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -1420,47 +1269,15 @@ models:
       input_mtok: 5
       output_mtok: 15
 
-  - id: openai/gpt-4o-2024-08-06
-    match:
-      equals: openai/gpt-4o-2024-08-06
-    prices:
-      input_mtok: 2.5
-      output_mtok: 10
-
-  - id: openai/gpt-4o-2024-11-20
-    match:
-      equals: openai/gpt-4o-2024-11-20
-    prices:
-      input_mtok: 2.5
-      output_mtok: 10
-
   - id: openai/gpt-4o-mini
     match:
-      equals: openai/gpt-4o-mini
+      or:
+        - equals: openai/gpt-4o-mini
+        - equals: openai/gpt-4o-mini-2024-07-18
+        - equals: openai/gpt-4o-mini-search-preview
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
-
-  - id: openai/gpt-4o-mini-2024-07-18
-    match:
-      equals: openai/gpt-4o-mini-2024-07-18
-    prices:
-      input_mtok: 0.15
-      output_mtok: 0.6
-
-  - id: openai/gpt-4o-mini-search-preview
-    match:
-      equals: openai/gpt-4o-mini-search-preview
-    prices:
-      input_mtok: 0.15
-      output_mtok: 0.6
-
-  - id: openai/gpt-4o-search-preview
-    match:
-      equals: openai/gpt-4o-search-preview
-    prices:
-      input_mtok: 2.5
-      output_mtok: 10
 
   - id: "openai/gpt-4o:extended"
     match:
@@ -1471,38 +1288,22 @@ models:
 
   - id: openai/o1
     match:
-      equals: openai/o1
+      or:
+        - equals: openai/o1
+        - equals: openai/o1-preview
+        - equals: openai/o1-preview-2024-09-12
     prices:
       input_mtok: 15
       output_mtok: 60
 
   - id: openai/o1-mini
     match:
-      equals: openai/o1-mini
+      or:
+        - equals: openai/o1-mini
+        - equals: openai/o1-mini-2024-09-12
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
-
-  - id: openai/o1-mini-2024-09-12
-    match:
-      equals: openai/o1-mini-2024-09-12
-    prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
-
-  - id: openai/o1-preview
-    match:
-      equals: openai/o1-preview
-    prices:
-      input_mtok: 15
-      output_mtok: 60
-
-  - id: openai/o1-preview-2024-09-12
-    match:
-      equals: openai/o1-preview-2024-09-12
-    prices:
-      input_mtok: 15
-      output_mtok: 60
 
   - id: openai/o1-pro
     match:
@@ -1520,28 +1321,18 @@ models:
 
   - id: openai/o3-mini
     match:
-      equals: openai/o3-mini
-    prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
-
-  - id: openai/o3-mini-high
-    match:
-      equals: openai/o3-mini-high
+      or:
+        - equals: openai/o3-mini
+        - equals: openai/o3-mini-high
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
 
   - id: openai/o4-mini
     match:
-      equals: openai/o4-mini
-    prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
-
-  - id: openai/o4-mini-high
-    match:
-      equals: openai/o4-mini-high
+      or:
+        - equals: openai/o4-mini
+        - equals: openai/o4-mini-high
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
