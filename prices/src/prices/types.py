@@ -114,6 +114,17 @@ class ModelPrice(_Model):
     output_audio_mtok: MTok | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
+    def all_unset(self) -> bool:
+        """Whether all values are zero or unset"""
+        return bool(
+            not self.input_mtok
+            and not self.input_audio_mtok
+            and not self.cache_write_mtok
+            and not self.cache_read_mtok
+            and not self.output_mtok
+            and not self.output_audio_mtok
+        )
+
 
 class TieredPrices(_Model):
     """Pricing model when the amount paid varies by number of tokens"""

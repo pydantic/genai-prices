@@ -36,7 +36,7 @@ class OpenRouterModel(BaseModel):
         return self.name.split(':', 1)[0].strip()
 
     def model_id(self) -> str:
-        return self.canonical_slug.split('/', 1)[1]
+        return self.id.split('/', 1)[1]
 
     def model_name(self) -> str:
         return self.name.split(':', 1)[-1].strip()
@@ -111,15 +111,30 @@ def update_from_openrouter():
             models_added = 0
             models_updated = 0
             provider_prices: source_prices.ProvidePrices = {}
+
+            def add_prices(id: str, prices: ModelPrice):
+                if existing := provider_prices.get(id):
+                    if existing == prices:
+                        return
+                    elif existing.all_unset():
+                        provider_prices[id] = prices
+                    elif prices.all_unset():
+                        return
+                    else:
+                        return
+                        # debug('prices differ', id, existing, prices)
+                else:
+                    provider_prices[id] = prices
+
             for or_model in or_models:
                 model_info = or_model.model_info()
                 assert isinstance(model_info.prices, ModelPrice)
                 if matching_model := pyd_provider.find_model(model_info.id):
-                    provider_prices[matching_model.id] = model_info.prices
+                    add_prices(matching_model.id, model_info.prices)
                     models_updated += 1
                     provider_yaml.update_model(matching_model.id, model_info)
                 else:
-                    provider_prices[model_info.id] = model_info.prices
+                    add_prices(model_info.id, model_info.prices)
                     models_added += provider_yaml.add_model(model_info)
 
             prices[pyd_provider.id] = provider_prices
