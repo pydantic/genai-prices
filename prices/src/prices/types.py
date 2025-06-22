@@ -5,6 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Union
 
+from annotated_types import Ge
 from pydantic import (
     BaseModel,
     Discriminator,
@@ -41,15 +42,21 @@ class Provider(_Model):
     @field_validator('models', mode='after')
     @classmethod
     def validate_id(cls, models: list[ModelInfo]) -> list[ModelInfo]:
-        ids: set[str] = set()
+        unique_ids: set[str] = set()
         duplicates: list[str] = []
         for model in models:
-            if model.id in ids:
+            if model.id in unique_ids:
                 duplicates.append(model.id)
-            ids.add(model.id)
+            unique_ids.add(model.id)
 
         if duplicates:
             raise ValueError(f'Duplicate model ids: {duplicates}')
+
+        # check models are sorted by ID
+        ids = [model.id for model in models]
+        if ids != sorted(ids):
+            raise ValueError('Models are not sorted by ID')
+
         return models
 
     def find_model(self, model_id: str) -> ModelInfo | None:
@@ -68,7 +75,7 @@ class ModelInfo(_Model):
     """Name of the model"""
     description: str | None = None
     """Description of the model"""
-    match: LogicClause
+    match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     max_tokens: int | None = None
     """Maximum number of tokens allowed for this model"""
@@ -83,36 +90,52 @@ class ModelInfo(_Model):
         return self.match.is_match(model_id)
 
 
-DecimalFloat = Annotated[
+def serialize_decimal(v: Decimal) -> float | int:
+    return float(v) if v % 1 != 0 else int(v)
+
+
+MTok = Annotated[
     Decimal,
+    Ge(0),
     WithJsonSchema({'type': 'number'}),
-    PlainSerializer(float, return_type=float, when_used='json'),
+    PlainSerializer(serialize_decimal, return_type=Union[float, int], when_used='json'),
 ]
 
 
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
-    input_mtok: DecimalFloat | TieredPrices | None = None
+    input_mtok: MTok | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
-    input_audio_mtok: DecimalFloat | TieredPrices | None = None
+    input_audio_mtok: MTok | TieredPrices | None = None
     """price in USD per million audio input tokens"""
 
-    cache_write_mtok: DecimalFloat | TieredPrices | None = None
+    cache_write_mtok: MTok | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
-    cache_read_mtok: DecimalFloat | TieredPrices | None = None
+    cache_read_mtok: MTok | TieredPrices | None = None
     """price in USD per million tokens read from the cache"""
 
-    output_mtok: DecimalFloat | TieredPrices | None = None
+    output_mtok: MTok | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
-    output_audio_mtok: DecimalFloat | TieredPrices | None = None
+    output_audio_mtok: MTok | TieredPrices | None = None
     """price in USD per million output audio tokens"""
+
+    def all_unset(self) -> bool:
+        """Whether all values are zero or unset"""
+        return bool(
+            not self.input_mtok
+            and not self.input_audio_mtok
+            and not self.cache_write_mtok
+            and not self.cache_read_mtok
+            and not self.output_mtok
+            and not self.output_audio_mtok
+        )
 
 
 class TieredPrices(_Model):
     """Pricing model when the amount paid varies by number of tokens"""
 
-    base: DecimalFloat
+    base: MTok
     """Based price, e.g. price until the first tier."""
     tiers: list[Tier]
 
@@ -122,7 +145,7 @@ class Tier(_Model):
 
     start: int
     """Start of the tier"""
-    price: DecimalFloat
+    price: MTok
     """Price for this tier"""
 
 
@@ -175,15 +198,15 @@ class ClauseEquals(_Model):
         return text == self.equals
 
 
-class ClauseOr(_Model):
-    or_: list[LogicClause] = Field(alias='or')
+class ClauseOr(_Model, populate_by_name=True):
+    or_: list[MatchLogic] = Field(alias='or')
 
     def is_match(self, text: str) -> bool:
         return any(clause.is_match(text) for clause in self.or_)
 
 
-class ClauseAnd(_Model):
-    and_: list[LogicClause] = Field(alias='and')
+class ClauseAnd(_Model, populate_by_name=True):
+    and_: list[MatchLogic] = Field(alias='and')
 
     def is_match(self, text: str) -> bool:
         return all(clause.is_match(text) for clause in self.and_)
@@ -193,11 +216,16 @@ def clause_discriminator(v: Any) -> str | None:
     if isinstance(v, dict):
         # return the first key
         return next(iter(v))  # type: ignore
+    elif isinstance(v, BaseModel):
+        tag = next(iter(v.__pydantic_fields__))
+        if tag.endswith('_'):
+            tag = tag[:-1]
+        return tag
     else:
         return None
 
 
-LogicClause = Annotated[
+MatchLogic = Annotated[
     Union[
         Annotated[ClauseStartsWith, Tag('starts_with')],
         Annotated[ClauseEndsWith, Tag('ends_with')],
@@ -209,4 +237,6 @@ LogicClause = Annotated[
     ],
     Discriminator(clause_discriminator),
 ]
+match_logic_schema: TypeAdapter[MatchLogic] = TypeAdapter(MatchLogic)
+
 providers_schema = TypeAdapter(list[Provider])

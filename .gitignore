@@ -10,3 +10,4 @@ wheels/
 .venv
 /openrouter.json
 /scratch/
+/prices/source_prices/

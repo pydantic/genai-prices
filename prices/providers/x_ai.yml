@@ -4,6 +4,10 @@ pricing_url: https://docs.x.ai/docs/models
 api_pattern: 'https://api\.x\.ai'
 models:
   - id: grok-2-1212
+    name: Grok 2 1212
+    description: >-
+      Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making it a powerful and flexible choice for developers seeking a highly steerable, intelligent
+      model.
     match:
       equals: grok-2-1212
     prices:
@@ -11,13 +15,47 @@ models:
       output_mtok: 10
 
   - id: grok-2-vision-1212
+    name: Grok 2 Vision 1212
+    description: >-
+      Grok 2 Vision 1212 advances image-based AI with stronger visual comprehension, refined instruction-following, and multilingual support. From object recognition to style analysis, it empowers developers
+      to build more intuitive, visually aware applications. Its enhanced steerability and reasoning establish a robust foundation for next-generation image solutions.
     match:
       equals: grok-2-vision-1212
     prices:
       input_mtok: 2
       output_mtok: 10
 
+  - id: grok-3
+    name: Grok 3
+    description: >-
+      Grok 3 is the latest model from xAI. It's their flagship model that excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance,
+      healthcare, law, and science.
+    match:
+      or:
+        - equals: grok-3
+        - equals: grok-3-beta
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.75
+      output_mtok: 15
+
+  - id: grok-3-mini
+    name: Grok 3 Mini
+    description: >-
+      A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require deep domain knowledge. The raw thinking traces are accessible.
+    match:
+      or:
+        - equals: grok-3-mini
+        - equals: grok-3-mini-beta
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.075
+      output_mtok: 0.5
+
   - id: grok-beta
+    name: Grok Beta
+    description: >-
+      Grok Beta is xAI's experimental language model with state-of-the-art reasoning capabilities, best for complex and multi-step use cases.
     match:
       equals: grok-beta
     prices:
@@ -25,6 +63,9 @@ models:
       output_mtok: 15
 
   - id: grok-vision-beta
+    name: Grok Vision Beta
+    description: >-
+      Grok Vision Beta is xAI's experimental language model with vision capability.
     match:
       equals: grok-vision-beta
     prices:

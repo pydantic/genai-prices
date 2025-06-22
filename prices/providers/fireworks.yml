@@ -82,7 +82,10 @@ models:
 
   - id: accounts/fireworks/models/sd3
     match:
-      equals: accounts/fireworks/models/sd3
+      or:
+        - equals: accounts/fireworks/models/sd3
+        - equals: accounts/fireworks/models/sd3-medium
+        - equals: accounts/fireworks/models/sd3-turbo
     prices:
       input_mtok: 130
       output_mtok: 130
@@ -94,26 +97,12 @@ models:
       input_mtok: 200
       output_mtok: 200
 
-  - id: accounts/fireworks/models/sd3-medium
-    match:
-      equals: accounts/fireworks/models/sd3-medium
-    prices:
-      input_mtok: 130
-      output_mtok: 130
-
   - id: accounts/fireworks/models/sd3-medium-ControlNet
     match:
       equals: accounts/fireworks/models/sd3-medium-ControlNet
     prices:
       input_mtok: 200
       output_mtok: 200
-
-  - id: accounts/fireworks/models/sd3-turbo
-    match:
-      equals: accounts/fireworks/models/sd3-turbo
-    prices:
-      input_mtok: 130
-      output_mtok: 130
 
   - id: accounts/fireworks/models/sd3-turbo-ControlNet
     match:

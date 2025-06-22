@@ -23,7 +23,7 @@ include = ["prices/src/**/*.py"]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
 flake8-quotes = { inline-quotes = "single", multiline-quotes = "double" }
 isort = { combine-as-imports = true }
-mccabe = { max-complexity = 15 }
+mccabe = { max-complexity = 18 }
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
