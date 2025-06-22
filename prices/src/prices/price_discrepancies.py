@@ -3,8 +3,8 @@ from .types import ModelPrice
 from .update import get_providers_yaml
 
 
-def price_discrepancies():
-    """Find price discrepancies between providers and source prices."""
+def update_price_discrepancies():
+    """Find price discrepancies between providers and source prices, and write them to providers."""
     prices = load_source_prices()
     providers_yml = get_providers_yaml()
 
@@ -14,10 +14,11 @@ def price_discrepancies():
             if provider_prices := source_prices.get(provider_yml.provider.id):
                 for model_id, price in provider_prices.items():
                     if model := provider_yml.provider.find_model(model_id):
-                        assert isinstance(model.prices, ModelPrice)
-                        if prices_conflict(model.prices, price):
-                            provider_yml.set_price_conflict(model.id, source, price)
-                            discs += 1
+                        if not model.prices_checked:
+                            assert isinstance(model.prices, ModelPrice)
+                            if prices_conflict(model.prices, price):
+                                provider_yml.set_price_conflict(model.id, source, price)
+                                discs += 1
 
         if discs:
             print(f'{provider_yml.provider.name}: {discs} price discrepancies')
