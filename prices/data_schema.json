@@ -1,0 +1,449 @@
+{
+  "$defs": {
+    "ClauseAnd": {
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ClauseStartsWith"
+              },
+              {
+                "$ref": "#/$defs/ClauseEndsWith"
+              },
+              {
+                "$ref": "#/$defs/ClauseContains"
+              },
+              {
+                "$ref": "#/$defs/ClauseRegex"
+              },
+              {
+                "$ref": "#/$defs/ClauseEquals"
+              },
+              {
+                "$ref": "#/$defs/ClauseOr"
+              },
+              {
+                "$ref": "#/$defs/ClauseAnd"
+              }
+            ]
+          },
+          "title": "And",
+          "type": "array"
+        }
+      },
+      "required": [
+        "and"
+      ],
+      "title": "ClauseAnd",
+      "type": "object"
+    },
+    "ClauseContains": {
+      "additionalProperties": false,
+      "properties": {
+        "contains": {
+          "title": "Contains",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contains"
+      ],
+      "title": "ClauseContains",
+      "type": "object"
+    },
+    "ClauseEndsWith": {
+      "additionalProperties": false,
+      "properties": {
+        "ends_with": {
+          "title": "Ends With",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ends_with"
+      ],
+      "title": "ClauseEndsWith",
+      "type": "object"
+    },
+    "ClauseEquals": {
+      "additionalProperties": false,
+      "properties": {
+        "equals": {
+          "title": "Equals",
+          "type": "string"
+        }
+      },
+      "required": [
+        "equals"
+      ],
+      "title": "ClauseEquals",
+      "type": "object"
+    },
+    "ClauseOr": {
+      "additionalProperties": false,
+      "properties": {
+        "or": {
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ClauseStartsWith"
+              },
+              {
+                "$ref": "#/$defs/ClauseEndsWith"
+              },
+              {
+                "$ref": "#/$defs/ClauseContains"
+              },
+              {
+                "$ref": "#/$defs/ClauseRegex"
+              },
+              {
+                "$ref": "#/$defs/ClauseEquals"
+              },
+              {
+                "$ref": "#/$defs/ClauseOr"
+              },
+              {
+                "$ref": "#/$defs/ClauseAnd"
+              }
+            ]
+          },
+          "title": "Or",
+          "type": "array"
+        }
+      },
+      "required": [
+        "or"
+      ],
+      "title": "ClauseOr",
+      "type": "object"
+    },
+    "ClauseRegex": {
+      "additionalProperties": false,
+      "properties": {
+        "regex": {
+          "format": "regex",
+          "title": "Regex",
+          "type": "string"
+        }
+      },
+      "required": [
+        "regex"
+      ],
+      "title": "ClauseRegex",
+      "type": "object"
+    },
+    "ClauseStartsWith": {
+      "additionalProperties": false,
+      "properties": {
+        "starts_with": {
+          "title": "Starts With",
+          "type": "string"
+        }
+      },
+      "required": [
+        "starts_with"
+      ],
+      "title": "ClauseStartsWith",
+      "type": "object"
+    },
+    "ConditionalPrice": {
+      "additionalProperties": false,
+      "description": "Pricing together with constraints that define with those prices should be used",
+      "properties": {
+        "constraint": {
+          "$ref": "#/$defs/StartDateConstraint",
+          "description": "Timestamp when this price starts, none means this price is always valid"
+        },
+        "prices": {
+          "$ref": "#/$defs/ModelPrice"
+        }
+      },
+      "required": [
+        "prices"
+      ],
+      "title": "ConditionalPrice",
+      "type": "object"
+    },
+    "ModelInfo": {
+      "additionalProperties": false,
+      "description": "Information about an LLM model",
+      "properties": {
+        "id": {
+          "description": "Primary unique identifier for the model",
+          "maxLength": 100,
+          "pattern": "^\\S+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 100,
+          "type": "string",
+          "description": "Name of the model",
+          "title": "Name"
+        },
+        "description": {
+          "maxLength": 1000,
+          "type": "string",
+          "description": "Description of the model",
+          "title": "Description"
+        },
+        "match": {
+          "description": "Boolean logic for matching this model to any identifier which could be used to reference the model in API requests",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ClauseStartsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseEndsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseContains"
+            },
+            {
+              "$ref": "#/$defs/ClauseRegex"
+            },
+            {
+              "$ref": "#/$defs/ClauseEquals"
+            },
+            {
+              "$ref": "#/$defs/ClauseOr"
+            },
+            {
+              "$ref": "#/$defs/ClauseAnd"
+            }
+          ],
+          "title": "Match"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "description": "Maximum number of tokens allowed for this model",
+          "title": "Max Tokens"
+        },
+        "prices": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ModelPrice"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/ConditionalPrice"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.",
+          "title": "Prices"
+        }
+      },
+      "required": [
+        "id",
+        "match",
+        "prices"
+      ],
+      "title": "ModelInfo",
+      "type": "object"
+    },
+    "ModelPrice": {
+      "additionalProperties": false,
+      "description": "Set of prices for using a model",
+      "properties": {
+        "input_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million text input/prompt token",
+          "title": "Input Mtok"
+        },
+        "input_audio_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million audio input tokens",
+          "title": "Input Audio Mtok"
+        },
+        "cache_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million tokens written to the cache",
+          "title": "Cache Write Mtok"
+        },
+        "cache_read_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million tokens read from the cache",
+          "title": "Cache Read Mtok"
+        },
+        "output_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million output/completion tokens",
+          "title": "Output Mtok"
+        },
+        "output_audio_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million output audio tokens",
+          "title": "Output Audio Mtok"
+        }
+      },
+      "title": "ModelPrice",
+      "type": "object"
+    },
+    "Provider": {
+      "additionalProperties": false,
+      "description": "Information about an LLM inference provider",
+      "properties": {
+        "name": {
+          "description": "Common name of the organization",
+          "maxLength": 100,
+          "title": "Name",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique identifier for the provider",
+          "maxLength": 100,
+          "pattern": "^\\S+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "pricing_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "type": "string",
+          "description": "Link to pricing page for the provider",
+          "title": "Pricing Url"
+        },
+        "api_pattern": {
+          "type": "string",
+          "description": "Pattern to identify provider via HTTP API URL.",
+          "title": "Api Pattern"
+        },
+        "description": {
+          "maxLength": 1000,
+          "type": "string",
+          "description": "Description of the provider",
+          "title": "Description"
+        },
+        "models": {
+          "description": "List of models provided by this organization",
+          "items": {
+            "$ref": "#/$defs/ModelInfo"
+          },
+          "title": "Models",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "id",
+        "models"
+      ],
+      "title": "Provider",
+      "type": "object"
+    },
+    "StartDateConstraint": {
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "description": "Timestamp when this price starts",
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start"
+      ],
+      "title": "StartDateConstraint",
+      "type": "object"
+    },
+    "Tier": {
+      "additionalProperties": false,
+      "description": "Price tier",
+      "properties": {
+        "start": {
+          "description": "Start of the tier",
+          "title": "Start",
+          "type": "integer"
+        },
+        "price": {
+          "description": "Price for this tier",
+          "title": "Price",
+          "type": "number"
+        }
+      },
+      "required": [
+        "start",
+        "price"
+      ],
+      "title": "Tier",
+      "type": "object"
+    },
+    "TieredPrices": {
+      "additionalProperties": false,
+      "description": "Pricing model when the amount paid varies by number of tokens",
+      "properties": {
+        "base": {
+          "description": "Based price, e.g. price until the first tier.",
+          "title": "Base",
+          "type": "number"
+        },
+        "tiers": {
+          "items": {
+            "$ref": "#/$defs/Tier"
+          },
+          "title": "Tiers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "base",
+        "tiers"
+      ],
+      "title": "TieredPrices",
+      "type": "object"
+    }
+  },
+  "items": {
+    "$ref": "#/$defs/Provider"
+  },
+  "type": "array"
+}

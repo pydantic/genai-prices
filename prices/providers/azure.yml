@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: Microsoft Azure
 id: azure
 pricing_url: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/

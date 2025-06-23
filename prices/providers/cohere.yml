@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: Cohere
 id: cohere
 pricing_url: https://cohere.com/pricing
