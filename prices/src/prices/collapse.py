@@ -4,6 +4,7 @@ from .update import get_providers_yaml
 def collapse():
     """Simplify prices by combining similar models."""
     providers_yaml = get_providers_yaml()
+    total_combined = 0
     for provider_id, provider_yaml in providers_yaml.items():
         models = provider_yaml.provider.models
         combined = 0
@@ -27,7 +28,13 @@ def collapse():
                 combined += 1
 
         if combined:
+            total_combined += combined
             print(f'Provider {provider_id}:')
             print(f'  {combined} models combined')
             print('')
             provider_yaml.save()
+
+    if total_combined:
+        print(f'Total models combined: {total_combined}')
+    else:
+        print('No models combined')
