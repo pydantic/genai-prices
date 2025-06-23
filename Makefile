@@ -31,6 +31,17 @@ lint: ## Lint the code
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build_prices
 
+.PHONY: helicone-get
+helicone-get: ## update helicone prices
+	cd prices/helicone_get && ./clone.sh && deno task run
+
+.PHONE: update-price-discrepancies
+update-price-discrepancies: ## update price discrepancies
+	uv run -m prices update_price_discrepancies
+
+foo:
+	cat y
+
 .PHONY: typecheck
 typecheck:
 	@# PYRIGHT_PYTHON_IGNORE_WARNINGS avoids the overhead of making a request to github on every invocation

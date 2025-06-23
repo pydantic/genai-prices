@@ -18,5 +18,8 @@ def write_source_prices(source: str, source_prices: SourcePricesType) -> None:
 def load_source_prices() -> dict[str, SourcePricesType]:
     prices: dict[str, SourcePricesType] = {}
     for path in source_prices_dir.iterdir():
-        prices[path.stem] = source_prices_schema.validate_json(path.read_bytes())
+        try:
+            prices[path.stem] = source_prices_schema.validate_json(path.read_bytes())
+        except ValueError as e:
+            raise ValueError(f'Error loading source prices from {path}: {e}')
     return prices

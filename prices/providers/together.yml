@@ -307,6 +307,10 @@ models:
     prices:
       input_mtok: 3.5
       output_mtok: 3.5
+    price_discrepancies:
+      helicone:
+        input_mtok: 5
+        output_mtok: 5
 
   - id: meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo-2
     description: "`-2` suffix added since this name matches the above model but has different pricing"
