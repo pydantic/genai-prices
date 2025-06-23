@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from decimal import Decimal
+from typing import Literal
 
 import httpx
 from pydantic import BaseModel
@@ -84,7 +85,7 @@ class OpenRouterResponse(BaseModel):
     data: list[OpenRouterModel]
 
 
-def update_from_openrouter():  # noqa: C901
+def main(mode: Literal['metadata', 'prices']):  # noqa: C901
     """Update provider prices and metadata based on OpenRouter API."""
     r = httpx.get('https://openrouter.ai/api/v1/models')
     r.raise_for_status()
@@ -119,7 +120,7 @@ def update_from_openrouter():  # noqa: C901
         else:
             or_models_updated += 1
 
-    if or_models_added or or_models_updated:
+    if mode == 'metadata' and (or_models_added or or_models_updated):
         print('Provider openrouter:')
         if or_models_added:
             print(f'  {or_models_added} models added')
@@ -168,7 +169,7 @@ def update_from_openrouter():  # noqa: C901
                 models_added += provider_yaml.add_model(model_info)
 
         prices[pyd_provider.id] = provider_prices
-        if models_added or models_updated:
+        if mode == 'metadata' and (models_added or models_updated):
             print(f'Provider {provider_id}:')
             if models_added:
                 print(f'  {models_added} models added')
@@ -177,4 +178,15 @@ def update_from_openrouter():  # noqa: C901
             print('')
             provider_yaml.save()
 
-    source_prices.write_source_prices('openrouter', prices)
+    if mode == 'prices':
+        source_prices.write_source_prices('openrouter', prices)
+
+
+def update_from_openrouter():
+    """Update metadata and add new models based on OpenRouter API."""
+    main('metadata')
+
+
+def get_openrouter_prices():
+    """Get prices from OpenRouter API."""
+    main('prices')

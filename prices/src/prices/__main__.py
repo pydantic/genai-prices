@@ -4,12 +4,19 @@ from inspect import getdoc
 from .build import build_prices
 from .price_discrepancies import update_price_discrepancies
 from .simplify import simplify
-from .update_litellm import update_from_litellm
-from .update_openrouter import update_from_openrouter
+from .source_litellm import get_litellm_prices
+from .source_openrouter import get_openrouter_prices, update_from_openrouter
 
 
 def main():
-    actions = build_prices, update_from_openrouter, simplify, update_from_litellm, update_price_discrepancies
+    actions = (
+        build_prices,
+        update_from_openrouter,
+        simplify,
+        get_litellm_prices,
+        get_openrouter_prices,
+        update_price_discrepancies,
+    )
     if len(sys.argv) == 2:
         command = sys.argv[1]
         action = next((f for f in actions if f.__name__ == command), None)

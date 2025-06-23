@@ -49,8 +49,8 @@ lookup_provider = {
 }
 
 
-def update_from_litellm():
-    """Update provider prices based on LiteLLM code."""
+def get_litellm_prices():
+    """Get prices from LiteLLM code."""
     url = 'https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json'
     r = httpx.get(url)
     r.raise_for_status()

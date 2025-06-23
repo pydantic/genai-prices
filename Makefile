@@ -31,6 +31,26 @@ lint: ## Lint the code
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build_prices
 
+.PHONY: helicone-get
+helicone-get: ## get helicone prices
+	./prices/helicone_get/pull.sh
+	cd prices/helicone_get && deno task run
+
+.PHONY: openrouter-get
+openrouter-get: ## get openrouter prices
+		uv run -m prices get_openrouter_prices
+
+.PHONY: litellm-get
+litellm-get: ## get litellm prices
+	uv run -m prices get_litellm_prices
+
+.PHONY: get-all-prices
+get-all-prices: helicone-get openrouter-get litellm-get ## get all prices
+
+.PHONE: update-price-discrepancies
+update-price-discrepancies: get-all-prices ## update price discrepancies
+	uv run -m prices update_price_discrepancies
+
 .PHONY: typecheck
 typecheck:
 	@# PYRIGHT_PYTHON_IGNORE_WARNINGS avoids the overhead of making a request to github on every invocation

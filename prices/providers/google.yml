@@ -116,6 +116,9 @@ models:
       litellm:
         input_mtok: 0
         output_mtok: 0
+      helicone:
+        input_mtok: 0.075
+        output_mtok: 0.3
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
@@ -213,7 +216,7 @@ models:
       cache_write_mtok: 1.625
       cache_read_mtok: 0.31
       output_mtok: 10
-    # I can't find any prices for these models, so just copying openrouter's prices
+    # Samuel: I can't find any prices for these models, so just copying openrouter's prices
     prices_checked: true
 
   - id: gemini-flash-1.5
