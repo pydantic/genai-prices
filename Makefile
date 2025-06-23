@@ -32,15 +32,24 @@ build: ## Build JSON Schema for data and validate and write data to prices/data.
 	uv run -m prices build_prices
 
 .PHONY: helicone-get
-helicone-get: ## update helicone prices
-	cd prices/helicone_get && ./clone.sh && deno task run
+helicone-get: ## get helicone prices
+	./prices/helicone_get/pull.sh
+	cd prices/helicone_get && deno task run
+
+.PHONY: openrouter-get
+openrouter-get: ## get openrouter prices
+		uv run -m prices get_openrouter_prices
+
+.PHONY: litellm-get
+litellm-get: ## get litellm prices
+	uv run -m prices get_litellm_prices
+
+.PHONY: get-all-prices
+get-all-prices: helicone-get openrouter-get litellm-get ## get all prices
 
 .PHONE: update-price-discrepancies
-update-price-discrepancies: ## update price discrepancies
+update-price-discrepancies: get-all-prices ## update price discrepancies
 	uv run -m prices update_price_discrepancies
-
-foo:
-	cat y
 
 .PHONY: typecheck
 typecheck:

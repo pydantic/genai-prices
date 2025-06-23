@@ -13,6 +13,7 @@ def write_source_prices(source: str, source_prices: SourcePricesType) -> None:
     source_prices_dir.mkdir(exist_ok=True)
     source_prices_file = source_prices_dir / f'{source}.json'
     source_prices_file.write_bytes(source_prices_schema.dump_json(source_prices, indent=2, exclude_none=True))
+    print(f'prices written to {source_prices_file}')
 
 
 def load_source_prices() -> dict[str, SourcePricesType]:
