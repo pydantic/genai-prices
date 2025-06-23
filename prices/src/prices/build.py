@@ -28,17 +28,19 @@ def build_prices():
     """Build schema.json and data.json."""
     root_dir = package_dir.parent
     # write the schema JSON file used by the yaml language server
-    schema_json_path = package_dir / 'schema.json'
+    schema_json_path = package_dir / 'providers' / '.schema.json'
     json_schema = Provider.model_json_schema()
     json_schema = simplify_json_schema(json_schema)
     schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
-    print('Prices schema written to', schema_json_path.relative_to(root_dir))
+    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
 
     providers: list[Provider] = []
 
     providers_dir = package_dir / 'providers'
     for file in providers_dir.iterdir():
-        assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
+        if file.suffix not in ('.yml', '.yaml'):
+            continue
+
         with file.open('rb') as f:
             data = cast(Any, yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
 
@@ -48,6 +50,12 @@ def build_prices():
             raise ValueError(f'Error validating provider {file.name}:\n{e}') from e
         else:
             providers.append(provider)
+
+    data_json_schema = providers_schema.json_schema(mode='serialization')
+    data_json_schema = simplify_json_schema(data_json_schema)
+    prices_json_schema_path = package_dir / 'data_schema.json'
+    prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
+    print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
 
     providers.sort(key=attrgetter('id'))
     prices_json_path = package_dir / 'data.json'

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: X AI
 id: x-ai
 pricing_url: https://docs.x.ai/docs/models

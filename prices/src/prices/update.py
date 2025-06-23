@@ -25,7 +25,8 @@ def get_providers_yaml() -> dict[str, ProviderYaml]:
     providers_dir = package_dir / 'providers'
     providers: dict[str, ProviderYaml] = {}
     for file in providers_dir.iterdir():
-        assert file.suffix in ('.yml', '.yaml'), f'All {providers_dir} files must be YAML files'
+        if file.suffix not in ('.yml', '.yaml'):
+            continue
 
         provider = ProviderYaml(file)
         providers[provider.provider_id] = provider

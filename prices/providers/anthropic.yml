@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: Anthropic
 id: anthropic
 pricing_url: https://www.anthropic.com/pricing#api

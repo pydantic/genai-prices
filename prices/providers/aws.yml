@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: AWS Bedrock
 id: aws
 pricing_url: https://aws.amazon.com/bedrock/pricing/

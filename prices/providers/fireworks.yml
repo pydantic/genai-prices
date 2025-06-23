@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: Fireworks
 id: fireworks
 pricing_url: https://fireworks.ai/pricing

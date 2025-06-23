@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: Groq
 id: groq
 pricing_url: https://groq.com/pricing/

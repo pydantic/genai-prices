@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schema.json
+# yaml-language-server: $schema=.schema.json
 name: together.ai
 id: together
 pricing_url: https://www.together.ai/pricing
