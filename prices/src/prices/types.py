@@ -5,7 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Union
 
-from annotated_types import Ge
+from annotated_types import Ge, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
@@ -26,18 +26,23 @@ class _Model(BaseModel, extra='forbid', use_attribute_docstrings=True):
     """Custom abstract based model with config"""
 
 
+IdField = Annotated[str, MaxLen(100), Field(pattern=r'^\S+$')]
+NameField = Annotated[str, MaxLen(100)]
+DescriptionField = Annotated[str, MaxLen(1000)]
+
+
 class Provider(_Model):
     """Information about an LLM inference provider"""
 
-    name: str
+    name: NameField
     """Common name of the organization"""
-    id: str
+    id: IdField
     """Unique identifier for the provider"""
     pricing_url: HttpUrl | None = None
     """Link to pricing page for the provider"""
     api_pattern: str | None = None
     """Pattern to identify provider via HTTP API URL."""
-    description: str | None = None
+    description: DescriptionField | None = None
     """Description of the provider"""
     models: list[ModelInfo]
     """List of models provided by this organization"""
@@ -72,11 +77,11 @@ class Provider(_Model):
 class ModelInfo(_Model):
     """Information about an LLM model"""
 
-    id: str
+    id: IdField
     """Primary unique identifier for the model"""
-    name: str | None = None
+    name: NameField | None = None
     """Name of the model"""
-    description: str | None = None
+    description: DescriptionField | None = None
     """Description of the model"""
     match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
