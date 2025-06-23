@@ -26,28 +26,35 @@ repos:
   - repo: local
     hooks:
       - id: format
-        name: Format
+        name: format
         entry: make
         args: [format]
         language: system
         types: [python]
         pass_filenames: false
       - id: lint
-        name: Lint
+        name: lint
         entry: make
         args: [lint]
         types: [python]
         language: system
         pass_filenames: false
+      - id: collapse-models
+        name: collapse models
+        entry: make
+        args: [collapse-models]
+        files: "prices/providers/"
+        language: system
+        pass_filenames: false
       - id: build
-        name: Build prices
+        name: build prices
         entry: make
         args: [build]
         files: "prices/"
         language: system
         pass_filenames: false
       - id: typecheck
-        name: Typecheck
+        name: typecheck
         entry: make
         args: [typecheck]
         language: system

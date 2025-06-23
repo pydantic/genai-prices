@@ -31,6 +31,11 @@ lint: ## Lint the code
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build_prices
 
+
+.PHONY: collapse-models
+collapse-models: ## Collapse duplicate similar models
+	uv run -m prices collapse
+
 .PHONY: helicone-get
 helicone-get: ## get helicone prices
 	./prices/helicone_get/pull.sh
