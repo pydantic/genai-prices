@@ -2,8 +2,8 @@ import sys
 from inspect import getdoc
 
 from .build import build_prices
+from .collapse import collapse
 from .price_discrepancies import update_price_discrepancies
-from .simplify import simplify
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
 
@@ -12,7 +12,7 @@ def main():
     actions = (
         build_prices,
         update_from_openrouter,
-        simplify,
+        collapse,
         get_litellm_prices,
         get_openrouter_prices,
         update_price_discrepancies,

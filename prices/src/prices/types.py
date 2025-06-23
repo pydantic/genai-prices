@@ -92,6 +92,8 @@ class ModelInfo(_Model):
     """List of price discrepancies based on external sources."""
     prices_checked: bool | None = Field(default=None, exclude=True)
     """Flag indicating whether the prices have been checked for discrepancies."""
+    collapse: bool = Field(default=True, exclude=True)
+    """Flag indicating whether this price should be collapsed into other prices."""
 
     def is_match(self, model_id: str) -> bool:
         return self.match.is_match(model_id)

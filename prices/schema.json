@@ -243,6 +243,12 @@
           "type": "boolean",
           "description": "Flag indicating whether the prices have been checked for discrepancies.",
           "title": "Prices Checked"
+        },
+        "collapse": {
+          "default": true,
+          "description": "Flag indicating whether this price should be collapsed into other prices.",
+          "title": "Collapse",
+          "type": "boolean"
         }
       },
       "required": [

@@ -218,6 +218,7 @@ models:
       output_mtok: 10
     # Samuel: I can't find any prices for these models, so just copying openrouter's prices
     prices_checked: true
+    collapse: false
 
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
