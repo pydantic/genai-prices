@@ -173,15 +173,19 @@
       "properties": {
         "id": {
           "description": "Primary unique identifier for the model",
+          "maxLength": 100,
+          "pattern": "^\\S+$",
           "title": "Id",
           "type": "string"
         },
         "name": {
+          "maxLength": 100,
           "type": "string",
           "description": "Name of the model",
           "title": "Name"
         },
         "description": {
+          "maxLength": 1000,
           "type": "string",
           "description": "Description of the model",
           "title": "Description"
@@ -407,11 +411,14 @@
   "properties": {
     "name": {
       "description": "Common name of the organization",
+      "maxLength": 100,
       "title": "Name",
       "type": "string"
     },
     "id": {
       "description": "Unique identifier for the provider",
+      "maxLength": 100,
+      "pattern": "^\\S+$",
       "title": "Id",
       "type": "string"
     },
@@ -429,6 +436,7 @@
       "title": "Api Pattern"
     },
     "description": {
+      "maxLength": 1000,
       "type": "string",
       "description": "Description of the provider",
       "title": "Description"
