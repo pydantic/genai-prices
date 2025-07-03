@@ -349,6 +349,10 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.2
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.09
+        output_mtok: 0.17
 
   - id: gemma-3-27b-it:free
     name: Gemma 3 27B (free)

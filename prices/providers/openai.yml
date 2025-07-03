@@ -514,6 +514,9 @@ models:
         input_mtok: 1.1
         cache_read_mtok: 0.275
         output_mtok: 4.4
+      litellm:
+        input_mtok: 2
+        output_mtok: 8
 
   - id: text-davinci-002
     match:

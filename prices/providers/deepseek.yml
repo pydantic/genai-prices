@@ -28,6 +28,10 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 0.88
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.28
+        output_mtok: 0.88
 
   - id: deepseek-chat-v3-0324:free
     name: DeepSeek V3 0324 (free)
@@ -96,6 +100,10 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.1
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.01
+        output_mtok: 0.02
 
   - id: deepseek-r1-0528-qwen3-8b:free
     name: Deepseek R1 0528 Qwen3 8B (free)
@@ -200,6 +208,10 @@ models:
     prices:
       input_mtok: 0.12
       output_mtok: 0.18
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.075
+        output_mtok: 0.15
 
   - id: deepseek-r1-distill-qwen-32b:free
     name: R1 Distill Qwen 32B (free)

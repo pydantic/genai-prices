@@ -57,8 +57,12 @@ simonw-prices-get: ## get simonw-prices
 get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get ## get all prices
 
 .PHONE: update-price-discrepancies
-update-price-discrepancies: get-all-prices ## update price discrepancies
+update-price-discrepancies: ## update price discrepancies
 	uv run -m prices update_price_discrepancies
+
+
+.PHONE: get-update-price-discrepancies
+get-update-price-discrepancies: get-all-prices update-price-discrepancies ## get and update price discrepancies
 
 .PHONY: typecheck
 typecheck:
