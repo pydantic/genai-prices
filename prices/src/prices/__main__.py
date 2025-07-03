@@ -6,6 +6,7 @@ from .collapse import collapse
 from .price_discrepancies import update_price_discrepancies
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
+from .source_simonw_prices import get_simonw_prices
 
 
 def main():
@@ -15,6 +16,7 @@ def main():
         collapse,
         get_litellm_prices,
         get_openrouter_prices,
+        get_simonw_prices,
         update_price_discrepancies,
     )
     if len(sys.argv) == 2:

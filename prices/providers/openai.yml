@@ -289,6 +289,9 @@ models:
       litellm:
         input_mtok: 2.5
         output_mtok: 10
+      simonw:
+        input_mtok: 2.5
+        output_mtok: 10
 
   - id: gpt-4o-2024-08-06
     name: GPT-4o (2024-11-20)
@@ -413,6 +416,9 @@ models:
         cache_read_mtok: 0.55
         output_mtok: 4.4
       litellm:
+        input_mtok: 1.1
+        output_mtok: 4.4
+      simonw:
         input_mtok: 1.1
         output_mtok: 4.4
 
