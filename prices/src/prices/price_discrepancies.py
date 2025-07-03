@@ -17,12 +17,22 @@ def update_price_discrepancies():
                         if not model.prices_checked:
                             assert isinstance(model.prices, ModelPrice)
                             if prices_conflict(model.prices, price):
-                                provider_yml.set_price_conflict(model.id, source, price)
+                                provider_yml.set_price_discrepency(model.id, source, price)
                                 discs += 1
 
         if discs:
-            print(f'{provider_yml.provider.name}: {discs} price discrepancies')
+            print(f'{provider_yml.provider.name:>20}: {discs} price discrepancies')
             provider_yml.save()
+
+
+def list_price_discrepancies():
+    """List price discrepancies between providers and source prices."""
+    providers_yml = get_providers_yaml()
+
+    for provider_yml in providers_yml.values():
+        discs = sum(int(bool(model.price_discrepancies)) for model in provider_yml.provider.models)
+        if discs:
+            print(f'{provider_yml.provider.name:>20}: {discs} price discrepancies')
 
 
 def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool:
