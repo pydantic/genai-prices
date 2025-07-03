@@ -18,6 +18,7 @@ from pydantic import (
     WithJsonSchema,
     field_validator,
 )
+from pydantic_core.core_schema import FieldValidationInfo
 
 from .utils import check_unique
 
@@ -107,6 +108,13 @@ class ModelInfo(_Model):
     def is_match(self, model_id: str) -> bool:
         return self.match.is_match(model_id)
 
+    @field_validator('prices_checked', mode='after')
+    @classmethod
+    def validate_id(cls, prices_checked: date | None, info: FieldValidationInfo) -> date | None:
+        if prices_checked is not None and info.data.get('price_discrepancies'):
+            raise ValueError('`price_discrepancies` should be removed when `prices_checked` is set')
+        return prices_checked
+
 
 def serialize_decimal(v: Decimal) -> float | int:
     return float(v) if v % 1 != 0 else int(v)
@@ -128,8 +136,6 @@ class ModelPrice(_Model):
 
     input_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
-    input_audio_mtok: DollarPrice | TieredPrices | None = None
-    """price in USD per million audio input tokens"""
 
     cache_write_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
@@ -138,6 +144,11 @@ class ModelPrice(_Model):
 
     output_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
+
+    input_audio_mtok: DollarPrice | TieredPrices | None = None
+    """price in USD per million audio input tokens"""
+    cache_audio_read_mtok: DollarPrice | TieredPrices | None = None
+    """price in USD per million audio tokens read from the cache"""
     output_audio_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
