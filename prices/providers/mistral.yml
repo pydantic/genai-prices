@@ -151,6 +151,10 @@ models:
     prices:
       input_mtok: 8
       output_mtok: 24
+    price_discrepancies:
+      simonw:
+        input_mtok: 2
+        output_mtok: 6
 
   - id: mistral-medium
     name: Mistral Medium
@@ -190,6 +194,10 @@ models:
     prices:
       input_mtok: 0.01
       output_mtok: 0.019
+    price_discrepancies:
+      simonw:
+        input_mtok: 0.15
+        output_mtok: 0.15
 
   - id: mistral-nemo:free
     name: Mistral Nemo (free)
@@ -290,6 +298,10 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 6
+    price_discrepancies:
+      simonw:
+        input_mtok: 0.1
+        output_mtok: 0.3
 
   - id: mistral-tiny
     name: Mistral Tiny
@@ -350,6 +362,10 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.1
+    price_discrepancies:
+      simonw:
+        input_mtok: 0.15
+        output_mtok: 0.15
 
   - id: pixtral-large-2411
     name: Pixtral Large 2411

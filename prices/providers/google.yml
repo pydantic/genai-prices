@@ -70,6 +70,9 @@ models:
       litellm:
         input_mtok: 0
         output_mtok: 0
+      simonw:
+        input_mtok: 0.075
+        output_mtok: 0.3
 
   - id: gemini-1.5-pro
     name: gemini 1.5 Pro
@@ -117,6 +120,9 @@ models:
         input_mtok: 0
         output_mtok: 0
       helicone:
+        input_mtok: 0.075
+        output_mtok: 0.3
+      simonw:
         input_mtok: 0.075
         output_mtok: 0.3
 
