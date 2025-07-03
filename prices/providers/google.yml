@@ -142,7 +142,8 @@ models:
   - id: gemini-2.5-flash
     name: Gemini 2.5 Flash
     description: >-
-      Gemini 2.5 Flash is Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities,
+      Gemini 2.5 Flash is Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding,
+      mathematics, and scientific tasks. It includes built-in "thinking" capabilities,
       enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       equals: gemini-2.5-flash
@@ -156,8 +157,10 @@ models:
   - id: gemini-2.5-flash-lite-preview-06-17
     name: Gemini 2.5 Flash Lite Preview 06-17
     description: >-
-      Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and cost efficiency. It offers improved throughput, faster token generation, and better
-      performance across common benchmarks compared to earlier Flash models. By default, "thinking" (i.e. multi-pass reasoning) is disabled to prioritize speed, but developers can enable it via the Reasoning
+      Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and
+      cost efficiency. It offers improved throughput, faster token generation, and better
+      performance across common benchmarks compared to earlier Flash models. By default, "thinking" (i.e. multi-pass reasoning)
+      is disabled to prioritize speed, but developers can enable it via the Reasoning
       API parameter to selectively trade off cost for intelligence.
     match:
       equals: gemini-2.5-flash-lite-preview-06-17
@@ -170,7 +173,8 @@ models:
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
     description: >-
-      Gemini 2.5 Flash May 20th Checkpoint is Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking"
+      Gemini 2.5 Flash May 20th Checkpoint is Google's state-of-the-art workhorse model, specifically designed for advanced
+      reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking"
       capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       or:
@@ -195,8 +199,10 @@ models:
   - id: gemini-2.5-pro
     name: Gemini 2.5 Pro
     description: >-
-      Gemini 2.5 Pro is Google's state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses
-      with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior
+      Gemini 2.5 Pro is Google's state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific
+      tasks. It employs "thinking" capabilities, enabling it to reason through responses
+      with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks,
+      including first-place positioning on the LMArena leaderboard, reflecting superior
       human-preference alignment and complex problem-solving abilities.
     match:
       equals: gemini-2.5-pro
@@ -209,8 +215,10 @@ models:
   - id: gemini-2.5-pro-preview
     name: Gemini 2.5 Pro Preview 06-05
     description: >
-      Gemini 2.5 Pro is Google's state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses
-      with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior
+      Gemini 2.5 Pro is Google's state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific
+      tasks. It employs "thinking" capabilities, enabling it to reason through responses
+      with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks,
+      including first-place positioning on the LMArena leaderboard, reflecting superior
       human-preference alignment and complex problem-solving abilities.
     match:
       or:
@@ -229,7 +237,8 @@ models:
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
     description: >-
-      Gemini 1.5 Flash is a foundation model that performs well at a variety of multimodal tasks such as visual understanding, classification, summarization, and creating content from image, audio and video.
+      Gemini 1.5 Flash is a foundation model that performs well at a variety of multimodal tasks such as visual understanding,
+      classification, summarization, and creating content from image, audio and video.
       It's adept at processing visual and text inputs such as photographs, documents, infographics, and screenshots.
     match:
       equals: gemini-flash-1.5
@@ -300,7 +309,8 @@ models:
   - id: gemma-2-9b-it
     name: Gemma 2 9B
     description: >-
-      Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.
+      Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance
+      in its size class.
     match:
       equals: gemma-2-9b-it
     prices:
@@ -310,7 +320,8 @@ models:
   - id: gemma-2-9b-it:free
     name: Gemma 2 9B (free)
     description: >-
-      Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.
+      Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance
+      in its size class.
     match:
       equals: gemma-2-9b-it:free
     prices:
@@ -320,8 +331,10 @@ models:
   - id: gemma-3-12b-it
     name: Gemma 3 12B
     description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family of Gemma 3 models after Gemma 3 27B
+      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
+      128k tokens, understands over 140 languages, and offers improved math, reasoning,
+      and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family
+      of Gemma 3 models after Gemma 3 27B
     match:
       equals: gemma-3-12b-it
     prices:
@@ -331,8 +344,10 @@ models:
   - id: gemma-3-12b-it:free
     name: Gemma 3 12B (free)
     description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family of Gemma 3 models after Gemma 3 27B
+      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
+      128k tokens, understands over 140 languages, and offers improved math, reasoning,
+      and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family
+      of Gemma 3 models after Gemma 3 27B
     match:
       equals: gemma-3-12b-it:free
     prices:
@@ -342,19 +357,27 @@ models:
   - id: gemma-3-27b-it
     name: Gemma 3 27B
     description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2
+      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
+      128k tokens, understands over 140 languages, and offers improved math, reasoning,
+      and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source
+      model, successor to Gemma 2
     match:
       equals: gemma-3-27b-it
     prices:
       input_mtok: 0.1
       output_mtok: 0.2
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.09
+        output_mtok: 0.17
 
   - id: gemma-3-27b-it:free
     name: Gemma 3 27B (free)
     description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2
+      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
+      128k tokens, understands over 140 languages, and offers improved math, reasoning,
+      and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source
+      model, successor to Gemma 2
     match:
       equals: gemma-3-27b-it:free
     prices:
@@ -364,7 +387,8 @@ models:
   - id: gemma-3-4b-it
     name: Gemma 3 4B
     description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning,
+      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
+      128k tokens, understands over 140 languages, and offers improved math, reasoning,
       and chat capabilities, including structured outputs and function calling.
     match:
       equals: gemma-3-4b-it
@@ -375,7 +399,8 @@ models:
   - id: gemma-3-4b-it:free
     name: Gemma 3 4B (free)
     description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning,
+      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
+      128k tokens, understands over 140 languages, and offers improved math, reasoning,
       and chat capabilities, including structured outputs and function calling.
     match:
       equals: gemma-3-4b-it:free
@@ -386,9 +411,12 @@ models:
   - id: gemma-3n-e4b-it:free
     name: Gemma 3n 4B (free)
     description: >-
-      Gemma 3n E4B-it is optimized for efficient execution on mobile and low-resource devices, such as phones, laptops, and tablets. It supports multimodal inputs—including text, visual data, and audio—enabling
-      diverse tasks such as text generation, speech recognition, translation, and image analysis. Leveraging innovations like Per-Layer Embedding (PLE) caching and the MatFormer architecture, Gemma 3n dynamically
-      manages memory usage and computational load by selectively activating model parameters, significantly reducing runtime resource requirements.
+      Gemma 3n E4B-it is optimized for efficient execution on mobile and low-resource devices, such as phones, laptops, and
+      tablets. It supports multimodal inputs—including text, visual data, and audio—enabling
+      diverse tasks such as text generation, speech recognition, translation, and image analysis. Leveraging innovations like
+      Per-Layer Embedding (PLE) caching and the MatFormer architecture, Gemma 3n dynamically
+      manages memory usage and computational load by selectively activating model parameters, significantly reducing runtime
+      resource requirements.
     match:
       equals: gemma-3n-e4b-it:free
     prices:

@@ -14,7 +14,8 @@ models:
   - id: command
     name: Command
     description: >-
-      Command is an instruction-following conversational model that performs language tasks with high quality, more reliably and with a longer context than our base generative models.
+      Command is an instruction-following conversational model that performs language tasks with high quality, more reliably
+      and with a longer context than our base generative models.
     match:
       equals: command
     prices:
@@ -24,9 +25,11 @@ models:
   - id: command-a
     name: Command A
     description: >-
-      Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.
+      Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance
+      across agentic, multilingual, and coding use cases.
 
-      Compared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.
+      Compared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware
+      costs, excelling on business-critical agentic and multilingual tasks.
     match:
       equals: command-a
     prices:
@@ -36,7 +39,8 @@ models:
   - id: command-r
     name: Command R
     description: >-
-      Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows
+      Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and
+      with a longer context than previous models. It can be used for complex workflows
       like code generation, retrieval augmented generation (RAG), tool use, and agents.
     match:
       or:
@@ -53,7 +57,8 @@ models:
   - id: command-r-08-2024
     name: Command R (08-2024)
     description: >-
-      command-r-08-2024 is an update of the Command R with improved performance for multilingual retrieval-augmented generation (RAG) and tool use. More broadly, it is better at math, code and reasoning
+      command-r-08-2024 is an update of the Command R with improved performance for multilingual retrieval-augmented generation
+      (RAG) and tool use. More broadly, it is better at math, code and reasoning
       and is competitive with the previous version of the larger Command R+ model.
     match:
       equals: command-r-08-2024
@@ -64,7 +69,8 @@ models:
   - id: command-r-plus
     name: Command R+
     description: >-
-      Command R+ is a new, 104B-parameter LLM from Cohere. It's useful for roleplay, general consumer usecases, and Retrieval Augmented Generation (RAG).
+      Command R+ is a new, 104B-parameter LLM from Cohere. It's useful for roleplay, general consumer usecases, and Retrieval
+      Augmented Generation (RAG).
     match:
       or:
         - equals: command-r-plus
@@ -80,7 +86,8 @@ models:
   - id: command-r-plus-08-2024
     name: Command R+ (08-2024)
     description: >-
-      command-r-plus-08-2024 is an update of the Command R+ with roughly 50% higher throughput and 25% lower latencies as compared to the previous Command R+ version, while keeping the hardware footprint
+      command-r-plus-08-2024 is an update of the Command R+ with roughly 50% higher throughput and 25% lower latencies as
+      compared to the previous Command R+ version, while keeping the hardware footprint
       the same.
     match:
       equals: command-r-plus-08-2024
@@ -91,7 +98,8 @@ models:
   - id: command-r7b-12-2024
     name: Command R7B (12-2024)
     description: >-
-      Command R7B (12-2024) is a small, fast update of the Command R+ model, delivered in December 2024. It excels at RAG, tool use, agents, and similar tasks requiring complex reasoning and multiple steps.
+      Command R7B (12-2024) is a small, fast update of the Command R+ model, delivered in December 2024. It excels at RAG,
+      tool use, agents, and similar tasks requiring complex reasoning and multiple steps.
     match:
       equals: command-r7b-12-2024
     prices:

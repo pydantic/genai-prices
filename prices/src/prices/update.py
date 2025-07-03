@@ -18,7 +18,7 @@ yaml.preserve_quotes = True
 yaml.map_indent = 2
 yaml.sequence_indent = 4
 yaml.sequence_dash_offset = 2
-yaml.width = 200
+yaml.width = 120
 
 
 def get_providers_yaml() -> dict[str, ProviderYaml]:

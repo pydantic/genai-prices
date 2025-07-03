@@ -36,7 +36,8 @@ models:
   - id: claude-3-5-sonnet
     name: Claude Sonnet 3.5
     description: >-
-      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads.
+      Maximum utility at a lower price, dependable, balanced for scaled deployments.
     match:
       or:
         - starts_with: claude-3-5-sonnet
@@ -79,7 +80,8 @@ models:
   - id: claude-3-opus-latest
     name: Claude Opus 3
     description: >-
-      Claude 3 Opus was Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.
+      Claude 3 Opus was Anthropic's most powerful model for highly complex tasks.
+      It boasts top-level performance, intelligence, fluency, and understanding.
     match:
       starts_with: claude-3-opus
     max_tokens: 200000
@@ -92,7 +94,8 @@ models:
   - id: claude-3-sonnet
     name: Claude 3 Sonnet
     description: >-
-      Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+      Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads.
+      Maximum utility at a lower price, dependable, balanced for scaled deployments.
     match:
       starts_with: claude-3-sonnet
     max_tokens: 200000
