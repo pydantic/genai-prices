@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated, Any, Union
 
@@ -44,6 +44,8 @@ class Provider(_Model):
     """Pattern to identify provider via HTTP API URL."""
     description: DescriptionField | None = None
     """Description of the provider"""
+    price_comments: DescriptionField | None = None
+    """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
     models: list[ModelInfo]
     """List of models provided by this organization"""
 
@@ -87,6 +89,8 @@ class ModelInfo(_Model):
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
     max_tokens: int | None = None
     """Maximum number of tokens allowed for this model"""
+    price_comments: DescriptionField | None = None
+    """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: ModelPrice | list[ConditionalPrice]
     """Set of prices for using this model.
 
@@ -95,8 +99,8 @@ class ModelInfo(_Model):
     """
     price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
     """List of price discrepancies based on external sources."""
-    prices_checked: bool | None = Field(default=None, exclude=True)
-    """Flag indicating whether the prices have been checked for discrepancies."""
+    prices_checked: date | None = Field(default=None, exclude=True)
+    """Date indicating when the prices were last checked for discrepancies."""
     collapse: bool = Field(default=True, exclude=True)
     """Flag indicating whether this price should be collapsed into other prices."""
 
@@ -108,7 +112,7 @@ def serialize_decimal(v: Decimal) -> float | int:
     return float(v) if v % 1 != 0 else int(v)
 
 
-MTok = Annotated[
+DollarPrice = Annotated[
     Decimal,
     Ge(0),
     WithJsonSchema({'type': 'number'}),
@@ -119,19 +123,22 @@ MTok = Annotated[
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
-    input_mtok: MTok | TieredPrices | None = None
+    requests_kcount: DollarPrice | None = None
+    """price in USD per thousand requests"""
+
+    input_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
-    input_audio_mtok: MTok | TieredPrices | None = None
+    input_audio_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million audio input tokens"""
 
-    cache_write_mtok: MTok | TieredPrices | None = None
+    cache_write_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
-    cache_read_mtok: MTok | TieredPrices | None = None
+    cache_read_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million tokens read from the cache"""
 
-    output_mtok: MTok | TieredPrices | None = None
+    output_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million output/completion tokens"""
-    output_audio_mtok: MTok | TieredPrices | None = None
+    output_audio_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
     def all_unset(self) -> bool:
@@ -149,7 +156,7 @@ class ModelPrice(_Model):
 class TieredPrices(_Model):
     """Pricing model when the amount paid varies by number of tokens"""
 
-    base: MTok
+    base: DollarPrice
     """Based price, e.g. price until the first tier."""
     tiers: list[Tier]
 
@@ -159,7 +166,7 @@ class Tier(_Model):
 
     start: int
     """Start of the tier"""
-    price: MTok
+    price: DollarPrice
     """Price for this tier"""
 
 
