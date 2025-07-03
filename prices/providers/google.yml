@@ -83,7 +83,7 @@ models:
     match:
       contains: gemini-1.5-pro
     max_tokens: 1000000
-    prices_checked: true
+    prices_checked: 2025-06-22
     prices:
       input_mtok:
         base: 1.25
@@ -147,7 +147,7 @@ models:
       enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       equals: gemini-2.5-flash
-    prices_checked: true
+    prices_checked: 2025-06-22
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
@@ -231,7 +231,7 @@ models:
       cache_read_mtok: 0.31
       output_mtok: 10
     # Samuel: I can't find any prices for these models, so just copying openrouter's prices
-    prices_checked: true
+    prices_checked: 2025-06-23
     collapse: false
 
   - id: gemini-flash-1.5

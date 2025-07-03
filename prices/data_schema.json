@@ -222,6 +222,12 @@
           "description": "Maximum number of tokens allowed for this model",
           "title": "Max Tokens"
         },
+        "price_comments": {
+          "maxLength": 1000,
+          "type": "string",
+          "description": "Comments about the pricing of the model, especially challenges in representing the provider's pricing model.",
+          "title": "Price Comments"
+        },
         "prices": {
           "anyOf": [
             {
@@ -250,6 +256,11 @@
       "additionalProperties": false,
       "description": "Set of prices for using a model",
       "properties": {
+        "requests_kcount": {
+          "type": "number",
+          "description": "price in USD per thousand requests",
+          "title": "Requests Kcount"
+        },
         "input_mtok": {
           "anyOf": [
             {
@@ -361,6 +372,12 @@
           "type": "string",
           "description": "Description of the provider",
           "title": "Description"
+        },
+        "price_comments": {
+          "maxLength": 1000,
+          "type": "string",
+          "description": "Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model.",
+          "title": "Price Comments"
         },
         "models": {
           "description": "List of models provided by this organization",
