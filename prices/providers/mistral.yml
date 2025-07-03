@@ -7,7 +7,8 @@ models:
   - id: codestral-2501
     name: Codestral 2501
     description: >-
-      Mistral's cutting-edge language model for coding. Codestral specializes in low-latency, high-frequency tasks such as fill-in-the-middle (FIM), code correction and test generation.
+      Mistral's cutting-edge language model for coding. Codestral specializes in low-latency, high-frequency tasks such as
+      fill-in-the-middle (FIM), code correction and test generation.
     match:
       equals: codestral-2501
     prices:
@@ -17,8 +18,10 @@ models:
   - id: devstral-small
     name: Devstral Small
     description: >-
-      Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for
-      codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).
+      Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI
+      and All Hands AI for advanced software engineering tasks. It is optimized for
+      codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on
+      SWE-Bench Verified (46.8%).
     match:
       equals: devstral-small
     prices:
@@ -28,8 +31,10 @@ models:
   - id: devstral-small:free
     name: Devstral Small (free)
     description: >-
-      Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for
-      codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).
+      Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI
+      and All Hands AI for advanced software engineering tasks. It is optimized for
+      codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on
+      SWE-Bench Verified (46.8%).
     match:
       equals: devstral-small:free
     prices:
@@ -39,8 +44,10 @@ models:
   - id: magistral-medium-2506
     name: Magistral Medium 2506
     description: >-
-      Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing and better accuracy than with non-reasoning LLMs. From legal research and financial
-      forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency and precision are critical.
+      Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing
+      and better accuracy than with non-reasoning LLMs. From legal research and financial
+      forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency
+      and precision are critical.
     match:
       or:
         - equals: magistral-medium-2506
@@ -52,7 +59,8 @@ models:
   - id: magistral-small-2506
     name: Magistral Small 2506
     description: >-
-      Magistral Small is a 24B parameter instruction-tuned model based on Mistral-Small-3.1 (2503), enhanced through supervised fine-tuning on traces from Magistral Medium and further refined via reinforcement
+      Magistral Small is a 24B parameter instruction-tuned model based on Mistral-Small-3.1 (2503), enhanced through supervised
+      fine-tuning on traces from Magistral Medium and further refined via reinforcement
       learning. It is optimized for reasoning and supports a wide multilingual range, including over 20 languages.
     match:
       equals: magistral-small-2506
@@ -63,8 +71,10 @@ models:
   - id: ministral-3b
     name: Ministral 3B
     description: >-
-      Ministral 3B is a 3B parameter model optimized for on-device and edge computing. It excels in knowledge, commonsense reasoning, and function-calling, outperforming larger models like Mistral 7B on
-      most benchmarks. Supporting up to 128k context length, it's ideal for orchestrating agentic workflows and specialist tasks with efficient inference.
+      Ministral 3B is a 3B parameter model optimized for on-device and edge computing. It excels in knowledge, commonsense
+      reasoning, and function-calling, outperforming larger models like Mistral 7B on
+      most benchmarks. Supporting up to 128k context length, it's ideal for orchestrating agentic workflows and specialist
+      tasks with efficient inference.
     match:
       equals: ministral-3b
     prices:
@@ -74,8 +84,10 @@ models:
   - id: ministral-8b
     name: Ministral 8B
     description: >-
-      Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context
-      length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.
+      Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient
+      inference. Designed for edge use cases, it supports up to 128k context
+      length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect
+      for low-latency, privacy-first applications.
     match:
       equals: ministral-8b
     prices:
@@ -134,7 +146,8 @@ models:
   - id: mistral-large
     name: Mistral Large
     description: >-
-      This is Mistral AI's flagship model, Mistral Large 2 (version `mistral-large-2407`). It's a proprietary weights-available model and excels at reasoning, code, JSON, chat, and more. Read the launch
+      This is Mistral AI's flagship model, Mistral Large 2 (version `mistral-large-2407`). It's a proprietary weights-available
+      model and excels at reasoning, code, JSON, chat, and more. Read the launch
       announcement here.
     match:
       or:
@@ -159,7 +172,8 @@ models:
   - id: mistral-medium
     name: Mistral Medium
     description: >-
-      This is Mistral AI's closed-source, medium-sided model. It's powered by a closed-source prototype and excels at reasoning, code, JSON, chat, and more. In benchmarks, it compares with many of the flagship
+      This is Mistral AI's closed-source, medium-sided model. It's powered by a closed-source prototype and excels at reasoning,
+      code, JSON, chat, and more. In benchmarks, it compares with many of the flagship
       models of other companies.
     match:
       equals: mistral-medium
@@ -170,8 +184,10 @@ models:
   - id: mistral-medium-3
     name: Mistral Medium 3
     description: >-
-      Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning
-      and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.
+      Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities
+      at significantly reduced operational cost. It balances state-of-the-art reasoning
+      and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable
+      deployments across professional and industrial use cases.
     match:
       equals: mistral-medium-3
     prices:
@@ -198,6 +214,9 @@ models:
       simonw:
         input_mtok: 0.15
         output_mtok: 0.15
+      openrouter:
+        input_mtok: 0.01
+        output_mtok: 0.001
 
   - id: mistral-nemo:free
     name: Mistral Nemo (free)
@@ -212,8 +231,10 @@ models:
   - id: mistral-saba
     name: Saba
     description: >-
-      Mistral Saba is a 24B-parameter language model specifically designed for the Middle East and South Asia, delivering accurate and contextually relevant responses while maintaining efficient performance.
-      Trained on curated regional datasets, it supports multiple Indian-origin languages—including Tamil and Malayalam—alongside Arabic. This makes it a versatile option for a range of regional and multilingual
+      Mistral Saba is a 24B-parameter language model specifically designed for the Middle East and South Asia, delivering
+      accurate and contextually relevant responses while maintaining efficient performance.
+      Trained on curated regional datasets, it supports multiple Indian-origin languages—including Tamil and Malayalam—alongside
+      Arabic. This makes it a versatile option for a range of regional and multilingual
       applications. Read more at the blog post here
     match:
       equals: mistral-saba
@@ -224,8 +245,10 @@ models:
   - id: mistral-small
     name: Mistral Small
     description: >-
-      With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo] and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective
-      solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English,
+      With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo]
+      and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective
+      solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities,
+      can produce and reason about code, and is multiligual, supporting English,
       French, German, Italian, and Spanish.
     match:
       equals: mistral-small
@@ -236,7 +259,8 @@ models:
   - id: mistral-small-24b-instruct-2501
     name: Mistral Small 3
     description: >-
-      Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released under the Apache 2.0 license, it features both pre-trained and instruction-tuned
+      Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released
+      under the Apache 2.0 license, it features both pre-trained and instruction-tuned
       versions designed for efficient local deployment.
     match:
       equals: mistral-small-24b-instruct-2501
@@ -247,7 +271,8 @@ models:
   - id: mistral-small-24b-instruct-2501:free
     name: Mistral Small 3 (free)
     description: >-
-      Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released under the Apache 2.0 license, it features both pre-trained and instruction-tuned
+      Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released
+      under the Apache 2.0 license, it features both pre-trained and instruction-tuned
       versions designed for efficient local deployment.
     match:
       equals: mistral-small-24b-instruct-2501:free
@@ -258,22 +283,36 @@ models:
   - id: mistral-small-3.1-24b-instruct
     name: Mistral Small 3.1 24B
     description: >-
-      Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with advanced multimodal capabilities. It provides state-of-the-art performance in
-      text-based reasoning and vision tasks, including image analysis, programming, mathematical reasoning, and multilingual support across dozens of languages. Equipped with an extensive 128k token context
-      window and optimized for efficient local inference, it supports use cases such as conversational agents, function calling, long-document comprehension, and privacy-sensitive deployments. The updated version is Mistral Small 3.2
+      Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with
+      advanced multimodal capabilities.
+      It provides state-of-the-art performance in text-based reasoning and vision tasks, including image analysis, programming,
+      mathematical reasoning, and multilingual support across dozens of languages.
+      Equipped with an extensive 128k token context window and optimized for efficient local inference, it supports use cases
+      such as conversational agents, function calling, long-document comprehension,
+      and privacy-sensitive deployments.
+      The updated version is Mistral Small 3.2
     max_tokens: 128000
     match:
       equals: mistral-small-3.1-24b-instruct
     prices:
       input_mtok: 0.05
       output_mtok: 0.15
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.05
+        output_mtok: 0.1
 
   - id: mistral-small-3.1-24b-instruct:free
     name: Mistral Small 3.1 24B (free)
     description: >-
-      Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with advanced multimodal capabilities. It provides state-of-the-art performance in
-      text-based reasoning and vision tasks, including image analysis, programming, mathematical reasoning, and multilingual support across dozens of languages. Equipped with an extensive 128k token context
-      window and optimized for efficient local inference, it supports use cases such as conversational agents, function calling, long-document comprehension, and privacy-sensitive deployments. The updated version is Mistral Small 3.2
+      Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with
+      advanced multimodal capabilities.
+      It provides state-of-the-art performance in text-based reasoning and vision tasks, including image analysis, programming,
+      mathematical reasoning, and multilingual support across dozens of languages.
+      Equipped with an extensive 128k token context window and optimized for efficient local inference, it supports use cases
+      such as conversational agents, function calling, long-document comprehension,
+      and privacy-sensitive deployments.
+      The updated version is Mistral Small 3.2
     max_tokens: 128000
     match:
       equals: mistral-small-3.1-24b-instruct:free
@@ -284,8 +323,10 @@ models:
   - id: mistral-small-3.2-24b-instruct:free
     name: Mistral Small 3.2 24B (free)
     description: >-
-      Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following, repetition reduction, and improved function calling. Compared to the 3.1 release,
-      version 3.2 significantly improves accuracy on WildBench and Arena Hard, reduces infinite generations, and delivers gains in tool use and structured output tasks.
+      Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following,
+      repetition reduction, and improved function calling. Compared to the 3.1 release,
+      version 3.2 significantly improves accuracy on WildBench and Arena Hard, reduces infinite generations, and delivers
+      gains in tool use and structured output tasks.
     match:
       equals: mistral-small-3.2-24b-instruct:free
     prices:
@@ -316,7 +357,8 @@ models:
   - id: mixtral-8x22b-instruct
     name: Mixtral 8x22B Instruct
     description: >-
-      Mistral's official instruct fine-tuned version of Mixtral 8x22B. It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include:
+      Mistral's official instruct fine-tuned version of Mixtral 8x22B. It uses 39B active parameters out of 141B, offering
+      unparalleled cost efficiency for its size. Its strengths include:
 
       - strong math, coding, and reasoning
 
@@ -332,7 +374,8 @@ models:
   - id: mixtral-8x7b-instruct
     name: Mixtral 8x7B Instruct
     description: >-
-      Mixtral 8x7B Instruct is a pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.
+      Mixtral 8x7B Instruct is a pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction
+      use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.
     match:
       equals: mixtral-8x7b-instruct
     prices:
@@ -370,7 +413,8 @@ models:
   - id: pixtral-large-2411
     name: Pixtral Large 2411
     description: >-
-      Pixtral Large is a 124B parameter, open-weight, multimodal model built on top of Mistral Large 2. The model is able to understand documents, charts and natural images.
+      Pixtral Large is a 124B parameter, open-weight, multimodal model built on top of Mistral Large 2. The model is able
+      to understand documents, charts and natural images.
     match:
       equals: pixtral-large-2411
     prices:

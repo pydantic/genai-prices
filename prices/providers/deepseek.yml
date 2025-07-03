@@ -7,7 +7,8 @@ models:
   - id: deepseek-chat
     name: DeepSeek V3
     description: >-
-      DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported
+      DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities
+      of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported
       evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models.
     match:
       equals: deepseek-chat
@@ -22,17 +23,23 @@ models:
   - id: deepseek-chat-v3-0324
     name: DeepSeek V3 0324
     description: >-
-      DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from the DeepSeek team.
+      DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from
+      the DeepSeek team.
     match:
       equals: deepseek-chat-v3-0324
     prices:
       input_mtok: 0.3
       output_mtok: 0.88
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.28
+        output_mtok: 0.88
 
   - id: deepseek-chat-v3-0324:free
     name: DeepSeek V3 0324 (free)
     description: >-
-      DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from the DeepSeek team.
+      DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from
+      the DeepSeek team.
     match:
       equals: deepseek-chat-v3-0324:free
     prices:
@@ -42,7 +49,8 @@ models:
   - id: deepseek-chat:free
     name: DeepSeek V3 (free)
     description: >-
-      DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported
+      DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities
+      of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported
       evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models.
     match:
       equals: deepseek-chat:free
@@ -53,7 +61,8 @@ models:
   - id: deepseek-prover-v2
     name: DeepSeek Prover V2
     description: >-
-      DeepSeek Prover V2 is a 671B parameter model, speculated to be geared towards logic and mathematics. Likely an upgrade from DeepSeek-Prover-V1.5 Not much is known about the model yet, as DeepSeek
+      DeepSeek Prover V2 is a 671B parameter model, speculated to be geared towards logic and mathematics. Likely an upgrade
+      from DeepSeek-Prover-V1.5 Not much is known about the model yet, as DeepSeek
       released it on Hugging Face without an announcement or description.
     match:
       equals: deepseek-prover-v2
@@ -64,7 +73,8 @@ models:
   - id: deepseek-r1
     name: R1
     description: >-
-      DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference pass.
+      DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's
+      671B parameters in size, with 37B active in an inference pass.
     match:
       equals: deepseek-r1
     prices:
@@ -74,7 +84,8 @@ models:
   - id: deepseek-r1-0528
     name: R1 0528
     description: >-
-      May 28th update to the original DeepSeek R1 Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference
+      May 28th update to the original DeepSeek R1 Performance on par with OpenAI o1, but open-sourced and with fully open
+      reasoning tokens. It's 671B parameters in size, with 37B active in an inference
       pass.
     match:
       equals: deepseek-r1-0528
@@ -85,27 +96,35 @@ models:
   - id: deepseek-r1-0528-qwen3-8b
     name: Deepseek R1 0528 Qwen3 8B
     description: >-
-      DeepSeek-R1-0528 is a lightly upgraded release of DeepSeek R1 that taps more compute and smarter post-training tricks, pushing its reasoning and inference to the brink of flagship models like O3 and
+      DeepSeek-R1-0528 is a lightly upgraded release of DeepSeek R1 that taps more compute and smarter post-training tricks,
+      pushing its reasoning and inference to the brink of flagship models like O3 and
       Gemini 2.5 Pro.
 
       It now tops math, programming, and logic leaderboards, showcasing a step-change in depth-of-thought.
 
-      The distilled variant, DeepSeek-R1-0528-Qwen3-8B, transfers this chain-of-thought into an 8 B-parameter form, beating standard Qwen3 8B by +10 pp and tying the 235 B "thinking" giant on AIME 2024.
+      The distilled variant, DeepSeek-R1-0528-Qwen3-8B, transfers this chain-of-thought into an 8 B-parameter form, beating
+      standard Qwen3 8B by +10 pp and tying the 235 B "thinking" giant on AIME 2024.
     match:
       equals: deepseek-r1-0528-qwen3-8b
     prices:
       input_mtok: 0.05
       output_mtok: 0.1
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.01
+        output_mtok: 0.02
 
   - id: deepseek-r1-0528-qwen3-8b:free
     name: Deepseek R1 0528 Qwen3 8B (free)
     description: >-
-      DeepSeek-R1-0528 is a lightly upgraded release of DeepSeek R1 that taps more compute and smarter post-training tricks, pushing its reasoning and inference to the brink of flagship models like O3 and
+      DeepSeek-R1-0528 is a lightly upgraded release of DeepSeek R1 that taps more compute and smarter post-training tricks,
+      pushing its reasoning and inference to the brink of flagship models like O3 and
       Gemini 2.5 Pro.
 
       It now tops math, programming, and logic leaderboards, showcasing a step-change in depth-of-thought.
 
-      The distilled variant, DeepSeek-R1-0528-Qwen3-8B, transfers this chain-of-thought into an 8 B-parameter form, beating standard Qwen3 8B by +10 pp and tying the 235 B "thinking" giant on AIME 2024.
+      The distilled variant, DeepSeek-R1-0528-Qwen3-8B, transfers this chain-of-thought into an 8 B-parameter form, beating
+      standard Qwen3 8B by +10 pp and tying the 235 B "thinking" giant on AIME 2024.
     match:
       equals: deepseek-r1-0528-qwen3-8b:free
     prices:
@@ -115,7 +134,8 @@ models:
   - id: deepseek-r1-0528:free
     name: R1 0528 (free)
     description: >-
-      May 28th update to the original DeepSeek R1 Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference
+      May 28th update to the original DeepSeek R1 Performance on par with OpenAI o1, but open-sourced and with fully open
+      reasoning tokens. It's 671B parameters in size, with 37B active in an inference
       pass.
     match:
       equals: deepseek-r1-0528:free
@@ -126,7 +146,8 @@ models:
   - id: deepseek-r1-distill-llama-70b
     name: R1 Distill Llama 70B
     description: >-
-      DeepSeek R1 Distill Llama 70B is a distilled large language model based on Llama-3.3-70B-Instruct, using outputs from DeepSeek R1. The model combines advanced distillation techniques to achieve high
+      DeepSeek R1 Distill Llama 70B is a distilled large language model based on Llama-3.3-70B-Instruct, using outputs from
+      DeepSeek R1. The model combines advanced distillation techniques to achieve high
       performance across multiple benchmarks, including:
     match:
       equals: deepseek-r1-distill-llama-70b
@@ -137,7 +158,8 @@ models:
   - id: deepseek-r1-distill-llama-70b:free
     name: R1 Distill Llama 70B (free)
     description: >-
-      DeepSeek R1 Distill Llama 70B is a distilled large language model based on Llama-3.3-70B-Instruct, using outputs from DeepSeek R1. The model combines advanced distillation techniques to achieve high
+      DeepSeek R1 Distill Llama 70B is a distilled large language model based on Llama-3.3-70B-Instruct, using outputs from
+      DeepSeek R1. The model combines advanced distillation techniques to achieve high
       performance across multiple benchmarks, including:
     match:
       equals: deepseek-r1-distill-llama-70b:free
@@ -148,7 +170,8 @@ models:
   - id: deepseek-r1-distill-llama-8b
     name: R1 Distill Llama 8B
     description: >-
-      DeepSeek R1 Distill Llama 8B is a distilled large language model based on Llama-3.1-8B-Instruct, using outputs from DeepSeek R1. The model combines advanced distillation techniques to achieve high
+      DeepSeek R1 Distill Llama 8B is a distilled large language model based on Llama-3.1-8B-Instruct, using outputs from
+      DeepSeek R1. The model combines advanced distillation techniques to achieve high
       performance across multiple benchmarks, including:
     match:
       equals: deepseek-r1-distill-llama-8b
@@ -159,7 +182,8 @@ models:
   - id: deepseek-r1-distill-qwen-1.5b
     name: R1 Distill Qwen 1.5B
     description: >-
-      DeepSeek R1 Distill Qwen 1.5B is a distilled large language model based on  Qwen 2.5 Math 1.5B, using outputs from DeepSeek R1. It's a very small and efficient model which outperforms GPT 4o 0513
+      DeepSeek R1 Distill Qwen 1.5B is a distilled large language model based on  Qwen 2.5 Math 1.5B, using outputs from DeepSeek
+      R1. It's a very small and efficient model which outperforms GPT 4o 0513
       on Math Benchmarks.
     match:
       equals: deepseek-r1-distill-qwen-1.5b
@@ -170,7 +194,8 @@ models:
   - id: deepseek-r1-distill-qwen-14b
     name: R1 Distill Qwen 14B
     description: >-
-      DeepSeek R1 Distill Qwen 14B is a distilled large language model based on Qwen 2.5 14B, using outputs from DeepSeek R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
+      DeepSeek R1 Distill Qwen 14B is a distilled large language model based on Qwen 2.5 14B, using outputs from DeepSeek
+      R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
       results for dense models.
     match:
       equals: deepseek-r1-distill-qwen-14b
@@ -181,7 +206,8 @@ models:
   - id: deepseek-r1-distill-qwen-14b:free
     name: R1 Distill Qwen 14B (free)
     description: >-
-      DeepSeek R1 Distill Qwen 14B is a distilled large language model based on Qwen 2.5 14B, using outputs from DeepSeek R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
+      DeepSeek R1 Distill Qwen 14B is a distilled large language model based on Qwen 2.5 14B, using outputs from DeepSeek
+      R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
       results for dense models.
     match:
       equals: deepseek-r1-distill-qwen-14b:free
@@ -192,20 +218,28 @@ models:
   - id: deepseek-r1-distill-qwen-32b
     name: R1 Distill Qwen 32B
     description: >-
-      DeepSeek R1 Distill Qwen 32B is a distilled large language model based on Qwen 2.5 32B, using outputs from DeepSeek R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
-      results for dense models.\n\nOther benchmark results include:\n\n- AIME 2024 pass@1: 72.6\n- MATH-500 pass@1: 94.3\n- CodeForces Rating: 1691\n\nThe model leverages fine-tuning from DeepSeek R1's
+      DeepSeek R1 Distill Qwen 32B is a distilled large language model based on Qwen 2.5 32B, using outputs from DeepSeek
+      R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
+      results for dense models.\n\nOther benchmark results include:\n\n- AIME 2024 pass@1: 72.6\n- MATH-500 pass@1: 94.3\n-
+      CodeForces Rating: 1691\n\nThe model leverages fine-tuning from DeepSeek R1's
       outputs, enabling competitive performance comparable to larger frontier models.
     match:
       equals: deepseek-r1-distill-qwen-32b
     prices:
       input_mtok: 0.12
       output_mtok: 0.18
+    price_discrepancies:
+      openrouter:
+        input_mtok: 0.075
+        output_mtok: 0.15
 
   - id: deepseek-r1-distill-qwen-32b:free
     name: R1 Distill Qwen 32B (free)
     description: >-
-      DeepSeek R1 Distill Qwen 32B is a distilled large language model based on Qwen 2.5 32B, using outputs from DeepSeek R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
-      results for dense models.\n\nOther benchmark results include:\n\n- AIME 2024 pass@1: 72.6\n- MATH-500 pass@1: 94.3\n- CodeForces Rating: 1691\n\nThe model leverages fine-tuning from DeepSeek R1's
+      DeepSeek R1 Distill Qwen 32B is a distilled large language model based on Qwen 2.5 32B, using outputs from DeepSeek
+      R1. It outperforms OpenAI's o1-mini across various benchmarks, achieving new state-of-the-art
+      results for dense models.\n\nOther benchmark results include:\n\n- AIME 2024 pass@1: 72.6\n- MATH-500 pass@1: 94.3\n-
+      CodeForces Rating: 1691\n\nThe model leverages fine-tuning from DeepSeek R1's
       outputs, enabling competitive performance comparable to larger frontier models.
     match:
       equals: deepseek-r1-distill-qwen-32b:free
@@ -216,9 +250,12 @@ models:
   - id: deepseek-r1-distill-qwen-7b
     name: R1 Distill Qwen 7B
     description: >-
-      DeepSeek-R1-Distill-Qwen-7B is a 7 billion parameter dense language model distilled from DeepSeek-R1, leveraging reinforcement learning-enhanced reasoning data generated by DeepSeek's larger models.
-      The distillation process transfers advanced reasoning, math, and code capabilities into a smaller, more efficient model architecture based on Qwen2.5-Math-7B. This model demonstrates strong performance
-      across mathematical benchmarks (92.8% pass@1 on MATH-500), coding tasks (Codeforces rating 1189), and general reasoning (49.1% pass@1 on GPQA Diamond), achieving competitive accuracy relative to larger
+      DeepSeek-R1-Distill-Qwen-7B is a 7 billion parameter dense language model distilled from DeepSeek-R1, leveraging reinforcement
+      learning-enhanced reasoning data generated by DeepSeek's larger models.
+      The distillation process transfers advanced reasoning, math, and code capabilities into a smaller, more efficient model
+      architecture based on Qwen2.5-Math-7B. This model demonstrates strong performance
+      across mathematical benchmarks (92.8% pass@1 on MATH-500), coding tasks (Codeforces rating 1189), and general reasoning
+      (49.1% pass@1 on GPQA Diamond), achieving competitive accuracy relative to larger
       models while maintaining smaller inference costs.
     match:
       equals: deepseek-r1-distill-qwen-7b
@@ -229,7 +266,8 @@ models:
   - id: deepseek-r1:free
     name: R1 (free)
     description: >-
-      DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's 671B parameters in size, with 37B active in an inference pass.
+      DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's
+      671B parameters in size, with 37B active in an inference pass.
     match:
       equals: deepseek-r1:free
     prices:
@@ -239,7 +277,8 @@ models:
   - id: deepseek-v3-base:free
     name: DeepSeek V3 Base (free)
     description: >-
-      Note that this is a base model mostly meant for testing, you need to provide detailed prompts for the model to return useful responses.
+      Note that this is a base model mostly meant for testing, you need to provide detailed prompts for the model to return
+      useful responses.
     match:
       equals: deepseek-v3-base:free
     prices:
