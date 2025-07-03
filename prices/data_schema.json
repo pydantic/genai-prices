@@ -273,18 +273,6 @@
           "description": "price in USD per million text input/prompt token",
           "title": "Input Mtok"
         },
-        "input_audio_mtok": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/$defs/TieredPrices"
-            }
-          ],
-          "description": "price in USD per million audio input tokens",
-          "title": "Input Audio Mtok"
-        },
         "cache_write_mtok": {
           "anyOf": [
             {
@@ -320,6 +308,30 @@
           ],
           "description": "price in USD per million output/completion tokens",
           "title": "Output Mtok"
+        },
+        "input_audio_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million audio input tokens",
+          "title": "Input Audio Mtok"
+        },
+        "cache_audio_read_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million audio tokens read from the cache",
+          "title": "Cache Audio Read Mtok"
         },
         "output_audio_mtok": {
           "anyOf": [
