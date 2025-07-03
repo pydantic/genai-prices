@@ -3,6 +3,9 @@ name: Perplexity
 id: perplexity
 pricing_url: https://docs.perplexity.ai/guides/pricing
 api_pattern: 'https://api\.perplexity\.ai'
+price_comments: >-
+  Prices per request vary based on usage, this is not represented here,
+  instead we just take the highest price shown for `requests_kcount`.
 models:
   - id: llama-3.1-sonar-large-128k-online
     name: Llama 3.1 Sonar 70B Online
@@ -35,6 +38,7 @@ models:
       perplexity search subsystem.
     match:
       equals: r1-1776
+    prices_checked: 2025-07-03
     prices:
       input_mtok: 2
       output_mtok: 8
@@ -47,13 +51,11 @@ models:
       features optimized for speed.
     match:
       equals: sonar
+    prices_checked: 2025-07-03
     prices:
-      input_mtok: 10
-      output_mtok: 10
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1
-        output_mtok: 1
+      input_mtok: 1
+      output_mtok: 1
+      requests_kcount: 12
 
   - id: sonar-deep-research
     name: Sonar Deep Research
@@ -74,13 +76,11 @@ models:
       Note: Sonar Pro pricing includes Perplexity search pricing. See details here
     match:
       equals: sonar-pro
+    prices_checked: 2025-07-03
     prices:
-      input_mtok: 30
-      output_mtok: 150
-    price_discrepancies:
-      openrouter:
-        input_mtok: 3
-        output_mtok: 15
+      requests_kcount: 14
+      input_mtok: 3
+      output_mtok: 15
 
   - id: sonar-reasoning
     name: Sonar Reasoning
@@ -88,19 +88,19 @@ models:
       Sonar Reasoning is a reasoning model provided by Perplexity based on DeepSeek R1.
     match:
       equals: sonar-reasoning
+    prices_checked: 2025-07-03
     prices:
-      input_mtok: 10
-      output_mtok: 50
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1
-        output_mtok: 5
+      requests_kcount: 12
+      input_mtok: 1
+      output_mtok: 5
 
   - id: sonar-reasoning-pro
     name: Sonar Reasoning Pro
     description: Sonar Pro pricing includes Perplexity search pricing.
     match:
       equals: sonar-reasoning-pro
+    prices_checked: 2025-07-03
     prices:
+      requests_kcount: 14
       input_mtok: 2
       output_mtok: 8
