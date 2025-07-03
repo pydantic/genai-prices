@@ -14,4 +14,4 @@ else
     git clone --branch main --single-branch --depth 1 git@github.com:Helicone/helicone.git helicone-repo
 fi
 
-cp -r helicone-repo/bifrost/packages/cost .
+cp -r helicone-repo/packages/cost .
