@@ -45,7 +45,7 @@ models:
       follows instructions effectively.
     match:
       equals: gemini-1.0-pro-vision-001
-    max_tokens: 32768
+    context_window: 32768
     prices:
       input_mtok: 0.125
       output_mtok: 0.375
@@ -62,7 +62,7 @@ models:
       Suitable for production deployments requiring high throughput.
     match:
       contains: gemini-1.5-flash
-    max_tokens: 1000000
+    context_window: 1000000
     prices:
       input_mtok: 0.35
       output_mtok: 1.05
@@ -82,7 +82,7 @@ models:
       long-form content processing, and multimodal understanding.
     match:
       contains: gemini-1.5-pro
-    max_tokens: 1000000
+    context_window: 1000000
     prices_checked: 2025-06-22
     prices:
       input_mtok:
@@ -108,7 +108,7 @@ models:
         - equals: gemini-2.0-flash-lite-001
         - equals: gemini-2.0-flash-001
         - equals: gemini-2.0-flash-exp:free
-    max_tokens: 1000000
+    context_window: 1000000
     prices:
       input_mtok: 0.1
       output_mtok: 0.4
@@ -134,7 +134,7 @@ models:
       Ideal for high-volume, cost-sensitive deployments.
     match:
       contains: gemini-2.0-flash-lite
-    max_tokens: 1000000
+    context_window: 1000000
     prices:
       input_mtok: 0.075
       output_mtok: 0.3
@@ -256,7 +256,7 @@ models:
       Suitable for production deployments requiring high throughput.
     match:
       equals: gemini-flash-1.5-8b
-    max_tokens: 1000000
+    context_window: 1000000
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
@@ -277,7 +277,7 @@ models:
       or:
         - equals: gemini-pro
         - equals: gemini-1.0-pro
-    max_tokens: 32768
+    context_window: 32768
     prices:
       input_mtok: 0.125
       output_mtok: 0.375

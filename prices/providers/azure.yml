@@ -231,7 +231,7 @@ models:
       output_mtok: 10
 
   - id: gpt-4o-mini
-    max_tokens: 128000
+    context_window: 128000
     match:
       starts_with: gpt-4o-mini
     prices_checked: 2025-07-03

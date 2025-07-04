@@ -66,7 +66,7 @@ class ProviderYaml:
         for field, value, position in [
             ('name', model.name, 1),
             ('description', description, 2),
-            ('max_tokens', model.max_tokens, 4),
+            ('context_window', model.context_window, 4),
         ]:
             if field not in yaml_model and value is not None:
                 yaml_model.insert(position, field, value)  # pyright: ignore[reportUnknownMemberType]
