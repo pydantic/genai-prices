@@ -7,6 +7,7 @@ from operator import itemgetter
 from pathlib import Path
 from typing import Any, TypedDict, cast
 
+from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
 from ruamel.yaml.scalarstring import FoldedScalarString
 
@@ -50,7 +51,10 @@ class ProviderYaml:
 
         self.provider_id = self.data['id']
         assert isinstance(self.provider_id, str), 'Provider ID must be a string'
-        self.provider = Provider.model_validate(self.data)
+        try:
+            self.provider = Provider.model_validate(self.data)
+        except ValidationError as e:
+            raise ValueError(f'Invalid provider data for {path.name}:\n{e}') from e
         self._extra_prices = []
         self._removed_models = set()
 
