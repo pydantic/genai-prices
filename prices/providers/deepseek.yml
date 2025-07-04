@@ -5,93 +5,22 @@ pricing_url: https://api-docs.deepseek.com/quick_start/pricing
 api_pattern: 'https://api\.deepseek\.com'
 models:
   - id: deepseek-chat
-    name: DeepSeek V3
+    name: DeepSeek Chat
     description: >-
       DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities
       of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported
       evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models.
     match:
-      equals: deepseek-chat
+      or:
+        - equals: deepseek-chat
+        - equals: deepseek-chat-v3-0324
+    context_window: 64000
+    prices_checked: 2025-07-04
+    # TODO add custom logic for discount periods
     prices:
-      input_mtok: 0.014
-      output_mtok: 0.028
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.38
-        output_mtok: 0.89
-
-  - id: deepseek-chat-v3-0324
-    name: DeepSeek V3 0324
-    description: >-
-      DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from
-      the DeepSeek team.
-    match:
-      equals: deepseek-chat-v3-0324
-    prices:
-      input_mtok: 0.3
-      output_mtok: 0.88
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.28
-        output_mtok: 0.88
-
-  - id: deepseek-chat-v3-0324:free
-    name: DeepSeek V3 0324 (free)
-    description: >-
-      DeepSeek V3, a 685B-parameter, mixture-of-experts model, is the latest iteration of the flagship chat model family from
-      the DeepSeek team.
-    match:
-      equals: deepseek-chat-v3-0324:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
-
-  - id: deepseek-chat:free
-    name: DeepSeek V3 (free)
-    description: >-
-      DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities
-      of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported
-      evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models.
-    match:
-      equals: deepseek-chat:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
-
-  - id: deepseek-prover-v2
-    name: DeepSeek Prover V2
-    description: >-
-      DeepSeek Prover V2 is a 671B parameter model, speculated to be geared towards logic and mathematics. Likely an upgrade
-      from DeepSeek-Prover-V1.5 Not much is known about the model yet, as DeepSeek
-      released it on Hugging Face without an announcement or description.
-    match:
-      equals: deepseek-prover-v2
-    prices:
-      input_mtok: 0.5
-      output_mtok: 2.18
-
-  - id: deepseek-r1
-    name: R1
-    description: >-
-      DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's
-      671B parameters in size, with 37B active in an inference pass.
-    match:
-      equals: deepseek-r1
-    prices:
-      input_mtok: 0.45
-      output_mtok: 2.15
-
-  - id: deepseek-r1-0528
-    name: R1 0528
-    description: >-
-      May 28th update to the original DeepSeek R1 Performance on par with OpenAI o1, but open-sourced and with fully open
-      reasoning tokens. It's 671B parameters in size, with 37B active in an inference
-      pass.
-    match:
-      equals: deepseek-r1-0528
-    prices:
-      input_mtok: 0.5
-      output_mtok: 2.15
+      input_mtok: 0.27
+      cache_read_mtok: 0.07
+      output_mtok: 1.1
 
   - id: deepseek-r1-0528-qwen3-8b
     name: Deepseek R1 0528 Qwen3 8B
@@ -107,12 +36,8 @@ models:
     match:
       equals: deepseek-r1-0528-qwen3-8b
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.1
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.01
-        output_mtok: 0.02
+      input_mtok: 0.01
+      output_mtok: 0.02
 
   - id: deepseek-r1-0528-qwen3-8b:free
     name: Deepseek R1 0528 Qwen3 8B (free)
@@ -226,12 +151,8 @@ models:
     match:
       equals: deepseek-r1-distill-qwen-32b
     prices:
-      input_mtok: 0.12
-      output_mtok: 0.18
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.075
-        output_mtok: 0.15
+      input_mtok: 0.075
+      output_mtok: 0.15
 
   - id: deepseek-r1-distill-qwen-32b:free
     name: R1 Distill Qwen 32B (free)
@@ -273,6 +194,23 @@ models:
     prices:
       input_mtok: 0
       output_mtok: 0
+
+  - id: deepseek-reasoner
+    name: Deepseek R1
+    description: >-
+      DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It's
+      671B parameters in size, with 37B active in an inference pass.
+    match:
+      or:
+        - equals: deepseek-reasoner
+        - equals: deepseek-r1
+        - equals: deepseek-r1-0528
+    prices_checked: 2025-07-04
+    # TODO add custom logic for discount periods
+    prices:
+      input_mtok: 0.55
+      cache_read_mtok: 0.14
+      output_mtok: 2.19
 
   - id: deepseek-v3-base:free
     name: DeepSeek V3 Base (free)
