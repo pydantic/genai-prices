@@ -66,6 +66,12 @@ class Provider(_Model):
         # check models are sorted by ID
         ids = [model.id for model in models]
         if ids != sorted(ids):
+            for current_index, current_id in enumerate(ids):
+                for expected_index, expected_id in enumerate(sorted(ids)):
+                    if current_id == expected_id and current_index != expected_index:
+                        raise ValueError(
+                            f'Models are not sorted by ID: move `{current_id}` {current_index} -> {expected_index}'
+                        )
             raise ValueError('Models are not sorted by ID')
 
         return models

@@ -10,3 +10,4 @@ wheels/
 .venv
 /scratch/
 /prices/source_prices/
+.claude/
