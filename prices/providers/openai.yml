@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: OpenAI
 id: openai
-pricing_url: https://openai.com/api/pricing/
+# The following also have prices: https://openai.com/api/pricing/ and https://platform.openai.com/docs/models
+pricing_url: https://platform.openai.com/docs/pricing
 api_pattern: 'https://api\.openai\.com'
 models:
   - id: ada
@@ -93,38 +94,13 @@ models:
       or:
         - equals: gpt-3.5-turbo
         - equals: gpt-35-turbo
-        - equals: gpt-3.5-turbo-0301
-        - equals: gpt-3.5-turbo-instruct-0914
-        - equals: gpt-3.5-turbo-0613
-        - equals: gpt-3.5-turbo-instruct
+        - equals: gpt-3.5-turbo-0125
+        - equals: gpt-3.5-turbo-1106
     context_window: 16385
-    prices:
-      input_mtok: 1.5
-      output_mtok: 2
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1
-        output_mtok: 2
-
-  - id: gpt-3.5-turbo-0125
-    name: gpt 3.5 turbo 0125
-    description: GPT-3.5 Turbo offers a balance between cost and performance.
-    match:
-      equals: gpt-3.5-turbo-0125
-    context_window: 16385
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
-
-  - id: gpt-3.5-turbo-1106
-    name: gpt 3.5
-    description: GPT-3.5 Turbo offers a balance between cost and performance.
-    match:
-      equals: gpt-3.5-turbo-1106
-    context_window: 16385
-    prices:
-      input_mtok: 1
-      output_mtok: 2
 
   - id: gpt-3.5-turbo-16k
     name: GPT-3.5 Turbo 16k
@@ -132,23 +108,28 @@ models:
       This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text
       in a single request at a higher cost. Training data: up to Sep 2021.
     match:
-      equals: gpt-3.5-turbo-16k
+      or:
+        - equals: gpt-3.5-turbo-16k
+        - equals: gpt-3.5-turbo-16k-0613
+        - equals: gpt-35-turbo-16k-0613
+    context_window: 16385
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 3
       output_mtok: 4
 
-  - id: gpt-35-turbo-16k
-    name: gpt 3.5 turbo 16k
+  - id: gpt-3.5-turbo-instruct
+    name: gpt 3.5 turbo instruct
     description: GPT-3.5 Turbo offers a balance between cost and performance.
     match:
       or:
-        - equals: gpt-35-turbo-16k
-        - equals: gpt-3.5-turbo-16k-0613
-        - equals: gpt-35-turbo-16k-0613
+        - equals: gpt-3.5-turbo-instruct
+        - equals: gpt-3.5-turbo-instruct-0914
     context_window: 16385
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 3
-      output_mtok: 4
+      input_mtok: 1.5
+      output_mtok: 2
 
   - id: gpt-4
     name: gpt 4
@@ -162,6 +143,7 @@ models:
         - equals: gpt-4-0314
         - equals: gpt-4-0613
     context_window: 8192
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 30
       output_mtok: 60
@@ -177,7 +159,9 @@ models:
         - equals: gpt-4-32k
         - equals: gpt-4-32k-0314
         - equals: gpt-4-32k-0613
-    context_window: 8192
+    # see https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
+    context_window: 32000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 60
       output_mtok: 120
@@ -194,6 +178,7 @@ models:
         - equals: gpt-4-1106-preview
         - equals: gpt-4-turbo-preview
     context_window: 128000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 10
       output_mtok: 30
@@ -221,6 +206,7 @@ models:
         - equals: gpt-4.1
         - equals: gpt-4.1-2025-04-14
     context_window: 1000000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
@@ -237,6 +223,7 @@ models:
         - equals: gpt-4.1-mini
         - equals: gpt-4.1-mini-2025-04-14
     context_window: 1000000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.4
       cache_read_mtok: 0.1
@@ -253,6 +240,7 @@ models:
         - equals: gpt-4.1-nano
         - equals: gpt-4.1-nano-2025-04-14
     context_window: 1000000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.025
@@ -266,6 +254,7 @@ models:
       with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.
     match:
       equals: gpt-4.5-preview
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 75
       cache_read_mtok: 37.5
@@ -281,40 +270,14 @@ models:
       or:
         - equals: gpt-4o
         - equals: gpt-4o-2024-05-13
-    context_window: 128000
-    prices:
-      input_mtok: 5
-      output_mtok: 15
-    price_discrepancies:
-      openrouter:
-        input_mtok: 2.5
-        cache_read_mtok: 1.25
-        output_mtok: 10
-      litellm:
-        input_mtok: 2.5
-        output_mtok: 10
-      simonw:
-        input_mtok: 2.5
-        output_mtok: 10
-
-  - id: gpt-4o-2024-08-06
-    name: GPT-4o (2024-11-20)
-    description: >-
-      The 2024-11-20 version of GPT-4o offers a leveled-up creative writing ability with more natural, engaging, and tailored
-      writing to improve relevance & readability. It's also better at working with
-      uploaded files, providing deeper insights & more thorough responses.
-    match:
-      or:
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
+    context_window: 128000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 2.5
+      cache_read_mtok: 1.25
       output_mtok: 10
-    price_discrepancies:
-      openrouter:
-        input_mtok: 2.5
-        cache_read_mtok: 1.25
-        output_mtok: 10
 
   - id: gpt-4o-mini
     name: gpt 4o mini
@@ -329,8 +292,10 @@ models:
         - equals: gpt-4o-mini-2024-07-18
         - equals: gpt-4o-mini-search-preview
     context_window: 128000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.15
+      cache_read_mtok: 0.075
       output_mtok: 0.6
 
   - id: gpt-4o-mini-2024-07-18.ft-
@@ -341,27 +306,33 @@ models:
       input_mtok: 0.3
       output_mtok: 1.2
 
-  - id: gpt-4o-mini-realtime
+  - id: gpt-4o-mini-audio-preview
     match:
-      contains: gpt-4o-mini-realtime
+      starts_with: gpt-4o-mini-audio
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 0.15
-      input_audio_mtok: 10
-      output_mtok: 0.6
-      output_audio_mtok: 20
-    price_discrepancies:
-      litellm:
-        input_mtok: 0.6
-        output_mtok: 2.4
+      input_audio_mtok: 0.15
+      output_audio_mtok: 0.6
 
-  - id: gpt-4o-realtime
+  - id: gpt-4o-mini-realtime-preview
+    match:
+      starts_with: gpt-4o-mini-realtime
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.3
+      output_mtok: 2.4
+
+  - id: gpt-4o-realtime-preview
     match:
       starts_with: gpt-4o-realtime
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 5
-      input_audio_mtok: 40
       cache_read_mtok: 2.5
       output_mtok: 20
+      input_audio_mtok: 40
+      cache_audio_read_mtok: 2.5
       output_audio_mtok: 80
 
   - id: gpt-4o-search-preview
@@ -397,14 +368,11 @@ models:
         - equals: o1-preview
         - equals: o1-preview-2024-09-12
     context_window: 128000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 15
+      cache_read_mtok: 7.5
       output_mtok: 60
-    price_discrepancies:
-      openrouter:
-        input_mtok: 15
-        cache_read_mtok: 7.5
-        output_mtok: 60
 
   - id: o1-mini
     name: o1 mini
@@ -414,20 +382,11 @@ models:
         - equals: o1-mini
         - equals: o1-mini-2024-09-12
     context_window: 128000
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 3
-      output_mtok: 12
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1.1
-        cache_read_mtok: 0.55
-        output_mtok: 4.4
-      litellm:
-        input_mtok: 1.1
-        output_mtok: 4.4
-      simonw:
-        input_mtok: 1.1
-        output_mtok: 4.4
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
 
   - id: o1-pro
     name: o1-pro
@@ -436,6 +395,7 @@ models:
       The o1-pro model uses more compute to think harder and provide consistently better answers.
     match:
       equals: o1-pro
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 150
       output_mtok: 600
@@ -448,23 +408,14 @@ models:
       Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required
       for this model. Set up here: https://openrouter.ai/settings/integrations
     match:
-      equals: o3
+      or:
+        - equals: o3
+        - equals: o3-2025-04-16
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
-
-  - id: o3-2025-04-16
-    match:
-      equals: o3-2025-04-16
-    prices:
-      input_mtok: 10
-      cache_read_mtok: 2.5
-      output_mtok: 40
-    price_discrepancies:
-      litellm:
-        input_mtok: 2
-        output_mtok: 8
 
   - id: o3-mini
     name: o3 Mini
@@ -475,21 +426,8 @@ models:
       or:
         - equals: o3-mini
         - equals: o3-mini-2025-01-31
-    prices:
-      input_mtok: 1.1
-      output_mtok: 4.4
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1.1
-        cache_read_mtok: 0.55
-        output_mtok: 4.4
-
-  - id: o3-mini-high
-    name: o3 Mini High
-    description: >-
-      OpenAI o3-mini-high is the same model as o3-mini with reasoning_effort set to high.
-    match:
-      equals: o3-mini-high
+        - equals: o3-mini-high
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.55
@@ -516,17 +454,11 @@ models:
         - equals: o4-mini-2025-04-16
         - equals: o4-mini-high
         - equals: o4-mini
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 1.1
+      cache_read_mtok: 0.275
       output_mtok: 4.4
-    price_discrepancies:
-      openrouter:
-        input_mtok: 1.1
-        cache_read_mtok: 0.275
-        output_mtok: 4.4
-      litellm:
-        input_mtok: 2
-        output_mtok: 8
 
   - id: text-davinci-002
     match:
@@ -548,12 +480,9 @@ models:
     match:
       equals: text-embedding-3-large
     context_window: 3072
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.13
-    price_discrepancies:
-      litellm:
-        input_mtok: 0.13
-        output_mtok: 0
 
   - id: text-embedding-3-small
     name: text embedding 3
@@ -561,12 +490,9 @@ models:
     match:
       equals: text-embedding-3-small
     context_window: 3072
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.02
-    price_discrepancies:
-      litellm:
-        input_mtok: 0.02
-        output_mtok: 0
 
   - id: text-embedding-ada-002
     name: text embedding ada
@@ -577,9 +503,6 @@ models:
         - equals: text-embedding-ada-002
         - equals: text-embedding-ada-002-v2
     context_window: 1536
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
-    price_discrepancies:
-      litellm:
-        input_mtok: 0.1
-        output_mtok: 0
