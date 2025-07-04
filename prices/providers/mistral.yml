@@ -291,7 +291,7 @@ models:
       such as conversational agents, function calling, long-document comprehension,
       and privacy-sensitive deployments.
       The updated version is Mistral Small 3.2
-    max_tokens: 128000
+    context_window: 128000
     match:
       equals: mistral-small-3.1-24b-instruct
     prices:
@@ -313,7 +313,7 @@ models:
       such as conversational agents, function calling, long-document comprehension,
       and privacy-sensitive deployments.
       The updated version is Mistral Small 3.2
-    max_tokens: 128000
+    context_window: 128000
     match:
       equals: mistral-small-3.1-24b-instruct:free
     prices:

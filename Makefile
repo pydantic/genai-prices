@@ -29,7 +29,7 @@ lint: ## Lint the code
 
 .PHONY: build
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
-	uv run -m prices build_prices
+	uv run -m prices build
 
 
 .PHONY: collapse-models

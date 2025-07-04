@@ -88,8 +88,8 @@ class ModelInfo(_Model):
     """Description of the model"""
     match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
-    max_tokens: int | None = None
-    """Maximum number of tokens allowed for this model"""
+    context_window: int | None = None
+    """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
     prices: ModelPrice | list[ConditionalPrice]

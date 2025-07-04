@@ -1,7 +1,7 @@
 import sys
 from inspect import getdoc
 
-from .build import build_prices
+from .build import build
 from .collapse import collapse
 from .price_discrepancies import list_price_discrepancies, update_price_discrepancies
 from .source_litellm import get_litellm_prices
@@ -11,7 +11,7 @@ from .source_simonw_prices import get_simonw_prices
 
 def main():
     actions = (
-        build_prices,
+        build,
         update_from_openrouter,
         collapse,
         get_litellm_prices,
