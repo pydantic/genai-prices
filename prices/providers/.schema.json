@@ -217,10 +217,10 @@
           ],
           "title": "Match"
         },
-        "max_tokens": {
+        "context_window": {
           "type": "integer",
-          "description": "Maximum number of tokens allowed for this model",
-          "title": "Max Tokens"
+          "description": "Maximum number of input tokens allowed for this model",
+          "title": "Context Window"
         },
         "price_comments": {
           "maxLength": 1000,
