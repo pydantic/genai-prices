@@ -4,13 +4,16 @@ id: mistral
 pricing_url: https://mistral.ai/pricing#api-pricing
 api_pattern: 'https://api\.mistral\.ai'
 models:
-  - id: codestral-2501
-    name: Codestral 2501
+  - id: codestral
+    name: Codestral
     description: >-
       Mistral's cutting-edge language model for coding. Codestral specializes in low-latency, high-frequency tasks such as
       fill-in-the-middle (FIM), code correction and test generation.
     match:
-      equals: codestral-2501
+      or:
+        - equals: codestral-latest
+        - equals: codestral-2501
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.3
       output_mtok: 0.9
@@ -152,34 +155,13 @@ models:
     match:
       or:
         - equals: mistral-large
+        - equals: mistral-large-latest
         - equals: mistral-large-2407
         - equals: mistral-large-2411
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 2
       output_mtok: 6
-
-  - id: mistral-large-latest
-    match:
-      equals: mistral-large-latest
-    prices:
-      input_mtok: 8
-      output_mtok: 24
-    price_discrepancies:
-      simonw:
-        input_mtok: 2
-        output_mtok: 6
-
-  - id: mistral-medium
-    name: Mistral Medium
-    description: >-
-      This is Mistral AI's closed-source, medium-sided model. It's powered by a closed-source prototype and excels at reasoning,
-      code, JSON, chat, and more. In benchmarks, it compares with many of the flagship
-      models of other companies.
-    match:
-      equals: mistral-medium
-    prices:
-      input_mtok: 2.75
-      output_mtok: 8.1
 
   - id: mistral-medium-3
     name: Mistral Medium 3
@@ -189,34 +171,24 @@ models:
       and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable
       deployments across professional and industrial use cases.
     match:
-      equals: mistral-medium-3
+      or:
+        - equals: mistral-medium-3
+        - equals: mistral-medium-latest
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.4
       output_mtok: 2
 
-  - id: mistral-medium-latest
-    match:
-      equals: mistral-medium-latest
-    prices:
-      input_mtok: 2.7
-      output_mtok: 8.1
-
   - id: mistral-nemo
-    name: Mistral Nemo
+    name: Mistral NeMo
     description: >-
       A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.
     match:
       equals: mistral-nemo
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 0.01
-      output_mtok: 0.019
-    price_discrepancies:
-      simonw:
-        input_mtok: 0.15
-        output_mtok: 0.15
-      openrouter:
-        input_mtok: 0.01
-        output_mtok: 0.001
+      input_mtok: 0.15
+      output_mtok: 0.15
 
   - id: mistral-nemo:free
     name: Mistral Nemo (free)
@@ -224,12 +196,10 @@ models:
       A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.
     match:
       equals: mistral-nemo:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: mistral-saba
-    name: Saba
+    name: Mistral Saba
     description: >-
       Mistral Saba is a 24B-parameter language model specifically designed for the Middle East and South Asia, delivering
       accurate and contextually relevant responses while maintaining efficient performance.
@@ -237,7 +207,10 @@ models:
       Arabic. This makes it a versatile option for a range of regional and multilingual
       applications. Read more at the blog post here
     match:
-      equals: mistral-saba
+      or:
+        - equals: mistral-saba
+        - equals: mistral-saba-latest
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
@@ -280,69 +253,15 @@ models:
       input_mtok: 0
       output_mtok: 0
 
-  - id: mistral-small-3.1-24b-instruct
-    name: Mistral Small 3.1 24B
-    description: >-
-      Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with
-      advanced multimodal capabilities.
-      It provides state-of-the-art performance in text-based reasoning and vision tasks, including image analysis, programming,
-      mathematical reasoning, and multilingual support across dozens of languages.
-      Equipped with an extensive 128k token context window and optimized for efficient local inference, it supports use cases
-      such as conversational agents, function calling, long-document comprehension,
-      and privacy-sensitive deployments.
-      The updated version is Mistral Small 3.2
-    context_window: 128000
-    match:
-      equals: mistral-small-3.1-24b-instruct
-    prices:
-      input_mtok: 0.05
-      output_mtok: 0.15
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.05
-        output_mtok: 0.1
-
-  - id: mistral-small-3.1-24b-instruct:free
-    name: Mistral Small 3.1 24B (free)
-    description: >-
-      Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with
-      advanced multimodal capabilities.
-      It provides state-of-the-art performance in text-based reasoning and vision tasks, including image analysis, programming,
-      mathematical reasoning, and multilingual support across dozens of languages.
-      Equipped with an extensive 128k token context window and optimized for efficient local inference, it supports use cases
-      such as conversational agents, function calling, long-document comprehension,
-      and privacy-sensitive deployments.
-      The updated version is Mistral Small 3.2
-    context_window: 128000
-    match:
-      equals: mistral-small-3.1-24b-instruct:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
-
-  - id: mistral-small-3.2-24b-instruct:free
-    name: Mistral Small 3.2 24B (free)
-    description: >-
-      Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following,
-      repetition reduction, and improved function calling. Compared to the 3.1 release,
-      version 3.2 significantly improves accuracy on WildBench and Arena Hard, reduces infinite generations, and delivers
-      gains in tool use and structured output tasks.
-    match:
-      equals: mistral-small-3.2-24b-instruct:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
-
   - id: mistral-small-latest
+    description: SOTA. Multimodal. Multilingual. Apache 2.0.
+    name: Mistral Small 3.2
     match:
       equals: mistral-small-latest
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 2
-      output_mtok: 6
-    price_discrepancies:
-      simonw:
-        input_mtok: 0.1
-        output_mtok: 0.3
+      input_mtok: 0.1
+      output_mtok: 0.3
 
   - id: mistral-tiny
     name: Mistral Tiny
@@ -402,21 +321,20 @@ models:
       The first multi-modal, text+image-to-text model from Mistral AI. Its weights were launched via torrent: https://x.com/mistralai/status/1833758285167722836.
     match:
       equals: pixtral-12b
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.1
-    price_discrepancies:
-      simonw:
-        input_mtok: 0.15
-        output_mtok: 0.15
+      input_mtok: 0.15
+      output_mtok: 0.15
 
-  - id: pixtral-large-2411
+  - id: pixtral-large
     name: Pixtral Large 2411
     description: >-
       Pixtral Large is a 124B parameter, open-weight, multimodal model built on top of Mistral Large 2. The model is able
       to understand documents, charts and natural images.
     match:
-      equals: pixtral-large-2411
+      or:
+        - equals: pixtral-large-latest
+        - equals: pixtral-large-2411
     prices:
       input_mtok: 2
       output_mtok: 6
