@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: X AI
 id: x-ai
-pricing_url: https://docs.x.ai/docs/models
+pricing_urls:
+  - https://docs.x.ai/docs/models
 api_pattern: 'https://api\.x\.ai'
 models:
   - id: grok-2-1212

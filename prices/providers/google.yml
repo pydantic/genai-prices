@@ -1,14 +1,17 @@
 # yaml-language-server: $schema=.schema.json
 name: Google
 id: google
-pricing_url: https://ai.google.dev/gemini-api/docs/pricing
-# also https://cloud.google.com/vertex-ai/generative-ai/pricing and https://cloud.google.com/vertex-ai/generative-ai/pricing
+pricing_urls:
+  - https://ai.google.dev/gemini-api/docs/pricing
+  - https://cloud.google.com/vertex-ai/generative-ai/pricing
+  # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
 api_pattern: 'https://(.*\.)?googleapis\.com'
 models:
   - id: claude-3-5-haiku
     match:
       contains: claude-3-5-haiku
-    prices_checked: 2025-07-04
+    context_window: 200000
+    prices_checked: 2025-07-05
     prices:
       input_mtok: 0.8
       cache_write_mtok: 1
@@ -16,9 +19,11 @@ models:
       output_mtok: 4
 
   - id: claude-3-5-sonnet
+    # this model also covers claude-3-5-sonnet-v2
     match:
       contains: claude-3-5-sonnet
-    prices_checked: 2025-07-04
+    context_window: 200000
+    prices_checked: 2025-07-05
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
@@ -28,16 +33,60 @@ models:
   - id: claude-3-7-sonnet
     match:
       contains: claude-3-7-sonnet
+    context_window: 200000
+    prices_checked: 2025-07-05
     prices:
       input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
       output_mtok: 15
+
+  - id: claude-3-haiku
+    match:
+      contains: claude-3-haiku
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
 
   - id: claude-3-opus
     match:
       contains: claude-3-opus
+    prices_checked: 2025-07-05
     prices:
       input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
       output_mtok: 75
+
+  - id: claude-4-opus
+    match:
+      or:
+        - contains: claude-4-opus
+        - contains: claude-opus-4
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-4-sonnet
+    match:
+      or:
+        - contains: claude-4-sonnet
+        - contains: claude-sonnet-4
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
 
   - id: gemini-1.0-pro-vision-001
     name: gemini 1.0 pro vision
@@ -75,8 +124,7 @@ models:
         tiers:
           - start: 128000
             price: 0.6
-      # I think they mean cache write here, but it's not clear https://ai.google.dev/gemini-api/docs/pricing
-      cache_write_mtok:
+      cache_read_mtok:
         base: 0.01875
         tiers:
           - start: 128000
@@ -122,8 +170,7 @@ models:
       input_mtok: 0.1
       input_audio_mtok: 0.7
       output_mtok: 0.4
-      # I think they mean cache write here, but it's not clear https://ai.google.dev/gemini-api/docs/pricing
-      cache_write_mtok:
+      cache_read_mtok:
         base: 0.025
         tiers:
           - start: 1000000
@@ -155,8 +202,8 @@ models:
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
-      # I think they mean cache write here, but it's not clear
-      cache_write_mtok: 0.075
+      cache_read_mtok: 0.075
+      cache_audio_read_mtok: 0.25
       output_mtok: 2.5
 
   - id: gemini-2.5-flash-lite-preview-06-17
@@ -204,33 +251,24 @@ models:
       human-preference alignment and complex problem-solving abilities.
     match:
       equals: gemini-2.5-pro
+    prices_checked: 2025-07-05
+    # https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
     prices:
-      input_mtok: 1.25
-      cache_write_mtok: 1.625
-      cache_read_mtok: 0.31
-      output_mtok: 10
-
-  - id: gemini-2.5-pro-preview
-    name: Gemini 2.5 Pro Preview 06-05
-    description: >
-      Gemini 2.5 Pro is Google's state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific
-      tasks. It employs "thinking" capabilities, enabling it to reason through responses
-      with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks,
-      including first-place positioning on the LMArena leaderboard, reflecting superior
-      human-preference alignment and complex problem-solving abilities.
-    match:
-      or:
-        - contains: gemini-2.5-pro-preview
-        - equals: gemini-2.5-pro-preview-05-06
-        - equals: gemini-2.5-pro-exp-03-25 # added here as I can't find any prices for this model
-    prices:
-      input_mtok: 1.25
-      cache_write_mtok: 1.625
-      cache_read_mtok: 0.31
-      output_mtok: 10
-    # Samuel: I can't find any prices for these models, so just copying openrouter's prices
-    prices_checked: 2025-06-23
-    collapse: false
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 200000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.31
+        tiers:
+          - start: 200000
+            price: 0.625
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 200000
+            price: 15
 
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
@@ -240,11 +278,24 @@ models:
       It's adept at processing visual and text inputs such as photographs, documents, infographics, and screenshots.
     match:
       equals: gemini-flash-1.5
+    prices_checked: 2025-07-05
+    # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash
     prices:
-      input_mtok: 0.075
-      cache_write_mtok: 0.1583
-      cache_read_mtok: 0.01875
-      output_mtok: 0.3
+      input_mtok:
+        base: 0.075
+        tiers:
+          - start: 128000
+            price: 0.15
+      cache_read_mtok:
+        base: 0.01875
+        tiers:
+          - start: 128000
+            price: 0.0375
+      output_mtok:
+        base: 0.3
+        tiers:
+          - start: 128000
+            price: 0.6
 
   - id: gemini-flash-1.5-8b
     name: gemini 1.5 flash
@@ -255,7 +306,7 @@ models:
     match:
       equals: gemini-flash-1.5-8b
     context_window: 1000000
-    prices_checked: 2025-07-04
+    prices_checked: 2025-07-05
     # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash-8b
     prices:
       input_mtok:
@@ -263,17 +314,16 @@ models:
         tiers:
           - start: 128000
             price: 0.075
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 128000
+            price: 0.02
       output_mtok:
         base: 0.15
         tiers:
           - start: 128000
             price: 0.3
-      # I think they mean cache write here, but it's not clear
-      cache_write_mtok:
-        base: 0.01
-        tiers:
-          - start: 128000
-            price: 0.02
 
   - id: gemini-pro
     name: gemini 1.0 pro
@@ -298,9 +348,25 @@ models:
       Google's latest multimodal model, supports image and video[0] in text or chat prompts.
     match:
       equals: gemini-pro-1.5
+    context_window: 2000000
+    prices_checked: 2025-07-05
+    # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-pro
     prices:
-      input_mtok: 1.25
-      output_mtok: 5
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 128000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.3125
+        tiers:
+          - start: 128000
+            price: 0.625
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 128000
+            price: 10
 
   - id: gemma-2-27b-it
     name: Gemma 2 27B

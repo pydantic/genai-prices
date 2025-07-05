@@ -1,8 +1,11 @@
 # yaml-language-server: $schema=.schema.json
 name: OpenAI
 id: openai
-# The following also have prices: https://openai.com/api/pricing/ and https://platform.openai.com/docs/models
-pricing_url: https://platform.openai.com/docs/pricing
+pricing_urls:
+  - https://platform.openai.com/docs/pricing
+  - https://openai.com/api/pricing/
+  - https://platform.openai.com/docs/models
+  - https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
 api_pattern: 'https://api\.openai\.com'
 models:
   - id: ada
