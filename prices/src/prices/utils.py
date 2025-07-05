@@ -18,7 +18,7 @@ def pretty_size(size: int) -> str:
 
 def mtok(v: Decimal | None) -> Decimal | None:
     """Convert a token price to mtok."""
-    if v is None:
+    if v is None or v == 0:
         return None
     else:
         return v * 1_000_000
