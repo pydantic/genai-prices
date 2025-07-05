@@ -53,9 +53,7 @@ models:
       standard Qwen3 8B by +10 pp and tying the 235 B "thinking" giant on AIME 2024.
     match:
       equals: deepseek-r1-0528-qwen3-8b:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: deepseek-r1-0528:free
     name: R1 0528 (free)
@@ -65,9 +63,7 @@ models:
       pass.
     match:
       equals: deepseek-r1-0528:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: deepseek-r1-distill-llama-70b
     name: R1 Distill Llama 70B
@@ -89,9 +85,7 @@ models:
       performance across multiple benchmarks, including:
     match:
       equals: deepseek-r1-distill-llama-70b:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: deepseek-r1-distill-llama-8b
     name: R1 Distill Llama 8B
@@ -137,9 +131,7 @@ models:
       results for dense models.
     match:
       equals: deepseek-r1-distill-qwen-14b:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: deepseek-r1-distill-qwen-32b
     name: R1 Distill Qwen 32B
@@ -165,9 +157,7 @@ models:
       The model leverages fine-tuning from DeepSeek R1's outputs, enabling competitive performance comparable to larger frontier models.
     match:
       equals: deepseek-r1-distill-qwen-32b:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: deepseek-r1-distill-qwen-7b
     name: R1 Distill Qwen 7B
@@ -192,9 +182,7 @@ models:
       671B parameters in size, with 37B active in an inference pass.
     match:
       equals: deepseek-r1:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: deepseek-reasoner
     name: Deepseek R1
@@ -221,6 +209,4 @@ models:
       useful responses.
     match:
       equals: deepseek-v3-base:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}

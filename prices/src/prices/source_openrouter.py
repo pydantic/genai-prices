@@ -147,9 +147,9 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
             if existing := provider_prices.get(id):
                 if existing == prices:
                     return
-                elif existing.all_unset():
+                elif existing.is_free():
                     provider_prices[id] = prices
-                elif prices.all_unset():
+                elif prices.is_free():
                     return
                 else:
                     return
