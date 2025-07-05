@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Microsoft Azure
 id: azure
-pricing_url: https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
+pricing_urls:
+  - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
 api_pattern: (https?://)?([^.]*\.)?(openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com)
 price_comments: >-
   These are prices for "*-Global" models, prices for "Regional" models are often slightly hihgher.

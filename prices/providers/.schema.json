@@ -446,13 +446,16 @@
       "title": "Id",
       "type": "string"
     },
-    "pricing_url": {
-      "format": "uri",
-      "maxLength": 2083,
-      "minLength": 1,
-      "type": "string",
+    "pricing_urls": {
+      "items": {
+        "format": "uri",
+        "maxLength": 2083,
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
       "description": "Link to pricing page for the provider",
-      "title": "Pricing Url"
+      "title": "Pricing Urls"
     },
     "api_pattern": {
       "type": "string",

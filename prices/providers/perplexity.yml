@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Perplexity
 id: perplexity
-pricing_url: https://docs.perplexity.ai/guides/pricing
+pricing_urls:
+  - https://docs.perplexity.ai/guides/pricing
 api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
   Prices per request vary based on usage, this is not represented here,

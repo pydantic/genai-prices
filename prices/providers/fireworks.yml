@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Fireworks
 id: fireworks
-pricing_url: https://fireworks.ai/pricing
+pricing_urls:
+  - https://fireworks.ai/pricing
 api_pattern: 'https://api\.fireworks\.ai'
 models:
   - id: accounts/fireworks/models/SSD-1B

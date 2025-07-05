@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: AWS Bedrock
 id: aws
-pricing_url: https://aws.amazon.com/bedrock/pricing/
+pricing_urls:
+  - https://aws.amazon.com/bedrock/pricing/
 api_pattern: 'https://bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com/.*'
 models:
   - id: meta.llama3-8b-instruct-v1%3A0
