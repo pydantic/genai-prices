@@ -162,7 +162,7 @@ models:
         - equals: gpt-4-32k
         - equals: gpt-4-32k-0314
         - equals: gpt-4-32k-0613
-    # see https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
+    price_comments: see https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
     context_window: 32000
     prices_checked: 2025-07-04
     prices:

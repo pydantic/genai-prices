@@ -97,7 +97,7 @@ models:
     match:
       equals: gemini-1.0-pro-vision-001
     context_window: 32768
-    # I can't find anything about this model or it's pricing, so trusting the original source
+    price_comments: I can't find anything about this model or it's pricing, so trusting the original source
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.125
@@ -235,8 +235,8 @@ models:
         - equals: gemini-2.5-flash-preview-05-20:thinking
         - equals: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview:thinking
+    price_comments: from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
     prices_checked: 2025-07-04
-    # from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
@@ -251,8 +251,8 @@ models:
       human-preference alignment and complex problem-solving abilities.
     match:
       equals: gemini-2.5-pro
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
     prices_checked: 2025-07-05
-    # https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
     prices:
       input_mtok:
         base: 1.25
@@ -279,7 +279,7 @@ models:
     match:
       equals: gemini-flash-1.5
     prices_checked: 2025-07-05
-    # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash
     prices:
       input_mtok:
         base: 0.075
@@ -307,7 +307,7 @@ models:
       equals: gemini-flash-1.5-8b
     context_window: 1000000
     prices_checked: 2025-07-05
-    # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash-8b
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash-8b
     prices:
       input_mtok:
         base: 0.0375
@@ -337,7 +337,7 @@ models:
         - equals: gemini-1.0-pro
     context_window: 32768
     prices_checked: 2025-07-04
-    # can't find anything so trusting these prices, not sure the model still exists
+    price_comments: I can't find anything so trusting these prices, not sure the model still exists
     prices:
       input_mtok: 0.125
       output_mtok: 0.375
@@ -350,7 +350,7 @@ models:
       equals: gemini-pro-1.5
     context_window: 2000000
     prices_checked: 2025-07-05
-    # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-pro
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-pro
     prices:
       input_mtok:
         base: 1.25
@@ -432,7 +432,7 @@ models:
     match:
       equals: gemma-3-27b-it
     prices_checked: 2025-07-04
-    # can't find anything so trusting these prices, not sure the model still exists on Vertex or GCP
+    price_comments: I can't find anything so trusting these prices, not sure the model still exists on Vertex or GCP
     prices:
       input_mtok: 0.1
       output_mtok: 0.2

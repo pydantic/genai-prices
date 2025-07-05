@@ -2,7 +2,7 @@
 name: Microsoft Azure
 id: azure
 pricing_urls:
-  - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
+  - https://azure.microsoft.com/en-gb/pricing/details/cognitive-services/openai-service/#pricing
 api_pattern: (https?://)?([^.]*\.)?(openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com)
 price_comments: >-
   These are prices for "*-Global" models, prices for "Regional" models are often slightly hihgher.
@@ -316,11 +316,14 @@ models:
 
   - id: o3-2025-04-16
     match:
-      equals: o3-2025-04-16
+      or:
+        - equals: o3
+        - equals: o3-2025-04-16
+    prices_checked: 2025-07-05
     prices:
-      input_mtok: 10
-      cache_read_mtok: 2.5
-      output_mtok: 40
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
 
   - id: o3-mini
     match:
@@ -338,7 +341,7 @@ models:
       or:
         - contains: o4-mini
         - contains: o4-mini-2025-04-16
-    prices_checked: 2025-07-03
+    prices_checked: 2025-07-05
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.28

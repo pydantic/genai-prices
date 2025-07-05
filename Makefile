@@ -31,7 +31,6 @@ lint: ## Lint the code
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build
 
-
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models
 	uv run -m prices collapse
