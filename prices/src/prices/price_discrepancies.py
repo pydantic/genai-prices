@@ -1,12 +1,21 @@
+from __future__ import annotations
+
+from datetime import date, timedelta
+
 from .source_prices import load_source_prices
 from .types import ModelPrice
 from .update import get_providers_yaml
 
 
-def update_price_discrepancies():
+def update_price_discrepancies(check_threshold: date | None = None):
     """Find price discrepancies between providers and source prices, and write them to providers."""
     prices = load_source_prices()
     providers_yml = get_providers_yaml()
+    if check_threshold is None:
+        check_threshold = date.today() - timedelta(days=30)
+
+    print(f'Checking price discrepancies since {check_threshold}')
+    found = False
 
     for provider_yml in providers_yml.values():
         discs = 0
@@ -14,15 +23,21 @@ def update_price_discrepancies():
             if provider_prices := source_prices.get(provider_yml.provider.id):
                 for model_id, price in provider_prices.items():
                     if model := provider_yml.provider.find_model(model_id):
-                        if not model.prices_checked:
+                        if not model.prices_checked or model.prices_checked < check_threshold:
                             assert isinstance(model.prices, ModelPrice)
                             if prices_conflict(model.prices, price):
                                 provider_yml.set_price_discrepency(model.id, source, price)
                                 discs += 1
 
         if discs:
-            print(f'{provider_yml.provider.name:>20}: {discs} price discrepancies')
+            if not found:
+                found = True
+                print('price discrepancies:')
+            print(f'{provider_yml.provider.name:>20}: {discs}')
             provider_yml.save()
+
+    if not found:
+        print('no price discrepancies found')
 
 
 def list_price_discrepancies():

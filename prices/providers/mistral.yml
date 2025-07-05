@@ -234,9 +234,11 @@ models:
       versions designed for efficient local deployment.
     match:
       equals: mistral-small-24b-instruct-2501
+    prices_checked: 2025-07-05
+    price_comments: Can't find pricing on this model, so just trusting open router
     prices:
       input_mtok: 0.05
-      output_mtok: 0.09
+      output_mtok: 0.08
 
   - id: mistral-small-24b-instruct-2501:free
     name: Mistral Small 3 (free)
