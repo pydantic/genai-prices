@@ -288,9 +288,7 @@ models:
       coding, and problem-solving capabilities, while unblocking a wide range of prompts previously restricted in R1.
     match:
       equals: mai-ds-r1:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: o1
     match:
@@ -434,9 +432,7 @@ models:
       structured into a step-by-step reasoning trace and final answer.
     match:
       equals: phi-4-reasoning-plus:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: phi-4-reasoning:free
     name: Phi 4 Reasoning (free)
@@ -448,9 +444,7 @@ models:
       in a two-part format: reasoning trace followed by a final solution.
     match:
       equals: phi-4-reasoning:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: text-ada-001
     match:

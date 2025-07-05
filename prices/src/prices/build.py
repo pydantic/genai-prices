@@ -11,6 +11,7 @@ from typing import Any, cast
 import pydantic_core
 import ruamel.yaml
 from pydantic import ValidationError
+from pydantic.main import IncEx
 
 from .types import Provider, providers_schema
 from .utils import package_dir, pretty_size, simplify_json_schema
@@ -53,37 +54,50 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    write_prices(
-        providers,
-        root_dir,
-        'data.json',
-    )
+    write_prices(providers, root_dir, 'data.json')
+    for provider in providers:
+        provider.exclude_free()
+    write_prices(providers, root_dir, 'data_slim.json', slim=True)
 
 
-def write_prices(providers: list[Provider], root_dir: Path, prices_file: str):
+def write_prices(providers: list[Provider], root_dir: Path, prices_file: str, *, slim: bool = False):
+    print('')
     prices_json_path = package_dir / prices_file
 
     data_json_schema = providers_schema.json_schema(mode='serialization')
     data_json_schema = simplify_json_schema(data_json_schema)
+    if slim:
+        # delete Provider fields
+        data_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')
+        data_json_schema['$defs']['Provider']['properties'].pop('description')
+        data_json_schema['$defs']['Provider']['properties'].pop('price_comments')
+        # delete ModelInfo fields
+        data_json_schema['$defs']['ModelInfo']['properties'].pop('name')
+        data_json_schema['$defs']['ModelInfo']['properties'].pop('description')
+        data_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
+
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
     print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
 
-    if prices_json_path.exists():
-        try:
-            current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
-        except ValidationError as e:
-            print(f'warning, error loading current prices:\n{e}')
-            current_prices = None
-    else:
-        current_prices = None
+    exclude: IncEx | None = None
+    if slim:
+        exclude = {
+            '__all__': {
+                'pricing_url': True,
+                'description': True,
+                'price_comments': True,
+                'models': {'__all__': {'name', 'description', 'price_comments'}},
+            }
+        }
 
-    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True) + b'\n'
-    if json_data != prices_json_path.read_bytes():
-        if current_prices is not None:
+    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
+    current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
+    if json_data != current_data:
+        if current_data is not None:
             diff = difflib.unified_diff(
-                pretty_providers_json(current_prices),
-                pretty_providers_json(providers),
+                pretty_providers_json(current_data),
+                pretty_providers_json(json_data),
                 fromfile='current_prices',
                 tofile='new_prices',
             )
@@ -97,23 +111,19 @@ def write_prices(providers: list[Provider], root_dir: Path, prices_file: str):
                 print('Prices have whitespace/dict ordering changes')
 
         prices_json_path.write_bytes(json_data)
-
-        buffer = io.BytesIO()
-        with gzip.GzipFile(fileobj=buffer, mode='wb') as f:
-            f.write(json_data)
-        gz_len = len(buffer.getvalue())
-
-        print(
-            f'Prices data written to {prices_json_path.relative_to(root_dir)}'
-            f' ({pretty_size(prices_json_path.stat().st_size)}, {pretty_size(gz_len)} gzipped)'
-        )
+        action = 'updated'
     else:
-        print('Prices data unchanged')
+        action = 'unchanged'
 
-
-def pretty_providers_json(providers: list[Provider]) -> list[str]:
-    return (
-        providers_schema.dump_json(providers, by_alias=True, exclude_none=True, indent=2)
-        .decode()
-        .splitlines(keepends=True)
+    buffer = io.BytesIO()
+    with gzip.GzipFile(fileobj=buffer, mode='wb') as f:
+        f.write(json_data)
+    gz_len = len(buffer.getvalue())
+    print(
+        f'Prices data file {prices_json_path.relative_to(root_dir)} {action} '
+        f'({pretty_size(len(json_data))}, {pretty_size(gz_len)} gzipped)'
     )
+
+
+def pretty_providers_json(compact_json: bytes) -> list[str]:
+    return pydantic_core.to_json(pydantic_core.from_json(compact_json), indent=2).decode().splitlines(keepends=True)

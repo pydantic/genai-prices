@@ -5,7 +5,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated, Any, Union
 
-from annotated_types import Ge, MaxLen
+from annotated_types import Gt, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
@@ -83,6 +83,9 @@ class Provider(_Model):
                 return model
         return None
 
+    def exclude_free(self):
+        self.models[:] = [model for model in self.models if not model.is_free()]
+
 
 class ModelInfo(_Model):
     """Information about an LLM model"""
@@ -122,6 +125,12 @@ class ModelInfo(_Model):
             raise ValueError('`price_discrepancies` should be removed when `prices_checked` is set')
         return prices_checked
 
+    def is_free(self) -> bool:
+        if isinstance(self.prices, list):
+            return all(price.prices.is_free() for price in self.prices)
+        else:
+            return self.prices.is_free()
+
 
 def serialize_decimal(v: Decimal) -> float | int:
     return float(v) if v % 1 != 0 else int(v)
@@ -129,7 +138,7 @@ def serialize_decimal(v: Decimal) -> float | int:
 
 DollarPrice = Annotated[
     Decimal,
-    Ge(0),
+    Gt(0),
     WithJsonSchema({'type': 'number'}),
     PlainSerializer(serialize_decimal, return_type=Union[float, int], when_used='json'),
 ]
@@ -159,7 +168,7 @@ class ModelPrice(_Model):
     output_audio_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
-    def all_unset(self) -> bool:
+    def is_free(self) -> bool:
         """Whether all values are zero or unset"""
         for field_name in self.__pydantic_fields__:
             if getattr(self, field_name):

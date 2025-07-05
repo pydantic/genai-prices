@@ -41,9 +41,7 @@ models:
       SWE-Bench Verified (46.8%).
     match:
       equals: devstral-small:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: magistral-medium-2506
     name: Magistral Medium 2506
@@ -136,9 +134,7 @@ models:
       A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
     match:
       equals: mistral-7b-instruct:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: mistral-embed
     match:
@@ -250,9 +246,7 @@ models:
       versions designed for efficient local deployment.
     match:
       equals: mistral-small-24b-instruct-2501:free
-    prices:
-      input_mtok: 0
-      output_mtok: 0
+    prices: {}
 
   - id: mistral-small-latest
     description: SOTA. Multimodal. Multilingual. Apache 2.0.
