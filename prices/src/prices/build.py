@@ -5,6 +5,7 @@ import gzip
 import io
 from decimal import Decimal
 from operator import attrgetter
+from pathlib import Path
 from typing import Any, cast
 
 import pydantic_core
@@ -51,14 +52,23 @@ def build():
         else:
             providers.append(provider)
 
+    providers.sort(key=attrgetter('id'))
+    write_prices(
+        providers,
+        root_dir,
+        'data.json',
+    )
+
+
+def write_prices(providers: list[Provider], root_dir: Path, prices_file: str):
+    prices_json_path = package_dir / prices_file
+
     data_json_schema = providers_schema.json_schema(mode='serialization')
     data_json_schema = simplify_json_schema(data_json_schema)
-    prices_json_schema_path = package_dir / 'data_schema.json'
+    prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
     print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
 
-    providers.sort(key=attrgetter('id'))
-    prices_json_path = package_dir / 'data.json'
     if prices_json_path.exists():
         try:
             current_prices = providers_schema.validate_json(prices_json_path.read_bytes())
