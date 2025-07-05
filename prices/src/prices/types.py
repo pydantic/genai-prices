@@ -117,7 +117,7 @@ class ModelInfo(_Model):
 
     @field_validator('prices_checked', mode='after')
     @classmethod
-    def validate_id(cls, prices_checked: date | None, info: FieldValidationInfo) -> date | None:
+    def validate_prices_checked(cls, prices_checked: date | None, info: FieldValidationInfo) -> date | None:
         if prices_checked is not None and info.data.get('price_discrepancies'):
             raise ValueError('`price_discrepancies` should be removed when `prices_checked` is set')
         return prices_checked
@@ -161,14 +161,10 @@ class ModelPrice(_Model):
 
     def all_unset(self) -> bool:
         """Whether all values are zero or unset"""
-        return bool(
-            not self.input_mtok
-            and not self.input_audio_mtok
-            and not self.cache_write_mtok
-            and not self.cache_read_mtok
-            and not self.output_mtok
-            and not self.output_audio_mtok
-        )
+        for field_name in self.__pydantic_fields__:
+            if getattr(self, field_name):
+                return False
+        return True
 
 
 class TieredPrices(_Model):

@@ -2,25 +2,27 @@
 name: Google
 id: google
 pricing_url: https://ai.google.dev/gemini-api/docs/pricing
-# also https://cloud.google.com/vertex-ai/generative-ai/pricing
+# also https://cloud.google.com/vertex-ai/generative-ai/pricing and https://cloud.google.com/vertex-ai/generative-ai/pricing
 api_pattern: 'https://(.*\.)?googleapis\.com'
 models:
   - id: claude-3-5-haiku
     match:
       contains: claude-3-5-haiku
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
       output_mtok: 4
-    price_discrepancies:
-      litellm:
-        input_mtok: 1
-        output_mtok: 5
 
   - id: claude-3-5-sonnet
     match:
       contains: claude-3-5-sonnet
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
       output_mtok: 15
 
   - id: claude-3-7-sonnet
@@ -46,13 +48,11 @@ models:
     match:
       equals: gemini-1.0-pro-vision-001
     context_window: 32768
+    # I can't find anything about this model or it's pricing, so trusting the original source
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.125
       output_mtok: 0.375
-    price_discrepancies:
-      litellm:
-        input_mtok: 0.5
-        output_mtok: 1.5
 
   - id: gemini-1.5-flash
     name: gemini 1.5 flash
@@ -63,16 +63,24 @@ models:
     match:
       contains: gemini-1.5-flash
     context_window: 1000000
+    prices_checked: 2025-07-04
     prices:
-      input_mtok: 0.35
-      output_mtok: 1.05
-    price_discrepancies:
-      litellm:
-        input_mtok: 0
-        output_mtok: 0
-      simonw:
-        input_mtok: 0.075
-        output_mtok: 0.3
+      input_mtok:
+        base: 0.075
+        tiers:
+          - start: 128000
+            price: 0.15
+      output_mtok:
+        base: 0.3
+        tiers:
+          - start: 128000
+            price: 0.6
+      # I think they mean cache write here, but it's not clear https://ai.google.dev/gemini-api/docs/pricing
+      cache_write_mtok:
+        base: 0.01875
+        tiers:
+          - start: 128000
+            price: 0.0375
 
   - id: gemini-1.5-pro
     name: gemini 1.5 Pro
@@ -109,22 +117,17 @@ models:
         - equals: gemini-2.0-flash-001
         - equals: gemini-2.0-flash-exp:free
     context_window: 1000000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
+      input_audio_mtok: 0.7
       output_mtok: 0.4
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.075
-        output_mtok: 0.3
-      litellm:
-        input_mtok: 0
-        output_mtok: 0
-      helicone:
-        input_mtok: 0.075
-        output_mtok: 0.3
-      simonw:
-        input_mtok: 0.075
-        output_mtok: 0.3
+      # I think they mean cache write here, but it's not clear https://ai.google.dev/gemini-api/docs/pricing
+      cache_write_mtok:
+        base: 0.025
+        tiers:
+          - start: 1000000
+            price: 0.175
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
@@ -135,6 +138,7 @@ models:
     match:
       contains: gemini-2.0-flash-lite
     context_window: 1000000
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.075
       output_mtok: 0.3
@@ -147,11 +151,12 @@ models:
       enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       equals: gemini-2.5-flash
-    prices_checked: 2025-06-22
+    prices_checked: 2025-07-04
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
-      cache_read_mtok: 0.075
+      # I think they mean cache write here, but it's not clear
+      cache_write_mtok: 0.075
       output_mtok: 2.5
 
   - id: gemini-2.5-flash-lite-preview-06-17
@@ -183,18 +188,11 @@ models:
         - equals: gemini-2.5-flash-preview-05-20:thinking
         - equals: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview:thinking
+    prices_checked: 2025-07-04
+    # from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.15
-        cache_write_mtok: 0.2333
-        cache_read_mtok: 0.0375
-        output_mtok: 0.6
-      litellm:
-        input_mtok: 0.3
-        output_mtok: 2.5
 
   - id: gemini-2.5-pro
     name: Gemini 2.5 Pro
@@ -257,15 +255,25 @@ models:
     match:
       equals: gemini-flash-1.5-8b
     context_window: 1000000
+    prices_checked: 2025-07-04
+    # https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash-8b
     prices:
-      input_mtok: 0.0375
-      output_mtok: 0.15
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.0375
-        cache_write_mtok: 0.0583
-        cache_read_mtok: 0.01
-        output_mtok: 0.15
+      input_mtok:
+        base: 0.0375
+        tiers:
+          - start: 128000
+            price: 0.075
+      output_mtok:
+        base: 0.15
+        tiers:
+          - start: 128000
+            price: 0.3
+      # I think they mean cache write here, but it's not clear
+      cache_write_mtok:
+        base: 0.01
+        tiers:
+          - start: 128000
+            price: 0.02
 
   - id: gemini-pro
     name: gemini 1.0 pro
@@ -278,13 +286,11 @@ models:
         - equals: gemini-pro
         - equals: gemini-1.0-pro
     context_window: 32768
+    prices_checked: 2025-07-04
+    # can't find anything so trusting these prices, not sure the model still exists
     prices:
       input_mtok: 0.125
       output_mtok: 0.375
-    price_discrepancies:
-      litellm:
-        input_mtok: 0.5
-        output_mtok: 1.5
 
   - id: gemini-pro-1.5
     name: Gemini 1.5 Pro
@@ -363,13 +369,11 @@ models:
       model, successor to Gemma 2
     match:
       equals: gemma-3-27b-it
+    prices_checked: 2025-07-04
+    # can't find anything so trusting these prices, not sure the model still exists on Vertex or GCP
     prices:
       input_mtok: 0.1
       output_mtok: 0.2
-    price_discrepancies:
-      openrouter:
-        input_mtok: 0.09
-        output_mtok: 0.17
 
   - id: gemma-3-27b-it:free
     name: Gemma 3 27B (free)
