@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Anthropic
 id: anthropic
-pricing_url: https://www.anthropic.com/pricing#api
+pricing_urls:
+  - https://www.anthropic.com/pricing#api
 api_pattern: 'https://api\.anthropic\.com'
 # see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 models:

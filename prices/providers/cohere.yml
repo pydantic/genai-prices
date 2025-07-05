@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Cohere
 id: cohere
-pricing_url: https://cohere.com/pricing
+pricing_urls:
+  - https://cohere.com/pricing
 api_pattern: 'https://api\.cohere\.ai'
 models:
   - id: command

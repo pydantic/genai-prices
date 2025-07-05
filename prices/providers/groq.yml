@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Groq
 id: groq
-pricing_url: https://groq.com/pricing/
+pricing_urls:
+  - https://groq.com/pricing/
 api_pattern: 'https://api\.groq\.com'
 models:
   - id: gemma-7b-it

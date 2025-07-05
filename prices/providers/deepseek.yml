@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: Deepseek
 id: deepseek
-pricing_url: https://api-docs.deepseek.com/quick_start/pricing
+pricing_urls:
+  - https://api-docs.deepseek.com/quick_start/pricing
 api_pattern: 'https://api\.deepseek\.com'
 models:
   - id: deepseek-chat

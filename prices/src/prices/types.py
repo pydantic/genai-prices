@@ -39,7 +39,7 @@ class Provider(_Model):
     """Common name of the organization"""
     id: IdField
     """Unique identifier for the provider"""
-    pricing_url: HttpUrl | None = None
+    pricing_urls: list[HttpUrl] | None = None
     """Link to pricing page for the provider"""
     api_pattern: str | None = None
     """Pattern to identify provider via HTTP API URL."""

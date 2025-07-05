@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=.schema.json
 name: OpenRouter
 id: openrouter
-pricing_url: https://openrouter.ai/models
+pricing_urls:
+  - https://openrouter.ai/models
 api_pattern: 'https://(api\.)?openrouter\.ai'
 # we don't include description here since there are so many models, you can see descriptions at
 # https://openrouter.ai/api/v1/models which this data is based on
