@@ -31,6 +31,10 @@ lint: ## Lint the code
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build
 
+.PHONY: package-data
+package-data: ## Prepare data for packages
+	uv run -m prices package_data
+
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models
 	uv run -m prices collapse
@@ -82,7 +86,7 @@ testcov: test ## Run tests and generate an HTML coverage report
 	@uv run coverage html
 
 .PHONY: all
-all: format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
+all: build package-data format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
 
 .PHONY: help
 help: ## Show this help (usage: make help)
