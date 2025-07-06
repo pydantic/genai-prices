@@ -77,10 +77,9 @@ class Provider:
     def is_match(self, provider_id: str | None, provider_api_url: str | None) -> bool:
         if provider_id is not None:
             return self.id == provider_id
-        elif provider_api_url is not None:
-            return bool(re.match(self.api_pattern, provider_api_url))
         else:
-            return True
+            assert provider_api_url is not None, 'Either provider_id or provider_api_url must be set'
+            return bool(re.match(self.api_pattern, provider_api_url))
 
     def find_model(self, model_ref: str) -> ModelInfo | None:
         for model in self.models:
