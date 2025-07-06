@@ -3,16 +3,22 @@ name = "genai-prices-root"
 version = "0"
 description = "Database of prices for calling LLM models."
 readme = "README.md"
+authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
 requires-python = ">=3.9"
 # Do not publish this package to PyPI
 classifiers = ["Private :: do not release"]
 dependencies = []
 
 [dependency-groups]
-dev = ["devtools>=0.12.2", "pyright>=1.1.402", "ruff>=0.12.0"]
+dev = [
+    "devtools>=0.12.2",
+    "ipython>=8.18.1",
+    "pyright>=1.1.402",
+    "ruff>=0.12.0",
+]
 
 [tool.uv.workspace]
-members = ["prices"]
+members = ["prices", "packages/python"]
 
 [tool.ruff]
 line-length = 120
@@ -37,7 +43,7 @@ quote-style = "single"
 pythonVersion = "3.9"
 typeCheckingMode = "strict"
 reportUnnecessaryTypeIgnoreComment = true
-include = ["prices/src"]
+include = ["prices/src", "packages/python"]
 venv = ".venv"
 
 [tool.codespell]

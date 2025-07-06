@@ -162,6 +162,7 @@
         }
       },
       "required": [
+        "constraint",
         "prices"
       ],
       "title": "ConditionalPrice",
@@ -222,7 +223,7 @@
               "type": "array"
             }
           ],
-          "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.",
+          "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.\n\nIf no conditional models match the conditions, the first one is used.",
           "title": "Prices"
         }
       },
@@ -349,9 +350,9 @@
           "type": "string"
         },
         "api_pattern": {
-          "type": "string",
           "description": "Pattern to identify provider via HTTP API URL.",
-          "title": "Api Pattern"
+          "title": "Api Pattern",
+          "type": "string"
         },
         "models": {
           "description": "List of models provided by this organization",
@@ -365,6 +366,7 @@
       "required": [
         "name",
         "id",
+        "api_pattern",
         "models"
       ],
       "title": "Provider",
@@ -413,11 +415,12 @@
       "description": "Pricing model when the amount paid varies by number of tokens",
       "properties": {
         "base": {
-          "description": "Based price, e.g. price until the first tier.",
+          "description": "Based price in USD per million tokens, e.g. price until the first tier.",
           "title": "Base",
           "type": "number"
         },
         "tiers": {
+          "description": "Extra price tiers.",
           "items": {
             "$ref": "#/$defs/Tier"
           },

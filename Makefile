@@ -10,7 +10,7 @@
 
 .PHONY: install
 install: .uv .pre-commit ## Install the package, dependencies, and pre-commit for local development
-	uv sync --frozen --all-packages
+	uv sync --frozen --all-packages --all-extras
 	pre-commit install --install-hooks
 
 .PHONY: sync
@@ -59,6 +59,9 @@ get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get ## get
 update-price-discrepancies: ## update price discrepancies
 	uv run -m prices update_price_discrepancies
 
+.PHONY: package-data
+package-data: ## prep data in packages
+	uv run -m prices package_data
 
 .PHONE: get-update-price-discrepancies
 get-update-price-discrepancies: get-all-prices update-price-discrepancies ## get and update price discrepancies
