@@ -1,6 +1,6 @@
 [project]
-name = "llm-pricing"
-version = "0.1.0"
+name = "genai-prices-root"
+version = "0"
 description = "Database of prices for calling LLM models."
 readme = "README.md"
 requires-python = ">=3.9"

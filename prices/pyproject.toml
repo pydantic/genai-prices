@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "prices"
 version = "0.1.0"
-description = "raw data for pydantic-llm-pricing"
+description = "raw data for genai-prices"
 readme = "README.md"
 # Do not publish this package to PyPI
 classifiers = ["Private :: do not release"]
