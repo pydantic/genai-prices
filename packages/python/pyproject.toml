@@ -3,7 +3,7 @@ requires = ["uv_build>=0.7.13,<0.8"]
 build-backend = "uv_build"
 
 [project]
-name = "pydantic-llm-prices"
+name = "genai-prices"
 version = "0.1.0"
 description = "Database of prices for calling LLM models."
 readme = "README.md"
@@ -12,8 +12,8 @@ requires-python = ">=3.9"
 dependencies = ["pydantic>=2.11.7"]
 
 [project.scripts]
-llm-pricing = "pydantic_llm_prices.cli:main"
+llm-pricing = "genai_prices.cli:main"
 
 [tool.uv.build-backend]
-module-name = "pydantic_llm_prices"
+module-name = "genai_prices"
 module-root = ""

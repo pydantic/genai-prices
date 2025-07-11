@@ -1,7 +1,7 @@
 from decimal import Decimal
 
+from genai_prices import Usage, sync_calc_price
 from inline_snapshot import snapshot
-from pydantic_llm_prices import Usage, sync_calc_price
 
 
 def test_success_with_provider():

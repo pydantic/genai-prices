@@ -7,7 +7,7 @@ from .utils import package_dir as this_package_dir
 def package_data():
     """Prep python package data."""
 
-    from pydantic_llm_prices.types import __file__ as pydantic_llm_prices_file, providers_schema
+    from genai_prices.types import __file__ as genai_prices_file, providers_schema
 
     data_path = this_package_dir / 'data.json'
 
@@ -25,7 +25,7 @@ __all__ = ('providers',)
 providers: list[Provider] = {providers}
 '''
 
-    py_package_dir = Path(pydantic_llm_prices_file).parent
+    py_package_dir = Path(genai_prices_file).parent
     data_py = py_package_dir / 'data.py'
     data_py.write_text(data_content)
     root_dir = this_package_dir.parent
