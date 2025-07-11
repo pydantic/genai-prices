@@ -9,7 +9,7 @@ def test_success_with_provider():
     assert price.price == snapshot(Decimal('0.0035'))
     assert price.model.name == snapshot('gpt 4o')
     assert price.provider.id == snapshot('openai')
-    assert price.phone_home_timestamp is None
+    assert price.auto_update_timestamp is None
 
 
 def test_success_with_url():
@@ -21,4 +21,4 @@ def test_success_with_url():
     assert price.price == snapshot(Decimal('0.00855'))
     assert price.model.name == snapshot('Claude Sonnet 3.5')
     assert price.provider.name == snapshot('Anthropic')
-    assert price.phone_home_timestamp is None
+    assert price.auto_update_timestamp is None
