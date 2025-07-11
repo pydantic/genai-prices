@@ -1,3 +1,3 @@
-## pydantic-llm-prices
+## genai-prices
 
-Python package for [pydantic-llm-pricing](https://github.com/pydantic/llm-prices)
+Python package for [github.com/pydantic/genai-prices](https://github.com/pydantic/genai-prices).

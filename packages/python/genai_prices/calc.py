@@ -15,7 +15,7 @@ from . import data, types
 __all__ = ('sync_calc_price',)
 DEFAULT_PHONE_HOME_TTL = timedelta(hours=1)
 DEFAULT_PHONE_HOME_REQUEST_TIMEOUT = 30
-DEFAULT_PHONE_HOME_URL = 'https://raw.githubusercontent.com/pydantic/llm-pricing/refs/heads/main/prices/data.json'
+DEFAULT_PHONE_HOME_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
 
 
 @dataclass
