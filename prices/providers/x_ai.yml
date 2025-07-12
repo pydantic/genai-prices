@@ -4,6 +4,8 @@ id: x-ai
 pricing_urls:
   - https://docs.x.ai/docs/models
 api_pattern: 'https://api\.x\.ai'
+model_match:
+  contains: grok
 models:
   - id: grok-2-1212
     name: Grok 2 1212

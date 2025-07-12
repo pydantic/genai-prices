@@ -35,10 +35,10 @@ DescriptionField = Annotated[str, MaxLen(1000)]
 class Provider(_Model):
     """Information about an LLM inference provider"""
 
-    name: NameField
-    """Common name of the organization"""
     id: IdField
     """Unique identifier for the provider"""
+    name: NameField
+    """Common name of the organization"""
     pricing_urls: list[HttpUrl] | None = None
     """Link to pricing page for the provider"""
     api_pattern: str
@@ -47,6 +47,8 @@ class Provider(_Model):
     """Description of the provider"""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
+    model_match: MatchLogic | None = None
+    """Logic to find a provider based on the model reference."""
     models: list[ModelInfo]
     """List of models provided by this organization"""
 

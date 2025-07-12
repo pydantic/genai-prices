@@ -435,17 +435,17 @@
   "additionalProperties": false,
   "description": "Information about an LLM inference provider",
   "properties": {
-    "name": {
-      "description": "Common name of the organization",
-      "maxLength": 100,
-      "title": "Name",
-      "type": "string"
-    },
     "id": {
       "description": "Unique identifier for the provider",
       "maxLength": 100,
       "pattern": "^\\S+$",
       "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "description": "Common name of the organization",
+      "maxLength": 100,
+      "title": "Name",
       "type": "string"
     },
     "pricing_urls": {
@@ -476,6 +476,33 @@
       "description": "Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model.",
       "title": "Price Comments"
     },
+    "model_match": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ClauseStartsWith"
+        },
+        {
+          "$ref": "#/$defs/ClauseEndsWith"
+        },
+        {
+          "$ref": "#/$defs/ClauseContains"
+        },
+        {
+          "$ref": "#/$defs/ClauseRegex"
+        },
+        {
+          "$ref": "#/$defs/ClauseEquals"
+        },
+        {
+          "$ref": "#/$defs/ClauseOr"
+        },
+        {
+          "$ref": "#/$defs/ClauseAnd"
+        }
+      ],
+      "description": "Logic to find a provider based on the model reference.",
+      "title": "Model Match"
+    },
     "models": {
       "description": "List of models provided by this organization",
       "items": {
@@ -486,8 +513,8 @@
     }
   },
   "required": [
-    "name",
     "id",
+    "name",
     "api_pattern",
     "models"
   ],

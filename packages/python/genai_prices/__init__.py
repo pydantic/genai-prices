@@ -1,6 +1,5 @@
 from __future__ import annotations as _annotations
 
-import typing
 from datetime import datetime
 from functools import cache
 
@@ -8,28 +7,6 @@ from . import sources, types
 from .types import Usage
 
 __all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync'
-
-
-@typing.overload
-async def calc_price_async(
-    usage: types.AbstractUsage,
-    model_ref: str,
-    *,
-    provider_id: types.ProviderID | str,
-    genai_request_timestamp: datetime | None = None,
-    auto_update: bool | sources.AsyncSource = False,
-) -> types.PriceCalculation: ...
-
-
-@typing.overload
-async def calc_price_async(
-    usage: types.AbstractUsage,
-    model_ref: str,
-    *,
-    provider_api_url: str,
-    genai_request_timestamp: datetime | None = None,
-    auto_update: bool | sources.AsyncSource = False,
-) -> types.PriceCalculation: ...
 
 
 async def calc_price_async(
@@ -79,28 +56,6 @@ def prefetch_async():
     calling `calc_price_async`.
     """
     sources.auto_update_async_source.pre_fetch()
-
-
-@typing.overload
-def calc_price_sync(
-    usage: types.AbstractUsage,
-    model_ref: str,
-    *,
-    provider_id: types.ProviderID | str,
-    genai_request_timestamp: datetime | None = None,
-    auto_update: bool | sources.SyncSource = False,
-) -> types.PriceCalculation: ...
-
-
-@typing.overload
-def calc_price_sync(
-    usage: types.AbstractUsage,
-    model_ref: str,
-    *,
-    provider_api_url: str,
-    genai_request_timestamp: datetime | None = None,
-    auto_update: bool | sources.SyncSource = False,
-) -> types.PriceCalculation: ...
 
 
 def calc_price_sync(
