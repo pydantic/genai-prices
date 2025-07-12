@@ -10,23 +10,29 @@ models:
   - id: grok-2-1212
     name: Grok 2 1212
     description: >-
-      Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making
+      (deprecated) Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making
       it a powerful and flexible choice for developers seeking a highly steerable, intelligent model.
     match:
-      equals: grok-2-1212
+      or:
+        - equals: grok-2-1212
+        - equals: grok-2
+        - equals: grok-2-latest
+    context_window: 32768
+    prices_checked: 2025-07-12
     prices:
       input_mtok: 2
       output_mtok: 10
 
   - id: grok-2-vision-1212
     name: Grok 2 Vision 1212
-    description: >-
-      Grok 2 Vision 1212 advances image-based AI with stronger visual comprehension, refined instruction-following, and
-      multilingual support. From object recognition to style analysis, it empowers developers to build more intuitive,
-      visually aware applications. Its enhanced steerability and reasoning establish a robust foundation
-      for next-generation image solutions.
+    description: Our multimodal model that processes documents, diagrams, charts, screenshots, and photographs.
     match:
-      equals: grok-2-vision-1212
+      or:
+        - equals: grok-2-vision-1212
+        - equals: grok-2-vision
+        - equals: grok-2-vision-latest
+    context_window: 32768
+    prices_checked: 2025-07-12
     prices:
       input_mtok: 2
       output_mtok: 10
@@ -34,16 +40,35 @@ models:
   - id: grok-3
     name: Grok 3
     description: >-
-      Grok 3 is the latest model from xAI. It's their flagship model that excels at enterprise use cases like data extraction,
+      Flagship model that excels at enterprise use cases like data extraction,
       coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.
     match:
       or:
         - equals: grok-3
+        - equals: grok-3-latest
         - equals: grok-3-beta
+    context_window: 131072
+    prices_checked: 2025-07-12
     prices:
       input_mtok: 3
       cache_read_mtok: 0.75
       output_mtok: 15
+
+  - id: grok-3-fast
+    name: Grok 3 Fast
+    description: >-
+      Excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.
+    match:
+      or:
+        - equals: grok-3-fast
+        - equals: grok-3-fast-latest
+        - equals: grok-3-fast-beta
+    context_window: 131072
+    prices_checked: 2025-07-12
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 1.25
+      output_mtok: 25
 
   - id: grok-3-mini
     name: Grok 3 Mini
@@ -54,28 +79,42 @@ models:
       or:
         - equals: grok-3-mini
         - equals: grok-3-mini-beta
+        - equals: grok-3-mini-latest
+    context_window: 131072
+    prices_checked: 2025-07-12
     prices:
       input_mtok: 0.3
       cache_read_mtok: 0.075
       output_mtok: 0.5
 
-  - id: grok-beta
-    name: Grok Beta
+  - id: grok-3-mini-fast
+    name: Grok 3 Mini Fast
     description: >-
-      Grok Beta is xAI's experimental language model with state-of-the-art reasoning capabilities, best for complex
-      and multi-step use cases.
+      A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require deep domain knowledge. The raw thinking traces are accessible.
     match:
-      equals: grok-beta
+      or:
+        - equals: grok-3-mini-fast
+        - equals: grok-3-mini-fast-beta
+        - equals: grok-3-mini-fast-latest
+    context_window: 131072
+    prices_checked: 2025-07-12
     prices:
-      input_mtok: 5
-      output_mtok: 15
+      input_mtok: 0.6
+      cache_read_mtok: 0.15
+      output_mtok: 4
 
-  - id: grok-vision-beta
-    name: Grok Vision Beta
+  - id: grok-4-0709
+    name: Grok 4
     description: >-
-      Grok Vision Beta is xAI's experimental language model with vision capability.
+      A flagship model, offering unparalleled performance in natural language, math and reasoning - the perfect jack of all trades.
     match:
-      equals: grok-vision-beta
+      or:
+        - equals: grok-4-0709
+        - equals: grok-4
+        - equals: grok-4-latest
+    context_window: 256000
+    prices_checked: 2025-07-12
     prices:
-      input_mtok: 5
+      input_mtok: 3
+      cache_read_mtok: 0.75
       output_mtok: 15
