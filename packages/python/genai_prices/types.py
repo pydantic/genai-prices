@@ -2,7 +2,7 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
-import sys
+from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, Union
@@ -27,11 +27,6 @@ ProviderID = Literal[
     'cohere',
     'openrouter',
 ]
-
-if sys.version_info >= (3, 10):
-    dataclass = dataclasses.dataclass(kw_only=True)
-else:
-    dataclass = dataclasses.dataclass
 
 
 @dataclass
@@ -108,10 +103,10 @@ class Usage:
 class Provider:
     """Information about an LLM inference provider"""
 
+    id: str
+    """Unique identifier for the provider"""
     name: str
     """Common name of the organization"""
-    id: ProviderID
-    """Unique identifier for the provider"""
     pricing_urls: list[str] | None = None
     """Link to pricing page for the provider"""
     api_pattern: str = ''

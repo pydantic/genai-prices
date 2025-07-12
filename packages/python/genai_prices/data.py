@@ -8,8 +8,8 @@ __all__ = ('providers',)
 
 providers: list[Provider] = [
     Provider(
-        name='Anthropic',
         id='anthropic',
+        name='Anthropic',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
         api_pattern='https://api\\.anthropic\\.com',
         models=[
@@ -153,8 +153,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Avian',
         id='avian',
+        name='Avian',
         pricing_urls=['https://avian.io/pricing/'],
         api_pattern='https://api\\.avian\\.io',
         models=[
@@ -181,8 +181,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='AWS Bedrock',
         id='aws',
+        name='AWS Bedrock',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
         api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
         models=[
@@ -215,8 +215,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Microsoft Azure',
         id='azure',
+        name='Microsoft Azure',
         pricing_urls=['https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing'],
         api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com)',
         price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly hihgher.',
@@ -594,8 +594,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Cohere',
         id='cohere',
+        name='Cohere',
         pricing_urls=['https://cohere.com/pricing'],
         api_pattern='https://api\\.cohere\\.ai',
         models=[
@@ -639,8 +639,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Deepseek',
         id='deepseek',
+        name='Deepseek',
         pricing_urls=['https://api-docs.deepseek.com/quick_start/pricing'],
         api_pattern='https://api\\.deepseek\\.com',
         models=[
@@ -773,8 +773,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Fireworks',
         id='fireworks',
+        name='Fireworks',
         pricing_urls=['https://fireworks.ai/pricing'],
         api_pattern='https://api\\.fireworks\\.ai',
         models=[
@@ -877,8 +877,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Google',
         id='google',
+        name='Google',
         pricing_urls=[
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
@@ -1211,8 +1211,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Groq',
         id='groq',
+        name='Groq',
         pricing_urls=['https://groq.com/pricing/'],
         api_pattern='https://api\\.groq\\.com',
         models=[
@@ -1259,8 +1259,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Mistral',
         id='mistral',
+        name='Mistral',
         pricing_urls=['https://mistral.ai/pricing#api-pricing'],
         api_pattern='https://api\\.mistral\\.ai',
         models=[
@@ -1476,8 +1476,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Novita',
         id='novita',
+        name='Novita',
         pricing_urls=['https://novita.ai/pricing'],
         api_pattern='https://api\\.novita\\.ai',
         models=[
@@ -1659,8 +1659,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='OpenAI',
         id='openai',
+        name='OpenAI',
         pricing_urls=[
             'https://platform.openai.com/docs/pricing',
             'https://openai.com/api/pricing/',
@@ -2059,8 +2059,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='OpenRouter',
         id='openrouter',
+        name='OpenRouter',
         pricing_urls=['https://openrouter.ai/models'],
         api_pattern='https://(api\\.)?openrouter\\.ai',
         models=[
@@ -5358,8 +5358,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='Perplexity',
         id='perplexity',
+        name='Perplexity',
         pricing_urls=['https://docs.perplexity.ai/guides/pricing'],
         api_pattern='https://api\\.perplexity\\.ai',
         price_comments='Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
@@ -5423,8 +5423,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='together.ai',
         id='together',
+        name='together.ai',
         pricing_urls=['https://www.together.ai/pricing'],
         api_pattern='https://api\\.together\\.xyz',
         models=[
@@ -5807,8 +5807,8 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
-        name='X AI',
         id='x-ai',
+        name='X AI',
         pricing_urls=['https://docs.x.ai/docs/models'],
         api_pattern='https://api\\.x\\.ai',
         models=[

@@ -30,10 +30,10 @@ providers: list[Provider] = {providers}
     data_py = py_package_dir / 'data.py'
     data_py.write_text(data_content)
     root_dir = this_package_dir.parent
-    subprocess.run(['uv', 'run', 'ruff', 'format', str(data_py)], cwd=str(root_dir), check=True)
+    subprocess.run(['uv', 'run', 'ruff', 'format', str(data_py)], cwd=str(root_dir), check=True, stdout=subprocess.PIPE)
 
     data_content = data_py.read_text()
-    data_content = re.sub('^ +[a-z_]+=None,\n', '', data_content, flags=re.M)
+    data_content = re.sub('^ +[a-z_]+=None,$', '', data_content, flags=re.M)
     data_py.write_text(data_content)
     subprocess.run(
         [
@@ -49,6 +49,7 @@ providers: list[Provider] = {providers}
         ],
         cwd=str(root_dir),
         check=True,
+        stdout=subprocess.PIPE,
     )
 
     print(f'Data successfully written to {data_py.relative_to(root_dir)}')

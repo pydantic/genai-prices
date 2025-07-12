@@ -81,7 +81,7 @@ exclude_lines = [
 ]
 
 [tool.pyright]
-pythonVersion = "3.9"
+pythonVersion = "3.12"
 typeCheckingMode = "strict"
 reportUnnecessaryTypeIgnoreComment = true
 include = ["prices/src", "packages/python", "tests"]

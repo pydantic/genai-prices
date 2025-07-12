@@ -144,7 +144,7 @@ class DataSnapshot:
         self,
         usage: types.AbstractUsage,
         model_ref: str,
-        provider_id: types.ProviderID | None,
+        provider_id: types.ProviderID | str | None,
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
     ) -> types.PriceCalculation:
@@ -161,7 +161,7 @@ class DataSnapshot:
     def find_provider_model(
         self,
         model_ref: str,
-        provider_id: types.ProviderID | None,
+        provider_id: types.ProviderID | str | None,
         provider_api_url: str | None,
     ) -> tuple[types.Provider, types.ModelInfo]:
         if provider_model := self._lookup_cache.get((provider_id or provider_api_url, model_ref)):
