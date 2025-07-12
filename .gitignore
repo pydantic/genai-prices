@@ -11,3 +11,4 @@ wheels/
 /scratch/
 /prices/source_prices/
 .claude/
+.coverage

@@ -53,6 +53,13 @@ repos:
         files: "prices/"
         language: system
         pass_filenames: false
+      - id: build
+        name: build prices
+        entry: make
+        args: [package-data]
+        types_or: [python, json]
+        language: system
+        pass_filenames: false
       - id: typecheck
         name: typecheck
         entry: make

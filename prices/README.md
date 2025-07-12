@@ -1,4 +1,4 @@
-# Pricing data for `pydantic-llm-pricing`
+# Pricing data for `pydantic-llm-index`
 
 TODO: instructions on updating prices.
 

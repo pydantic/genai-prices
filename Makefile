@@ -10,7 +10,7 @@
 
 .PHONY: install
 install: .uv .pre-commit ## Install the package, dependencies, and pre-commit for local development
-	uv sync --frozen --all-packages
+	uv sync --frozen --all-packages --all-extras
 	pre-commit install --install-hooks
 
 .PHONY: sync
@@ -30,6 +30,10 @@ lint: ## Lint the code
 .PHONY: build
 build: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build
+
+.PHONY: package-data
+package-data: ## Prepare data for packages
+	uv run -m prices package_data
 
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models
@@ -59,7 +63,6 @@ get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get ## get
 update-price-discrepancies: ## update price discrepancies
 	uv run -m prices update_price_discrepancies
 
-
 .PHONE: get-update-price-discrepancies
 get-update-price-discrepancies: get-all-prices update-price-discrepancies ## get and update price discrepancies
 
@@ -78,8 +81,18 @@ testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
 	@uv run coverage html
 
+.PHONY: test-all-python
+test-all-python: ## Run tests on Python 3.9 to 3.13
+	UV_PROJECT_ENVIRONMENT=.venv39 uv run --python 3.9 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv310 uv run --python 3.10 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv311 uv run --python 3.11 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv312 uv run --python 3.12 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --all-extras --all-packages coverage run -p -m pytest
+	@uv run coverage combine
+	@uv run coverage report
+
 .PHONY: all
-all: format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
+all: build package-data format lint typecheck testcov ## Run code formatting, linting, static type checks, and tests with coverage report generation
 
 .PHONY: help
 help: ## Show this help (usage: make help)
