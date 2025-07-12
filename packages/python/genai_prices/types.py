@@ -141,7 +141,7 @@ class Provider:
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
     model_match: MatchLogic | None = None
     """Logic to find a provider based on the model reference."""
-    models: list[ModelInfo] = dataclasses.field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models provided by this organization"""
 
     def find_model(self, model_ref: str) -> ModelInfo | None:
@@ -168,7 +168,7 @@ class ModelInfo:
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
 
-    prices: ModelPrice | list[ConditionalPrice] = dataclasses.field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    prices: ModelPrice | list[ConditionalPrice] = dataclasses.field(default_factory=list)
     """Set of prices for using this model.
 
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.

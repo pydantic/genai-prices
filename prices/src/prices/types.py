@@ -302,7 +302,7 @@ class ClauseAnd(_Model, populate_by_name=True):
 def clause_discriminator(v: Any) -> str | None:
     if isinstance(v, dict):
         # return the first key
-        return next(iter(v))  # type: ignore
+        return next(iter(v))  # pyright: ignore[reportUnknownVariableType,reportUnknownArgumentType]
     elif isinstance(v, BaseModel):
         tag = next(iter(v.__pydantic_fields__))
         if tag.endswith('_'):
