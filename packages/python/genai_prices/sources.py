@@ -1,7 +1,9 @@
 from __future__ import annotations as _annotations
 
+import asyncio
 import warnings
 from abc import ABC, abstractmethod
+from concurrent import futures
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -12,75 +14,116 @@ from pydantic import ValidationError
 
 from . import data, types
 
-DEFAULT_AUTO_UPDATE_TTL = timedelta(hours=1)
+__all__ = (
+    'DEFAULT_AUTO_UPDATE_MAX_AGE',
+    'DEFAULT_AUTO_UPDATE_URL',
+    'AsyncSource',
+    'AutoUpdateAsyncSource',
+    'auto_update_async_source',
+    'SyncSource',
+    'AutoUpdateSyncSource',
+    'PriceCalculation',
+    'DataSnapshot',
+)
+
+DEFAULT_AUTO_UPDATE_MAX_AGE = timedelta(hours=1)
+DEFAULT_AUTO_UPDATE_FETCH_AGE = timedelta(minutes=30)
 DEFAULT_AUTO_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
 
 
 class AsyncSource(ABC):
     @abstractmethod
-    async def fetch(self, current_snapshot: DataSnapshot | None) -> DataSnapshot | None:
-        raise NotImplementedError
-
-    @abstractmethod
-    def source_id(self) -> str:
+    async def fetch(self) -> DataSnapshot | None:
+        """Fetch a new snapshot or return and existing cached snapshot."""
         raise NotImplementedError
 
 
+@dataclass
 class AutoUpdateAsyncSource(AsyncSource):
     client: httpx.AsyncClient | None = None
     url: str = DEFAULT_AUTO_UPDATE_URL
-    data_ttl: timedelta = DEFAULT_AUTO_UPDATE_TTL
+    max_age: timedelta = DEFAULT_AUTO_UPDATE_MAX_AGE
+    fetch_age: timedelta = DEFAULT_AUTO_UPDATE_FETCH_AGE
     request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=30, connect=5))
+    _pre_fetch_task: asyncio.Task[None] | None = field(default=None, init=False)
 
-    async def fetch(self, current_snapshot: DataSnapshot | None) -> DataSnapshot | None:
-        if current_snapshot is None or not current_snapshot.active(self.data_ttl):
-            try:
-                client = self.client if self.client else _cached_async_http_client()
-                r = await client.get(self.url, timeout=self.request_timeout)
-                r.raise_for_status()
-                providers = data.providers_schema.validate_json(r.content)
-            except (httpx.HTTPError, ValidationError) as e:
-                warnings.warn(f'Failed to auto update from {self.url}: {e}')
-            else:
-                return DataSnapshot(providers=providers, from_auto_update=True)
+    def pre_fetch(self) -> None:
+        if self._pre_fetch_task is None:
+            self._pre_fetch_task = asyncio.create_task(self._fetch())
 
-    def source_id(self) -> str:
-        return self.url
+    async def fetch(self) -> DataSnapshot | None:
+        if self._pre_fetch_task is not None:
+            await self._pre_fetch_task
+            self._pre_fetch_task = None
+
+        if _auto_update_snapshot is None or not _auto_update_snapshot.active(self.max_age):
+            await self._fetch()
+        elif not _auto_update_snapshot.active(self.fetch_age):
+            self.pre_fetch()
+        return _auto_update_snapshot
+
+    async def _fetch(self):
+        global _auto_update_snapshot
+
+        try:
+            client = self.client or _cached_async_http_client()
+            r = await client.get(self.url, timeout=self.request_timeout)
+            r.raise_for_status()
+            providers = data.providers_schema.validate_json(r.content)
+        except (httpx.HTTPError, ValidationError) as e:
+            warnings.warn(f'Failed to auto update from {self.url}: {e}')
+        else:
+            _auto_update_snapshot = DataSnapshot(providers=providers, from_auto_update=True)
 
 
 class SyncSource(ABC):
     @abstractmethod
-    def fetch(self, current_snapshot: DataSnapshot | None) -> DataSnapshot | None:
-        raise NotImplementedError
-
-    @abstractmethod
-    def source_id(self) -> str:
+    def fetch(self) -> DataSnapshot | None:
+        """Fetch a new snapshot or return and existing cached snapshot."""
         raise NotImplementedError
 
 
+@dataclass
 class AutoUpdateSyncSource(SyncSource):
     client: httpx.Client | None = None
     url: str = DEFAULT_AUTO_UPDATE_URL
-    data_ttl: timedelta = DEFAULT_AUTO_UPDATE_TTL
+    max_age: timedelta = DEFAULT_AUTO_UPDATE_MAX_AGE
+    fetch_age: timedelta = DEFAULT_AUTO_UPDATE_FETCH_AGE
     request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=30, connect=5))
+    _pre_fetch_task: futures.Future[None] | None = field(default=None, init=False)
 
-    def fetch(self, current_snapshot: DataSnapshot | None) -> DataSnapshot | None:
-        if current_snapshot is None or not current_snapshot.active(self.data_ttl):
-            try:
-                if self.client:
-                    r = self.client.get(self.url, timeout=self.request_timeout)
-                else:
-                    r = httpx.get(self.url, timeout=self.request_timeout)
+    def pre_fetch(self) -> None:
+        if self._pre_fetch_task is None:
+            self._pre_fetch_task = futures.ThreadPoolExecutor(max_workers=1).submit(self._fetch)
 
-                r.raise_for_status()
-                providers = data.providers_schema.validate_json(r.content)
-            except (httpx.HTTPError, ValidationError) as e:
-                warnings.warn(f'Failed to auto update from {self.url}: {e}')
-            else:
-                return DataSnapshot(providers=providers, from_auto_update=True)
+    def fetch(self) -> DataSnapshot | None:
+        if self._pre_fetch_task is not None:
+            self._pre_fetch_task.result()
+            self._pre_fetch_task = None
 
-    def source_id(self) -> str:
-        return self.url
+        if _auto_update_snapshot is None or not _auto_update_snapshot.active(self.max_age):
+            self._fetch()
+        elif not _auto_update_snapshot.active(self.fetch_age):
+            self.pre_fetch()
+        return _auto_update_snapshot
+
+    def _fetch(self):
+        global _auto_update_snapshot
+
+        try:
+            client = self.client or httpx
+            r = client.get(self.url, timeout=self.request_timeout)
+            r.raise_for_status()
+            providers = data.providers_schema.validate_json(r.content)
+        except (httpx.HTTPError, ValidationError) as e:
+            warnings.warn(f'Failed to auto update from {self.url}: {e}')
+        else:
+            _auto_update_snapshot = DataSnapshot(providers=providers, from_auto_update=True)
+
+
+_auto_update_snapshot: DataSnapshot | None = None
+auto_update_async_source = AutoUpdateAsyncSource()
+auto_update_sync_source = AutoUpdateSyncSource()
 
 
 @dataclass
@@ -154,5 +197,5 @@ class DataSnapshot:
 
 
 @cache
-def _cached_async_http_client(timeout: int, connect: int) -> httpx.AsyncClient:
-    return httpx.AsyncClient(timeout=httpx.Timeout(timeout=timeout, connect=connect))
+def _cached_async_http_client() -> httpx.AsyncClient:
+    return httpx.AsyncClient()

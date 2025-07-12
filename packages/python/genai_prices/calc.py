@@ -42,15 +42,11 @@ async def calc_price(
     snapshot = _local_snapshot
     if auto_update is not False:
         if auto_update is True:
-            auto_update = sources.AutoUpdateAsyncSource()
+            auto_update = sources.auto_update_async_source
 
-        source_id = auto_update.source_id()
-        current_snapshot = _source_snapshots.get(source_id)
-        new_snapshot = await auto_update.fetch(current_snapshot)
+        new_snapshot = await auto_update.fetch()
         if new_snapshot is not None:
-            snapshot = _source_snapshots[source_id] = new_snapshot
-        elif current_snapshot is not None:
-            snapshot = current_snapshot
+            snapshot = new_snapshot
 
     return snapshot.calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
 
@@ -89,18 +85,13 @@ def sync_calc_price(
     snapshot = _local_snapshot
     if auto_update is not False:
         if auto_update is True:
-            auto_update = sources.AutoUpdateSyncSource()
+            auto_update = sources.auto_update_sync_source
 
-        source_id = auto_update.source_id()
-        current_snapshot = _source_snapshots.get(source_id)
-        new_snapshot = auto_update.fetch(current_snapshot)
+        new_snapshot = auto_update.fetch()
         if new_snapshot is not None:
-            snapshot = _source_snapshots[source_id] = new_snapshot
-        elif current_snapshot is not None:
-            snapshot = current_snapshot
+            snapshot = new_snapshot
 
     return snapshot.calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
 
 
 _local_snapshot = sources.DataSnapshot(providers=data.providers, from_auto_update=False)
-_source_snapshots: dict[str, sources.DataSnapshot] = {}
