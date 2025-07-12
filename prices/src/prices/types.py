@@ -216,9 +216,9 @@ class Tier(_Model):
 
 
 class ConditionalPrice(_Model):
-    """Pricing together with constraints that define with those prices should be used.
+    """Pricing together with constraints that define when those prices should be used.
 
-    The last price that is active is used.
+    The last price active price (price where the constraints are met) is used.
     """
 
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
