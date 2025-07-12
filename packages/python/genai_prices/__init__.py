@@ -17,7 +17,7 @@ async def calc_price_async(
     provider_id: types.ProviderID,
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.AsyncSource = False,
-) -> sources.PriceCalculation: ...
+) -> types.PriceCalculation: ...
 
 
 @typing.overload
@@ -28,7 +28,7 @@ async def calc_price_async(
     provider_api_url: str,
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.AsyncSource = False,
-) -> sources.PriceCalculation: ...
+) -> types.PriceCalculation: ...
 
 
 async def calc_price_async(
@@ -39,7 +39,7 @@ async def calc_price_async(
     provider_api_url: str | None = None,
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.AsyncSource = False,
-) -> sources.PriceCalculation:
+) -> types.PriceCalculation:
     snapshot = _local_snapshot
     if auto_update is not False:
         if auto_update is True:
@@ -55,7 +55,7 @@ async def calc_price_async(
 def prefetch_async():
     """Prefetches the latest snapshot for use with `calc_price_async`.
 
-    NOTE: this method is NOT async itself, it starts a task to fetch the latest snapshot which will be joined when
+    NOTE: this method is NOT async itself, it starts a task to fetch the latest snapshot which will be awaited when
     calling `calc_price_async`.
     """
     sources.auto_update_async_source.pre_fetch()
@@ -69,7 +69,7 @@ def calc_price_sync(
     provider_id: types.ProviderID,
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.SyncSource = False,
-) -> sources.PriceCalculation: ...
+) -> types.PriceCalculation: ...
 
 
 @typing.overload
@@ -80,7 +80,7 @@ def calc_price_sync(
     provider_api_url: str,
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.SyncSource = False,
-) -> sources.PriceCalculation: ...
+) -> types.PriceCalculation: ...
 
 
 def calc_price_sync(
@@ -91,7 +91,7 @@ def calc_price_sync(
     provider_api_url: str | None = None,
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.SyncSource = False,
-) -> sources.PriceCalculation:
+) -> types.PriceCalculation:
     snapshot = _local_snapshot
     if auto_update is not False:
         if auto_update is True:

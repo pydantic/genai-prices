@@ -34,6 +34,22 @@ else:
     dataclass = dataclasses.dataclass
 
 
+@dataclass
+class PriceCalculation:
+    price: Decimal
+    provider: Provider
+    model: ModelInfo
+    auto_update_timestamp: datetime | None
+
+    def __repr__(self) -> str:
+        return (
+            f'PriceCalculation(price={self.price!r}, '
+            f'provider=Provider(id={self.provider.id!r}, name={self.provider.name!r}, ...), '
+            f'model=Model(id={self.model.id!r}, name={self.model.name!r}, ...), '
+            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+        )
+
+
 class AbstractUsage(Protocol):
     """Abstract definition of data about token usage for an LLM call"""
 
@@ -159,7 +175,8 @@ class ModelInfo:
         if isinstance(self.prices, ModelPrice):
             return self.prices
         else:
-            for conditional_price in self.prices:
+            # reversed because the last price takes precedence
+            for conditional_price in reversed(self.prices):
                 if conditional_price.constraint.active(request_timestamp):
                     return conditional_price.prices
             return self.prices[0].prices
@@ -197,13 +214,13 @@ class ModelPrice:
             requests = 1 if usage.requests is None else usage.requests
             price += self.requests_kcount * requests / 1000
 
-        price += _calc_price(self.input_mtok, usage.input_tokens)
-        price += _calc_price(self.cache_write_mtok, usage.cache_write_tokens)
-        price += _calc_price(self.cache_read_mtok, usage.cache_read_tokens)
-        price += _calc_price(self.output_mtok, usage.output_tokens)
-        price += _calc_price(self.input_audio_mtok, usage.input_audio_tokens)
-        price += _calc_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
-        price += _calc_price(self.output_audio_mtok, usage.output_audio_tokens)
+        price += calc_mtok_price(self.input_mtok, usage.input_tokens)
+        price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
+        price += calc_mtok_price(self.cache_read_mtok, usage.cache_read_tokens)
+        price += calc_mtok_price(self.output_mtok, usage.output_tokens)
+        price += calc_mtok_price(self.input_audio_mtok, usage.input_audio_tokens)
+        price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
+        price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
         return price
 
     def is_free(self) -> bool:
@@ -214,7 +231,7 @@ class ModelPrice:
         return True
 
 
-def _calc_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
+def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
     if field_mtok is None or token_count is None:
         return Decimal(0)
 

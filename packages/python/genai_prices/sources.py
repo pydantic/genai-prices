@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 from concurrent import futures
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal
 from functools import cache
 
 import httpx
@@ -22,7 +21,6 @@ __all__ = (
     'auto_update_async_source',
     'SyncSource',
     'AutoUpdateSyncSource',
-    'PriceCalculation',
     'DataSnapshot',
 )
 
@@ -127,22 +125,6 @@ auto_update_sync_source = AutoUpdateSyncSource()
 
 
 @dataclass
-class PriceCalculation:
-    price: Decimal
-    provider: types.Provider
-    model: types.ModelInfo
-    auto_update_timestamp: datetime | None
-
-    def __repr__(self) -> str:
-        return (
-            f'PriceCalculation(price={self.price!r}, '
-            f'provider=Provider(id={self.provider.id!r}, name={self.provider.name!r}, ...), '
-            f'model=Model(id={self.model.id!r}, name={self.model.name!r}, ...), '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
-        )
-
-
-@dataclass
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
@@ -161,11 +143,11 @@ class DataSnapshot:
         provider_id: types.ProviderID | None,
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
-    ) -> PriceCalculation:
+    ) -> types.PriceCalculation:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         provider, model = self.find_provider_model(model_ref, provider_id, provider_api_url)
-        return PriceCalculation(
+        return types.PriceCalculation(
             price=model.get_prices(genai_request_timestamp).calc_price(usage),
             provider=provider,
             model=model,
