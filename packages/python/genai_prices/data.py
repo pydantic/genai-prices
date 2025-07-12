@@ -5762,47 +5762,103 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='grok-2-1212',
-                match=ClauseEquals(equals='grok-2-1212'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-2-1212'),
+                        ClauseEquals(equals='grok-2'),
+                        ClauseEquals(equals='grok-2-latest'),
+                    ]
+                ),
                 name='Grok 2 1212',
-                description='Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making it a powerful and flexible choice for developers seeking a highly steerable, intelligent model.',
+                description='(deprecated) Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making it a powerful and flexible choice for developers seeking a highly steerable, intelligent model.',
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='grok-2-vision-1212',
-                match=ClauseEquals(equals='grok-2-vision-1212'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-2-vision-1212'),
+                        ClauseEquals(equals='grok-2-vision'),
+                        ClauseEquals(equals='grok-2-vision-latest'),
+                    ]
+                ),
                 name='Grok 2 Vision 1212',
-                description='Grok 2 Vision 1212 advances image-based AI with stronger visual comprehension, refined instruction-following, and multilingual support. From object recognition to style analysis, it empowers developers to build more intuitive, visually aware applications. Its enhanced steerability and reasoning establish a robust foundation for next-generation image solutions.',
+                description='Our multimodal model that processes documents, diagrams, charts, screenshots, and photographs.',
+                context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='grok-3',
-                match=ClauseOr(or_=[ClauseEquals(equals='grok-3'), ClauseEquals(equals='grok-3-beta')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-3'),
+                        ClauseEquals(equals='grok-3-latest'),
+                        ClauseEquals(equals='grok-3-beta'),
+                    ]
+                ),
                 name='Grok 3',
-                description="Grok 3 is the latest model from xAI. It's their flagship model that excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.",
+                description='Flagship model that excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.',
+                context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='grok-3-fast',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-3-fast'),
+                        ClauseEquals(equals='grok-3-fast-latest'),
+                        ClauseEquals(equals='grok-3-fast-beta'),
+                    ]
+                ),
+                name='Grok 3 Fast',
+                description='Excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('25')),
+            ),
+            ModelInfo(
                 id='grok-3-mini',
-                match=ClauseOr(or_=[ClauseEquals(equals='grok-3-mini'), ClauseEquals(equals='grok-3-mini-beta')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-3-mini'),
+                        ClauseEquals(equals='grok-3-mini-beta'),
+                        ClauseEquals(equals='grok-3-mini-latest'),
+                    ]
+                ),
                 name='Grok 3 Mini',
                 description='A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require deep domain knowledge. The raw thinking traces are accessible.',
+                context_window=131072,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('0.5')
                 ),
             ),
             ModelInfo(
-                id='grok-beta',
-                match=ClauseEquals(equals='grok-beta'),
-                name='Grok Beta',
-                description="Grok Beta is xAI's experimental language model with state-of-the-art reasoning capabilities, best for complex and multi-step use cases.",
-                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
+                id='grok-3-mini-fast',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-3-mini-fast'),
+                        ClauseEquals(equals='grok-3-mini-fast-beta'),
+                        ClauseEquals(equals='grok-3-mini-fast-latest'),
+                    ]
+                ),
+                name='Grok 3 Mini Fast',
+                description='A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require deep domain knowledge. The raw thinking traces are accessible.',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
-                id='grok-vision-beta',
-                match=ClauseEquals(equals='grok-vision-beta'),
-                name='Grok Vision Beta',
-                description="Grok Vision Beta is xAI's experimental language model with vision capability.",
-                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
+                id='grok-4-0709',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4-0709'),
+                        ClauseEquals(equals='grok-4'),
+                        ClauseEquals(equals='grok-4-latest'),
+                    ]
+                ),
+                name='Grok 4',
+                description='A flagship model, offering unparalleled performance in natural language, math and reasoning - the perfect jack of all trades.',
+                context_window=256000,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15')),
             ),
         ],
     ),
