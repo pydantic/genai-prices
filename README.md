@@ -24,6 +24,31 @@ This package is a work in progress:
 - [ ] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
 - [ ] API (and I guess UI) for calculating latest prices
 
+## Providers
+
+The following providers are currently supported:
+
+[comment]: <> (providers-start)
+
+* [Anthropic](prices/providers/anthropic.yml) - 9 models
+* [Avian](prices/providers/avian.yml) - 4 models
+* [AWS Bedrock](prices/providers/aws.yml) - 4 models
+* [Microsoft Azure](prices/providers/azure.yml) - 54 models
+* [Cohere](prices/providers/cohere.yml) - 5 models
+* [Deepseek](prices/providers/deepseek.yml) - 2 models
+* [Fireworks](prices/providers/fireworks.yml) - 18 models
+* [Google](prices/providers/google.yml) - 30 models
+* [Groq](prices/providers/groq.yml) - 8 models
+* [Mistral](prices/providers/mistral.yml) - 28 models
+* [Novita](prices/providers/novita.yml) - 34 models
+* [OpenAI](prices/providers/openai.yml) - 40 models
+* [OpenRouter](prices/providers/openrouter.yml) - 548 models
+* [Perplexity](prices/providers/perplexity.yml) - 8 models
+* [Together AI](prices/providers/together.yml) - 72 models
+* [X AI](prices/providers/x_ai.yml) - 7 models
+
+[comment]: <> (providers-end)
+
 ## Usage
 
 ### Python Package

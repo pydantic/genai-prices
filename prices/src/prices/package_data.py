@@ -2,7 +2,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from .utils import package_dir as this_package_dir
+from .utils import package_dir as this_package_dir, root_dir
 
 
 def package_data():
@@ -30,7 +30,6 @@ providers: list[Provider] = {providers}
     py_package_dir = Path(genai_prices_file).parent
     data_py = py_package_dir / 'data.py'
     data_py.write_text(data_content)
-    root_dir = this_package_dir.parent
     subprocess.run(['uv', 'run', 'ruff', 'format', str(data_py)], cwd=str(root_dir), check=True, stdout=subprocess.PIPE)
 
     data_content = data_py.read_text()
