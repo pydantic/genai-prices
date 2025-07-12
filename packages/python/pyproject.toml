@@ -9,7 +9,10 @@ description = "Database of prices for calling LLM models."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
 requires-python = ">=3.9"
-dependencies = ["pydantic>=2.11.7"]
+dependencies = [
+    "pydantic>=2.11.7",
+    "eval-type-backport>=0.2; python_version < '3.11'",
+]
 
 [project.scripts]
 llm-pricing = "genai_prices.cli:main"
