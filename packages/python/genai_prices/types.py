@@ -3,11 +3,35 @@ from __future__ import annotations as _annotations
 import dataclasses
 import re
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, Union
 
 import pydantic
+
+__all__ = (
+    'ProviderID',
+    'PriceCalculation',
+    'AbstractUsage',
+    'Usage',
+    'Provider',
+    'ModelInfo',
+    'ModelPrice',
+    'TieredPrices',
+    'Tier',
+    'ConditionalPrice',
+    'StartDateConstraint',
+    'TimeOfDateConstraint',
+    'ClauseStartsWith',
+    'ClauseEndsWith',
+    'ClauseContains',
+    'ClauseRegex',
+    'ClauseEquals',
+    'ClauseOr',
+    'ClauseAnd',
+    'MatchLogic',
+    'providers_schema',
+)
 
 ProviderID = Literal[
     'avian',
@@ -254,7 +278,7 @@ class ConditionalPrice:
     The last price that is active is used.
     """
 
-    constraint: StartDateConstraint | None = None
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
 
     prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
@@ -266,14 +290,26 @@ class ConditionalPrice:
 
 @dataclass
 class StartDateConstraint:
-    start: pydantic.AwareDatetime | date
-    """Timestamp when this price starts"""
+    """Constraint that defines when this price starts, e.g. when a new price is introduced."""
+
+    start_date: date
+    """Date when this price starts"""
 
     def active(self, request_timestamp: datetime) -> bool:
-        if isinstance(self.start, datetime):
-            return request_timestamp >= self.start
-        else:
-            return request_timestamp.date() >= self.start
+        return request_timestamp.date() >= self.start_date
+
+
+@dataclass
+class TimeOfDateConstraint:
+    """Constraint that defines a daily interval when a price applies, useful for off-peak pricing like deepseek."""
+
+    start_time: time
+    """Start time of the interval."""
+    end_time: time
+    """End time of the interval."""
+
+    def active(self, request_timestamp: datetime) -> bool:
+        return self.start_time <= request_timestamp.timetz() < self.end_time
 
 
 @dataclass

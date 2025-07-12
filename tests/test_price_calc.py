@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 
 import pytest
@@ -82,6 +82,25 @@ def test_price_constraint_after():
     assert price.price == snapshot(Decimal('0.002'))
     assert price.model.name == snapshot('o3')
     assert price.provider.name == snapshot('OpenAI')
+
+
+def test_price_constraint_time_of_date():
+    price = calc_price_sync(
+        Usage(input_tokens=100_000_000),
+        model_ref='deepseek-chat',
+        genai_request_timestamp=datetime(2025, 6, 1, 16, tzinfo=timezone.utc),
+    )
+    assert price.price == snapshot(Decimal('27'))
+    assert price.model.name == snapshot('DeepSeek Chat')
+    assert price.provider.name == snapshot('Deepseek')
+    price = calc_price_sync(
+        Usage(input_tokens=100_000_000),
+        model_ref='deepseek-chat',
+        genai_request_timestamp=datetime(2025, 6, 1, 17, tzinfo=timezone.utc),
+    )
+    assert price.price == snapshot(Decimal('13.5'))
+    assert price.model.name == snapshot('DeepSeek Chat')
+    assert price.provider.name == snapshot('Deepseek')
 
 
 def test_provider_not_found_id():

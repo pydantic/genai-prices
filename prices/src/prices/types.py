@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from datetime import date, datetime
+from datetime import date, time
 from decimal import Decimal
 from typing import Annotated, Any, Union
 
@@ -221,15 +221,33 @@ class ConditionalPrice(_Model):
     The last price that is active is used.
     """
 
-    constraint: StartDateConstraint | None = None
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
     """Prices for this condition."""
 
 
 class StartDateConstraint(_Model):
-    start: datetime | date
-    """Timestamp when this price starts"""
+    """Constraint that defines when this price starts, e.g. when a new price is introduced."""
+
+    start_date: date
+    """Date when this price starts"""
+
+
+class TimeOfDateConstraint(_Model):
+    """Constraint that defines a daily interval when a price applies, useful for off-peak pricing like deepseek."""
+
+    start_time: time
+    """Start time of the interval."""
+    end_time: time
+    """End time of the interval."""
+
+    @field_validator('start_time', 'end_time', mode='after')
+    @classmethod
+    def enforce_tz(cls, time_of_date: time) -> time:
+        if time_of_date.tzinfo is None:
+            raise ValueError('Times must be timezone aware')
+        return time_of_date
 
 
 class ClauseStartsWith(_Model):

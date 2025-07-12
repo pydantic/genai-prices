@@ -427,7 +427,7 @@ models:
           output_mtok: 40
       - constraint:
           # See https://community.openai.com/t/o3-is-80-cheaper-and-introducing-o3-pro/1284925
-          start: 2025-06-10
+          start_date: 2025-06-10
         prices:
           input_mtok: 2
           cache_read_mtok: 0.5
