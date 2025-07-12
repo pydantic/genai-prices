@@ -49,6 +49,7 @@ quote-style = "single"
 [tool.pytest.ini_options]
 testpaths = "tests"
 xfail_strict = true
+filterwarnings = ["error"]
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
