@@ -10,11 +10,13 @@
   <a href="https://logfire.pydantic.dev/docs/join-slack/"><img src="https://img.shields.io/badge/Slack-Join%20Slack-4A154B?logo=slack" alt="Join Slack" /></a>
 </div>
 
-Python package for [github.com/pydantic/genai-prices](https://github.com/pydantic/genai-prices).
+<br/>
+<div align="center">
+  Python package for <a href="https://github.com/pydantic/genai-prices">github.com/pydantic/genai-prices</a>.
+</div>
+<br/>
 
-This method calculates the price of API calls to a range of LLM inference providers.
-
-## ⚠️ Warning: these prices will not be 100% accurate ⚠️
+## ⚠️ Warning: these prices will not be 100% accurate
 
 See [the project README](https://github.com/pydantic/genai-prices) for more information.
 
