@@ -1,6 +1,6 @@
 # Pricing data for `genai-prices`
 
-## ⛔️ DO NOT MOVE `data.json` OR `data_slim.json`! ⛔️
+## DO NOT MOVE `data.json` OR `data_slim.json`!
 
 Or associated `.schema.json` files.
 
@@ -26,13 +26,11 @@ When you edit the prices of a model, remember to:
 
 ### Automatic price discrepancy detection
 
-This project supports pulling prices from the following sources:
-
-Existing data sources:
-- Helicone - `https://github.com/Helicone/helicone/tree/main/bifrost/packages/cost`
-- Open router - `https://openrouter.ai/api/v1/models`
-- LiteLLM - `https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json`
-- Simon Willison - `https://github.com/simonw/llm-prices/pull/7`
+This project supports pulling prices from
+[Helicone](https://github.com/Helicone/helicone/tree/main/packages/cost),
+[Open Router](https://openrouter.ai/docs/api-reference/list-available-models),
+[LiteLLM](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json) and
+[Simon Willison's "llm-prices"](https://github.com/simonw/llm-prices/pull/7)
 
 And injecting price discrepancy information into the YAML files.
 

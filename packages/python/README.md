@@ -14,6 +14,10 @@ Python package for [github.com/pydantic/genai-prices](https://github.com/pydanti
 
 This method calculates the price of API calls to a range of LLM inference providers.
 
+## ⚠️ Warning: these prices will not be 100% accurate ⚠️
+
+See [the project README](https://github.com/pydantic/genai-prices) for more information.
+
 ## Installation
 
 ```bash
