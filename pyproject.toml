@@ -84,7 +84,7 @@ exclude_lines = [
 pythonVersion = "3.9"
 typeCheckingMode = "strict"
 reportUnnecessaryTypeIgnoreComment = true
-include = ["prices/src", "packages/python"]
+include = ["prices/src", "packages/python", "tests"]
 venv = ".venv"
 executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
 

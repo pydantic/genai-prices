@@ -2,13 +2,12 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
-from dataclasses import dataclass
+import sys
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Union
+from typing import Annotated, Any, Literal, Protocol, Union
 
 import pydantic
-from typing_extensions import TypedDict
 
 ProviderID = Literal[
     'avian',
@@ -29,30 +28,64 @@ ProviderID = Literal[
     'openrouter',
 ]
 
+if sys.version_info >= (3, 10):
+    dataclass = dataclasses.dataclass(kw_only=True)
+else:
+    dataclass = dataclasses.dataclass
 
-class Usage(TypedDict, total=False):
-    """Information about token usage for an LLM call"""
 
-    requests: int
-    """Number of requests made, defaults to 1 if omitted"""
+class AbstractUsage(Protocol):
+    """Abstract definition of data about token usage for an LLM call"""
 
-    input_tokens: int
-    """Number of text input/prompt token"""
+    @property
+    def requests(self) -> int | None:
+        """Number of requests made, defaults to 1 if omitted"""
 
-    cache_write_tokens: int
-    """Number of tokens written to the cache"""
-    cache_read_tokens: int
-    """Number of tokens read from the cache"""
+    @property
+    def input_tokens(self) -> int | None:
+        """Number of text input/prompt token"""
 
-    output_tokens: int
-    """Number of text output/completion tokens"""
+    @property
+    def cache_write_tokens(self) -> int | None:
+        """Number of tokens written to the cache"""
 
-    input_audio_tokens: int
-    """Number of audio input tokens"""
-    cache_audio_read_tokens: int
-    """Number of audio tokens read from the cache"""
-    output_audio_tokens: int
-    """Number of output audio tokens"""
+    @property
+    def cache_read_tokens(self) -> int | None:
+        """Number of tokens read from the cache"""
+
+    @property
+    def output_tokens(self) -> int | None:
+        """Number of text output/completion tokens"""
+
+    @property
+    def input_audio_tokens(self) -> int | None:
+        """Number of audio input tokens"""
+
+    @property
+    def cache_audio_read_tokens(self) -> int | None:
+        """Number of audio tokens read from the cache"""
+
+    @property
+    def output_audio_tokens(self) -> int | None:
+        """Number of output audio tokens"""
+
+
+@dataclass
+class Usage:
+    """Simple implementation of `AbstractUsage` as a dataclass."""
+
+    requests: int | None = None
+
+    input_tokens: int | None = None
+
+    cache_write_tokens: int | None = None
+    cache_read_tokens: int | None = None
+
+    output_tokens: int | None = None
+
+    input_audio_tokens: int | None = None
+    cache_audio_read_tokens: int | None = None
+    output_audio_tokens: int | None = None
 
 
 @dataclass
@@ -157,19 +190,20 @@ class ModelPrice:
     output_audio_mtok: Decimal | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
-    def calc_price(self, usage: Usage) -> Decimal:
+    def calc_price(self, usage: AbstractUsage) -> Decimal:
         """Calculate the price of usage in USD."""
         price = Decimal(0)
         if self.requests_kcount is not None:
-            price += self.requests_kcount * usage.get('requests_kcount', 1) / 1000
+            requests = 1 if usage.requests is None else usage.requests
+            price += self.requests_kcount * requests / 1000
 
-        price += _calc_price(self.input_mtok, usage.get('input_tokens'))
-        price += _calc_price(self.cache_write_mtok, usage.get('cache_write_tokens'))
-        price += _calc_price(self.cache_read_mtok, usage.get('cache_read_tokens'))
-        price += _calc_price(self.output_mtok, usage.get('output_tokens'))
-        price += _calc_price(self.input_audio_mtok, usage.get('input_audio_tokens'))
-        price += _calc_price(self.cache_audio_read_mtok, usage.get('cache_audio_read_tokens'))
-        price += _calc_price(self.output_audio_mtok, usage.get('output_audio_tokens'))
+        price += _calc_price(self.input_mtok, usage.input_tokens)
+        price += _calc_price(self.cache_write_mtok, usage.cache_write_tokens)
+        price += _calc_price(self.cache_read_mtok, usage.cache_read_tokens)
+        price += _calc_price(self.output_mtok, usage.output_tokens)
+        price += _calc_price(self.input_audio_mtok, usage.input_audio_tokens)
+        price += _calc_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
+        price += _calc_price(self.output_audio_mtok, usage.output_audio_tokens)
         return price
 
     def is_free(self) -> bool:

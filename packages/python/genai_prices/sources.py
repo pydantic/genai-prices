@@ -156,7 +156,7 @@ class DataSnapshot:
 
     def calc(
         self,
-        usage: types.Usage,
+        usage: types.AbstractUsage,
         model_ref: str,
         provider_id: types.ProviderID | None,
         provider_api_url: str | None,

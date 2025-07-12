@@ -3,7 +3,7 @@ from __future__ import annotations as _annotations
 import typing
 from datetime import datetime
 
-from . import data, sources
+from . import data, sources, types
 from .types import Usage
 
 __all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync'
@@ -11,7 +11,7 @@ __all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'pre
 
 @typing.overload
 async def calc_price_async(
-    usage: types.Usage,
+    usage: types.AbstractUsage,
     model_ref: str,
     *,
     provider_id: types.ProviderID,
@@ -22,7 +22,7 @@ async def calc_price_async(
 
 @typing.overload
 async def calc_price_async(
-    usage: types.Usage,
+    usage: types.AbstractUsage,
     model_ref: str,
     *,
     provider_api_url: str,
@@ -32,7 +32,7 @@ async def calc_price_async(
 
 
 async def calc_price_async(
-    usage: types.Usage,
+    usage: types.AbstractUsage,
     model_ref: str,
     *,
     provider_id: types.ProviderID | None = None,
@@ -63,7 +63,7 @@ def prefetch_async():
 
 @typing.overload
 def calc_price_sync(
-    usage: types.Usage,
+    usage: types.AbstractUsage,
     model_ref: str,
     *,
     provider_id: types.ProviderID,
@@ -74,7 +74,7 @@ def calc_price_sync(
 
 @typing.overload
 def calc_price_sync(
-    usage: types.Usage,
+    usage: types.AbstractUsage,
     model_ref: str,
     *,
     provider_api_url: str,
@@ -84,7 +84,7 @@ def calc_price_sync(
 
 
 def calc_price_sync(
-    usage: types.Usage,
+    usage: types.AbstractUsage,
     model_ref: str,
     *,
     provider_id: types.ProviderID | None = None,
