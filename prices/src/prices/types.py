@@ -41,7 +41,7 @@ class Provider(_Model):
     """Unique identifier for the provider"""
     pricing_urls: list[HttpUrl] | None = None
     """Link to pricing page for the provider"""
-    api_pattern: str | None = None
+    api_pattern: str
     """Pattern to identify provider via HTTP API URL."""
     description: DescriptionField | None = None
     """Description of the provider"""
@@ -107,6 +107,8 @@ class ModelInfo(_Model):
 
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
     E.g. later conditional prices take precedence over earlier ones.
+
+    If no conditional models match the conditions, the first one is used.
     """
     price_discrepancies: dict[str, Any] | None = Field(default=None, exclude=True)
     """List of price discrepancies based on external sources."""
@@ -124,6 +126,13 @@ class ModelInfo(_Model):
         if prices_checked is not None and info.data.get('price_discrepancies'):
             raise ValueError('`price_discrepancies` should be removed when `prices_checked` is set')
         return prices_checked
+
+    @field_validator('prices', mode='after')
+    @classmethod
+    def prices_not_empty(cls, prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
+        if isinstance(prices, list) and len(prices) == 0:
+            raise ValueError('model prices may not be empty')
+        return prices
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):
@@ -180,8 +189,16 @@ class TieredPrices(_Model):
     """Pricing model when the amount paid varies by number of tokens"""
 
     base: DollarPrice
-    """Based price, e.g. price until the first tier."""
+    """Based price in USD per million tokens, e.g. price until the first tier."""
     tiers: list[Tier]
+    """Extra price tiers."""
+
+    @field_validator('tiers', mode='after')
+    @classmethod
+    def tiers_assending(cls, data: list[Tier]) -> list[Tier]:
+        if data != sorted(data, key=lambda t: t.start):
+            raise ValueError('Tiers must be in ascending order by start')
+        return data
 
 
 class Tier(_Model):
@@ -196,7 +213,7 @@ class Tier(_Model):
 class ConditionalPrice(_Model):
     """Pricing together with constraints that define with those prices should be used"""
 
-    constraint: StartDateConstraint | None = None
+    constraint: StartDateConstraint
     """Timestamp when this price starts, none means this price is always valid"""
     prices: ModelPrice
 

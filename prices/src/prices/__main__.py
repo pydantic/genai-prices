@@ -3,6 +3,7 @@ from inspect import getdoc
 
 from .build import build
 from .collapse import collapse
+from .package_data import package_data
 from .price_discrepancies import list_price_discrepancies, update_price_discrepancies
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
@@ -19,6 +20,7 @@ def main():
         get_simonw_prices,
         update_price_discrepancies,
         list_price_discrepancies,
+        package_data,
     )
     if len(sys.argv) == 2:
         command = sys.argv[1]
