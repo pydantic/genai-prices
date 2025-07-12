@@ -336,12 +336,6 @@
       "additionalProperties": false,
       "description": "Information about an LLM inference provider",
       "properties": {
-        "name": {
-          "description": "Common name of the organization",
-          "maxLength": 100,
-          "title": "Name",
-          "type": "string"
-        },
         "id": {
           "description": "Unique identifier for the provider",
           "maxLength": 100,
@@ -349,10 +343,43 @@
           "title": "Id",
           "type": "string"
         },
+        "name": {
+          "description": "Common name of the organization",
+          "maxLength": 100,
+          "title": "Name",
+          "type": "string"
+        },
         "api_pattern": {
           "description": "Pattern to identify provider via HTTP API URL.",
           "title": "Api Pattern",
           "type": "string"
+        },
+        "model_match": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ClauseStartsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseEndsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseContains"
+            },
+            {
+              "$ref": "#/$defs/ClauseRegex"
+            },
+            {
+              "$ref": "#/$defs/ClauseEquals"
+            },
+            {
+              "$ref": "#/$defs/ClauseOr"
+            },
+            {
+              "$ref": "#/$defs/ClauseAnd"
+            }
+          ],
+          "description": "Logic to find a provider based on the model reference.",
+          "title": "Model Match"
         },
         "models": {
           "description": "List of models provided by this organization",
@@ -364,8 +391,8 @@
         }
       },
       "required": [
-        "name",
         "id",
+        "name",
         "api_pattern",
         "models"
       ],

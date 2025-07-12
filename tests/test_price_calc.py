@@ -28,6 +28,14 @@ def test_sync_success_with_url():
     assert price.auto_update_timestamp is None
 
 
+def test_sync_success_with_model():
+    price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o')
+    assert price.price == snapshot(Decimal('0.0035'))
+    assert price.model.name == snapshot('gpt 4o')
+    assert price.provider.id == snapshot('openai')
+    assert price.auto_update_timestamp is None
+
+
 async def test_async_success_with_provider():
     price = await calc_price_async(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai'
@@ -47,9 +55,19 @@ def test_tiered_prices():
     assert price.auto_update_timestamp is None
 
 
-def test_provider_not_found():
+def test_provider_not_found_id():
     with pytest.raises(LookupError, match="Unable to find provider provider_id='foobar'"):
         calc_price_sync(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='foobar')
+
+
+def test_provider_not_found_url():
+    with pytest.raises(LookupError, match="Unable to find provider provider_api_url='foobar'"):
+        calc_price_sync(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_api_url='foobar')
+
+
+def test_provider_not_found_model_ref():
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'llama2-70b-4096'"):
+        calc_price_sync(Usage(input_tokens=500_000), model_ref='llama2-70b-4096')
 
 
 def test_model_not_found():

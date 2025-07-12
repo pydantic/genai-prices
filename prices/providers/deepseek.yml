@@ -4,6 +4,8 @@ id: deepseek
 pricing_urls:
   - https://api-docs.deepseek.com/quick_start/pricing
 api_pattern: 'https://api\.deepseek\.com'
+model_match:
+  contains: deepseek
 models:
   - id: deepseek-chat
     name: DeepSeek Chat
