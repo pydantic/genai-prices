@@ -5371,7 +5371,7 @@ providers: list[Provider] = [
     ),
     Provider(
         id='together',
-        name='together.ai',
+        name='Together AI',
         api_pattern='https://api\\.together\\.xyz',
         pricing_urls=['https://www.together.ai/pricing'],
         models=[

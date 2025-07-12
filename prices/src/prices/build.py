@@ -5,7 +5,6 @@ import gzip
 import io
 from decimal import Decimal
 from operator import attrgetter
-from pathlib import Path
 from typing import Any, cast
 
 import pydantic_core
@@ -14,7 +13,7 @@ from pydantic import ValidationError
 from pydantic.main import IncEx
 
 from .types import Provider, providers_schema
-from .utils import package_dir, pretty_size, simplify_json_schema
+from .utils import package_dir, pretty_size, repo_root_dir, simplify_json_schema
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -28,13 +27,12 @@ yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)
 
 def build():
     """Build providers/.schema.json and data.json and data_schema.json."""
-    root_dir = package_dir.parent
     # write the schema JSON file used by the yaml language server
     schema_json_path = package_dir / 'providers' / '.schema.json'
     json_schema = Provider.model_json_schema()
     json_schema = simplify_json_schema(json_schema)
     schema_json_path.write_bytes(pydantic_core.to_json(json_schema, indent=2) + b'\n')
-    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+    print('Providers JSON schema written to', schema_json_path.relative_to(repo_root_dir))
 
     providers: list[Provider] = []
 
@@ -54,13 +52,13 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
-    write_prices(providers, root_dir, 'data.json')
+    write_prices(providers, 'data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, root_dir, 'data_slim.json', slim=True)
+    write_prices(providers, 'data_slim.json', slim=True)
 
 
-def write_prices(providers: list[Provider], root_dir: Path, prices_file: str, *, slim: bool = False):
+def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = False):
     print('')
     prices_json_path = package_dir / prices_file
 
@@ -79,7 +77,7 @@ def write_prices(providers: list[Provider], root_dir: Path, prices_file: str, *,
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
-    print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
+    print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(repo_root_dir)}')
 
     exclude: IncEx | None = None
     if slim:
@@ -121,7 +119,7 @@ def write_prices(providers: list[Provider], root_dir: Path, prices_file: str, *,
         f.write(json_data)
     gz_len = len(buffer.getvalue())
     print(
-        f'Prices data file {prices_json_path.relative_to(root_dir)} {action} '
+        f'Prices data file {prices_json_path.relative_to(repo_root_dir)} {action} '
         f'({pretty_size(len(json_data))}, {pretty_size(gz_len)} gzipped)'
     )
 

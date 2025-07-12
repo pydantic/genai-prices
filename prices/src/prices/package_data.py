@@ -2,7 +2,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from .utils import package_dir as this_package_dir
+from .utils import package_dir as this_package_dir, repo_root_dir
 
 
 def package_data():
@@ -30,8 +30,18 @@ providers: list[Provider] = {providers}
     py_package_dir = Path(genai_prices_file).parent
     data_py = py_package_dir / 'data.py'
     data_py.write_text(data_content)
-    root_dir = this_package_dir.parent
-    subprocess.run(['uv', 'run', 'ruff', 'format', str(data_py)], cwd=str(root_dir), check=True, stdout=subprocess.PIPE)
+    subprocess.run(
+        [
+            'uv',
+            'run',
+            'ruff',
+            'format',
+            str(data_py),
+        ],
+        cwd=str(repo_root_dir),
+        check=True,
+        stdout=subprocess.PIPE,
+    )
 
     data_content = data_py.read_text()
     data_content = re.sub('^ +[a-z_]+=None,$', '', data_content, flags=re.M)
@@ -49,9 +59,9 @@ providers: list[Provider] = {providers}
             'lint.isort.split-on-trailing-comma = false',
             str(data_py),
         ],
-        cwd=str(root_dir),
+        cwd=str(repo_root_dir),
         check=True,
         stdout=subprocess.PIPE,
     )
 
-    print(f'Data successfully written to {data_py.relative_to(root_dir)}')
+    print(f'Data successfully written to {data_py.relative_to(repo_root_dir)}')

@@ -61,6 +61,14 @@ repos:
         files: "prices/"
         language: system
         pass_filenames: false
+      - id: inject-providers
+        name: inject providers into README.md
+        entry: make
+        args: [inject-providers]
+        types_or: [yaml]
+        files: "prices/"
+        language: system
+        pass_filenames: false
       - id: typecheck
         name: typecheck
         entry: make
