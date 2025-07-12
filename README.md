@@ -24,20 +24,6 @@ This package is a work in progress:
 - [ ] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
 - [ ] API (and I guess UI) for calculating latest prices
 
-<h2 id="warning">⚠️ Warning: these prices will not be 100% accurate</h2>
-
-This project is a best effort from Pydantic and the community to provide an indicative
-estimate of the price you might pay for calling an LLM.
-
-The price data cannot be exactly correct because model providers do not provide exact price information for their APIs
-in a format which can be reliably processed.
-
-If you get a bill you weren't expecting, don't blame us!
-
-If you're a lawyer, please read the [LICENSE](https://github.com/pydantic/genai-prices/blob/main/LICENSE) under which this project is developed, hosted and distributed.
-
-If you're a developer, please [contribute](#contributing) to fix any missing or incorrect prices you find.
-
 ## Usage
 
 ### Python Package
@@ -64,6 +50,20 @@ project wherever you use it and [contribute](#contributing) back to the project 
 
 Coming soon...
 
+<h2 id="warning">⚠️ Warning: these prices will not be 100% accurate</h2>
+
+This project is a best effort from Pydantic and the community to provide an indicative
+estimate of the price you might pay for calling an LLM.
+
+The price data cannot be exactly correct because model providers do not provide exact price information for their APIs
+in a format which can be reliably processed.
+
+If you get a bill you weren't expecting, don't blame us!
+
+If you're a lawyer, please read the [LICENSE](https://github.com/pydantic/genai-prices/blob/main/LICENSE) under which this project is developed, hosted and distributed.
+
+If you're a developer, please [contribute](#contributing) to fix any missing or incorrect prices you find.
+
 ## Contributing
 
 We welcome contributions from the community and especially model/inference providers!
@@ -74,7 +74,7 @@ dramatically improve the experience for developers using your API!
 
 Otherwise, to contribute:
 
-- See [`prices/README.md`](prices/README.md) for instructions on how to contribute to the price data.
+- See [`prices/README.md`](prices) for instructions on how to contribute to the price data.
 - Feel free to submit pull requests or issues about the Python and JS packages.
 - If you need a library for another language, please create an issue, we'd be happy to discuss building it, hosting it here,
   or helping you maintain it elsewhere.
@@ -86,7 +86,7 @@ This project would not be possible without the following existing data sources:
 - [Helicone](https://github.com/Helicone/helicone/tree/main/packages/cost)
 - [Open Router](https://openrouter.ai/docs/api-reference/list-available-models)
 - [LiteLLM](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json)
-- [Simon Willison's "llm-prices"](https://github.com/simonw/llm-prices/pull/7)
+- Simon Willison's [llm-prices](https://github.com/simonw/llm-prices/pull/7)
 
 While none of these sources had exactly what we needed (hence creating this project), they (especially helicone) were used to populate some of the initial price database, and we continue to pull price updates from them.
 
