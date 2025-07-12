@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Literal, TypeVar
 
 package_dir = Path(__file__).parent.parent.parent
+root_dir = package_dir.parent
 
 
 def pretty_size(size: int) -> str:
