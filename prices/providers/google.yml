@@ -6,6 +6,8 @@ pricing_urls:
   - https://cloud.google.com/vertex-ai/generative-ai/pricing
   # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
 api_pattern: 'https://(.*\.)?googleapis\.com'
+model_match:
+  contains: gemini
 models:
   - id: claude-3-5-haiku
     match:

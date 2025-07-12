@@ -27,6 +27,7 @@ class AltPricesSource(SyncSource):
             types.Provider(
                 id='testing',
                 name='Testing',
+                api_pattern=r'.*testing\.example\.com',
                 models=[
                     types.ModelInfo(
                         id='foobar',

@@ -66,6 +66,7 @@ def write_prices(providers: list[Provider], root_dir: Path, prices_file: str, *,
 
     data_json_schema = providers_schema.json_schema(mode='serialization')
     data_json_schema = simplify_json_schema(data_json_schema)
+
     if slim:
         # delete Provider fields
         data_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')

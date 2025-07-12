@@ -1,6 +1,7 @@
 from __future__ import annotations as _annotations
 
 import asyncio
+import re
 import warnings
 from abc import ABC, abstractmethod
 from concurrent import futures
@@ -142,7 +143,7 @@ auto_update_sync_source = AutoUpdateSyncSource()
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
-    _lookup_cache: dict[tuple[str | None, str], tuple[types.Provider, types.ModelInfo]] = field(
+    _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]] = field(
         default_factory=lambda: {}
     )
     timestamp: datetime = field(default_factory=datetime.now)
@@ -155,7 +156,7 @@ class DataSnapshot:
         self,
         usage: types.AbstractUsage,
         model_ref: str,
-        provider_id: types.ProviderID | str | None,
+        provider_id: str | None,
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
     ) -> types.PriceCalculation:
@@ -173,26 +174,44 @@ class DataSnapshot:
     def find_provider_model(
         self,
         model_ref: str,
-        provider_id: types.ProviderID | str | None,
+        provider_id: str | None,
         provider_api_url: str | None,
     ) -> tuple[types.Provider, types.ModelInfo]:
         """Find the provider and model for the given model reference and optional provider identifier."""
-        if provider_model := self._lookup_cache.get((provider_id or provider_api_url, model_ref)):
+        if provider_model := self._lookup_cache.get((provider_id, provider_api_url, model_ref)):
             return provider_model
 
-        try:
-            provider = next(provider for provider in self.providers if provider.is_match(provider_id, provider_api_url))
-        except StopIteration as e:
-            if provider_id:
-                raise LookupError(f'Unable to find provider {provider_id=!r}') from e
-            else:
-                raise LookupError(f'Unable to find provider {provider_api_url=!r}') from e
+        provider = self.find_provider(model_ref, provider_id, provider_api_url)
 
         if model := provider.find_model(model_ref):
-            self._lookup_cache[(provider_id or provider_api_url, model_ref)] = ret = provider, model
+            self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
         else:
             raise LookupError(f'Unable to find model with {model_ref=!r} in {provider.id}')
+
+    def find_provider(
+        self,
+        model_ref: str,
+        provider_id: str | None,
+        provider_api_url: str | None,
+    ) -> types.Provider:
+        if provider_id is not None:
+            for provider in self.providers:
+                if provider.id == provider_id:
+                    return provider
+            raise LookupError(f'Unable to find provider {provider_id=!r}')
+
+        if provider_api_url is not None:
+            for provider in self.providers:
+                if re.match(provider.api_pattern, provider_api_url):
+                    return provider
+            raise LookupError(f'Unable to find provider {provider_api_url=!r}')
+
+        for provider in self.providers:
+            if provider.model_match is not None and provider.model_match.is_match(model_ref):
+                return provider
+
+        raise LookupError(f'Unable to find provider with model matching {model_ref!r}')
 
 
 @cache

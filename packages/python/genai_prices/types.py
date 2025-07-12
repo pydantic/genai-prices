@@ -106,24 +106,19 @@ class Provider:
     id: str
     """Unique identifier for the provider"""
     name: str
+    """Link to pricing page for the provider"""
+    api_pattern: str
     """Common name of the organization"""
     pricing_urls: list[str] | None = None
-    """Link to pricing page for the provider"""
-    api_pattern: str = ''
     """Pattern to identify provider via HTTP API URL."""
     description: str | None = None
     """Description of the provider"""
     price_comments: str | None = None
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
+    model_match: MatchLogic | None = None
+    """Logic to find a provider based on the model reference."""
     models: list[ModelInfo] = dataclasses.field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     """List of models provided by this organization"""
-
-    def is_match(self, provider_id: str | None, provider_api_url: str | None) -> bool:
-        if provider_id is not None:
-            return self.id == provider_id
-        else:
-            assert provider_api_url is not None, 'Either provider_id or provider_api_url must be set'
-            return bool(re.match(self.api_pattern, provider_api_url))
 
     def find_model(self, model_ref: str) -> ModelInfo | None:
         for model in self.models:
