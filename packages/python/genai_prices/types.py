@@ -213,13 +213,6 @@ class ModelPrice:
         price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
         return price
 
-    def is_free(self) -> bool:
-        """Whether all values are zero or unset"""
-        for f in dataclasses.fields(self):
-            if getattr(self, f.name):
-                return False
-        return True
-
 
 def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
     """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok)."""
@@ -334,16 +327,8 @@ class ClauseAnd:
 
 
 def clause_discriminator(v: Any) -> str | None:
-    if isinstance(v, dict):
-        # return the first key
-        return next(iter(v))  # type: ignore
-    elif dataclasses.is_dataclass(v):
-        tag = next(iter(dataclasses.fields(v))).name
-        if tag.endswith('_'):
-            tag = tag[:-1]
-        return tag
-    else:
-        return None
+    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
+    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
 
 
 MatchLogic = Annotated[
