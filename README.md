@@ -28,7 +28,7 @@ This package is a work in progress:
 
 The following providers are currently supported:
 
-[comment]: <> (providers)
+[comment]: <> (providers-start)
 
 * [Anthropic](prices/providers/anthropic.yml) - 9 models
 * [Avian](prices/providers/avian.yml) - 4 models
@@ -47,7 +47,7 @@ The following providers are currently supported:
 * [Together AI](prices/providers/together.yml) - 72 models
 * [X AI](prices/providers/x_ai.yml) - 7 models
 
-[comment]: <> (/providers)
+[comment]: <> (providers-end)
 
 ## Usage
 

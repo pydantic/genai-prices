@@ -3,14 +3,14 @@ from __future__ import annotations
 import re
 
 from .update import get_providers_yaml
-from .utils import repo_root_dir
+from .utils import root_dir
 
 
 def inject_providers():
-    readme_path = repo_root_dir / 'README.md'
+    readme_path = root_dir / 'README.md'
     readme_content = readme_path.read_text()
     text, count = re.subn(
-        r'(\[comment\]: <> \(providers\)).+(\[comment\]: <> \(/providers\))',
+        r'(\[comment\]: +<> +\(providers-start\)).+(\[comment\]: +<> +\(providers-end\))',
         providers_list,
         readme_content,
         flags=re.DOTALL,

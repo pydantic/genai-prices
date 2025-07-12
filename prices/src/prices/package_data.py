@@ -2,7 +2,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from .utils import package_dir as this_package_dir, repo_root_dir
+from .utils import package_dir as this_package_dir, root_dir
 
 
 def package_data():
@@ -38,7 +38,7 @@ providers: list[Provider] = {providers}
             'format',
             str(data_py),
         ],
-        cwd=str(repo_root_dir),
+        cwd=str(root_dir),
         check=True,
         stdout=subprocess.PIPE,
     )
@@ -59,9 +59,9 @@ providers: list[Provider] = {providers}
             'lint.isort.split-on-trailing-comma = false',
             str(data_py),
         ],
-        cwd=str(repo_root_dir),
+        cwd=str(root_dir),
         check=True,
         stdout=subprocess.PIPE,
     )
 
-    print(f'Data successfully written to {data_py.relative_to(repo_root_dir)}')
+    print(f'Data successfully written to {data_py.relative_to(root_dir)}')
