@@ -11,7 +11,7 @@
 </div>
 <br/>
 <div align="center">
-  Database of prices for calling LLM models.
+  Calculate prices for calling LLM inference APIs.
 </div>
 <br/>
 
@@ -24,7 +24,7 @@ This package is a work in progress:
 - [ ] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
 - [ ] API (and I guess UI) for calculating latest prices
 
-## ⚠️ Warning: these prices will not be 100% accurate
+<h2 id="warning">⚠️ Warning: these prices will not be 100% accurate</h2>
 
 This project is a best effort from Pydantic and the community to provide an indicative
 estimate of the price you might pay for calling an LLM.

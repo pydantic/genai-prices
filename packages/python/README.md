@@ -18,7 +18,7 @@
 
 ## ⚠️ Warning: these prices will not be 100% accurate
 
-See [the project README](https://github.com/pydantic/genai-prices) for more information.
+See [the project README](https://github.com/pydantic/genai-prices?tab=readme-ov-file#warning) for more information.
 
 ## Installation
 
