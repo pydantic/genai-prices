@@ -30,18 +30,7 @@ providers: list[Provider] = {providers}
     py_package_dir = Path(genai_prices_file).parent
     data_py = py_package_dir / 'data.py'
     data_py.write_text(data_content)
-    subprocess.run(
-        [
-            'uv',
-            'run',
-            'ruff',
-            'format',
-            str(data_py),
-        ],
-        cwd=str(root_dir),
-        check=True,
-        stdout=subprocess.PIPE,
-    )
+    subprocess.run(['uv', 'run', 'ruff', 'format', str(data_py)], cwd=str(root_dir), check=True, stdout=subprocess.PIPE)
 
     data_content = data_py.read_text()
     data_content = re.sub('^ +[a-z_]+=None,$', '', data_content, flags=re.M)
