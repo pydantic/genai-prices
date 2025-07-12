@@ -40,21 +40,26 @@ def update_price_discrepancies(check_threshold: date | None = None):
         print('no price discrepancies found')
 
 
-def list_price_discrepancies():
-    """List price discrepancies between providers and source prices."""
+def check_for_price_discrepancies() -> int:
+    """List price discrepancies between providers and source prices.
+
+    Returns:
+        The number of price discrepancies found.
+    """
     providers_yml = get_providers_yaml()
 
-    found = False
+    found = 0
     for provider_yml in providers_yml.values():
         discs = sum(int(bool(model.price_discrepancies)) for model in provider_yml.provider.models)
         if discs:
             if not found:
-                found = True
                 print('price discrepancies:')
+            found += 1
             print(f'{provider_yml.provider.name:>20}: {discs}')
 
     if not found:
         print('no price discrepancies found')
+    return found
 
 
 def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool:

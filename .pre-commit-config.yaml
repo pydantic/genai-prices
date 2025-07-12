@@ -53,11 +53,12 @@ repos:
         files: "prices/"
         language: system
         pass_filenames: false
-      - id: build
-        name: build prices
+      - id: check-for-price-discrepancies
+        name: check for price discrepancies
         entry: make
-        args: [package-data]
-        types_or: [python, json]
+        args: [check-for-price-discrepancies]
+        types: [yaml]
+        files: "prices/"
         language: system
         pass_filenames: false
       - id: typecheck

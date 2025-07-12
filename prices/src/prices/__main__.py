@@ -4,7 +4,7 @@ from inspect import getdoc
 from .build import build
 from .collapse import collapse
 from .package_data import package_data
-from .price_discrepancies import list_price_discrepancies, update_price_discrepancies
+from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
 from .source_simonw_prices import get_simonw_prices
@@ -19,14 +19,16 @@ def main():
         get_openrouter_prices,
         get_simonw_prices,
         update_price_discrepancies,
-        list_price_discrepancies,
+        check_for_price_discrepancies,
         package_data,
     )
     if len(sys.argv) == 2:
         command = sys.argv[1]
         action = next((f for f in actions if f.__name__ == command), None)
         if action:
-            action()
+            return_value = action()
+            if isinstance(return_value, int):
+                sys.exit(return_value)
             return
         else:
             print('Invalid command')
