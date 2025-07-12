@@ -1,5 +1,11 @@
 # Pricing data for `pydantic-llm-index`
 
+## ⛔️ DO NOT MOVE `data.json` OR `data_slim.json`! ⛔️
+
+These files are downloaded by packages to auto-update prices, so their URLs must not change.
+
+## Automatically updating prices
+
 TODO: instructions on updating prices.
 
 Existing data sources:
