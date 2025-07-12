@@ -11,7 +11,7 @@ from functools import cache
 import httpx
 from pydantic import ValidationError
 
-from . import data, types
+from . import types
 
 __all__ = (
     'DEFAULT_AUTO_UPDATE_MAX_AGE',
@@ -61,6 +61,8 @@ class AutoUpdateAsyncSource(AsyncSource):
         return _cached_auto_update_snapshot
 
     async def _fetch(self):
+        from . import data
+
         global _cached_auto_update_snapshot
 
         try:
@@ -106,6 +108,8 @@ class AutoUpdateSyncSource(SyncSource):
         return _cached_auto_update_snapshot
 
     def _fetch(self):
+        from . import data
+
         global _cached_auto_update_snapshot
 
         try:

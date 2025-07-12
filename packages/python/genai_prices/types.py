@@ -3,7 +3,7 @@ from __future__ import annotations as _annotations
 import dataclasses
 import re
 import sys
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, Union
 
@@ -112,15 +112,15 @@ class Provider:
     """Common name of the organization"""
     id: ProviderID
     """Unique identifier for the provider"""
-    pricing_urls: Annotated[list[str] | None, pydantic.Field(None)]
+    pricing_urls: list[str] | None = None
     """Link to pricing page for the provider"""
-    api_pattern: str
+    api_pattern: str = ''
     """Pattern to identify provider via HTTP API URL."""
-    description: Annotated[str | None, pydantic.Field(None)]
+    description: str | None = None
     """Description of the provider"""
-    price_comments: Annotated[str | None, pydantic.Field(None)]
+    price_comments: str | None = None
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
-    models: list[ModelInfo]
+    models: list[ModelInfo] = dataclasses.field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     """List of models provided by this organization"""
 
     def is_match(self, provider_id: str | None, provider_api_url: str | None) -> bool:
@@ -145,14 +145,6 @@ class ModelInfo:
     """Primary unique identifier for the model"""
     match: MatchLogic
     """Boolean logic for matching this model to any identifier which could be used to reference the model in API requests"""
-    prices: ModelPrice | list[ConditionalPrice]
-    """Set of prices for using this model.
-
-    When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
-    E.g. later conditional prices take precedence over earlier ones.
-
-    If no conditional models match the conditions, the first one is used.
-    """
     name: str | None = None
     """Name of the model"""
     description: str | None = None
@@ -161,12 +153,15 @@ class ModelInfo:
     """Maximum number of input tokens allowed for this model"""
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
-    price_discrepancies: dict[str, Any] | None = None
-    """List of price discrepancies based on external sources."""
-    prices_checked: date | None = None
-    """Date indicating when the prices were last checked for discrepancies."""
-    collapse: bool = True
-    """Flag indicating whether this price should be collapsed into other prices."""
+
+    prices: ModelPrice | list[ConditionalPrice] = dataclasses.field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    """Set of prices for using this model.
+
+    When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
+    E.g. later conditional prices take precedence over earlier ones.
+
+    If no conditional models match the conditions, the first one is used.
+    """
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref)
@@ -208,7 +203,7 @@ class ModelPrice:
     """price in USD per million output audio tokens"""
 
     def calc_price(self, usage: AbstractUsage) -> Decimal:
-        """Calculate the price of usage in USD."""
+        """Calculate the price of usage in USD with this model price."""
         price = Decimal(0)
         if self.requests_kcount is not None:
             requests = 1 if usage.requests is None else usage.requests
@@ -232,6 +227,7 @@ class ModelPrice:
 
 
 def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
+    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok)."""
     if field_mtok is None or token_count is None:
         return Decimal(0)
 
@@ -245,7 +241,7 @@ def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int 
         price += field_mtok.base * remaining
     else:
         price = field_mtok * token_count
-    return price / 1000000
+    return price / 1_000_000
 
 
 @dataclass

@@ -2,8 +2,9 @@ from __future__ import annotations as _annotations
 
 import typing
 from datetime import datetime
+from functools import cache
 
-from . import data, sources, types
+from . import sources, types
 from .types import Usage
 
 __all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync'
@@ -40,7 +41,7 @@ async def calc_price_async(
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.AsyncSource = False,
 ) -> types.PriceCalculation:
-    snapshot = _local_snapshot
+    snapshot = _local_snapshot()
     if auto_update is not False:
         if auto_update is True:
             auto_update = sources.auto_update_async_source
@@ -92,7 +93,7 @@ def calc_price_sync(
     genai_request_timestamp: datetime | None = None,
     auto_update: bool | sources.SyncSource = False,
 ) -> types.PriceCalculation:
-    snapshot = _local_snapshot
+    snapshot = _local_snapshot()
     if auto_update is not False:
         if auto_update is True:
             auto_update = sources.auto_update_sync_source
@@ -113,4 +114,8 @@ def prefetch_sync():
     sources.auto_update_sync_source.pre_fetch()
 
 
-_local_snapshot = sources.DataSnapshot(providers=data.providers, from_auto_update=False)
+@cache
+def _local_snapshot():
+    from .data import providers
+
+    return sources.DataSnapshot(providers=providers, from_auto_update=False)
