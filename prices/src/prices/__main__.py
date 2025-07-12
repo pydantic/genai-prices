@@ -3,6 +3,7 @@ from inspect import getdoc
 
 from .build import build
 from .collapse import collapse
+from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
 from .source_litellm import get_litellm_prices
@@ -21,6 +22,7 @@ def main():
         update_price_discrepancies,
         check_for_price_discrepancies,
         package_data,
+        inject_providers,
     )
     if len(sys.argv) == 2:
         command = sys.argv[1]
