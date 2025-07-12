@@ -86,6 +86,9 @@ pythonVersion = "3.12"
 typeCheckingMode = "strict"
 reportUnnecessaryTypeIgnoreComment = true
 reportIgnoreCommentWithoutRule = true
+reportUnusedParameter = true
+reportIncompatibleUnannotatedOverride = true
+reportImplicitAbstractClass = true
 include = ["prices/src", "packages/python", "tests"]
 venv = ".venv"
 executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
