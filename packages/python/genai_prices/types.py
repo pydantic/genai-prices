@@ -3,7 +3,7 @@ from __future__ import annotations as _annotations
 import dataclasses
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, Union
 
@@ -162,7 +162,7 @@ class ModelInfo:
         else:
             # reversed because the last price takes precedence
             for conditional_price in reversed(self.prices):
-                if conditional_price.constraint.active(request_timestamp):
+                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
                     return conditional_price.prices
             return self.prices[0].prices
 
@@ -249,20 +249,31 @@ class Tier:
 
 @dataclass
 class ConditionalPrice:
-    """Pricing together with constraints that define with those prices should be used"""
+    """Pricing together with constraints that define with those prices should be used.
 
-    constraint: StartDateConstraint
-    """Timestamp when this price starts, none means this price is always valid"""
-    prices: ModelPrice
+    The last price that is active is used.
+    """
+
+    constraint: StartDateConstraint | None = None
+    """Timestamp when this price starts, None means this price is always valid."""
+
+    prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
+    """Prices for this condition.
+
+    This field is really required, the default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
+    """
 
 
 @dataclass
 class StartDateConstraint:
-    start: pydantic.AwareDatetime
+    start: pydantic.AwareDatetime | date
     """Timestamp when this price starts"""
 
     def active(self, request_timestamp: datetime) -> bool:
-        return request_timestamp >= self.start
+        if isinstance(self.start, datetime):
+            return request_timestamp >= self.start
+        else:
+            return request_timestamp.date() >= self.start
 
 
 @dataclass

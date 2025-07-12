@@ -151,18 +151,18 @@
     },
     "ConditionalPrice": {
       "additionalProperties": false,
-      "description": "Pricing together with constraints that define with those prices should be used",
+      "description": "Pricing together with constraints that define with those prices should be used.\n\nThe last price that is active is used.",
       "properties": {
         "constraint": {
           "$ref": "#/$defs/StartDateConstraint",
-          "description": "Timestamp when this price starts, none means this price is always valid"
+          "description": "Timestamp when this price starts, None means this price is always valid."
         },
         "prices": {
-          "$ref": "#/$defs/ModelPrice"
+          "$ref": "#/$defs/ModelPrice",
+          "description": "Prices for this condition."
         }
       },
       "required": [
-        "constraint",
         "prices"
       ],
       "title": "ConditionalPrice",
@@ -372,10 +372,18 @@
       "additionalProperties": false,
       "properties": {
         "start": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "format": "date",
+              "type": "string"
+            }
+          ],
           "description": "Timestamp when this price starts",
-          "format": "date-time",
-          "title": "Start",
-          "type": "string"
+          "title": "Start"
         }
       },
       "required": [

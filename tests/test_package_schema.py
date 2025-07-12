@@ -36,6 +36,9 @@ def test_package_schema():
     # models is not required in the provider package schema for simplicity
     package_schema['$defs']['Provider']['required'].append('models')
 
+    # work around for hack on ConditionalPrice
+    package_schema['$defs']['ConditionalPrice']['required'] = ['prices']
+
     prices_schema_path = prices_package_dir / 'data.schema.json'
     prices_schema = from_json(prices_schema_path.read_bytes())
 

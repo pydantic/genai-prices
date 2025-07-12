@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 
 import pytest
@@ -36,6 +37,13 @@ def test_sync_success_with_model():
     assert price.auto_update_timestamp is None
 
 
+def test_sync_success_with_model_regex():
+    price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='o3')
+    assert price.price == snapshot(Decimal('0.0028'))
+    assert price.model.name == snapshot('o3')
+    assert price.provider.id == snapshot('openai')
+
+
 async def test_async_success_with_provider():
     price = await calc_price_async(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai'
@@ -52,7 +60,28 @@ def test_tiered_prices():
     assert price.price == snapshot(Decimal('0.0654'))
     assert price.model.name == snapshot('gemini 1.5 flash')
     assert price.provider.id == snapshot('google')
-    assert price.auto_update_timestamp is None
+
+
+def test_requests_kcount_prices():
+    # request count defaults to 1
+    price = calc_price_sync(Usage(), model_ref='sonar', provider_id='perplexity')
+    assert price.price == snapshot(Decimal('0.012'))
+    assert price.model.name == snapshot('Sonar')
+    assert price.provider.name == snapshot('Perplexity')
+
+
+def test_price_constraint_before():
+    price = calc_price_sync(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
+    assert price.price == snapshot(Decimal('0.01'))
+    assert price.model.name == snapshot('o3')
+    assert price.provider.name == snapshot('OpenAI')
+
+
+def test_price_constraint_after():
+    price = calc_price_sync(Usage(input_tokens=1000), model_ref='o3')
+    assert price.price == snapshot(Decimal('0.002'))
+    assert price.model.name == snapshot('o3')
+    assert price.provider.name == snapshot('OpenAI')
 
 
 def test_provider_not_found_id():

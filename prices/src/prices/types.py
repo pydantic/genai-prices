@@ -132,8 +132,11 @@ class ModelInfo(_Model):
     @field_validator('prices', mode='after')
     @classmethod
     def prices_not_empty(cls, prices: ModelPrice | list[ConditionalPrice]) -> ModelPrice | list[ConditionalPrice]:
-        if isinstance(prices, list) and len(prices) == 0:
-            raise ValueError('model prices may not be empty')
+        if isinstance(prices, list):
+            if len(prices) == 0:
+                raise ValueError('model prices may not be empty')
+            if sum(p.constraint is None for p in prices) != 1:
+                raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
         return prices
 
     def is_free(self) -> bool:
@@ -213,15 +216,19 @@ class Tier(_Model):
 
 
 class ConditionalPrice(_Model):
-    """Pricing together with constraints that define with those prices should be used"""
+    """Pricing together with constraints that define with those prices should be used.
 
-    constraint: StartDateConstraint
-    """Timestamp when this price starts, none means this price is always valid"""
+    The last price that is active is used.
+    """
+
+    constraint: StartDateConstraint | None = None
+    """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
+    """Prices for this condition."""
 
 
 class StartDateConstraint(_Model):
-    start: datetime
+    start: datetime | date
     """Timestamp when this price starts"""
 
 
