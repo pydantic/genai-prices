@@ -151,18 +151,26 @@
     },
     "ConditionalPrice": {
       "additionalProperties": false,
-      "description": "Pricing together with constraints that define with those prices should be used",
+      "description": "Pricing together with constraints that define when those prices should be used.\n\nThe last price active price (price where the constraints are met) is used.",
       "properties": {
         "constraint": {
-          "$ref": "#/$defs/StartDateConstraint",
-          "description": "Timestamp when this price starts, none means this price is always valid"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StartDateConstraint"
+            },
+            {
+              "$ref": "#/$defs/TimeOfDateConstraint"
+            }
+          ],
+          "description": "Timestamp when this price starts, None means this price is always valid.",
+          "title": "Constraint"
         },
         "prices": {
-          "$ref": "#/$defs/ModelPrice"
+          "$ref": "#/$defs/ModelPrice",
+          "description": "Prices for this condition."
         }
       },
       "required": [
-        "constraint",
         "prices"
       ],
       "title": "ConditionalPrice",
@@ -370,16 +378,17 @@
     },
     "StartDateConstraint": {
       "additionalProperties": false,
+      "description": "Constraint that defines when this price starts, e.g. when a new price is introduced.",
       "properties": {
-        "start": {
-          "description": "Timestamp when this price starts",
-          "format": "date-time",
-          "title": "Start",
+        "start_date": {
+          "description": "Date when this price starts",
+          "format": "date",
+          "title": "Start Date",
           "type": "string"
         }
       },
       "required": [
-        "start"
+        "start_date"
       ],
       "title": "StartDateConstraint",
       "type": "object"
@@ -429,6 +438,30 @@
         "tiers"
       ],
       "title": "TieredPrices",
+      "type": "object"
+    },
+    "TimeOfDateConstraint": {
+      "additionalProperties": false,
+      "description": "Constraint that defines a daily interval when a price applies, useful for off-peak pricing like deepseek.",
+      "properties": {
+        "start_time": {
+          "description": "Start time of the interval.",
+          "format": "time",
+          "title": "Start Time",
+          "type": "string"
+        },
+        "end_time": {
+          "description": "End time of the interval.",
+          "format": "time",
+          "title": "End Time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start_time",
+        "end_time"
+      ],
+      "title": "TimeOfDateConstraint",
       "type": "object"
     }
   },

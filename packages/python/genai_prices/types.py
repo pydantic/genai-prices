@@ -3,11 +3,35 @@ from __future__ import annotations as _annotations
 import dataclasses
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, Union
 
 import pydantic
+
+__all__ = (
+    'ProviderID',
+    'PriceCalculation',
+    'AbstractUsage',
+    'Usage',
+    'Provider',
+    'ModelInfo',
+    'ModelPrice',
+    'TieredPrices',
+    'Tier',
+    'ConditionalPrice',
+    'StartDateConstraint',
+    'TimeOfDateConstraint',
+    'ClauseStartsWith',
+    'ClauseEndsWith',
+    'ClauseContains',
+    'ClauseRegex',
+    'ClauseEquals',
+    'ClauseOr',
+    'ClauseAnd',
+    'MatchLogic',
+    'providers_schema',
+)
 
 ProviderID = Literal[
     'avian',
@@ -162,7 +186,7 @@ class ModelInfo:
         else:
             # reversed because the last price takes precedence
             for conditional_price in reversed(self.prices):
-                if conditional_price.constraint.active(request_timestamp):
+                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
                     return conditional_price.prices
             return self.prices[0].prices
 
@@ -249,20 +273,43 @@ class Tier:
 
 @dataclass
 class ConditionalPrice:
-    """Pricing together with constraints that define with those prices should be used"""
+    """Pricing together with constraints that define when those prices should be used.
 
-    constraint: StartDateConstraint
-    """Timestamp when this price starts, none means this price is always valid"""
-    prices: ModelPrice
+    The last price active price (price where the constraints are met) is used.
+    """
+
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Timestamp when this price starts, None means this price is always valid."""
+
+    prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
+    """Prices for this condition.
+
+    This field is really required, the default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
+    """
 
 
 @dataclass
 class StartDateConstraint:
-    start: pydantic.AwareDatetime
-    """Timestamp when this price starts"""
+    """Constraint that defines when this price starts, e.g. when a new price is introduced."""
+
+    start_date: date
+    """Date when this price starts"""
 
     def active(self, request_timestamp: datetime) -> bool:
-        return request_timestamp >= self.start
+        return request_timestamp.date() >= self.start_date
+
+
+@dataclass
+class TimeOfDateConstraint:
+    """Constraint that defines a daily interval when a price applies, useful for off-peak pricing like deepseek."""
+
+    start_time: time
+    """Start time of the interval."""
+    end_time: time
+    """End time of the interval."""
+
+    def active(self, request_timestamp: datetime) -> bool:
+        return self.start_time <= request_timestamp.timetz() < self.end_time
 
 
 @dataclass

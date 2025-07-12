@@ -11,6 +11,7 @@ model_match:
   or:
     - starts_with: "gpt-"
     - regex: "^o[134]"
+
 models:
   - id: ada
     match:
@@ -418,11 +419,19 @@ models:
       or:
         - equals: o3
         - equals: o3-2025-04-16
-    prices_checked: 2025-07-04
+    prices_checked: 2025-07-12
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 8
+      - prices:
+          input_mtok: 10
+          cache_read_mtok: 0.5
+          output_mtok: 40
+      - constraint:
+          # See https://community.openai.com/t/o3-is-80-cheaper-and-introducing-o3-pro/1284925
+          start_date: 2025-06-10
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.5
+          output_mtok: 8
 
   - id: o3-mini
     name: o3 Mini
