@@ -27,13 +27,16 @@ lint: ## Lint the code
 	uv run ruff format --check
 	uv run ruff check
 
-.PHONY: build
-build: ## Build JSON Schema for data and validate and write data to prices/data.json
+.PHONY: build-prices
+build-prices: ## Build JSON Schema for data and validate and write data to prices/data.json
 	uv run -m prices build
 
 .PHONY: package-data
 package-data: ## Prepare data for packages
 	uv run -m prices package_data
+
+.PHONY: build
+build: build-prices package-data ## Build prices and package data
 
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models

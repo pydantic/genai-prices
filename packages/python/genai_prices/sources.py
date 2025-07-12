@@ -6,13 +6,12 @@ from abc import ABC, abstractmethod
 from concurrent import futures
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal
 from functools import cache
 
 import httpx
 from pydantic import ValidationError
 
-from . import data, types
+from . import types
 
 __all__ = (
     'DEFAULT_AUTO_UPDATE_MAX_AGE',
@@ -22,7 +21,6 @@ __all__ = (
     'auto_update_async_source',
     'SyncSource',
     'AutoUpdateSyncSource',
-    'PriceCalculation',
     'DataSnapshot',
 )
 
@@ -34,7 +32,12 @@ DEFAULT_AUTO_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-pric
 class AsyncSource(ABC):
     @abstractmethod
     async def fetch(self) -> DataSnapshot | None:
-        """Fetch a new snapshot or return and existing cached snapshot."""
+        """Try to fetch a new snapshot if required.
+
+        This method should check if any relevant cached has expired, if not it should return `None`.
+
+        If fetching new data fails, this method should emit a warning and return `None`.
+        """
         raise NotImplementedError
 
 
@@ -44,7 +47,7 @@ class AutoUpdateAsyncSource(AsyncSource):
     url: str = DEFAULT_AUTO_UPDATE_URL
     max_age: timedelta = DEFAULT_AUTO_UPDATE_MAX_AGE
     fetch_age: timedelta = DEFAULT_AUTO_UPDATE_FETCH_AGE
-    request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=30, connect=5))
+    request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=10, connect=5))
     _pre_fetch_task: asyncio.Task[None] | None = field(default=None, init=False)
 
     def pre_fetch(self) -> None:
@@ -63,6 +66,8 @@ class AutoUpdateAsyncSource(AsyncSource):
         return _cached_auto_update_snapshot
 
     async def _fetch(self):
+        from . import data
+
         global _cached_auto_update_snapshot
 
         try:
@@ -79,7 +84,12 @@ class AutoUpdateAsyncSource(AsyncSource):
 class SyncSource(ABC):
     @abstractmethod
     def fetch(self) -> DataSnapshot | None:
-        """Fetch a new snapshot or return and existing cached snapshot."""
+        """Try to fetch a new snapshot if required.
+
+        This method should check if any relevant cached has expired, if not it should return `None`.
+
+        If fetching new data fails, this method should emit a warning and return `None`.
+        """
         raise NotImplementedError
 
 
@@ -89,7 +99,7 @@ class AutoUpdateSyncSource(SyncSource):
     url: str = DEFAULT_AUTO_UPDATE_URL
     max_age: timedelta = DEFAULT_AUTO_UPDATE_MAX_AGE
     fetch_age: timedelta = DEFAULT_AUTO_UPDATE_FETCH_AGE
-    request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=30, connect=5))
+    request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=10, connect=5))
     _pre_fetch_task: futures.Future[None] | None = field(default=None, init=False)
 
     def pre_fetch(self) -> None:
@@ -108,6 +118,8 @@ class AutoUpdateSyncSource(SyncSource):
         return _cached_auto_update_snapshot
 
     def _fetch(self):
+        from . import data
+
         global _cached_auto_update_snapshot
 
         try:
@@ -127,22 +139,6 @@ auto_update_sync_source = AutoUpdateSyncSource()
 
 
 @dataclass
-class PriceCalculation:
-    price: Decimal
-    provider: types.Provider
-    model: types.ModelInfo
-    auto_update_timestamp: datetime | None
-
-    def __repr__(self) -> str:
-        return (
-            f'PriceCalculation(price={self.price!r}, '
-            f'provider=Provider(id={self.provider.id!r}, name={self.provider.name!r}, ...), '
-            f'model=Model(id={self.model.id!r}, name={self.model.name!r}, ...), '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
-        )
-
-
-@dataclass
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
@@ -152,20 +148,22 @@ class DataSnapshot:
     timestamp: datetime = field(default_factory=datetime.now)
 
     def active(self, ttl: timedelta) -> bool:
+        """Check if the snapshot is "active" (e.g. hasn't expired) based on a time to live."""
         return self.timestamp + ttl > datetime.now()
 
     def calc(
         self,
         usage: types.AbstractUsage,
         model_ref: str,
-        provider_id: types.ProviderID | None,
+        provider_id: types.ProviderID | str | None,
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
-    ) -> PriceCalculation:
+    ) -> types.PriceCalculation:
+        """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         provider, model = self.find_provider_model(model_ref, provider_id, provider_api_url)
-        return PriceCalculation(
+        return types.PriceCalculation(
             price=model.get_prices(genai_request_timestamp).calc_price(usage),
             provider=provider,
             model=model,
@@ -175,9 +173,10 @@ class DataSnapshot:
     def find_provider_model(
         self,
         model_ref: str,
-        provider_id: types.ProviderID | None,
+        provider_id: types.ProviderID | str | None,
         provider_api_url: str | None,
     ) -> tuple[types.Provider, types.ModelInfo]:
+        """Find the provider and model for the given model reference and optional provider identifier."""
         if provider_model := self._lookup_cache.get((provider_id or provider_api_url, model_ref)):
             return provider_model
 
@@ -198,4 +197,5 @@ class DataSnapshot:
 
 @cache
 def _cached_async_http_client() -> httpx.AsyncClient:
+    """Naughty trick (also used by pydantic-ai and openai) to avoid creating a new async client for each request."""
     return httpx.AsyncClient()
