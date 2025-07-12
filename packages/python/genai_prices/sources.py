@@ -56,14 +56,14 @@ class AutoUpdateAsyncSource(AsyncSource):
             await self._pre_fetch_task
             self._pre_fetch_task = None
 
-        if _auto_update_snapshot is None or not _auto_update_snapshot.active(self.max_age):
+        if _cached_auto_update_snapshot is None or not _cached_auto_update_snapshot.active(self.max_age):
             await self._fetch()
-        elif not _auto_update_snapshot.active(self.fetch_age):
+        elif not _cached_auto_update_snapshot.active(self.fetch_age):
             self.pre_fetch()
-        return _auto_update_snapshot
+        return _cached_auto_update_snapshot
 
     async def _fetch(self):
-        global _auto_update_snapshot
+        global _cached_auto_update_snapshot
 
         try:
             client = self.client or _cached_async_http_client()
@@ -73,7 +73,7 @@ class AutoUpdateAsyncSource(AsyncSource):
         except (httpx.HTTPError, ValidationError) as e:
             warnings.warn(f'Failed to auto update from {self.url}: {e}')
         else:
-            _auto_update_snapshot = DataSnapshot(providers=providers, from_auto_update=True)
+            _cached_auto_update_snapshot = DataSnapshot(providers=providers, from_auto_update=True)
 
 
 class SyncSource(ABC):
@@ -101,14 +101,14 @@ class AutoUpdateSyncSource(SyncSource):
             self._pre_fetch_task.result()
             self._pre_fetch_task = None
 
-        if _auto_update_snapshot is None or not _auto_update_snapshot.active(self.max_age):
+        if _cached_auto_update_snapshot is None or not _cached_auto_update_snapshot.active(self.max_age):
             self._fetch()
-        elif not _auto_update_snapshot.active(self.fetch_age):
+        elif not _cached_auto_update_snapshot.active(self.fetch_age):
             self.pre_fetch()
-        return _auto_update_snapshot
+        return _cached_auto_update_snapshot
 
     def _fetch(self):
-        global _auto_update_snapshot
+        global _cached_auto_update_snapshot
 
         try:
             client = self.client or httpx
@@ -118,10 +118,10 @@ class AutoUpdateSyncSource(SyncSource):
         except (httpx.HTTPError, ValidationError) as e:
             warnings.warn(f'Failed to auto update from {self.url}: {e}')
         else:
-            _auto_update_snapshot = DataSnapshot(providers=providers, from_auto_update=True)
+            _cached_auto_update_snapshot = DataSnapshot(providers=providers, from_auto_update=True)
 
 
-_auto_update_snapshot: DataSnapshot | None = None
+_cached_auto_update_snapshot: DataSnapshot | None = None
 auto_update_async_source = AutoUpdateAsyncSource()
 auto_update_sync_source = AutoUpdateSyncSource()
 
