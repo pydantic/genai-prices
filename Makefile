@@ -69,6 +69,10 @@ update-price-discrepancies: ## update price discrepancies
 .PHONE: get-update-price-discrepancies
 get-update-price-discrepancies: get-all-prices update-price-discrepancies ## get and update price discrepancies
 
+.PHONY: check-for-price-discrepancies
+check-for-price-discrepancies: ## check for price discrepancies
+	uv run -m prices check_for_price_discrepancies
+
 .PHONY: typecheck
 typecheck:
 	uv run basedpyright
