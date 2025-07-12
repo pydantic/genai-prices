@@ -82,6 +82,9 @@ jobs:
           enable-cache: true
 
       - run: uv sync --only-dev
+      - run: pwd
+      - run: ls -la
+      - run: ls -la coverage
       - run: uv run coverage combine coverage
 
       - run: uv run coverage html --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
