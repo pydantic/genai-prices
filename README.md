@@ -24,7 +24,16 @@ This package is a work in progress:
 - [ ] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
 - [ ] API (and I guess UI) for calculating latest prices
 
-## Providers
+## Features
+
+* Advanced logic for matching on model IDs to maximise the chance of using the correct model
+* Support for historic prices and prices changes, e.g. we have the prices for o3 before and after it's price changed
+* Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
+* tiered pricing support for Gemini models where you pay a separate price for very large contexts
+* support for [identifying price discrepancies](prices/README.md) from other sources
+* (WIP) Python package, JS/TS package, API and web UI
+
+### Providers
 
 The following providers are currently supported:
 
