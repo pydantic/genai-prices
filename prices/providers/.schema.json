@@ -283,11 +283,6 @@
       "additionalProperties": false,
       "description": "Set of prices for using a model",
       "properties": {
-        "requests_kcount": {
-          "type": "number",
-          "description": "price in USD per thousand requests",
-          "title": "Requests Kcount"
-        },
         "input_mtok": {
           "anyOf": [
             {
@@ -371,6 +366,11 @@
           ],
           "description": "price in USD per million output audio tokens",
           "title": "Output Audio Mtok"
+        },
+        "requests_kcount": {
+          "type": "number",
+          "description": "price in USD per thousand requests",
+          "title": "Requests Kcount"
         }
       },
       "title": "ModelPrice",

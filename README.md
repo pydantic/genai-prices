@@ -31,7 +31,8 @@ This package is a work in progress:
 * Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 * tiered pricing support for Gemini models where you pay a separate price for very large contexts
 * support for [identifying price discrepancies](prices/README.md) from other sources
-* (WIP) Python package, JS/TS package, API and web UI
+* Python package, CLI
+* TODO: JS/TS package, API and web UI
 
 ### Providers
 
@@ -60,9 +61,9 @@ The following providers are currently supported:
 
 ## Usage
 
-### Python Package
+### Python Package & CLI
 
-See the [Python README](packages/python/README.md) for instructions on how to install and use the Python package.
+See the [Python README](packages/python/README.md) for instructions on how to install and use the Python package and CLI.
 
 ### JavaScript/TypeScript Package
 
