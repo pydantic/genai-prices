@@ -4,6 +4,10 @@ id: deepseek
 pricing_urls:
   - https://api-docs.deepseek.com/quick_start/pricing
 api_pattern: 'https://api\.deepseek\.com'
+price_comments: >-
+  Deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing
+  as the default (first) price then the second price with a constraint is the "standard" pricing
+  that applies "UTC 00:30-16:30".
 model_match:
   contains: deepseek
 
@@ -20,9 +24,6 @@ models:
         - equals: deepseek-chat-v3-0324
     context_window: 64000
     prices_checked: 2025-07-12
-    # deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing
-    # as the default (first) price then the second price with a constraint is the "standard" pricing
-    # that applies "UTC 00:30-16:30"
     prices:
       - prices:
           input_mtok: 0.135
@@ -48,7 +49,6 @@ models:
         - equals: deepseek-r1-0528
     context_window: 64000
     prices_checked: 2025-07-12
-    # See above for pricing logic
     prices:
       - prices:
           input_mtok: 0.135

@@ -24,6 +24,13 @@ When you edit the prices of a model, remember to:
 * have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
   which will update the `data*.json` files when prices change. You can also run `make build` to update these files manually.
 
+Please do not:
+
+* edit any JSON file directly - they're all built with `make build` and are compact by design
+* add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
+* try to change the schema of providers or models without creating an issue to discuss the changes first
+* add new providers without creating an issue to discuss the changes first, adding models is fine
+
 ### Automatic price discrepancy detection
 
 This project supports pulling prices from
