@@ -80,7 +80,7 @@ class AbstractUsage(Protocol):
 
     @property
     def cache_write_tokens(self) -> int | None:
-        """Number of tokens written to the caches"""
+        """Number of tokens written to the cache."""
 
     @property
     def cache_read_tokens(self) -> int | None:
