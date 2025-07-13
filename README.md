@@ -43,7 +43,7 @@ The following providers are currently supported:
 * [Anthropic](prices/providers/anthropic.yml) - 9 models
 * [Avian](prices/providers/avian.yml) - 4 models
 * [AWS Bedrock](prices/providers/aws.yml) - 4 models
-* [Microsoft Azure](prices/providers/azure.yml) - 54 models
+* [Microsoft Azure](prices/providers/azure.yml) - 47 models
 * [Cohere](prices/providers/cohere.yml) - 5 models
 * [Deepseek](prices/providers/deepseek.yml) - 2 models
 * [Fireworks](prices/providers/fireworks.yml) - 7 models

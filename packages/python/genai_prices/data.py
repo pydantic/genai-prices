@@ -221,27 +221,47 @@ providers: list[Provider] = [
         name='Microsoft Azure',
         api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com)',
         pricing_urls=['https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing'],
-        price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.',
+        price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly higher. Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models',
         models=[
             ModelInfo(
                 id='ada',
-                match=ClauseEquals(equals='ada'),
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('0.4')),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='ada'),
+                        ClauseEquals(equals='text-embedding-ada'),
+                        ClauseEquals(equals='text-embedding-ada-002'),
+                        ClauseEquals(equals='text-embedding-ada-002-v2'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='babbage',
-                match=ClauseEquals(equals='babbage'),
-                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('0.5')),
+                match=ClauseOr(or_=[ClauseEquals(equals='babbage'), ClauseEquals(equals='babbage-002')]),
+                prices=ModelPrice(input_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='curie',
-                match=ClauseEquals(equals='curie'),
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='curie'),
+                        ClauseEquals(equals='text-curie'),
+                        ClauseEquals(equals='text-curie-001'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='davinci',
-                match=ClauseEquals(equals='davinci'),
-                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='davinci'),
+                        ClauseEquals(equals='davinci-002'),
+                        ClauseEquals(equals='text-davinci'),
+                        ClauseEquals(equals='text-davinci-002'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo',
@@ -377,12 +397,7 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='gpt-45-turbo',
-                match=ClauseEquals(equals='gpt-45-turbo'),
-                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
-            ),
-            ModelInfo(
-                id='gpt-4o-2024-05-13',
+                id='gpt-4o-2024-0513',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-4o-2024-05-13'), ClauseEquals(equals='gpt-4o-2024-0513')]),
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
@@ -394,16 +409,28 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='gpt-4o-2024-11-20',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-4o-2024-11-20'), ClauseEquals(equals='gpt-4o-2024-1120')]),
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+                id='gpt-4o-2024-1120',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-4o-2024-1120'), ClauseEquals(equals='gpt-4o-2024-11-20')]),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini',
-                match=ClauseStartsWith(starts_with='gpt-4o-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-4o-mini'),
+                        ClauseEquals(equals='gpt-4o-mini-0718'),
+                        ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
+                    ]
+                ),
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('0.6')
+                    input_mtok=Decimal('0.15'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('0.6'),
+                    input_audio_mtok=Decimal('10'),
+                    output_audio_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
@@ -411,6 +438,7 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-realtime'),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'),
+                    cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('2.4'),
                     input_audio_mtok=Decimal('10'),
                     cache_audio_read_mtok=Decimal('0.3'),
@@ -541,31 +569,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
-                id='text-ada-001',
-                match=ClauseEquals(equals='text-ada-001'),
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('0.4')),
-            ),
-            ModelInfo(
-                id='text-curie-001',
-                match=ClauseEquals(equals='text-curie-001'),
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
-            ),
-            ModelInfo(
-                id='text-davinci-001',
-                match=ClauseEquals(equals='text-davinci-001'),
-                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
-            ),
-            ModelInfo(
-                id='text-davinci-002',
-                match=ClauseEquals(equals='text-davinci-002'),
-                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
-            ),
-            ModelInfo(
-                id='text-davinci-003',
-                match=ClauseEquals(equals='text-davinci-003'),
-                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
-            ),
-            ModelInfo(
                 id='text-embedding-3-large',
                 match=ClauseEquals(equals='text-embedding-3-large'),
                 prices=ModelPrice(input_mtok=Decimal('0.13')),
@@ -574,17 +577,6 @@ providers: list[Provider] = [
                 id='text-embedding-3-small',
                 match=ClauseEquals(equals='text-embedding-3-small'),
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
-            ),
-            ModelInfo(
-                id='text-embedding-ada',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='text-embedding-ada'),
-                        ClauseEquals(equals='text-embedding-ada-002'),
-                        ClauseEquals(equals='text-embedding-ada-002-v2'),
-                    ]
-                ),
-                prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='wizardlm-2-8x22b',
