@@ -58,6 +58,7 @@ class PriceCalculation:
     price: Decimal
     provider: Provider
     model: ModelInfo
+    model_price: ModelPrice
     auto_update_timestamp: datetime | None
 
     def __repr__(self) -> str:
@@ -65,6 +66,7 @@ class PriceCalculation:
             f'PriceCalculation(price={self.price!r}, '
             f'provider=Provider(id={self.provider.id!r}, name={self.provider.name!r}, ...), '
             f'model=Model(id={self.model.id!r}, name={self.model.name!r}, ...), '
+            f'model_price=ModelPrice({self.model_price}), '
             f'auto_update_timestamp={self.auto_update_timestamp!r})'
         )
 
@@ -73,36 +75,36 @@ class AbstractUsage(Protocol):
     """Abstract definition of data about token usage for an LLM call"""
 
     @property
-    def requests(self) -> int | None:
-        """Number of requests made, defaults to 1 if omitted"""
-
-    @property
     def input_tokens(self) -> int | None:
-        """Number of text input/prompt token"""
+        """Number of text input/prompt tokens."""
 
     @property
     def cache_write_tokens(self) -> int | None:
-        """Number of tokens written to the cache"""
+        """Number of tokens written to the cache."""
 
     @property
     def cache_read_tokens(self) -> int | None:
-        """Number of tokens read from the cache"""
+        """Number of tokens read from the cache."""
 
     @property
     def output_tokens(self) -> int | None:
-        """Number of text output/completion tokens"""
+        """Number of text output/completion tokens."""
 
     @property
     def input_audio_tokens(self) -> int | None:
-        """Number of audio input tokens"""
+        """Number of audio input tokens."""
 
     @property
     def cache_audio_read_tokens(self) -> int | None:
-        """Number of audio tokens read from the cache"""
+        """Number of audio tokens read from the cache."""
 
     @property
     def output_audio_tokens(self) -> int | None:
-        """Number of output audio tokens"""
+        """Number of output audio tokens."""
+
+    @property
+    def requests(self) -> int | None:
+        """Number of requests made, defaults to 1 if omitted"""
 
 
 @dataclass
@@ -195,9 +197,6 @@ class ModelInfo:
 class ModelPrice:
     """Set of prices for using a model"""
 
-    requests_kcount: Decimal | None = None
-    """price in USD per thousand requests"""
-
     input_mtok: Decimal | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
 
@@ -216,12 +215,12 @@ class ModelPrice:
     output_audio_mtok: Decimal | TieredPrices | None = None
     """price in USD per million output audio tokens"""
 
+    requests_kcount: Decimal | None = None
+    """price in USD per thousand requests"""
+
     def calc_price(self, usage: AbstractUsage) -> Decimal:
         """Calculate the price of usage in USD with this model price."""
         price = Decimal(0)
-        if self.requests_kcount is not None:
-            requests = 1 if usage.requests is None else usage.requests
-            price += self.requests_kcount * requests / 1000
 
         price += calc_mtok_price(self.input_mtok, usage.input_tokens)
         price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
@@ -230,7 +229,28 @@ class ModelPrice:
         price += calc_mtok_price(self.input_audio_mtok, usage.input_audio_tokens)
         price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
         price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
+
+        if self.requests_kcount is not None:
+            requests = 1 if usage.requests is None else usage.requests
+            price += self.requests_kcount * requests / 1000
+
         return price
+
+    def __str__(self) -> str:
+        parts: list[str] = []
+        for field in dataclasses.fields(self):
+            value = getattr(self, field.name)
+            if value is not None:
+                if field.name == 'requests_kcount':
+                    parts.append(f'${value} / K requests')
+                else:
+                    name = field.name.replace('_mtok', '').replace('_', ' ')
+                    if isinstance(value, TieredPrices):
+                        parts.append(f'{value.base}/{name} MTok (+tiers)')
+                    else:
+                        parts.append(f'${value}/{name} MTok')
+
+        return ', '.join(parts)
 
 
 def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
