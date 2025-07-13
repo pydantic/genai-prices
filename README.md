@@ -46,7 +46,7 @@ The following providers are currently supported:
 * [Microsoft Azure](prices/providers/azure.yml) - 54 models
 * [Cohere](prices/providers/cohere.yml) - 5 models
 * [Deepseek](prices/providers/deepseek.yml) - 2 models
-* [Fireworks](prices/providers/fireworks.yml) - 18 models
+* [Fireworks](prices/providers/fireworks.yml) - 7 models
 * [Google](prices/providers/google.yml) - 30 models
 * [Groq](prices/providers/groq.yml) - 8 models
 * [Mistral](prices/providers/mistral.yml) - 28 models
