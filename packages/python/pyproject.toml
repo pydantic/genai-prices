@@ -37,7 +37,7 @@ dependencies = [
 ]
 
 [project.scripts]
-llm-pricing = "genai_prices.cli:main"
+genai-prices = "genai_prices._cli:cli"
 
 [tool.uv.build-backend]
 module-name = "genai_prices"

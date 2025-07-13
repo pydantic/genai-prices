@@ -161,9 +161,6 @@ DollarPrice = Annotated[
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
-    requests_kcount: DollarPrice | None = None
-    """price in USD per thousand requests"""
-
     input_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million text input/prompt token"""
 
@@ -181,6 +178,9 @@ class ModelPrice(_Model):
     """price in USD per million audio tokens read from the cache"""
     output_audio_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million output audio tokens"""
+
+    requests_kcount: DollarPrice | None = None
+    """price in USD per thousand requests"""
 
     def is_free(self) -> bool:
         """Whether all values are zero or unset"""

@@ -164,10 +164,12 @@ class DataSnapshot:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         provider, model = self.find_provider_model(model_ref, provider_id, provider_api_url)
+        model_price = model.get_prices(genai_request_timestamp)
         return types.PriceCalculation(
-            price=model.get_prices(genai_request_timestamp).calc_price(usage),
+            price=model_price.calc_price(usage),
             provider=provider,
             model=model,
+            model_price=model_price,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
         )
 

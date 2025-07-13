@@ -2,11 +2,13 @@ from __future__ import annotations as _annotations
 
 from datetime import datetime
 from functools import cache
+from importlib.metadata import version as _metadata_version
 
 from . import sources, types
 from .types import Usage
 
-__all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync'
+__version__ = _metadata_version('genai_prices')
+__all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync', '__version__'
 
 
 async def calc_price_async(
