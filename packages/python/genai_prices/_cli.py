@@ -10,7 +10,7 @@ import pydantic
 from . import Usage, __version__, calc_price_sync
 
 
-def cli() -> int:
+def cli() -> int:  # pragma: no cover
     """Run the CLI."""
     sys.exit(cli_logic())
 
@@ -21,7 +21,8 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
         description=f'genai-prices CLI v{__version__}\n\nCalculate prices for calling LLM inference APIs.\n',
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    subparsers = parser.add_subparsers(required=True)
+    parser.add_argument('--version', action='store_true', help='Show version and exit')
+    subparsers = parser.add_subparsers(dest='command')
 
     calc_parser = subparsers.add_parser('calc', help='Calculate prices.', description='Calculate prices.')
     calc_parser.add_argument(
@@ -54,8 +55,11 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
     list_parser.add_argument('provider', nargs='?', help='Only list models for the provider.')
 
     args = parser.parse_args(args_list)
+    if args.version:
+        print(f'genai-prices {__version__}')
+        return 0
 
-    if hasattr(args, 'model'):
+    if args.command == 'calc':
         return calc_prices(args)
     else:
         return list_models(args)
@@ -94,7 +98,7 @@ def calc_prices(args: argparse.Namespace) -> int:
             ('Model', price_calc.model.name or price_calc.model.id),
             ('Model Prices', str(price_calc.model_price)),
             ('Context Window', f'{w:,d}' if w is not None else None),
-            ('Price', f'${price_calc.price:.2f}'),
+            ('Price', f'${price_calc.price}'),
         ]
         for key, value in output:
             if value is not None:

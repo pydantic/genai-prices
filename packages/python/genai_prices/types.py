@@ -245,7 +245,10 @@ class ModelPrice:
                     parts.append(f'${value} / K requests')
                 else:
                     name = field.name.replace('_mtok', '').replace('_', ' ')
-                    parts.append(f'${value} / {name} MTok')
+                    if isinstance(value, TieredPrices):
+                        parts.append(f'{value.base}/{name} MTok (+tiers)')
+                    else:
+                        parts.append(f'${value}/{name} MTok')
 
         return ', '.join(parts)
 
