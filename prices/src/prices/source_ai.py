@@ -54,7 +54,9 @@ async def update_get_provider_page(
 
     cleaned_html = clean_html(html, content_id)
 
-    result = await html_agent.run(cleaned_html, deps=AgentDeps(known_model_ids=model_ids))
+    result = await html_agent.run(
+        cleaned_html, model='anthropic:claude-sonnet-4-0', deps=AgentDeps(known_model_ids=model_ids)
+    )
     provider_prices = {m.id: m.prices for m in result.output.models if not m.prices.is_free()}
     print(f'{url} found {len(provider_prices)} models')
 
@@ -121,7 +123,6 @@ class AgentDeps(BaseModel):
 
 
 html_agent = Agent(
-    'anthropic:claude-sonnet-4-0',
     output_type=ProviderPricingPage,
     deps_type=AgentDeps,
     instructions="""\
