@@ -5,7 +5,7 @@ pricing_urls:
   - https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing
 api_pattern: (https?://)?([^.]*\.)?(?:openai\.azure\.com|azure-api\.net|cognitiveservices\.azure\.com)
 price_comments: >-
-  These are prices for "*-Global" models, prices for "Regional" models are often slightly hihgher.
+  These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.
 models:
   - id: ada
     match:

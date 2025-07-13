@@ -221,7 +221,7 @@ providers: list[Provider] = [
         name='Microsoft Azure',
         api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com)',
         pricing_urls=['https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing'],
-        price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly hihgher.',
+        price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly higher.',
         models=[
             ModelInfo(
                 id='ada',
@@ -646,6 +646,7 @@ providers: list[Provider] = [
         name='Deepseek',
         api_pattern='https://api\\.deepseek\\.com',
         pricing_urls=['https://api-docs.deepseek.com/quick_start/pricing'],
+        price_comments='Deepseek off-peak pricing applies "UTC 16:30-00:30" so we switch it around and use the off-peak pricing as the default (first) price then the second price with a constraint is the "standard" pricing that applies "UTC 00:30-16:30".',
         model_match=ClauseContains(contains='deepseek'),
         models=[
             ModelInfo(
