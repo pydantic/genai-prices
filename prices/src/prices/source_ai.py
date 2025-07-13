@@ -13,7 +13,7 @@ from pydantic_ai import Agent, RunContext
 
 from . import source_prices, types, update, utils
 
-zenrows_api_key = os.environ['ZENROWS_API_KEY']
+zenrows_api_key = os.getenv('ZENROWS_API_KEY')
 
 
 def get_ai_prices():
@@ -80,6 +80,7 @@ async def cache_get(client: httpx.AsyncClient, url: str):
             response = await client.get(url)
         else:
             print(f'getting content from {url} with zenrows...')
+            assert zenrows_api_key, 'ZENROWS_API_KEY environment variable is not set'
             params = {'url': url, 'apikey': zenrows_api_key, 'js_render': 'true'}
             response = await client.get('https://api.zenrows.com/v1/', params=params)
 
