@@ -87,6 +87,26 @@ None-the-less, the library tries hard to avoid making a network call when the us
   these are both sync methods which return immediately and update the cache in the background, the only difference is that
   `calc_price_async` will wait for the `prefetch_async` task to complete when it is first called, and `calc_price_sync` will wait for the `prefetch_sync` concurrent future to complete when it is first called.
 
+### CLI Usage
+
+Run the CLI with:
+
+```bash
+uvx genai-prices --help
+```
+
+To list providers and models, run:
+
+```bash
+uvx genai-prices list
+```
+
+To calculate the price of models, run for example:
+
+```bash
+uvx genai-prices calc --input-tokens 100000 --output-tokens 3000 o1 o3 claude-opus-4
+```
+
 ## Further Documentation
 
 We do not yet build API documentation for this package, but the source code is relatively simple and well documented.
