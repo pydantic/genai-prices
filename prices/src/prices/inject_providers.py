@@ -7,6 +7,7 @@ from .utils import root_dir
 
 
 def inject_providers():
+    """Injects a list of providers into the README.md file."""
     readme_path = root_dir / 'README.md'
     readme_content = readme_path.read_text()
     text, count = re.subn(

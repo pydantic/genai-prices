@@ -6,6 +6,7 @@ from .collapse import collapse
 from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
+from .source_ai import get_ai_prices
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
 from .source_simonw_prices import get_simonw_prices
@@ -19,12 +20,13 @@ def main():
         get_litellm_prices,
         get_openrouter_prices,
         get_simonw_prices,
+        get_ai_prices,
         update_price_discrepancies,
         check_for_price_discrepancies,
         package_data,
         inject_providers,
     )
-    if len(sys.argv) == 2:
+    if len(sys.argv) >= 2:
         command = sys.argv[1]
         action = next((f for f in actions if f.__name__ == command), None)
         if action:
