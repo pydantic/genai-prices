@@ -303,12 +303,14 @@ version = "0.0.2"
 source = { editable = "packages/python" }
 dependencies = [
     { name = "eval-type-backport", marker = "python_full_version < '3.11'" },
+    { name = "httpx" },
     { name = "pydantic" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "eval-type-backport", marker = "python_full_version < '3.11'", specifier = ">=0.2" },
+    { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
 ]
 
