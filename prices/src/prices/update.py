@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from datetime import date
 from io import StringIO
 from operator import itemgetter
 from pathlib import Path
@@ -9,7 +10,7 @@ from typing import Any, TypedDict, cast
 
 from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
-from ruamel.yaml.scalarstring import DoubleQuotedScalarString, FoldedScalarString
+from ruamel.yaml.scalarstring import FoldedScalarString
 
 from .types import ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
 from .utils import package_dir
@@ -108,15 +109,14 @@ class ProviderYaml:
         else:
             yaml_model['price_discrepancies'] = {source: data}
 
-    def set_model_field(self, lookup_id: str, key: str, value: str | int) -> None:
+    def set_model_field(self, lookup_id: str, key: str, value: date | str | int) -> None:
         yaml_model = self._get_model(lookup_id)
-        yaml_value = DoubleQuotedScalarString(value) if isinstance(value, str) else value
         if key in yaml_model:
-            yaml_model[key] = yaml_value
+            yaml_model[key] = value
         else:
             # insert key before prices
             keys: list[str] = list(yaml_model)
-            yaml_model.insert(keys.index('prices'), key, yaml_value)  # pyright: ignore[reportUnknownMemberType]
+            yaml_model.insert(keys.index('prices'), key, value)  # pyright: ignore[reportUnknownMemberType]
 
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self._extra_prices if m.id == model.id), None):
