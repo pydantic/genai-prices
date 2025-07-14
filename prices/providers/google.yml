@@ -208,8 +208,8 @@ models:
       cache_audio_read_mtok: 0.25
       output_mtok: 2.5
 
-  - id: gemini-2.5-flash-lite-preview-06-17
-    name: Gemini 2.5 Flash Lite Preview 06-17
+  - id: gemini-2.5-flash-lite
+    name: Gemini 2.5 Flash Lite
     description: >-
       Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and
       cost efficiency. It offers improved throughput, faster token generation, and better
@@ -217,12 +217,17 @@ models:
       is disabled to prioritize speed, but developers can enable it via the Reasoning
       API parameter to selectively trade off cost for intelligence.
     match:
-      equals: gemini-2.5-flash-lite-preview-06-17
+      or:
+        - equals: gemini-2.5-flash-lite
+        - starts_with: gemini-2.5-flash-lite-preview
+    context_window: 1000000
+    prices_checked: 2025-07-13
     prices:
       input_mtok: 0.1
-      input_audio_mtok: 0.50
       cache_read_mtok: 0.025
       output_mtok: 0.4
+      input_audio_mtok: 0.5
+      cache_audio_read_mtok: 0.125
 
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
