@@ -933,15 +933,22 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='gemini-2.5-flash-lite-preview-06-17',
-                match=ClauseEquals(equals='gemini-2.5-flash-lite-preview-06-17'),
-                name='Gemini 2.5 Flash Lite Preview 06-17',
+                id='gemini-2.5-flash-lite',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-2.5-flash-lite'),
+                        ClauseStartsWith(starts_with='gemini-2.5-flash-lite-preview'),
+                    ]
+                ),
+                name='Gemini 2.5 Flash Lite',
                 description='Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and cost efficiency. It offers improved throughput, faster token generation, and better performance across common benchmarks compared to earlier Flash models. By default, "thinking" (i.e. multi-pass reasoning) is disabled to prioritize speed, but developers can enable it via the Reasoning API parameter to selectively trade off cost for intelligence.',
+                context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'),
                     cache_read_mtok=Decimal('0.025'),
                     output_mtok=Decimal('0.4'),
                     input_audio_mtok=Decimal('0.5'),
+                    cache_audio_read_mtok=Decimal('0.125'),
                 ),
             ),
             ModelInfo(
