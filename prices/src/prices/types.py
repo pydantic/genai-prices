@@ -116,6 +116,8 @@ class ModelInfo(_Model):
     """List of price discrepancies based on external sources."""
     prices_checked: date | None = Field(default=None, exclude=True)
     """Date indicating when the prices were last checked for discrepancies."""
+    prices_checked_ai: date | None = Field(default=None, exclude=True)
+    """Date indicating when the prices were last checked or updated by AI."""
     collapse: bool = Field(default=True, exclude=True)
     """Flag indicating whether this price should be collapsed into other prices."""
 

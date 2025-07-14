@@ -9,7 +9,7 @@ from typing import Any, TypedDict, cast
 
 from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
-from ruamel.yaml.scalarstring import FoldedScalarString
+from ruamel.yaml.scalarstring import DoubleQuotedScalarString, FoldedScalarString
 
 from .types import ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
 from .utils import package_dir
@@ -107,6 +107,16 @@ class ProviderYaml:
             disc[source] = data
         else:
             yaml_model['price_discrepancies'] = {source: data}
+
+    def set_model_field(self, lookup_id: str, key: str, value: str | int) -> None:
+        yaml_model = self._get_model(lookup_id)
+        yaml_value = DoubleQuotedScalarString(value) if isinstance(value, str) else value
+        if key in yaml_model:
+            yaml_model[key] = yaml_value
+        else:
+            # insert key before prices
+            keys: list[str] = list(yaml_model)
+            yaml_model.insert(keys.index('prices'), key, yaml_value)  # pyright: ignore[reportUnknownMemberType]
 
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self._extra_prices if m.id == model.id), None):
