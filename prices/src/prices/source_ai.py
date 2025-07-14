@@ -26,7 +26,7 @@ def get_ai_prices():
     provider = providers_yml[provider_id].provider
     provider_prices = asyncio.get_event_loop().run_until_complete(update_get_provider(provider))
 
-    source_prices.write_source_prices('ai', {provider_id: provider_prices})
+    source_prices.write_source_prices(f'ai-{provider_id}', {provider_id: provider_prices})
 
 
 async def update_get_provider(provider: types.Provider) -> source_prices.ProvidePrices:
@@ -150,10 +150,15 @@ def clean_html(html: str, content_id: str | None = None) -> str:
     # Parse the HTML content
     page_soup = BeautifulSoup(html, 'html.parser')
 
+    soup = None
     if content_id is not None:
         soup = page_soup.find(id=content_id)
-        assert isinstance(soup, Tag), f'Content with id {content_id} not found'
-    else:
+        if soup is None:
+            print(f'Content with id {content_id} not found, fallback to body')
+        else:
+            assert isinstance(soup, Tag)
+
+    if soup is None:
         # Extract the body
         soup = page_soup.body
         assert soup is not None, 'body not found'
