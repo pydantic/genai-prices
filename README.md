@@ -18,6 +18,7 @@
 ## 🛠️ Work in Progress
 
 This package is a work in progress:
+
 - [x] price data YAML
 - [x] JSON file with all prices
 - [x] Python library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
@@ -26,13 +27,13 @@ This package is a work in progress:
 
 ## Features
 
-* Advanced logic for matching on model IDs to maximise the chance of using the correct model
-* Support for historic prices and prices changes, e.g. we have the prices for o3 before and after it's price changed
-* Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
-* tiered pricing support for Gemini models where you pay a separate price for very large contexts
-* support for [identifying price discrepancies](prices/README.md) from other sources
-* Python package, CLI
-* TODO: JS/TS package, API and web UI
+- Advanced logic for matching on model IDs to maximise the chance of using the correct model
+- Support for historic prices and prices changes, e.g. we have the prices for o3 before and after it's price changed
+- Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
+- tiered pricing support for Gemini models where you pay a separate price for very large contexts
+- support for [identifying price discrepancies](prices/README.md) from other sources
+- Python package, CLI
+- TODO: JS/TS package, API and web UI
 
 ### Providers
 
@@ -40,22 +41,22 @@ The following providers are currently supported:
 
 [comment]: <> (providers-start)
 
-* [Anthropic](prices/providers/anthropic.yml) - 9 models
-* [Avian](prices/providers/avian.yml) - 4 models
-* [AWS Bedrock](prices/providers/aws.yml) - 4 models
-* [Microsoft Azure](prices/providers/azure.yml) - 47 models
-* [Cohere](prices/providers/cohere.yml) - 5 models
-* [Deepseek](prices/providers/deepseek.yml) - 2 models
-* [Fireworks](prices/providers/fireworks.yml) - 7 models
-* [Google](prices/providers/google.yml) - 30 models
-* [Groq](prices/providers/groq.yml) - 8 models
-* [Mistral](prices/providers/mistral.yml) - 28 models
-* [Novita](prices/providers/novita.yml) - 34 models
-* [OpenAI](prices/providers/openai.yml) - 40 models
-* [OpenRouter](prices/providers/openrouter.yml) - 548 models
-* [Perplexity](prices/providers/perplexity.yml) - 8 models
-* [Together AI](prices/providers/together.yml) - 72 models
-* [X AI](prices/providers/x_ai.yml) - 7 models
+- [Anthropic](prices/providers/anthropic.yml) - 9 models
+- [Avian](prices/providers/avian.yml) - 4 models
+- [AWS Bedrock](prices/providers/aws.yml) - 4 models
+- [Microsoft Azure](prices/providers/azure.yml) - 47 models
+- [Cohere](prices/providers/cohere.yml) - 5 models
+- [Deepseek](prices/providers/deepseek.yml) - 2 models
+- [Fireworks](prices/providers/fireworks.yml) - 7 models
+- [Google](prices/providers/google.yml) - 30 models
+- [Groq](prices/providers/groq.yml) - 8 models
+- [Mistral](prices/providers/mistral.yml) - 28 models
+- [Novita](prices/providers/novita.yml) - 34 models
+- [OpenAI](prices/providers/openai.yml) - 40 models
+- [OpenRouter](prices/providers/openrouter.yml) - 548 models
+- [Perplexity](prices/providers/perplexity.yml) - 8 models
+- [Together AI](prices/providers/together.yml) - 72 models
+- [X AI](prices/providers/x_ai.yml) - 7 models
 
 [comment]: <> (providers-end)
 
