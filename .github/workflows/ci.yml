@@ -28,8 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm install
 
-      - run: echo "UV_PYTHON=${{ env.UV_PYTHON }}"
-
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
