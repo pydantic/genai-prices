@@ -33,12 +33,14 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 ## Development Commands
 
 ### Setup
+
 ```bash
 make install      # Install dependencies and pre-commit hooks
 make sync         # Update local packages and uv.lock
 ```
 
 ### Core Development
+
 ```bash
 make format       # Format code with ruff
 make lint         # Check code style and linting
@@ -66,27 +68,30 @@ make get-update-price-discrepancies    # Download and update price discrepancies
 make check-for-price-discrepancies     # Check for price discrepancies
 ```
 
-
 ## Important Notes
 
 ### Pricing Data
+
 - **NEVER** edit `prices/data.json` or `prices/data_slim.json` directly - they are generated files
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
 - URLs for `data.json` and `data_slim.json` must not change (used by auto-update feature)
 
 ### Development Workflow
+
 - Use `uv` for dependency management (not pip/conda)
 - Pre-commit hooks will automatically update JSON files when YAML prices change
 - Run `make build` after editing provider YAML files
 - Always run the full test suite before submitting changes
 
 ### Testing
+
 - Tests use pytest with coverage reporting
 - Test files are in `tests/` directory
 - Use `make test-all-python` to test across Python 3.9-3.13
 
 ### Code Style
+
 - Code formatted with ruff (single quotes, 120 char line length)
 - Type checking with basedpyright in strict mode
 - Follow existing patterns in the codebase
