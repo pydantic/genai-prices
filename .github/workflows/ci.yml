@@ -25,9 +25,17 @@ jobs:
 
       - run: uv sync  --all-packages
 
-      - uses: pre-commit/action@v3.0.0
+      - uses: actions/setup-node@v4
+      - run: npm install
+
+      - run: echo "UV_PYTHON=${{ env.UV_PYTHON }}"
+
+      - uses: actions/cache@v4
         with:
-          extra_args: --all-files --verbose
+          path: ~/.cache/pre-commit
+          key: pre-commit|${{ env.UV_PYTHON }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - run: uvx pre-commit run --color=always --all-files --verbose
         env:
           SKIP: no-commit-to-branch
 
