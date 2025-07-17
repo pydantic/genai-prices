@@ -12,13 +12,13 @@ def update_price_discrepancies(check_threshold: date | None = None):
     prices = load_source_prices()
     providers_yml = get_providers_yaml()
     if check_threshold is None:
-        check_threshold = date.today() - timedelta(days=30)
+        check_threshold = date.today() - timedelta(days=0)
 
     print(f'Checking price discrepancies since {check_threshold}')
-    found = False
 
     for provider_yml in providers_yml.values():
         discs = 0
+        ai_updates = 0
         for source, source_prices in prices.items():
             if provider_prices := source_prices.get(provider_yml.provider.id):
                 for model_id, price in provider_prices.items():
@@ -28,16 +28,16 @@ def update_price_discrepancies(check_threshold: date | None = None):
                             if prices_conflict(model.prices, price):
                                 provider_yml.set_price_discrepency(model.id, source, price)
                                 discs += 1
+                            else:
+                                provider_yml.set_model_field(model.id, 'prices_checked_ai', date.today())
+                                ai_updates += 1
 
-        if discs:
-            if not found:
-                found = True
-                print('price discrepancies:')
-            print(f'{provider_yml.provider.name:>20}: {discs}')
+        if discs or ai_updates:
+            if discs:
+                print(f'{provider_yml.provider.name:>20}: {discs} discrepancies')
+            if ai_updates:
+                print(f'{provider_yml.provider.name:>20}: {ai_updates} AI updates')
             provider_yml.save()
-
-    if not found:
-        print('no price discrepancies found')
 
 
 def check_for_price_discrepancies() -> int:

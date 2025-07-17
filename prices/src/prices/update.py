@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from datetime import date
 from io import StringIO
 from operator import itemgetter
 from pathlib import Path
@@ -107,6 +108,15 @@ class ProviderYaml:
             disc[source] = data
         else:
             yaml_model['price_discrepancies'] = {source: data}
+
+    def set_model_field(self, lookup_id: str, key: str, value: date | str | int) -> None:
+        yaml_model = self._get_model(lookup_id)
+        if key in yaml_model:
+            yaml_model[key] = value
+        else:
+            # insert key before prices
+            keys: list[str] = list(yaml_model)
+            yaml_model.insert(keys.index('prices'), key, value)  # pyright: ignore[reportUnknownMemberType]
 
     def add_model(self, model: ModelInfo) -> int:
         if next((m for m in self._extra_prices if m.id == model.id), None):

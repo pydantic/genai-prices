@@ -701,7 +701,7 @@ providers: list[Provider] = [
         id='fireworks',
         name='Fireworks',
         api_pattern='https://api\\.fireworks\\.ai',
-        pricing_urls=['https://fireworks.ai/pricing'],
+        pricing_urls=['https://fireworks.ai/models?filter=Featured'],
         model_match=ClauseStartsWith(starts_with='accounts/fireworks/models/'),
         models=[
             ModelInfo(

@@ -2,7 +2,7 @@
 name: Fireworks
 id: fireworks
 pricing_urls:
-  - https://fireworks.ai/pricing
+  - https://fireworks.ai/models?filter=Featured
 api_pattern: 'https://api\.fireworks\.ai'
 model_match:
   starts_with: accounts/fireworks/models/

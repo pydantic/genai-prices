@@ -264,6 +264,12 @@
           "description": "Date indicating when the prices were last checked for discrepancies.",
           "title": "Prices Checked"
         },
+        "prices_checked_ai": {
+          "format": "date",
+          "type": "string",
+          "description": "Date indicating when the prices were last checked or updated by AI.",
+          "title": "Prices Checked Ai"
+        },
         "collapse": {
           "default": true,
           "description": "Flag indicating whether this price should be collapsed into other prices.",
