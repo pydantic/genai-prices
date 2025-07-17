@@ -25,12 +25,18 @@ repos:
 
   - repo: local
     hooks:
-      - id: format
-        name: format
+      - id: format-python
+        name: format python
         entry: make
         args: [format]
         language: system
         types: [python]
+        pass_filenames: false
+      - id: format-prettier
+        name: format prettier
+        entry: npm
+        args: [run, format]
+        language: system
         pass_filenames: false
       - id: lint
         name: lint
