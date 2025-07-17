@@ -1,0 +1,37 @@
+{
+  "name": "genai-prices",
+  "version": "0.1.0",
+  "description": "Calculate prices for calling LLM inference APIs (JS/TS version of genai-prices)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "genai-prices": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pydantic/genai-prices"
+  },
+  "author": "Pydantic Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/yargs": "^17.0.24",
+    "@vitest/ui": "^3.2.4",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module"
+}

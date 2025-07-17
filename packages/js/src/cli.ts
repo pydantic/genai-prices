@@ -1,0 +1,124 @@
+#!/usr/bin/env node
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import { calcPrice, enableAutoUpdate } from './index.js';
+
+interface Argv {
+  _: (string | number)[];
+  $0: string;
+  'auto-update'?: boolean;
+  autoUpdate?: boolean;
+  provider?: string;
+  model?: string;
+  'input-tokens'?: number;
+  'cache-write-tokens'?: number;
+  'cache-read-tokens'?: number;
+  'output-tokens'?: number;
+  'input-audio-tokens'?: number;
+  'cache-audio-read-tokens'?: number;
+  'output-audio-tokens'?: number;
+  requests?: number;
+  timestamp?: string;
+}
+
+const argv = yargs(hideBin(process.argv))
+  .scriptName('genai-prices')
+  .command('list [provider]', 'List providers and models', (y) =>
+    y.positional('provider', { type: 'string', describe: 'Provider ID to filter' })
+  )
+  .command('calc <model>', 'Calculate price', (y) =>
+    y
+      .positional('model', { type: 'string', describe: 'Model (optionally provider:model)' })
+      .option('input-tokens', { type: 'number' })
+      .option('cache-write-tokens', { type: 'number' })
+      .option('cache-read-tokens', { type: 'number' })
+      .option('output-tokens', { type: 'number' })
+      .option('input-audio-tokens', { type: 'number' })
+      .option('cache-audio-read-tokens', { type: 'number' })
+      .option('output-audio-tokens', { type: 'number' })
+      .option('requests', { type: 'number' })
+      .option('provider', { type: 'string' })
+      .option('auto-update', { type: 'boolean', default: false })
+      .option('timestamp', { type: 'string', describe: 'RFC3339 timestamp' })
+  )
+  .option('auto-update', { type: 'boolean', describe: 'Enable auto-update from GitHub' })
+  .version('0.1.0')
+  .help()
+  .parseSync() as Argv;
+
+async function main() {
+  if (argv['auto-update']) enableAutoUpdate();
+  if (argv._[0] === 'list') {
+    const { getProviders } = await import('./dataLoader.js');
+    const providers = await getProviders();
+    if (argv.provider) {
+      const p = providers.find((p) => p.id === argv.provider);
+      if (!p) {
+        console.error(`Provider ${argv.provider} not found.`);
+        process.exit(1);
+      }
+      console.log(`${p.name}: (${p.models.length} models)`);
+      for (const m of p.models) {
+        console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
+      }
+    } else {
+      for (const p of providers) {
+        console.log(`${p.name}: (${p.models.length} models)`);
+        for (const m of p.models) {
+          console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
+        }
+      }
+    }
+    process.exit(0);
+  }
+  if (argv._[0] === 'calc') {
+    let providerId: string | undefined;
+    let modelRef = argv.model as string;
+    if (modelRef.includes(':')) {
+      [providerId, modelRef] = modelRef.split(':', 2);
+    }
+    const usage = {
+      inputTokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
+      cacheWriteTokens:
+        argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
+      cacheReadTokens:
+        argv['cache-read-tokens'] !== undefined ? Number(argv['cache-read-tokens']) : undefined,
+      outputTokens: argv['output-tokens'] !== undefined ? Number(argv['output-tokens']) : undefined,
+      inputAudioTokens:
+        argv['input-audio-tokens'] !== undefined ? Number(argv['input-audio-tokens']) : undefined,
+      cacheAudioReadTokens:
+        argv['cache-audio-read-tokens'] !== undefined
+          ? Number(argv['cache-audio-read-tokens'])
+          : undefined,
+      outputAudioTokens:
+        argv['output-audio-tokens'] !== undefined ? Number(argv['output-audio-tokens']) : undefined,
+      requests: argv['requests'] !== undefined ? Number(argv['requests']) : undefined,
+    };
+    const timestamp = argv.timestamp ? new Date(String(argv.timestamp)) : undefined;
+    try {
+      const result = await calcPrice(usage, modelRef, { providerId, timestamp });
+      const w = result.model.contextWindow;
+      const output: [string, string | number | undefined][] = [
+        ['Provider', result.provider.name],
+        ['Model', result.model.name || result.model.id],
+        ['Model Prices', JSON.stringify(result.modelPrice)],
+        ['Context Window', w !== undefined ? w.toLocaleString() : undefined],
+        ['Price', `$${result.price}`],
+      ];
+      for (const [key, value] of output) {
+        if (value !== undefined) {
+          console.log(`${key.padStart(14)}: ${value}`);
+        }
+      }
+    } catch (e: any) {
+      console.error('Error:', e.message);
+      process.exit(1);
+    }
+    process.exit(0);
+  }
+  // If no command matched
+  yargs().showHelp();
+  process.exit(1);
+}
+
+main();
