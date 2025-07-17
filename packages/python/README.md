@@ -70,8 +70,9 @@ Both `calc_price_sync` and `calc_price_async` can be configured to auto-update b
 This will cause the library to periodically check for updates to the price data.
 
 Please note:
-* this functionality is explicitly opt-in
-* we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
+
+- this functionality is explicitly opt-in
+- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
 
 You may also pass a custom source to `auto_update` to customize auto-update behavior.
 
@@ -81,9 +82,9 @@ downloaded by auto-update is around 26KB when compressed, so is generally very q
 None-the-less, the library tries hard to avoid making a network call when the user calls
 `calc_price_sync` or `calc_price_async`:
 
-* data is cached for one hour by default
-* when the cached data is 30minutes old, the library will attempt to update the cache in the background
-* You may pre-fetch data at program startup using `genai_prices.prefetch_async()` and `genai_prices.prefetch_sync()`,
+- data is cached for one hour by default
+- when the cached data is 30minutes old, the library will attempt to update the cache in the background
+- You may pre-fetch data at program startup using `genai_prices.prefetch_async()` and `genai_prices.prefetch_sync()`,
   these are both sync methods which return immediately and update the cache in the background, the only difference is that
   `calc_price_async` will wait for the `prefetch_async` task to complete when it is first called, and `calc_price_sync` will wait for the `prefetch_sync` concurrent future to complete when it is first called.
 

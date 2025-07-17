@@ -30,7 +30,7 @@ def providers_list(m: re.Match[str]):
 
     providers = sorted(list(providers_yml.values()), key=lambda x: x.provider.id)
     bullets = '\n'.join(
-        f'* [{provider_yml.provider.name}](prices/providers/{provider_yml.path.name}) - {len(provider_yml.provider.models)} models'
+        f'- [{provider_yml.provider.name}](prices/providers/{provider_yml.path.name}) - {len(provider_yml.provider.models)} models'
         for provider_yml in providers
     )
     return f'{open_comment}\n\n{bullets}\n\n{close_comment}'
