@@ -6,6 +6,7 @@ import { Provider, ModelInfo, ModelPrice, TieredPrices, ConditionalPrice } from 
 
 const DEFAULT_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json';
 const DEFAULT_TTL_MS = 60 * 60 * 1000; // 1 hour
+const OUTDATED_THRESHOLD_MS = 24 * 60 * 60 * 1000; // 1 day
 
 function mapTieredPrices(json: any): TieredPrices {
   return {
@@ -84,25 +85,25 @@ function mapProvider(json: any): Provider {
   };
 }
 
-function getLocalDataPath() {
-  try {
-    const { fileURLToPath } = require('url');
-    let resolvedFilename: string;
-    // @ts-ignore
-    if (typeof import.meta !== 'undefined' && import.meta.url) {
-      resolvedFilename = fileURLToPath(import.meta.url);
-    } else {
-      resolvedFilename = __filename;
+function findProjectRoot(): string {
+  let dir = process.cwd();
+  while (dir !== path.parse(dir).root) {
+    if (fs.existsSync(path.join(dir, 'prices', 'data.json'))) {
+      return dir;
     }
-    const __dirname = path.dirname(resolvedFilename);
-    return path.resolve(__dirname, '../../../prices/data.json');
-  } catch {
-    return path.resolve(process.cwd(), '../../../prices/data.json');
+    dir = path.dirname(dir);
   }
+  throw new Error('Could not find project root containing prices/data.json');
 }
 
-let providers: Provider[] | null = null;
-let lastLoaded = 0;
+function getLocalDataPath() {
+  const root = findProjectRoot();
+  return path.join(root, 'prices', 'data.json');
+}
+
+let asyncProviders: Provider[] | null = null;
+let asyncLastLoaded = 0;
+let asyncFetchPromise: Promise<Provider[]> | null = null;
 let autoUpdate = false;
 let remoteUrl = DEFAULT_URL;
 let ttlMs = DEFAULT_TTL_MS;
@@ -134,30 +135,44 @@ function loadLocalData(): Provider[] {
   throw new Error('No local data.json found');
 }
 
-export async function getProviders(): Promise<Provider[]> {
+export function getProvidersSync(): Provider[] {
+  return loadLocalData();
+}
+
+export async function getProvidersAsync(): Promise<Provider[]> {
   const now = Date.now();
-  if (providers && now - lastLoaded < ttlMs) {
-    return providers;
+  if (asyncProviders && now - asyncLastLoaded < ttlMs) {
+    return asyncProviders;
   }
-  if (autoUpdate) {
+  if (asyncFetchPromise) {
+    return asyncFetchPromise;
+  }
+  asyncFetchPromise = (async () => {
     try {
-      providers = await fetchRemoteData();
-      lastLoaded = now;
-      return providers;
+      asyncProviders = await fetchRemoteData();
+      asyncLastLoaded = Date.now();
+      return asyncProviders;
     } catch (e) {
-      providers = loadLocalData();
-      lastLoaded = now;
-      return providers;
+      asyncProviders = loadLocalData();
+      asyncLastLoaded = Date.now();
+      return asyncProviders;
+    } finally {
+      asyncFetchPromise = null;
     }
-  } else {
-    providers = loadLocalData();
-    lastLoaded = now;
-    return providers;
-  }
+  })();
+  return asyncFetchPromise;
 }
 
 export function enableAutoUpdate(options?: { url?: string; ttlMs?: number }) {
   autoUpdate = true;
   if (options?.url) remoteUrl = options.url;
   if (options?.ttlMs) ttlMs = options.ttlMs;
+}
+
+export function isLocalDataOutdated(): boolean {
+  const localPath = getLocalDataPath();
+  if (!fs.existsSync(localPath)) return true;
+  const stats = fs.statSync(localPath);
+  const age = Date.now() - stats.mtimeMs;
+  return age > OUTDATED_THRESHOLD_MS;
 }

@@ -9,6 +9,8 @@ A JavaScript/TypeScript library for calculating prices for calling LLM inference
 - Supports historic, tiered, and variable pricing
 - Opt-in auto-update from GitHub
 - CLI for listing models/providers and calculating prices
+- **Sync and Async API**: Use local data or fetch latest from GitHub
+- **Outdated data warning**: Warns if your local data is more than 1 day old
 
 ## Installation
 
@@ -58,27 +60,29 @@ node dist/cli.js --version
 
 ## API Usage (TypeScript/Node.js)
 
-```ts
-import { calcPrice, enableAutoUpdate, Usage } from 'genai-prices';
-
-// Enable auto-update to always use the latest data from GitHub
-enableAutoUpdate();
-
-const usage: Usage = { inputTokens: 1000, outputTokens: 100 };
-
-const result = await calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' });
-console.log(result.price); // e.g., 0.0012
-console.log(result.provider.name); // 'OpenAI'
-console.log(result.model.name); // 'gpt 3.5 turbo'
-```
-
-## Auto-Update
-
-By default, the library uses bundled price data. To enable auto-update from GitHub:
+### Synchronous API (local data only)
 
 ```ts
-import { enableAutoUpdate } from 'genai-prices';
-enableAutoUpdate();
+import { calcPriceSync } from 'genai-prices';
+const usage = { inputTokens: 1000, outputTokens: 100 };
+const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' });
+console.log(result.price);
 ```
 
-Or use the `--auto-update` flag in the CLI.
+### Asynchronous API (fetches latest data, then caches)
+
+```ts
+import { calcPriceAsync, enableAutoUpdate } from 'genai-prices';
+enableAutoUpdate(); // Always get the latest prices from GitHub
+const usage = { inputTokens: 1000, outputTokens: 100 };
+const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' });
+console.log(result.price);
+```
+
+- **Note:** The async API fetches the latest data on first call, then uses cached data for subsequent calls (always returns a Promise).
+- **Note:** The sync API always uses local data and will throw if the local data file is missing.
+- **Outdated data warning:** If your local data is more than 1 day old, a warning will be printed. Use `make build` or `--auto-update` to update.
+
+## License
+
+MIT

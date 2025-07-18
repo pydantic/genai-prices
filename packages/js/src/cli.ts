@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { calcPrice, enableAutoUpdate } from './index.js';
+import { calcPriceSync, calcPriceAsync, enableAutoUpdate } from './index.js';
+import type { Provider } from './types.js';
 
 interface Argv {
   _: (string | number)[];
@@ -23,12 +24,11 @@ interface Argv {
 
 const argv = yargs(hideBin(process.argv))
   .scriptName('genai-prices')
-  .command('list [provider]', 'List providers and models', (y) =>
+  .command('list [provider]', 'List providers and models', y =>
     y.positional('provider', { type: 'string', describe: 'Provider ID to filter' })
   )
-  .command('calc <model>', 'Calculate price', (y) =>
-    y
-      .positional('model', { type: 'string', describe: 'Model (optionally provider:model)' })
+  .command('calc <model>', 'Calculate price', y =>
+    y.positional('model', { type: 'string', describe: 'Model (optionally provider:model)' })
       .option('input-tokens', { type: 'number' })
       .option('cache-write-tokens', { type: 'number' })
       .option('cache-read-tokens', { type: 'number' })
@@ -49,23 +49,46 @@ const argv = yargs(hideBin(process.argv))
 async function main() {
   if (argv['auto-update']) enableAutoUpdate();
   if (argv._[0] === 'list') {
-    const { getProviders } = await import('./dataLoader.js');
-    const providers = await getProviders();
-    if (argv.provider) {
-      const p = providers.find((p) => p.id === argv.provider);
-      if (!p) {
-        console.error(`Provider ${argv.provider} not found.`);
-        process.exit(1);
-      }
-      console.log(`${p.name}: (${p.models.length} models)`);
-      for (const m of p.models) {
-        console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
-      }
-    } else {
-      for (const p of providers) {
+    if (argv['auto-update']) {
+      const { getProvidersAsync } = await import('./dataLoader.js');
+      const providers: Provider[] = await getProvidersAsync();
+      if (argv.provider) {
+        const p = providers.find((p: Provider) => p.id === argv.provider);
+        if (!p) {
+          console.error(`Provider ${argv.provider} not found.`);
+          process.exit(1);
+        }
         console.log(`${p.name}: (${p.models.length} models)`);
         for (const m of p.models) {
           console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
+        }
+      } else {
+        for (const p of providers) {
+          console.log(`${p.name}: (${p.models.length} models)`);
+          for (const m of p.models) {
+            console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
+          }
+        }
+      }
+    } else {
+      const { getProvidersSync } = await import('./dataLoader.js');
+      const providers: Provider[] = getProvidersSync();
+      if (argv.provider) {
+        const p = providers.find((p: Provider) => p.id === argv.provider);
+        if (!p) {
+          console.error(`Provider ${argv.provider} not found.`);
+          process.exit(1);
+        }
+        console.log(`${p.name}: (${p.models.length} models)`);
+        for (const m of p.models) {
+          console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
+        }
+      } else {
+        for (const p of providers) {
+          console.log(`${p.name}: (${p.models.length} models)`);
+          for (const m of p.models) {
+            console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`);
+          }
         }
       }
     }
@@ -79,24 +102,18 @@ async function main() {
     }
     const usage = {
       inputTokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
-      cacheWriteTokens:
-        argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
-      cacheReadTokens:
-        argv['cache-read-tokens'] !== undefined ? Number(argv['cache-read-tokens']) : undefined,
+      cacheWriteTokens: argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
+      cacheReadTokens: argv['cache-read-tokens'] !== undefined ? Number(argv['cache-read-tokens']) : undefined,
       outputTokens: argv['output-tokens'] !== undefined ? Number(argv['output-tokens']) : undefined,
-      inputAudioTokens:
-        argv['input-audio-tokens'] !== undefined ? Number(argv['input-audio-tokens']) : undefined,
-      cacheAudioReadTokens:
-        argv['cache-audio-read-tokens'] !== undefined
-          ? Number(argv['cache-audio-read-tokens'])
-          : undefined,
-      outputAudioTokens:
-        argv['output-audio-tokens'] !== undefined ? Number(argv['output-audio-tokens']) : undefined,
+      inputAudioTokens: argv['input-audio-tokens'] !== undefined ? Number(argv['input-audio-tokens']) : undefined,
+      cacheAudioReadTokens: argv['cache-audio-read-tokens'] !== undefined ? Number(argv['cache-audio-read-tokens']) : undefined,
+      outputAudioTokens: argv['output-audio-tokens'] !== undefined ? Number(argv['output-audio-tokens']) : undefined,
       requests: argv['requests'] !== undefined ? Number(argv['requests']) : undefined,
     };
     const timestamp = argv.timestamp ? new Date(String(argv.timestamp)) : undefined;
     try {
-      const result = await calcPrice(usage, modelRef, { providerId, timestamp });
+      const fn = argv['auto-update'] ? calcPriceAsync : calcPriceSync;
+      const result = await fn(usage, modelRef, { providerId, timestamp });
       const w = result.model.contextWindow;
       const output: [string, string | number | undefined][] = [
         ['Provider', result.provider.name],

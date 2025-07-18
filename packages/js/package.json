@@ -2,13 +2,33 @@
   "name": "genai-prices",
   "version": "0.1.0",
   "description": "Calculate prices for calling LLM inference APIs (JS/TS version of genai-prices)",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "bin": {
     "genai-prices": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "vite build && npm run build:cli",
+    "build:cli": "tsc src/cli.ts --outDir dist --module nodenext --esModuleInterop --skipLibCheck",
+    "dev": "vite build --watch",
+    "typecheck": "tsc",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "prepare": "npm run build"
@@ -28,7 +48,9 @@
     "@types/yargs": "^17.0.24",
     "@vitest/ui": "^3.2.4",
     "typescript": "^5.0.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.3"
   },
   "engines": {
     "node": ">=20"
