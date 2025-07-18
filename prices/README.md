@@ -18,18 +18,18 @@ The simplest way to contribute is to edit the [`./providers`](./providers) YAML 
 
 When you edit the prices of a model, remember to:
 
-* add or update the `prices_checked` field on the model to the current date
-* if relevant, add or update `price_comments` on the provider or model explaining the change and providing a link as a reference,
+- add or update the `prices_checked` field on the model to the current date
+- if relevant, add or update `price_comments` on the provider or model explaining the change and providing a link as a reference,
   if those fields don't make sense, you can also add a comment next to your change
-* have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
+- have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
   which will update the `data*.json` files when prices change. You can also run `make build` to update these files manually.
 
 Please do not:
 
-* edit any JSON file directly - they're all built with `make build` and are compact by design
-* add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
-* try to change the schema of providers or models without creating an issue to discuss the changes first
-* add new providers without creating an issue to discuss the changes first, adding models is fine
+- edit any JSON file directly - they're all built with `make build` and are compact by design
+- add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
+- try to change the schema of providers or models without creating an issue to discuss the changes first
+- add new providers without creating an issue to discuss the changes first, adding models is fine
 
 ### Automatic price discrepancy detection
 
