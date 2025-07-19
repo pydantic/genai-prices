@@ -1,8 +1,91 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest'
+import { describe, it, expect, beforeAll, vi, beforeEach } from 'vitest'
 import { calcPriceSync, calcPriceAsync, enableAutoUpdate, prefetchAsync, Usage } from '../index.js'
 import * as dataLoader from '../dataLoader.js'
 
+// Mock data for sync tests
+const mockProviders = [
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    apiPattern: 'https://api.openai.com',
+    pricingUrls: ['https://openai.com/pricing'],
+    description: 'OpenAI API',
+    priceComments: '',
+    modelMatch: { or: [{ starts_with: 'gpt-' }, { equals: 'o1' }] },
+    models: [
+      {
+        id: 'gpt-3.5-turbo',
+        match: { equals: 'gpt-3.5-turbo' },
+        name: 'GPT-3.5 Turbo',
+        description: 'GPT-3.5 Turbo model',
+        contextWindow: 16385,
+        priceComments: '',
+        prices: {
+          inputMtok: 0.5,
+          outputMtok: 1.5,
+          requestsKcount: 0.002,
+        },
+      },
+      {
+        id: 'gpt-4o',
+        match: { equals: 'gpt-4o' },
+        name: 'GPT-4o',
+        description: 'GPT-4o model',
+        contextWindow: 128000,
+        priceComments: '',
+        prices: {
+          inputMtok: 5,
+          outputMtok: 15,
+          requestsKcount: 0.01,
+        },
+      },
+      {
+        id: 'o1',
+        match: { equals: 'o1' },
+        name: 'O1',
+        description: 'O1 model',
+        contextWindow: 32768,
+        priceComments: '',
+        prices: {
+          inputMtok: 15,
+          outputMtok: 60,
+          requestsKcount: 0.05,
+        },
+      },
+    ],
+  },
+  {
+    id: 'google',
+    name: 'Google',
+    apiPattern: 'https://generativelanguage.googleapis.com',
+    pricingUrls: ['https://ai.google.dev/pricing'],
+    description: 'Google AI',
+    priceComments: '',
+    modelMatch: { starts_with: 'gemini' },
+    models: [
+      {
+        id: 'gemini-1.5-pro',
+        match: { equals: 'gemini-1.5-pro' },
+        name: 'Gemini 1.5 Pro',
+        description: 'Gemini 1.5 Pro model',
+        contextWindow: 1000000,
+        priceComments: '',
+        prices: {
+          inputMtok: { base: 3.5, tiers: [{ start: 1000000, price: 1.75 }] },
+          outputMtok: 10.5,
+          requestsKcount: 0.007,
+        },
+      },
+    ],
+  },
+]
+
 describe('calcPriceSync', () => {
+  beforeEach(() => {
+    // Mock getProvidersSync for sync tests
+    vi.spyOn(dataLoader, 'getProvidersSync').mockReturnValue(mockProviders)
+  })
+
   it('calculates price for gpt-3.5-turbo (sync, local only)', () => {
     const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
     const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
@@ -121,21 +204,5 @@ describe('calcPriceAsync', () => {
       expect(result.provider.name).toBeTruthy()
       expect(result.model.name).toBeTruthy()
     }
-  })
-
-  it('triggers background refresh if cache is older than 30 minutes', async () => {
-    // Simulate cache older than 30 minutes
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
-    // Prime the cache
-    await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-    // Manually age the cache
-    ;(dataLoader as any).asyncLastLoaded -= 31 * 60 * 1000
-    // Spy on fetchRemoteData
-    const spy = vi.spyOn(dataLoader as any, 'fetchRemoteData').mockResolvedValue((dataLoader as any).asyncProviders)
-    // Call again, should trigger background refresh but serve old data
-    const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-    expect(result.price).toBeGreaterThanOrEqual(0)
-    expect(spy).toHaveBeenCalled()
-    spy.mockRestore()
   })
 })

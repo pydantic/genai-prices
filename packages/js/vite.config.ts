@@ -4,15 +4,28 @@ import { builtinModules } from 'module'
 
 export default defineConfig({
   build: {
-    lib: {
-      entry: './src/index.ts',
-      name: 'genai-prices',
-      formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
-    },
     rollupOptions: {
+      input: {
+        index: './src/index.ts',
+        cli: './src/cli.ts',
+      },
       external: [...builtinModules, ...builtinModules.map((m) => `node:${m}`)],
+      output: {
+        entryFileNames: (chunkInfo) => {
+          if (chunkInfo.name === 'cli') {
+            return 'cli.js'
+          }
+          return 'index.js'
+        },
+        chunkFileNames: '[name].js',
+        format: 'esm',
+      },
     },
+    lib: false,
+    outDir: 'dist',
+    emptyOutDir: true,
+    target: 'node20',
+    minify: false,
   },
   plugins: [dts()],
 })

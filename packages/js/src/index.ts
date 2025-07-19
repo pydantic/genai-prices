@@ -1,6 +1,8 @@
+import fs from 'fs'
+import path from 'path'
 import {
-  getProvidersSync,
   getProvidersAsync,
+  getProvidersSync,
   enableAutoUpdate,
   isLocalDataOutdated,
   prefetchAsync,
@@ -19,13 +21,16 @@ export interface CalcPriceOptions {
 }
 
 // Outdated data warning (1 day threshold)
-if (isLocalDataOutdated()) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    '[genai-prices] Your local price data is more than 1 day old. Run `make build` or use --auto-update to get the latest prices.',
-  )
-}
+;(async () => {
+  if (await isLocalDataOutdated()) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[genai-prices] Your local price data is more than 1 day old. Run `make build` or use --auto-update to get the latest prices.',
+    )
+  }
+})()
 
+// Node.js only: always reads from local prices/data.json
 export function calcPriceSync(usage: Usage, modelRef: string, options: CalcPriceOptions = {}): PriceCalculation {
   const providers = getProvidersSync()
   const provider = matchProvider(providers, modelRef, options.providerId, options.providerApiUrl)
@@ -44,23 +49,24 @@ export function calcPriceSync(usage: Usage, modelRef: string, options: CalcPrice
   }
 }
 
-let asyncCache: { providers: Provider[]; timestamp: number } | null = null
-let asyncInitPromise: Promise<Provider[]> | null = null
-
 export async function calcPriceAsync(
   usage: Usage,
   modelRef: string,
   options: CalcPriceOptions = {},
 ): Promise<PriceCalculation> {
-  if (asyncCache) {
-    // Always async, even if cached
-    return Promise.resolve(calcPriceSync(usage, modelRef, options))
+  const providers = await getProvidersAsync()
+  const provider = matchProvider(providers, modelRef, options.providerId, options.providerApiUrl)
+  if (!provider) throw new Error('Provider not found')
+  const model = matchModel(provider.models, modelRef)
+  if (!model) throw new Error('Model not found')
+  const timestamp = options.timestamp || new Date()
+  const modelPrice = getActiveModelPrice(model, timestamp)
+  const price = calcModelPrice(usage, modelPrice)
+  return {
+    price,
+    provider,
+    model,
+    modelPrice,
+    autoUpdateTimestamp: undefined,
   }
-  if (!asyncInitPromise) {
-    asyncInitPromise = getProvidersAsync()
-  }
-  const providers = await asyncInitPromise
-  asyncCache = { providers, timestamp: Date.now() }
-  // Now use the cached providers for calculation
-  return calcPriceSync(usage, modelRef, options)
 }

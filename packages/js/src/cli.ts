@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import { calcPriceSync, calcPriceAsync, enableAutoUpdate } from './index.js'

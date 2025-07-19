@@ -47,13 +47,13 @@ export interface TimeOfDateConstraint {
 }
 
 export type MatchLogic =
-  | { type: 'starts_with'; value: string }
-  | { type: 'ends_with'; value: string }
-  | { type: 'contains'; value: string }
-  | { type: 'equals'; value: string }
-  | { type: 'regex'; value: string }
-  | { type: 'or'; clauses: MatchLogic[] }
-  | { type: 'and'; clauses: MatchLogic[] }
+  | { starts_with: string }
+  | { ends_with: string }
+  | { contains: string }
+  | { equals: string }
+  | { regex: string }
+  | { or: MatchLogic[] }
+  | { and: MatchLogic[] }
 
 export interface ModelInfo {
   id: string
@@ -82,4 +82,10 @@ export interface PriceCalculation {
   model: ModelInfo
   modelPrice: ModelPrice
   autoUpdateTimestamp?: string
+}
+
+export type PriceDataStorage = {
+  get: () => Promise<string | null>
+  set: (data: string) => Promise<void>
+  getLastModified?: () => Promise<number | null>
 }
