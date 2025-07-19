@@ -1,0 +1,59 @@
+{
+  "name": "@pydantic/genai-prices",
+  "version": "0.1.0",
+  "description": "Calculate prices for calling LLM inference APIs (JS/TS version of genai-prices)",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "bin": {
+    "@pydantic/genai-prices": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "vite build && npm run postbuild",
+    "postbuild": "echo '#!/usr/bin/env node' | cat - dist/cli.js > dist/cli.tmp && mv dist/cli.tmp dist/cli.js && chmod +x dist/cli.js",
+    "dev": "vite build --watch",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "test:ui": "vitest --ui",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pydantic/genai-prices"
+  },
+  "author": "Pydantic Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/yargs": "^17.0.24",
+    "@vitest/ui": "^3.2.4",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module"
+}

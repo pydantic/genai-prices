@@ -13,3 +13,4 @@ wheels/
 .claude/
 .coverage
 TODO.md
+node_modules/
