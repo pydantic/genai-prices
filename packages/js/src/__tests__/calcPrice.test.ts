@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, vi, beforeEach } from 'vitest'
-import { calcPriceSync, calcPriceAsync, enableAutoUpdate, prefetchAsync, Usage } from '../index.js'
+import { calcPriceSync, calcPriceAsync, enableAutoUpdate, Usage } from '../index.js'
 import * as dataLoader from '../dataLoader.js'
 
 // Mock data for sync tests

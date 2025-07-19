@@ -1,7 +1,6 @@
 import { Provider, ModelInfo, ModelPrice, TieredPrices, ConditionalPrice, PriceDataStorage } from './types.js'
 import path from 'path'
 import fetch, { type RequestInfo, type RequestInit } from 'node-fetch'
-import os from 'os'
 import fs from 'fs'
 
 const DEFAULT_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'

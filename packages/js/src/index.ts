@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import {
   getProvidersAsync,
   getProvidersSync,
@@ -9,7 +7,7 @@ import {
 } from './dataLoader.js'
 import { matchProvider, matchModel } from './matcher.js'
 import { calcPrice as calcModelPrice, getActiveModelPrice } from './priceCalc.js'
-import type { Usage, PriceCalculation, Provider, ModelInfo } from './types.js'
+import type { Usage, PriceCalculation } from './types.js'
 
 export type { Usage, PriceCalculation, Provider, ModelInfo } from './types.js'
 export { enableAutoUpdate, prefetchAsync }
