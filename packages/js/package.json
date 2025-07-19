@@ -25,8 +25,9 @@
     "@pydantic/genai-prices": "dist/cli.js"
   },
   "scripts": {
-    "build": "vite build && npm run postbuild",
-    "postbuild": "echo '#!/usr/bin/env node' | cat - dist/cli.js > dist/cli.tmp && mv dist/cli.tmp dist/cli.js && chmod +x dist/cli.js",
+    "build": "vite build && npm run postbuild && npm run copy-data",
+    "postbuild": "if ! head -n1 dist/cli.js | grep -q '^#!/usr/bin/env node$'; then echo '#!/usr/bin/env node' | cat - dist/cli.js > dist/cli.tmp && mv dist/cli.tmp dist/cli.js; fi && chmod +x dist/cli.js",
+    "copy-data": "cp ../../prices/data.json dist/data.json",
     "dev": "vite build --watch",
     "typecheck": "tsc",
     "test": "vitest run",

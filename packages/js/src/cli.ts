@@ -42,15 +42,27 @@ const argv = yargs(hideBin(process.argv))
       .option('timestamp', { type: 'string', describe: 'RFC3339 timestamp' }),
   )
   .option('auto-update', { type: 'boolean', describe: 'Enable auto-update from GitHub' })
+  .option('input-tokens', { type: 'number' })
+  .option('cache-write-tokens', { type: 'number' })
+  .option('cache-read-tokens', { type: 'number' })
+  .option('output-tokens', { type: 'number' })
+  .option('input-audio-tokens', { type: 'number' })
+  .option('cache-audio-read-tokens', { type: 'number' })
+  .option('output-audio-tokens', { type: 'number' })
+  .option('requests', { type: 'number' })
+  .option('provider', { type: 'string' })
+  .option('timestamp', { type: 'string', describe: 'RFC3339 timestamp' })
   .version('0.1.0')
   .help()
   .parseSync() as Argv
 
 async function main() {
   if (argv['auto-update']) enableAutoUpdate()
+
+  // Handle list command
   if (argv._[0] === 'list') {
     if (argv['auto-update']) {
-      const { getProvidersAsync } = await import('./dataLoader.js')
+      const { getProvidersAsync } = await import('./dataLoader.browser.js')
       const providers: Provider[] = await getProvidersAsync()
       if (argv.provider) {
         const p = providers.find((p: Provider) => p.id === argv.provider)
@@ -71,7 +83,7 @@ async function main() {
         }
       }
     } else {
-      const { getProvidersSync } = await import('./dataLoader.js')
+      const { getProvidersSync } = await import('./dataLoader.node.js')
       const providers: Provider[] = getProvidersSync()
       if (argv.provider) {
         const p = providers.find((p: Provider) => p.id === argv.provider)
@@ -94,8 +106,16 @@ async function main() {
     }
     process.exit(0)
   }
-  if (argv._[0] === 'calc') {
-    const models = Array.isArray(argv.model) ? argv.model : [argv.model]
+
+  // Handle calc command or direct model names
+  const isCalcCommand = argv._[0] === 'calc'
+  const models = isCalcCommand
+    ? Array.isArray(argv.model)
+      ? argv.model
+      : [argv.model]
+    : (argv._.filter((arg) => typeof arg === 'string') as string[])
+
+  if (models.length > 0) {
     const usage = {
       inputTokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
       cacheWriteTokens: argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
@@ -139,6 +159,7 @@ async function main() {
     }
     process.exit(hadError ? 1 : 0)
   }
+
   // If no command matched
   yargs().showHelp()
   process.exit(1)

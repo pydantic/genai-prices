@@ -1,133 +1,150 @@
 # genai-prices (JS/TS)
 
-A JavaScript/TypeScript library for calculating prices for calling LLM inference APIs, using the [genai-prices](https://github.com/pydantic/genai-prices) data.
+Universal library and CLI for calculating LLM API prices, supporting Node.js, browser, and other environments.
 
 ## Features
 
-- Loads model/provider pricing from JSON (local or remote)
-- Advanced logic for matching model IDs
-- Supports historic, tiered, and variable pricing
-- Opt-in auto-update from GitHub
-- **Sync API (Node.js only)**: Always reads from local prices/data.json
-- **Async API (universal)**: Use in Node, browser, or cloud with storage callbacks
-- **Outdated data warning**: Warns if your local data is more than 1 day old
-- **Multi-model CLI support**: Calculate prices for multiple models in one command
-- **Async prefetch**: Pre-warm the async cache at startup for fast first call
-- **Background refresh**: Async cache is refreshed in the background if older than 30 minutes
+- **Sync API** (Node.js only): Fast, local price calculation using local data file.
+- **Async API** (Universal): Fetches and caches price data from GitHub, works in browser, Node.js, Cloudflare, etc.
+- **Environment-agnostic design**: Sync/async distinction is about API style, not environment.
+- **Smart provider and model matching** with flexible options.
+- **CLI** for quick price calculations with auto-update support.
+- **Browser support** with a dedicated bundle and test page.
 
-## Installation
+## Usage
 
-```sh
-npm install @pydantic/genai-prices
-# or
-yarn add @pydantic/genai-prices
-```
+### Node.js (Library)
 
-## API Usage
+```js
+import { calcPriceSync, calcPriceAsync } from '@pydantic/genai-prices'
 
-### Synchronous API (Node.js only, always reads from local prices/data.json)
-
-```ts
-import { calcPriceSync } from '@pydantic/genai-prices'
 const usage = { inputTokens: 1000, outputTokens: 100 }
+
+// Sync (Node.js only) - requires local data.json
 const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-console.log(result.price)
-// Note: This only works in Node.js and always uses the local file prices/data.json
+console.log(result.price, result.provider.name, result.model.name)
+
+// Async (works everywhere) - fetches from GitHub
+const asyncResult = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+console.log(asyncResult.price, asyncResult.provider.name, asyncResult.model.name)
 ```
 
-### Asynchronous API (universal, works in Node, browser, or cloud)
+### Browser (Library)
 
-```ts
-import { calcPriceAsync, enableAutoUpdate, prefetchAsync } from '@pydantic/genai-prices'
-// In-memory (default, works everywhere)
-enableAutoUpdate() // No storage option = in-memory
-prefetchAsync() // (Optional) Pre-warm the async cache at startup
+```js
+import { calcPriceAsync } from './dist/browser.js'
 const usage = { inputTokens: 1000, outputTokens: 100 }
 const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-console.log(result.price)
+console.log(result.price, result.provider.name, result.model.name)
 ```
 
-### Asynchronous API (browser, using localStorage)
+### CLI
 
-```ts
-import { calcPriceAsync, enableAutoUpdate } from '@pydantic/genai-prices'
-const browserStorage = {
-  get: async () => window.localStorage.getItem('genai-prices-data'),
-  set: async (data) => {
-    window.localStorage.setItem('genai-prices-data', data)
-    window.localStorage.setItem('genai-prices-data:ts', Date.now().toString())
-  },
-  getLastModified: async () => {
-    const ts = window.localStorage.getItem('genai-prices-data:ts')
-    return ts ? Number(ts) : null
-  },
-}
-enableAutoUpdate({ storage: browserStorage })
-const usage = { inputTokens: 1000, outputTokens: 100 }
-const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-console.log(result.price)
+```bash
+# Basic usage
+node dist/cli.js gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
+
+# With auto-update (fetches latest prices from GitHub)
+node dist/cli.js gpt-3.5-turbo --input-tokens 1000 --output-tokens 100 --auto-update
+
+# Specify provider explicitly
+node dist/cli.js openai:gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
+
+# List available providers and models
+node dist/cli.js list
+node dist/cli.js list openai
 ```
 
-- **Note:** The sync API is Node.js only and always uses the local file prices/data.json.
-- **Note:** The async API is universal and works in any environment with storage callbacks.
-- **Note:** The async API fetches the latest data on first call, then uses cached data for subsequent calls (always returns a Promise).
-- **Note:** If the async cache is older than 30 minutes, a background refresh is started, but the old data is served until the new data is ready.
-- **Note:** Call `prefetchAsync()` at startup to pre-warm the async cache for fast first call (matches Python's prefetch_async).
-- **Note:** You can provide your own custom storage backend by passing `get`, `set`, and `getLastModified` callbacks.
-- **Outdated data warning:** If your local data is more than 1 day old, a warning will be printed. Use `make build` or `--auto-update` to update.
+### Provider Matching
 
-## CLI Usage
+The library uses intelligent provider matching:
 
-You can use the CLI either locally (via `node dist/cli.js ...`) or globally (after installing with `npm i -g @pydantic/genai-prices`).
+1. **Explicit provider**: Use `providerId` parameter or `provider:model` format
+2. **Model-based matching**: Uses provider's `modelMatch` logic (e.g., OpenAI matches models starting with "gpt-")
+3. **Fallback**: Tries to match based on model name patterns
 
-### Global CLI Usage
+**Best practices:**
 
-Install globally:
+- Always specify `providerId` if you know it (e.g., `openai`, `google`, etc.) for best results
+- Use `provider:model` format in CLI for explicit provider selection
+- The async API with `--auto-update` provides the most up-to-date pricing
 
-```sh
-npm install -g @pydantic/genai-prices
+## Testing
+
+### Node.js Test
+
+Run:
+
+```bash
+node tests/test-error-handling.js
 ```
 
-Then use the CLI directly:
+This tests error handling, sync/async API, and providerId usage.
 
-```sh
-@pydantic/genai-prices list --auto-update
-@pydantic/genai-prices calc --input-tokens 1000 --output-tokens 100 openai:gpt-3.5-turbo --auto-update
+### Browser Test
+
+1. Build the package: `npm run build`
+2. Serve the directory: `npx serve .` or `python3 -m http.server`
+3. Open `tests/test-browser.html` in your browser.
+4. Enter a provider (e.g., `openai`) and model (e.g., `gpt-3.5-turbo`) and run the test.
+
+## Architecture
+
+### Folder Structure
+
+```
+src/
+├── sync/
+│   └── calcPriceSync.ts      # Sync API implementation (any environment)
+├── async/
+│   └── calcPriceAsync.ts     # Async API implementation (any environment)
+├── dataLoader.node.ts        # Node.js data loader (sync + async)
+├── dataLoader.browser.ts     # Browser data loader (async only)
+├── index.ts                  # Node.js entry (exports both sync + async)
+├── index.browser.ts          # Browser entry (exports async only)
+├── cli.ts                    # CLI tool
+├── types.ts                  # Shared types
+├── matcher.ts                # Shared matching logic
+├── priceCalc.ts              # Shared price calculation
+└── __tests__/                # Tests
 ```
 
-### Local CLI Usage (from project root)
+### Design Principles
 
-```sh
-node dist/cli.js list --auto-update
-node dist/cli.js calc --input-tokens 1000 --output-tokens 100 openai:gpt-3.5-turbo --auto-update
+- **Environment-agnostic APIs**: Sync/async is about API style, not environment
+- **Environment-specific data loaders**: Each environment gets appropriate data loading
+- **Universal compatibility**: Both sync and async APIs can be used in Node.js, browser, Cloudflare, etc.
+- **Clean separation**: Data loaders are environment-specific, but APIs are not
+
+## Troubleshooting
+
+### Common Issues
+
+- **Provider not found**:
+  - Make sure you specify the correct `providerId` (e.g., `openai`)
+  - Try using `provider:model` format in CLI
+  - Use `--auto-update` flag to fetch latest data
+- **Sync API in browser**: Not supported. Use only the async API in browser environments.
+- **Build errors**: Ensure you have the latest data.json file in the dist directory.
+
+### Provider Matching Examples
+
+```bash
+# These should work with auto-update
+node dist/cli.js gpt-3.5-turbo --auto-update
+node dist/cli.js claude-3-5-sonnet --auto-update
+node dist/cli.js gemini-1.5-pro --auto-update
+
+# Explicit provider specification
+node dist/cli.js openai:gpt-3.5-turbo
+node dist/cli.js anthropic:claude-3-5-sonnet
+node dist/cli.js google:gemini-1.5-pro
 ```
 
-### Calculate prices for multiple models in one command
+## Maintainers
 
-```sh
-@pydantic/genai-prices calc --input-tokens 100000 --output-tokens 3000 o1 o3 claude-opus-4 --auto-update
-```
-
-- Each model will be processed in turn. Errors for individual models are reported but do not stop the batch.
-
-### Calculate price for a model with a timestamp (historic pricing)
-
-```sh
-@pydantic/genai-prices calc --input-tokens 1000 --output-tokens 100 openai:gpt-4o --timestamp 2024-01-01T12:00:00Z --auto-update
-```
-
-### Show CLI help
-
-```sh
-@pydantic/genai-prices --help
-```
-
-### Show CLI version
-
-```sh
-@pydantic/genai-prices --version
-```
-
-## License
-
-MIT
+- When adding new features, keep sync and async logic in separate files
+- Only import Node.js built-ins in Node-only files
+- Use the browser entry for browser bundles
+- Data loaders should handle snake_case to camelCase conversion
+- Provider matching logic is in `matcher.ts` and should be environment-agnostic

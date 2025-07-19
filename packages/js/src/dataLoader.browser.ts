@@ -1,7 +1,4 @@
-import { Provider, ModelInfo, ModelPrice, TieredPrices, ConditionalPrice, PriceDataStorage } from './types.js'
-import path from 'path'
-import fetch, { type RequestInfo, type RequestInit } from 'node-fetch'
-import fs from 'fs'
+import type { Provider, ModelInfo, ModelPrice, TieredPrices, ConditionalPrice, PriceDataStorage } from './types.js'
 
 const DEFAULT_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 const DEFAULT_TTL_MS = 60 * 60 * 1000 // 1 hour
@@ -81,25 +78,25 @@ function mapProvider(json: any): Provider {
   }
 }
 
-// In-memory storage callbacks (default)
+// In-memory storage
 let inMemoryData: string | null = null
 let inMemoryLastModified: number | null = null
 const inMemoryStorage: PriceDataStorage = {
-  get: async () => inMemoryData,
-  set: async (data) => {
+  get: async (): Promise<string | null> => inMemoryData,
+  set: async (data: string) => {
     inMemoryData = data
     inMemoryLastModified = Date.now()
   },
-  getLastModified: async () => inMemoryLastModified,
+  getLastModified: async (): Promise<number | null> => inMemoryLastModified,
 }
 
 let storageBackend: PriceDataStorage = inMemoryStorage
 let asyncProviders: Provider[] | null = null
-let asyncLastLoaded = 0
+let asyncLastLoaded: number = 0
 let asyncFetchPromise: Promise<Provider[]> | null = null
-let autoUpdate = false
-let remoteUrl = DEFAULT_URL
-let ttlMs = DEFAULT_TTL_MS
+let autoUpdate: boolean = false
+let remoteUrl: string = DEFAULT_URL
+let ttlMs: number = DEFAULT_TTL_MS
 
 export function setStorageBackend(storage: PriceDataStorage) {
   storageBackend = storage
@@ -117,7 +114,7 @@ async function saveDataAsync(data: string) {
 }
 
 export async function fetchRemoteData(): Promise<Provider[]> {
-  const res = await fetch(remoteUrl as RequestInfo, { cache: 'no-store' } as RequestInit)
+  const res = await fetch(remoteUrl, { cache: 'no-store' })
   if (!res.ok) throw new Error(`Failed to fetch data: ${res.statusText}`)
   const data = await res.text()
   await saveDataAsync(data)
@@ -176,15 +173,8 @@ export async function isLocalDataOutdated(): Promise<boolean> {
   return Date.now() - ts > OUTDATED_THRESHOLD_MS
 }
 
-export function prefetchAsync() {
+export function prefetchAsync(): void {
   if (!asyncFetchPromise) {
     asyncFetchPromise = getProvidersAsync()
   }
-}
-
-export function getProvidersSync(): Provider[] {
-  const dataPath = path.resolve(__dirname, '../../prices/data.json')
-  const raw = fs.readFileSync(dataPath, 'utf-8')
-  const data = JSON.parse(raw)
-  return Array.isArray(data) ? data.map(mapProvider) : []
 }

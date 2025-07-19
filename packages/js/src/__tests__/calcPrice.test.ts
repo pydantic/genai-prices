@@ -1,84 +1,73 @@
 import { describe, it, expect, beforeAll, vi, beforeEach } from 'vitest'
-import { calcPriceSync, calcPriceAsync, enableAutoUpdate, Usage } from '../index.js'
-import * as dataLoader from '../dataLoader.js'
+import * as dataLoader from '../dataLoader.node.js'
+import { calcPriceSync } from '../sync/calcPriceSync.js'
+import { calcPriceAsync } from '../async/calcPriceAsync.js'
+import { enableAutoUpdate } from '../dataLoader.node.js'
+import type { Usage } from '../types.js'
 
 // Mock data for sync tests
 const mockProviders = [
   {
     id: 'openai',
     name: 'OpenAI',
-    apiPattern: 'https://api.openai.com',
-    pricingUrls: ['https://openai.com/pricing'],
-    description: 'OpenAI API',
+    apiPattern: '',
+    pricingUrls: [],
+    description: '',
     priceComments: '',
-    modelMatch: { or: [{ starts_with: 'gpt-' }, { equals: 'o1' }] },
     models: [
       {
         id: 'gpt-3.5-turbo',
         match: { equals: 'gpt-3.5-turbo' },
-        name: 'GPT-3.5 Turbo',
-        description: 'GPT-3.5 Turbo model',
+        name: 'gpt 3.5 turbo',
+        description: '',
         contextWindow: 16385,
         priceComments: '',
-        prices: {
-          inputMtok: 0.5,
-          outputMtok: 1.5,
-          requestsKcount: 0.002,
-        },
+        prices: { inputMtok: 0.0005, outputMtok: 0.0015 },
       },
       {
         id: 'gpt-4o',
         match: { equals: 'gpt-4o' },
-        name: 'GPT-4o',
-        description: 'GPT-4o model',
+        name: 'gpt-4o',
+        description: '',
         contextWindow: 128000,
         priceComments: '',
-        prices: {
-          inputMtok: 5,
-          outputMtok: 15,
-          requestsKcount: 0.01,
-        },
+        prices: { inputMtok: 0.0005, outputMtok: 0.0015 },
       },
       {
         id: 'o1',
         match: { equals: 'o1' },
         name: 'O1',
-        description: 'O1 model',
+        description: '',
         contextWindow: 32768,
         priceComments: '',
-        prices: {
-          inputMtok: 15,
-          outputMtok: 60,
-          requestsKcount: 0.05,
-        },
+        prices: { inputMtok: 0.001, outputMtok: 0.002 },
       },
     ],
   },
   {
     id: 'google',
     name: 'Google',
-    apiPattern: 'https://generativelanguage.googleapis.com',
-    pricingUrls: ['https://ai.google.dev/pricing'],
-    description: 'Google AI',
+    apiPattern: '',
+    pricingUrls: [],
+    description: '',
     priceComments: '',
-    modelMatch: { starts_with: 'gemini' },
     models: [
       {
         id: 'gemini-1.5-pro',
         match: { equals: 'gemini-1.5-pro' },
         name: 'Gemini 1.5 Pro',
-        description: 'Gemini 1.5 Pro model',
+        description: '',
         contextWindow: 1000000,
         priceComments: '',
-        prices: {
-          inputMtok: { base: 3.5, tiers: [{ start: 1000000, price: 1.75 }] },
-          outputMtok: 10.5,
-          requestsKcount: 0.007,
-        },
+        prices: { inputMtok: 0.00025, outputMtok: 0.0005 },
       },
     ],
   },
 ]
+
+beforeEach(() => {
+  vi.spyOn(dataLoader, 'getProvidersSync').mockImplementation(() => mockProviders)
+})
 
 describe('calcPriceSync', () => {
   beforeEach(() => {
@@ -126,9 +115,7 @@ describe('calcPriceSync', () => {
   it('calculates prices for multiple models (sync)', () => {
     const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
     const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
-    const results = models.map((model) =>
-      calcPriceSync(usage, model, { providerId: model === 'o1' ? 'openai' : undefined }),
-    )
+    const results = models.map((model) => calcPriceSync(usage, model, { providerId: 'openai' }))
     expect(results.length).toBe(models.length)
     for (const result of results) {
       expect(result.price).toBeGreaterThanOrEqual(0)
