@@ -1,4 +1,4 @@
-import type { Provider, ModelInfo, ModelPrice, TieredPrices, ConditionalPrice, PriceDataStorage } from './types.js'
+import type { Provider, PriceDataStorage } from './types.js'
 import { data as embeddedData } from './data.js'
 
 const DEFAULT_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
@@ -8,62 +8,44 @@ const BACKGROUND_REFRESH_MS = 30 * 60 * 1000 // 30 minutes
 
 // Universal environment detection
 function detectEnvironment(): 'node' | 'browser' | 'cloudflare' | 'deno' | 'unknown' {
-  // Check for Cloudflare Workers
   if (typeof globalThis !== 'undefined' && 'caches' in globalThis && 'default' in globalThis.caches) {
     return 'cloudflare'
   }
-
-  // Check for Deno
   if (typeof (globalThis as any).Deno !== 'undefined') {
     return 'deno'
   }
-
-  // Check for Node.js
   if (typeof process !== 'undefined' && process.versions && process.versions.node) {
     return 'node'
   }
-
-  // Check for browser
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     return 'browser'
   }
-
   return 'unknown'
 }
 
-// Universal fetch that works everywhere
 async function universalFetch(url: string, options: RequestInit = {}): Promise<Response> {
   const env = detectEnvironment()
-
   if (env === 'node') {
-    // Use node-fetch in Node.js
     const { default: nodeFetch } = await import('node-fetch')
     return nodeFetch(url, options as any) as any
   }
-
-  // Use native fetch in all other environments
   if (typeof fetch !== 'undefined') {
     return fetch(url, options)
   }
-
   throw new Error(`Fetch not available in environment: ${env}`)
 }
 
 // Universal file system access (Node.js only)
 async function readLocalFile(path: string): Promise<string | null> {
   const env = detectEnvironment()
-
   if (env === 'node') {
     try {
       const fs = require('fs')
       const pathModule = require('path')
-
-      // Try dist/data.json first
       try {
         const dataPath = pathModule.join(__dirname, 'data.json')
         return fs.readFileSync(dataPath, 'utf-8')
       } catch (error) {
-        // Try monorepo source path
         try {
           const monorepoPath = pathModule.join(__dirname, '../../prices/data.json')
           return fs.readFileSync(monorepoPath, 'utf-8')
@@ -75,82 +57,7 @@ async function readLocalFile(path: string): Promise<string | null> {
       return null
     }
   }
-
   return null
-}
-
-// Mapping functions
-function mapTieredPrices(json: any): TieredPrices {
-  return {
-    base: json.base,
-    tiers: Array.isArray(json.tiers) ? json.tiers.map((t: any) => ({ start: t.start, price: t.price })) : [],
-  }
-}
-
-function mapModelPrice(json: any): ModelPrice {
-  return {
-    inputMtok:
-      typeof json.input_mtok === 'object' && json.input_mtok !== null
-        ? mapTieredPrices(json.input_mtok)
-        : json.input_mtok,
-    cacheWriteMtok:
-      typeof json.cache_write_mtok === 'object' && json.cache_write_mtok !== null
-        ? mapTieredPrices(json.cache_write_mtok)
-        : json.cache_write_mtok,
-    cacheReadMtok:
-      typeof json.cache_read_mtok === 'object' && json.cache_read_mtok !== null
-        ? mapTieredPrices(json.cache_read_mtok)
-        : json.cache_read_mtok,
-    outputMtok:
-      typeof json.output_mtok === 'object' && json.output_mtok !== null
-        ? mapTieredPrices(json.output_mtok)
-        : json.output_mtok,
-    inputAudioMtok:
-      typeof json.input_audio_mtok === 'object' && json.input_audio_mtok !== null
-        ? mapTieredPrices(json.input_audio_mtok)
-        : json.input_audio_mtok,
-    cacheAudioReadMtok:
-      typeof json.cache_audio_read_mtok === 'object' && json.cache_audio_read_mtok !== null
-        ? mapTieredPrices(json.cache_audio_read_mtok)
-        : json.cache_audio_read_mtok,
-    outputAudioMtok:
-      typeof json.output_audio_mtok === 'object' && json.output_audio_mtok !== null
-        ? mapTieredPrices(json.output_audio_mtok)
-        : json.output_audio_mtok,
-    requestsKcount: json.requests_kcount,
-  }
-}
-
-function mapConditionalPrice(json: any): ConditionalPrice {
-  return {
-    constraint: json.constraint,
-    prices: mapModelPrice(json.prices),
-  }
-}
-
-function mapModelInfo(json: any): ModelInfo {
-  return {
-    id: json.id,
-    match: json.match,
-    name: json.name,
-    description: json.description,
-    contextWindow: json.context_window,
-    priceComments: json.price_comments,
-    prices: Array.isArray(json.prices) ? json.prices.map(mapConditionalPrice) : mapModelPrice(json.prices),
-  }
-}
-
-function mapProvider(json: any): Provider {
-  return {
-    id: json.id,
-    name: json.name,
-    apiPattern: json.api_pattern,
-    pricingUrls: json.pricing_urls,
-    description: json.description,
-    priceComments: json.price_comments,
-    modelMatch: json.model_match,
-    models: Array.isArray(json.models) ? json.models.map(mapModelInfo) : [],
-  }
 }
 
 // Universal storage implementation
@@ -163,7 +70,7 @@ const universalStorage: PriceDataStorage = {
     inMemoryData = data
     inMemoryLastModified = Date.now()
   },
-  getLastModified: async (): Promise<number | null> => inMemoryLastModified,
+  get_last_modified: async (): Promise<number | null> => inMemoryLastModified,
 }
 
 let storageBackend: PriceDataStorage = universalStorage
@@ -182,7 +89,7 @@ async function loadDataAsync(): Promise<Provider[]> {
   const raw = await storageBackend.get()
   if (!raw) throw new Error('No data found in storage backend')
   const data = JSON.parse(raw)
-  return Array.isArray(data) ? data.map(mapProvider) : []
+  return Array.isArray(data) ? data : []
 }
 
 async function saveDataAsync(data: string) {
@@ -195,7 +102,7 @@ export async function fetchRemoteData(): Promise<Provider[]> {
   const data = await res.text()
   await saveDataAsync(data)
   const parsed = JSON.parse(data)
-  return Array.isArray(parsed) ? parsed.map(mapProvider) : []
+  return Array.isArray(parsed) ? parsed : []
 }
 
 export async function getProvidersAsync(): Promise<Provider[]> {
@@ -243,8 +150,8 @@ export function enableAutoUpdate(options?: { url?: string; ttlMs?: number; stora
 }
 
 export async function isLocalDataOutdated(): Promise<boolean> {
-  if (!storageBackend.getLastModified) return false
-  const ts = await storageBackend.getLastModified()
+  if (!storageBackend.get_last_modified) return false
+  const ts = await storageBackend.get_last_modified()
   if (!ts) return true
   return Date.now() - ts > OUTDATED_THRESHOLD_MS
 }
@@ -257,11 +164,9 @@ export function prefetchAsync(): void {
 
 // Universal sync function that works everywhere
 export function getProvidersSync(): Provider[] {
-  // Use the embedded data directly - this works in all environments
-  return embeddedData.map(mapProvider)
+  return embeddedData
 }
 
-// Export environment info for debugging
 export function getEnvironmentInfo() {
   return {
     environment: detectEnvironment(),

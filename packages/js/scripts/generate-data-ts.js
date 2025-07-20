@@ -12,9 +12,34 @@ const __dirname = path.dirname(__filename)
 const dataPath = path.join(__dirname, '../../../prices/data.json')
 const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'))
 
+function fixConstraints(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(fixConstraints)
+  } else if (obj && typeof obj === 'object') {
+    // Fix constraints in ConditionalPrice
+    if (obj.constraint) {
+      if (obj.constraint.start_date && !obj.constraint.type) {
+        obj.constraint.type = 'start_date'
+      } else if (obj.constraint.start_time && obj.constraint.end_time && !obj.constraint.type) {
+        obj.constraint.type = 'time_of_date'
+      }
+    }
+    // Recurse into nested objects
+    for (const key of Object.keys(obj)) {
+      obj[key] = fixConstraints(obj[key])
+    }
+    return obj
+  } else {
+    return obj
+  }
+}
+
+const fixedData = fixConstraints(data)
+
 // Generate the TypeScript file
-const tsContent = `// Raw JSON data - will be transformed by mapping functions
-export const data: any[] = ${JSON.stringify(data, null, 2)};
+const tsContent = `// Raw JSON data, type-checked as Provider[]
+import type { Provider } from './types.js'
+export const data: Provider[] = ${JSON.stringify(fixedData, null, 2)};
 `
 
 // Write the TypeScript file

@@ -1,11 +1,11 @@
 export interface Usage {
-  inputTokens?: number
-  cacheWriteTokens?: number
-  cacheReadTokens?: number
-  outputTokens?: number
-  inputAudioTokens?: number
-  cacheAudioReadTokens?: number
-  outputAudioTokens?: number
+  input_tokens?: number
+  cache_write_tokens?: number
+  cache_read_tokens?: number
+  output_tokens?: number
+  input_audio_tokens?: number
+  cache_audio_read_tokens?: number
+  output_audio_tokens?: number
   requests?: number
 }
 
@@ -20,14 +20,14 @@ export interface TieredPrices {
 }
 
 export interface ModelPrice {
-  inputMtok?: number | TieredPrices
-  cacheWriteMtok?: number | TieredPrices
-  cacheReadMtok?: number | TieredPrices
-  outputMtok?: number | TieredPrices
-  inputAudioMtok?: number | TieredPrices
-  cacheAudioReadMtok?: number | TieredPrices
-  outputAudioMtok?: number | TieredPrices
-  requestsKcount?: number
+  input_mtok?: number | TieredPrices
+  cache_write_mtok?: number | TieredPrices
+  cache_read_mtok?: number | TieredPrices
+  output_mtok?: number | TieredPrices
+  input_audio_mtok?: number | TieredPrices
+  cache_audio_read_mtok?: number | TieredPrices
+  output_audio_mtok?: number | TieredPrices
+  requests_kcount?: number
 }
 
 export interface ConditionalPrice {
@@ -36,13 +36,13 @@ export interface ConditionalPrice {
 }
 
 export interface StartDateConstraint {
-  startDate: string // ISO date string
+  start_date: string // ISO date string
   type: 'start_date'
 }
 
 export interface TimeOfDateConstraint {
-  startTime: string // HH:MM:SS
-  endTime: string // HH:MM:SS
+  start_time: string // HH:MM:SS
+  end_time: string // HH:MM:SS
   type: 'time_of_date'
 }
 
@@ -60,19 +60,19 @@ export interface ModelInfo {
   match: MatchLogic
   name?: string
   description?: string
-  contextWindow?: number
-  priceComments?: string
+  context_window?: number
+  price_comments?: string
   prices: ModelPrice | ConditionalPrice[]
 }
 
 export interface Provider {
   id: string
   name: string
-  apiPattern: string
-  pricingUrls?: string[]
+  api_pattern: string
+  pricing_urls?: string[]
   description?: string
-  priceComments?: string
-  modelMatch?: MatchLogic
+  price_comments?: string
+  model_match?: MatchLogic
   models: ModelInfo[]
 }
 
@@ -80,12 +80,12 @@ export interface PriceCalculation {
   price: number
   provider: Provider
   model: ModelInfo
-  modelPrice: ModelPrice
-  autoUpdateTimestamp?: string
+  model_price: ModelPrice
+  auto_update_timestamp?: string
 }
 
 export type PriceDataStorage = {
   get: () => Promise<string | null>
   set: (data: string) => Promise<void>
-  getLastModified?: () => Promise<number | null>
+  get_last_modified?: () => Promise<number | null>
 }

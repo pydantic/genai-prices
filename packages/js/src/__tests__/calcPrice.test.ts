@@ -10,56 +10,56 @@ const mockProviders = [
   {
     id: 'openai',
     name: 'OpenAI',
-    apiPattern: '',
-    pricingUrls: [],
+    api_pattern: '',
+    pricing_urls: [],
     description: '',
-    priceComments: '',
+    price_comments: '',
     models: [
       {
         id: 'gpt-3.5-turbo',
         match: { equals: 'gpt-3.5-turbo' },
         name: 'gpt 3.5 turbo',
         description: '',
-        contextWindow: 16385,
-        priceComments: '',
-        prices: { inputMtok: 0.0005, outputMtok: 0.0015 },
+        context_window: 16385,
+        price_comments: '',
+        prices: { input_mtok: 0.0005, output_mtok: 0.0015 },
       },
       {
         id: 'gpt-4o',
         match: { equals: 'gpt-4o' },
         name: 'gpt-4o',
         description: '',
-        contextWindow: 128000,
-        priceComments: '',
-        prices: { inputMtok: 0.0005, outputMtok: 0.0015 },
+        context_window: 128000,
+        price_comments: '',
+        prices: { input_mtok: 0.0005, output_mtok: 0.0015 },
       },
       {
         id: 'o1',
         match: { equals: 'o1' },
         name: 'O1',
         description: '',
-        contextWindow: 32768,
-        priceComments: '',
-        prices: { inputMtok: 0.001, outputMtok: 0.002 },
+        context_window: 32768,
+        price_comments: '',
+        prices: { input_mtok: 0.001, output_mtok: 0.002 },
       },
     ],
   },
   {
     id: 'google',
     name: 'Google',
-    apiPattern: '',
-    pricingUrls: [],
+    api_pattern: '',
+    pricing_urls: [],
     description: '',
-    priceComments: '',
+    price_comments: '',
     models: [
       {
         id: 'gemini-1.5-pro',
         match: { equals: 'gemini-1.5-pro' },
         name: 'Gemini 1.5 Pro',
         description: '',
-        contextWindow: 1000000,
-        priceComments: '',
-        prices: { inputMtok: 0.00025, outputMtok: 0.0005 },
+        context_window: 1000000,
+        price_comments: '',
+        prices: { input_mtok: 0.00025, output_mtok: 0.0005 },
       },
     ],
   },
@@ -76,7 +76,7 @@ describe('calcPriceSync', () => {
   })
 
   it('calculates price for gpt-3.5-turbo (sync, local only)', () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
     expect(result.price).toBeGreaterThanOrEqual(0)
     expect(result.provider.name).toMatch(/OpenAI/i)
@@ -84,7 +84,7 @@ describe('calcPriceSync', () => {
   })
 
   it('calculates tiered pricing for Gemini 1.5 Pro (Google)', () => {
-    const usage: Usage = { inputTokens: 2_000_000, outputTokens: 1000 }
+    const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
     const result = calcPriceSync(usage, 'gemini-1.5-pro', { providerId: 'google' })
     expect(result.price).toBeGreaterThan(0)
     expect(result.provider.name).toMatch(/Google/i)
@@ -92,17 +92,17 @@ describe('calcPriceSync', () => {
   })
 
   it('throws error for invalid provider', () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     expect(() => calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'notaprovider' })).toThrow(/Provider not found/)
   })
 
   it('throws error for invalid model', () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     expect(() => calcPriceSync(usage, 'not-a-real-model', { providerId: 'openai' })).toThrow(/Model not found/)
   })
 
   it('calculates historic pricing for gpt-4o (OpenAI)', () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const result = calcPriceSync(usage, 'gpt-4o', {
       providerId: 'openai',
       timestamp: new Date('2024-01-01T12:00Z'),
@@ -113,7 +113,7 @@ describe('calcPriceSync', () => {
   })
 
   it('calculates prices for multiple models (sync)', () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
     const results = models.map((model) => calcPriceSync(usage, model, { providerId: 'openai' }))
     expect(results.length).toBe(models.length)
@@ -131,7 +131,7 @@ describe('calcPriceAsync', () => {
   })
 
   it('calculates price for gpt-3.5-turbo (async, fetches remote)', async () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
     expect(result.price).toBeGreaterThanOrEqual(0)
     expect(result.provider.name).toMatch(/OpenAI/i)
@@ -139,7 +139,7 @@ describe('calcPriceAsync', () => {
   })
 
   it('calculates tiered pricing for Gemini 1.5 Pro (Google)', async () => {
-    const usage: Usage = { inputTokens: 2_000_000, outputTokens: 1000 }
+    const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
     const result = await calcPriceAsync(usage, 'gemini-1.5-pro', { providerId: 'google' })
     expect(result.price).toBeGreaterThan(0)
     expect(result.provider.name).toMatch(/Google/i)
@@ -147,21 +147,21 @@ describe('calcPriceAsync', () => {
   })
 
   it('throws error for invalid provider', async () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     await expect(calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'notaprovider' })).rejects.toThrow(
       /Provider not found/,
     )
   })
 
   it('throws error for invalid model', async () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     await expect(calcPriceAsync(usage, 'not-a-real-model', { providerId: 'openai' })).rejects.toThrow(
       /Model not found/,
     )
   })
 
   it('calculates historic pricing for gpt-4o (OpenAI)', async () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const result = await calcPriceAsync(usage, 'gpt-4o', {
       providerId: 'openai',
       timestamp: new Date('2024-01-01T12:00:00Z'),
@@ -172,7 +172,7 @@ describe('calcPriceAsync', () => {
   })
 
   it('returns a Promise and uses cache on subsequent calls', async () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const first = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
     const second = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
     expect(second.price).toBe(first.price)
@@ -180,7 +180,7 @@ describe('calcPriceAsync', () => {
   })
 
   it('calculates prices for multiple models (async)', async () => {
-    const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
+    const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
     const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
     const results = await Promise.all(
       models.map((model) => calcPriceAsync(usage, model, { providerId: model === 'o1' ? 'openai' : undefined })),

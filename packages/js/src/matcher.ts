@@ -25,10 +25,6 @@ function matchLogic(logic: any, text: string): boolean {
   return false
 }
 
-export function matchModel(models: ModelInfo[], modelRef: string): ModelInfo | undefined {
-  return models.find((model) => matchLogic(model.match, modelRef))
-}
-
 export function matchProvider(
   providers: Provider[],
   modelRef: string,
@@ -39,8 +35,12 @@ export function matchProvider(
     return providers.find((p) => p.id === providerId)
   }
   if (providerApiUrl) {
-    return providers.find((p) => new RegExp(p.apiPattern).test(providerApiUrl))
+    return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
   }
   // Try model_match logic
-  return providers.find((p) => p.modelMatch && matchLogic(p.modelMatch, modelRef))
+  return providers.find((p) => p.model_match && matchLogic(p.model_match, modelRef))
+}
+
+export function matchModel(models: ModelInfo[], modelRef: string): ModelInfo | undefined {
+  return models.find((m) => matchLogic(m.match, modelRef))
 }

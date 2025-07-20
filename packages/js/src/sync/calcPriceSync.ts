@@ -18,13 +18,13 @@ export function calcPriceSync(usage: Usage, modelRef: string, options: CalcPrice
   const model = matchModel(provider.models, modelRef)
   if (!model) throw new Error('Model not found')
   const timestamp = options.timestamp || new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
-  const price = calcModelPrice(usage, modelPrice)
+  const model_price = getActiveModelPrice(model, timestamp)
+  const price = calcModelPrice(usage, model_price)
   return {
     price,
     provider,
     model,
-    modelPrice,
-    autoUpdateTimestamp: undefined,
+    model_price,
+    auto_update_timestamp: undefined,
   }
 }

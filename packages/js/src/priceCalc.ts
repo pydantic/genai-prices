@@ -25,26 +25,25 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
   return price
 }
 
-function calcMtokPrice(field: number | TieredPrices | undefined, tokens: number | undefined, label?: string): number {
-  if (!field || !tokens || tokens <= 0) return 0
-  if (typeof field === 'number') {
-    return (field * tokens) / 1_000_000
-  } else {
-    return calcTieredPrice(field, tokens)
+function calcMtokPrice(price: number | TieredPrices | undefined, tokens: number | undefined, _field: string): number {
+  if (price === undefined || tokens === undefined) return 0
+  if (typeof price === 'number') {
+    return (price * tokens) / 1_000_000
   }
+  return calcTieredPrice(price, tokens)
 }
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): number {
   let price = 0
-  price += calcMtokPrice(modelPrice.inputMtok, usage.inputTokens, 'inputMtok')
-  price += calcMtokPrice(modelPrice.cacheWriteMtok, usage.cacheWriteTokens, 'cacheWriteMtok')
-  price += calcMtokPrice(modelPrice.cacheReadMtok, usage.cacheReadTokens, 'cacheReadMtok')
-  price += calcMtokPrice(modelPrice.outputMtok, usage.outputTokens, 'outputMtok')
-  price += calcMtokPrice(modelPrice.inputAudioMtok, usage.inputAudioTokens, 'inputAudioMtok')
-  price += calcMtokPrice(modelPrice.cacheAudioReadMtok, usage.cacheAudioReadTokens, 'cacheAudioReadMtok')
-  price += calcMtokPrice(modelPrice.outputAudioMtok, usage.outputAudioTokens, 'outputAudioMtok')
-  if (modelPrice.requestsKcount !== undefined) {
-    price += modelPrice.requestsKcount * ((usage.requests ?? 1) / 1000)
+  price += calcMtokPrice(modelPrice.input_mtok, usage.input_tokens, 'input_mtok')
+  price += calcMtokPrice(modelPrice.cache_write_mtok, usage.cache_write_tokens, 'cache_write_mtok')
+  price += calcMtokPrice(modelPrice.cache_read_mtok, usage.cache_read_tokens, 'cache_read_mtok')
+  price += calcMtokPrice(modelPrice.output_mtok, usage.output_tokens, 'output_mtok')
+  price += calcMtokPrice(modelPrice.input_audio_mtok, usage.input_audio_tokens, 'input_audio_mtok')
+  price += calcMtokPrice(modelPrice.cache_audio_read_mtok, usage.cache_audio_read_tokens, 'cache_audio_read_mtok')
+  price += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok')
+  if (modelPrice.requests_kcount !== undefined) {
+    price += modelPrice.requests_kcount * ((usage.requests ?? 1) / 1000)
   }
   return price
 }
@@ -58,12 +57,12 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
     const cond = model.prices[i] as ConditionalPrice
     if (!cond.constraint) return cond.prices
     if (cond.constraint.type === 'start_date') {
-      if (timestamp >= new Date(cond.constraint.startDate)) {
+      if (timestamp >= new Date(cond.constraint.start_date)) {
         return cond.prices
       }
     } else if (cond.constraint.type === 'time_of_date') {
       const t = timestamp.toTimeString().slice(0, 8)
-      if (t >= cond.constraint.startTime && t < cond.constraint.endTime) {
+      if (t >= cond.constraint.start_time && t < cond.constraint.end_time) {
         return cond.prices
       }
     }

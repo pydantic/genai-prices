@@ -1,5 +1,6 @@
-// Raw JSON data - will be transformed by mapping functions
-export const data: any[] = [
+// Raw JSON data, type-checked as Provider[]
+import type { Provider } from './types.js'
+export const data: Provider[] = [
   {
     id: 'anthropic',
     name: 'Anthropic',
@@ -1144,6 +1145,7 @@ export const data: any[] = [
             constraint: {
               start_time: '00:30:00Z',
               end_time: '16:30:00Z',
+              type: 'time_of_date',
             },
             prices: {
               input_mtok: 0.27,
@@ -1184,6 +1186,7 @@ export const data: any[] = [
             constraint: {
               start_time: '00:30:00Z',
               end_time: '16:30:00Z',
+              type: 'time_of_date',
             },
             prices: {
               input_mtok: 0.55,
@@ -3380,6 +3383,7 @@ export const data: any[] = [
           {
             constraint: {
               start_date: '2025-06-10',
+              type: 'start_date',
             },
             prices: {
               input_mtok: 2,
