@@ -8,23 +8,15 @@ export default defineConfig({
       input: {
         index: './src/index.ts',
         cli: './src/cli.ts',
-        browser: './src/index.browser.ts', // browser-only entry
       },
       external: (id) => {
-        // For browser entry, don't externalize Node.js modules since they don't exist in browser
-        if (id === './src/index.browser.ts' || id.includes('browser')) {
-          return false
-        }
-        // For Node.js entries, externalize Node.js built-ins
+        // Externalize Node.js built-ins
         return [...builtinModules, ...builtinModules.map((m) => `node:${m}`)].includes(id)
       },
       output: {
         entryFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'cli') {
             return 'cli.js'
-          }
-          if (chunkInfo.name === 'browser') {
-            return 'browser.js'
           }
           return 'index.js'
         },
@@ -36,7 +28,7 @@ export default defineConfig({
     lib: false,
     outDir: 'dist',
     emptyOutDir: true,
-    target: 'esnext', // browser bundle should target modern browsers
+    target: 'esnext',
     minify: false,
   },
   plugins: [dts()],

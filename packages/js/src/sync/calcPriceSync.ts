@@ -1,4 +1,4 @@
-import { getProvidersSync } from '../dataLoader.node.js'
+import { getProvidersSync } from '../dataLoader.js'
 import { matchProvider, matchModel } from '../matcher.js'
 import { calcPrice as calcModelPrice, getActiveModelPrice } from '../priceCalc.js'
 import type { Usage, PriceCalculation } from '../types.js'

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll, vi, beforeEach } from 'vitest'
-import * as dataLoader from '../dataLoader.node.js'
+import * as dataLoader from '../dataLoader.js'
 import { calcPriceSync } from '../sync/calcPriceSync.js'
 import { calcPriceAsync } from '../async/calcPriceAsync.js'
-import { enableAutoUpdate } from '../dataLoader.node.js'
+import { enableAutoUpdate } from '../dataLoader.js'
 import type { Usage } from '../types.js'
 
 // Mock data for sync tests
@@ -105,7 +105,7 @@ describe('calcPriceSync', () => {
     const usage: Usage = { inputTokens: 1000, outputTokens: 100 }
     const result = calcPriceSync(usage, 'gpt-4o', {
       providerId: 'openai',
-      timestamp: new Date('2024-01-01T12:00:00Z'),
+      timestamp: new Date('2024-01-01T12:00Z'),
     })
     expect(result.price).toBeGreaterThanOrEqual(0)
     expect(result.provider.name).toMatch(/OpenAI/i)

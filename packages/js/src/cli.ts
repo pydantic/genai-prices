@@ -62,7 +62,7 @@ async function main() {
   // Handle list command
   if (argv._[0] === 'list') {
     if (argv['auto-update']) {
-      const { getProvidersAsync } = await import('./dataLoader.browser.js')
+      const { getProvidersAsync } = await import('./dataLoader.js')
       const providers: Provider[] = await getProvidersAsync()
       if (argv.provider) {
         const p = providers.find((p: Provider) => p.id === argv.provider)
@@ -83,7 +83,7 @@ async function main() {
         }
       }
     } else {
-      const { getProvidersSync } = await import('./dataLoader.node.js')
+      const { getProvidersSync } = await import('./dataLoader.js')
       const providers: Provider[] = getProvidersSync()
       if (argv.provider) {
         const p = providers.find((p: Provider) => p.id === argv.provider)

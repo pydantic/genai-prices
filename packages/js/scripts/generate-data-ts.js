@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+import fs from 'fs'
+import path from 'path'
+import { execSync } from 'child_process'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Read the JSON data directly from the source
+const dataPath = path.join(__dirname, '../../../prices/data.json')
+const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'))
+
+// Generate the TypeScript file
+const tsContent = `// Raw JSON data - will be transformed by mapping functions
+export const data: any[] = ${JSON.stringify(data, null, 2)};
+`
+
+// Write the TypeScript file
+const outputPath = path.join(__dirname, '../src/data.ts')
+fs.writeFileSync(outputPath, tsContent)
+
+console.log('✅ Generated src/data.ts from prices/data.json')
+
+// Run prettier on the generated file
+try {
+  execSync('npx prettier --write src/data.ts', { cwd: path.join(__dirname, '..'), stdio: 'inherit' })
+  console.log('✅ Formatted src/data.ts with prettier')
+} catch (error) {
+  console.log('⚠️  Prettier not available, skipping formatting')
+}

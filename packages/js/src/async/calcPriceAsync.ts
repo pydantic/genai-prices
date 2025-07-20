@@ -1,4 +1,4 @@
-import { getProvidersAsync } from '../dataLoader.browser.js'
+import { getProvidersAsync } from '../dataLoader.js'
 import { matchProvider, matchModel } from '../matcher.js'
 import { calcPrice as calcModelPrice, getActiveModelPrice } from '../priceCalc.js'
 import type { Usage, PriceCalculation } from '../types.js'

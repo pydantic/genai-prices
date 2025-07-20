@@ -1,10 +1,85 @@
 import type { Provider, ModelInfo, ModelPrice, TieredPrices, ConditionalPrice, PriceDataStorage } from './types.js'
+import { data as embeddedData } from './data.js'
 
 const DEFAULT_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 const DEFAULT_TTL_MS = 60 * 60 * 1000 // 1 hour
 const OUTDATED_THRESHOLD_MS = 24 * 60 * 60 * 1000 // 1 day
 const BACKGROUND_REFRESH_MS = 30 * 60 * 1000 // 30 minutes
 
+// Universal environment detection
+function detectEnvironment(): 'node' | 'browser' | 'cloudflare' | 'deno' | 'unknown' {
+  // Check for Cloudflare Workers
+  if (typeof globalThis !== 'undefined' && 'caches' in globalThis && 'default' in globalThis.caches) {
+    return 'cloudflare'
+  }
+
+  // Check for Deno
+  if (typeof (globalThis as any).Deno !== 'undefined') {
+    return 'deno'
+  }
+
+  // Check for Node.js
+  if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+    return 'node'
+  }
+
+  // Check for browser
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    return 'browser'
+  }
+
+  return 'unknown'
+}
+
+// Universal fetch that works everywhere
+async function universalFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const env = detectEnvironment()
+
+  if (env === 'node') {
+    // Use node-fetch in Node.js
+    const { default: nodeFetch } = await import('node-fetch')
+    return nodeFetch(url, options as any) as any
+  }
+
+  // Use native fetch in all other environments
+  if (typeof fetch !== 'undefined') {
+    return fetch(url, options)
+  }
+
+  throw new Error(`Fetch not available in environment: ${env}`)
+}
+
+// Universal file system access (Node.js only)
+async function readLocalFile(path: string): Promise<string | null> {
+  const env = detectEnvironment()
+
+  if (env === 'node') {
+    try {
+      const fs = require('fs')
+      const pathModule = require('path')
+
+      // Try dist/data.json first
+      try {
+        const dataPath = pathModule.join(__dirname, 'data.json')
+        return fs.readFileSync(dataPath, 'utf-8')
+      } catch (error) {
+        // Try monorepo source path
+        try {
+          const monorepoPath = pathModule.join(__dirname, '../../prices/data.json')
+          return fs.readFileSync(monorepoPath, 'utf-8')
+        } catch (error2) {
+          return null
+        }
+      }
+    } catch (error) {
+      return null
+    }
+  }
+
+  return null
+}
+
+// Mapping functions
 function mapTieredPrices(json: any): TieredPrices {
   return {
     base: json.base,
@@ -78,10 +153,11 @@ function mapProvider(json: any): Provider {
   }
 }
 
-// In-memory storage
+// Universal storage implementation
 let inMemoryData: string | null = null
 let inMemoryLastModified: number | null = null
-const inMemoryStorage: PriceDataStorage = {
+
+const universalStorage: PriceDataStorage = {
   get: async (): Promise<string | null> => inMemoryData,
   set: async (data: string) => {
     inMemoryData = data
@@ -90,7 +166,7 @@ const inMemoryStorage: PriceDataStorage = {
   getLastModified: async (): Promise<number | null> => inMemoryLastModified,
 }
 
-let storageBackend: PriceDataStorage = inMemoryStorage
+let storageBackend: PriceDataStorage = universalStorage
 let asyncProviders: Provider[] | null = null
 let asyncLastLoaded: number = 0
 let asyncFetchPromise: Promise<Provider[]> | null = null
@@ -114,7 +190,7 @@ async function saveDataAsync(data: string) {
 }
 
 export async function fetchRemoteData(): Promise<Provider[]> {
-  const res = await fetch(remoteUrl, { cache: 'no-store' })
+  const res = await universalFetch(remoteUrl, { cache: 'no-store' })
   if (!res.ok) throw new Error(`Failed to fetch data: ${res.statusText}`)
   const data = await res.text()
   await saveDataAsync(data)
@@ -176,5 +252,21 @@ export async function isLocalDataOutdated(): Promise<boolean> {
 export function prefetchAsync(): void {
   if (!asyncFetchPromise) {
     asyncFetchPromise = getProvidersAsync()
+  }
+}
+
+// Universal sync function that works everywhere
+export function getProvidersSync(): Provider[] {
+  // Use the embedded data directly - this works in all environments
+  return embeddedData.map(mapProvider)
+}
+
+// Export environment info for debugging
+export function getEnvironmentInfo() {
+  return {
+    environment: detectEnvironment(),
+    hasFetch: typeof fetch !== 'undefined',
+    hasProcess: typeof process !== 'undefined',
+    hasWindow: typeof window !== 'undefined',
   }
 }
