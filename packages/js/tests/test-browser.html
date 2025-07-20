@@ -38,19 +38,19 @@
       To use: <b>serve this directory</b> (e.g. <code>npx serve .</code> or <code>python3 -m http.server</code>), then
       open in your browser.<br />
       <b>Note:</b>
-      <span style="color: #b00">Only the async API (<code>calcPriceAsync</code>) is supported in the browser.</span
-      ><br />
-      The sync API (<code>calcPriceSync</code>) is <b>Node.js only</b> and will not work in the browser.<br />
-      <b>This page uses the browser-only bundle: <code>dist/browser.js</code></b>
+      <span style="color: #080">Both sync and async APIs are now supported in the browser!</span><br />
+      The universal solution works in all environments: Node.js, browser, Cloudflare Workers, etc.<br />
+      <b>This page uses the universal bundle: <code>dist/index.js</code></b>
     </p>
     <label>Provider: <input id="provider" value="" /></label>
     <label>Model: <input id="model" value="gpt-3.5-turbo" /></label>
     <label>Input Tokens: <input id="inputTokens" type="number" value="1000" /></label>
     <label>Output Tokens: <input id="outputTokens" type="number" value="100" /></label>
     <button id="runAsync">Run calcPriceAsync</button>
+    <button id="runSync">Run calcPriceSync</button>
     <div id="output"></div>
     <script type="module">
-      import { calcPriceAsync } from '../dist/browser.js'
+      import { calcPriceAsync, calcPriceSync } from '../dist/index.js'
       const provider = document.getElementById('provider')
       const model = document.getElementById('model')
       const inputTokens = document.getElementById('inputTokens')
@@ -65,6 +65,18 @@
           output.innerHTML = `<div class='success'>Async Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
         } catch (e) {
           output.innerHTML = `<div class='error'>Async Error: ${e.message}</div>`
+        }
+      }
+
+      document.getElementById('runSync').onclick = () => {
+        output.innerHTML = 'Running sync...'
+        try {
+          const usage = { inputTokens: Number(inputTokens.value), outputTokens: Number(outputTokens.value) }
+          const options = provider.value ? { providerId: provider.value } : {}
+          const result = calcPriceSync(usage, model.value, options)
+          output.innerHTML = `<div class='success'>Sync Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+        } catch (e) {
+          output.innerHTML = `<div class='error'>Sync Error: ${e.message}</div>`
         }
       }
     </script>
