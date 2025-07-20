@@ -1,17 +1,17 @@
-# genai-prices (JS/TS)
+# genai-prices package (JS/TS)
 
-Library and CLI for calculating LLM API prices, supporting Node.js, browser, and other environments.
+Library and CLI for calculating LLM API prices, supporting browser, Node.js and other environments.
 
 ## Features
 
-- **Sync API**: Fast, local price calculation using embedded data. Works in Node.js, browser, Cloudflare, etc.
-- **Async API**: Fetches and caches price data from GitHub, works in browser, Node.js, Cloudflare, etc.
+- **Sync API**: Fast, local price calculation using embedded data. Works in browser, Node.js, Cloudflare, Deno, etc.
+- **Async API**: Fetches and caches price data from GitHub, works in browser, Node.js, Cloudflare, Deno, etc.
 - **Environment-agnostic design**: Sync/async distinction is about API style, not environment.
 - **Smart provider and model matching** with flexible options.
 - **CLI** for quick price calculations with auto-update support.
 - **Browser support** with a single bundle and test page.
 
-## Usage
+## API Usage
 
 ### Node.js & Browser (Library)
 
@@ -38,7 +38,24 @@ const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 console.log(result.price, result.provider.name, result.model.name)
 ```
 
+### Global CLI Installation
+
+You can install the CLI globally to use the `genai-prices` command from anywhere:
+
+```bash
+npm install -g @pydantic/genai-prices
+```
+
+After installing globally, you can run:
+
+```bash
+genai-prices calc gpt-4 --input-tokens 1000 --output-tokens 500
+genai-prices list
+```
+
 ### CLI
+
+After global installation, you can use the CLI as follows:
 
 ```bash
 # Basic usage
