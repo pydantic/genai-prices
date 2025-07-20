@@ -1,40 +1,40 @@
 # genai-prices (JS/TS)
 
-Universal library and CLI for calculating LLM API prices, supporting Node.js, browser, and other environments.
+Library and CLI for calculating LLM API prices, supporting Node.js, browser, and other environments.
 
 ## Features
 
-- **Sync API** (Node.js only): Fast, local price calculation using local data file.
-- **Async API** (Universal): Fetches and caches price data from GitHub, works in browser, Node.js, Cloudflare, etc.
+- **Sync API**: Fast, local price calculation using embedded data. Works in Node.js, browser, Cloudflare, etc.
+- **Async API**: Fetches and caches price data from GitHub, works in browser, Node.js, Cloudflare, etc.
 - **Environment-agnostic design**: Sync/async distinction is about API style, not environment.
 - **Smart provider and model matching** with flexible options.
 - **CLI** for quick price calculations with auto-update support.
-- **Browser support** with a dedicated bundle and test page.
+- **Browser support** with a single bundle and test page.
 
 ## Usage
 
-### Node.js (Library)
+### Node.js & Browser (Library)
 
 ```js
 import { calcPriceSync, calcPriceAsync } from '@pydantic/genai-prices'
 
-const usage = { inputTokens: 1000, outputTokens: 100 }
+const usage = { input_tokens: 1000, output_tokens: 100 }
 
-// Sync (Node.js only) - requires local data.json
+// Sync (works everywhere, including browser)
 const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 console.log(result.price, result.provider.name, result.model.name)
 
-// Async (works everywhere) - fetches from GitHub
+// Async (works everywhere)
 const asyncResult = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 console.log(asyncResult.price, asyncResult.provider.name, asyncResult.model.name)
 ```
 
-### Browser (Library)
+### Browser (Direct Bundle)
 
 ```js
-import { calcPriceAsync } from './dist/browser.js'
-const usage = { inputTokens: 1000, outputTokens: 100 }
-const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+import { calcPriceSync, calcPriceAsync } from './dist/index.js'
+const usage = { input_tokens: 1000, output_tokens: 100 }
+const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 console.log(result.price, result.provider.name, result.model.name)
 ```
 
@@ -42,17 +42,17 @@ console.log(result.price, result.provider.name, result.model.name)
 
 ```bash
 # Basic usage
-node dist/cli.js gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
+genai-prices gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
 
 # With auto-update (fetches latest prices from GitHub)
-node dist/cli.js gpt-3.5-turbo --input-tokens 1000 --output-tokens 100 --auto-update
+genai-prices gpt-3.5-turbo --input-tokens 1000 --output-tokens 100 --auto-update
 
 # Specify provider explicitly
-node dist/cli.js openai:gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
+genai-prices openai:gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
 
 # List available providers and models
-node dist/cli.js list
-node dist/cli.js list openai
+genai-prices list
+genai-prices list openai
 ```
 
 ### Provider Matching
@@ -60,7 +60,7 @@ node dist/cli.js list openai
 The library uses intelligent provider matching:
 
 1. **Explicit provider**: Use `providerId` parameter or `provider:model` format
-2. **Model-based matching**: Uses provider's `modelMatch` logic (e.g., OpenAI matches models starting with "gpt-")
+2. **Model-based matching**: Uses provider's `model_match` logic (e.g., OpenAI matches models starting with "gpt-")
 3. **Fallback**: Tries to match based on model name patterns
 
 **Best practices:**
@@ -95,15 +95,13 @@ This tests error handling, sync/async API, and providerId usage.
 ```
 src/
 ├── sync/
-│   └── calcPriceSync.ts      # Sync API implementation (any environment)
+│   └── calcPriceSync.ts      # Sync API implementation
 ├── async/
-│   └── calcPriceAsync.ts     # Async API implementation (any environment)
-├── dataLoader.node.ts        # Node.js data loader (sync + async)
-├── dataLoader.browser.ts     # Browser data loader (async only)
-├── index.ts                  # Node.js entry (exports both sync + async)
-├── index.browser.ts          # Browser entry (exports async only)
+│   └── calcPriceAsync.ts     # Async API implementation
+├── dataLoader.ts             # Data loader (sync + async)
+├── index.ts                  # Entry point (exports both sync + async)
 ├── cli.ts                    # CLI tool
-├── types.ts                  # Shared types
+├── types.ts                  # Shared types (snake_case, matches JSON)
 ├── matcher.ts                # Shared matching logic
 ├── priceCalc.ts              # Shared price calculation
 └── __tests__/                # Tests
@@ -112,9 +110,9 @@ src/
 ### Design Principles
 
 - **Environment-agnostic APIs**: Sync/async is about API style, not environment
-- **Environment-specific data loaders**: Each environment gets appropriate data loading
-- **Universal compatibility**: Both sync and async APIs can be used in Node.js, browser, Cloudflare, etc.
-- **Clean separation**: Data loaders are environment-specific, but APIs are not
+- **Single data loader**: Handles all environments with embedded data for sync and remote fetch for async
+- **Cross-environment compatibility**: Both sync and async APIs can be used in Node.js, browser, Cloudflare, etc.
+- **No mapping needed**: All types and data use snake_case, matching the JSON schema
 
 ## Troubleshooting
 
@@ -124,27 +122,26 @@ src/
   - Make sure you specify the correct `providerId` (e.g., `openai`)
   - Try using `provider:model` format in CLI
   - Use `--auto-update` flag to fetch latest data
-- **Sync API in browser**: Not supported. Use only the async API in browser environments.
-- **Build errors**: Ensure you have the latest data.json file in the dist directory.
+- **Build errors**: Ensure you have run the build and that your data is up to date.
 
 ### Provider Matching Examples
 
 ```bash
 # These should work with auto-update
-node dist/cli.js gpt-3.5-turbo --auto-update
-node dist/cli.js claude-3-5-sonnet --auto-update
-node dist/cli.js gemini-1.5-pro --auto-update
+genai-prices gpt-3.5-turbo --auto-update
+genai-prices claude-3-5-sonnet --auto-update
+genai-prices gemini-1.5-pro --auto-update
 
 # Explicit provider specification
-node dist/cli.js openai:gpt-3.5-turbo
-node dist/cli.js anthropic:claude-3-5-sonnet
-node dist/cli.js google:gemini-1.5-pro
+genai-prices openai:gpt-3.5-turbo
+genai-prices anthropic:claude-3-5-sonnet
+genai-prices google:gemini-1.5-pro
 ```
 
 ## Maintainers
 
 - When adding new features, keep sync and async logic in separate files
-- Only import Node.js built-ins in Node-only files
-- Use the browser entry for browser bundles
-- Data loaders should handle snake_case to camelCase conversion
+- Only import Node.js built-ins in Node-only files if absolutely necessary
+- Use the main entry for all environments
+- All types and data should use snake_case to match the JSON schema
 - Provider matching logic is in `matcher.ts` and should be environment-agnostic
