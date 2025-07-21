@@ -32,8 +32,7 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "prepare": "npm run build",
-    "release": "npm run build && npx @changesets/cli publish"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
