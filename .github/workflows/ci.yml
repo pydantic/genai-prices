@@ -131,6 +131,13 @@ jobs:
           node-version: 22.x
           cache: "npm"
 
+      - name: Clean npm cache and modules
+        run: |
+          rm -rf node_modules
+          rm -rf packages/js/node_modules
+          rm -f package-lock.json
+          npm cache clean --force
+
       - name: Install dependencies
         run: |
           npm install

@@ -32,7 +32,8 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:ui": "vitest --ui",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "release": "npm run build && npx @changesets/cli publish"
   },
   "repository": {
     "type": "git",
@@ -50,7 +51,7 @@
     "@types/yargs": "^17.0.24",
     "@vitest/ui": "^3.2.4",
     "typescript": "^5.0.0",
-    "vite": "^6.2.0",
+    "vite": "^5.1.3",
     "vite-plugin-dts": "^4.5.3",
     "vitest": "^3.2.4"
   },
