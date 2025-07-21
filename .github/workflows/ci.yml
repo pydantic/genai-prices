@@ -141,3 +141,35 @@ jobs:
 
       - run: uv build --package genai-prices
       - run: uv publish --trusted-publishing always
+
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Begin CI...
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install --workspaces
+
+      - name: run CI checks
+        run: |
+          npm run ci
+
+      - name: Release
+        id: changesets
+        if: github.ref == 'refs/heads/main'
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

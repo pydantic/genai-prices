@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "format": "prettier --write -- .",
-    "lint": "prettier --check -- ."
+    "lint": "prettier --check -- .",
+    "release": "npm run build && npx @changesets/cli publish"
   },
   "prettier": {
     "singleQuote": true,
