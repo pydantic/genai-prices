@@ -97,4 +97,4 @@ executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = "prices/data.json"
+skip = "prices/data.json,package-lock.json"

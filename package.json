@@ -3,10 +3,17 @@
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/js"
+  ],
   "scripts": {
     "format": "prettier --write -- .",
     "lint": "prettier --check -- .",
-    "release": "npm run build && npx @changesets/cli publish"
+    "release": "npm run build && npx @changesets/cli publish",
+    "build": "npm run build --workspace=packages/js",
+    "test": "npm run test --workspace=packages/js",
+    "ci": "npm run build && npm run test"
   },
   "prettier": {
     "singleQuote": true,
