@@ -141,6 +141,14 @@ jobs:
         run: |
           npm run ci
 
+      - name: Generate a token
+        id: generate-token
+        if: github.ref == 'refs/heads/main'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Release
         id: changesets
         if: github.ref == 'refs/heads/main'
@@ -148,5 +156,5 @@ jobs:
         with:
           publish: npm run release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
