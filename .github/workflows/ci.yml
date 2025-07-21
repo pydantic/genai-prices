@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches:
@@ -18,49 +17,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-
       - run: uv sync  --all-packages
-
       - uses: actions/setup-node@v4
       - run: npm install
-
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.UV_PYTHON }}|${{ hashFiles('.pre-commit-config.yaml') }}
-
       - run: uvx pre-commit run --color=always --all-files --verbose
         env:
           SKIP: no-commit-to-branch
 
   test-python:
     name: test py${{ matrix.python-version }}
-
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-
     env:
       UV_PYTHON: ${{ matrix.python-version }}
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-
       - run: uv sync --frozen --all-packages --all-extras
       - run: make test
         env:
           COVERAGE_FILE: coverage/.coverage.py${{ matrix.python-version }}
-
       - name: store coverage files
         uses: actions/upload-artifact@v4
         with:
@@ -76,29 +64,23 @@ jobs:
         with:
           # needed for diff-cover
           fetch-depth: 0
-
       - name: get coverage files
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
           path: coverage
-
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-
       - run: uv sync --only-dev
       - run: uv run coverage combine coverage
-
       - run: uv run coverage html --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
-
       - name: Store coverage html
         uses: actions/upload-artifact@v4
         with:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
-
       - run: uv run coverage report --fail-under 95
 
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
@@ -116,28 +98,55 @@ jobs:
     needs: [check]
     if: success() && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-
     environment:
       name: release-pypi
       url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
-
     permissions:
       id-token: write
-
     outputs:
       package-version: ${{ steps.check-python-version.outputs.VERSION }}
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-
       - id: check-python-version
         uses: samuelcolvin/check-python-version@v4.1
         with:
           version_file_path: packages/python/pyproject.toml
-
       - run: uv build --package genai-prices
       - run: uv publish --trusted-publishing always
+
+  js:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Begin CI...
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - name: Clean install
+        run: |
+          rm -rf node_modules packages/js/node_modules
+          rm -f package-lock.json
+          npm install
+
+      - name: run CI checks
+        run: |
+          npm run ci
+
+      - name: Release
+        id: changesets
+        if: github.ref == 'refs/heads/main'
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
