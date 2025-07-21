@@ -68,7 +68,7 @@ See the [Python README](packages/python/README.md) for instructions on how to in
 
 ### JavaScript/TypeScript Package
 
-Coming soon...
+See the [JS/TS README](packages/js/README.md) for instructions on how to install and use the JavaScript/TypeScript package and CLI.
 
 ### Download data
 
