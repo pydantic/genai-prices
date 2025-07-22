@@ -14,7 +14,9 @@ models:
       Claude 2 is Anthropic's previous generation model, offering reliable performance
       for various tasks. This includes Claude 2.0 and Claude 2.1.
     match:
-      starts_with: claude-2
+      or:
+        - starts_with: claude-2
+        - contains: claude-v2
     context_window: 200000
     prices:
       input_mtok: 8

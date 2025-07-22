@@ -16,7 +16,14 @@ export const data: Provider[] = [
         description:
           "Claude 2 is Anthropic's previous generation model, offering reliable performance for various tasks. This includes Claude 2.0 and Claude 2.1.\n",
         match: {
-          starts_with: 'claude-2',
+          or: [
+            {
+              starts_with: 'claude-2',
+            },
+            {
+              contains: 'claude-v2',
+            },
+          ],
         },
         context_window: 200000,
         prices: {
@@ -1635,7 +1642,7 @@ export const data: Provider[] = [
         description:
           'Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
         match: {
-          equals: 'gemini-2.5-pro',
+          starts_with: 'gemini-2.5-pro',
         },
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
         prices: {
@@ -2394,7 +2401,14 @@ export const data: Provider[] = [
         description:
           'The first multi-modal, text+image-to-text model from Mistral AI. Its weights were launched via torrent: https://x.com/mistralai/status/1833758285167722836.',
         match: {
-          equals: 'pixtral-12b',
+          or: [
+            {
+              equals: 'pixtral-12b',
+            },
+            {
+              equals: 'pixtral-12b-latest',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.15,
@@ -2977,7 +2991,7 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              equals: 'gpt-3.5-turbo-instruct',
+              starts_with: 'gpt-3.5-turbo-instruct',
             },
             {
               equals: 'gpt-3.5-turbo-instruct-0914',
@@ -3163,7 +3177,7 @@ export const data: Provider[] = [
         description:
           "GPT-4.5 (Preview) is a research preview of OpenAI's latest language model, designed to advance capabilities in reasoning, creativity, and multi-turn conversation. It builds on previous iterations with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.",
         match: {
-          equals: 'gpt-4.5-preview',
+          starts_with: 'gpt-4.5-preview',
         },
         prices: {
           input_mtok: 75,
@@ -3197,6 +3211,19 @@ export const data: Provider[] = [
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-4o-audio-preview',
+        name: 'gpt 4o audio preview',
+        description: 'Audio model for gpt-4o',
+        match: {
+          starts_with: 'gpt-4o-audio-preview',
+        },
+        context_window: 128000,
+        prices: {
+          output_mtok: 10,
+          input_audio_mtok: 2.5,
         },
       },
       {
@@ -3237,12 +3264,14 @@ export const data: Provider[] = [
       },
       {
         id: 'gpt-4o-mini-audio-preview',
+        name: 'gpt 4o mini audio preview',
+        description: 'Audio model for gpt-4o mini',
         match: {
           starts_with: 'gpt-4o-mini-audio',
         },
         prices: {
+          output_mtok: 0.6,
           input_audio_mtok: 0.15,
-          output_audio_mtok: 0.6,
         },
       },
       {

@@ -319,7 +319,9 @@ models:
     description: >-
       The first multi-modal, text+image-to-text model from Mistral AI. Its weights were launched via torrent: https://x.com/mistralai/status/1833758285167722836.
     match:
-      equals: pixtral-12b
+      or:
+        - equals: pixtral-12b
+        - equals: pixtral-12b-latest
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.15
