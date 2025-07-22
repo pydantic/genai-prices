@@ -42,6 +42,7 @@
   "author": "Pydantic Team",
   "license": "MIT",
   "dependencies": {
+    "node-fetch": "^3.3.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -62,7 +63,6 @@
   },
   "type": "module",
   "optionalDependencies": {
-    "node-fetch": "^3.3.2",
     "@rollup/rollup-linux-x64-gnu": "^4.9.5"
   }
 }
