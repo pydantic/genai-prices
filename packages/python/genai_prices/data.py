@@ -1653,7 +1653,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-instruct',
-                match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-3.5-turbo-instruct')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='gpt-3.5-turbo-instruct'),
+                        ClauseEquals(equals='gpt-3.5-turbo-instruct-0914'),
+                    ]
+                ),
                 name='gpt 3.5 turbo instruct',
                 description='GPT-3.5 Turbo offers a balance between cost and performance.',
                 context_window=16385,
