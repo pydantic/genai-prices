@@ -1,6 +1,6 @@
 {
   "name": "@pydantic/genai-prices",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Calculate prices for calling LLM inference APIs (JS/TS version of genai-prices)",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -57,6 +57,9 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "browser": {
+    "node-fetch": false
   },
   "type": "module",
   "optionalDependencies": {

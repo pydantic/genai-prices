@@ -40,8 +40,8 @@ async function readLocalFile(path: string): Promise<string | null> {
   const env = detectEnvironment()
   if (env === 'node') {
     try {
-      const fs = require('fs')
-      const pathModule = require('path')
+      const fs = await import('fs')
+      const pathModule = await import('path')
       try {
         const dataPath = pathModule.join(__dirname, 'data.json')
         return fs.readFileSync(dataPath, 'utf-8')
