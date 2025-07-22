@@ -131,8 +131,7 @@ models:
     description: GPT-3.5 Turbo offers a balance between cost and performance.
     match:
       or:
-        - equals: gpt-3.5-turbo-instruct
-        - equals: gpt-3.5-turbo-instruct-0914
+        - starts_with: gpt-3.5-turbo-instruct
     context_window: 16385
     prices_checked: 2025-07-04
     prices:
@@ -261,7 +260,7 @@ models:
       creativity, and multi-turn conversation. It builds on previous iterations
       with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.
     match:
-      equals: gpt-4.5-preview
+      starts_with: gpt-4.5-preview
     prices_checked: 2025-07-04
     prices:
       input_mtok: 75
@@ -285,6 +284,17 @@ models:
     prices:
       input_mtok: 2.5
       cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-4o-audio-preview
+    name: gpt 4o audio preview
+    description: Audio model for gpt-4o
+    match:
+      starts_with: gpt-4o-audio-preview
+    context_window: 128000
+    prices_checked: 2025-07-22
+    prices:
+      input_audio_mtok: 2.5
       output_mtok: 10
 
   - id: gpt-4o-mini
@@ -315,12 +325,14 @@ models:
       output_mtok: 1.2
 
   - id: gpt-4o-mini-audio-preview
+    name: gpt 4o mini audio preview
+    description: Audio model for gpt-4o mini
     match:
       starts_with: gpt-4o-mini-audio
-    prices_checked: 2025-07-04
+    prices_checked: 2025-07-22
     prices:
       input_audio_mtok: 0.15
-      output_audio_mtok: 0.6
+      output_mtok: 0.6
 
   - id: gpt-4o-mini-realtime-preview
     match:

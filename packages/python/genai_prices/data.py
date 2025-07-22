@@ -17,7 +17,7 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='claude-2',
-                match=ClauseStartsWith(starts_with='claude-2'),
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='claude-2'), ClauseContains(contains='claude-v2')]),
                 name='Claude 2.0 / 2.1',
                 description="Claude 2 is Anthropic's previous generation model, offering reliable performance for various tasks. This includes Claude 2.0 and Claude 2.1.\n",
                 context_window=200000,
@@ -969,7 +969,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-2.5-pro',
-                match=ClauseEquals(equals='gemini-2.5-pro'),
+                match=ClauseStartsWith(starts_with='gemini-2.5-pro'),
                 name='Gemini 2.5 Pro',
                 description='Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro',
@@ -1357,7 +1357,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='pixtral-12b',
-                match=ClauseEquals(equals='pixtral-12b'),
+                match=ClauseOr(or_=[ClauseEquals(equals='pixtral-12b'), ClauseEquals(equals='pixtral-12b-latest')]),
                 name='Pixtral 12B',
                 description='The first multi-modal, text+image-to-text model from Mistral AI. Its weights were launched via torrent: https://x.com/mistralai/status/1833758285167722836.',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
@@ -1653,12 +1653,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-instruct',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='gpt-3.5-turbo-instruct'),
-                        ClauseEquals(equals='gpt-3.5-turbo-instruct-0914'),
-                    ]
-                ),
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-3.5-turbo-instruct')]),
                 name='gpt 3.5 turbo instruct',
                 description='GPT-3.5 Turbo offers a balance between cost and performance.',
                 context_window=16385,
@@ -1754,7 +1749,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-4.5-preview',
-                match=ClauseEquals(equals='gpt-4.5-preview'),
+                match=ClauseStartsWith(starts_with='gpt-4.5-preview'),
                 name='GPT-4.5 (Preview)',
                 description="GPT-4.5 (Preview) is a research preview of OpenAI's latest language model, designed to advance capabilities in reasoning, creativity, and multi-turn conversation. It builds on previous iterations with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.",
                 prices=ModelPrice(
@@ -1777,6 +1772,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')
                 ),
+            ),
+            ModelInfo(
+                id='gpt-4o-audio-preview',
+                match=ClauseStartsWith(starts_with='gpt-4o-audio-preview'),
+                name='gpt 4o audio preview',
+                description='Audio model for gpt-4o',
+                context_window=128000,
+                prices=ModelPrice(output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')),
             ),
             ModelInfo(
                 id='gpt-4o-mini',
@@ -1803,7 +1806,9 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-mini-audio-preview',
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
-                prices=ModelPrice(input_audio_mtok=Decimal('0.15'), output_audio_mtok=Decimal('0.6')),
+                name='gpt 4o mini audio preview',
+                description='Audio model for gpt-4o mini',
+                prices=ModelPrice(output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')),
             ),
             ModelInfo(
                 id='gpt-4o-mini-realtime-preview',
