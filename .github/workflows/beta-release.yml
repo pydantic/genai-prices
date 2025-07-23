@@ -38,6 +38,11 @@ jobs:
       - name: Run tests
         run: npm run ci
 
+      - name: Setup Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@v2
