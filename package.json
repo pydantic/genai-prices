@@ -10,7 +10,7 @@
   "scripts": {
     "format": "prettier --write -- .",
     "lint": "prettier --check -- .",
-    "release": "./scripts/publish.sh",
+    "release": "npm run build && node scripts/publish.js",
     "release:beta": "npm run build && npx @changesets/cli publish --pre-state .changeset/pre.json",
     "beta:enter": "npx @changesets/cli pre enter beta",
     "beta:exit": "npx @changesets/cli pre exit",
