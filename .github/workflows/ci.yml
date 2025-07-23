@@ -154,7 +154,15 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: changesets/action@v1
         with:
-          publish: npm run release
+          publish: |
+            # Check if we're in beta mode
+            if [ -f ".changeset/pre.json" ]; then
+              echo "Publishing beta release..."
+              npm run release:beta
+            else
+              echo "Publishing stable release..."
+              npm run release
+            fi
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
