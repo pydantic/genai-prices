@@ -20,5 +20,5 @@ if (fs.existsSync('.changeset/pre.json')) {
   }
 } else {
   console.log('Publishing stable release...')
-  execSync('npx @changesets/cli publish', { stdio: 'inherit' })
+  execSync('npx @changesets/cli publish --force', { stdio: 'inherit' })
 }
