@@ -22,7 +22,7 @@ This package is a work in progress:
 - [x] price data YAML
 - [x] JSON file with all prices
 - [x] Python library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
-- [ ] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
+- [x] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
 - [ ] API (and I guess UI) for calculating latest prices
 
 ## Features
@@ -33,7 +33,8 @@ This package is a work in progress:
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
 - support for [identifying price discrepancies](prices/README.md) from other sources
 - Python package, CLI
-- TODO: JS/TS package, API and web UI
+- JavaScript/TypeScript package, CLI
+- TODO: API and web UI
 
 ### Providers
 
