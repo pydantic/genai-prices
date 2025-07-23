@@ -138,6 +138,11 @@ async function main() {
       }
       try {
         const result = await fn(usage, modelRef, { providerId, timestamp })
+        if (!result) {
+          hadError = true
+          console.error(`No price found for model ${modelArg}`)
+          continue
+        }
         const w = result.model.context_window
         const output: [string, string | number | undefined][] = [
           ['Provider', result.provider.name],

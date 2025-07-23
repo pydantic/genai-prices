@@ -11,8 +11,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: (id) => {
-        // Externalize Node.js built-ins
-        return [...builtinModules, ...builtinModules.map((m) => `node:${m}`)].includes(id)
+        // Externalize Node.js built-ins and node-fetch
+        const nodeModules = [...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
+        const externalModules = ['node-fetch', 'yargs']
+        return nodeModules.includes(id) || externalModules.includes(id)
       },
       output: {
         format: 'esm',
