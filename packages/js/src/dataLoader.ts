@@ -6,7 +6,7 @@ const DEFAULT_TTL_MS = 60 * 60 * 1000 // 1 hour
 const OUTDATED_THRESHOLD_MS = 24 * 60 * 60 * 1000 // 1 day
 const BACKGROUND_REFRESH_MS = 30 * 60 * 1000 // 30 minutes
 
-// Universal environment detection
+// environment detection
 function detectEnvironment(): 'node' | 'browser' | 'cloudflare' | 'deno' | 'unknown' {
   if (typeof globalThis !== 'undefined' && 'caches' in globalThis && 'default' in globalThis.caches) {
     return 'cloudflare'
@@ -35,32 +35,7 @@ async function universalFetch(url: string, options: RequestInit = {}): Promise<R
   throw new Error(`Fetch not available in environment: ${env}`)
 }
 
-// Universal file system access (Node.js only)
-async function readLocalFile(path: string): Promise<string | null> {
-  const env = detectEnvironment()
-  if (env === 'node') {
-    try {
-      const fs = await import('fs')
-      const pathModule = await import('path')
-      try {
-        const dataPath = pathModule.join(__dirname, 'data.json')
-        return fs.readFileSync(dataPath, 'utf-8')
-      } catch (error) {
-        try {
-          const monorepoPath = pathModule.join(__dirname, '../../prices/data.json')
-          return fs.readFileSync(monorepoPath, 'utf-8')
-        } catch (error2) {
-          return null
-        }
-      }
-    } catch (error) {
-      return null
-    }
-  }
-  return null
-}
-
-// Universal storage implementation
+// storage implementation
 let inMemoryData: string | null = null
 let inMemoryLastModified: number | null = null
 
@@ -162,7 +137,7 @@ export function prefetchAsync(): void {
   }
 }
 
-// Universal sync function that works everywhere
+// sync function that works everywhere
 export function getProvidersSync(): Provider[] {
   return embeddedData
 }
