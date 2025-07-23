@@ -22,11 +22,19 @@ const usage = { input_tokens: 1000, output_tokens: 100 }
 
 // Sync (works everywhere, including browser)
 const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-console.log(result.price, result.provider.name, result.model.name)
+if (result) {
+  console.log(result.price, result.provider.name, result.model.name)
+} else {
+  console.log('No price found for this model/provider combination')
+}
 
 // Async (works everywhere)
 const asyncResult = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-console.log(asyncResult.price, asyncResult.provider.name, asyncResult.model.name)
+if (asyncResult) {
+  console.log(asyncResult.price, asyncResult.provider.name, asyncResult.model.name)
+} else {
+  console.log('No price found for this model/provider combination')
+}
 ```
 
 ### Browser (Direct Bundle)
@@ -35,7 +43,9 @@ console.log(asyncResult.price, asyncResult.provider.name, asyncResult.model.name
 import { calcPriceSync, calcPriceAsync } from './dist/index.js'
 const usage = { input_tokens: 1000, output_tokens: 100 }
 const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-console.log(result.price, result.provider.name, result.model.name)
+if (result) {
+  console.log(result.price, result.provider.name, result.model.name)
+}
 ```
 
 ### Global CLI Installation
@@ -86,6 +96,34 @@ The library uses intelligent provider matching:
 - Use `provider:model` format in CLI for explicit provider selection
 - The async API with `--auto-update` provides the most up-to-date pricing
 
+### Error Handling
+
+The library returns `null` when a model or provider is not found, rather than throwing errors. This makes it easier to handle cases where pricing information might not be available:
+
+```js
+import { calcPriceSync, calcPriceAsync } from '@pydantic/genai-prices'
+
+const usage = { input_tokens: 1000, output_tokens: 100 }
+
+// Returns null if model/provider not found
+const result = calcPriceSync(usage, 'non-existent-model')
+if (result === null) {
+  console.log('No pricing information available for this model')
+} else {
+  console.log(`Price: $${result.price}`)
+}
+
+// Async version also returns null
+const asyncResult = await calcPriceAsync(usage, 'non-existent-model', { providerId: 'unknown-provider' })
+if (asyncResult === null) {
+  console.log('No pricing information available for this model/provider combination')
+} else {
+  console.log(`Price: $${asyncResult.price}`)
+}
+```
+
+**TypeScript users**: The return type is `PriceCalculation | null` (exported as `PriceCalculationResult`).
+
 ## Testing
 
 ### Node.js Test
@@ -135,10 +173,11 @@ src/
 
 ### Common Issues
 
-- **Provider not found**:
+- **No price found (returns null)**:
   - Make sure you specify the correct `providerId` (e.g., `openai`)
   - Try using `provider:model` format in CLI
   - Use `--auto-update` flag to fetch latest data
+  - Check that the model name is correct and supported by the provider
 - **Build errors**: Ensure you have run the build and that your data is up to date.
 
 ### Provider Matching Examples

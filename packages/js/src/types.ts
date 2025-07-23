@@ -84,6 +84,8 @@ export interface PriceCalculation {
   auto_update_timestamp?: string
 }
 
+export type PriceCalculationResult = PriceCalculation | null
+
 export type PriceDataStorage = {
   get: () => Promise<string | null>
   set: (data: string) => Promise<void>
