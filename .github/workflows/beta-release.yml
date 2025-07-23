@@ -1,16 +1,6 @@
 name: Beta Release
 on:
   workflow_dispatch:
-    inputs:
-      action:
-        description: "Beta release action"
-        required: true
-        default: "version"
-        type: choice
-        options:
-          - enter
-          - version
-          - exit
 
 jobs:
   beta-release:
@@ -52,60 +42,48 @@ jobs:
 
       - name: Handle beta release
         run: |
-          case "${{ github.event.inputs.action }}" in
-            "enter")
-              echo "Entering beta mode..."
-              npm run beta:enter
-              git add .changeset/pre.json
-              git commit -m "Enter beta release mode"
-              git push origin HEAD:beta-enter-${{ github.run_id }}
-              ;;
-            "version")
-              echo "Creating beta version..."
+          echo "Running smart beta release workflow..."
+
+          # Check if we're in beta mode
+          if [ -f ".changeset/pre.json" ]; then
+            echo "Already in beta mode. Checking for changesets..."
+
+            # Check if there are changesets to version
+            if [ -n "$(find .changeset -name '*.md' -not -name 'README.md')" ]; then
+              echo "Found changesets, creating beta version..."
               npm run beta:version
               git add .
-              git commit -m "Version packages for beta release"
-              git push origin HEAD:beta-version-${{ github.run_id }}
-              ;;
-            "exit")
-              echo "Exiting beta mode..."
+              git commit -m "Create beta version"
+              git push origin HEAD:smart-${{ github.run_id }}
+            else
+              echo "No changesets found. Exiting beta mode..."
               npm run beta:exit
               npm run beta:version
               git add .
-              git commit -m "Exit beta mode and version packages"
-              git push origin HEAD:beta-exit-${{ github.run_id }}
-              ;;
-          esac
+              git commit -m "Exit beta mode and create stable version"
+              git push origin HEAD:smart-${{ github.run_id }}
+            fi
+          else
+            echo "Not in beta mode. Entering beta mode..."
+            npm run beta:enter
+            git add .changeset/pre.json
+            git commit -m "Enter beta release mode"
+            git push origin HEAD:smart-${{ github.run_id }}
+          fi
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: Create Pull Request
-        if: github.event.inputs.action == 'enter' || github.event.inputs.action == 'exit' || github.event.inputs.action == 'version'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ steps.generate-token.outputs.token }}
-          branch: ${{ github.event.inputs.action }}-${{ github.run_id }}
+          branch: smart-${{ github.run_id }}
           base: main
-          title: |
-            ${{ github.event.inputs.action == 'enter' && 'Enter beta release mode' ||
-                github.event.inputs.action == 'exit' && 'Exit beta release mode' ||
-                github.event.inputs.action == 'version' && 'Create beta version' }}
+          title: Smart beta release workflow
           body: |
             This PR was automatically created by the beta release workflow.
 
-            **Action:** ${{ github.event.inputs.action }}
             **Run ID:** ${{ github.run_id }}
 
-            ${{ github.event.inputs.action == 'enter' && 'This will enable beta releases for the repository.' ||
-                github.event.inputs.action == 'exit' && 'This will disable beta releases and prepare for stable release.' ||
-                github.event.inputs.action == 'version' && 'This will create a new beta version. After merging, the beta will be published automatically.' }}
+            This smart workflow automatically handles entering beta mode, creating versions, and exiting beta mode based on the current state.
           delete-branch: true
-
-      - name: Publish beta release
-        if: github.event.inputs.action == 'version'
-        run: |
-          echo "Note: Beta will be published automatically when the PR is merged to main."
-          echo "The CI workflow will detect beta mode and publish with beta tag."
-        env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
