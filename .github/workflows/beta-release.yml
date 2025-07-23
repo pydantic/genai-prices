@@ -46,23 +46,23 @@ jobs:
 
           # Check if we're in beta mode
           if [ -f ".changeset/pre.json" ]; then
-            echo "Already in beta mode. Checking for changesets..."
+            echo "Already in beta mode. Creating beta version..."
+            # Create a changeset automatically if none exist
+            if [ -z "$(find .changeset -name '*.md' -not -name 'README.md')" ]; then
+              echo "No changesets found, creating automatic changeset..."
+              mkdir -p .changeset
+              cat > .changeset/auto-$(date +%s).md << EOF
+          ---
+          "@pydantic/genai-prices": patch
+          ---
 
-            # Check if there are changesets to version
-            if [ -n "$(find .changeset -name '*.md' -not -name 'README.md')" ]; then
-              echo "Found changesets, creating beta version..."
-              npm run beta:version
-              git add .
-              git commit -m "Create beta version"
-              git push origin HEAD:smart-${{ github.run_id }}
-            else
-              echo "No changesets found. Exiting beta mode..."
-              npm run beta:exit
-              npm run beta:version
-              git add .
-              git commit -m "Exit beta mode and create stable version"
-              git push origin HEAD:smart-${{ github.run_id }}
+          Automatic beta release
+          EOF
             fi
+            npm run beta:version
+            git add .
+            git commit -m "Create beta version"
+            git push origin HEAD:smart-${{ github.run_id }}
           else
             echo "Not in beta mode. Entering beta mode..."
             npm run beta:enter
