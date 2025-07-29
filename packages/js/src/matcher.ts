@@ -31,7 +31,7 @@ function matchLogic(logic: any, text: string): boolean {
  * @param providerId - The provider ID to match
  * @returns The matching provider or undefined
  */
-export function findProviderById(providers: Provider[], providerId: string): Provider | undefined {
+export function findProviderByMatch(providers: Provider[], providerId: string): Provider | undefined {
   const normalizedProviderId = providerId.toLowerCase().trim()
 
   // First try exact match by ID
@@ -72,7 +72,10 @@ export function matchProvider(
 ): Provider | undefined {
   // If providerId is provided, try to find by provider_match logic
   if (providerId) {
-    return findProviderByMatch(providers, providerId)
+    const provider = findProviderByMatch(providers, providerId)
+    if (provider) return provider
+    // If providerId is provided but not found, return undefined (don't fall back to model matching)
+    return undefined
   }
 
   if (providerApiUrl) {

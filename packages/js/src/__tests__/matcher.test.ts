@@ -105,7 +105,7 @@ describe('Provider and Model Matching', () => {
       expect(normalizeModel('openai', 'gpt-3.5-turbo-instruct')).toBe('gpt-3.5-turbo')
     })
 
-    it('should not normalize models for other providers', () => {
+    it('should not normalize other provider models', () => {
       expect(normalizeModel('google', 'gemini-2.5-pro')).toBe('gemini-2.5-pro')
       expect(normalizeModel('mistral', 'mistral-large')).toBe('mistral-large')
       expect(normalizeModel('anthropic', 'claude-3-sonnet')).toBe('claude-3-sonnet')

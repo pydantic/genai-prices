@@ -318,6 +318,9 @@ requires-dist = [
 name = "genai-prices-root"
 version = "0"
 source = { virtual = "." }
+dependencies = [
+    { name = "httpx" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -337,6 +340,7 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [{ name = "httpx", specifier = ">=0.28.1" }]
 
 [package.metadata.requires-dev]
 dev = [

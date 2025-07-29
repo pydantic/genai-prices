@@ -7,7 +7,9 @@ authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
 requires-python = ">=3.9"
 # Do not publish this package to PyPI
 classifiers = ["Private :: do not release"]
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+]
 
 [dependency-groups]
 dev = [
