@@ -96,8 +96,6 @@ def find_provider_by_id(providers: list['Provider'], provider_id: str) -> 'Provi
         if provider.provider_match and provider.provider_match.is_match(normalized_provider_id):
             return provider
 
-    return None
-
 
 @dataclass
 class PriceCalculation:
