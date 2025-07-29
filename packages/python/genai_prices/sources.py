@@ -200,7 +200,7 @@ class DataSnapshot:
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
         else:
-            raise LookupError(f'Unable to find model with {normalized_model_ref=!r} in {provider.id}')
+            raise LookupError(f'Unable to find model with model_ref={model_ref!r} in {provider.id}')
 
     def find_provider(
         self,
@@ -213,13 +213,13 @@ class DataSnapshot:
             for provider in self.providers:
                 if provider.id == normalized_provider_id:
                     return provider
-            raise LookupError(f'Unable to find provider {normalized_provider_id=!r}')
+            raise LookupError(f'Unable to find provider provider_id={provider_id!r}')
 
         if provider_api_url is not None:
             for provider in self.providers:
                 if re.match(provider.api_pattern, provider_api_url):
                     return provider
-            raise LookupError(f'Unable to find provider {provider_api_url=!r}')
+            raise LookupError(f'Unable to find provider provider_api_url={provider_api_url!r}')
 
         for provider in self.providers:
             if provider.model_match is not None and provider.model_match.is_match(model_ref):
