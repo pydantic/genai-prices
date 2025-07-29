@@ -1332,7 +1332,7 @@ export const data: Provider[] = [
       'https://ai.google.dev/gemini-api/docs/pricing',
       'https://cloud.google.com/vertex-ai/generative-ai/pricing',
     ],
-    api_pattern: 'https://api\\.googleapis\\.com',
+    api_pattern: 'https://(.*\\.)?googleapis\\.com',
     model_match: {
       contains: 'gemini',
     },
