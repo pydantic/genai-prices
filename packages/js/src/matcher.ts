@@ -31,7 +31,7 @@ function matchLogic(logic: any, text: string): boolean {
  * @param providerId - The provider ID to match
  * @returns The matching provider or undefined
  */
-export function findProviderByMatch(providers: Provider[], providerId: string): Provider | undefined {
+export function findProviderById(providers: Provider[], providerId: string): Provider | undefined {
   const normalizedProviderId = providerId.toLowerCase().trim()
 
   // First try exact match by ID
