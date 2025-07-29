@@ -25,14 +25,86 @@ function matchLogic(logic: any, text: string): boolean {
   return false
 }
 
+// Provider aliases mapping - maps various provider names to standardized provider IDs
+const PROVIDER_ALIASES: Record<string, string> = {
+  // Google aliases
+  gemini: 'google',
+  'google-gla': 'google',
+  'google-vertex': 'google',
+  'google-ai': 'google',
+
+  // Meta aliases
+  'meta-llama': 'meta',
+  llama: 'meta',
+
+  // Mistral aliases
+  mistralai: 'mistral',
+
+  // Anthropic aliases
+  anthropic: 'anthropic',
+  claude: 'anthropic',
+
+  // OpenAI aliases
+  openai: 'openai',
+  gpt: 'openai',
+
+  // Other common aliases
+  cohere: 'cohere',
+  groq: 'groq',
+  fireworks: 'fireworks',
+  deepseek: 'deepseek',
+  perplexity: 'perplexity',
+  together: 'together',
+  aws: 'aws',
+  azure: 'azure',
+  openrouter: 'openrouter',
+  novita: 'novita',
+  'x-ai': 'x-ai',
+  avian: 'avian',
+}
+
+/**
+ * Normalize a provider name to a standardized provider ID
+ * @param providerName - The raw provider name from the system
+ * @returns The normalized provider ID
+ */
+export function normalizeProvider(providerName: string): string {
+  const normalized = providerName.toLowerCase().trim()
+  return PROVIDER_ALIASES[normalized] || normalized
+}
+
+/**
+ * Normalize a model name based on provider and model patterns
+ * @param providerId - The normalized provider ID
+ * @param modelName - The raw model name
+ * @returns The normalized model name
+ */
+export function normalizeModel(providerId: string, modelName: string): string {
+  const model = modelName.trim()
+
+  // Anthropic model normalization
+  if (providerId === 'anthropic' && model.startsWith('claude-opus-4')) {
+    return 'claude-opus-4-20250514'
+  }
+
+  // OpenAI model normalization
+  if (providerId === 'openai' && model.startsWith('gpt-3.5-turbo')) {
+    return 'gpt-3.5-turbo'
+  }
+
+  return model
+}
+
 export function matchProvider(
   providers: Provider[],
   modelRef: string,
   providerId?: string,
   providerApiUrl?: string,
 ): Provider | undefined {
+  // If providerId is provided, normalize it first
   if (providerId) {
-    return providers.find((p) => p.id === providerId)
+    const normalizedProviderId = normalizeProvider(providerId)
+    return providers.find((p) => p.id === normalizedProviderId)
   }
   if (providerApiUrl) {
     return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))

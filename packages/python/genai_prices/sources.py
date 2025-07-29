@@ -8,11 +8,16 @@ from concurrent import futures
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from functools import cache
+from typing import TYPE_CHECKING
 
 import httpx
 from pydantic import ValidationError
 
 from . import types
+from .types import normalize_provider, normalize_model
+
+if TYPE_CHECKING:
+    from .sources import DataSnapshot
 
 __all__ = (
     'DEFAULT_AUTO_UPDATE_MAX_AGE',
@@ -32,7 +37,7 @@ DEFAULT_AUTO_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-pric
 
 class AsyncSource(ABC):
     @abstractmethod
-    async def fetch(self) -> DataSnapshot | None:
+    async def fetch(self) -> 'DataSnapshot | None':
         """Try to fetch a new snapshot if required.
 
         This method should check if any relevant cached has expired, if not it should return `None`.
@@ -55,7 +60,7 @@ class AutoUpdateAsyncSource(AsyncSource):
         if self._pre_fetch_task is None:
             self._pre_fetch_task = asyncio.create_task(self._fetch())
 
-    async def fetch(self) -> DataSnapshot | None:
+    async def fetch(self) -> 'DataSnapshot | None':
         if self._pre_fetch_task is not None:
             await self._pre_fetch_task
             self._pre_fetch_task = None
@@ -84,7 +89,7 @@ class AutoUpdateAsyncSource(AsyncSource):
 
 class SyncSource(ABC):
     @abstractmethod
-    def fetch(self) -> DataSnapshot | None:
+    def fetch(self) -> 'DataSnapshot | None':
         """Try to fetch a new snapshot if required.
 
         This method should check if any relevant cached has expired, if not it should return `None`.
@@ -107,7 +112,7 @@ class AutoUpdateSyncSource(SyncSource):
         if self._pre_fetch_task is None:
             self._pre_fetch_task = futures.ThreadPoolExecutor(max_workers=1).submit(self._fetch)
 
-    def fetch(self) -> DataSnapshot | None:
+    def fetch(self) -> 'DataSnapshot | None':
         if self._pre_fetch_task is not None:
             self._pre_fetch_task.result()
             self._pre_fetch_task = None
@@ -185,11 +190,17 @@ class DataSnapshot:
 
         provider = self.find_provider(model_ref, provider_id, provider_api_url)
 
-        if model := provider.find_model(model_ref):
+        # Normalize the model reference if provider_id is provided
+        normalized_model_ref = model_ref
+        if provider_id is not None:
+            normalized_provider_id = normalize_provider(provider_id)
+            normalized_model_ref = normalize_model(normalized_provider_id, model_ref)
+
+        if model := provider.find_model(normalized_model_ref):
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
         else:
-            raise LookupError(f'Unable to find model with {model_ref=!r} in {provider.id}')
+            raise LookupError(f'Unable to find model with {normalized_model_ref=!r} in {provider.id}')
 
     def find_provider(
         self,
@@ -198,10 +209,11 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         if provider_id is not None:
+            normalized_provider_id = normalize_provider(provider_id)
             for provider in self.providers:
-                if provider.id == provider_id:
+                if provider.id == normalized_provider_id:
                     return provider
-            raise LookupError(f'Unable to find provider {provider_id=!r}')
+            raise LookupError(f'Unable to find provider {normalized_provider_id=!r}')
 
         if provider_api_url is not None:
             for provider in self.providers:

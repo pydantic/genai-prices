@@ -29,6 +29,7 @@ This package is a work in progress:
 ## Features
 
 - Advanced logic for matching on model IDs to maximise the chance of using the correct model
+- **Provider and model normalization** - Automatically handles provider aliases (e.g., `google-vertex`, `google-gla` → `google`) and model name variations
 - Support for historic prices and prices changes, e.g. we have the prices for o3 before and after it's price changed
 - Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
@@ -36,6 +37,45 @@ This package is a work in progress:
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
 - TODO: API and web UI
+
+### Provider and Model Normalization
+
+The library automatically normalizes provider names and model identifiers to handle various naming conventions:
+
+**Provider Aliases:**
+
+- Google: `gemini`, `google-gla`, `google-vertex`, `google-ai` → `google`
+- Meta: `meta-llama`, `llama` → `meta`
+- Mistral: `mistralai` → `mistral`
+- Anthropic: `anthropic`, `claude` → `anthropic`
+- OpenAI: `openai`, `gpt` → `openai`
+
+**Model Normalization:**
+
+- Anthropic Claude Opus 4: Any model starting with `claude-opus-4` → `claude-opus-4-20250514`
+- OpenAI GPT-3.5: Any model starting with `gpt-3.5-turbo` → `gpt-3.5-turbo`
+
+This allows you to use various provider and model names without worrying about exact matching:
+
+```python
+# Python
+from genai_prices import calc_price_sync
+
+# These all work automatically:
+result = calc_price_sync(usage, 'gemini-2.5-pro', provider_id='google-vertex')
+result = calc_price_sync(usage, 'gemini-2.5-pro', provider_id='google-gla')
+result = calc_price_sync(usage, 'claude-opus-4-something', provider_id='anthropic')
+```
+
+```typescript
+// JavaScript/TypeScript
+import { calcPriceSync } from '@pydantic/genai-prices'
+
+// These all work automatically:
+const result1 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google-vertex' })
+const result2 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google-gla' })
+const result3 = calcPriceSync(usage, 'claude-opus-4-something', { providerId: 'anthropic' })
+```
 
 ### Providers
 

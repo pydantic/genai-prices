@@ -31,6 +31,8 @@ __all__ = (
     'ClauseAnd',
     'MatchLogic',
     'providers_schema',
+    'normalize_provider',
+    'normalize_model',
 )
 
 ProviderID = Literal[
@@ -51,6 +53,80 @@ ProviderID = Literal[
     'cohere',
     'openrouter',
 ]
+
+# Provider aliases mapping - maps various provider names to standardized provider IDs
+PROVIDER_ALIASES: dict[str, str] = {
+    # Google aliases
+    'gemini': 'google',
+    'google-gla': 'google',
+    'google-vertex': 'google',
+    'google-ai': 'google',
+
+    # Meta aliases
+    'meta-llama': 'meta',
+    'llama': 'meta',
+
+    # Mistral aliases
+    'mistralai': 'mistral',
+
+    # Anthropic aliases
+    'anthropic': 'anthropic',
+    'claude': 'anthropic',
+
+    # OpenAI aliases
+    'openai': 'openai',
+    'gpt': 'openai',
+
+    # Other common aliases
+    'cohere': 'cohere',
+    'groq': 'groq',
+    'fireworks': 'fireworks',
+    'deepseek': 'deepseek',
+    'perplexity': 'perplexity',
+    'together': 'together',
+    'aws': 'aws',
+    'azure': 'azure',
+    'openrouter': 'openrouter',
+    'novita': 'novita',
+    'x-ai': 'x-ai',
+    'avian': 'avian',
+}
+
+
+def normalize_provider(provider_name: str) -> str:
+    """Normalize a provider name to a standardized provider ID.
+
+    Args:
+        provider_name: The raw provider name from the system
+
+    Returns:
+        The normalized provider ID
+    """
+    normalized = provider_name.lower().strip()
+    return PROVIDER_ALIASES.get(normalized, normalized)
+
+
+def normalize_model(provider_id: str, model_name: str) -> str:
+    """Normalize a model name based on provider and model patterns.
+
+    Args:
+        provider_id: The normalized provider ID
+        model_name: The raw model name
+
+    Returns:
+        The normalized model name
+    """
+    model = model_name.strip()
+
+    # Anthropic model normalization
+    if provider_id == 'anthropic' and model.startswith('claude-opus-4'):
+        return 'claude-opus-4-20250514'
+
+    # OpenAI model normalization
+    if provider_id == 'openai' and model.startswith('gpt-3.5-turbo'):
+        return 'gpt-3.5-turbo'
+
+    return model
 
 
 @dataclass
