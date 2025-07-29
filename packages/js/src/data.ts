@@ -1341,9 +1341,6 @@ export const data: Provider[] = [
         {
           contains: 'google',
         },
-        {
-          contains: 'gemini',
-        },
       ],
     },
     models: [
@@ -2839,9 +2836,6 @@ export const data: Provider[] = [
       or: [
         {
           equals: 'openai',
-        },
-        {
-          equals: 'gpt',
         },
       ],
     },

@@ -10,7 +10,6 @@ api_pattern: 'https://api\.openai\.com'
 provider_match:
   or:
     - equals: openai
-    - equals: gpt
 model_match:
   or:
     - starts_with: "gpt-"

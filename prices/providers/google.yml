@@ -11,7 +11,6 @@ model_match:
 provider_match:
   or:
     - contains: google
-    - contains: gemini
 models:
   - id: claude-3-5-haiku
     match:
