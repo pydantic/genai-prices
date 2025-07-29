@@ -9,25 +9,6 @@ from typing import Annotated, Any, Literal, Protocol, Union
 
 import pydantic
 
-# Define MatchLogic early to avoid forward reference issues
-def clause_discriminator(v: Any) -> str | None:
-    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
-    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
-
-
-MatchLogic = Annotated[
-    Union[
-        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
-        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
-        Annotated['ClauseContains', pydantic.Tag('contains')],
-        Annotated['ClauseRegex', pydantic.Tag('regex')],
-        Annotated['ClauseEquals', pydantic.Tag('equals')],
-        Annotated['ClauseOr', pydantic.Tag('or')],
-        Annotated['ClauseAnd', pydantic.Tag('and')],
-    ],
-    pydantic.Discriminator(clause_discriminator),
-]
-
 __all__ = (
     'ProviderID',
     'PriceCalculation',
@@ -53,6 +34,25 @@ __all__ = (
     'find_provider_by_match',
 
 )
+
+# Define MatchLogic after __all__ to avoid forward reference issues
+def clause_discriminator(v: Any) -> str | None:
+    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
+    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
+
+
+MatchLogic = Annotated[
+    Union[
+        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
+        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
+        Annotated['ClauseContains', pydantic.Tag('contains')],
+        Annotated['ClauseRegex', pydantic.Tag('regex')],
+        Annotated['ClauseEquals', pydantic.Tag('equals')],
+        Annotated['ClauseOr', pydantic.Tag('or')],
+        Annotated['ClauseAnd', pydantic.Tag('and')],
+    ],
+    pydantic.Discriminator(clause_discriminator),
+]
 
 ProviderID = Literal[
     'avian',
@@ -97,9 +97,6 @@ def find_provider_by_match(providers: list['Provider'], provider_id: str) -> 'Pr
             return provider
 
     return None
-
-
-
 
 
 @dataclass
