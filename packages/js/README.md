@@ -82,17 +82,30 @@ genai-prices list
 genai-prices list openai
 ```
 
-### Provider Matching
+### Provider and Model Matching
 
-The library uses intelligent provider matching:
+The library uses intelligent provider and model matching:
 
 1. **Explicit provider**: Use `providerId` parameter or `provider:model` format
-2. **Model-based matching**: Uses provider's `model_match` logic (e.g., OpenAI matches models starting with "gpt-")
-3. **Fallback**: Tries to match based on model name patterns
+2. **Provider matching**: Uses provider's `provider_match` logic for provider identifiers (e.g., `google`, `openai`, `anthropic`)
+3. **Model matching**: Uses provider's `model_match` logic for model names (e.g., models starting with "gpt-" for OpenAI)
+
+**Provider Matching Examples:**
+
+```js
+// Provider matching works with various provider identifiers
+const result1 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google' })
+const result2 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google-vertex' })
+const result3 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google-gla' })
+
+// Model matching works with various model names
+const result4 = calcPriceSync(usage, 'gpt-4o') // Auto-detects OpenAI
+const result5 = calcPriceSync(usage, 'claude-3-opus') // Auto-detects Anthropic
+```
 
 **Best practices:**
 
-- Always specify `providerId` if you know it (e.g., `openai`, `google`, etc.) for best results
+- Always specify `providerId` if you know it (e.g., `openai`, `google`, `anthropic`) for best results
 - Use `provider:model` format in CLI for explicit provider selection
 - The async API with `--auto-update` provides the most up-to-date pricing
 
@@ -174,7 +187,7 @@ src/
 ### Common Issues
 
 - **No price found (returns null)**:
-  - Make sure you specify the correct `providerId` (e.g., `openai`)
+  - Make sure you specify the correct `providerId` (e.g., `openai`, `google`, `anthropic`)
   - Try using `provider:model` format in CLI
   - Use `--auto-update` flag to fetch latest data
   - Check that the model name is correct and supported by the provider
