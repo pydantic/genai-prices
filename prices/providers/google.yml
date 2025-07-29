@@ -10,11 +10,8 @@ model_match:
   contains: gemini
 provider_match:
   or:
-    - equals: google
-    - equals: gemini
-    - equals: google-gla
-    - equals: google-vertex
-    - equals: google-ai
+    - contains: google
+    - contains: gemini
 models:
   - id: claude-3-5-haiku
     match:
