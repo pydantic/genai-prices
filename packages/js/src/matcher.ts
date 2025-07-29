@@ -72,10 +72,7 @@ export function matchProvider(
 ): Provider | undefined {
   // If providerId is provided, try to find by provider_match logic
   if (providerId) {
-    const provider = findProviderByMatch(providers, providerId)
-    if (provider) return provider
-    // If providerId is provided but not found, return undefined (don't fall back to model matching)
-    return undefined
+    return findProviderByMatch(providers, providerId)
   }
 
   if (providerApiUrl) {
