@@ -5,9 +5,7 @@ pricing_urls:
   - https://mistral.ai/pricing/
 api_pattern: 'https://(.*\.)?mistral\.ai'
 provider_match:
-  or:
-    - equals: mistral
-    - equals: mistralai
+  starts_with: mistral
 model_match:
   regex: (?:mi|code|dev|magi|mini)stral
 models:
