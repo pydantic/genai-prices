@@ -14,7 +14,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.anthropic\\.com',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
         model_match=ClauseContains(contains='claude'),
-        provider_match=ClauseOr(or_=[ClauseEquals(equals='anthropic'), ClauseEquals(equals='claude')]),
+        provider_match=ClauseOr(or_=[ClauseEquals(equals='anthropic')]),
         models=[
             ModelInfo(
                 id='claude-2',

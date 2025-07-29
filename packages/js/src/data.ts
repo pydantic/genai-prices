@@ -14,9 +14,6 @@ export const data: Provider[] = [
         {
           equals: 'anthropic',
         },
-        {
-          equals: 'claude',
-        },
       ],
     },
     models: [

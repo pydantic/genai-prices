@@ -7,7 +7,6 @@ api_pattern: 'https://api\.anthropic\.com'
 provider_match:
   or:
     - equals: anthropic
-    - equals: claude
 # see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 model_match:
   contains: claude
