@@ -51,7 +51,7 @@ __all__ = (
     'MatchLogic',
     'providers_schema',
     'find_provider_by_match',
-    'normalize_model',
+
 )
 
 ProviderID = Literal[
@@ -99,27 +99,7 @@ def find_provider_by_match(providers: list['Provider'], provider_id: str) -> 'Pr
     return None
 
 
-def normalize_model(provider_id: str, model_name: str) -> str:
-    """Normalize a model name based on provider and model patterns.
 
-    Args:
-        provider_id: The normalized provider ID
-        model_name: The raw model name
-
-    Returns:
-        The normalized model name
-    """
-    model = model_name.strip()
-
-    # Anthropic model normalization
-    if provider_id == 'anthropic' and model.startswith('claude-opus-4'):
-        return 'claude-opus-4-20250514'
-
-    # OpenAI model normalization
-    if provider_id == 'openai' and model.startswith('gpt-3.5-turbo'):
-        return 'gpt-3.5-turbo'
-
-    return model
 
 
 @dataclass

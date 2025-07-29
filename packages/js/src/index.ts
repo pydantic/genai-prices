@@ -8,5 +8,5 @@ export {
   prefetchAsync,
   getEnvironmentInfo,
 } from './dataLoader.js'
-export { matchProvider, matchModel, normalizeModel } from './matcher.js'
+export { matchProvider, matchModel } from './matcher.js'
 export type { Usage, PriceCalculation, PriceCalculationResult, Provider, ModelInfo } from './types.js'

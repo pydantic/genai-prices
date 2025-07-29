@@ -25,28 +25,6 @@ function matchLogic(logic: any, text: string): boolean {
   return false
 }
 
-/**
- * Normalize a model name based on provider and model patterns
- * @param providerId - The normalized provider ID
- * @param modelName - The raw model name
- * @returns The normalized model name
- */
-export function normalizeModel(providerId: string, modelName: string): string {
-  const model = modelName.trim()
-
-  // Anthropic model normalization
-  if (providerId === 'anthropic' && model.startsWith('claude-opus-4')) {
-    return 'claude-opus-4-20250514'
-  }
-
-  // OpenAI model normalization
-  if (providerId === 'openai' && model.startsWith('gpt-3.5-turbo')) {
-    return 'gpt-3.5-turbo'
-  }
-
-  return model
-}
-
 export function matchProvider(
   providers: Provider[],
   modelRef: string,

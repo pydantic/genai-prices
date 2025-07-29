@@ -4,7 +4,7 @@ import os
 # Add the parent directory to the path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from genai_prices.types import find_provider_by_match, normalize_model, Provider, ClauseOr, ClauseEquals
+from genai_prices.types import find_provider_by_match, Provider, ClauseOr, ClauseEquals
 
 # Mock providers for testing
 mock_providers = [
@@ -141,28 +141,3 @@ class TestProviderMatching:
 
         result = find_provider_by_match(mock_providers, 'custom-ai')
         assert result is None
-
-
-class TestModelNormalization:
-    def test_anthropic_claude_opus_4_models(self):
-        """Test Anthropic Claude Opus 4 model normalization."""
-        assert normalize_model('anthropic', 'claude-opus-4-20250514') == 'claude-opus-4-20250514'
-        assert normalize_model('anthropic', 'claude-opus-4-something') == 'claude-opus-4-20250514'
-        assert normalize_model('anthropic', 'claude-opus-4') == 'claude-opus-4-20250514'
-
-    def test_openai_gpt_35_models(self):
-        """Test OpenAI GPT-3.5 model normalization."""
-        assert normalize_model('openai', 'gpt-3.5-turbo') == 'gpt-3.5-turbo'
-        assert normalize_model('openai', 'gpt-3.5-turbo-16k') == 'gpt-3.5-turbo'
-        assert normalize_model('openai', 'gpt-3.5-turbo-instruct') == 'gpt-3.5-turbo'
-
-    def test_other_provider_models(self):
-        """Test that models for other providers are not normalized."""
-        assert normalize_model('google', 'gemini-2.5-pro') == 'gemini-2.5-pro'
-        assert normalize_model('mistral', 'mistral-large') == 'mistral-large'
-        assert normalize_model('anthropic', 'claude-3-sonnet') == 'claude-3-sonnet'
-
-    def test_whitespace_handling(self):
-        """Test whitespace handling in model names."""
-        assert normalize_model('anthropic', '  claude-opus-4  ') == 'claude-opus-4-20250514'
-        assert normalize_model('openai', ' gpt-3.5-turbo ') == 'gpt-3.5-turbo'

@@ -1,5 +1,5 @@
 import { getProvidersAsync } from '../dataLoader.js'
-import { matchProvider, matchModel, normalizeModel } from '../matcher.js'
+import { matchProvider, matchModel } from '../matcher.js'
 import { calcPrice as calcModelPrice, getActiveModelPrice } from '../priceCalc.js'
 import type { Usage, PriceCalculation, PriceCalculationResult } from '../types.js'
 
@@ -18,18 +18,9 @@ export async function calcPriceAsync(
 ): Promise<PriceCalculationResult> {
   const providers = await getProvidersAsync()
 
-  // Normalize the model reference if providerId is provided
-  let normalizedModelRef = modelRef
-  if (options.providerId) {
-    const provider = matchProvider(providers, normalizedModelRef, options.providerId)
-    if (provider) {
-      normalizedModelRef = normalizeModel(provider.id, modelRef)
-    }
-  }
-
-  const provider = matchProvider(providers, normalizedModelRef, options.providerId, options.providerApiUrl)
+  const provider = matchProvider(providers, modelRef, options.providerId, options.providerApiUrl)
   if (!provider) return null
-  const model = matchModel(provider.models, normalizedModelRef)
+  const model = matchModel(provider.models, modelRef)
   if (!model) return null
   const timestamp = options.timestamp || new Date()
   const model_price = getActiveModelPrice(model, timestamp)

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { matchProvider, normalizeModel } from '../matcher.js'
+import { matchProvider } from '../matcher.js'
 import type { Provider } from '../types.js'
 
 // Mock providers for testing
@@ -57,7 +57,7 @@ const mockProviders: Provider[] = [
   },
 ]
 
-describe('Provider and Model Matching', () => {
+describe('Provider Matching', () => {
   describe('matchProvider with providerId', () => {
     it('should find providers by exact ID match', () => {
       expect(matchProvider(mockProviders, 'any-model', 'google')?.id).toBe('google')
@@ -89,31 +89,6 @@ describe('Provider and Model Matching', () => {
     it('should return undefined for unknown providers', () => {
       expect(matchProvider(mockProviders, 'any-model', 'unknown-provider')).toBeUndefined()
       expect(matchProvider(mockProviders, 'any-model', 'custom-ai')).toBeUndefined()
-    })
-  })
-
-  describe('normalizeModel', () => {
-    it('should normalize Anthropic Claude Opus 4 models', () => {
-      expect(normalizeModel('anthropic', 'claude-opus-4-20250514')).toBe('claude-opus-4-20250514')
-      expect(normalizeModel('anthropic', 'claude-opus-4-something')).toBe('claude-opus-4-20250514')
-      expect(normalizeModel('anthropic', 'claude-opus-4')).toBe('claude-opus-4-20250514')
-    })
-
-    it('should normalize OpenAI GPT-3.5 models', () => {
-      expect(normalizeModel('openai', 'gpt-3.5-turbo')).toBe('gpt-3.5-turbo')
-      expect(normalizeModel('openai', 'gpt-3.5-turbo-16k')).toBe('gpt-3.5-turbo')
-      expect(normalizeModel('openai', 'gpt-3.5-turbo-instruct')).toBe('gpt-3.5-turbo')
-    })
-
-    it('should not normalize other provider models', () => {
-      expect(normalizeModel('google', 'gemini-2.5-pro')).toBe('gemini-2.5-pro')
-      expect(normalizeModel('mistral', 'mistral-large')).toBe('mistral-large')
-      expect(normalizeModel('anthropic', 'claude-3-sonnet')).toBe('claude-3-sonnet')
-    })
-
-    it('should handle whitespace', () => {
-      expect(normalizeModel('anthropic', '  claude-opus-4  ')).toBe('claude-opus-4-20250514')
-      expect(normalizeModel('openai', ' gpt-3.5-turbo ')).toBe('gpt-3.5-turbo')
     })
   })
 })

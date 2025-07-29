@@ -1332,7 +1332,7 @@ export const data: Provider[] = [
       'https://ai.google.dev/gemini-api/docs/pricing',
       'https://cloud.google.com/vertex-ai/generative-ai/pricing',
     ],
-    api_pattern: 'https://(.*\\.)?googleapis\\.com',
+    api_pattern: 'https://api\\.googleapis\\.com',
     model_match: {
       contains: 'gemini',
     },
@@ -2054,7 +2054,7 @@ export const data: Provider[] = [
   {
     id: 'mistral',
     name: 'Mistral AI',
-    pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
+    pricing_urls: ['https://mistral.ai/pricing/'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
       regex: '(?:mi|code|dev|magi|mini)stral',
@@ -2827,12 +2827,7 @@ export const data: Provider[] = [
   {
     id: 'openai',
     name: 'OpenAI',
-    pricing_urls: [
-      'https://platform.openai.com/docs/pricing',
-      'https://openai.com/api/pricing/',
-      'https://platform.openai.com/docs/models',
-      'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
-    ],
+    pricing_urls: ['https://openai.com/pricing'],
     api_pattern: 'https://api\\.openai\\.com',
     model_match: {
       or: [
@@ -2848,6 +2843,9 @@ export const data: Provider[] = [
       or: [
         {
           equals: 'openai',
+        },
+        {
+          equals: 'gpt',
         },
       ],
     },

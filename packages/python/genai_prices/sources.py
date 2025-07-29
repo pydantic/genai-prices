@@ -14,7 +14,7 @@ import httpx
 from pydantic import ValidationError
 
 from . import types
-from .types import find_provider_by_match, normalize_model
+from .types import find_provider_by_match
 
 if TYPE_CHECKING:
     from .sources import DataSnapshot
@@ -190,12 +190,7 @@ class DataSnapshot:
 
         provider = self.find_provider(model_ref, provider_id, provider_api_url)
 
-        # Normalize the model reference if provider_id is provided
-        normalized_model_ref = model_ref
-        if provider_id is not None:
-            normalized_model_ref = normalize_model(provider.id, model_ref)
-
-        if model := provider.find_model(normalized_model_ref):
+        if model := provider.find_model(model_ref):
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
         else:

@@ -5,10 +5,10 @@ from functools import cache
 from importlib.metadata import version as _metadata_version
 
 from . import sources, types
-from .types import Usage, find_provider_by_match, normalize_model
+from .types import Usage, find_provider_by_match
 
 __version__ = _metadata_version('genai_prices')
-__all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync', 'find_provider_by_match', 'normalize_model', '__version__'
+__all__ = 'Usage', 'calc_price_async', 'prefetch_async', 'calc_price_sync', 'prefetch_sync', 'find_provider_by_match', '__version__'
 
 
 async def calc_price_async(
