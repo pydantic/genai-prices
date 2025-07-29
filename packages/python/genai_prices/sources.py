@@ -37,7 +37,7 @@ DEFAULT_AUTO_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-pric
 
 class AsyncSource(ABC):
     @abstractmethod
-    async def fetch(self) -> 'DataSnapshot | None':
+    async def fetch(self) -> DataSnapshot | None:
         """Try to fetch a new snapshot if required.
 
         This method should check if any relevant cached has expired, if not it should return `None`.
@@ -60,7 +60,7 @@ class AutoUpdateAsyncSource(AsyncSource):
         if self._pre_fetch_task is None:
             self._pre_fetch_task = asyncio.create_task(self._fetch())
 
-    async def fetch(self) -> 'DataSnapshot | None':
+    async def fetch(self) -> DataSnapshot | None:
         if self._pre_fetch_task is not None:
             await self._pre_fetch_task
             self._pre_fetch_task = None
@@ -89,7 +89,7 @@ class AutoUpdateAsyncSource(AsyncSource):
 
 class SyncSource(ABC):
     @abstractmethod
-    def fetch(self) -> 'DataSnapshot | None':
+    def fetch(self) -> DataSnapshot | None:
         """Try to fetch a new snapshot if required.
 
         This method should check if any relevant cached has expired, if not it should return `None`.
@@ -112,7 +112,7 @@ class AutoUpdateSyncSource(SyncSource):
         if self._pre_fetch_task is None:
             self._pre_fetch_task = futures.ThreadPoolExecutor(max_workers=1).submit(self._fetch)
 
-    def fetch(self) -> 'DataSnapshot | None':
+    def fetch(self) -> DataSnapshot | None:
         if self._pre_fetch_task is not None:
             self._pre_fetch_task.result()
             self._pre_fetch_task = None
