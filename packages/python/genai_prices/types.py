@@ -9,6 +9,25 @@ from typing import Annotated, Any, Literal, Protocol, Union
 
 import pydantic
 
+# Define MatchLogic early to avoid forward reference issues
+def clause_discriminator(v: Any) -> str | None:
+    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
+    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
+
+
+MatchLogic = Annotated[
+    Union[
+        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
+        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
+        Annotated['ClauseContains', pydantic.Tag('contains')],
+        Annotated['ClauseRegex', pydantic.Tag('regex')],
+        Annotated['ClauseEquals', pydantic.Tag('equals')],
+        Annotated['ClauseOr', pydantic.Tag('or')],
+        Annotated['ClauseAnd', pydantic.Tag('and')],
+    ],
+    pydantic.Discriminator(clause_discriminator),
+]
+
 __all__ = (
     'ProviderID',
     'PriceCalculation',
@@ -31,7 +50,7 @@ __all__ = (
     'ClauseAnd',
     'MatchLogic',
     'providers_schema',
-    'normalize_provider',
+    'find_provider_by_match',
     'normalize_model',
 )
 
@@ -54,56 +73,30 @@ ProviderID = Literal[
     'openrouter',
 ]
 
-# Provider aliases mapping - maps various provider names to standardized provider IDs
-PROVIDER_ALIASES: dict[str, str] = {
-    # Google aliases
-    'gemini': 'google',
-    'google-gla': 'google',
-    'google-vertex': 'google',
-    'google-ai': 'google',
 
-    # Meta aliases
-    'meta-llama': 'meta',
-    'llama': 'meta',
-
-    # Mistral aliases
-    'mistralai': 'mistral',
-
-    # Anthropic aliases
-    'anthropic': 'anthropic',
-    'claude': 'anthropic',
-
-    # OpenAI aliases
-    'openai': 'openai',
-    'gpt': 'openai',
-
-    # Other common aliases
-    'cohere': 'cohere',
-    'groq': 'groq',
-    'fireworks': 'fireworks',
-    'deepseek': 'deepseek',
-    'perplexity': 'perplexity',
-    'together': 'together',
-    'aws': 'aws',
-    'azure': 'azure',
-    'openrouter': 'openrouter',
-    'novita': 'novita',
-    'x-ai': 'x-ai',
-    'avian': 'avian',
-}
-
-
-def normalize_provider(provider_name: str) -> str:
-    """Normalize a provider name to a standardized provider ID.
+def find_provider_by_match(providers: list['Provider'], provider_id: str) -> 'Provider | None':
+    """Find a provider by matching against provider_match logic.
 
     Args:
-        provider_name: The raw provider name from the system
+        providers: List of available providers
+        provider_id: The provider ID to match
 
     Returns:
-        The normalized provider ID
+        The matching provider or None
     """
-    normalized = provider_name.lower().strip()
-    return PROVIDER_ALIASES.get(normalized, normalized)
+    normalized_provider_id = provider_id.lower().strip()
+
+    # First try exact match by ID
+    for provider in providers:
+        if provider.id == normalized_provider_id:
+            return provider
+
+    # Then try provider_match logic
+    for provider in providers:
+        if provider.provider_match and provider.provider_match.is_match(normalized_provider_id):
+            return provider
+
+    return None
 
 
 def normalize_model(provider_id: str, model_name: str) -> str:
@@ -219,6 +212,8 @@ class Provider:
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
     model_match: MatchLogic | None = None
     """Logic to find a provider based on the model reference."""
+    provider_match: MatchLogic | None = None
+    """Logic to find a provider based on the provider identifier."""
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models provided by this organization"""
 
@@ -464,21 +459,4 @@ class ClauseAnd:
         return all(clause.is_match(text) for clause in self.and_)
 
 
-def clause_discriminator(v: Any) -> str | None:
-    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
-    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
-
-
-MatchLogic = Annotated[
-    Union[
-        Annotated[ClauseStartsWith, pydantic.Tag('starts_with')],
-        Annotated[ClauseEndsWith, pydantic.Tag('ends_with')],
-        Annotated[ClauseContains, pydantic.Tag('contains')],
-        Annotated[ClauseRegex, pydantic.Tag('regex')],
-        Annotated[ClauseEquals, pydantic.Tag('equals')],
-        Annotated[ClauseOr, pydantic.Tag('or')],
-        Annotated[ClauseAnd, pydantic.Tag('and')],
-    ],
-    pydantic.Discriminator(clause_discriminator),
-]
 providers_schema = pydantic.TypeAdapter(list[Provider], config=pydantic.ConfigDict(defer_build=True))

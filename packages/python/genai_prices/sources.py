@@ -14,7 +14,7 @@ import httpx
 from pydantic import ValidationError
 
 from . import types
-from .types import normalize_provider, normalize_model
+from .types import find_provider_by_match, normalize_model
 
 if TYPE_CHECKING:
     from .sources import DataSnapshot
@@ -129,7 +129,7 @@ class AutoUpdateSyncSource(SyncSource):
         global _cached_auto_update_snapshot
 
         try:
-            client = self.client or httpx
+            client = self.client or httpx.Client()
             r = client.get(self.url, timeout=self.request_timeout)
             r.raise_for_status()
             providers = data.providers_schema.validate_json(r.content)
@@ -193,8 +193,7 @@ class DataSnapshot:
         # Normalize the model reference if provider_id is provided
         normalized_model_ref = model_ref
         if provider_id is not None:
-            normalized_provider_id = normalize_provider(provider_id)
-            normalized_model_ref = normalize_model(normalized_provider_id, model_ref)
+            normalized_model_ref = normalize_model(provider.id, model_ref)
 
         if model := provider.find_model(normalized_model_ref):
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
@@ -209,11 +208,10 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         if provider_id is not None:
-            normalized_provider_id = normalize_provider(provider_id)
-            for provider in self.providers:
-                if provider.id == normalized_provider_id:
-                    return provider
-            raise LookupError(f'Unable to find provider provider_id={provider_id!r}')
+            provider = find_provider_by_match(self.providers, provider_id)
+            if provider is None:
+                raise LookupError(f'Unable to find provider provider_id={provider_id!r}')
+            return provider
 
         if provider_api_url is not None:
             for provider in self.providers:

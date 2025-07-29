@@ -38,22 +38,26 @@ This package is a work in progress:
 - JavaScript/TypeScript package, CLI
 - TODO: API and web UI
 
-### Provider and Model Normalization
+### Provider and Model Matching
 
-The library automatically normalizes provider names and model identifiers to handle various naming conventions:
+The library automatically handles provider aliases and model name variations through YAML-based configuration. This allows you to use various provider identifiers and model names while the library maps them to the correct providers and models.
 
 **Provider Aliases:**
 
-- Google: `gemini`, `google-gla`, `google-vertex`, `google-ai` → `google`
-- Meta: `meta-llama`, `llama` → `meta`
-- Mistral: `mistralai` → `mistral`
-- Anthropic: `anthropic`, `claude` → `anthropic`
-- OpenAI: `openai`, `gpt` → `openai`
+Provider aliases are defined in the YAML configuration files and support the same matching logic as models:
+
+- **Google**: `google`, `gemini`, `google-gla`, `google-vertex`, `google-ai`
+- **Meta**: `meta`, `meta-llama`, `llama`
+- **Mistral**: `mistral`, `mistralai`
+- **Anthropic**: `anthropic`, `claude`
+- **OpenAI**: `openai`, `gpt`
 
 **Model Normalization:**
 
-- Anthropic Claude Opus 4: Any model starting with `claude-opus-4` → `claude-opus-4-20250514`
-- OpenAI GPT-3.5: Any model starting with `gpt-3.5-turbo` → `gpt-3.5-turbo`
+The library also normalizes model names for consistency:
+
+- **Anthropic Claude Opus 4**: Any model starting with `claude-opus-4` is normalized to `claude-opus-4-20250514`
+- **OpenAI GPT-3.5**: Any model starting with `gpt-3.5-turbo` is normalized to `gpt-3.5-turbo`
 
 This allows you to use various provider and model names without worrying about exact matching:
 
@@ -92,7 +96,7 @@ The following providers are currently supported:
 - [Fireworks](prices/providers/fireworks.yml) - 7 models
 - [Google](prices/providers/google.yml) - 30 models
 - [Groq](prices/providers/groq.yml) - 8 models
-- [Mistral](prices/providers/mistral.yml) - 28 models
+- [Mistral AI](prices/providers/mistral.yml) - 28 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 41 models
 - [OpenRouter](prices/providers/openrouter.yml) - 548 models
@@ -126,7 +130,7 @@ project wherever you use it and [contribute](#contributing) back to the project 
 
 ### Release Workflow
 
-This project uses [changesets](https://github.com/changesets/changesets) for versioning and publishing:
+This project uses [changesets](https://github.com/changesets/changesets) for versioning and publishing js package:
 
 - **Stable releases**: Automatically published when PRs are merged to main (if changesets are present)
 - **Beta releases**: Use the GitHub Actions workflow "Beta Release" to:

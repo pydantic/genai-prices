@@ -4,10 +4,20 @@ export const data: Provider[] = [
   {
     id: 'anthropic',
     name: 'Anthropic',
-    pricing_urls: ['https://www.anthropic.com/pricing#api'],
-    api_pattern: 'https://api\\.anthropic\\.com',
+    pricing_urls: ['https://www.anthropic.com/pricing'],
+    api_pattern: 'https://(.*\\.)?anthropic\\.com',
     model_match: {
       contains: 'claude',
+    },
+    provider_match: {
+      or: [
+        {
+          equals: 'anthropic',
+        },
+        {
+          equals: 'claude',
+        },
+      ],
     },
     models: [
       {
@@ -1326,6 +1336,25 @@ export const data: Provider[] = [
     model_match: {
       contains: 'gemini',
     },
+    provider_match: {
+      or: [
+        {
+          equals: 'google',
+        },
+        {
+          equals: 'gemini',
+        },
+        {
+          equals: 'google-gla',
+        },
+        {
+          equals: 'google-vertex',
+        },
+        {
+          equals: 'google-ai',
+        },
+      ],
+    },
     models: [
       {
         id: 'claude-3-5-haiku',
@@ -2024,11 +2053,21 @@ export const data: Provider[] = [
   },
   {
     id: 'mistral',
-    name: 'Mistral',
-    pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
-    api_pattern: 'https://api\\.mistral\\.ai',
+    name: 'Mistral AI',
+    pricing_urls: ['https://mistral.ai/pricing/'],
+    api_pattern: 'https://(.*\\.)?mistral\\.ai',
     model_match: {
       regex: '(?:mi|code|dev|magi|mini)stral',
+    },
+    provider_match: {
+      or: [
+        {
+          equals: 'mistral',
+        },
+        {
+          equals: 'mistralai',
+        },
+      ],
     },
     models: [
       {
@@ -2795,13 +2834,8 @@ export const data: Provider[] = [
   {
     id: 'openai',
     name: 'OpenAI',
-    pricing_urls: [
-      'https://platform.openai.com/docs/pricing',
-      'https://openai.com/api/pricing/',
-      'https://platform.openai.com/docs/models',
-      'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
-    ],
-    api_pattern: 'https://api\\.openai\\.com',
+    pricing_urls: ['https://openai.com/pricing'],
+    api_pattern: 'https://(.*\\.)?openai\\.com',
     model_match: {
       or: [
         {
@@ -2809,6 +2843,16 @@ export const data: Provider[] = [
         },
         {
           regex: '^o[134]',
+        },
+      ],
+    },
+    provider_match: {
+      or: [
+        {
+          equals: 'openai',
+        },
+        {
+          equals: 'gpt',
         },
       ],
     },

@@ -25,52 +25,21 @@ function matchLogic(logic: any, text: string): boolean {
   return false
 }
 
-// Provider aliases mapping - maps various provider names to standardized provider IDs
-const PROVIDER_ALIASES: Record<string, string> = {
-  // Google aliases
-  gemini: 'google',
-  'google-gla': 'google',
-  'google-vertex': 'google',
-  'google-ai': 'google',
-
-  // Meta aliases
-  'meta-llama': 'meta',
-  llama: 'meta',
-
-  // Mistral aliases
-  mistralai: 'mistral',
-
-  // Anthropic aliases
-  anthropic: 'anthropic',
-  claude: 'anthropic',
-
-  // OpenAI aliases
-  openai: 'openai',
-  gpt: 'openai',
-
-  // Other common aliases
-  cohere: 'cohere',
-  groq: 'groq',
-  fireworks: 'fireworks',
-  deepseek: 'deepseek',
-  perplexity: 'perplexity',
-  together: 'together',
-  aws: 'aws',
-  azure: 'azure',
-  openrouter: 'openrouter',
-  novita: 'novita',
-  'x-ai': 'x-ai',
-  avian: 'avian',
-}
-
 /**
- * Normalize a provider name to a standardized provider ID
- * @param providerName - The raw provider name from the system
- * @returns The normalized provider ID
+ * Find a provider by matching against provider_match logic
+ * @param providers - List of available providers
+ * @param providerId - The provider ID to match
+ * @returns The matching provider or undefined
  */
-export function normalizeProvider(providerName: string): string {
-  const normalized = providerName.toLowerCase().trim()
-  return PROVIDER_ALIASES[normalized] || normalized
+export function findProviderByMatch(providers: Provider[], providerId: string): Provider | undefined {
+  const normalizedProviderId = providerId.toLowerCase().trim()
+
+  // First try exact match by ID
+  const exactMatch = providers.find((p) => p.id === normalizedProviderId)
+  if (exactMatch) return exactMatch
+
+  // Then try provider_match logic
+  return providers.find((p) => p.provider_match && matchLogic(p.provider_match, normalizedProviderId))
 }
 
 /**
@@ -101,11 +70,12 @@ export function matchProvider(
   providerId?: string,
   providerApiUrl?: string,
 ): Provider | undefined {
-  // If providerId is provided, normalize it first
+  // If providerId is provided, try to find by provider_match logic
   if (providerId) {
-    const normalizedProviderId = normalizeProvider(providerId)
-    return providers.find((p) => p.id === normalizedProviderId)
+    const provider = findProviderByMatch(providers, providerId)
+    if (provider) return provider
   }
+
   if (providerApiUrl) {
     return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
   }

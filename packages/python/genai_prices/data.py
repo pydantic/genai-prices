@@ -11,9 +11,10 @@ providers: list[Provider] = [
     Provider(
         id='anthropic',
         name='Anthropic',
-        api_pattern='https://api\\.anthropic\\.com',
-        pricing_urls=['https://www.anthropic.com/pricing#api'],
+        api_pattern='https://(.*\\.)?anthropic\\.com',
+        pricing_urls=['https://www.anthropic.com/pricing'],
         model_match=ClauseContains(contains='claude'),
+        provider_match=ClauseOr(or_=[ClauseEquals(equals='anthropic'), ClauseEquals(equals='claude')]),
         models=[
             ModelInfo(
                 id='claude-2',
@@ -774,6 +775,15 @@ providers: list[Provider] = [
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
         model_match=ClauseContains(contains='gemini'),
+        provider_match=ClauseOr(
+            or_=[
+                ClauseEquals(equals='google'),
+                ClauseEquals(equals='gemini'),
+                ClauseEquals(equals='google-gla'),
+                ClauseEquals(equals='google-vertex'),
+                ClauseEquals(equals='google-ai'),
+            ]
+        ),
         models=[
             ModelInfo(
                 id='claude-3-5-haiku',
@@ -1157,10 +1167,11 @@ providers: list[Provider] = [
     ),
     Provider(
         id='mistral',
-        name='Mistral',
-        api_pattern='https://api\\.mistral\\.ai',
-        pricing_urls=['https://mistral.ai/pricing#api-pricing'],
+        name='Mistral AI',
+        api_pattern='https://(.*\\.)?mistral\\.ai',
+        pricing_urls=['https://mistral.ai/pricing/'],
         model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
+        provider_match=ClauseOr(or_=[ClauseEquals(equals='mistral'), ClauseEquals(equals='mistralai')]),
         models=[
             ModelInfo(
                 id='codestral',
@@ -1559,14 +1570,10 @@ providers: list[Provider] = [
     Provider(
         id='openai',
         name='OpenAI',
-        api_pattern='https://api\\.openai\\.com',
-        pricing_urls=[
-            'https://platform.openai.com/docs/pricing',
-            'https://openai.com/api/pricing/',
-            'https://platform.openai.com/docs/models',
-            'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
-        ],
+        api_pattern='https://(.*\\.)?openai\\.com',
+        pricing_urls=['https://openai.com/pricing'],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
+        provider_match=ClauseOr(or_=[ClauseEquals(equals='openai'), ClauseEquals(equals='gpt')]),
         models=[
             ModelInfo(
                 id='ada',

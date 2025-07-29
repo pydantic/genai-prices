@@ -1,9 +1,13 @@
 # yaml-language-server: $schema=.schema.json
-name: Mistral
+name: Mistral AI
 id: mistral
 pricing_urls:
-  - https://mistral.ai/pricing#api-pricing
-api_pattern: 'https://api\.mistral\.ai'
+  - https://mistral.ai/pricing/
+api_pattern: 'https://(.*\.)?mistral\.ai'
+provider_match:
+  or:
+    - equals: mistral
+    - equals: mistralai
 model_match:
   regex: (?:mi|code|dev|magi|mini)stral
 models:

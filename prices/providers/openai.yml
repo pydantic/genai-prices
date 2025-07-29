@@ -2,11 +2,12 @@
 name: OpenAI
 id: openai
 pricing_urls:
-  - https://platform.openai.com/docs/pricing
-  - https://openai.com/api/pricing/
-  - https://platform.openai.com/docs/models
-  - https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
-api_pattern: 'https://api\.openai\.com'
+  - https://openai.com/pricing
+api_pattern: 'https://(.*\.)?openai\.com'
+provider_match:
+  or:
+    - equals: openai
+    - equals: gpt
 model_match:
   or:
     - starts_with: "gpt-"

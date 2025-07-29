@@ -1,43 +1,94 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeProvider, normalizeModel } from '../matcher.js'
+import { findProviderByMatch, normalizeModel } from '../matcher.js'
+import type { Provider } from '../types.js'
 
-describe('Provider and Model Normalization', () => {
-  describe('normalizeProvider', () => {
-    it('should normalize Google provider aliases', () => {
-      expect(normalizeProvider('gemini')).toBe('google')
-      expect(normalizeProvider('google-gla')).toBe('google')
-      expect(normalizeProvider('google-vertex')).toBe('google')
-      expect(normalizeProvider('google-ai')).toBe('google')
-      expect(normalizeProvider('GOOGLE-GLA')).toBe('google')
+// Mock providers for testing
+const mockProviders: Provider[] = [
+  {
+    id: 'google',
+    name: 'Google',
+    api_pattern: '',
+    models: [],
+    provider_match: {
+      or: [
+        { equals: 'google' },
+        { equals: 'gemini' },
+        { equals: 'google-gla' },
+        { equals: 'google-vertex' },
+        { equals: 'google-ai' },
+      ],
+    },
+  },
+  {
+    id: 'meta',
+    name: 'Meta',
+    api_pattern: '',
+    models: [],
+    provider_match: {
+      or: [{ equals: 'meta' }, { equals: 'meta-llama' }, { equals: 'llama' }],
+    },
+  },
+  {
+    id: 'mistral',
+    name: 'Mistral',
+    api_pattern: '',
+    models: [],
+    provider_match: {
+      or: [{ equals: 'mistral' }, { equals: 'mistralai' }],
+    },
+  },
+  {
+    id: 'anthropic',
+    name: 'Anthropic',
+    api_pattern: '',
+    models: [],
+    provider_match: {
+      or: [{ equals: 'anthropic' }, { equals: 'claude' }],
+    },
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI',
+    api_pattern: '',
+    models: [],
+    provider_match: {
+      or: [{ equals: 'openai' }, { equals: 'gpt' }],
+    },
+  },
+]
+
+describe('Provider and Model Matching', () => {
+  describe('findProviderByMatch', () => {
+    it('should find providers by exact ID match', () => {
+      expect(findProviderByMatch(mockProviders, 'google')?.id).toBe('google')
+      expect(findProviderByMatch(mockProviders, 'meta')?.id).toBe('meta')
+      expect(findProviderByMatch(mockProviders, 'mistral')?.id).toBe('mistral')
     })
 
-    it('should normalize Meta provider aliases', () => {
-      expect(normalizeProvider('meta-llama')).toBe('meta')
-      expect(normalizeProvider('llama')).toBe('meta')
+    it('should find providers by provider_match logic', () => {
+      expect(findProviderByMatch(mockProviders, 'gemini')?.id).toBe('google')
+      expect(findProviderByMatch(mockProviders, 'google-gla')?.id).toBe('google')
+      expect(findProviderByMatch(mockProviders, 'google-vertex')?.id).toBe('google')
+      expect(findProviderByMatch(mockProviders, 'meta-llama')?.id).toBe('meta')
+      expect(findProviderByMatch(mockProviders, 'llama')?.id).toBe('meta')
+      expect(findProviderByMatch(mockProviders, 'mistralai')?.id).toBe('mistral')
+      expect(findProviderByMatch(mockProviders, 'claude')?.id).toBe('anthropic')
+      expect(findProviderByMatch(mockProviders, 'gpt')?.id).toBe('openai')
     })
 
-    it('should normalize Mistral provider aliases', () => {
-      expect(normalizeProvider('mistralai')).toBe('mistral')
-    })
-
-    it('should normalize Anthropic provider aliases', () => {
-      expect(normalizeProvider('anthropic')).toBe('anthropic')
-      expect(normalizeProvider('claude')).toBe('anthropic')
-    })
-
-    it('should normalize OpenAI provider aliases', () => {
-      expect(normalizeProvider('openai')).toBe('openai')
-      expect(normalizeProvider('gpt')).toBe('openai')
-    })
-
-    it('should handle unknown providers', () => {
-      expect(normalizeProvider('unknown-provider')).toBe('unknown-provider')
-      expect(normalizeProvider('custom-ai')).toBe('custom-ai')
+    it('should handle case insensitive matching', () => {
+      expect(findProviderByMatch(mockProviders, 'GEMINI')?.id).toBe('google')
+      expect(findProviderByMatch(mockProviders, 'GOOGLE-GLA')?.id).toBe('google')
     })
 
     it('should handle whitespace', () => {
-      expect(normalizeProvider('  gemini  ')).toBe('google')
-      expect(normalizeProvider('google-gla ')).toBe('google')
+      expect(findProviderByMatch(mockProviders, '  gemini  ')?.id).toBe('google')
+      expect(findProviderByMatch(mockProviders, 'google-gla ')?.id).toBe('google')
+    })
+
+    it('should return undefined for unknown providers', () => {
+      expect(findProviderByMatch(mockProviders, 'unknown-provider')).toBeUndefined()
+      expect(findProviderByMatch(mockProviders, 'custom-ai')).toBeUndefined()
     })
   })
 
