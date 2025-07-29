@@ -26,23 +26,6 @@ function matchLogic(logic: any, text: string): boolean {
 }
 
 /**
- * Find a provider by matching against provider_match logic
- * @param providers - List of available providers
- * @param providerId - The provider ID to match
- * @returns The matching provider or undefined
- */
-export function findProviderByMatch(providers: Provider[], providerId: string): Provider | undefined {
-  const normalizedProviderId = providerId.toLowerCase().trim()
-
-  // First try exact match by ID
-  const exactMatch = providers.find((p) => p.id === normalizedProviderId)
-  if (exactMatch) return exactMatch
-
-  // Then try provider_match logic
-  return providers.find((p) => p.provider_match && matchLogic(p.provider_match, normalizedProviderId))
-}
-
-/**
  * Normalize a model name based on provider and model patterns
  * @param providerId - The normalized provider ID
  * @param modelName - The raw model name
@@ -72,8 +55,16 @@ export function matchProvider(
 ): Provider | undefined {
   // If providerId is provided, try to find by provider_match logic
   if (providerId) {
-    const provider = findProviderByMatch(providers, providerId)
+    const normalizedProviderId = providerId.toLowerCase().trim()
+
+    // First try exact match by ID
+    const exactMatch = providers.find((p) => p.id === normalizedProviderId)
+    if (exactMatch) return exactMatch
+
+    // Then try provider_match logic
+    const provider = providers.find((p) => p.provider_match && matchLogic(p.provider_match, normalizedProviderId))
     if (provider) return provider
+
     // If providerId is provided but not found, return undefined (don't fall back to model matching)
     return undefined
   }

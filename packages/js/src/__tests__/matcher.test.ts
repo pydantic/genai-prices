@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findProviderByMatch, normalizeModel } from '../matcher.js'
+import { matchProvider, normalizeModel } from '../matcher.js'
 import type { Provider } from '../types.js'
 
 // Mock providers for testing
@@ -58,37 +58,37 @@ const mockProviders: Provider[] = [
 ]
 
 describe('Provider and Model Matching', () => {
-  describe('findProviderByMatch', () => {
+  describe('matchProvider with providerId', () => {
     it('should find providers by exact ID match', () => {
-      expect(findProviderByMatch(mockProviders, 'google')?.id).toBe('google')
-      expect(findProviderByMatch(mockProviders, 'meta')?.id).toBe('meta')
-      expect(findProviderByMatch(mockProviders, 'mistral')?.id).toBe('mistral')
+      expect(matchProvider(mockProviders, 'any-model', 'google')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'meta')?.id).toBe('meta')
+      expect(matchProvider(mockProviders, 'any-model', 'mistral')?.id).toBe('mistral')
     })
 
     it('should find providers by provider_match logic', () => {
-      expect(findProviderByMatch(mockProviders, 'gemini')?.id).toBe('google')
-      expect(findProviderByMatch(mockProviders, 'google-gla')?.id).toBe('google')
-      expect(findProviderByMatch(mockProviders, 'google-vertex')?.id).toBe('google')
-      expect(findProviderByMatch(mockProviders, 'meta-llama')?.id).toBe('meta')
-      expect(findProviderByMatch(mockProviders, 'llama')?.id).toBe('meta')
-      expect(findProviderByMatch(mockProviders, 'mistralai')?.id).toBe('mistral')
-      expect(findProviderByMatch(mockProviders, 'claude')?.id).toBe('anthropic')
-      expect(findProviderByMatch(mockProviders, 'gpt')?.id).toBe('openai')
+      expect(matchProvider(mockProviders, 'any-model', 'gemini')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'google-gla')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'google-vertex')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'meta-llama')?.id).toBe('meta')
+      expect(matchProvider(mockProviders, 'any-model', 'llama')?.id).toBe('meta')
+      expect(matchProvider(mockProviders, 'any-model', 'mistralai')?.id).toBe('mistral')
+      expect(matchProvider(mockProviders, 'any-model', 'claude')?.id).toBe('anthropic')
+      expect(matchProvider(mockProviders, 'any-model', 'gpt')?.id).toBe('openai')
     })
 
     it('should handle case insensitive matching', () => {
-      expect(findProviderByMatch(mockProviders, 'GEMINI')?.id).toBe('google')
-      expect(findProviderByMatch(mockProviders, 'GOOGLE-GLA')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'GEMINI')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'GOOGLE-GLA')?.id).toBe('google')
     })
 
     it('should handle whitespace', () => {
-      expect(findProviderByMatch(mockProviders, '  gemini  ')?.id).toBe('google')
-      expect(findProviderByMatch(mockProviders, 'google-gla ')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', '  gemini  ')?.id).toBe('google')
+      expect(matchProvider(mockProviders, 'any-model', 'google-gla ')?.id).toBe('google')
     })
 
     it('should return undefined for unknown providers', () => {
-      expect(findProviderByMatch(mockProviders, 'unknown-provider')).toBeUndefined()
-      expect(findProviderByMatch(mockProviders, 'custom-ai')).toBeUndefined()
+      expect(matchProvider(mockProviders, 'any-model', 'unknown-provider')).toBeUndefined()
+      expect(matchProvider(mockProviders, 'any-model', 'custom-ai')).toBeUndefined()
     })
   })
 
