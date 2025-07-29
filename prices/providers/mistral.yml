@@ -3,7 +3,7 @@ name: Mistral AI
 id: mistral
 pricing_urls:
   - https://mistral.ai/pricing/
-api_pattern: 'https://(.*\.)?mistral\.ai'
+api_pattern: 'https://api\.mistral\.ai'
 provider_match:
   starts_with: mistral
 model_match:

@@ -3,7 +3,7 @@ name: OpenAI
 id: openai
 pricing_urls:
   - https://openai.com/pricing
-api_pattern: 'https://(.*\.)?openai\.com'
+api_pattern: 'https://api\.openai\.com'
 provider_match:
   or:
     - equals: openai

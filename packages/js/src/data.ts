@@ -4,8 +4,8 @@ export const data: Provider[] = [
   {
     id: 'anthropic',
     name: 'Anthropic',
-    pricing_urls: ['https://www.anthropic.com/pricing'],
-    api_pattern: 'https://(.*\\.)?anthropic\\.com',
+    pricing_urls: ['https://www.anthropic.com/pricing#api'],
+    api_pattern: 'https://api\\.anthropic\\.com',
     model_match: {
       contains: 'claude',
     },
@@ -1332,7 +1332,7 @@ export const data: Provider[] = [
       'https://ai.google.dev/gemini-api/docs/pricing',
       'https://cloud.google.com/vertex-ai/generative-ai/pricing',
     ],
-    api_pattern: 'https://(.*\\.)?googleapis\\.com',
+    api_pattern: 'https://api\\.googleapis\\.com',
     model_match: {
       contains: 'gemini',
     },
@@ -2055,19 +2055,12 @@ export const data: Provider[] = [
     id: 'mistral',
     name: 'Mistral AI',
     pricing_urls: ['https://mistral.ai/pricing/'],
-    api_pattern: 'https://(.*\\.)?mistral\\.ai',
+    api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
       regex: '(?:mi|code|dev|magi|mini)stral',
     },
     provider_match: {
-      or: [
-        {
-          equals: 'mistral',
-        },
-        {
-          equals: 'mistralai',
-        },
-      ],
+      starts_with: 'mistral',
     },
     models: [
       {
@@ -2835,7 +2828,7 @@ export const data: Provider[] = [
     id: 'openai',
     name: 'OpenAI',
     pricing_urls: ['https://openai.com/pricing'],
-    api_pattern: 'https://(.*\\.)?openai\\.com',
+    api_pattern: 'https://api\\.openai\\.com',
     model_match: {
       or: [
         {

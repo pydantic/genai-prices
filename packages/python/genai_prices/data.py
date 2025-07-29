@@ -11,8 +11,8 @@ providers: list[Provider] = [
     Provider(
         id='anthropic',
         name='Anthropic',
-        api_pattern='https://(.*\\.)?anthropic\\.com',
-        pricing_urls=['https://www.anthropic.com/pricing'],
+        api_pattern='https://api\\.anthropic\\.com',
+        pricing_urls=['https://www.anthropic.com/pricing#api'],
         model_match=ClauseContains(contains='claude'),
         provider_match=ClauseOr(or_=[ClauseEquals(equals='anthropic'), ClauseEquals(equals='claude')]),
         models=[
@@ -769,7 +769,7 @@ providers: list[Provider] = [
     Provider(
         id='google',
         name='Google',
-        api_pattern='https://(.*\\.)?googleapis\\.com',
+        api_pattern='https://api\\.googleapis\\.com',
         pricing_urls=[
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
@@ -1168,10 +1168,10 @@ providers: list[Provider] = [
     Provider(
         id='mistral',
         name='Mistral AI',
-        api_pattern='https://(.*\\.)?mistral\\.ai',
+        api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing/'],
         model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
-        provider_match=ClauseOr(or_=[ClauseEquals(equals='mistral'), ClauseEquals(equals='mistralai')]),
+        provider_match=ClauseStartsWith(starts_with='mistral'),
         models=[
             ModelInfo(
                 id='codestral',
@@ -1570,7 +1570,7 @@ providers: list[Provider] = [
     Provider(
         id='openai',
         name='OpenAI',
-        api_pattern='https://(.*\\.)?openai\\.com',
+        api_pattern='https://api\\.openai\\.com',
         pricing_urls=['https://openai.com/pricing'],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
         provider_match=ClauseOr(or_=[ClauseEquals(equals='openai'), ClauseEquals(equals='gpt')]),

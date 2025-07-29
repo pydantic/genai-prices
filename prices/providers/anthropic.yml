@@ -2,8 +2,8 @@
 name: Anthropic
 id: anthropic
 pricing_urls:
-  - https://www.anthropic.com/pricing
-api_pattern: 'https://(.*\.)?anthropic\.com'
+  - https://www.anthropic.com/pricing#api
+api_pattern: 'https://api\.anthropic\.com'
 provider_match:
   or:
     - equals: anthropic
