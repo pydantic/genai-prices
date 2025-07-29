@@ -14,7 +14,7 @@ import httpx
 from pydantic import ValidationError
 
 from . import types
-from .types import find_provider_by_match
+from .types import find_provider_by_id
 
 if TYPE_CHECKING:
     from .sources import DataSnapshot
@@ -203,7 +203,7 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         if provider_id is not None:
-            provider = find_provider_by_match(self.providers, provider_id)
+            provider = find_provider_by_id(self.providers, provider_id)
             if provider is None:
                 raise LookupError(f'Unable to find provider provider_id={provider_id!r}')
             return provider
