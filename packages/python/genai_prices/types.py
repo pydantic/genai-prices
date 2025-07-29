@@ -74,7 +74,7 @@ ProviderID = Literal[
 ]
 
 
-def find_provider_id(providers: list[Provider], provider_id: str) -> Provider | None:
+def find_provider_by_match(providers: list['Provider'], provider_id: str) -> 'Provider | None':
     """Find a provider by matching against provider_match logic.
 
     Args:

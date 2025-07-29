@@ -769,21 +769,13 @@ providers: list[Provider] = [
     Provider(
         id='google',
         name='Google',
-        api_pattern='https://api\\.googleapis\\.com',
+        api_pattern='https://(.*\\.)?googleapis\\.com',
         pricing_urls=[
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
         model_match=ClauseContains(contains='gemini'),
-        provider_match=ClauseOr(
-            or_=[
-                ClauseEquals(equals='google'),
-                ClauseEquals(equals='gemini'),
-                ClauseEquals(equals='google-gla'),
-                ClauseEquals(equals='google-vertex'),
-                ClauseEquals(equals='google-ai'),
-            ]
-        ),
+        provider_match=ClauseOr(or_=[ClauseContains(contains='google'), ClauseContains(contains='gemini')]),
         models=[
             ModelInfo(
                 id='claude-3-5-haiku',
@@ -1167,9 +1159,9 @@ providers: list[Provider] = [
     ),
     Provider(
         id='mistral',
-        name='Mistral AI',
+        name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
-        pricing_urls=['https://mistral.ai/pricing/'],
+        pricing_urls=['https://mistral.ai/pricing#api-pricing'],
         model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
         provider_match=ClauseStartsWith(starts_with='mistral'),
         models=[
@@ -1571,7 +1563,12 @@ providers: list[Provider] = [
         id='openai',
         name='OpenAI',
         api_pattern='https://api\\.openai\\.com',
-        pricing_urls=['https://openai.com/pricing'],
+        pricing_urls=[
+            'https://platform.openai.com/docs/pricing',
+            'https://openai.com/api/pricing/',
+            'https://platform.openai.com/docs/models',
+            'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
+        ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
         provider_match=ClauseOr(or_=[ClauseEquals(equals='openai'), ClauseEquals(equals='gpt')]),
         models=[

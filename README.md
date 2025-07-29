@@ -96,7 +96,7 @@ The following providers are currently supported:
 - [Fireworks](prices/providers/fireworks.yml) - 7 models
 - [Google](prices/providers/google.yml) - 30 models
 - [Groq](prices/providers/groq.yml) - 8 models
-- [Mistral AI](prices/providers/mistral.yml) - 28 models
+- [Mistral](prices/providers/mistral.yml) - 28 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 41 models
 - [OpenRouter](prices/providers/openrouter.yml) - 548 models
