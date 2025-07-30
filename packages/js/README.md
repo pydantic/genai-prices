@@ -82,6 +82,20 @@ genai-prices list
 genai-prices list openai
 ```
 
+### Provider Matching
+
+The library uses intelligent provider matching:
+
+1. **Explicit provider**: Use `providerId` parameter or `provider:model` format
+2. **Model-based matching**: Uses provider's `model_match` logic (e.g., OpenAI matches models starting with "gpt-")
+3. **Fallback**: Tries to match based on model name patterns
+
+**Best practices:**
+
+- Always specify `providerId` if you know it (e.g., `openai`, `google`, etc.) for best results
+- Use `provider:model` format in CLI for explicit provider selection
+- The async API with `--auto-update` provides the most up-to-date pricing
+
 ### Error Handling
 
 The library returns `null` when a model or provider is not found, rather than throwing errors. This makes it easier to handle cases where pricing information might not be available:
