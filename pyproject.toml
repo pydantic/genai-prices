@@ -94,7 +94,9 @@ include = ["prices/src", "packages/python", "tests"]
 venv = ".venv"
 executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
 
-
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
 skip = "prices/data.json,package-lock.json"
+
+[tool.inline-snapshot]
+format-command = "ruff format --stdin-filename {filename}"

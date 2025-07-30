@@ -98,7 +98,9 @@ def calc_prices(args: argparse.Namespace) -> int:
             ('Model', price_calc.model.name or price_calc.model.id),
             ('Model Prices', str(price_calc.model_price)),
             ('Context Window', f'{w:,d}' if w is not None else None),
-            ('Price', f'${price_calc.price}'),
+            ('Input Price', f'${price_calc.input_price}'),
+            ('Output Price', f'${price_calc.output_price}'),
+            ('Total Price', f'${price_calc.total_price}'),
         ]
         for key, value in output:
             if value is not None:
