@@ -165,8 +165,11 @@ class DataSnapshot:
 
         provider, model = self.find_provider_model(model_ref, provider_id, provider_api_url)
         model_price = model.get_prices(genai_request_timestamp)
+        price = model_price.calc_price(usage)
         return types.PriceCalculation(
-            price=model_price.calc_price(usage),
+            input_price=price['input_price'],
+            output_price=price['output_price'],
+            total_price=price['total_price'],
             provider=provider,
             model=model,
             model_price=model_price,

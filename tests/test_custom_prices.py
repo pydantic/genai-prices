@@ -14,10 +14,10 @@ from genai_prices.sources import DataSnapshot, SyncSource
 class CustomModelPrice(types.ModelPrice):
     sausage_price: Decimal | None = None
 
-    def calc_price(self, usage: types.AbstractUsage) -> Decimal:
+    def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
         price = super().calc_price(usage)
         if isinstance(usage, CustomUsage) and self.sausage_price is not None:
-            price += self.sausage_price * usage.sausages
+            price['total_price'] += self.sausage_price * usage.sausages
         return price
 
 
@@ -96,7 +96,9 @@ def test_alt_source():
         provider_id='testing',
         auto_update=AltPricesSource(),
     )
-    assert price.price == snapshot(Decimal('3'))
+    assert price.input_price == snapshot(Decimal('1'))
+    assert price.output_price == snapshot(Decimal('2'))
+    assert price.total_price == snapshot(Decimal('3'))
     assert price.model.name == snapshot('Foobar')
     assert price.provider.id == snapshot('testing')
     assert price.auto_update_timestamp is None
@@ -109,7 +111,9 @@ def test_alt_source_sausage():
         provider_id='testing',
         auto_update=AltPricesSource(),
     )
-    assert price.price == snapshot(Decimal('12'))
+    assert price.input_price == snapshot(Decimal('1'))
+    assert price.output_price == snapshot(Decimal('2'))
+    assert price.total_price == snapshot(Decimal('12'))
     assert price.model.name == snapshot('Sausage')
     assert price.provider.id == snapshot('testing')
     assert price.auto_update_timestamp is None
@@ -122,7 +126,9 @@ def test_extra_source_normal():
         provider_id='openai',
         auto_update=ExtraPricesSource(),
     )
-    assert price.price == snapshot(Decimal('90'))
+    assert price.input_price == snapshot(Decimal('30'))
+    assert price.output_price == snapshot(Decimal('60'))
+    assert price.total_price == snapshot(Decimal('90'))
     assert price.model.name == snapshot('gpt 4')
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None
@@ -135,7 +141,9 @@ def test_extra_source_sausage():
         provider_id='openai',
         auto_update=ExtraPricesSource(),
     )
-    assert price.price == snapshot(Decimal('12'))
+    assert price.input_price == snapshot(Decimal('1'))
+    assert price.output_price == snapshot(Decimal('2'))
+    assert price.total_price == snapshot(Decimal('12'))
     assert price.model.name == snapshot('gpt-4o Custom')
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None

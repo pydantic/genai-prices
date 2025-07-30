@@ -11,7 +11,10 @@ pytestmark = pytest.mark.anyio
 
 def test_sync_success_with_provider():
     price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
-    assert price.price == snapshot(Decimal('0.0035'))
+
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
+    assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.model.name == snapshot('gpt 4o')
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None
@@ -23,7 +26,9 @@ def test_sync_success_with_url():
         model_ref='claude-3.5-sonnet@abc',
         provider_api_url='https://api.anthropic.com/foo/bar',
     )
-    assert price.price == snapshot(Decimal('0.00855'))
+    assert price.input_price == snapshot(Decimal('0.00705'))
+    assert price.output_price == snapshot(Decimal('0.0015'))
+    assert price.total_price == snapshot(Decimal('0.00855'))
     assert price.model.name == snapshot('Claude Sonnet 3.5')
     assert price.provider.name == snapshot('Anthropic')
     assert price.auto_update_timestamp is None
@@ -31,7 +36,10 @@ def test_sync_success_with_url():
 
 def test_sync_success_with_model():
     price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o')
-    assert price.price == snapshot(Decimal('0.0035'))
+
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
+    assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.model.name == snapshot('gpt 4o')
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None
@@ -39,7 +47,10 @@ def test_sync_success_with_model():
 
 def test_sync_success_with_model_regex():
     price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='o3')
-    assert price.price == snapshot(Decimal('0.0028'))
+
+    assert price.input_price == snapshot(Decimal('0.002'))
+    assert price.output_price == snapshot(Decimal('0.0008'))
+    assert price.total_price == snapshot(Decimal('0.0028'))
     assert price.model.name == snapshot('o3')
     assert price.provider.id == snapshot('openai')
 
@@ -48,7 +59,9 @@ async def test_async_success_with_provider():
     price = await calc_price_async(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai'
     )
-    assert price.price == snapshot(Decimal('0.0035'))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
+    assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.model.name == snapshot('gpt 4o')
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None
@@ -57,7 +70,10 @@ async def test_async_success_with_provider():
 def test_tiered_prices():
     price = calc_price_sync(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
     # from providers/google.yml: (0.075 * 128000 + 0.15 * (500000 - 128000)) / 1_000_000 = 0.0654
-    assert price.price == snapshot(Decimal('0.0654'))
+
+    assert price.input_price == snapshot(Decimal('0.0654'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('0.0654'))
     assert price.model.name == snapshot('gemini 1.5 flash')
     assert price.provider.id == snapshot('google')
 
@@ -65,21 +81,27 @@ def test_tiered_prices():
 def test_requests_kcount_prices():
     # request count defaults to 1
     price = calc_price_sync(Usage(), model_ref='sonar', provider_id='perplexity')
-    assert price.price == snapshot(Decimal('0.012'))
+    assert price.input_price == snapshot(Decimal('0'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('0.012'))
     assert price.model.name == snapshot('Sonar')
     assert price.provider.name == snapshot('Perplexity')
 
 
 def test_price_constraint_before():
     price = calc_price_sync(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
-    assert price.price == snapshot(Decimal('0.01'))
+    assert price.input_price == snapshot(Decimal('0.01'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('0.01'))
     assert price.model.name == snapshot('o3')
     assert price.provider.name == snapshot('OpenAI')
 
 
 def test_price_constraint_after():
     price = calc_price_sync(Usage(input_tokens=1000), model_ref='o3')
-    assert price.price == snapshot(Decimal('0.002'))
+    assert price.input_price == snapshot(Decimal('0.002'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('0.002'))
     assert price.model.name == snapshot('o3')
     assert price.provider.name == snapshot('OpenAI')
 
@@ -90,7 +112,9 @@ def test_price_constraint_time_of_date():
         model_ref='deepseek-chat',
         genai_request_timestamp=datetime(2025, 6, 1, 16, tzinfo=timezone.utc),
     )
-    assert price.price == snapshot(Decimal('27'))
+    assert price.input_price == snapshot(Decimal('27.00'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('27'))
     assert price.model.name == snapshot('DeepSeek Chat')
     assert price.provider.name == snapshot('Deepseek')
     price = calc_price_sync(
@@ -98,7 +122,9 @@ def test_price_constraint_time_of_date():
         model_ref='deepseek-chat',
         genai_request_timestamp=datetime(2025, 6, 1, 17, tzinfo=timezone.utc),
     )
-    assert price.price == snapshot(Decimal('13.5'))
+    assert price.input_price == snapshot(Decimal('13.500'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('13.5'))
     assert price.model.name == snapshot('DeepSeek Chat')
     assert price.provider.name == snapshot('Deepseek')
 
