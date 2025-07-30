@@ -31,8 +31,6 @@ __all__ = (
     'ClauseAnd',
     'MatchLogic',
     'providers_schema',
-    'find_provider_by_id',
-
 )
 
 # Define MatchLogic after __all__ to avoid forward reference issues
@@ -74,27 +72,7 @@ ProviderID = Literal[
 ]
 
 
-def find_provider_by_id(providers: list['Provider'], provider_id: str) -> 'Provider | None':
-    """Find a provider by matching against provider_match logic.
 
-    Args:
-        providers: List of available providers
-        provider_id: The provider ID to match
-
-    Returns:
-        The matching provider or None
-    """
-    normalized_provider_id = provider_id.lower().strip()
-
-    # First try exact match by ID
-    for provider in providers:
-        if provider.id == normalized_provider_id:
-            return provider
-
-    # Then try provider_match logic
-    for provider in providers:
-        if provider.provider_match and provider.provider_match.is_match(normalized_provider_id):
-            return provider
 
 
 @dataclass

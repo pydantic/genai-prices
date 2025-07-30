@@ -4,7 +4,8 @@ import os
 # Add the parent directory to the path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from genai_prices.types import find_provider_by_id, Provider, ClauseOr, ClauseEquals, ClauseContains
+from genai_prices.sources import find_provider_by_id
+from genai_prices.types import Provider, ClauseOr, ClauseEquals, ClauseContains
 
 # Mock providers for testing
 mock_providers = [
