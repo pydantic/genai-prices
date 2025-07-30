@@ -129,7 +129,7 @@ class AutoUpdateSyncSource(SyncSource):
         global _cached_auto_update_snapshot
 
         try:
-            client = self.client or httpx.Client()
+            client = self.client or httpx
             r = client.get(self.url, timeout=self.request_timeout)
             r.raise_for_status()
             providers = data.providers_schema.validate_json(r.content)
