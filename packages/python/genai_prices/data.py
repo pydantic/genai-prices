@@ -22,136 +22,7 @@ providers: list[Provider] = [
                 description="Claude 2 is Anthropic's previous generation model, offering reliable performance for various tasks. This includes Claude 2.0 and Claude 2.1.\n",
                 context_window=200000,
                 prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
-            ),
-            ModelInfo(
-                id='claude-3-5-haiku-latest',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='claude-3-5-haiku'),
-                        ClauseStartsWith(starts_with='claude-3.5-haiku'),
-                    ]
-                ),
-                name='Claude Haiku 3.5',
-                description='Fastest, most cost-effective model',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.8'),
-                    cache_write_mtok=Decimal('1'),
-                    cache_read_mtok=Decimal('0.08'),
-                    output_mtok=Decimal('4'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-3-5-sonnet',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='claude-3-5-sonnet'),
-                        ClauseStartsWith(starts_with='claude-3.5-sonnet'),
-                    ]
-                ),
-                name='Claude Sonnet 3.5',
-                description='Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3'),
-                    cache_write_mtok=Decimal('3.75'),
-                    cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-3-7-sonnet-latest',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='claude-3-7-sonnet'),
-                        ClauseStartsWith(starts_with='claude-3.7-sonnet'),
-                    ]
-                ),
-                name='Claude Sonnet 3.7',
-                description='Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities.',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3'),
-                    cache_write_mtok=Decimal('3.75'),
-                    cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-3-haiku-latest',
-                match=ClauseStartsWith(starts_with='claude-3-haiku'),
-                name='Claude Haiku 3',
-                description='Fastest, most cost-effective model',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.25'),
-                    cache_write_mtok=Decimal('0.3'),
-                    cache_read_mtok=Decimal('0.03'),
-                    output_mtok=Decimal('1.25'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-3-opus-latest',
-                match=ClauseStartsWith(starts_with='claude-3-opus'),
-                name='Claude Opus 3',
-                description="Claude 3 Opus was Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.",
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('15'),
-                    cache_write_mtok=Decimal('18.75'),
-                    cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-3-sonnet',
-                match=ClauseStartsWith(starts_with='claude-3-sonnet'),
-                name='Claude 3 Sonnet',
-                description='Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3'),
-                    cache_write_mtok=Decimal('3.75'),
-                    cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-opus-4-0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='claude-opus-4'),
-                        ClauseStartsWith(starts_with='claude-4-opus-20250522'),
-                    ]
-                ),
-                name='Claude Opus 4',
-                description='Most intelligent model for complex tasks',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('15'),
-                    cache_write_mtok=Decimal('18.75'),
-                    cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75'),
-                ),
-            ),
-            ModelInfo(
-                id='claude-sonnet-4-0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='claude-sonnet-4'),
-                        ClauseStartsWith(starts_with='claude-4-sonnet-20250522'),
-                    ]
-                ),
-                name='Claude Sonnet 4',
-                description='Optimal balance of intelligence, cost, and speed',
-                context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3'),
-                    cache_write_mtok=Decimal('3.75'),
-                    cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15'),
-                ),
-            ),
+            )
         ],
     ),
     Provider(
@@ -776,6 +647,115 @@ providers: list[Provider] = [
         model_match=ClauseContains(contains='gemini'),
         provider_match=ClauseOr(or_=[ClauseContains(contains='google'), ClauseEquals(equals='gemini')]),
         models=[
+            ModelInfo(
+                id='claude-3-5-haiku',
+                match=ClauseContains(contains='claude-3-5-haiku'),
+                name='Claude 3.5 Haiku',
+                description='Fastest, most cost-effective Claude model',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.8'),
+                    cache_write_mtok=Decimal('1'),
+                    cache_read_mtok=Decimal('0.08'),
+                    output_mtok=Decimal('4'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-3-5-sonnet',
+                match=ClauseContains(contains='claude-3-5-sonnet'),
+                name='Claude 3.5 Sonnet',
+                description='Ideal balance of intelligence and speed for enterprise workloads',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-3-7-sonnet',
+                match=ClauseContains(contains='claude-3-7-sonnet'),
+                name='Claude 3.7 Sonnet',
+                description='Advanced large language model with improved reasoning, coding, and problem-solving capabilities',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-3-haiku',
+                match=ClauseContains(contains='claude-3-haiku'),
+                name='Claude 3 Haiku',
+                description='Fastest, most cost-effective model',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'),
+                    cache_write_mtok=Decimal('0.3'),
+                    cache_read_mtok=Decimal('0.03'),
+                    output_mtok=Decimal('1.25'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-3-opus',
+                match=ClauseContains(contains='claude-3-opus'),
+                name='Claude 3 Opus',
+                description='Most powerful model for highly complex tasks',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('15'),
+                    cache_write_mtok=Decimal('18.75'),
+                    cache_read_mtok=Decimal('1.5'),
+                    output_mtok=Decimal('75'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-3-sonnet',
+                match=ClauseContains(contains='claude-3-sonnet'),
+                name='Claude 3 Sonnet',
+                description='Ideal balance of intelligence and speed for enterprise workloads',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-opus-4',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-4'),
+                        ClauseStartsWith(starts_with='claude-4-opus-20250522'),
+                    ]
+                ),
+                name='Claude Opus 4',
+                description='Most intelligent model for complex tasks',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('15'),
+                    cache_write_mtok=Decimal('18.75'),
+                    cache_read_mtok=Decimal('1.5'),
+                    output_mtok=Decimal('75'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-4',
+                match=ClauseContains(contains='claude-sonnet-4'),
+                name='Claude Sonnet 4',
+                description='Advanced model with improved capabilities',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
             ModelInfo(
                 id='gemini-1.0-pro-vision-001',
                 match=ClauseEquals(equals='gemini-1.0-pro-vision-001'),
