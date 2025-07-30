@@ -25,19 +25,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-3-5-haiku',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='claude-3-5-haiku'),
-                        ClauseOr(
-                            or_=[
-                                ClauseStartsWith(starts_with='claude-3-5-haiku'),
-                                ClauseStartsWith(starts_with='claude-3.5-haiku'),
-                            ]
-                        ),
-                    ]
-                ),
-                name='Claude Haiku 3.5',
-                description='Fastest, most cost-effective model',
+                match=ClauseContains(contains='claude-3-5-haiku'),
                 context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),

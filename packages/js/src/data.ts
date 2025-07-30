@@ -33,24 +33,8 @@ export const data: Provider[] = [
       },
       {
         id: 'claude-3-5-haiku',
-        name: 'Claude Haiku 3.5',
-        description: 'Fastest, most cost-effective model',
         match: {
-          or: [
-            {
-              contains: 'claude-3-5-haiku',
-            },
-            {
-              or: [
-                {
-                  starts_with: 'claude-3-5-haiku',
-                },
-                {
-                  starts_with: 'claude-3.5-haiku',
-                },
-              ],
-            },
-          ],
+          contains: 'claude-3-5-haiku',
         },
         context_window: 200000,
         prices: {
