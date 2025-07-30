@@ -1,94 +1,47 @@
 import { describe, it, expect } from 'vitest'
 import { matchProvider } from '../matcher.js'
-import type { Provider } from '../types.js'
+import { data } from '../data.js'
 
-// Mock providers for testing
-const mockProviders: Provider[] = [
-  {
-    id: 'google',
-    name: 'Google',
-    api_pattern: '',
-    models: [],
-    provider_match: {
-      contains: 'google',
-    },
-  },
-  {
-    id: 'meta',
-    name: 'Meta',
-    api_pattern: '',
-    models: [],
-    provider_match: {
-      or: [{ equals: 'meta' }, { equals: 'meta-llama' }, { equals: 'llama' }],
-    },
-  },
-  {
-    id: 'mistral',
-    name: 'Mistral',
-    api_pattern: '',
-    models: [],
-    provider_match: {
-      or: [{ equals: 'mistral' }, { equals: 'mistralai' }],
-    },
-  },
-  {
-    id: 'anthropic',
-    name: 'Anthropic',
-    api_pattern: '',
-    models: [],
-    provider_match: {
-      equals: 'anthropic',
-    },
-  },
-  {
-    id: 'openai',
-    name: 'OpenAI',
-    api_pattern: '',
-    models: [],
-    provider_match: {
-      equals: 'openai',
-    },
-  },
-]
+// Use actual provider data for testing
+const actualProviders = data
 
 describe('Provider Matching', () => {
   describe('matchProvider with providerId', () => {
     it('should find providers by exact ID match', () => {
-      expect(matchProvider(mockProviders, 'any-model', 'google')?.id).toBe('google')
-      expect(matchProvider(mockProviders, 'any-model', 'meta')?.id).toBe('meta')
-      expect(matchProvider(mockProviders, 'any-model', 'mistral')?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, 'any-model', 'google')?.id).toBe('google')
+      expect(matchProvider(actualProviders, 'any-model', 'anthropic')?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, 'any-model', 'openai')?.id).toBe('openai')
     })
 
     it('should find providers by provider_match logic', () => {
-      expect(matchProvider(mockProviders, 'any-model', 'google-gla')?.id).toBe('google')
-      expect(matchProvider(mockProviders, 'any-model', 'google-vertex')?.id).toBe('google')
-      expect(matchProvider(mockProviders, 'any-model', 'meta-llama')?.id).toBe('meta')
-      expect(matchProvider(mockProviders, 'any-model', 'llama')?.id).toBe('meta')
-      expect(matchProvider(mockProviders, 'any-model', 'mistralai')?.id).toBe('mistral')
-      expect(matchProvider(mockProviders, 'any-model', 'anthropic')?.id).toBe('anthropic')
-      expect(matchProvider(mockProviders, 'any-model', 'openai')?.id).toBe('openai')
+      expect(matchProvider(actualProviders, 'any-model', 'google-gla')?.id).toBe('google')
+      expect(matchProvider(actualProviders, 'any-model', 'google-vertex')?.id).toBe('google')
+      expect(matchProvider(actualProviders, 'any-model', 'gemini')?.id).toBe('google')
+      expect(matchProvider(actualProviders, 'any-model', 'mistral')?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, 'any-model', 'mistralai')?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, 'any-model', 'anthropic')?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, 'any-model', 'openai')?.id).toBe('openai')
     })
 
     it('should handle case insensitive matching', () => {
-      expect(matchProvider(mockProviders, 'any-model', 'GOOGLE-GLA')?.id).toBe('google')
-      expect(matchProvider(mockProviders, 'any-model', 'ANTHROPIC')?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, 'any-model', 'GOOGLE-GLA')?.id).toBe('google')
+      expect(matchProvider(actualProviders, 'any-model', 'ANTHROPIC')?.id).toBe('anthropic')
     })
 
     it('should handle whitespace', () => {
-      expect(matchProvider(mockProviders, 'any-model', '  google-gla  ')?.id).toBe('google')
-      expect(matchProvider(mockProviders, 'any-model', 'openai ')?.id).toBe('openai')
+      expect(matchProvider(actualProviders, 'any-model', '  google-gla  ')?.id).toBe('google')
+      expect(matchProvider(actualProviders, 'any-model', 'openai ')?.id).toBe('openai')
     })
 
     it('should return undefined for unknown providers', () => {
-      expect(matchProvider(mockProviders, 'any-model', 'unknown-provider')).toBeUndefined()
-      expect(matchProvider(mockProviders, 'any-model', 'custom-ai')).toBeUndefined()
+      expect(matchProvider(actualProviders, 'any-model', 'unknown-provider')).toBeUndefined()
+      expect(matchProvider(actualProviders, 'any-model', 'custom-ai')).toBeUndefined()
     })
 
     it('should not match model names as providers', () => {
       // Model names should not match providers anymore
-      expect(matchProvider(mockProviders, 'any-model', 'gemini')).toBeUndefined()
-      expect(matchProvider(mockProviders, 'any-model', 'claude')).toBeUndefined()
-      expect(matchProvider(mockProviders, 'any-model', 'gpt')).toBeUndefined()
+      expect(matchProvider(actualProviders, 'any-model', 'claude')).toBeUndefined()
+      expect(matchProvider(actualProviders, 'any-model', 'gpt')).toBeUndefined()
     })
   })
 })
