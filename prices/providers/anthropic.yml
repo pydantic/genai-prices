@@ -24,16 +24,20 @@ models:
       output_mtok: 24
     prices_checked: 2025-06-23
 
-  - id: claude-3-5-haiku
+  - id: claude-3-5-haiku-latest
+    name: Claude Haiku 3.5
+    description: Fastest, most cost-effective model
     match:
-      contains: claude-3-5-haiku
+      or:
+        - starts_with: claude-3-5-haiku
+        - starts_with: claude-3.5-haiku
     context_window: 200000
-    prices_checked: 2025-07-05
     prices:
       input_mtok: 0.8
       cache_write_mtok: 1
       cache_read_mtok: 0.08
       output_mtok: 4
+    prices_checked: 2025-06-22
 
   - id: claude-3-5-sonnet
     name: Claude Sonnet 3.5

@@ -24,8 +24,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
             ),
             ModelInfo(
-                id='claude-3-5-haiku',
-                match=ClauseContains(contains='claude-3-5-haiku'),
+                id='claude-3-5-haiku-latest',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-3-5-haiku'),
+                        ClauseStartsWith(starts_with='claude-3.5-haiku'),
+                    ]
+                ),
+                name='Claude Haiku 3.5',
+                description='Fastest, most cost-effective model',
                 context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
