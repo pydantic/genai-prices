@@ -94,7 +94,7 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 5 models
 - [Deepseek](prices/providers/deepseek.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 7 models
-- [Google](prices/providers/google.yml) - 30 models
+- [Google](prices/providers/google.yml) - 23 models
 - [Groq](prices/providers/groq.yml) - 8 models
 - [Mistral](prices/providers/mistral.yml) - 28 models
 - [Novita](prices/providers/novita.yml) - 34 models

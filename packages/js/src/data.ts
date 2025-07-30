@@ -9,13 +9,6 @@ export const data: Provider[] = [
     model_match: {
       contains: 'claude',
     },
-    provider_match: {
-      or: [
-        {
-          equals: 'anthropic',
-        },
-      ],
-    },
     models: [
       {
         id: 'claude-2',
@@ -1338,113 +1331,12 @@ export const data: Provider[] = [
         {
           contains: 'google',
         },
+        {
+          equals: 'gemini',
+        },
       ],
     },
     models: [
-      {
-        id: 'claude-3-5-haiku',
-        match: {
-          contains: 'claude-3-5-haiku',
-        },
-        context_window: 200000,
-        prices: {
-          input_mtok: 0.8,
-          cache_write_mtok: 1,
-          cache_read_mtok: 0.08,
-          output_mtok: 4,
-        },
-      },
-      {
-        id: 'claude-3-5-sonnet',
-        match: {
-          contains: 'claude-3-5-sonnet',
-        },
-        context_window: 200000,
-        prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
-        },
-      },
-      {
-        id: 'claude-3-7-sonnet',
-        match: {
-          contains: 'claude-3-7-sonnet',
-        },
-        context_window: 200000,
-        prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
-        },
-      },
-      {
-        id: 'claude-3-haiku',
-        match: {
-          contains: 'claude-3-haiku',
-        },
-        context_window: 200000,
-        prices: {
-          input_mtok: 0.25,
-          cache_write_mtok: 0.3,
-          cache_read_mtok: 0.03,
-          output_mtok: 1.25,
-        },
-      },
-      {
-        id: 'claude-3-opus',
-        match: {
-          contains: 'claude-3-opus',
-        },
-        prices: {
-          input_mtok: 15,
-          cache_write_mtok: 18.75,
-          cache_read_mtok: 1.5,
-          output_mtok: 75,
-        },
-      },
-      {
-        id: 'claude-4-opus',
-        match: {
-          or: [
-            {
-              contains: 'claude-4-opus',
-            },
-            {
-              contains: 'claude-opus-4',
-            },
-          ],
-        },
-        context_window: 200000,
-        prices: {
-          input_mtok: 15,
-          cache_write_mtok: 18.75,
-          cache_read_mtok: 1.5,
-          output_mtok: 75,
-        },
-      },
-      {
-        id: 'claude-4-sonnet',
-        match: {
-          or: [
-            {
-              contains: 'claude-4-sonnet',
-            },
-            {
-              contains: 'claude-sonnet-4',
-            },
-          ],
-        },
-        context_window: 200000,
-        prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
-        },
-      },
       {
         id: 'gemini-1.0-pro-vision-001',
         name: 'gemini 1.0 pro vision',
