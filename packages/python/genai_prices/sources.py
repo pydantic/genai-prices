@@ -8,15 +8,11 @@ from concurrent import futures
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from functools import cache
-from typing import TYPE_CHECKING
 
 import httpx
 from pydantic import ValidationError
 
 from . import types
-
-if TYPE_CHECKING:
-    from .sources import DataSnapshot
 
 __all__ = (
     'DEFAULT_AUTO_UPDATE_MAX_AGE',
