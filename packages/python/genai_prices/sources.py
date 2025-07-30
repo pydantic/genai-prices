@@ -228,12 +228,10 @@ def find_provider_by_id(providers: list[types.Provider], provider_id: str) -> ty
     """
     normalized_provider_id = provider_id.lower().strip()
 
-    # First try exact match by ID
     for provider in providers:
         if provider.id == normalized_provider_id:
             return provider
 
-    # Then try provider_match logic
     for provider in providers:
         if provider.provider_match and provider.provider_match.is_match(normalized_provider_id):
             return provider

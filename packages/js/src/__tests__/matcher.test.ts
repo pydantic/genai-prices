@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { matchProvider } from '../matcher.js'
 import { data } from '../data.js'
 
-// Use actual provider data for testing
 const actualProviders = data
 
 describe('Provider Matching', () => {
@@ -39,7 +38,6 @@ describe('Provider Matching', () => {
     })
 
     it('should not match model names as providers', () => {
-      // Model names should not match providers anymore
       expect(matchProvider(actualProviders, 'any-model', 'claude')).toBeUndefined()
       expect(matchProvider(actualProviders, 'any-model', 'gpt')).toBeUndefined()
     })

@@ -1,8 +1,8 @@
 from genai_prices.sources import find_provider_by_id
 from genai_prices import data
 
-# Use actual provider data for testing
-actual_providers = data.providers
+# Ensure actual_providers is a list of Provider objects
+actual_providers = list(data.providers)
 
 
 class TestProviderMatching:
@@ -62,7 +62,6 @@ class TestProviderMatching:
         result = find_provider_by_id(actual_providers, 'custom-ai')
         assert result is None
 
-        # Model names should not match providers anymore
         result = find_provider_by_id(actual_providers, 'claude')
         assert result is None
 

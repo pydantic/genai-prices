@@ -28,11 +28,9 @@ function matchLogic(logic: any, text: string): boolean {
 function findProviderById(providers: Provider[], providerId: string): Provider | undefined {
   const normalizedProviderId = providerId.toLowerCase().trim()
 
-  // First try exact match by ID
   const exactMatch = providers.find((p) => p.id === normalizedProviderId)
   if (exactMatch) return exactMatch
 
-  // Then try provider_match logic
   return providers.find((p) => p.provider_match && matchLogic(p.provider_match, normalizedProviderId))
 }
 
@@ -49,7 +47,7 @@ export function matchProvider(
   if (providerApiUrl) {
     return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
   }
-  // Try model_match logic only if no providerId was provided
+
   return providers.find((p) => p.model_match && matchLogic(p.model_match, modelRef))
 }
 
