@@ -203,7 +203,7 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         if provider_id is not None:
-            if provider := find_provider_by_id(self.providers, provider_id)
+            if provider := find_provider_by_id(self.providers, provider_id):
                 return provider
             raise LookupError(f'Unable to find provider {provider_id=!r}')
 
@@ -211,7 +211,7 @@ class DataSnapshot:
             for provider in self.providers:
                 if re.match(provider.api_pattern, provider_api_url):
                     return provider
-            raise LookupError(f'Unable to find provider provider_api_url={provider_api_url!r}')
+            raise LookupError(f'Unable to find provider {provider_api_url=!r}')
 
         for provider in self.providers:
             if provider.model_match is not None and provider.model_match.is_match(model_ref):
