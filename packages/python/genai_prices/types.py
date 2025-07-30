@@ -78,7 +78,7 @@ class PriceCalculation:
 
 
 class AbstractUsage(Protocol):
-    """Abstract definition of data about token usage for an LLM call"""
+    """Abstract definition of data about token usage for a single LLM call."""
 
     @property
     def input_tokens(self) -> int | None:
@@ -108,27 +108,28 @@ class AbstractUsage(Protocol):
     def output_audio_tokens(self) -> int | None:
         """Number of output audio tokens."""
 
-    @property
-    def requests(self) -> int | None:
-        """Number of requests made, defaults to 1 if omitted"""
-
 
 @dataclass
 class Usage:
     """Simple implementation of `AbstractUsage` as a dataclass."""
 
-    requests: int | None = None
-
     input_tokens: int | None = None
+    """Number of text input/prompt tokens."""
 
     cache_write_tokens: int | None = None
+    """Number of tokens written to the cache."""
     cache_read_tokens: int | None = None
+    """Number of tokens read from the cache."""
 
     output_tokens: int | None = None
+    """Number of text output/completion tokens."""
 
     input_audio_tokens: int | None = None
+    """Number of audio input tokens."""
     cache_audio_read_tokens: int | None = None
+    """Number of audio tokens read from the cache."""
     output_audio_tokens: int | None = None
+    """Number of output audio tokens."""
 
 
 @dataclass
@@ -246,8 +247,7 @@ class ModelPrice:
         total_price = input_price + output_price
 
         if self.requests_kcount is not None:
-            requests = 1 if usage.requests is None else usage.requests
-            total_price += self.requests_kcount * requests / 1000
+            total_price += self.requests_kcount / 1000
 
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
