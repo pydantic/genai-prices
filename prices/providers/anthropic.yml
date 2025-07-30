@@ -22,6 +22,7 @@ models:
       input_mtok: 8
       output_mtok: 24
     prices_checked: 2025-06-23
+
   - id: claude-3-5-haiku-latest
     name: Claude Haiku 3.5
     description: Fastest, most cost-effective model
