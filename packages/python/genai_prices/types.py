@@ -54,7 +54,7 @@ ProviderID = Literal[
 ]
 
 
-@dataclass
+@dataclass(repr=False)
 class PriceCalculation:
     input_price: Decimal
     output_price: Decimal
