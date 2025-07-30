@@ -72,9 +72,6 @@ ProviderID = Literal[
 ]
 
 
-
-
-
 @dataclass
 class PriceCalculation:
     price: Decimal
