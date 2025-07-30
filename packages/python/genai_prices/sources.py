@@ -194,7 +194,7 @@ class DataSnapshot:
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
         else:
-            raise LookupError(f'Unable to find model with model_ref={model_ref!r} in {provider.id}')
+            raise LookupError(f'Unable to find model with {model_ref=!r} in {provider.id}')
 
     def find_provider(
         self,
