@@ -2721,13 +2721,6 @@ export const data: Provider[] = [
         },
       ],
     },
-    provider_match: {
-      or: [
-        {
-          equals: 'openai',
-        },
-      ],
-    },
     models: [
       {
         id: 'ada',

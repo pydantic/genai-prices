@@ -7,9 +7,7 @@ pricing_urls:
   - https://platform.openai.com/docs/models
   - https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
 api_pattern: 'https://api\.openai\.com'
-provider_match:
-  or:
-    - equals: openai
+
 model_match:
   or:
     - starts_with: "gpt-"
