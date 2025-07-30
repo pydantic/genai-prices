@@ -40,6 +40,11 @@ dependencies = [
 [project.scripts]
 genai-prices = "genai_prices._cli:cli"
 
+[project.urls]
+Homepage = "https://github.com/pydantic/genai-prices"
+Source = "https://github.com/pydantic/genai-prices"
+Changelog = "https://github.com/pydantic/genai-prices/releases"
+
 [tool.uv.build-backend]
 module-name = "genai_prices"
 module-root = ""
