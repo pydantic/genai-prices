@@ -4,7 +4,6 @@ id: anthropic
 pricing_urls:
   - https://www.anthropic.com/pricing#api
 api_pattern: 'https://api\.anthropic\.com'
-
 # see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 model_match:
   contains: claude
@@ -23,3 +22,117 @@ models:
       input_mtok: 8
       output_mtok: 24
     prices_checked: 2025-06-23
+  - id: claude-3-5-haiku-latest
+    name: Claude Haiku 3.5
+    description: Fastest, most cost-effective model
+    match:
+      or:
+        - starts_with: claude-3-5-haiku
+        - starts_with: claude-3.5-haiku
+    context_window: 200000
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+    prices_checked: 2025-06-22
+
+  - id: claude-3-5-sonnet
+    name: Claude Sonnet 3.5
+    description: >-
+      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads.
+      Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      or:
+        - starts_with: claude-3-5-sonnet
+        - starts_with: claude-3.5-sonnet
+    context_window: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3-7-sonnet-latest
+    name: Claude Sonnet 3.7
+    description: >-
+      Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities.
+    match:
+      or:
+        - starts_with: claude-3-7-sonnet
+        - starts_with: claude-3.7-sonnet
+    context_window: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3-haiku-latest
+    name: Claude Haiku 3
+    description: Fastest, most cost-effective model
+    match:
+      starts_with: claude-3-haiku
+    context_window: 200000
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
+    prices_checked: 2025-06-23
+
+  - id: claude-3-opus-latest
+    name: Claude Opus 3
+    description: >-
+      Claude 3 Opus was Anthropic's most powerful model for highly complex tasks.
+      It boasts top-level performance, intelligence, fluency, and understanding.
+    match:
+      starts_with: claude-3-opus
+    context_window: 200000
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-3-sonnet
+    name: Claude 3 Sonnet
+    description: >-
+      Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads.
+      Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      starts_with: claude-3-sonnet
+    context_window: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-opus-4-0
+    name: Claude Opus 4
+    description: Most intelligent model for complex tasks
+    match:
+      or:
+        - starts_with: claude-opus-4
+        - starts_with: claude-4-opus-20250522
+    context_window: 200000
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-sonnet-4-0
+    name: Claude Sonnet 4
+    description: Optimal balance of intelligence, cost, and speed
+    match:
+      or:
+        - starts_with: claude-sonnet-4
+        - starts_with: claude-4-sonnet-20250522
+    context_window: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
