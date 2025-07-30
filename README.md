@@ -37,49 +37,6 @@ This package is a work in progress:
 - JavaScript/TypeScript package, CLI
 - TODO: API and web UI
 
-### Provider and Model Matching
-
-The library automatically handles provider aliases and model name variations through YAML-based configuration. This allows you to use various provider identifiers and model names while the library maps them to the correct providers and models.
-
-**Provider Aliases:**
-
-Provider aliases are defined in the YAML configuration files and support the same matching logic as models:
-
-- **Google**: `google`, `gemini`, `google-gla`, `google-vertex`, `google-ai`
-- **Meta**: `meta`, `meta-llama`, `llama`
-- **Mistral**: `mistral`, `mistralai`
-- **Anthropic**: `anthropic`, `claude`
-- **OpenAI**: `openai`, `gpt`
-
-**Model Normalization:**
-
-The library also normalizes model names for consistency:
-
-- **Anthropic Claude Opus 4**: Any model starting with `claude-opus-4` is normalized to `claude-opus-4-20250514`
-- **OpenAI GPT-3.5**: Any model starting with `gpt-3.5-turbo` is normalized to `gpt-3.5-turbo`
-
-This allows you to use various provider and model names without worrying about exact matching:
-
-```python
-# Python
-from genai_prices import calc_price_sync
-
-# These all work automatically:
-result = calc_price_sync(usage, 'gemini-2.5-pro', provider_id='google-vertex')
-result = calc_price_sync(usage, 'gemini-2.5-pro', provider_id='google-gla')
-result = calc_price_sync(usage, 'claude-opus-4-something', provider_id='anthropic')
-```
-
-```typescript
-// JavaScript/TypeScript
-import { calcPriceSync } from '@pydantic/genai-prices'
-
-// These all work automatically:
-const result1 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google-vertex' })
-const result2 = calcPriceSync(usage, 'gemini-2.5-pro', { providerId: 'google-gla' })
-const result3 = calcPriceSync(usage, 'claude-opus-4-something', { providerId: 'anthropic' })
-```
-
 ### Providers
 
 The following providers are currently supported:
