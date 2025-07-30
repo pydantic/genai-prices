@@ -28,8 +28,7 @@ This package is a work in progress:
 
 ## Features
 
-- Advanced logic for matching on model IDs to maximise the chance of using the correct model
-- **Provider and model normalization** - Automatically handles provider aliases (e.g., `google-vertex`, `google-gla` → `google`) and model name variations
+- Advanced logic for matching on model and provider IDs to maximise the chance of using the correct model
 - Support for historic prices and prices changes, e.g. we have the prices for o3 before and after it's price changed
 - Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
