@@ -1,5 +1,11 @@
 # @pydantic/genai-prices
 
+## 0.0.8-beta.0
+
+### Patch Changes
+
+- Automatic beta release
+
 ## 1.0.0
 
 ### Major Changes
