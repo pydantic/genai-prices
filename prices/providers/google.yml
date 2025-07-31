@@ -8,6 +8,10 @@ pricing_urls:
 api_pattern: 'https://(.*\.)?googleapis\.com'
 model_match:
   contains: gemini
+provider_match:
+  or:
+    - contains: google
+    - equals: gemini
 models:
   - id: claude-3-5-haiku
     match:
