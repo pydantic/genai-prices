@@ -149,7 +149,9 @@ async function main() {
           ['Model', result.model.name || result.model.id],
           ['Model Prices', JSON.stringify(result.model_price)],
           ['Context Window', w !== undefined ? w.toLocaleString() : undefined],
-          ['Price', `$${result.price}`],
+          ['Total Price', `$${result.total_price}`],
+          ['Input Price', `$${result.input_price}`],
+          ['Output Price', `$${result.output_price}`],
         ]
         for (const [key, value] of output) {
           if (value !== undefined) {

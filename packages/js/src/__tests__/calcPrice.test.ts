@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { calcPrice } from '../priceCalc.js'
 import type { Usage, ModelPrice } from '../types.js'
 
-describe('Price Calculation', () => {
+describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
     it('should calculate input and output prices separately', () => {
       const usage: Usage = {
