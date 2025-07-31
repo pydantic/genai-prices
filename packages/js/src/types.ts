@@ -77,7 +77,6 @@ export interface Provider {
   models: ModelInfo[]
 }
 
-// New interfaces for separated price calculations
 export interface CalcPrice {
   input_price: number
   output_price: number
