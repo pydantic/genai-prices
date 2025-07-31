@@ -73,6 +73,7 @@ export interface Provider {
   description?: string
   price_comments?: string
   model_match?: MatchLogic
+  provider_match?: MatchLogic
   models: ModelInfo[]
 }
 
