@@ -17,6 +17,7 @@ export async function calcPriceAsync(
   options: CalcPriceOptions = {},
 ): Promise<PriceCalculationResult> {
   const providers = await getProvidersAsync()
+
   const provider = matchProvider(providers, modelRef, options.providerId, options.providerApiUrl)
   if (!provider) return null
   const model = matchModel(provider.models, modelRef)

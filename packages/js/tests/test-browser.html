@@ -30,6 +30,9 @@
       .success {
         color: #080;
       }
+      .warning {
+        color: #f80;
+      }
     </style>
   </head>
   <body>
@@ -62,7 +65,11 @@
           const usage = { inputTokens: Number(inputTokens.value), outputTokens: Number(outputTokens.value) }
           const options = provider.value ? { providerId: provider.value } : {}
           const result = await calcPriceAsync(usage, model.value, options)
-          output.innerHTML = `<div class='success'>Async Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          if (result) {
+            output.innerHTML = `<div class='success'>Async Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          } else {
+            output.innerHTML = `<div class='warning'>Async Result: No price found for model "${model.value}"${provider.value ? ` and provider "${provider.value}"` : ''}</div>`
+          }
         } catch (e) {
           output.innerHTML = `<div class='error'>Async Error: ${e.message}</div>`
         }
@@ -74,7 +81,11 @@
           const usage = { inputTokens: Number(inputTokens.value), outputTokens: Number(outputTokens.value) }
           const options = provider.value ? { providerId: provider.value } : {}
           const result = calcPriceSync(usage, model.value, options)
-          output.innerHTML = `<div class='success'>Sync Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          if (result) {
+            output.innerHTML = `<div class='success'>Sync Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          } else {
+            output.innerHTML = `<div class='warning'>Sync Result: No price found for model "${model.value}"${provider.value ? ` and provider "${provider.value}"` : ''}</div>`
+          }
         } catch (e) {
           output.innerHTML = `<div class='error'>Sync Error: ${e.message}</div>`
         }

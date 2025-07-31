@@ -14,3 +14,6 @@ wheels/
 .coverage
 TODO.md
 node_modules/
+
+# macOS system files
+.DS_Store

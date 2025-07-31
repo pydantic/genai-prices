@@ -198,9 +198,9 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> types.Provider:
         if provider_id is not None:
-            for provider in self.providers:
-                if provider.id == provider_id:
-                    return provider
+            provider = find_provider_by_id(self.providers, provider_id)
+            if provider := find_provider_by_id(self.providers, provider_id):
+                return provider
             raise LookupError(f'Unable to find provider {provider_id=!r}')
 
         if provider_api_url is not None:
@@ -214,6 +214,29 @@ class DataSnapshot:
                 return provider
 
         raise LookupError(f'Unable to find provider with model matching {model_ref!r}')
+
+
+def find_provider_by_id(providers: list[types.Provider], provider_id: str) -> types.Provider | None:
+    """Find a provider by matching against provider_match logic.
+
+    Args:
+        providers: List of available providers
+        provider_id: The provider ID to match
+
+    Returns:
+        The matching provider or None
+    """
+    normalized_provider_id = provider_id.lower().strip()
+
+    for provider in providers:
+        if provider.id == normalized_provider_id:
+            return provider
+
+    for provider in providers:
+        if provider.provider_match and provider.provider_match.is_match(normalized_provider_id):
+            return provider
+
+    return None
 
 
 @cache
