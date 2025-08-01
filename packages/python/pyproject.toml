@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "genai-prices"
-version = "0.0.3"
+version = "0.0.4"
 description = "Calculate prices for calling LLM inference APIs."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
@@ -39,6 +39,11 @@ dependencies = [
 
 [project.scripts]
 genai-prices = "genai_prices._cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/pydantic/genai-prices"
+Source = "https://github.com/pydantic/genai-prices"
+Changelog = "https://github.com/pydantic/genai-prices/releases"
 
 [tool.uv.build-backend]
 module-name = "genai_prices"

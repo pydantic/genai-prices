@@ -2,6 +2,7 @@
 
 import { calcPriceSync } from '../dist/index.js'
 
+console.log('Testing with existing model:')
 try {
   const result = calcPriceSync({ input_tokens: 1000, output_tokens: 500 }, 'gpt-4')
   if (result) {

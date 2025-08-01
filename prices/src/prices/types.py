@@ -49,6 +49,8 @@ class Provider(_Model):
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
     model_match: MatchLogic | None = None
     """Logic to find a provider based on the model reference."""
+    provider_match: MatchLogic | None = None
+    """Logic to find a provider based on the provider identifier."""
     models: list[ModelInfo]
     """List of models provided by this organization"""
 

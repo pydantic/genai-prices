@@ -536,6 +536,33 @@
       "description": "Logic to find a provider based on the model reference.",
       "title": "Model Match"
     },
+    "provider_match": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ClauseStartsWith"
+        },
+        {
+          "$ref": "#/$defs/ClauseEndsWith"
+        },
+        {
+          "$ref": "#/$defs/ClauseContains"
+        },
+        {
+          "$ref": "#/$defs/ClauseRegex"
+        },
+        {
+          "$ref": "#/$defs/ClauseEquals"
+        },
+        {
+          "$ref": "#/$defs/ClauseOr"
+        },
+        {
+          "$ref": "#/$defs/ClauseAnd"
+        }
+      ],
+      "description": "Logic to find a provider based on the provider identifier.",
+      "title": "Provider Match"
+    },
     "models": {
       "description": "List of models provided by this organization",
       "items": {

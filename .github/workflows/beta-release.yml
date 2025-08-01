@@ -64,10 +64,25 @@ jobs:
             git commit -m "Create beta version"
             git push origin HEAD:smart-${{ github.run_id }}
           else
-            echo "Not in beta mode. Entering beta mode..."
+            echo "Not in beta mode. Entering beta mode and creating beta version..."
             npm run beta:enter
-            git add .changeset/pre.json
-            git commit -m "Enter beta release mode"
+
+            # Create a changeset automatically
+            echo "Creating automatic changeset..."
+            mkdir -p .changeset
+            cat > .changeset/auto-$(date +%s).md << EOF
+          ---
+          "@pydantic/genai-prices": patch
+          ---
+
+          Automatic beta release
+          EOF
+
+            # Create beta version
+            npm run beta:version
+
+            git add .
+            git commit -m "Enter beta mode and create beta version"
             git push origin HEAD:smart-${{ github.run_id }}
           fi
         env:

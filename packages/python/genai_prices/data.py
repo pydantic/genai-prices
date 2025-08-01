@@ -774,6 +774,7 @@ providers: list[Provider] = [
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
         model_match=ClauseContains(contains='gemini'),
+        provider_match=ClauseOr(or_=[ClauseContains(contains='google'), ClauseEquals(equals='gemini')]),
         models=[
             ModelInfo(
                 id='claude-3-5-haiku',
@@ -1161,6 +1162,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.mistral\\.ai',
         pricing_urls=['https://mistral.ai/pricing#api-pricing'],
         model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
+        provider_match=ClauseStartsWith(starts_with='mistral'),
         models=[
             ModelInfo(
                 id='codestral',

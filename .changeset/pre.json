@@ -1,8 +1,0 @@
-{
-  "mode": "pre",
-  "tag": "beta",
-  "initialVersions": {
-    "@pydantic/genai-prices": "0.0.6"
-  },
-  "changesets": []
-}

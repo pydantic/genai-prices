@@ -25,6 +25,15 @@ function matchLogic(logic: any, text: string): boolean {
   return false
 }
 
+function findProviderById(providers: Provider[], providerId: string): Provider | undefined {
+  const normalizedProviderId = providerId.toLowerCase().trim()
+
+  const exactMatch = providers.find((p) => p.id === normalizedProviderId)
+  if (exactMatch) return exactMatch
+
+  return providers.find((p) => p.provider_match && matchLogic(p.provider_match, normalizedProviderId))
+}
+
 export function matchProvider(
   providers: Provider[],
   modelRef: string,
@@ -32,12 +41,13 @@ export function matchProvider(
   providerApiUrl?: string,
 ): Provider | undefined {
   if (providerId) {
-    return providers.find((p) => p.id === providerId)
+    return findProviderById(providers, providerId)
   }
+
   if (providerApiUrl) {
     return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
   }
-  // Try model_match logic
+
   return providers.find((p) => p.model_match && matchLogic(p.model_match, modelRef))
 }
 
