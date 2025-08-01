@@ -79,9 +79,22 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
         return cond.prices
       }
     } else if (cond.constraint.type === 'time_of_date') {
-      const t = timestamp.toTimeString().slice(0, 8)
-      if (t >= cond.constraint.start_time && t < cond.constraint.end_time) {
-        return cond.prices
+      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
+      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
+      const startTime = cond.constraint.start_time
+      const endTime = cond.constraint.end_time
+
+      // Handle time ranges that span midnight (end time < start time)
+      if (endTime < startTime) {
+        // Time is in range if it's >= start OR < end
+        if (t >= startTime || t < endTime) {
+          return cond.prices
+        }
+      } else {
+        // Normal time range (start <= time < end)
+        if (t >= startTime && t < endTime) {
+          return cond.prices
+        }
       }
     }
   }
