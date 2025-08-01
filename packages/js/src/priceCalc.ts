@@ -1,4 +1,4 @@
-import { Usage, ModelPrice, TieredPrices, ModelInfo, ConditionalPrice } from './types.js'
+import { Usage, ModelPrice, TieredPrices, ModelInfo, ConditionalPrice, CalcPrice } from './types.js'
 
 function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
   if (tokens <= 0) return 0
@@ -33,19 +33,37 @@ function calcMtokPrice(price: number | TieredPrices | undefined, tokens: number 
   return calcTieredPrice(price, tokens)
 }
 
-export function calcPrice(usage: Usage, modelPrice: ModelPrice): number {
-  let price = 0
-  price += calcMtokPrice(modelPrice.input_mtok, usage.input_tokens, 'input_mtok')
-  price += calcMtokPrice(modelPrice.cache_write_mtok, usage.cache_write_tokens, 'cache_write_mtok')
-  price += calcMtokPrice(modelPrice.cache_read_mtok, usage.cache_read_tokens, 'cache_read_mtok')
-  price += calcMtokPrice(modelPrice.output_mtok, usage.output_tokens, 'output_mtok')
-  price += calcMtokPrice(modelPrice.input_audio_mtok, usage.input_audio_tokens, 'input_audio_mtok')
-  price += calcMtokPrice(modelPrice.cache_audio_read_mtok, usage.cache_audio_read_tokens, 'cache_audio_read_mtok')
-  price += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok')
+export function calcPrice(usage: Usage, modelPrice: ModelPrice): CalcPrice {
+  let input_price = 0
+  let output_price = 0
+
+  // Input-related prices
+  input_price += calcMtokPrice(modelPrice.input_mtok, usage.input_tokens, 'input_mtok')
+  input_price += calcMtokPrice(modelPrice.cache_write_mtok, usage.cache_write_tokens, 'cache_write_mtok')
+  input_price += calcMtokPrice(modelPrice.cache_read_mtok, usage.cache_read_tokens, 'cache_read_mtok')
+  input_price += calcMtokPrice(modelPrice.input_audio_mtok, usage.input_audio_tokens, 'input_audio_mtok')
+  input_price += calcMtokPrice(
+    modelPrice.cache_audio_read_mtok,
+    usage.cache_audio_read_tokens,
+    'cache_audio_read_mtok',
+  )
+
+  // Output-related prices
+  output_price += calcMtokPrice(modelPrice.output_mtok, usage.output_tokens, 'output_mtok')
+  output_price += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok')
+
+  // Requests price (counted as input cost)
   if (modelPrice.requests_kcount !== undefined) {
-    price += modelPrice.requests_kcount * ((usage.requests ?? 1) / 1000)
+    input_price += modelPrice.requests_kcount / 1000
   }
-  return price
+
+  const total_price = input_price + output_price
+
+  return {
+    input_price,
+    output_price,
+    total_price,
+  }
 }
 
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
@@ -61,9 +79,22 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
         return cond.prices
       }
     } else if (cond.constraint.type === 'time_of_date') {
-      const t = timestamp.toTimeString().slice(0, 8)
-      if (t >= cond.constraint.start_time && t < cond.constraint.end_time) {
-        return cond.prices
+      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
+      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
+      const startTime = cond.constraint.start_time
+      const endTime = cond.constraint.end_time
+
+      // Handle time ranges that span midnight (end time < start time)
+      if (endTime < startTime) {
+        // Time is in range if it's >= start OR < end
+        if (t >= startTime || t < endTime) {
+          return cond.prices
+        }
+      } else {
+        // Normal time range (start <= time < end)
+        if (t >= startTime && t < endTime) {
+          return cond.prices
+        }
       }
     }
   }

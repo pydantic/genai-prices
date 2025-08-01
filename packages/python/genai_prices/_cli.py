@@ -47,7 +47,6 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
         '--cache-audio-read-tokens', type=int, help='Usage: Number of audio tokens read from the cache.'
     )
     calc_parser.add_argument('--output-audio-tokens', type=int, help='Usage: Number of output audio tokens.')
-    calc_parser.add_argument('--requests', type=int, help='Usage: Number of requests made, defaults to 1 if omitted.')
 
     list_parser = subparsers.add_parser(
         'list', help='List providers and models.', description='List providers and models.'
@@ -74,7 +73,6 @@ def calc_prices(args: argparse.Namespace) -> int:
         input_audio_tokens=args.input_audio_tokens,
         cache_audio_read_tokens=args.cache_audio_read_tokens,
         output_audio_tokens=args.output_audio_tokens,
-        requests=args.requests,
     )
     for model in args.model:
         provider_id = None
@@ -98,7 +96,9 @@ def calc_prices(args: argparse.Namespace) -> int:
             ('Model', price_calc.model.name or price_calc.model.id),
             ('Model Prices', str(price_calc.model_price)),
             ('Context Window', f'{w:,d}' if w is not None else None),
-            ('Price', f'${price_calc.price}'),
+            ('Input Price', f'${price_calc.input_price}'),
+            ('Output Price', f'${price_calc.output_price}'),
+            ('Total Price', f'${price_calc.total_price}'),
         ]
         for key, value in output:
             if value is not None:

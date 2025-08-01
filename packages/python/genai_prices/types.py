@@ -8,6 +8,7 @@ from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, Union
 
 import pydantic
+from typing_extensions import TypedDict
 
 __all__ = (
     'ProviderID',
@@ -72,9 +73,11 @@ ProviderID = Literal[
 ]
 
 
-@dataclass
+@dataclass(repr=False)
 class PriceCalculation:
-    price: Decimal
+    input_price: Decimal
+    output_price: Decimal
+    total_price: Decimal
     provider: Provider
     model: ModelInfo
     model_price: ModelPrice
@@ -82,7 +85,10 @@ class PriceCalculation:
 
     def __repr__(self) -> str:
         return (
-            f'PriceCalculation(price={self.price!r}, '
+            'PriceCalculation('
+            f'input_price={self.input_price!r}, '
+            f'output_price={self.output_price!r}, '
+            f'total_price={self.total_price!r}, '
             f'provider=Provider(id={self.provider.id!r}, name={self.provider.name!r}, ...), '
             f'model=Model(id={self.model.id!r}, name={self.model.name!r}, ...), '
             f'model_price=ModelPrice({self.model_price}), '
@@ -91,7 +97,7 @@ class PriceCalculation:
 
 
 class AbstractUsage(Protocol):
-    """Abstract definition of data about token usage for an LLM call"""
+    """Abstract definition of data about token usage for a single LLM call."""
 
     @property
     def input_tokens(self) -> int | None:
@@ -121,27 +127,28 @@ class AbstractUsage(Protocol):
     def output_audio_tokens(self) -> int | None:
         """Number of output audio tokens."""
 
-    @property
-    def requests(self) -> int | None:
-        """Number of requests made, defaults to 1 if omitted"""
-
 
 @dataclass
 class Usage:
     """Simple implementation of `AbstractUsage` as a dataclass."""
 
-    requests: int | None = None
-
     input_tokens: int | None = None
+    """Number of text input/prompt tokens."""
 
     cache_write_tokens: int | None = None
+    """Number of tokens written to the cache."""
     cache_read_tokens: int | None = None
+    """Number of tokens read from the cache."""
 
     output_tokens: int | None = None
+    """Number of text output/completion tokens."""
 
     input_audio_tokens: int | None = None
+    """Number of audio input tokens."""
     cache_audio_read_tokens: int | None = None
+    """Number of audio tokens read from the cache."""
     output_audio_tokens: int | None = None
+    """Number of output audio tokens."""
 
 
 @dataclass
@@ -214,6 +221,12 @@ class ModelInfo:
             return self.prices[0].prices
 
 
+class CalcPrice(TypedDict):
+    input_price: Decimal
+    output_price: Decimal
+    total_price: Decimal
+
+
 @dataclass
 class ModelPrice:
     """Set of prices for using a model"""
@@ -239,23 +252,25 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
 
-    def calc_price(self, usage: AbstractUsage) -> Decimal:
+    def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
-        price = Decimal(0)
+        input_price = Decimal(0)
+        output_price = Decimal(0)
 
-        price += calc_mtok_price(self.input_mtok, usage.input_tokens)
-        price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
-        price += calc_mtok_price(self.cache_read_mtok, usage.cache_read_tokens)
-        price += calc_mtok_price(self.output_mtok, usage.output_tokens)
-        price += calc_mtok_price(self.input_audio_mtok, usage.input_audio_tokens)
-        price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
-        price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
+        input_price += calc_mtok_price(self.input_mtok, usage.input_tokens)
+        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
+        input_price += calc_mtok_price(self.cache_read_mtok, usage.cache_read_tokens)
+        output_price += calc_mtok_price(self.output_mtok, usage.output_tokens)
+        input_price += calc_mtok_price(self.input_audio_mtok, usage.input_audio_tokens)
+        input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
+        output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
+
+        total_price = input_price + output_price
 
         if self.requests_kcount is not None:
-            requests = 1 if usage.requests is None else usage.requests
-            price += self.requests_kcount * requests / 1000
+            total_price += self.requests_kcount / 1000
 
-        return price
+        return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
     def __str__(self) -> str:
         parts: list[str] = []

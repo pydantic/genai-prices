@@ -4,9 +4,9 @@ import { calcPriceSync } from '../dist/index.js'
 
 console.log('Testing with existing model:')
 try {
-  const result = calcPriceSync({ inputTokens: 1000, outputTokens: 500 }, 'gpt-4')
+  const result = calcPriceSync({ input_tokens: 1000, output_tokens: 500 }, 'gpt-4')
   if (result) {
-    console.log('Success:', result.price)
+    console.log('Success:', `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`)
   } else {
     console.log('No price found for gpt-4')
   }
@@ -17,9 +17,9 @@ try {
 
 console.log('\nTesting with non-existent model:')
 try {
-  const result = calcPriceSync({ inputTokens: 1000, outputTokens: 500 }, 'non-existent-model')
+  const result = calcPriceSync({ input_tokens: 1000, output_tokens: 500 }, 'non-existent-model')
   if (result) {
-    console.log('Success:', result.price)
+    console.log('Success:', `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`)
   } else {
     console.log('No price found for non-existent-model')
   }

@@ -20,9 +20,11 @@ export function calcPriceSync(usage: Usage, modelRef: string, options: CalcPrice
   if (!model) return null
   const timestamp = options.timestamp || new Date()
   const model_price = getActiveModelPrice(model, timestamp)
-  const price = calcModelPrice(usage, model_price)
+  const priceResult = calcModelPrice(usage, model_price)
   return {
-    price,
+    input_price: priceResult.input_price,
+    output_price: priceResult.output_price,
+    total_price: priceResult.total_price,
     provider,
     model,
     model_price,

@@ -30,6 +30,12 @@ See [the project README](https://github.com/pydantic/genai-prices?tab=readme-ov-
 
 ## Usage
 
+The library provides separated input and output pricing, giving you detailed breakdown of costs:
+
+- `price_data.total_price` - Total cost for the request
+- `price_data.input_price` - Cost for input/prompt tokens
+- `price_data.output_price` - Cost for output/completion tokens
+
 Since this library may need to make a network call to download prices, both sync and async veriants of `calc_price` are provided.
 
 ### Sync API Example
@@ -42,7 +48,7 @@ price_data = calc_price_sync(
     model_ref='gpt-4o',
     provider_id='openai',
 )
-print(price_data.price)
+print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
 ### Async API Example
@@ -58,7 +64,7 @@ async def main():
         model_ref='gpt-4o',
         provider_id='openai',
     )
-    print(price_data.price)
+    print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 
 if __name__ == '__main__':
     asyncio.run(main())

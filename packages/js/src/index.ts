@@ -9,4 +9,4 @@ export {
   getEnvironmentInfo,
 } from './dataLoader.js'
 export { matchProvider, matchModel } from './matcher.js'
-export type { Usage, PriceCalculation, PriceCalculationResult, Provider, ModelInfo } from './types.js'
+export type { Usage, PriceCalculation, PriceCalculationResult, Provider, ModelInfo, CalcPrice } from './types.js'

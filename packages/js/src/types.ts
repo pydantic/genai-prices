@@ -6,7 +6,6 @@ export interface Usage {
   input_audio_tokens?: number
   cache_audio_read_tokens?: number
   output_audio_tokens?: number
-  requests?: number
 }
 
 export interface Tier {
@@ -77,8 +76,16 @@ export interface Provider {
   models: ModelInfo[]
 }
 
+export interface CalcPrice {
+  input_price: number
+  output_price: number
+  total_price: number
+}
+
 export interface PriceCalculation {
-  price: number
+  input_price: number
+  output_price: number
+  total_price: number
   provider: Provider
   model: ModelInfo
   model_price: ModelPrice
