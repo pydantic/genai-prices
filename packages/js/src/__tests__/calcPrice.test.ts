@@ -16,9 +16,11 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
-      expect(result.input_price).toBe(0.0015) // 1000 * 1.5 / 1_000_000
-      expect(result.output_price).toBe(0.001) // 500 * 2.0 / 1_000_000
-      expect(result.total_price).toBe(0.0025) // 0.0015 + 0.001
+      expect(result).toMatchObject({
+        input_price: 0.0015, // 1000 * 1.5 / 1_000_000
+        output_price: 0.001, // 500 * 2.0 / 1_000_000
+        total_price: 0.0025, // 0.0015 + 0.001
+      })
     })
 
     it('should handle cache tokens as input costs', () => {
@@ -37,9 +39,11 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
-      expect(result.input_price).toBe(0.001 + 0.0001 + 0.00001) // input + cache_write + cache_read
-      expect(result.output_price).toBe(0.001) // output only
-      expect(result.total_price).toBe(result.input_price + result.output_price)
+      expect(result).toMatchObject({
+        input_price: 0.001 + 0.0001 + 0.00001, // input + cache_write + cache_read
+        output_price: 0.001, // output only
+        total_price: 0.001 + 0.0001 + 0.00001 + 0.001,
+      })
     })
 
     it('should handle audio tokens correctly', () => {
@@ -54,9 +58,11 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
-      expect(result.input_price).toBe(0.001) // 100 * 10.0 / 1_000_000
-      expect(result.output_price).toBe(0.001) // 50 * 20.0 / 1_000_000
-      expect(result.total_price).toBe(0.002)
+      expect(result).toMatchObject({
+        input_price: 0.001, // 100 * 10.0 / 1_000_000
+        output_price: 0.001, // 50 * 20.0 / 1_000_000
+        total_price: 0.002,
+      })
     })
 
     it('should handle requests as input cost', () => {
@@ -73,9 +79,11 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
-      expect(result.input_price).toBe(0.001 + 0.001) // input tokens + requests (2 * 0.5 / 1000)
-      expect(result.output_price).toBe(0.001) // output tokens only
-      expect(result.total_price).toBe(result.input_price + result.output_price)
+      expect(result).toMatchObject({
+        input_price: 0.001 + 0.001, // input tokens + requests (2 * 0.5 / 1000)
+        output_price: 0.001, // output tokens only
+        total_price: 0.001 + 0.001 + 0.001,
+      })
     })
 
     it('should handle tiered pricing', () => {
@@ -96,41 +104,36 @@ describe('Core Price Calculation Function', () => {
       const result = calcPrice(usage, modelPrice)
 
       // Input: 100k at $1.0 + 50k at $0.5 = 0.1 + 0.025 = 0.125
-      expect(result.input_price).toBe(0.125)
       // Output: 50k at $2.0 = 0.1
-      expect(result.output_price).toBe(0.1)
-      expect(result.total_price).toBe(0.225)
+      expect(result).toMatchObject({
+        input_price: 0.125,
+        output_price: 0.1,
+        total_price: 0.225,
+      })
     })
 
-    it('should handle zero tokens', () => {
-      const usage: Usage = {
-        input_tokens: 0,
-        output_tokens: 0,
-      }
-      const modelPrice: ModelPrice = {
-        input_mtok: 1.0,
-        output_mtok: 2.0,
-      }
-
+    it.each([
+      {
+        name: 'zero tokens',
+        usage: { input_tokens: 0, output_tokens: 0 } as Usage,
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+      },
+      {
+        name: 'undefined tokens',
+        usage: {} as Usage,
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+      },
+      {
+        name: 'mixed zero and defined tokens',
+        usage: { input_tokens: 1000, output_tokens: 0 } as Usage,
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
+        expected: { input_price: 0.001, output_price: 0, total_price: 0.001 },
+      },
+    ])('should handle $name', ({ usage, modelPrice, expected }) => {
       const result = calcPrice(usage, modelPrice)
-
-      expect(result.input_price).toBe(0)
-      expect(result.output_price).toBe(0)
-      expect(result.total_price).toBe(0)
-    })
-
-    it('should handle undefined tokens', () => {
-      const usage: Usage = {}
-      const modelPrice: ModelPrice = {
-        input_mtok: 1.0,
-        output_mtok: 2.0,
-      }
-
-      const result = calcPrice(usage, modelPrice)
-
-      expect(result.input_price).toBe(0)
-      expect(result.output_price).toBe(0)
-      expect(result.total_price).toBe(0)
+      expect(result).toMatchObject(expected)
     })
   })
 })
