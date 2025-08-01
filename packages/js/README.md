@@ -13,6 +13,12 @@ Library and CLI for calculating LLM API prices, supporting browser, Node.js and 
 
 ## API Usage
 
+The library provides separated input and output pricing, giving you detailed breakdown of costs:
+
+- `result.total_price` - Total cost for the request
+- `result.input_price` - Cost for input/prompt tokens
+- `result.output_price` - Cost for output/completion tokens
+
 ### Node.js & Browser (Library)
 
 ```js
@@ -23,7 +29,11 @@ const usage = { input_tokens: 1000, output_tokens: 100 }
 // Sync (works everywhere, including browser)
 const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 if (result) {
-  console.log(result.price, result.provider.name, result.model.name)
+  console.log(
+    `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`,
+    result.provider.name,
+    result.model.name,
+  )
 } else {
   console.log('No price found for this model/provider combination')
 }
@@ -31,7 +41,11 @@ if (result) {
 // Async (works everywhere)
 const asyncResult = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 if (asyncResult) {
-  console.log(asyncResult.price, asyncResult.provider.name, asyncResult.model.name)
+  console.log(
+    `$${asyncResult.total_price} (input: $${asyncResult.input_price}, output: $${asyncResult.output_price})`,
+    asyncResult.provider.name,
+    asyncResult.model.name,
+  )
 } else {
   console.log('No price found for this model/provider combination')
 }
@@ -44,7 +58,11 @@ import { calcPriceSync, calcPriceAsync } from './dist/index.js'
 const usage = { input_tokens: 1000, output_tokens: 100 }
 const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 if (result) {
-  console.log(result.price, result.provider.name, result.model.name)
+  console.log(
+    `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`,
+    result.provider.name,
+    result.model.name,
+  )
 }
 ```
 
@@ -110,7 +128,7 @@ const result = calcPriceSync(usage, 'non-existent-model')
 if (result === null) {
   console.log('No pricing information available for this model')
 } else {
-  console.log(`Price: $${result.price}`)
+  console.log(`Total Price: $${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`)
 }
 
 // Async version also returns null
@@ -118,7 +136,9 @@ const asyncResult = await calcPriceAsync(usage, 'non-existent-model', { provider
 if (asyncResult === null) {
   console.log('No pricing information available for this model/provider combination')
 } else {
-  console.log(`Price: $${asyncResult.price}`)
+  console.log(
+    `Total Price: $${asyncResult.total_price} (input: $${asyncResult.input_price}, output: $${asyncResult.output_price})`,
+  )
 }
 ```
 
