@@ -76,8 +76,16 @@ export interface Provider {
   models: ModelInfo[]
 }
 
+export interface CalcPrice {
+  input_price: number
+  output_price: number
+  total_price: number
+}
+
 export interface PriceCalculation {
-  price: number
+  input_price: number
+  output_price: number
+  total_price: number
   provider: Provider
   model: ModelInfo
   model_price: ModelPrice

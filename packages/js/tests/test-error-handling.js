@@ -27,7 +27,7 @@ calcPriceAsync(usage, 'not-a-real-model')
     } else {
       console.log(
         'Sync result before async:',
-        syncResultBeforeAsync.price,
+        `$${syncResultBeforeAsync.total_price} (input: $${syncResultBeforeAsync.input_price}, output: $${syncResultBeforeAsync.output_price})`,
         syncResultBeforeAsync.provider.name,
         syncResultBeforeAsync.model.name,
       )
@@ -37,10 +37,20 @@ calcPriceAsync(usage, 'not-a-real-model')
     try {
       const asyncResult = await calcPriceAsync(usage, 'gpt-3.5-turbo')
       if (asyncResult) {
-        console.log('Async result:', asyncResult.price, asyncResult.provider.name, asyncResult.model.name)
+        console.log(
+          'Async result:',
+          `$${asyncResult.total_price} (input: $${asyncResult.input_price}, output: $${asyncResult.output_price})`,
+          asyncResult.provider.name,
+          asyncResult.model.name,
+        )
         const syncResult = calcPriceSync(usage, 'gpt-3.5-turbo')
         if (syncResult) {
-          console.log('Sync result after async:', syncResult.price, syncResult.provider.name, syncResult.model.name)
+          console.log(
+            'Sync result after async:',
+            `$${syncResult.total_price} (input: $${syncResult.input_price}, output: $${syncResult.output_price})`,
+            syncResult.provider.name,
+            syncResult.model.name,
+          )
         } else {
           console.log('Sync result after async: null (no embedded data)')
         }
@@ -57,7 +67,7 @@ calcPriceAsync(usage, 'not-a-real-model')
       if (asyncResult) {
         console.log(
           'Async result with providerId:',
-          asyncResult.price,
+          `$${asyncResult.total_price} (input: $${asyncResult.input_price}, output: $${asyncResult.output_price})`,
           asyncResult.provider.name,
           asyncResult.model.name,
         )
@@ -72,7 +82,12 @@ calcPriceAsync(usage, 'not-a-real-model')
     try {
       const syncResult = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
       if (syncResult) {
-        console.log('Sync result with providerId:', syncResult.price, syncResult.provider.name, syncResult.model.name)
+        console.log(
+          'Sync result with providerId:',
+          `$${syncResult.total_price} (input: $${syncResult.input_price}, output: $${syncResult.output_price})`,
+          syncResult.provider.name,
+          syncResult.model.name,
+        )
       } else {
         console.log('Sync result with providerId: null (no price found)')
       }

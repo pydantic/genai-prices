@@ -59,10 +59,14 @@
       document.getElementById('runAsync').onclick = async () => {
         output.innerHTML = 'Running async...'
         try {
-          const usage = { inputTokens: Number(inputTokens.value), outputTokens: Number(outputTokens.value) }
+          const usage = { input_tokens: Number(inputTokens.value), output_tokens: Number(outputTokens.value) }
           const options = provider.value ? { providerId: provider.value } : {}
           const result = await calcPriceAsync(usage, model.value, options)
-          output.innerHTML = `<div class='success'>Async Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          if (result) {
+            output.innerHTML = `<div class='success'>Async Success:<br>Total Price: $${result.total_price}<br>Input Price: $${result.input_price}<br>Output Price: $${result.output_price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          } else {
+            output.innerHTML = `<div class='warning'>Async Result: No price found for model "${model.value}"${provider.value ? ` and provider "${provider.value}"` : ''}</div>`
+          }
         } catch (e) {
           output.innerHTML = `<div class='error'>Async Error: ${e.message}</div>`
         }
@@ -71,10 +75,14 @@
       document.getElementById('runSync').onclick = () => {
         output.innerHTML = 'Running sync...'
         try {
-          const usage = { inputTokens: Number(inputTokens.value), outputTokens: Number(outputTokens.value) }
+          const usage = { input_tokens: Number(inputTokens.value), output_tokens: Number(outputTokens.value) }
           const options = provider.value ? { providerId: provider.value } : {}
           const result = calcPriceSync(usage, model.value, options)
-          output.innerHTML = `<div class='success'>Sync Success:<br>Price: $${result.price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          if (result) {
+            output.innerHTML = `<div class='success'>Sync Success:<br>Total Price: $${result.total_price}<br>Input Price: $${result.input_price}<br>Output Price: $${result.output_price}<br>Provider: ${result.provider.name}<br>Model: ${result.model.name}</div>`
+          } else {
+            output.innerHTML = `<div class='warning'>Sync Result: No price found for model "${model.value}"${provider.value ? ` and provider "${provider.value}"` : ''}</div>`
+          }
         } catch (e) {
           output.innerHTML = `<div class='error'>Sync Error: ${e.message}</div>`
         }
