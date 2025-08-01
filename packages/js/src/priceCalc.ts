@@ -54,7 +54,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): CalcPrice {
 
   // Requests price (counted as input cost)
   if (modelPrice.requests_kcount !== undefined) {
-    input_price += modelPrice.requests_kcount * ((usage.requests ?? 1) / 1000)
+    input_price += modelPrice.requests_kcount / 1000
   }
 
   const total_price = input_price + output_price

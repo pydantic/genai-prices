@@ -69,20 +69,19 @@ describe('Core Price Calculation Function', () => {
       const usage: Usage = {
         input_tokens: 1000,
         output_tokens: 500,
-        requests: 2,
       }
       const modelPrice: ModelPrice = {
         input_mtok: 1.0,
         output_mtok: 2.0,
-        requests_kcount: 0.5, // $0.50 per thousand requests
+        requests_kcount: 0.5, // $0.50 per request
       }
 
       const result = calcPrice(usage, modelPrice)
 
       expect(result).toMatchObject({
-        input_price: 0.001 + 0.001, // input tokens + requests (2 * 0.5 / 1000)
+        input_price: 0.001 + 0.0005, // input tokens + requests (0.5 / 1000)
         output_price: 0.001, // output tokens only
-        total_price: 0.001 + 0.001 + 0.001,
+        total_price: 0.001 + 0.0005 + 0.001,
       })
     })
 

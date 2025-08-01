@@ -6,7 +6,6 @@ export interface Usage {
   input_audio_tokens?: number
   cache_audio_read_tokens?: number
   output_audio_tokens?: number
-  requests?: number
 }
 
 export interface Tier {

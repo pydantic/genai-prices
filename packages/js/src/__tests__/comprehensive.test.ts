@@ -451,14 +451,6 @@ describe('Comprehensive API Tests', () => {
           output_tokens: 500,
         } as Usage,
       },
-      {
-        name: 'requests',
-        usage: {
-          input_tokens: 1000,
-          output_tokens: 500,
-          requests: 2,
-        } as Usage,
-      },
     ])('should handle $name', ({ usage }) => {
       const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
