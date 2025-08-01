@@ -194,7 +194,7 @@ src/
 ### Common Issues
 
 - **No price found (returns null)**:
-  - Make sure you specify the correct `providerId` (e.g., `openai`)
+  - Make sure you specify the correct `providerId` (e.g., `openai`, `google`, `anthropic`)
   - Try using `provider:model` format in CLI
   - Use `--auto-update` flag to fetch latest data
   - Check that the model name is correct and supported by the provider

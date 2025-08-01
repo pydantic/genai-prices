@@ -13,6 +13,7 @@ export interface CalcPriceOptions {
 
 export function calcPriceSync(usage: Usage, modelRef: string, options: CalcPriceOptions = {}): PriceCalculationResult {
   const providers = getProvidersSync()
+
   const provider = matchProvider(providers, modelRef, options.providerId, options.providerApiUrl)
   if (!provider) return null
   const model = matchModel(provider.models, modelRef)

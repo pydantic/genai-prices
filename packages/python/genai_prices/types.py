@@ -34,6 +34,25 @@ __all__ = (
     'providers_schema',
 )
 
+# Define MatchLogic after __all__ to avoid forward reference issues
+def clause_discriminator(v: Any) -> str | None:
+    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
+    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
+
+
+MatchLogic = Annotated[
+    Union[
+        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
+        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
+        Annotated['ClauseContains', pydantic.Tag('contains')],
+        Annotated['ClauseRegex', pydantic.Tag('regex')],
+        Annotated['ClauseEquals', pydantic.Tag('equals')],
+        Annotated['ClauseOr', pydantic.Tag('or')],
+        Annotated['ClauseAnd', pydantic.Tag('and')],
+    ],
+    pydantic.Discriminator(clause_discriminator),
+]
+
 ProviderID = Literal[
     'avian',
     'groq',
@@ -150,6 +169,8 @@ class Provider:
     """Comments about the pricing of this provider's models, especially challenges in representing the provider's pricing model."""
     model_match: MatchLogic | None = None
     """Logic to find a provider based on the model reference."""
+    provider_match: MatchLogic | None = None
+    """Logic to find a provider based on the provider identifier."""
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models provided by this organization"""
 
@@ -403,21 +424,4 @@ class ClauseAnd:
         return all(clause.is_match(text) for clause in self.and_)
 
 
-def clause_discriminator(v: Any) -> str | None:
-    assert isinstance(v, dict), f'Expected dict, got {type(v)}'
-    return next(iter(v))  # pyright: ignore[reportUnknownArgumentType, reportUnknownVariableType]
-
-
-MatchLogic = Annotated[
-    Union[
-        Annotated[ClauseStartsWith, pydantic.Tag('starts_with')],
-        Annotated[ClauseEndsWith, pydantic.Tag('ends_with')],
-        Annotated[ClauseContains, pydantic.Tag('contains')],
-        Annotated[ClauseRegex, pydantic.Tag('regex')],
-        Annotated[ClauseEquals, pydantic.Tag('equals')],
-        Annotated[ClauseOr, pydantic.Tag('or')],
-        Annotated[ClauseAnd, pydantic.Tag('and')],
-    ],
-    pydantic.Discriminator(clause_discriminator),
-]
 providers_schema = pydantic.TypeAdapter(list[Provider], config=pydantic.ConfigDict(defer_build=True))

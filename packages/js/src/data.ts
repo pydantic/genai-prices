@@ -1326,6 +1326,16 @@ export const data: Provider[] = [
     model_match: {
       contains: 'gemini',
     },
+    provider_match: {
+      or: [
+        {
+          contains: 'google',
+        },
+        {
+          equals: 'gemini',
+        },
+      ],
+    },
     models: [
       {
         id: 'claude-3-5-haiku',
@@ -2029,6 +2039,9 @@ export const data: Provider[] = [
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
       regex: '(?:mi|code|dev|magi|mini)stral',
+    },
+    provider_match: {
+      starts_with: 'mistral',
     },
     models: [
       {
