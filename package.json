@@ -10,14 +10,11 @@
   "scripts": {
     "format": "prettier --write -- .",
     "lint": "prettier --check -- .",
-    "release": "npm run build && node scripts/publish.js",
-    "release:beta": "npm run build && npx @changesets/cli publish --pre-state .changeset/pre.json",
-    "beta:enter": "npx @changesets/cli pre enter beta",
-    "beta:exit": "npx @changesets/cli pre exit",
-    "beta:version": "npx @changesets/cli version",
     "build": "npm run build --workspace=packages/js",
     "test": "npm run test --workspace=packages/js",
-    "ci": "npm run build && npm run test"
+    "ci": "npm run build && npm run test",
+    "release": "python scripts/release.py",
+    "release:dry-run": "python scripts/release.py --dry-run"
   },
   "prettier": {
     "singleQuote": true,
@@ -39,7 +36,6 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^3.6.2",
-    "@changesets/cli": "^2.29.5"
+    "prettier": "^3.6.2"
   }
 }

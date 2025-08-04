@@ -1,0 +1,144 @@
+name: Test Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to test (e.g., 1.0.0)"
+        required: true
+        default: "0.0.1"
+      dry_run:
+        description: "Dry run mode (no actual publishing)"
+        required: false
+        default: "true"
+        type: boolean
+
+env:
+  COLUMNS: 150
+  UV_PYTHON: 3.13
+  UV_FROZEN: "1"
+
+jobs:
+  test-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Testing release version: $VERSION"
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-packages
+          npm install
+
+      - name: Run tests
+        run: |
+          make test
+          npm run ci
+
+      - name: Update Python package version
+        run: |
+          cd packages/python
+          uv run python -c "
+          import tomllib
+          import tomli_w
+
+          with open('pyproject.toml', 'rb') as f:
+              data = tomllib.load(f)
+
+          data['project']['version'] = '${{ steps.version.outputs.version }}'
+
+          with open('pyproject.toml', 'wb') as f:
+              tomli_w.dump(data, f)
+          "
+          echo "Updated Python package version to ${{ steps.version.outputs.version }}"
+
+      - name: Update JavaScript package version
+        run: |
+          cd packages/js
+          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+          echo "Updated JavaScript package version to ${{ steps.version.outputs.version }}"
+
+      - name: Build packages
+        run: |
+          cd packages/python
+          uv build --package genai-prices
+          cd ../js
+          npm run build
+
+      - name: Verify package contents
+        run: |
+          echo "=== Python Package Contents ==="
+          cd packages/python
+          ls -la dist/
+
+          echo "=== JavaScript Package Contents ==="
+          cd ../js
+          ls -la dist/
+
+      - name: Test Python package installation
+        if: ${{ github.event.inputs.dry_run == 'false' }}
+        run: |
+          cd packages/python
+          uv run pip install dist/*.whl --force-reinstall
+          uv run genai-prices --help
+
+      - name: Test JavaScript package
+        if: ${{ github.event.inputs.dry_run == 'false' }}
+        run: |
+          cd packages/js
+          node dist/cli.js --help
+
+      - name: Show what would be published
+        run: |
+          echo "=== Python Package Info ==="
+          cd packages/python
+          uv run python -c "
+          import tomllib
+          with open('pyproject.toml', 'rb') as f:
+              data = tomllib.load(f)
+          print(f'Name: {data[\"project\"][\"name\"]}')
+          print(f'Version: {data[\"project\"][\"version\"]}')
+          print(f'Description: {data[\"project\"][\"description\"]}')
+          "
+
+          echo "=== JavaScript Package Info ==="
+          cd ../js
+          node -e "
+          const pkg = require('./package.json');
+          console.log('Name:', pkg.name);
+          console.log('Version:', pkg.version);
+          console.log('Description:', pkg.description);
+          "
+
+      - name: Summary
+        run: |
+          echo "🎉 Release test completed successfully!"
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo "Dry run: ${{ github.event.inputs.dry_run }}"
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo "This was a dry run - no packages were published"
+          else
+            echo "Packages were built and tested successfully"
+          fi

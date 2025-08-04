@@ -1,0 +1,128 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  COLUMNS: 150
+  UV_PYTHON: 3.13
+  UV_FROZEN: "1"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Setup Python
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-packages
+          npm install
+
+      - name: Run tests
+        run: |
+          make test
+          npm run ci
+
+      - name: Update Python package version
+        run: |
+          cd packages/python
+          uv run python -c "
+          import tomllib
+          import tomli_w
+
+          with open('pyproject.toml', 'rb') as f:
+              data = tomllib.load(f)
+
+          data['project']['version'] = '${{ steps.version.outputs.version }}'
+
+          with open('pyproject.toml', 'wb') as f:
+              tomli_w.dump(data, f)
+          "
+          echo "Updated Python package version to ${{ steps.version.outputs.version }}"
+
+      - name: Update JavaScript package version
+        run: |
+          cd packages/js
+          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+          echo "Updated JavaScript package version to ${{ steps.version.outputs.version }}"
+
+      - name: Build packages
+        run: |
+          cd packages/python
+          uv build --package genai-prices
+          cd ../js
+          npm run build
+
+      - name: Publish Python package
+        run: |
+          cd packages/python
+          uv publish --trusted-publishing always
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish JavaScript package
+        run: |
+          cd packages/js
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.version.outputs.version }}
+          body: |
+            ## What's Changed
+
+            This release includes updates to both Python and JavaScript packages.
+
+            ### Python Package (genai-prices)
+            - Version: ${{ steps.version.outputs.version }}
+
+            ### JavaScript Package (@pydantic/genai-prices)
+            - Version: ${{ steps.version.outputs.version }}
+
+            ## Installation
+
+            **Python:**
+            ```bash
+            pip install genai-prices==${{ steps.version.outputs.version }}
+            ```
+
+            **JavaScript:**
+            ```bash
+            npm install @pydantic/genai-prices@${{ steps.version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false

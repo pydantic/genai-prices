@@ -23,7 +23,7 @@ This package is a work in progress:
 - [x] JSON file with all prices
 - [x] Python library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
 - [x] JS/TS library with functionality to calculate prices, including opt-in support for phoning home to get latest prices
-- [x] Beta release workflow with changesets for versioning and publishing
+- [x] Unified release workflow for both Python and JavaScript packages
 - [ ] API (and I guess UI) for calculating latest prices
 
 ## Features
@@ -86,13 +86,37 @@ project wherever you use it and [contribute](#contributing) back to the project 
 
 ### Release Workflow
 
-This project uses [changesets](https://github.com/changesets/changesets) for versioning and publishing js package:
+This project uses a unified release workflow for both Python and JavaScript packages:
 
-- **Stable releases**: Automatically published when PRs are merged to main (if changesets are present)
-- **Beta releases**: Use the GitHub Actions workflow "Beta Release" to:
-  - Enter beta mode: Creates a PR to enable beta releases
-  - Version packages: Creates a PR with new beta versions
-  - Exit beta mode: Creates a PR to disable beta releases and prepare for stable release
+- **Releases**: Both packages are released together with the same version number
+- **Tag-based releases**: Create a git tag to trigger an automated release
+- **Version consistency**: Both packages always have the same version, even if only one package has changes
+
+To create a release:
+
+1. **Automatic (recommended)**: Run `npm run release <version>` or `python scripts/release.py <version>` to:
+   - Update both package versions
+   - Commit the changes
+   - Create and push a git tag
+   - Trigger the CI release workflow
+
+2. **Test the release process**: Run `npm run release:dry-run <version>` or `python scripts/release.py <version> --dry-run` to:
+   - Simulate the release process without making changes
+   - Verify version updates work correctly
+   - Test without committing or pushing
+
+3. **Manual**: Create a git tag manually:
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+
+The CI will automatically:
+
+- Build both packages
+- Run tests
+- Publish to PyPI and npm
+- Create a GitHub release
 
 ### API
 

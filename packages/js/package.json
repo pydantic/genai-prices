@@ -45,7 +45,6 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.5",
     "@types/node": "^20.0.0",
     "@types/yargs": "^17.0.24",
     "@vitest/ui": "^3.2.4",
