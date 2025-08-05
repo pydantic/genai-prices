@@ -102,6 +102,11 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
 
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
@@ -131,7 +136,12 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: changesets/action@v1
         with:
-          publish: npm run changeset-version
+          publish: |
+            npm run changeset-version
+            cd packages/python && uv publish --trusted-publishing always
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          COLUMNS: 150
+          UV_PYTHON: 3.13
+          UV_FROZEN: "1"
