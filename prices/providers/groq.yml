@@ -60,3 +60,19 @@ models:
     prices:
       input_mtok: 0.24
       output_mtok: 0.24
+
+  # https://console.groq.com/docs/model/openai/gpt-oss-120b
+  - id: openai/gpt-oss-120b
+    match:
+      equals: openai/gpt-oss-120b
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.75
+
+  # https://console.groq.com/docs/model/openai/gpt-oss-20b
+  - id: openai/gpt-oss-20b
+    match:
+      equals: openai/gpt-oss-20b
+    prices:
+      input_mtok: 0.10
+      output_mtok: 0.50
