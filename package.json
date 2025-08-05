@@ -5,16 +5,14 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "packages/js"
+    "packages/js",
+    "packages/python"
   ],
   "scripts": {
     "format": "prettier --write -- .",
     "lint": "prettier --check -- .",
-    "release": "npm run build && node scripts/publish.js",
-    "release:beta": "npm run build && npx @changesets/cli publish --pre-state .changeset/pre.json",
-    "beta:enter": "npx @changesets/cli pre enter beta",
-    "beta:exit": "npx @changesets/cli pre exit",
-    "beta:version": "npx @changesets/cli version",
+    "changeset-version": "npx @changesets/cli version; cd packages/python && npm run sync-versions",
+    "changeset-add": "npx @changesets/cli add",
     "build": "npm run build --workspace=packages/js",
     "test": "npm run test --workspace=packages/js",
     "ci": "npm run build && npm run test"

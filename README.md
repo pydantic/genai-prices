@@ -75,13 +75,21 @@ project wherever you use it and [contribute](#contributing) back to the project 
 
 ### Release Workflow
 
-This project uses [changesets](https://github.com/changesets/changesets) for versioning and publishing js package:
+This project uses [changesets](https://github.com/changesets/changesets) for unified versioning and publishing of both Python and JavaScript packages:
 
-- **Stable releases**: Automatically published when PRs are merged to main (if changesets are present)
-- **Beta releases**: Use the GitHub Actions workflow "Beta Release" to:
-  - Enter beta mode: Creates a PR to enable beta releases
-  - Version packages: Creates a PR with new beta versions
-  - Exit beta mode: Creates a PR to disable beta releases and prepare for stable release
+- **Automated releases**: When changesets are present and PRs are merged to main, the changesets action will:
+  1. Version both packages together (they are kept in sync)
+  2. Publish the JavaScript package to npm
+  3. Publish the Python package to PyPI via uv
+  4. Create a GitHub release with changelog
+
+To create a release:
+
+1. Add a changeset: `npm run changeset-add`
+2. Commit and push the changeset
+3. When the PR is merged, the release will be automatically created
+
+Both packages are versioned together to ensure consistency across the ecosystem.
 
 ### API
 

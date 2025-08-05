@@ -94,29 +94,6 @@ jobs:
         with:
           jobs: ${{ toJSON(needs) }}
 
-  release-pypi:
-    needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    environment:
-      name: release-pypi
-      url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
-    permissions:
-      id-token: write
-    outputs:
-      package-version: ${{ steps.check-python-version.outputs.VERSION }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-      - id: check-python-version
-        uses: samuelcolvin/check-python-version@v4.1
-        with:
-          version_file_path: packages/python/pyproject.toml
-      - run: uv build --package genai-prices
-      - run: uv publish --trusted-publishing always
-
   js:
     runs-on: ubuntu-latest
     env:
@@ -133,8 +110,8 @@ jobs:
 
       - name: Clean install
         run: |
-          rm -rf node_modules packages/js/node_modules
-          rm -f package-lock.json
+          rm -rf node_modules packages/js/node_modules packages/python/node_modules
+          rm -f package-lock.json packages/python/package-lock.json
           npm install
 
       - name: run CI checks
@@ -154,7 +131,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: changesets/action@v1
         with:
-          publish: npm run release
+          publish: npm run changeset-version
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

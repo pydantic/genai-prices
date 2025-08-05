@@ -1,0 +1,19 @@
+{
+  "name": "genai-prices",
+  "version": "0.0.8",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sync-versions": "./scripts/sync-versions.sh",
+    "prepare": "uv build",
+    "prepublishOnly": "uv publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@iarna/toml": "^2.2.5"
+  }
+}
