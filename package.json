@@ -36,8 +36,10 @@
       }
     ]
   },
-  "devDependencies": {
-    "prettier": "^3.6.2",
+  "dependencies": {
     "@changesets/cli": "^2.29.5"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }
