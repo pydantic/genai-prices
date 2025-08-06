@@ -154,6 +154,7 @@ jobs:
 
       - if: steps.changesets.outputs.published == 'true'
         run: |
+          npx @changesets/cli publish
           cd packages/python && npm run sync-versions
           uv build --package genai-prices
           uv publish --trusted-publishing always
