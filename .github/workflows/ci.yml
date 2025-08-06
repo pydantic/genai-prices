@@ -116,9 +116,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: run CI checks
-        run: |
-          npm run ci
+      - run: npm run ci
 
   release:
     needs: [check, test-js]
