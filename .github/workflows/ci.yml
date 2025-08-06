@@ -114,11 +114,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
-      url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
     permissions:
       id-token: write
-    outputs:
-      package-version: ${{ steps.check-python-version.outputs.VERSION }}
 
     steps:
       - name: Checkout
