@@ -150,8 +150,8 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish Python Package
-        if: steps.changesets.outputs.published == 'true'
+      - if: steps.changesets.outputs.published == 'true'
         run: |
+          cd packages/python && npm run sync-versions
           uv build --package genai-prices
           uv publish --trusted-publishing always
