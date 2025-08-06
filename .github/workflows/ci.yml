@@ -116,9 +116,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: run CI checks
-        run: |
-          npm run ci
+      - run: npm run ci
 
   release:
     needs: [check, test-js]
@@ -153,8 +151,6 @@ jobs:
 
       - name: Build and test Python package
         run: |
-          cd packages/python
-          uv sync --frozen --all-packages --all-extras
           uv build --package genai-prices
 
       - name: Check Python version
