@@ -176,7 +176,7 @@ jobs:
         with:
           publish: |
             npm run changeset-version
-            cd packages/python && uv publish --trusted-publishing always
+            uv publish --trusted-publishing always
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
