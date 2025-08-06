@@ -94,7 +94,7 @@ jobs:
         with:
           jobs: ${{ toJSON(needs) }}
 
-  js:
+  test-js:
     runs-on: ubuntu-latest
     env:
       CI: true
@@ -121,9 +121,18 @@ jobs:
           npm run ci
 
   release:
-    needs: [check, js]
+    needs: [check, test-js]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: release-pypi
+      url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
+    permissions:
+      id-token: write
+      contents: write
+    outputs:
+      package-version: ${{ steps.check-python-version.outputs.VERSION }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -148,6 +157,12 @@ jobs:
           uv sync --frozen --all-packages --all-extras
           uv build --package genai-prices
 
+      - name: Check Python version
+        id: check-python-version
+        uses: samuelcolvin/check-python-version@v4.1
+        with:
+          version_file_path: packages/python/pyproject.toml
+
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@v2
@@ -165,6 +180,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          COLUMNS: 150
-          UV_PYTHON: 3.13
-          UV_FROZEN: "1"
