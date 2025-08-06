@@ -2030,6 +2030,32 @@ export const data: Provider[] = [
           output_mtok: 0.24,
         },
       },
+      {
+        id: 'openai/gpt-oss-120b',
+        description:
+          "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        description:
+          "GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.5,
+        },
+      },
     ],
   },
   {
