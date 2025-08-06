@@ -147,7 +147,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: npm run changeset-version
+          publish: npx @changesets/cli publish
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
