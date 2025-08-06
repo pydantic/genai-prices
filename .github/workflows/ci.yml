@@ -89,11 +89,6 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
@@ -125,7 +120,6 @@ jobs:
       url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
     permissions:
       id-token: write
-      contents: write
     outputs:
       package-version: ${{ steps.check-python-version.outputs.VERSION }}
 
