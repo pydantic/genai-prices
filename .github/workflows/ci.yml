@@ -83,10 +83,24 @@ jobs:
           include-hidden-files: true
       - run: uv run coverage report --fail-under 95
 
+  test-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - run: npm install
+
+      - run: npm run ci
+
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage]
+    needs: [pre-commit, test-python, coverage, test-js]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
@@ -94,36 +108,23 @@ jobs:
         with:
           jobs: ${{ toJSON(needs) }}
 
-  release-pypi:
+  release:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
-      url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
     permissions:
       id-token: write
-    outputs:
-      package-version: ${{ steps.check-python-version.outputs.VERSION }}
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-      - id: check-python-version
-        uses: samuelcolvin/check-python-version@v4.1
-        with:
-          version_file_path: packages/python/pyproject.toml
-      - run: uv build --package genai-prices
-      - run: uv publish --trusted-publishing always
-
-  js:
-    runs-on: ubuntu-latest
-    env:
-      CI: true
-    steps:
-      - name: Begin CI...
-        uses: actions/checkout@v4
 
       - name: Use Node 22
         uses: actions/setup-node@v4
@@ -131,19 +132,11 @@ jobs:
           node-version: 22.x
           cache: "npm"
 
-      - name: Clean install
-        run: |
-          rm -rf node_modules packages/js/node_modules
-          rm -f package-lock.json
-          npm install
-
-      - name: run CI checks
-        run: |
-          npm run ci
+      - name: Install dependencies
+        run: npm install
 
       - name: Generate a token
         id: generate-token
-        if: github.ref == 'refs/heads/main'
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.APP_ID }}
@@ -151,10 +144,12 @@ jobs:
 
       - name: Release
         id: changesets
-        if: github.ref == 'refs/heads/main'
         uses: changesets/action@v1
         with:
-          publish: npm run release
+          publish: |
+            npm run changeset-version
+            uv build --package genai-prices
+            uv publish --trusted-publishing always
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -73,16 +73,6 @@ Price data is available in the following files:
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.
 
-### Release Workflow
-
-This project uses [changesets](https://github.com/changesets/changesets) for versioning and publishing js package:
-
-- **Stable releases**: Automatically published when PRs are merged to main (if changesets are present)
-- **Beta releases**: Use the GitHub Actions workflow "Beta Release" to:
-  - Enter beta mode: Creates a PR to enable beta releases
-  - Version packages: Creates a PR with new beta versions
-  - Exit beta mode: Creates a PR to disable beta releases and prepare for stable release
-
 ### API
 
 Coming soon...
