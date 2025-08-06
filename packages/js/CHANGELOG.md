@@ -1,5 +1,11 @@
 # @pydantic/genai-prices
 
+## 0.0.10
+
+### Patch Changes
+
+- 9f227b5: test publish flow
+
 ## 0.0.9
 
 ### Patch Changes
