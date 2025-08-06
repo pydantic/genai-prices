@@ -1,5 +1,12 @@
 # genai-prices
 
+## 0.0.12
+
+### Patch Changes
+
+- 1210931: test publish
+- 1210931: test publish
+
 ## 0.0.11
 
 ### Patch Changes
