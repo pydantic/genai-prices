@@ -73,26 +73,6 @@ Price data is available in the following files:
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.
 
-### Release Workflow
-
-This project uses [changesets](https://github.com/changesets/changesets) for unified versioning and publishing of both Python and JavaScript packages.
-
-**📖 For detailed release instructions, see [RELEASE.md](RELEASE.md)**
-
-- **Automated releases**: When changesets are present and PRs are merged to main, the changesets action will:
-  1. Version both packages together (they are kept in sync)
-  2. Publish the JavaScript package to npm
-  3. Publish the Python package to PyPI via uv
-  4. Create a GitHub release with changelog
-
-To create a release:
-
-1. Add a changeset: `npm run changeset-add`
-2. Commit and push the changeset
-3. When the PR is merged, the release will be automatically created
-
-Both packages are versioned together to ensure consistency across the ecosystem.
-
 ### API
 
 Coming soon...
