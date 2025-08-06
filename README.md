@@ -75,7 +75,9 @@ project wherever you use it and [contribute](#contributing) back to the project 
 
 ### Release Workflow
 
-This project uses [changesets](https://github.com/changesets/changesets) for unified versioning and publishing of both Python and JavaScript packages:
+This project uses [changesets](https://github.com/changesets/changesets) for unified versioning and publishing of both Python and JavaScript packages.
+
+**📖 For detailed release instructions, see [RELEASE.md](RELEASE.md)**
 
 - **Automated releases**: When changesets are present and PRs are merged to main, the changesets action will:
   1. Version both packages together (they are kept in sync)
