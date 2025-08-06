@@ -146,11 +146,12 @@ jobs:
       - name: Release
         id: changesets
         uses: changesets/action@v1
-        with:
-          publish: |
-            npm run changeset-version
-            uv build --package genai-prices
-            uv publish --trusted-publishing always
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Python Package
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          uv build --package genai-prices
+          uv publish --trusted-publishing always
