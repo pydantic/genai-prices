@@ -153,12 +153,6 @@ jobs:
             npm run changeset-version
             uv build --package genai-prices
             uv publish --trusted-publishing always
-
-      - name: Check Python version
-        id: check-python-version
-        uses: samuelcolvin/check-python-version@v4.1
-        with:
-          version_file_path: packages/python/pyproject.toml
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
