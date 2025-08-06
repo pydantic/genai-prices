@@ -120,9 +120,36 @@ jobs:
         run: |
           npm run ci
 
+  release:
+    needs: [check, js]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and test Python package
+        run: |
+          cd packages/python
+          uv sync --frozen --all-packages --all-extras
+          uv build --package genai-prices
+
       - name: Generate a token
         id: generate-token
-        if: github.ref == 'refs/heads/main'
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ secrets.APP_ID }}
@@ -130,7 +157,6 @@ jobs:
 
       - name: Release
         id: changesets
-        if: github.ref == 'refs/heads/main'
         uses: changesets/action@v1
         with:
           publish: |
