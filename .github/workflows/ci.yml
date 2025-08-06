@@ -86,17 +86,14 @@ jobs:
   test-js:
     runs-on: ubuntu-latest
     steps:
-      - name: Begin CI...
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Use Node 22
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
       - run: npm run ci
 
@@ -141,16 +138,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and test Python package
-        run: |
-          uv build --package genai-prices
-
-      - name: Check Python version
-        id: check-python-version
-        uses: samuelcolvin/check-python-version@v4.1
-        with:
-          version_file_path: packages/python/pyproject.toml
-
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@v2
@@ -164,7 +151,14 @@ jobs:
         with:
           publish: |
             npm run changeset-version
+            uv build --package genai-prices
             uv publish --trusted-publishing always
+
+      - name: Check Python version
+        id: check-python-version
+        uses: samuelcolvin/check-python-version@v4.1
+        with:
+          version_file_path: packages/python/pyproject.toml
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
