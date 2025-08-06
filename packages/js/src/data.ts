@@ -2033,7 +2033,7 @@ export const data: Provider[] = [
       {
         id: 'openai/gpt-oss-120b',
         description:
-          "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 20 billion parameters and 128 experts.",
+          "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
           equals: 'openai/gpt-oss-120b',
         },
@@ -2046,7 +2046,7 @@ export const data: Provider[] = [
       {
         id: 'openai/gpt-oss-20b',
         description:
-          "GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 20 billion parameters and 32 experts.",
+          "GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
         match: {
           equals: 'openai/gpt-oss-20b',
         },

@@ -63,7 +63,9 @@ models:
 
   # https://console.groq.com/docs/model/openai/gpt-oss-120b
   - id: openai/gpt-oss-120b
-    description: "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 20 billion parameters and 128 experts."
+    description: |
+      GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with
+      120 billion parameters and 128 experts.
     match:
       equals: openai/gpt-oss-120b
     context_window: 131072
@@ -74,7 +76,9 @@ models:
 
   # https://console.groq.com/docs/model/openai/gpt-oss-20b
   - id: openai/gpt-oss-20b
-    description: "GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 20 billion parameters and 32 experts."
+    description: |
+      GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with
+      20 billion parameters and 32 experts.
     match:
       equals: openai/gpt-oss-20b
     context_window: 131072

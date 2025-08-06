@@ -1157,14 +1157,14 @@ providers: list[Provider] = [
             ModelInfo(
                 id='openai/gpt-oss-120b',
                 match=ClauseEquals(equals='openai/gpt-oss-120b'),
-                description="GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 20 billion parameters and 128 experts.",
+                description="GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.75')),
             ),
             ModelInfo(
                 id='openai/gpt-oss-20b',
                 match=ClauseEquals(equals='openai/gpt-oss-20b'),
-                description="GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 20 billion parameters and 32 experts.",
+                description="GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5')),
             ),
