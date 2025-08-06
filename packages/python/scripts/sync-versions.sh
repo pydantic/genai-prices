@@ -3,8 +3,8 @@
 # Exit on any error, undefined variables, and pipe failures
 set -euo pipefail
 
-# sync versions from package json to pyproject.toml
-version=$(jq -r '.version' <package.json)
+# sync versions from JS package json to pyproject.toml
+version=$(jq -r '.version' <../../packages/js/package.json)
 
 # Validate that we got a non-empty version
 if [[ -z "$version" ]]; then
