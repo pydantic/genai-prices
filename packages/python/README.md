@@ -119,14 +119,3 @@ uvx genai-prices calc --input-tokens 100000 --output-tokens 3000 o1 o3 claude-op
 We do not yet build API documentation for this package, but the source code is relatively simple and well documented.
 
 If you need further information on the API, we encourage you to read the source code.
-
-## Note: package.json in Python Package
-
-This Python package directory contains a `package.json` file, which may seem unusual. This file exists for the following reasons:
-
-- **Version synchronization**: The `sync-versions.sh` script reads the version from `package.json` and syncs it to `pyproject.toml`
-- **Workspace management**: This is part of a monorepo where the root `package.json` defines workspaces including `packages/python`
-- **Build tool compatibility**: Some tools expect a `package.json` in each workspace
-- `"type": "module"` - it's used in Node.js packages to specify ES modules vs CommonJS, for example to run `sync-versions` or correctly use `@iarna/toml`.
-
-The `package.json` is not used for the actual Python package functionality - that's handled by `pyproject.toml`.

@@ -3,6 +3,7 @@
   "version": "0.0.8",
   "main": "index.js",
   "type": "module",
+  "description": "type module required for Node.js tools like @iarna/toml used in sync-versions script",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sync-versions": "./scripts/sync-versions.sh",
@@ -11,7 +12,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@iarna/toml": "^2.2.5"
   }
