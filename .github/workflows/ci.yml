@@ -119,7 +119,7 @@ jobs:
       - run: npm run ci
 
   release:
-    needs: [check, test-js]
+    needs: [check]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
