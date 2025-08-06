@@ -153,8 +153,6 @@ jobs:
 
       - name: Build and test Python package
         run: |
-          cd packages/python
-          uv sync --frozen --all-packages --all-extras
           uv build --package genai-prices
 
       - name: Check Python version
