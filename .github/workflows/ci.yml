@@ -85,8 +85,6 @@ jobs:
 
   test-js:
     runs-on: ubuntu-latest
-    env:
-      CI: true
     steps:
       - name: Begin CI...
         uses: actions/checkout@v4
