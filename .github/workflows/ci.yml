@@ -153,7 +153,14 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - if: steps.changesets.outputs.published == 'true'
-        run: |
-          cd packages/python && npm run sync-versions
-          uv build --package genai-prices
-          uv publish --directory packages/python --trusted-publishing always
+        name: Sync Python version
+        run: npm run sync-versions
+        working-directory: packages/python
+
+      - if: steps.changesets.outputs.published == 'true'
+        name: Build Python package
+        run: uv build --package genai-prices
+
+      - if: steps.changesets.outputs.published == 'true'
+        name: Publish Python package to PyPI
+        run: uv publish --trusted-publishing always
