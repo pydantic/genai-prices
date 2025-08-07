@@ -156,6 +156,13 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - if: steps.changesets.outputs.published == 'true'
+      - name: Simplify GH release title
+        run: gh release edit $TAG --title "v${TAG##*@}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.changesets.output.tag }}
+
+      - if: steps.changesets.outputs.published == 'true'
         name: Sync Python version
         run: ./scripts/sync-versions.sh
         working-directory: packages/python
