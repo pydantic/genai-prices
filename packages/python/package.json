@@ -1,18 +1,11 @@
 {
-  "name": "genai-prices",
+  "name": "@pydantic/genai-prices-python-package-shim",
   "version": "0.0.12",
-  "main": "index.js",
-  "type": "module",
-  "description": "type module required for Node.js tools like @iarna/toml used in sync-versions script",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "sync-versions": "./scripts/sync-versions.sh",
-    "prepare": "echo 'Dummy package - no build needed'"
+  "publishConfig": {
+    "access": "restricted"
   },
+  "description": "A package shim used by changesets to manage the the version of the python package and generate changelog",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@iarna/toml": "^2.2.5"
-  }
+  "author": "Pydantic Team",
+  "license": "MIT"
 }

@@ -154,7 +154,7 @@ jobs:
 
       - if: steps.changesets.outputs.published == 'true'
         name: Sync Python version
-        run: npm run sync-versions
+        run: ./scripts/sync-versions.sh
         working-directory: packages/python
 
       - if: steps.changesets.outputs.published == 'true'
