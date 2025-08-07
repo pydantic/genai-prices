@@ -1,5 +1,11 @@
 # @pydantic/genai-prices
 
+## 0.0.18
+
+### Patch Changes
+
+- fd67740: fix js publish step name
+
 ## 0.0.17
 
 ### Patch Changes
