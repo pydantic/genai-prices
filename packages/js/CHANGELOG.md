@@ -1,5 +1,11 @@
 # @pydantic/genai-prices
 
+## 0.0.17
+
+### Patch Changes
+
+- fa4be16: test publish
+
 ## 0.0.16
 
 ### Patch Changes
