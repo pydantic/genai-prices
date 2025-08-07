@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "restricted"
   },
-  "description": "A package shim used by changesets to manage the the version of the python package and generate changelog",
+  "description": "A package shim used by changesets to manage the version of the Python package and to generate a changelog",
   "keywords": [],
   "author": "Pydantic Team",
   "license": "MIT"

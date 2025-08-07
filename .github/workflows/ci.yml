@@ -156,11 +156,11 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - if: steps.changesets.outputs.published == 'true'
-      - name: Simplify GH release title
-        run: gh release edit $TAG --title "v${TAG##*@}"
+        name: Simplify GH release title
+        run: gh release edit "@pydantic/genai-prices@${VERSION}" --title "v${VERSION}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.changesets.output.tag }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          VERSION: ${{ steps.changesets.outputs.publishedPackages[0].version }}
 
       - if: steps.changesets.outputs.published == 'true'
         name: Sync Python version
