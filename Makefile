@@ -36,7 +36,7 @@ package-data: ## Prepare data for packages
 	uv run -m prices package_data
 
 .PHONY: build
-build: build-prices package-data ## Build prices and package data
+build: build-prices package-data inject-providers ## Build prices and package data
 
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models

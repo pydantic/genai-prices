@@ -78,7 +78,7 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='claude-3-haiku-latest',
+                id='claude-3-haiku',
                 match=ClauseStartsWith(starts_with='claude-3-haiku'),
                 name='Claude Haiku 3',
                 description='Fastest, most cost-effective model',
@@ -125,6 +125,24 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Claude Opus 4',
+                description='Most intelligent model for complex tasks',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('15'),
+                    cache_write_mtok=Decimal('18.75'),
+                    cache_read_mtok=Decimal('1.5'),
+                    output_mtok=Decimal('75'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-opus-4-1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-4'),
+                        ClauseStartsWith(starts_with='claude-4-opus-20250522'),
+                    ]
+                ),
+                name='Claude Opus 4.1',
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
                 prices=ModelPrice(
