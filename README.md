@@ -18,7 +18,7 @@
 ## Features
 
 - Advanced logic for matching on model and provider IDs to maximise the chance of using the correct model
-- Support for historic prices and prices changes, e.g. we have the prices for o3 before and after it's price changed
+- Support for historic prices and prices changes, e.g. we have the prices for o3 before and after its price changed
 - Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
 - support for [identifying price discrepancies](prices/README.md) from other sources
