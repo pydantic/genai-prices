@@ -167,7 +167,12 @@ export function matchModel(models: ModelInfo[], modelRef: string): ModelInfo | u
   return models.find((m) => matchLogic(m.match, modelRef))
 }
 
-export function calcPrice(usage: Usage, modelId: string, providers: Provider[], options?: PriceOptions): PriceCalculationResult {
+export function calcPriceInternal(
+  usage: Usage,
+  modelId: string,
+  providers: Provider[],
+  options?: Omit<PriceOptions, 'awaitAutoUpdate'>
+): PriceCalculationResult {
   const provider = matchProvider(providers, modelId, options?.providerId, options?.providerApiUrl)
   if (!provider) return null
   const model = matchModel(provider.models, modelId)

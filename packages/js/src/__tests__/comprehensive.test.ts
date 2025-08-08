@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Usage } from '../types.js'
 
-import { calcPriceAsync, calcPriceSync } from '../'
+import { calcPrice } from '../'
 import { matchModel, matchProvider } from '../engine'
 
 // Mock data for tests
@@ -87,7 +87,7 @@ const mockProviders = [
 ]
 
 describe('Comprehensive API Tests', () => {
-  describe('calcPriceSync - Basic Functionality', () => {
+  describe('calcPrice - Basic Functionality', () => {
     it.each([
       {
         expectedModel: /gpt/i,
@@ -112,7 +112,7 @@ describe('Comprehensive API Tests', () => {
       },
     ])('should calculate price for $name with provider ID', ({ expectedModel, expectedProvider, model, providerId }) => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, model, { providerId })
+      const result = calcPrice(usage, model, { providerId })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
@@ -129,7 +129,7 @@ describe('Comprehensive API Tests', () => {
 
     it('should calculate tiered pricing for Gemini 1.5 Pro', () => {
       const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
-      const result = calcPriceSync(usage, 'gemini-1.5-pro', { providerId: 'google' })
+      const result = calcPrice(usage, 'gemini-1.5-pro', { providerId: 'google' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
@@ -146,7 +146,7 @@ describe('Comprehensive API Tests', () => {
 
     it('should calculate price for Claude 3 Opus', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, 'claude-3-opus', { providerId: 'anthropic' })
+      const result = calcPrice(usage, 'claude-3-opus', { providerId: 'anthropic' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
@@ -162,22 +162,22 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
-  describe('calcPriceSync - Error Handling', () => {
+  describe('calcPrice - Error Handling', () => {
     it.each([
       { model: 'gpt-3.5-turbo', name: 'invalid provider', providerId: 'notaprovider' },
       { model: 'not-a-real-model', name: 'invalid model', providerId: 'openai' },
       { model: 'invalid-model', name: 'invalid model with valid provider', providerId: 'openai' },
     ])('should return null for $name', ({ model, providerId }) => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, model, { providerId })
+      const result = calcPrice(usage, model, { providerId })
       expect(result).toBeNull()
     })
   })
 
-  describe('calcPriceSync - Historic Pricing', () => {
+  describe('calcPrice - Historic Pricing', () => {
     it('should calculate historic pricing for gpt-4o', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, 'gpt-4o', {
+      const result = calcPrice(usage, 'gpt-4o', {
         providerId: 'openai',
         timestamp: new Date('2024-01-01T12:00Z'),
       })
@@ -196,11 +196,11 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
-  describe('calcPriceSync - Multiple Models', () => {
+  describe('calcPrice - Multiple Models', () => {
     it('should calculate prices for multiple models', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
       const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
-      const results = models.map((model) => calcPriceSync(usage, model, { providerId: 'openai' }))
+      const results = models.map((model) => calcPrice(usage, model, { providerId: 'openai' }))
 
       expect(results.length).toBe(models.length)
       for (const result of results) {
@@ -228,7 +228,7 @@ describe('Comprehensive API Tests', () => {
         { model: 'claude-3-opus', providerId: 'anthropic' },
       ]
 
-      const results = testCases.map(({ model, providerId }) => calcPriceSync(usage, model, { providerId }))
+      const results = testCases.map(({ model, providerId }) => calcPrice(usage, model, { providerId }))
 
       expect(results.length).toBe(testCases.length)
       for (const result of results) {
@@ -249,10 +249,10 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
-  describe('calcPriceAsync - Basic Functionality', () => {
+  describe('calcPrice - Basic Functionality', () => {
     it('should calculate price for gpt-3.5-turbo (async)', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const result = await calcPrice(usage, 'gpt-3.5-turbo', { awaitAutoUpdate: true, providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
@@ -269,7 +269,7 @@ describe('Comprehensive API Tests', () => {
 
     it('should calculate tiered pricing for Gemini 1.5 Pro (async)', async () => {
       const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
-      const result = await calcPriceAsync(usage, 'gemini-1.5-pro', { providerId: 'google' })
+      const result = await calcPrice(usage, 'gemini-1.5-pro', { awaitAutoUpdate: true, providerId: 'google' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
@@ -289,13 +289,14 @@ describe('Comprehensive API Tests', () => {
       { model: 'not-a-real-model', name: 'invalid model', providerId: 'openai' },
     ])('should return null for $name (async)', async ({ model, providerId }) => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = await calcPriceAsync(usage, model, { providerId })
+      const result = await calcPrice(usage, model, { awaitAutoUpdate: true, providerId })
       expect(result).toBeNull()
     })
 
     it('should calculate historic pricing for gpt-4o (async)', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = await calcPriceAsync(usage, 'gpt-4o', {
+      const result = await calcPrice(usage, 'gpt-4o', {
+        awaitAutoUpdate: true,
         providerId: 'openai',
         timestamp: new Date('2024-01-01T12:00:00Z'),
       })
@@ -315,8 +316,14 @@ describe('Comprehensive API Tests', () => {
 
     it('should use cache on subsequent calls', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const first = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-      const second = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const first = await calcPrice(usage, 'gpt-3.5-turbo', {
+        awaitAutoUpdate: true,
+        providerId: 'openai',
+      })
+      const second = await calcPrice(usage, 'gpt-3.5-turbo', {
+        awaitAutoUpdate: true,
+        providerId: 'openai',
+      })
 
       expect(first).not.toBeNull()
       expect(second).not.toBeNull()
@@ -331,7 +338,7 @@ describe('Comprehensive API Tests', () => {
     it('should calculate prices for multiple models (async)', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
       const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
-      const results = await Promise.all(models.map((model) => calcPriceAsync(usage, model, { providerId: 'openai' })))
+      const results = await Promise.all(models.map((model) => calcPrice(usage, model, { providerId: 'openai' })))
 
       expect(results.length).toBe(models.length)
       for (const result of results) {
@@ -403,7 +410,7 @@ describe('Comprehensive API Tests', () => {
         usage: {} as Usage,
       },
     ])('should handle $name', ({ expected, usage }) => {
-      const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject(expected)
@@ -411,7 +418,7 @@ describe('Comprehensive API Tests', () => {
 
     it('should handle large token counts', () => {
       const usage: Usage = { input_tokens: 1000000, output_tokens: 500000 }
-      const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
@@ -435,7 +442,7 @@ describe('Comprehensive API Tests', () => {
         } as Usage,
       },
     ])('should handle $name', ({ usage }) => {
-      const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({

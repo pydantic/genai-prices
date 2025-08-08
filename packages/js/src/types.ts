@@ -105,12 +105,21 @@ export type SyncProviderStorage = () => Provider[]
 export type AsyncProviderStorage = () => Promise<Provider[]>
 
 export interface StorageFactoryParams {
-  embeddedData: Provider[]
   embeddedDataTimestamp: number
+  onCalc: (cb: () => void) => void
   remoteDataUrl: string
+  setProviderData: (data: Promise<Provider[]> | Provider[]) => void
 }
 
 export interface PriceOptions {
+  awaitAutoUpdate?: false
+  providerApiUrl?: string
+  providerId?: string
+  timestamp?: Date
+}
+
+export interface AsyncPriceOptions {
+  awaitAutoUpdate: true
   providerApiUrl?: string
   providerId?: string
   timestamp?: Date

@@ -1,34 +1,53 @@
-import type { AsyncProviderStorage, PriceCalculationResult, PriceOptions, StorageFactoryParams, SyncProviderStorage, Usage } from './types'
+/* eslint-disable no-redeclare */
+import type { AsyncPriceOptions, PriceCalculationResult, PriceOptions, Provider, StorageFactoryParams, Usage } from './types'
 
 import { data as embeddedData, dataTimestamp as embeddedDataTimestamp } from './data'
-import { calcPrice } from './engine'
+import { calcPriceInternal } from './engine'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
-// module level "singletons"
-let theSyncDataProviderStorage: SyncProviderStorage = () => embeddedData
-let theAsyncDataProviderStorage: AsyncProviderStorage = async () => Promise.resolve(embeddedData)
+let providerData: Provider[] = embeddedData
+let providerDataPromise: Promise<Provider[]> = Promise.resolve(embeddedData)
+let autoUpdateCb: (() => void) | null = null
 
-function createProviderStorage<T extends AsyncProviderStorage | SyncProviderStorage>(factory: (options: StorageFactoryParams) => T): T {
-  return factory({
-    embeddedData,
+function setProviderData(data: Promise<Provider[]> | Provider[]) {
+  if ('then' in data) {
+    providerDataPromise = data
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    data.then((data) => {
+      providerData = data
+    })
+  } else {
+    providerDataPromise = Promise.resolve(data)
+    providerData = data
+  }
+}
+
+function onCalc(cb: () => void) {
+  autoUpdateCb = cb
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function enableAutoUpdate(factory: (options: StorageFactoryParams) => any): void {
+  factory({
     embeddedDataTimestamp,
+    onCalc,
     remoteDataUrl: REMOTE_DATA_JSON_URL,
+    setProviderData,
   })
 }
 
-export function enableAutoUpdateForSyncCalc(factory: (options: StorageFactoryParams) => SyncProviderStorage): void {
-  theSyncDataProviderStorage = createProviderStorage<SyncProviderStorage>(factory)
-}
-
-export function enableAutoUpdateForAsyncCalc(factory: (options: StorageFactoryParams) => AsyncProviderStorage): void {
-  theAsyncDataProviderStorage = createProviderStorage<AsyncProviderStorage>(factory)
-}
-
-export function calcPriceSync(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
-  return calcPrice(usage, modelId, theSyncDataProviderStorage(), options)
-}
-
-export async function calcPriceAsync(usage: Usage, modelId: string, options?: PriceOptions): Promise<PriceCalculationResult> {
-  return calcPrice(usage, modelId, await theAsyncDataProviderStorage(), options)
+export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult
+export function calcPrice(usage: Usage, modelId: string, options: AsyncPriceOptions): Promise<PriceCalculationResult>
+export function calcPrice(
+  usage: Usage,
+  modelId: string,
+  options?: AsyncPriceOptions | PriceOptions
+): PriceCalculationResult | Promise<PriceCalculationResult> {
+  autoUpdateCb?.()
+  if (options && 'awaitAutoUpdate' in options && options.awaitAutoUpdate) {
+    return providerDataPromise.then((data) => calcPriceInternal(usage, modelId, data, options)) as Promise<PriceCalculationResult>
+  } else {
+    return calcPriceInternal(usage, modelId, providerData, options)
+  }
 }

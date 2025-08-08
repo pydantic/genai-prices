@@ -6,7 +6,7 @@ import { hideBin } from 'yargs/helpers'
 import type { Provider } from './types'
 
 import { data as embeddedData } from './data'
-import { calcPriceAsync, calcPriceSync } from './index'
+import { calcPrice } from './index'
 
 interface Argv {
   $0: string
@@ -61,7 +61,7 @@ const argv = yargs(hideBin(process.argv))
   .help()
   .parseSync() as Argv
 
-async function main() {
+function main() {
   // Handle list command
   if (argv._[0] === 'list') {
     const providers = embeddedData
@@ -102,7 +102,6 @@ async function main() {
       requests: argv.requests !== undefined ? Number(argv.requests) : undefined,
     }
     const timestamp = argv.timestamp ? new Date(String(argv.timestamp)) : undefined
-    const fn = argv['auto-update'] ? calcPriceAsync : calcPriceSync
     let hadError = false
     for (const modelArg of models) {
       let providerId: string | undefined
@@ -112,7 +111,7 @@ async function main() {
         ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
       }
       try {
-        const result = await fn(usage, modelId, { providerId, timestamp })
+        const result = calcPrice(usage, modelId, { providerId, timestamp })
         if (!result) {
           hadError = true
           console.error(`No price found for model ${modelArg}`)
@@ -149,4 +148,4 @@ async function main() {
   process.exit(1)
 }
 
-await main()
+main()

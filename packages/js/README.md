@@ -4,17 +4,17 @@ JavaScript package and command-line tool for calculating LLM API prices.
 
 ## Basic usage
 
-### `calcPriceSync`
+### `calcPrice`
 
-The package exports a synchronous function for price calculation that, by default, uses the bundled price data.
+The package exports a function for price calculation that, by default, uses the bundled price data.
 
 ```ts
-import { calcPriceSync } from '@pydantic/genai-prices'
+import { calcPrice } from '@pydantic/genai-prices'
 
 const usage = { input_tokens: 1000, output_tokens: 100 }
 
-// Sync (works everywhere, including browser)
-const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+
 if (result) {
   console.log(
     `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`,
@@ -26,27 +26,25 @@ if (result) {
 }
 ```
 
-You can optionally use `enableAutoUpdateForSyncCalc` to implement asynchronous auto-update logic for the data used by `calcPriceSync`.
-When enabled, the function will use the most recently available data while updates occur in the background. See the `src/examples/browser` directory for an example that implements a local storage-backed auto-update.
+### `enableAutoUpdate`
 
-### `calcPriceAsync`
+You can optionally use `enableAutoUpdate` to implement logic that can periodically update the data used by `calcPrice`.
+See the `src/examples/browser` directory for an example that implements a local storage-backed auto-update and `src/examples/node-script.ts` for an example of a file-based asynchronous auto-update implementation.
 
-If you want to ensure that the calculation always uses the latest provider data, you can use the asynchronous API `calcPriceAsync` and implement `enableAutoUpdateForAsyncCalc` to fetch a fresh snapshot.
-Unlike the synchronous API, `calcPriceAsync` will await any data updates to complete before returning the result. See `src/examples/node-script.ts` for an example of a file-based asynchronous auto-update implementation.
+By default, `calcPrice` is a synchronous function that uses the currently available data - either the bundled one, or the last data fetched from the `enableAutoUpdate` setup. To force `calcPrice` to await potential in-progress data updates that can happen in `enableAutoUpdate`, pass the `awaitAutoUpdate: true` option. This will cause the function to always return a promise.
 
 ```ts
-import { calcPriceAsync } from '@pydantic/genai-prices'
+import { calcPrice, enableAutoUpdate } from '@pydantic/genai-prices'
 
-const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-if (result) {
-  console.log(
-    `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`,
-    result.provider.name,
-    result.model.name
-  )
-} else {
-  console.log('No price found for this model/provider combination')
-}
+enableAutoUpdate(/** auto-update logic */)
+
+const result = await calcPrice(usage, 'gpt-3.5-turbo', { awaitAutoUpdate: true, providerId: 'openai' })
+
+console.log(
+  `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`,
+  result.provider.name,
+  result.model.name
+)
 ```
 
 ### Provider Matching
@@ -54,7 +52,7 @@ if (result) {
 The library uses intelligent provider matching:
 
 1. **Explicit provider**: Use `providerId` parameter or `provider:model` format
-2. **Model-based matching**: Uses provider's `model_match` logic (e.g., OpenAI matches models starting with "gpt-")
+2. **Model-based matching**: Uses the provider's `model_match` logic (e.g., OpenAI matches models starting with "gpt-")
 3. **Fallback**: Tries to match based on model name patterns
 
 **Best practices:**
@@ -68,12 +66,12 @@ The library uses intelligent provider matching:
 When a model or provider is not found, the library returns `null`. This makes it easier to handle cases where pricing information might not be available.
 
 ```js
-import { calcPriceSync, calcPriceAsync } from '@pydantic/genai-prices'
+import { calcPrice } from '@pydantic/genai-prices'
 
 const usage = { input_tokens: 1000, output_tokens: 100 }
 
 // Returns null if model/provider not found
-const result = calcPriceSync(usage, 'non-existent-model')
+const result = calcPrice(usage, 'non-existent-model')
 if (result === null) {
   console.log('No pricing information available for this model')
 } else {
@@ -81,7 +79,7 @@ if (result === null) {
 }
 
 // Async version also returns null
-const asyncResult = await calcPriceAsync(usage, 'non-existent-model', { providerId: 'unknown-provider' })
+const asyncResult = await calcPrice(usage, 'non-existent-model', { awaitAutoUpdate: true, providerId: 'unknown-provider' })
 if (asyncResult === null) {
   console.log('No pricing information available for this model/provider combination')
 } else {
