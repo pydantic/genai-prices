@@ -1,16 +1,16 @@
 export interface Usage {
-  input_tokens?: number
-  cache_write_tokens?: number
-  cache_read_tokens?: number
-  output_tokens?: number
-  input_audio_tokens?: number
   cache_audio_read_tokens?: number
+  cache_read_tokens?: number
+  cache_write_tokens?: number
+  input_audio_tokens?: number
+  input_tokens?: number
   output_audio_tokens?: number
+  output_tokens?: number
 }
 
 export interface Tier {
-  start: number
   price: number
+  start: number
 }
 
 export interface TieredPrices {
@@ -19,13 +19,13 @@ export interface TieredPrices {
 }
 
 export interface ModelPrice {
-  input_mtok?: number | TieredPrices
-  cache_write_mtok?: number | TieredPrices
-  cache_read_mtok?: number | TieredPrices
-  output_mtok?: number | TieredPrices
-  input_audio_mtok?: number | TieredPrices
   cache_audio_read_mtok?: number | TieredPrices
+  cache_read_mtok?: number | TieredPrices
+  cache_write_mtok?: number | TieredPrices
+  input_audio_mtok?: number | TieredPrices
+  input_mtok?: number | TieredPrices
   output_audio_mtok?: number | TieredPrices
+  output_mtok?: number | TieredPrices
   requests_kcount?: number
 }
 
@@ -40,62 +40,78 @@ export interface StartDateConstraint {
 }
 
 export interface TimeOfDateConstraint {
-  start_time: string // HH:MM:SS
   end_time: string // HH:MM:SS
+  start_time: string // HH:MM:SS
   type: 'time_of_date'
 }
 
 export type MatchLogic =
-  | { starts_with: string }
-  | { ends_with: string }
-  | { contains: string }
-  | { equals: string }
-  | { regex: string }
-  | { or: MatchLogic[] }
   | { and: MatchLogic[] }
+  | { contains: string }
+  | { ends_with: string }
+  | { equals: string }
+  | { or: MatchLogic[] }
+  | { regex: string }
+  | { starts_with: string }
 
 export interface ModelInfo {
+  context_window?: number
+  description?: string
   id: string
   match: MatchLogic
   name?: string
-  description?: string
-  context_window?: number
   price_comments?: string
-  prices: ModelPrice | ConditionalPrice[]
+  prices: ConditionalPrice[] | ModelPrice
 }
 
 export interface Provider {
-  id: string
-  name: string
   api_pattern: string
-  pricing_urls?: string[]
   description?: string
-  price_comments?: string
+  id: string
   model_match?: MatchLogic
-  provider_match?: MatchLogic
   models: ModelInfo[]
+  name: string
+  price_comments?: string
+  pricing_urls?: string[]
+  provider_match?: MatchLogic
 }
 
-export interface CalcPrice {
+export interface ModelPriceCalculationResult {
   input_price: number
   output_price: number
   total_price: number
 }
 
 export interface PriceCalculation {
+  auto_update_timestamp?: string
   input_price: number
-  output_price: number
-  total_price: number
-  provider: Provider
   model: ModelInfo
   model_price: ModelPrice
-  auto_update_timestamp?: string
+  output_price: number
+  provider: Provider
+  total_price: number
 }
 
-export type PriceCalculationResult = PriceCalculation | null
+export type PriceCalculationResult = null | PriceCalculation
 
-export type PriceDataStorage = {
-  get: () => Promise<string | null>
+export interface PriceDataStorage {
+  get: () => Promise<null | string>
+  get_last_modified?: () => Promise<null | number>
   set: (data: string) => Promise<void>
-  get_last_modified?: () => Promise<number | null>
+}
+
+export type SyncProviderStorage = () => Provider[]
+
+export type AsyncProviderStorage = () => Promise<Provider[]>
+
+export interface StorageFactoryParams {
+  embeddedData: Provider[]
+  embeddedDataTimestamp: number
+  remoteDataUrl: string
+}
+
+export interface PriceOptions {
+  providerApiUrl?: string
+  providerId?: string
+  timestamp?: Date
 }

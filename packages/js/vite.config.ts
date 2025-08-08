@@ -1,33 +1,42 @@
+import { copyFileSync } from 'node:fs'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
-import { builtinModules } from 'module'
 
 export default defineConfig({
   build: {
+    emptyOutDir: true,
     lib: {
-      entry: './src/index.ts',
-      name: 'GenaiPrices',
+      entry: ['./src/index.ts'],
       fileName: 'index',
+      formats: ['es', 'cjs'],
     },
+    minify: true,
+    outDir: 'dist',
     rollupOptions: {
-      external: (id) => {
-        // Externalize Node.js built-ins and node-fetch
-        const nodeModules = [...builtinModules, ...builtinModules.map((m) => `node:${m}`)]
-        const externalModules = ['node-fetch', 'yargs']
-        return nodeModules.includes(id) || externalModules.includes(id)
-      },
       output: {
-        format: 'esm',
+        exports: 'named',
       },
       preserveEntrySignatures: 'strict',
     },
-    outDir: 'dist',
-    emptyOutDir: true,
     target: 'esnext',
-    minify: false,
   },
-  plugins: [dts()],
   json: {
     stringify: true,
   },
+  plugins: [
+    dts({
+      // https://github.com/arethetypeswrong
+      // https://github.com/qmhc/vite-plugin-dts/issues/267#issuecomment-1786996676
+      afterBuild: () => {
+        // To pass publint (`npm x publint@latest`) and ensure the
+        // package is supported by all consumers, we must export types that are
+        // read as ESM. To do this, there must be duplicate types with the
+        // correct extension supplied in the package.json exports field.
+        copyFileSync('dist/index.d.ts', 'dist/index.d.cts')
+      },
+      compilerOptions: { skipLibCheck: true },
+      rollupTypes: true,
+      staticImport: true,
+    }),
+  ],
 })
