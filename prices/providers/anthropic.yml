@@ -31,12 +31,12 @@ models:
         - starts_with: claude-3-5-haiku
         - starts_with: claude-3.5-haiku
     context_window: 200000
+    prices_checked: 2025-08-08
     prices:
       input_mtok: 0.8
       cache_write_mtok: 1
       cache_read_mtok: 0.08
       output_mtok: 4
-    prices_checked: 2025-06-22
 
   - id: claude-3-5-sonnet
     name: Claude Sonnet 3.5
@@ -63,24 +63,25 @@ models:
         - starts_with: claude-3-7-sonnet
         - starts_with: claude-3.7-sonnet
     context_window: 200000
+    prices_checked: 2025-08-08
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
 
-  - id: claude-3-haiku-latest
+  - id: claude-3-haiku
     name: Claude Haiku 3
     description: Fastest, most cost-effective model
     match:
       starts_with: claude-3-haiku
     context_window: 200000
+    prices_checked: 2025-08-08
     prices:
       input_mtok: 0.25
       cache_write_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 1.25
-    prices_checked: 2025-06-23
 
   - id: claude-3-opus-latest
     name: Claude Opus 3
@@ -118,6 +119,23 @@ models:
         - starts_with: claude-opus-4
         - starts_with: claude-4-opus-20250522
     context_window: 200000
+    prices_checked: 2025-08-08
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-opus-4-1
+    name: Claude Opus 4.1
+    description: Most intelligent model for complex tasks
+    match:
+      or:
+        - starts_with: claude-opus-4
+        - starts_with: claude-4-opus-20250522
+    context_window: 200000
+    collapse: true
+    prices_checked: 2025-08-08
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
@@ -132,6 +150,7 @@ models:
         - starts_with: claude-sonnet-4
         - starts_with: claude-4-sonnet-20250522
     context_window: 200000
+    prices_checked: 2025-08-08
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
