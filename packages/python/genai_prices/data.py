@@ -458,6 +458,36 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-5',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5'), ClauseEquals(equals='gpt-5-2025-08-07')]),
+                name='GPT-5',
+                description="GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-mini'), ClauseEquals(equals='gpt-5-mini-2025-08-07')]),
+                name='GPT-5 mini',
+                description="GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5-nano',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-nano'), ClauseEquals(equals='gpt-5-nano-2025-04-14')]),
+                name='GPT-5 nano',
+                description="GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.4')
+                ),
+            ),
+            ModelInfo(
                 id='gpt35',
                 match=ClauseEquals(equals='gpt35'),
                 prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
@@ -1863,6 +1893,43 @@ providers: list[Provider] = [
                 name='GPT-4o (extended)',
                 description='GPT-4o ("o" for "omni") is OpenAI\'s latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of GPT-4 Turbo while being twice as fast and 50% more cost-effective. GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.',
                 prices=ModelPrice(input_mtok=Decimal('6'), output_mtok=Decimal('18')),
+            ),
+            ModelInfo(
+                id='gpt-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5'),
+                        ClauseEquals(equals='gpt-5-2025-08-07'),
+                        ClauseEquals(equals='gpt-5-chat'),
+                        ClauseEquals(equals='gpt-5-chat-latest'),
+                    ]
+                ),
+                name='GPT-5',
+                description="GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-mini'), ClauseEquals(equals='gpt-5-mini-2025-08-07')]),
+                name='GPT-5 mini',
+                description="GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5-nano',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-nano'), ClauseEquals(equals='gpt-5-nano-2025-04-14')]),
+                name='GPT-5 nano',
+                description="GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.4')
+                ),
             ),
             ModelInfo(
                 id='o1',
