@@ -1,150 +1,143 @@
-import { describe, it, expect, beforeAll, vi, beforeEach } from 'vitest'
-import { calcPriceSync, calcPriceAsync, matchProvider, matchModel } from '../index.js'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { describe, expect, it } from 'vitest'
+
 import type { Usage } from '../types.js'
+
+import { calcPrice, waitForUpdate } from '../'
+import { matchModel, matchProvider } from '../engine'
 
 // Mock data for tests
 const mockProviders = [
   {
-    id: 'openai',
-    name: 'OpenAI',
     api_pattern: '',
-    pricing_urls: [],
     description: '',
-    price_comments: '',
+    id: 'openai',
     models: [
       {
+        context_window: 16385,
+        description: '',
         id: 'gpt-3.5-turbo',
         match: { equals: 'gpt-3.5-turbo' },
         name: 'gpt 3.5 turbo',
-        description: '',
-        context_window: 16385,
         price_comments: '',
         prices: { input_mtok: 0.0005, output_mtok: 0.0015 },
       },
       {
+        context_window: 128000,
+        description: '',
         id: 'gpt-4o',
         match: { equals: 'gpt-4o' },
         name: 'gpt-4o',
-        description: '',
-        context_window: 128000,
         price_comments: '',
         prices: { input_mtok: 0.0005, output_mtok: 0.0015 },
       },
       {
+        context_window: 32768,
+        description: '',
         id: 'o1',
         match: { equals: 'o1' },
         name: 'O1',
-        description: '',
-        context_window: 32768,
         price_comments: '',
         prices: { input_mtok: 0.001, output_mtok: 0.002 },
       },
     ],
+    name: 'OpenAI',
+    price_comments: '',
+    pricing_urls: [],
   },
   {
-    id: 'google',
-    name: 'Google',
     api_pattern: '',
-    pricing_urls: [],
     description: '',
-    price_comments: '',
+    id: 'google',
     models: [
       {
+        context_window: 1000000,
+        description: '',
         id: 'gemini-1.5-pro',
         match: { equals: 'gemini-1.5-pro' },
         name: 'Gemini 1.5 Pro',
-        description: '',
-        context_window: 1000000,
         price_comments: '',
         prices: { input_mtok: 0.00025, output_mtok: 0.0005 },
       },
     ],
+    name: 'Google',
+    price_comments: '',
+    pricing_urls: [],
   },
   {
-    id: 'anthropic',
-    name: 'Anthropic',
     api_pattern: '',
-    pricing_urls: [],
     description: '',
-    price_comments: '',
+    id: 'anthropic',
     models: [
       {
+        context_window: 200000,
+        description: '',
         id: 'claude-3-opus',
         match: { equals: 'claude-3-opus' },
         name: 'Claude 3 Opus',
-        description: '',
-        context_window: 200000,
         price_comments: '',
         prices: { input_mtok: 0.0015, output_mtok: 0.0075 },
       },
     ],
+    name: 'Anthropic',
+    price_comments: '',
+    pricing_urls: [],
   },
 ]
 
-beforeEach(() => {
-  // Mock the dataLoader module
-  vi.mock('../dataLoader.js', () => ({
-    getProvidersSync: vi.fn(() => mockProviders),
-    getProvidersAsync: vi.fn(async () => mockProviders),
-    enableAutoUpdate: vi.fn(),
-  }))
-})
-
 describe('Comprehensive API Tests', () => {
-  describe('calcPriceSync - Basic Functionality', () => {
+  describe('calcPrice - Basic Functionality', () => {
     it.each([
       {
-        name: 'gpt-3.5-turbo',
+        expectedModel: /gpt/i,
+        expectedProvider: /OpenAI/i,
         model: 'gpt-3.5-turbo',
+        name: 'gpt-3.5-turbo',
         providerId: 'openai',
-        expectedProvider: /OpenAI/i,
-        expectedModel: /gpt/i,
       },
       {
-        name: 'gpt-4o',
+        expectedModel: /gpt/i,
+        expectedProvider: /OpenAI/i,
         model: 'gpt-4o',
+        name: 'gpt-4o',
         providerId: 'openai',
-        expectedProvider: /OpenAI/i,
-        expectedModel: /gpt/i,
       },
       {
-        name: 'o1',
-        model: 'o1',
-        providerId: 'openai',
-        expectedProvider: /OpenAI/i,
         expectedModel: /o1/i,
+        expectedProvider: /OpenAI/i,
+        model: 'o1',
+        name: 'o1',
+        providerId: 'openai',
       },
-    ])(
-      'should calculate price for $name with provider ID',
-      ({ model, providerId, expectedProvider, expectedModel }) => {
-        const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-        const result = calcPriceSync(usage, model, { providerId })
-
-        expect(result).not.toBeNull()
-        expect(result).toMatchObject({
-          total_price: expect.any(Number),
-          input_price: expect.any(Number),
-          output_price: expect.any(Number),
-          provider: { name: expect.stringMatching(expectedProvider) },
-          model: { name: expect.stringMatching(expectedModel) },
-        })
-        expect(result!.total_price).toBeGreaterThanOrEqual(0)
-        expect(result!.input_price).toBeGreaterThanOrEqual(0)
-        expect(result!.output_price).toBeGreaterThanOrEqual(0)
-      },
-    )
-
-    it('should calculate tiered pricing for Gemini 1.5 Pro', () => {
-      const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
-      const result = calcPriceSync(usage, 'gemini-1.5-pro', { providerId: 'google' })
+    ])('should calculate price for $name with provider ID', ({ expectedModel, expectedProvider, model, providerId }) => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const result = calcPrice(usage, model, { providerId })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
+        model: { name: expect.stringMatching(expectedModel) },
+        output_price: expect.any(Number),
+        provider: { name: expect.stringMatching(expectedProvider) },
+        total_price: expect.any(Number),
+      })
+      expect(result!.total_price).toBeGreaterThanOrEqual(0)
+      expect(result!.input_price).toBeGreaterThanOrEqual(0)
+      expect(result!.output_price).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should calculate tiered pricing for Gemini 1.5 Pro', () => {
+      const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
+      const result = calcPrice(usage, 'gemini-1.5-pro', { providerId: 'google' })
+
+      expect(result).not.toBeNull()
+      expect(result).toMatchObject({
+        input_price: expect.any(Number),
+        model: { name: expect.stringMatching(/gemini/i) },
         output_price: expect.any(Number),
         provider: { name: expect.stringMatching(/Google/i) },
-        model: { name: expect.stringMatching(/gemini/i) },
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThan(0)
       expect(result!.input_price).toBeGreaterThan(0)
@@ -153,15 +146,15 @@ describe('Comprehensive API Tests', () => {
 
     it('should calculate price for Claude 3 Opus', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, 'claude-3-opus', { providerId: 'anthropic' })
+      const result = calcPrice(usage, 'claude-3-opus', { providerId: 'anthropic' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
+        model: { name: expect.stringMatching(/claude/i) },
         output_price: expect.any(Number),
         provider: { name: expect.stringMatching(/Anthropic/i) },
-        model: { name: expect.stringMatching(/claude/i) },
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
       expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -169,33 +162,33 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
-  describe('calcPriceSync - Error Handling', () => {
+  describe('calcPrice - Error Handling', () => {
     it.each([
-      { name: 'invalid provider', model: 'gpt-3.5-turbo', providerId: 'notaprovider' },
-      { name: 'invalid model', model: 'not-a-real-model', providerId: 'openai' },
-      { name: 'invalid model with valid provider', model: 'invalid-model', providerId: 'openai' },
+      { model: 'gpt-3.5-turbo', name: 'invalid provider', providerId: 'notaprovider' },
+      { model: 'not-a-real-model', name: 'invalid model', providerId: 'openai' },
+      { model: 'invalid-model', name: 'invalid model with valid provider', providerId: 'openai' },
     ])('should return null for $name', ({ model, providerId }) => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, model, { providerId })
+      const result = calcPrice(usage, model, { providerId })
       expect(result).toBeNull()
     })
   })
 
-  describe('calcPriceSync - Historic Pricing', () => {
+  describe('calcPrice - Historic Pricing', () => {
     it('should calculate historic pricing for gpt-4o', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = calcPriceSync(usage, 'gpt-4o', {
+      const result = calcPrice(usage, 'gpt-4o', {
         providerId: 'openai',
         timestamp: new Date('2024-01-01T12:00Z'),
       })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
+        model: { name: expect.stringMatching(/gpt/i) },
         output_price: expect.any(Number),
         provider: { name: expect.stringMatching(/OpenAI/i) },
-        model: { name: expect.stringMatching(/gpt/i) },
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
       expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -203,21 +196,21 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
-  describe('calcPriceSync - Multiple Models', () => {
+  describe('calcPrice - Multiple Models', () => {
     it('should calculate prices for multiple models', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
       const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
-      const results = models.map((model) => calcPriceSync(usage, model, { providerId: 'openai' }))
+      const results = models.map((model) => calcPrice(usage, model, { providerId: 'openai' }))
 
       expect(results.length).toBe(models.length)
       for (const result of results) {
         expect(result).not.toBeNull()
         expect(result).toMatchObject({
-          total_price: expect.any(Number),
           input_price: expect.any(Number),
+          model: { name: expect.any(String) },
           output_price: expect.any(Number),
           provider: { name: expect.any(String) },
-          model: { name: expect.any(String) },
+          total_price: expect.any(Number),
         })
         expect(result!.total_price).toBeGreaterThanOrEqual(0)
         expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -235,17 +228,17 @@ describe('Comprehensive API Tests', () => {
         { model: 'claude-3-opus', providerId: 'anthropic' },
       ]
 
-      const results = testCases.map(({ model, providerId }) => calcPriceSync(usage, model, { providerId }))
+      const results = testCases.map(({ model, providerId }) => calcPrice(usage, model, { providerId }))
 
       expect(results.length).toBe(testCases.length)
       for (const result of results) {
         expect(result).not.toBeNull()
         expect(result).toMatchObject({
-          total_price: expect.any(Number),
           input_price: expect.any(Number),
+          model: { name: expect.any(String) },
           output_price: expect.any(Number),
           provider: { name: expect.any(String) },
-          model: { name: expect.any(String) },
+          total_price: expect.any(Number),
         })
         expect(result!.total_price).toBeGreaterThanOrEqual(0)
         expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -256,18 +249,19 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
-  describe('calcPriceAsync - Basic Functionality', () => {
+  describe('calcPrice - Basic Functionality', () => {
     it('should calculate price for gpt-3.5-turbo (async)', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      await waitForUpdate()
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
+        model: { name: expect.stringMatching(/gpt/i) },
         output_price: expect.any(Number),
         provider: { name: expect.stringMatching(/OpenAI/i) },
-        model: { name: expect.stringMatching(/gpt/i) },
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
       expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -276,15 +270,16 @@ describe('Comprehensive API Tests', () => {
 
     it('should calculate tiered pricing for Gemini 1.5 Pro (async)', async () => {
       const usage: Usage = { input_tokens: 2_000_000, output_tokens: 1000 }
-      const result = await calcPriceAsync(usage, 'gemini-1.5-pro', { providerId: 'google' })
+      await waitForUpdate()
+      const result = calcPrice(usage, 'gemini-1.5-pro', { providerId: 'google' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
+        model: { name: expect.stringMatching(/gemini/i) },
         output_price: expect.any(Number),
         provider: { name: expect.stringMatching(/Google/i) },
-        model: { name: expect.stringMatching(/gemini/i) },
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThan(0)
       expect(result!.input_price).toBeGreaterThan(0)
@@ -292,28 +287,30 @@ describe('Comprehensive API Tests', () => {
     })
 
     it.each([
-      { name: 'invalid provider', model: 'gpt-3.5-turbo', providerId: 'notaprovider' },
-      { name: 'invalid model', model: 'not-a-real-model', providerId: 'openai' },
+      { model: 'gpt-3.5-turbo', name: 'invalid provider', providerId: 'notaprovider' },
+      { model: 'not-a-real-model', name: 'invalid model', providerId: 'openai' },
     ])('should return null for $name (async)', async ({ model, providerId }) => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = await calcPriceAsync(usage, model, { providerId })
+      await waitForUpdate()
+      const result = calcPrice(usage, model, { providerId })
       expect(result).toBeNull()
     })
 
     it('should calculate historic pricing for gpt-4o (async)', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const result = await calcPriceAsync(usage, 'gpt-4o', {
+      await waitForUpdate()
+      const result = calcPrice(usage, 'gpt-4o', {
         providerId: 'openai',
         timestamp: new Date('2024-01-01T12:00:00Z'),
       })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
+        model: { name: expect.stringMatching(/gpt/i) },
         output_price: expect.any(Number),
         provider: { name: expect.stringMatching(/OpenAI/i) },
-        model: { name: expect.stringMatching(/gpt/i) },
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
       expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -322,33 +319,38 @@ describe('Comprehensive API Tests', () => {
 
     it('should use cache on subsequent calls', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const first = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
-      const second = await calcPriceAsync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      await waitForUpdate()
+      const first = calcPrice(usage, 'gpt-3.5-turbo', {
+        providerId: 'openai',
+      })
+      const second = calcPrice(usage, 'gpt-3.5-turbo', {
+        providerId: 'openai',
+      })
 
       expect(first).not.toBeNull()
       expect(second).not.toBeNull()
       expect(second).toMatchObject({
-        total_price: first!.total_price,
         input_price: first!.input_price,
         output_price: first!.output_price,
         provider: { name: first!.provider.name },
+        total_price: first!.total_price,
       })
     })
 
     it('should calculate prices for multiple models (async)', async () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
       const models = ['gpt-3.5-turbo', 'gpt-4o', 'o1']
-      const results = await Promise.all(models.map((model) => calcPriceAsync(usage, model, { providerId: 'openai' })))
+      const results = await Promise.all(models.map((model) => calcPrice(usage, model, { providerId: 'openai' })))
 
       expect(results.length).toBe(models.length)
       for (const result of results) {
         expect(result).not.toBeNull()
         expect(result).toMatchObject({
-          total_price: expect.any(Number),
           input_price: expect.any(Number),
+          model: { name: expect.any(String) },
           output_price: expect.any(Number),
           provider: { name: expect.any(String) },
-          model: { name: expect.any(String) },
+          total_price: expect.any(Number),
         })
         expect(result!.total_price).toBeGreaterThanOrEqual(0)
         expect(result!.input_price).toBeGreaterThanOrEqual(0)
@@ -360,21 +362,11 @@ describe('Comprehensive API Tests', () => {
   })
 
   describe('Provider and Model Matching', () => {
-    function matchModelWithProvider(providers: any[], modelId: string) {
-      for (const provider of providers) {
-        const model = provider.models.find((m: any) => m.id === modelId)
-        if (model) {
-          return { provider, model }
-        }
-      }
-      return null
-    }
-
     it.each([
-      { name: 'OpenAI', providerId: 'openai', expectedId: 'openai' },
-      { name: 'Google', providerId: 'google', expectedId: 'google' },
-      { name: 'Anthropic', providerId: 'anthropic', expectedId: 'anthropic' },
-    ])('should match $name provider correctly', ({ providerId, expectedId }) => {
+      { expectedId: 'openai', name: 'OpenAI', providerId: 'openai' },
+      { expectedId: 'google', name: 'Google', providerId: 'google' },
+      { expectedId: 'anthropic', name: 'Anthropic', providerId: 'anthropic' },
+    ])('should match $name provider correctly', ({ expectedId, providerId }) => {
       const providers = mockProviders
       const provider = matchProvider(providers, providerId, providerId)
       expect(provider).not.toBeUndefined()
@@ -388,10 +380,10 @@ describe('Comprehensive API Tests', () => {
     })
 
     it.each([
-      { name: 'GPT-3.5', providerId: 'openai', modelId: 'gpt-3.5-turbo', expectedId: 'gpt-3.5-turbo' },
-      { name: 'Gemini', providerId: 'google', modelId: 'gemini-1.5-pro', expectedId: 'gemini-1.5-pro' },
-      { name: 'Claude', providerId: 'anthropic', modelId: 'claude-3-opus', expectedId: 'claude-3-opus' },
-    ])('should match $name model correctly', ({ providerId, modelId, expectedId }) => {
+      { expectedId: 'gpt-3.5-turbo', modelId: 'gpt-3.5-turbo', name: 'GPT-3.5', providerId: 'openai' },
+      { expectedId: 'gemini-1.5-pro', modelId: 'gemini-1.5-pro', name: 'Gemini', providerId: 'google' },
+      { expectedId: 'claude-3-opus', modelId: 'claude-3-opus', name: 'Claude', providerId: 'anthropic' },
+    ])('should match $name model correctly', ({ expectedId, modelId, providerId }) => {
       const providers = mockProviders
       const provider = providers.find((p) => p.id === providerId)!
       const model = matchModel(provider.models, modelId)
@@ -410,17 +402,17 @@ describe('Comprehensive API Tests', () => {
   describe('Edge Cases and Special Scenarios', () => {
     it.each([
       {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
         name: 'zero tokens',
         usage: { input_tokens: 0, output_tokens: 0 } as Usage,
-        expected: { total_price: 0, input_price: 0, output_price: 0 },
       },
       {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
         name: 'undefined tokens',
         usage: {} as Usage,
-        expected: { total_price: 0, input_price: 0, output_price: 0 },
       },
-    ])('should handle $name', ({ usage, expected }) => {
-      const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+    ])('should handle $name', ({ expected, usage }) => {
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject(expected)
@@ -428,13 +420,13 @@ describe('Comprehensive API Tests', () => {
 
     it('should handle large token counts', () => {
       const usage: Usage = { input_tokens: 1000000, output_tokens: 500000 }
-      const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
         output_price: expect.any(Number),
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThan(0)
       expect(result!.input_price).toBeGreaterThan(0)
@@ -445,20 +437,20 @@ describe('Comprehensive API Tests', () => {
       {
         name: 'cache tokens',
         usage: {
-          input_tokens: 1000,
-          cache_write_tokens: 200,
           cache_read_tokens: 100,
+          cache_write_tokens: 200,
+          input_tokens: 1000,
           output_tokens: 500,
         } as Usage,
       },
     ])('should handle $name', ({ usage }) => {
-      const result = calcPriceSync(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+      const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
 
       expect(result).not.toBeNull()
       expect(result).toMatchObject({
-        total_price: expect.any(Number),
         input_price: expect.any(Number),
         output_price: expect.any(Number),
+        total_price: expect.any(Number),
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
       expect(result!.input_price).toBeGreaterThanOrEqual(0)

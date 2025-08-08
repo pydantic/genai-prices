@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Provider, Usage, UsageExtractor } from './types.js'
 
 export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): [string, Usage] {
@@ -8,7 +9,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   if (!apiFlavor) {
     if (provider.extractors.length === 1) {
-      extractor = provider.extractors[0]
+      extractor = provider.extractors[0]!
     } else {
       throw new Error('No apiFlavor specified and multiple extractors available')
     }
@@ -36,7 +37,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
   for (const mapping of extractor.mappings) {
     const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
     if (value !== null) {
-      const currentValue = usage[mapping.dest] || 0
+      const currentValue = usage[mapping.dest] ?? 0
       usage[mapping.dest] = currentValue + value
     }
   }
@@ -53,23 +54,29 @@ function extractPath<T>(
   data: Record<string, unknown>,
   typeCheck: TypeCheck<T>,
   required: true,
-  dataPath: string[],
+  dataPath: string[]
 ): T
+// eslint-disable-next-line no-redeclare
 function extractPath<T>(
   path: string | string[],
   data: Record<string, unknown>,
   typeCheck: TypeCheck<T>,
   required: boolean,
-  dataPath: string[],
-): T | null
+  dataPath: string[]
+): null | T
+// eslint-disable-next-line no-redeclare
 function extractPath<T>(
   path: string | string[],
   data: Record<string, unknown>,
   typeCheck: TypeCheck<T>,
   required: boolean,
-  dataPath: string[],
-): T | null {
+  dataPath: string[]
+): null | T {
   const [last, ...steps] = asArray(path).reverse()
+  if (typeof last !== 'string') {
+    throw new Error(`Expected last step of path to be a string, got ${typeName(last)}`)
+  }
+
   let currentStepData: Record<string, unknown> = data
   steps.reverse()
 
@@ -104,9 +111,7 @@ function extractPath<T>(
     return value
   } else {
     errorPath.push(last)
-    throw new Error(
-      `Expected \`${[...dataPath, ...errorPath].join('.')}\` value to be a ${typeCheck.name}, got ${typeName(value)}`,
-    )
+    throw new Error(`Expected \`${[...dataPath, ...errorPath].join('.')}\` value to be a ${typeCheck.name}, got ${typeName(value)}`)
   }
 }
 
@@ -128,7 +133,7 @@ function typeName(v: unknown): string {
 }
 
 interface TypeCheck<T> {
-  guard(value: any): value is T
+  guard(value: unknown): value is T
   name: string
 }
 
