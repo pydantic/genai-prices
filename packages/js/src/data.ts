@@ -3365,6 +3365,77 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5',
+        name: 'GPT-5',
+        description: "GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-5',
+            },
+            {
+              equals: 'gpt-5-2025-08-07',
+            },
+            {
+              equals: 'gpt-5-chat',
+            },
+            {
+              equals: 'gpt-5-chat-latest',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5-mini',
+        name: 'GPT-5 mini',
+        description:
+          "GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-5-mini',
+            },
+            {
+              equals: 'gpt-5-mini-2025-08-07',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-5-nano',
+        name: 'GPT-5 nano',
+        description:
+          "GPT-5 Nano is our fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-5-nano',
+            },
+            {
+              equals: 'gpt-5-nano-2025-04-14',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.005,
+          output_mtok: 0.4,
+        },
+      },
+      {
         id: 'o1',
         name: 'o1',
         description: 'O1 is a model that offers a balance between cost and performance.',
