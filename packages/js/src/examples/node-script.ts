@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { AsyncProviderStorage, calcPriceAsync, enableAutoUpdateForAsyncCalc, Provider } from '../index'
+import { calcPriceAsync, enableAutoUpdateForAsyncCalc, Provider } from '../index'
 
 // You can bump this to a longer TTL if you want to cache the data for longer
 const PRICE_TTL = 1000 * 60 // * 60 * 60 * 24 // 24 hours
@@ -11,7 +11,7 @@ const GENAI_DATA_FILE = path.join(process.cwd(), '.genai-prices-cache.json')
 enableAutoUpdateForAsyncCalc(({ embeddedData, embeddedDataTimestamp, remoteDataUrl }) => {
   let dataPromise: null | Promise<Provider[]> = null
 
-  const cb: AsyncProviderStorage = async () => {
+  return async () => {
     if (dataPromise) {
       console.log('using cached data promise')
       return dataPromise
@@ -39,7 +39,7 @@ enableAutoUpdateForAsyncCalc(({ embeddedData, embeddedDataTimestamp, remoteDataU
     }
 
     try {
-      console.log('fetching fresh genai data')
+      console.log('fetching fresh genai-prices data')
       dataPromise = fetch(remoteDataUrl, { cache: 'no-store' }).then(async (response) => {
         return (await response.json()) as Provider[]
       })
@@ -49,7 +49,7 @@ enableAutoUpdateForAsyncCalc(({ embeddedData, embeddedDataTimestamp, remoteDataU
         console.warn('Failed to write fresh data to file, will use it only in memory:', writeError)
       }
     } catch (error) {
-      console.error('Failed to fetch remote genai data:', error)
+      console.error('Failed to fetch remote genai-prices data:', error)
       // Try to use cached file data even if stale
       try {
         const dataStr = await fs.promises.readFile(GENAI_DATA_FILE, 'utf-8')
@@ -65,8 +65,6 @@ enableAutoUpdateForAsyncCalc(({ embeddedData, embeddedDataTimestamp, remoteDataU
 
     return dataPromise
   }
-
-  return cb
 })
 
 const result1 = calcPriceAsync({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {

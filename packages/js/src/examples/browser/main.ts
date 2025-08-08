@@ -46,14 +46,14 @@ enableAutoUpdateForSyncCalc(({ embeddedData, embeddedDataTimestamp, remoteDataUr
     return cb
   }
 
-  console.log('genai data is stale')
+  console.log('genai-prices data is stale')
 
   // at this point, we have no fresh data in the local storage, so we will fetch remote data.
   // we will use the current data (either the embedded one or the stale local storage one) as a temp fallback.
   fetch(remoteDataUrl, { cache: 'no-store' })
     .then(async (response) => {
       const freshData = (await response.json()) as Provider[]
-      console.log('updated genai data')
+      console.log('updated genai-prices data')
       try {
         localStorage.setItem(GENAI_DATA_TIMESTAMP_KEY, Date.now().toString())
         localStorage.setItem(GENAI_DATA_KEY, JSON.stringify(freshData))
@@ -63,7 +63,7 @@ enableAutoUpdateForSyncCalc(({ embeddedData, embeddedDataTimestamp, remoteDataUr
       data = freshData
     })
     .catch((error: unknown) => {
-      console.error('Failed to fetch remote genai data, using what we have:', error)
+      console.error('Failed to fetch remote genai-prices data, using what we have:', error)
       // we failed to fetch remote data, so we will use the current data as a fallback
       return cb
     })
