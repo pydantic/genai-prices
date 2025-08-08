@@ -1,5 +1,11 @@
 # @pydantic/genai-prices
 
+## 0.0.19
+
+### Patch Changes
+
+- 9e6ed8d: Add new models GPT-5 and Claude Opus 4.1
+
 ## 0.0.18
 
 ### Patch Changes
