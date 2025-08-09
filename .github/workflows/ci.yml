@@ -141,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release-npm
-      url: https://www.npmjs.com/package/@pydantic/genai-prices/v/0.0.19/${{ steps.check-package-version.outputs.VERSION }}
+      url: https://www.npmjs.com/package/@pydantic/genai-prices/v/${{ steps.check-package-version.outputs.VERSION }}
     permissions:
       id-token: write
     steps:
@@ -159,5 +159,5 @@ jobs:
           version_pattern: '"version": *"(?P<version>.+?)"'
 
       - run: npm install -g npm@latest
-
+      - run: npm install
       - run: npm publish --workspace=packages/js
