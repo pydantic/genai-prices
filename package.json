@@ -11,8 +11,6 @@
   "scripts": {
     "format": "prettier --write -- .",
     "lint": "prettier --check -- .",
-    "changeset-version": "npx @changesets/cli version; cd packages/python && npm run sync-versions",
-    "changeset-add": "npx @changesets/cli add",
     "build": "npm run build --workspace=packages/js",
     "test": "npm run test --workspace=packages/js",
     "ci": "npm run build && npm run test"
@@ -35,9 +33,6 @@
         }
       }
     ]
-  },
-  "dependencies": {
-    "@changesets/cli": "^2.29.5"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
