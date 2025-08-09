@@ -2,14 +2,6 @@
 
 Keep it simple!
 
-Set the version in the Python package:
-
-```bash
-todo
-```
-
-Set the version in the JS package:
-
-```bash
-npm version patch --workspace=packages/js
-```
+1. Run `./uprev.sh <new-version>`
+2. Commit the changes, merge with main
+3. Create a release, use GitHub to generate a changelog
