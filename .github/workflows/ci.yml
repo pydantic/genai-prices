@@ -114,7 +114,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
-      url: https://pypi.org/project/genai-prices/${{ steps.check-python-version.outputs.VERSION }}
+      url: https://pypi.org/project/genai-prices/${{ steps.check-package-version.outputs.VERSION }}
     permissions:
       id-token: write
     outputs:
@@ -126,7 +126,7 @@ jobs:
         with:
           enable-cache: true
 
-      - id: check-python-version
+      - id: check-package-version
         uses: samuelcolvin/check-python-version@v5
         with:
           version_file_path: packages/python/pyproject.toml
@@ -141,6 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release-npm
+      url: https://www.npmjs.com/package/@pydantic/genai-prices/v/0.0.19/${{ steps.check-package-version.outputs.VERSION }}
     permissions:
       id-token: write
     steps:
@@ -151,7 +152,7 @@ jobs:
           node-version: 22.x
           cache: npm
 
-      - id: check-python-version
+      - id: check-package-version
         uses: samuelcolvin/check-python-version@v5
         with:
           version_file_path: packages/js/package.json
