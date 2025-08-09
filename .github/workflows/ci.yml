@@ -160,4 +160,4 @@ jobs:
 
       - run: npm install -g npm@latest
 
-      - run: npm publish
+      - run: npm publish --workspace=packages/js

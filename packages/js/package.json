@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pydantic/genai-prices"
+    "url": "git+https://github.com/pydantic/genai-prices.git"
   },
   "author": "Pydantic Team",
   "license": "MIT",
