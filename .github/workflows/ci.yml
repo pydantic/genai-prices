@@ -22,6 +22,9 @@ jobs:
           enable-cache: true
       - run: uv sync  --all-packages
       - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
       - run: npm install
       - uses: actions/cache@v4
         with:
@@ -153,8 +156,15 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - if: steps.changesets.outputs.published == 'true'
+        name: Simplify GH release title
+        run: gh release edit "@pydantic/genai-prices@${VERSION}" --title "v${VERSION}"
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          VERSION: ${{ steps.changesets.outputs.publishedPackages[0].version }}
+
+      - if: steps.changesets.outputs.published == 'true'
         name: Sync Python version
-        run: npm run sync-versions
+        run: ./scripts/sync-versions.sh
         working-directory: packages/python
 
       - if: steps.changesets.outputs.published == 'true'
