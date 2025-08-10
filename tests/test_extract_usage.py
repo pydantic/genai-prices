@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from typing import Any
 
 import pytest
@@ -6,6 +7,20 @@ from inline_snapshot import snapshot
 from genai_prices import Usage
 from genai_prices.data import providers
 from genai_prices.types import Provider
+
+
+class MyMapping(Mapping[str, Any]):
+    def __init__(self, **data: Any):
+        self._data = data
+
+    def __getitem__(self, key: str) -> Any:
+        return self._data[key]
+
+    def __iter__(self) -> Any:
+        return iter(self._data)
+
+    def __len__(self) -> int:
+        return len(self._data)
 
 
 @pytest.mark.parametrize(
@@ -36,6 +51,10 @@ from genai_prices.types import Provider
         ),
         (
             {'model': 'x', 'usage': {'input_tokens': 504, 'output_tokens': 97, 'service_tier': 'standard'}},
+            snapshot(('x', Usage(input_tokens=504, output_tokens=97))),
+        ),
+        (
+            MyMapping(model='x', usage=MyMapping(input_tokens=504, output_tokens=97, service_tier='standard')),
             snapshot(('x', Usage(input_tokens=504, output_tokens=97))),
         ),
     ],
@@ -77,7 +96,7 @@ def test_openai():
         ({'model': None}, snapshot('Expected `model` value to be a str, got None')),
         ({'model': 'x'}, snapshot('Missing value at `usage`')),
         ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
-        ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a dict, got int')),
+        ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
         (
             {'model': 'x', 'usage': {'input_tokens': 123.0}},
             snapshot('Expected `usage.input_tokens` value to be a int, got float'),

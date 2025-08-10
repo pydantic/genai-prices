@@ -2,6 +2,7 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime, time
 from decimal import Decimal
@@ -267,10 +268,10 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        if not isinstance(response_data, dict):
+        if not isinstance(response_data, Mapping):
             raise ValueError(f'Expected response data to be a dict, got {_type_name(response_data)}')
 
-        response_data = cast(dict[str, Any], response_data)
+        response_data = cast(Mapping[str, Any], response_data)
 
         model_name = _extract_path(self.model_path, response_data, str, True, [])
 
@@ -278,7 +279,7 @@ class UsageExtractor:
         if isinstance(root, str):
             root = [root]
 
-        usage_obj = cast(dict[str, Any], _extract_path(root, response_data, dict, True, []))
+        usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
 
         usage = Usage()
         values_set = False
@@ -298,18 +299,22 @@ E = TypeVar('E')
 
 @overload
 def _extract_path(
-    path: str | list[str], data: dict[str, Any], extract_type: type[E], required: Literal[True], data_path: list[str]
+    path: str | list[str], data: Mapping[str, Any], extract_type: type[E], required: Literal[True], data_path: list[str]
 ) -> E: ...
 
 
 @overload
 def _extract_path(
-    path: str | list[str], data: dict[str, Any], extract_type: type[E], required: Literal[False], data_path: list[str]
+    path: str | list[str],
+    data: Mapping[str, Any],
+    extract_type: type[E],
+    required: Literal[False],
+    data_path: list[str],
 ) -> E | None: ...
 
 
 def _extract_path(
-    path: str | list[str], data: dict[str, Any], extract_type: type[E], required: bool, data_path: list[str]
+    path: str | list[str], data: Mapping[str, Any], extract_type: type[E], required: bool, data_path: list[str]
 ) -> E | None:
     if isinstance(path, str):
         path = [path]
@@ -327,7 +332,7 @@ def _extract_path(
             else:
                 return None
         else:
-            if not isinstance(data, dict):  # type: ignore[reportUnnecessaryIsInstance]
+            if not isinstance(data, Mapping):  # type: ignore[reportUnnecessaryIsInstance]
                 raise ValueError(
                     f'Expected `{".".join(data_path + error_path)}` value to be a dict, got {_type_name(data)}'
                 )
