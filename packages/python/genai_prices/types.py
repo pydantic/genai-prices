@@ -174,7 +174,7 @@ class Provider:
     """Logic to find a provider based on the model reference."""
     provider_match: MatchLogic | None = None
     """Logic to find a provider based on the provider identifier."""
-    extract: list[UsageExtractor] | None = None
+    extractors: list[UsageExtractor] | None = None
     """Logic to extract usage information from the provider's API responses."""
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models supported by this provider"""
@@ -185,7 +185,7 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: dict[str, Any], api_flavor: str = 'default') -> Usage:
+    def extract_usage(self, response_data: dict[str, Any], *, api_flavor: str = 'default') -> Usage:
         """Extract usage information from the provider's API responses.
 
         Args:
@@ -198,13 +198,14 @@ class Provider:
         Returns:
             Usage: The extracted usage information.
         """
-        if self.extract is None:
+        if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
         try:
-            extractor = next(e for e in self.extract if e.api_flavor == api_flavor)
+            extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
         except StopIteration as e:
-            raise ValueError(f'Failed to extract usage information: {e}') from e
+            fs = ', '.join(e.api_flavor for e in self.extractors)
+            raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
         else:
             return extractor.extract(response_data)
 

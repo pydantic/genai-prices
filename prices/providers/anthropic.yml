@@ -8,7 +8,7 @@ api_pattern: 'https://api\.anthropic\.com'
 model_match:
   contains: claude
 # https://github.com/anthropics/anthropic-sdk-python/blob/v0.62.0/src/anthropic/types/usage.py#L12
-extract:
+extractors:
   - root: usage
     mappings:
       - path: input_tokens

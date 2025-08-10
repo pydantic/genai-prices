@@ -14,7 +14,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.anthropic\\.com',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
         model_match=ClauseContains(contains='claude'),
-        extract=[
+        extractors=[
             UsageExtractor(
                 root='usage',
                 mappings=[
@@ -837,7 +837,7 @@ providers: list[Provider] = [
         ],
         model_match=ClauseContains(contains='gemini'),
         provider_match=ClauseOr(or_=[ClauseContains(contains='google'), ClauseEquals(equals='gemini')]),
-        extract=[
+        extractors=[
             UsageExtractor(
                 root='UsageMetadata',
                 mappings=[
@@ -1186,7 +1186,7 @@ providers: list[Provider] = [
         name='Groq',
         api_pattern='https://api\\.groq\\.com',
         pricing_urls=['https://groq.com/pricing/'],
-        extract=[
+        extractors=[
             UsageExtractor(
                 root='usage',
                 mappings=[
@@ -1260,7 +1260,7 @@ providers: list[Provider] = [
         pricing_urls=['https://mistral.ai/pricing#api-pricing'],
         model_match=ClauseRegex(regex='(?:mi|code|dev|magi|mini)stral'),
         provider_match=ClauseStartsWith(starts_with='mistral'),
-        extract=[
+        extractors=[
             UsageExtractor(
                 root='usage',
                 mappings=[
@@ -1676,7 +1676,7 @@ providers: list[Provider] = [
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
-        extract=[
+        extractors=[
             UsageExtractor(
                 root='usage',
                 mappings=[

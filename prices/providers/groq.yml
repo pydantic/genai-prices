@@ -6,7 +6,7 @@ pricing_urls:
 api_pattern: 'https://api\.groq\.com'
 
 # https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
-extract:
+extractors:
   - root: usage
     mappings:
       - path: prompt_tokens

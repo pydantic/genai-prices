@@ -416,13 +416,13 @@
           "description": "Logic to find a provider based on the provider identifier.",
           "title": "Provider Match"
         },
-        "extract": {
+        "extractors": {
           "items": {
             "$ref": "#/$defs/UsageExtractor"
           },
           "type": "array",
           "description": "Logic to extract usage information from the provider's API responses.",
-          "title": "Extract"
+          "title": "Extractors"
         },
         "models": {
           "description": "List of models supported by this provider",

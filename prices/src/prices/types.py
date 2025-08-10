@@ -52,12 +52,12 @@ class Provider(_Model):
     """Logic to find a provider based on the model reference."""
     provider_match: MatchLogic | None = None
     """Logic to find a provider based on the provider identifier."""
-    extract: list[UsageExtractor] | None = None
+    extractors: list[UsageExtractor] | None = None
     """Logic to extract usage information from the provider's API responses."""
     models: list[ModelInfo]
     """List of models supported by this provider"""
 
-    @field_validator('extract', mode='after')
+    @field_validator('extractors', mode='after')
     @classmethod
     def validate_extract(cls, extract: list[UsageExtractor]) -> list[UsageExtractor]:
         unique_flavors: set[str] = set()

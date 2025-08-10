@@ -10,7 +10,7 @@ model_match:
   regex: (?:mi|code|dev|magi|mini)stral
 
 # https://github.com/mistralai/client-python/blob/v1.9.3/src/mistralai/models/usageinfo.py
-extract:
+extractors:
   - root: usage
     mappings:
       - path: prompt_tokens

@@ -9,7 +9,7 @@ export const data: Provider[] = [
     model_match: {
       contains: 'claude',
     },
-    extract: [
+    extractors: [
       {
         api_flavor: 'default',
         root: 'usage',
@@ -1451,7 +1451,7 @@ export const data: Provider[] = [
         },
       ],
     },
-    extract: [
+    extractors: [
       {
         api_flavor: 'default',
         root: 'UsageMetadata',
@@ -2087,7 +2087,7 @@ export const data: Provider[] = [
     name: 'Groq',
     pricing_urls: ['https://groq.com/pricing/'],
     api_pattern: 'https://api\\.groq\\.com',
-    extract: [
+    extractors: [
       {
         api_flavor: 'default',
         root: 'usage',
@@ -2225,7 +2225,7 @@ export const data: Provider[] = [
     provider_match: {
       starts_with: 'mistral',
     },
-    extract: [
+    extractors: [
       {
         api_flavor: 'default',
         root: 'usage',
@@ -3025,7 +3025,7 @@ export const data: Provider[] = [
         },
       ],
     },
-    extract: [
+    extractors: [
       {
         api_flavor: 'chat',
         root: 'usage',
