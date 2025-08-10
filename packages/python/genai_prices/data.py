@@ -727,7 +727,7 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
-                api_flavor='default',
+                api_flavor='chat',
                 model_path='model',
             )
         ],
@@ -807,7 +807,7 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
-                api_flavor='default',
+                api_flavor='chat',
                 model_path='model',
             )
         ],
@@ -5970,7 +5970,7 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
-                api_flavor='default',
+                api_flavor='chat',
                 model_path='model',
             )
         ],

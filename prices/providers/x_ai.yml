@@ -9,7 +9,8 @@ model_match:
 
 extractors:
   # assuming this API matches OpenAI
-  - root: usage
+  - api_flavor: chat
+    root: usage
     mappings:
       - path: prompt_tokens
         dest: input_tokens

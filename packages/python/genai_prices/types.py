@@ -185,7 +185,7 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: Any, *, api_flavor: str = 'default') -> tuple[str, Usage]:
+    def extract_usage(self, response_data: Any, *, api_flavor: str | None = None) -> tuple[str, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
@@ -201,13 +201,19 @@ class Provider:
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
-        try:
-            extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
-        except StopIteration as e:
-            fs = ', '.join(e.api_flavor for e in self.extractors)
-            raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
+        if api_flavor is None:
+            if len(self.extractors) == 1:
+                extractor = self.extractors[0]
+            else:
+                raise ValueError('No api_flavor specified and multiple extractors available')
         else:
-            return extractor.extract(response_data)
+            try:
+                extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
+            except StopIteration as e:
+                fs = ', '.join(e.api_flavor for e in self.extractors)
+                raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
+
+        return extractor.extract(response_data)
 
 
 UsageField = Literal[

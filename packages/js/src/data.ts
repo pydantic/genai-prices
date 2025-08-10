@@ -1260,7 +1260,7 @@ export const data: Provider[] = [
     },
     extractors: [
       {
-        api_flavor: 'default',
+        api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
         mappings: [
@@ -1379,7 +1379,7 @@ export const data: Provider[] = [
     },
     extractors: [
       {
-        api_flavor: 'default',
+        api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
         mappings: [
@@ -10763,7 +10763,7 @@ export const data: Provider[] = [
     },
     extractors: [
       {
-        api_flavor: 'default',
+        api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
         mappings: [

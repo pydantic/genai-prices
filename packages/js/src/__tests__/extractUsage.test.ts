@@ -63,7 +63,7 @@ describe('extractUsage', () => {
       expect(openaiProvider.extractors).toBeDefined()
     })
 
-    it('should extract usage with chat api_flavor', () => {
+    it('should extract usage with chat apiFlavor', () => {
       const responseData = {
         model: 'gpt-4.1',
         usage: { prompt_tokens: 100, completion_tokens: 200 },
@@ -78,7 +78,7 @@ describe('extractUsage', () => {
       })
     })
 
-    it('should extract usage with responses api_flavor', () => {
+    it('should extract usage with responses apiFlavor', () => {
       const responseData = {
         model: 'gpt-5',
         usage: { input_tokens: 100, output_tokens: 200 },
@@ -91,6 +91,17 @@ describe('extractUsage', () => {
         input_tokens: 100,
         output_tokens: 200,
       })
+    })
+
+    it('should error if not apiFlavor is provided', () => {
+      const responseData = {
+        model: 'gpt-5',
+        usage: { input_tokens: 100, output_tokens: 200 },
+      }
+
+      expect(() => extractUsage(openaiProvider, responseData)).toThrow(
+        'No apiFlavor specified and multiple extractors available',
+      )
     })
   })
 
@@ -111,19 +122,19 @@ describe('extractUsage', () => {
     })
   })
 
-  describe('api_flavor handling', () => {
-    it('should throw error for unknown api_flavor', () => {
+  describe('apiFlavor handling', () => {
+    it('should throw error for unknown apiFlavor', () => {
       const responseData = {
         model: 'test-model',
         usage: { input_tokens: 100, output_tokens: 50 },
       }
 
       expect(() => extractUsage(anthropicProvider, responseData, 'wrong')).toThrow(
-        "Unknown api_flavor 'wrong', allowed values: default",
+        "Unknown apiFlavor 'wrong', allowed values: default",
       )
     })
 
-    it('should work with correct api_flavor', () => {
+    it('should work with correct apiFlavor', () => {
       const responseData = {
         model: 'test-model',
         usage: { input_tokens: 100, output_tokens: 50 },

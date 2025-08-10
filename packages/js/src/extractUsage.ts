@@ -1,16 +1,25 @@
-import { Provider, Usage } from './types.js'
+import { Provider, Usage, UsageExtractor } from './types.js'
 
 export function extractUsage(provider: Provider, responseData: any, apiFlavor?: string): [string, Usage] {
-  apiFlavor = apiFlavor || 'default'
-
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
+  let extractor: UsageExtractor
 
-  const extractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
-  if (!extractor) {
-    const availableFlavors = provider.extractors.map((e) => e.api_flavor).join(', ')
-    throw new Error(`Unknown api_flavor '${apiFlavor}', allowed values: ${availableFlavors}`)
+  if (!apiFlavor) {
+    if (provider.extractors.length === 1) {
+      extractor = provider.extractors[0]
+    } else {
+      throw new Error('No apiFlavor specified and multiple extractors available')
+    }
+  } else {
+    const foundExtractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
+    if (foundExtractor) {
+      extractor = foundExtractor
+    } else {
+      const availableFlavors = provider.extractors.map((e) => e.api_flavor).join(', ')
+      throw new Error(`Unknown apiFlavor '${apiFlavor}', allowed values: ${availableFlavors}`)
+    }
   }
 
   if (!mappingCheck.guard(responseData)) {

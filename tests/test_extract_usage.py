@@ -66,6 +66,9 @@ def test_openai():
     usage = provider.extract_usage(response_data, api_flavor='responses')
     assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=200)))
 
+    with pytest.raises(ValueError, match='No api_flavor specified and multiple extractors available'):
+        provider.extract_usage(response_data)
+
 
 @pytest.mark.parametrize(
     'response_data,error',
