@@ -29,7 +29,7 @@
     "build:cli": "tsc src/cli.ts --outDir dist --module nodenext --esModuleInterop --skipLibCheck",
     "postbuild": "if ! head -n1 dist/cli.js | grep -q '^#!/usr/bin/env node$'; then echo '#!/usr/bin/env node' | cat - dist/cli.js > dist/cli.tmp && mv dist/cli.tmp dist/cli.js; fi && chmod +x dist/cli.js",
     "dev": "vite build --watch",
-    "typecheck": "tsc",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "prepare": "npm run build"

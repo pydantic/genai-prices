@@ -38,8 +38,8 @@ repos:
         args: [run, format]
         language: system
         pass_filenames: false
-      - id: lint
-        name: lint
+      - id: lint-python
+        name: lint python
         entry: make
         args: [lint]
         types: [python]
@@ -75,10 +75,17 @@ repos:
         files: "prices/"
         language: system
         pass_filenames: false
-      - id: typecheck
-        name: typecheck
+      - id: typecheck-python
+        name: typecheck python
         entry: make
         args: [typecheck]
         language: system
         types: [python]
+        pass_filenames: false
+      - id: typecheck-ts
+        name: typecheck typescript
+        entry: npm
+        args: [run, typecheck]
+        language: system
+        types: [ts]
         pass_filenames: false
