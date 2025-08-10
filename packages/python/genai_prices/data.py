@@ -16,9 +16,7 @@ providers: list[Provider] = [
         model_match=ClauseContains(contains='claude'),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
@@ -27,6 +25,8 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -658,13 +658,13 @@ providers: list[Provider] = [
         model_match=ClauseStartsWith(starts_with='command-'),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root=['usage', 'billed_units'],
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -716,9 +716,7 @@ providers: list[Provider] = [
         model_match=ClauseContains(contains='deepseek'),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
@@ -729,6 +727,8 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -796,9 +796,7 @@ providers: list[Provider] = [
         model_match=ClauseStartsWith(starts_with='accounts/fireworks/models/'),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
@@ -809,6 +807,8 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -885,14 +885,14 @@ providers: list[Provider] = [
         provider_match=ClauseOr(or_=[ClauseContains(contains='google'), ClauseEquals(equals='gemini')]),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='UsageMetadata',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='cachedContentTokenCount', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -1235,13 +1235,13 @@ providers: list[Provider] = [
         pricing_urls=['https://groq.com/pricing/'],
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -1310,13 +1310,13 @@ providers: list[Provider] = [
         provider_match=ClauseStartsWith(starts_with='mistral'),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[
@@ -1727,9 +1727,7 @@ providers: list[Provider] = [
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
         extractors=[
             UsageExtractor(
-                api_flavor='chat',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
@@ -1740,11 +1738,11 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='chat',
+                model_path='model',
             ),
             UsageExtractor(
-                api_flavor='responses',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
@@ -1752,6 +1750,8 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='responses',
+                model_path='model',
             ),
         ],
         models=[
@@ -5959,9 +5959,7 @@ providers: list[Provider] = [
         model_match=ClauseContains(contains='grok'),
         extractors=[
             UsageExtractor(
-                api_flavor='default',
                 root='usage',
-                model_path='model',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
@@ -5972,6 +5970,8 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
         models=[

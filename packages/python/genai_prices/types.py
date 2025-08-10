@@ -210,7 +210,7 @@ class Provider:
             return extractor.extract(response_data)
 
 
-type UsageField = Literal[
+UsageField = Literal[
     'input_tokens',
     'cache_write_tokens',
     'cache_read_tokens',
@@ -240,14 +240,14 @@ class UsageExtractorMapping:
 class UsageExtractor:
     """Logic for extracting usage information from a response."""
 
-    api_flavor: str
-    """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     root: str | list[str]
     """Path to the root of the usage information in the response, generally `usage`."""
-    model_path: str | list[str]
-    """Path to the model name in the response."""
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
+    api_flavor: str = 'default'
+    """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
+    model_path: str | list[str] = 'model'
+    """Path to the model name in the response."""
 
     def extract(self, response_data: Any) -> tuple[str, Usage]:
         """Extract model name and usage information from a response.

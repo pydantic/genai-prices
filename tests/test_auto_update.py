@@ -18,8 +18,8 @@ def test_sync_auto_update():
     price = calc_price_sync(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai', auto_update=True
     )
-    assert price.input_price == snapshot(Decimal("0.0025"))
-    assert price.output_price == snapshot(Decimal("0.001"))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
     assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is not None
@@ -40,8 +40,8 @@ def test_sync_prefetch():
     price = calc_price_sync(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai', auto_update=True
     )
-    assert price.input_price == snapshot(Decimal("0.0025"))
-    assert price.output_price == snapshot(Decimal("0.001"))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
     assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp == IsNow(tz=None)
@@ -57,8 +57,8 @@ async def test_async_auto_update():
     price = await calc_price_async(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai', auto_update=True
     )
-    assert price.input_price == snapshot(Decimal("0.0025"))
-    assert price.output_price == snapshot(Decimal("0.001"))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
     assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp == IsNow(tz=None)
@@ -79,8 +79,8 @@ async def test_async_prefetch():
     price = await calc_price_async(
         Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai', auto_update=True
     )
-    assert price.input_price == snapshot(Decimal("0.0025"))
-    assert price.output_price == snapshot(Decimal("0.001"))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
     assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp == IsNow(tz=None)
@@ -98,8 +98,8 @@ def test_sync_auto_update_fails():
         price = calc_price_sync(
             Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai', auto_update=True
         )
-    assert price.input_price == snapshot(Decimal("0.0025"))
-    assert price.output_price == snapshot(Decimal("0.001"))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
     assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None
@@ -116,8 +116,8 @@ async def test_async_auto_update_fails():
         price = await calc_price_async(
             Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai', auto_update=True
         )
-    assert price.input_price == snapshot(Decimal("0.0025"))
-    assert price.output_price == snapshot(Decimal("0.001"))
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
     assert price.total_price == snapshot(Decimal('0.0035'))
     assert price.provider.id == snapshot('openai')
     assert price.auto_update_timestamp is None

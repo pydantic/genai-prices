@@ -1,5 +1,5 @@
-from genai_prices.sources import find_provider_by_id
 from genai_prices import data
+from genai_prices.sources import find_provider_by_id
 
 # Ensure actual_providers is a list of Provider objects
 actual_providers = list(data.providers)

@@ -30,7 +30,7 @@ members = ["prices", "packages/python"]
 [tool.ruff]
 line-length = 120
 target-version = "py39"
-include = ["prices/src/**/*.py"]
+include = ["prices/src/**/*.py", "packages/python/**/*.py", "tests/**/*.py"]
 
 [tool.ruff.lint]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
@@ -40,6 +40,9 @@ mccabe = { max-complexity = 18 }
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"packages/python/genai_prices/data.py" = ["F405", "F403"]
 
 [tool.ruff.format]
 # don't format python in docstrings, pytest-examples takes care of it
