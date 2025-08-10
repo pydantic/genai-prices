@@ -85,9 +85,7 @@ function extractPath<T>(
         return null
       }
     } else if (dataType !== 'mapping') {
-      throw new Error(
-        `Expected \`${[...dataPath, ...errorPath].join('.')}\` value to be a mapping, got ${typeName(data)}`,
-      )
+      throw new Error(`Expected \`${[...dataPath, ...errorPath].join('.')}\` value to be a mapping, got ${dataType}`)
     }
   }
 
