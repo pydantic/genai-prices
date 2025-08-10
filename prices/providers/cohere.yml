@@ -6,6 +6,17 @@ pricing_urls:
 api_pattern: 'https://api\.cohere\.ai'
 model_match:
   starts_with: "command-"
+
+# https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L13
+# and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_billed_units.py
+extractors:
+  - root: [usage, billed_units]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+
 models:
   - id: command
     name: Command

@@ -27,11 +27,16 @@ from genai_prices.types import Provider
                     'service_tier': 'standard',
                 },
             },
-            snapshot(Usage(input_tokens=504, cache_write_tokens=123, cache_read_tokens=0, output_tokens=97)),
+            snapshot(
+                (
+                    'claude-sonnet-4-20250514',
+                    Usage(input_tokens=504, cache_write_tokens=123, cache_read_tokens=0, output_tokens=97),
+                )
+            ),
         ),
         (
-            {'usage': {'input_tokens': 504, 'output_tokens': 97, 'service_tier': 'standard'}},
-            snapshot(Usage(input_tokens=504, output_tokens=97)),
+            {'model': 'x', 'usage': {'input_tokens': 504, 'output_tokens': 97, 'service_tier': 'standard'}},
+            snapshot(('x', Usage(input_tokens=504, output_tokens=97))),
         ),
     ],
 )
@@ -46,10 +51,19 @@ def test_extract_usage_ok(response_data: Any, expected: Usage):
 @pytest.mark.parametrize(
     'response_data,error',
     [
-        ({}, snapshot('Missing value at `usage`')),
-        ({'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
-        ({'usage': 123}, snapshot('Expected `usage` value to be a dict, got int')),
-        ({'usage': {'input_tokens': []}}, snapshot('Expected `usage.input_tokens` value to be a int, got list')),
+        ({}, snapshot('Missing value at `model`')),
+        ({'model': None}, snapshot('Expected `model` value to be a str, got None')),
+        ({'model': 'x'}, snapshot('Missing value at `usage`')),
+        ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
+        ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a dict, got int')),
+        (
+            {'model': 'x', 'usage': {'input_tokens': 123.0}},
+            snapshot('Expected `usage.input_tokens` value to be a int, got float'),
+        ),
+        (
+            {'model': 'x', 'usage': {'input_tokens': []}},
+            snapshot('Expected `usage.input_tokens` value to be a int, got list'),
+        ),
     ],
 )
 def test_extract_usage_error(response_data: Any, error: str):

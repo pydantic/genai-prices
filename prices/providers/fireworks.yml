@@ -7,6 +7,21 @@ api_pattern: 'https://api\.fireworks\.ai'
 model_match:
   starts_with: accounts/fireworks/models/
 
+extractors:
+  # assuming this API matches OpenAI
+  - root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
 models:
   - id: deepseek-r1-0528
     name: DeepSeek R1 0528

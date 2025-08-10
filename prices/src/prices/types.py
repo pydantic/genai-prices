@@ -139,6 +139,11 @@ class UsageExtractor(_Model):
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     root: str | list[str]
     """Path to the root of the usage information in the response, generally `usage`."""
+    model_path: str | list[str] = 'model'
+    """Path to the model name in the response.
+
+    Almost all APIs return this in the 'model' field, hence the default value.
+    """
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
 

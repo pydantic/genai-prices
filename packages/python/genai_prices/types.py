@@ -5,7 +5,7 @@ import re
 from dataclasses import dataclass
 from datetime import date, datetime, time
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast
+from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
 
 import pydantic
 from typing_extensions import TypedDict
@@ -185,8 +185,8 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: dict[str, Any], *, api_flavor: str = 'default') -> Usage:
-        """Extract usage information from the provider's API responses.
+    def extract_usage(self, response_data: dict[str, Any], *, api_flavor: str = 'default') -> tuple[str, Usage]:
+        """Extract model name and usage information from a response.
 
         Args:
             response_data: The response data from the provider's API.
@@ -196,7 +196,7 @@ class Provider:
             ValueError: If the response data is invalid or the API flavor is not found.
 
         Returns:
-            Usage: The extracted usage information.
+            tuple[str, Usage]: The extracted model name and usage information.
         """
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
@@ -240,15 +240,17 @@ class UsageExtractorMapping:
 class UsageExtractor:
     """Logic for extracting usage information from a response."""
 
+    api_flavor: str
+    """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     root: str | list[str]
     """Path to the root of the usage information in the response, generally `usage`."""
+    model_path: str | list[str]
+    """Path to the model name in the response."""
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
-    api_flavor: str = 'default'
-    """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
 
-    def extract(self, response_data: Any) -> Usage:
-        """Extract usage information from a response.
+    def extract(self, response_data: Any) -> tuple[str, Usage]:
+        """Extract model name and usage information from a response.
 
         Args:
             response_data: The response data to extract usage information from, generally the decoded JSON response.
@@ -257,12 +259,14 @@ class UsageExtractor:
             ValueError: If no usage information is found at the root.
 
         Returns:
-            Usage: The extracted usage information.
+            tuple[str, Usage]: The extracted model name and usage information.
         """
         if not isinstance(response_data, dict):
             raise ValueError(f'Expected response data to be a dict, got {_type_name(response_data)}')
 
         response_data = cast(dict[str, Any], response_data)
+
+        model_name = _extract_path(self.model_path, response_data, str, True, [])
 
         root = self.root
         if isinstance(root, str):
@@ -280,10 +284,22 @@ class UsageExtractor:
                 values_set = True
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
-        return usage
+        return model_name, usage
 
 
 E = TypeVar('E')
+
+
+@overload
+def _extract_path(
+    path: str | list[str], data: dict[str, Any], extract_type: type[E], required: Literal[True], data_path: list[str]
+) -> E: ...
+
+
+@overload
+def _extract_path(
+    path: str | list[str], data: dict[str, Any], extract_type: type[E], required: Literal[False], data_path: list[str]
+) -> E | None: ...
 
 
 def _extract_path(
@@ -329,7 +345,7 @@ def _extract_path(
 
 
 def _type_name(v: Any) -> str:
-    return type(v).__name__
+    return 'None' if v is None else type(v).__name__
 
 
 @dataclass

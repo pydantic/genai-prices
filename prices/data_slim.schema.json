@@ -555,6 +555,22 @@
           "description": "Path to the root of the usage information in the response, generally `usage`.",
           "title": "Root"
         },
+        "model_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "default": "model",
+          "description": "Path to the model name in the response.\n\nAlmost all APIs return this in the 'model' field, hence the default value.",
+          "title": "Model Path"
+        },
         "mappings": {
           "description": "Mappings from used to build usage.",
           "items": {

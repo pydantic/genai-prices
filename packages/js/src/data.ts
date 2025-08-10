@@ -13,6 +13,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'default',
         root: 'usage',
+        model_path: 'model',
         mappings: [
           {
             path: 'input_tokens',
@@ -1139,6 +1140,25 @@ export const data: Provider[] = [
     model_match: {
       starts_with: 'command-',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: ['usage', 'billed_units'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'command',
@@ -1238,6 +1258,35 @@ export const data: Provider[] = [
     model_match: {
       contains: 'deepseek',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'deepseek-chat',
@@ -1328,6 +1377,35 @@ export const data: Provider[] = [
     model_match: {
       starts_with: 'accounts/fireworks/models/',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'deepseek-r1-0528',
@@ -1455,6 +1533,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'default',
         root: 'UsageMetadata',
+        model_path: 'model',
         mappings: [
           {
             path: 'promptTokenCount',
@@ -2091,6 +2170,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'default',
         root: 'usage',
+        model_path: 'model',
         mappings: [
           {
             path: 'prompt_tokens',
@@ -2229,6 +2309,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'default',
         root: 'usage',
+        model_path: 'model',
         mappings: [
           {
             path: 'prompt_tokens',
@@ -3029,6 +3110,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'chat',
         root: 'usage',
+        model_path: 'model',
         mappings: [
           {
             path: 'prompt_tokens',
@@ -3055,6 +3137,7 @@ export const data: Provider[] = [
       {
         api_flavor: 'responses',
         root: 'usage',
+        model_path: 'model',
         mappings: [
           {
             path: 'input_tokens',
@@ -10678,6 +10761,35 @@ export const data: Provider[] = [
     model_match: {
       contains: 'grok',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'grok-2-1212',
