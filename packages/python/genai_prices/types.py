@@ -5,7 +5,7 @@ import re
 from dataclasses import dataclass
 from datetime import date, datetime, time
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, Union
+from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast
 
 import pydantic
 from typing_extensions import TypedDict
@@ -16,6 +16,8 @@ __all__ = (
     'AbstractUsage',
     'Usage',
     'Provider',
+    'UsageExtractorMapping',
+    'UsageExtractor',
     'ModelInfo',
     'ModelPrice',
     'TieredPrices',
@@ -33,6 +35,7 @@ __all__ = (
     'MatchLogic',
     'providers_schema',
 )
+
 
 # Define MatchLogic after __all__ to avoid forward reference issues
 def clause_discriminator(v: Any) -> str | None:
@@ -171,14 +174,161 @@ class Provider:
     """Logic to find a provider based on the model reference."""
     provider_match: MatchLogic | None = None
     """Logic to find a provider based on the provider identifier."""
+    extract: list[UsageExtractor] | None = None
+    """Logic to extract usage information from the provider's API responses."""
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
-    """List of models provided by this organization"""
+    """List of models supported by this provider"""
 
     def find_model(self, model_ref: str) -> ModelInfo | None:
         for model in self.models:
             if model.is_match(model_ref):
                 return model
         return None
+
+    def extract_usage(self, response_data: dict[str, Any], api_flavor: str = 'default') -> Usage:
+        """Extract usage information from the provider's API responses.
+
+        Args:
+            response_data: The response data from the provider's API.
+            api_flavor: The flavor of API used for this request.
+
+        Raises:
+            ValueError: If the response data is invalid or the API flavor is not found.
+
+        Returns:
+            Usage: The extracted usage information.
+        """
+        if self.extract is None:
+            raise ValueError('No extraction logic defined for this provider')
+
+        try:
+            extractor = next(e for e in self.extract if e.api_flavor == api_flavor)
+        except StopIteration as e:
+            raise ValueError(f'Failed to extract usage information: {e}') from e
+        else:
+            return extractor.extract(response_data)
+
+
+type UsageField = Literal[
+    'input_tokens',
+    'cache_write_tokens',
+    'cache_read_tokens',
+    'output_tokens',
+    'input_audio_tokens',
+    'cache_audio_read_tokens',
+    'output_audio_tokens',
+]
+
+
+@dataclass
+class UsageExtractorMapping:
+    """Mappings from used to build usage."""
+
+    path: str | list[str]
+    """Path to the value to extract"""
+    dest: UsageField
+    """Destination field to store the extracted value.
+
+    If multiple mappings point to the same destination, the values are summed.
+    """
+    required: bool = True
+    """Whether the value is required to be present in the response"""
+
+
+@dataclass
+class UsageExtractor:
+    """Logic for extracting usage information from a response."""
+
+    root: str | list[str]
+    """Path to the root of the usage information in the response, generally `usage`."""
+    mappings: list[UsageExtractorMapping]
+    """Mappings from used to build usage."""
+    api_flavor: str = 'default'
+    """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
+
+    def extract(self, response_data: Any) -> Usage:
+        """Extract usage information from a response.
+
+        Args:
+            response_data: The response data to extract usage information from, generally the decoded JSON response.
+
+        Raises:
+            ValueError: If no usage information is found at the root.
+
+        Returns:
+            Usage: The extracted usage information.
+        """
+        if not isinstance(response_data, dict):
+            raise ValueError(f'Expected response data to be a dict, got {_type_name(response_data)}')
+
+        response_data = cast(dict[str, Any], response_data)
+
+        root = self.root
+        if isinstance(root, str):
+            root = [root]
+
+        usage_obj = cast(dict[str, Any], _extract_path(root, response_data, dict, True, []))
+
+        usage = Usage()
+        values_set = False
+        for mapping in self.mappings:
+            value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
+            if value is not None:
+                current_value = getattr(usage, mapping.dest) or 0
+                setattr(usage, mapping.dest, current_value + value)
+                values_set = True
+        if not values_set:
+            raise ValueError(f'No usage information found at {self.root}')
+        return usage
+
+
+E = TypeVar('E')
+
+
+def _extract_path(
+    path: str | list[str], data: dict[str, Any], extract_type: type[E], required: bool, data_path: list[str]
+) -> E | None:
+    if isinstance(path, str):
+        path = [path]
+
+    *steps, last = path
+
+    error_path: list[str] = []
+    for step in steps:
+        error_path.append(step)
+        try:
+            data = data[step]
+        except KeyError:
+            if required:
+                raise ValueError(f'Missing value at `{".".join(data_path + error_path)}`')
+            else:
+                return None
+        else:
+            if not isinstance(data, dict):  # type: ignore[reportUnnecessaryIsInstance]
+                raise ValueError(
+                    f'Expected `{".".join(data_path + error_path)}` value to be a dict, got {_type_name(data)}'
+                )
+
+    try:
+        value = data[last]
+    except KeyError:
+        if required:
+            error_path.append(last)
+            raise ValueError(f'Missing value at `{".".join(data_path + error_path)}`')
+        else:
+            return None
+    else:
+        if isinstance(value, extract_type):
+            return value
+        else:
+            error_path.append(last)
+            raise ValueError(
+                f'Expected `{".".join(data_path + error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
+            )
+
+
+def _type_name(v: Any) -> str:
+    return type(v).__name__
 
 
 @dataclass

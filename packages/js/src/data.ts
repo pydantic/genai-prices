@@ -9,6 +9,34 @@ export const data: Provider[] = [
     model_match: {
       contains: 'claude',
     },
+    extract: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'claude-2',
@@ -1423,6 +1451,29 @@ export const data: Provider[] = [
         },
       ],
     },
+    extract: [
+      {
+        api_flavor: 'default',
+        root: 'UsageMetadata',
+        mappings: [
+          {
+            path: 'promptTokenCount',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cachedContentTokenCount',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'candidatesTokenCount',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'claude-3-5-haiku',
@@ -2036,6 +2087,24 @@ export const data: Provider[] = [
     name: 'Groq',
     pricing_urls: ['https://groq.com/pricing/'],
     api_pattern: 'https://api\\.groq\\.com',
+    extract: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'gemma-7b-it',
@@ -2156,6 +2225,24 @@ export const data: Provider[] = [
     provider_match: {
       starts_with: 'mistral',
     },
+    extract: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'codestral',
@@ -2938,6 +3025,55 @@ export const data: Provider[] = [
         },
       ],
     },
+    extract: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'ada',

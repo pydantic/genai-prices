@@ -19,6 +19,7 @@ from pydantic import (
     field_validator,
 )
 from pydantic_core.core_schema import FieldValidationInfo
+from typing_extensions import Literal
 
 from .utils import check_unique
 
@@ -51,8 +52,23 @@ class Provider(_Model):
     """Logic to find a provider based on the model reference."""
     provider_match: MatchLogic | None = None
     """Logic to find a provider based on the provider identifier."""
+    extract: list[UsageExtractor] | None = None
+    """Logic to extract usage information from the provider's API responses."""
     models: list[ModelInfo]
-    """List of models provided by this organization"""
+    """List of models supported by this provider"""
+
+    @field_validator('extract', mode='after')
+    @classmethod
+    def validate_extract(cls, extract: list[UsageExtractor]) -> list[UsageExtractor]:
+        unique_flavors: set[str] = set()
+        duplicates: list[str] = []
+        for extraction in extract:
+            if extraction.api_flavor in unique_flavors:
+                duplicates.append(extraction.api_flavor)
+            unique_flavors.add(extraction.api_flavor)
+        if duplicates:
+            raise ValueError(f'Duplicate extraction api_flavor: {duplicates}')
+        return extract
 
     @field_validator('models', mode='after')
     @classmethod
@@ -89,6 +105,42 @@ class Provider(_Model):
 
     def exclude_free(self):
         self.models[:] = [model for model in self.models if not model.is_free()]
+
+
+UsageField = Literal[
+    'input_tokens',
+    'cache_write_tokens',
+    'cache_read_tokens',
+    'output_tokens',
+    'input_audio_tokens',
+    'cache_audio_read_tokens',
+    'output_audio_tokens',
+]
+
+
+class UsageExtractorMapping(_Model):
+    """Mappings from used to build usage."""
+
+    path: str | list[str]
+    """Path to the value to extract"""
+    dest: UsageField
+    """Destination field to store the extracted value.
+
+    If multiple mappings point to the same destination, the values are summed.
+    """
+    required: bool = True
+    """Whether the value is required to be present in the response"""
+
+
+class UsageExtractor(_Model):
+    """Logic for extracting usage information from a response."""
+
+    api_flavor: str = 'default'
+    """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
+    root: str | list[str]
+    """Path to the root of the usage information in the response, generally `usage`."""
+    mappings: list[UsageExtractorMapping]
+    """Mappings from used to build usage."""
 
 
 class ModelInfo(_Model):

@@ -12,6 +12,20 @@ provider_match:
   or:
     - contains: google
     - equals: gemini
+
+# https://github.com/googleapis/nodejs-vertexai/blob/v1.10.0/src/types/content.ts#L465
+# Note, this suggests `promptTokenCount` and `candidatesTokenCount` are optional, but they seem to be always present
+extract:
+  - root: UsageMetadata
+    mappings:
+      - path: promptTokenCount
+        dest: input_tokens
+      - path: cachedContentTokenCount
+        dest: cache_read_tokens
+        required: false
+      - path: candidatesTokenCount
+        dest: output_tokens
+
 models:
   - id: claude-3-5-haiku
     match:
