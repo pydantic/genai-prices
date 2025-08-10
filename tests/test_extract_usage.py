@@ -54,17 +54,17 @@ def test_openai():
     assert provider.extractors is not None
     response_data = {
         'model': 'gpt-4.1',
-        'usage': {'prompt_tokens': 100, 'completion_tokens': 100},
+        'usage': {'prompt_tokens': 100, 'completion_tokens': 200},
     }
     usage = provider.extract_usage(response_data, api_flavor='chat')
-    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=100)))
+    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200)))
 
     response_data = {
         'model': 'gpt-5',
-        'usage': {'input_tokens': 100, 'output_tokens': 100},
+        'usage': {'input_tokens': 100, 'output_tokens': 200},
     }
     usage = provider.extract_usage(response_data, api_flavor='responses')
-    assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=100)))
+    assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=200)))
 
 
 @pytest.mark.parametrize(

@@ -55,6 +55,45 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('OpenAI provider', () => {
+    const openaiProvider: Provider = data.find((provider) => provider.id === 'openai')!
+
+    it('should have correct provider properties', () => {
+      expect(openaiProvider.name).toBe('OpenAI')
+      expect(openaiProvider.extractors).toBeDefined()
+    })
+
+    it('should extract usage with chat api_flavor', () => {
+      const responseData = {
+        model: 'gpt-4.1',
+        usage: { prompt_tokens: 100, completion_tokens: 200 },
+      }
+
+      const [model, usage] = extractUsage(openaiProvider, responseData, 'chat')
+
+      expect(model).toBe('gpt-4.1')
+      expect(usage).toEqual({
+        input_tokens: 100,
+        output_tokens: 200,
+      })
+    })
+
+    it('should extract usage with responses api_flavor', () => {
+      const responseData = {
+        model: 'gpt-5',
+        usage: { input_tokens: 100, output_tokens: 200 },
+      }
+
+      const [model, usage] = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(model).toBe('gpt-5')
+      expect(usage).toEqual({
+        input_tokens: 100,
+        output_tokens: 200,
+      })
+    })
+  })
+
   describe('error handling', () => {
     it.each([
       [{}, 'Missing value at `model`'],
