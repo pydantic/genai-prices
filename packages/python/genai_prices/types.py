@@ -185,7 +185,7 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: dict[str, Any], *, api_flavor: str = 'default') -> tuple[str, Usage]:
+    def extract_usage(self, response_data: Any, *, api_flavor: str = 'default') -> tuple[str, Usage]:
         """Extract model name and usage information from a response.
 
         Args:

@@ -48,6 +48,25 @@ def test_extract_usage_ok(response_data: Any, expected: Usage):
     assert usage == expected
 
 
+def test_openai():
+    provider = next(provider for provider in providers if provider.id == 'openai')
+    assert provider.name == 'OpenAI'
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'gpt-4.1',
+        'usage': {'prompt_tokens': 100, 'completion_tokens': 100},
+    }
+    usage = provider.extract_usage(response_data, api_flavor='chat')
+    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=100)))
+
+    response_data = {
+        'model': 'gpt-5',
+        'usage': {'input_tokens': 100, 'output_tokens': 100},
+    }
+    usage = provider.extract_usage(response_data, api_flavor='responses')
+    assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=100)))
+
+
 @pytest.mark.parametrize(
     'response_data,error',
     [
