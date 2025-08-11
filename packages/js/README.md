@@ -36,13 +36,13 @@ See the `src/examples/browser` directory for an example that implements a local 
 ```ts
 import { calcPrice, updatePrices } from '@pydantic/genai-prices'
 
-updatePrices(/** auto-update logic */)
+enableAutoUpdate(/** auto-update logic */)
 
 // ...
 
 // this guarantees that the latest data is used
 await waitForUpdate()
-const result = calcPrice(usage, 'gpt-3.5-turbo', { providerId: 'openai' })
+const result = calcPrice(usage, 'gpt-5', { providerId: 'openai' })
 
 console.log(
   `$${result.total_price} (input: $${result.input_price}, output: $${result.output_price})`,
@@ -124,10 +124,10 @@ npm i -g @pydantic/genai-prices
 
 ```bash
 # Basic usage
-genai-prices gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
+genai-prices gpt-5 --input-tokens 1000 --output-tokens 100
 
 # Specify provider explicitly
-genai-prices openai:gpt-3.5-turbo --input-tokens 1000 --output-tokens 100
+genai-prices openai:gpt-5 --input-tokens 1000 --output-tokens 100
 
 # List available providers and models
 genai-prices list

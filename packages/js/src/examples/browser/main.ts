@@ -1,4 +1,4 @@
-import { calcPrice, updatePrices, Provider } from '../..'
+import { calcPrice, Provider, updatePrices } from '../..'
 
 const PRICE_TTL = 1000 * 60 // * 60 * 60 * 24 // 24 hours
 
@@ -53,16 +53,16 @@ updatePrices(({ onCalc, remoteDataUrl, setProviderData }) => {
   )
 })
 
-calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {
+calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {
   providerId: 'openai',
 })
 
-calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {
+calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {
   providerId: 'openai',
 })
 
 setTimeout(() => {
-  const result = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {
+  const result = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {
     providerId: 'openai',
   })
   console.log(result)

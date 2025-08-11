@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { calcPrice, updatePrices, Provider, waitForUpdate } from '../index'
+import { calcPrice, Provider, updatePrices, waitForUpdate } from '../index'
 
 // You can bump this to a longer TTL if you want to cache the data for longer
 const PRICE_TTL = 1000 ///* 60 // * 60 * 60 * 24 // 24 hours
@@ -45,15 +45,15 @@ updatePrices(async ({ remoteDataUrl, setProviderData }) => {
 })
 
 await waitForUpdate()
-const result1 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {
+const result1 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {
   providerId: 'openai',
 })
 
-const result2 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {
+const result2 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {
   providerId: 'openai',
 })
 
-const result3 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-3.5-turbo', {
+const result3 = calcPrice({ input_tokens: 100, output_tokens: 100 }, 'gpt-5', {
   providerId: 'openai',
 })
 
