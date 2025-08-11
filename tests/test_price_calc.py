@@ -4,13 +4,13 @@ from decimal import Decimal
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, calc_price_async, calc_price_sync
+from genai_prices import Usage, calc_price
 
 pytestmark = pytest.mark.anyio
 
 
 def test_sync_success_with_provider():
-    price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
+    price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
 
     assert price.input_price == snapshot(Decimal('0.0025'))
     assert price.output_price == snapshot(Decimal('0.001'))
@@ -21,7 +21,7 @@ def test_sync_success_with_provider():
 
 
 def test_sync_success_with_url():
-    price = calc_price_sync(
+    price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=1000, cache_read_tokens=1000),
         model_ref='claude-3.5-sonnet@abc',
         provider_api_url='https://api.anthropic.com/foo/bar',
@@ -35,7 +35,7 @@ def test_sync_success_with_url():
 
 
 def test_sync_success_with_model():
-    price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o')
+    price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o')
 
     assert price.input_price == snapshot(Decimal('0.0025'))
     assert price.output_price == snapshot(Decimal('0.001'))
@@ -46,7 +46,7 @@ def test_sync_success_with_model():
 
 
 def test_sync_success_with_model_regex():
-    price = calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref='o3')
+    price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='o3')
 
     assert price.input_price == snapshot(Decimal('0.002'))
     assert price.output_price == snapshot(Decimal('0.0008'))
@@ -55,20 +55,8 @@ def test_sync_success_with_model_regex():
     assert price.provider.id == snapshot('openai')
 
 
-async def test_async_success_with_provider():
-    price = await calc_price_async(
-        Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai'
-    )
-    assert price.input_price == snapshot(Decimal('0.0025'))
-    assert price.output_price == snapshot(Decimal('0.001'))
-    assert price.total_price == snapshot(Decimal('0.0035'))
-    assert price.model.name == snapshot('gpt 4o')
-    assert price.provider.id == snapshot('openai')
-    assert price.auto_update_timestamp is None
-
-
 def test_tiered_prices():
-    price = calc_price_sync(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
+    price = calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
     # from providers/google.yml: (0.075 * 128000 + 0.15 * (500000 - 128000)) / 1_000_000 = 0.0654
 
     assert price.input_price == snapshot(Decimal('0.0654'))
@@ -80,7 +68,7 @@ def test_tiered_prices():
 
 def test_requests_kcount_prices():
     # request count defaults to 1
-    price = calc_price_sync(Usage(), model_ref='sonar', provider_id='perplexity')
+    price = calc_price(Usage(), model_ref='sonar', provider_id='perplexity')
     assert price.input_price == snapshot(Decimal('0'))
     assert price.output_price == snapshot(Decimal('0'))
     assert price.total_price == snapshot(Decimal('0.012'))
@@ -89,7 +77,7 @@ def test_requests_kcount_prices():
 
 
 def test_price_constraint_before():
-    price = calc_price_sync(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
+    price = calc_price(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
     assert price.input_price == snapshot(Decimal('0.01'))
     assert price.output_price == snapshot(Decimal('0'))
     assert price.total_price == snapshot(Decimal('0.01'))
@@ -98,7 +86,7 @@ def test_price_constraint_before():
 
 
 def test_price_constraint_after():
-    price = calc_price_sync(Usage(input_tokens=1000), model_ref='o3')
+    price = calc_price(Usage(input_tokens=1000), model_ref='o3')
     assert price.input_price == snapshot(Decimal('0.002'))
     assert price.output_price == snapshot(Decimal('0'))
     assert price.total_price == snapshot(Decimal('0.002'))
@@ -107,7 +95,7 @@ def test_price_constraint_after():
 
 
 def test_price_constraint_time_of_date():
-    price = calc_price_sync(
+    price = calc_price(
         Usage(input_tokens=100_000_000),
         model_ref='deepseek-chat',
         genai_request_timestamp=datetime(2025, 6, 1, 16, tzinfo=timezone.utc),
@@ -117,7 +105,7 @@ def test_price_constraint_time_of_date():
     assert price.total_price == snapshot(Decimal('27'))
     assert price.model.name == snapshot('DeepSeek Chat')
     assert price.provider.name == snapshot('Deepseek')
-    price = calc_price_sync(
+    price = calc_price(
         Usage(input_tokens=100_000_000),
         model_ref='deepseek-chat',
         genai_request_timestamp=datetime(2025, 6, 1, 17, tzinfo=timezone.utc),
@@ -131,22 +119,22 @@ def test_price_constraint_time_of_date():
 
 def test_provider_not_found_id():
     with pytest.raises(LookupError, match="Unable to find provider provider_id='foobar'"):
-        calc_price_sync(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='foobar')
+        calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='foobar')
 
 
 def test_provider_not_found_url():
     with pytest.raises(LookupError, match="Unable to find provider provider_api_url='foobar'"):
-        calc_price_sync(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_api_url='foobar')
+        calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_api_url='foobar')
 
 
 def test_provider_not_found_model_ref():
     with pytest.raises(LookupError, match="Unable to find provider with model matching 'llama2-70b-4096'"):
-        calc_price_sync(Usage(input_tokens=500_000), model_ref='llama2-70b-4096')
+        calc_price(Usage(input_tokens=500_000), model_ref='llama2-70b-4096')
 
 
 def test_model_not_found():
     with pytest.raises(LookupError, match="Unable to find model with model_ref='wrong' in google"):
-        calc_price_sync(Usage(input_tokens=500_000), model_ref='wrong', provider_id='google')
+        calc_price(Usage(input_tokens=500_000), model_ref='wrong', provider_id='google')
 
 
 EXAMPLES: list[tuple[str, str]] = [
@@ -200,4 +188,4 @@ EXAMPLES: list[tuple[str, str]] = [
 
 @pytest.mark.parametrize('provider,model', EXAMPLES)
 def test_models_found(provider: str, model: str):
-    calc_price_sync(Usage(input_tokens=1000, output_tokens=100), model_ref=model, provider_id=provider)
+    calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model, provider_id=provider)

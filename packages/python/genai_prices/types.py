@@ -82,7 +82,7 @@ class PriceCalculation:
     input_price: Decimal
     output_price: Decimal
     total_price: Decimal
-    provider: Provider
+    provider: Provider = dataclasses.field(repr=False)
     model: ModelInfo
     model_price: ModelPrice
     auto_update_timestamp: datetime | None

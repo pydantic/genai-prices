@@ -3,11 +3,12 @@ from __future__ import annotations as _annotations
 import argparse
 import sys
 from collections.abc import Sequence
+from contextlib import ExitStack
 from datetime import datetime
 
 import pydantic
 
-from . import Usage, __version__, calc_price_sync
+from . import Usage, __version__, calc_price, update_prices
 
 
 def cli() -> int:  # pragma: no cover
@@ -31,7 +32,7 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
         help='Model and optionally provider used: either just the model ID, e.g. "gpt-4o" or in format "<provider>:<model>" e.g. "openai:gpt-4o".',
     )
     calc_parser.add_argument(
-        '--auto-update', action='store_true', help='Whether to update the model prices from GitHub.'
+        '--update-prices', action='store_true', help='Whether to update the model prices from GitHub.'
     )
     calc_parser.add_argument(
         '--timestamp',
@@ -83,13 +84,15 @@ def calc_prices(args: argparse.Namespace) -> int:
         if args.timestamp:
             genai_request_timestamp = pydantic.TypeAdapter(datetime).validate_python(args.timestamp)
 
-        price_calc = calc_price_sync(
-            usage,
-            model_ref=model,
-            provider_id=provider_id,
-            genai_request_timestamp=genai_request_timestamp,
-            auto_update=args.auto_update,
-        )
+        with ExitStack() as exit_stack:
+            if args.update_prices:
+                exit_stack.enter_context(update_prices.UpdatePrices(wait_on_start=True))
+            price_calc = calc_price(
+                usage,
+                model_ref=model,
+                provider_id=provider_id,
+                genai_request_timestamp=genai_request_timestamp,
+            )
         w = price_calc.model.context_window
         output: list[tuple[str, str | None]] = [
             ('Provider', price_calc.provider.name),
