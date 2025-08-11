@@ -1,16 +1,11 @@
-import { calcPrice, enableAutoUpdate, Provider } from '../..'
+import { calcPrice, updatePrices, Provider } from '../..'
 
 const PRICE_TTL = 1000 * 60 // * 60 * 60 * 24 // 24 hours
 
 const GENAI_DATA_KEY = 'genai-prices-data'
 const GENAI_DATA_TIMESTAMP_KEY = 'genai-prices-timestamp'
 
-enableAutoUpdate(({ embeddedDataTimestamp, onCalc, remoteDataUrl, setProviderData }) => {
-  if (Date.now() - embeddedDataTimestamp < PRICE_TTL) {
-    console.log('genai prices data is fresh')
-    return
-  }
-
+updatePrices(({ onCalc, remoteDataUrl, setProviderData }) => {
   onCalc(() => {
     // you can implement a stale/refresh check to capture stale data and eventually set new provider data (as promise)
     console.log('calculation is happening')

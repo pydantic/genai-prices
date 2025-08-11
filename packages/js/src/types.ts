@@ -121,7 +121,6 @@ export interface PriceDataStorage {
 }
 
 export interface StorageFactoryParams {
-  embeddedDataTimestamp: number
   onCalc: (cb: () => void) => void
   remoteDataUrl: string
   setProviderData: (data: Promise<Provider[]> | Provider[]) => void

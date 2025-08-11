@@ -1,6 +1,3 @@
-export default {
-  printWidth: 140,
-  semi: false,
-  singleQuote: true,
-  trailingComma: 'es5',
-}
+import rootConfig from '../../prettier.config.mjs'
+
+export default rootConfig

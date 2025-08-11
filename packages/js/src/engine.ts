@@ -1,14 +1,4 @@
-import {
-  MatchLogic,
-  ModelInfo,
-  ModelPrice,
-  ModelPriceCalculationResult,
-  PriceCalculationResult,
-  PriceOptions,
-  Provider,
-  TieredPrices,
-  Usage,
-} from './types'
+import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, TieredPrices, Usage } from './types'
 
 function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
   if (tokens <= 0) return 0
@@ -45,7 +35,7 @@ function calcMtokPrice(price: number | TieredPrices | undefined, tokens: number 
   return calcTieredPrice(price, tokens)
 }
 
-export function calcModelPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
+export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
   let inputPrice = 0
   let outputPrice = 0
 
@@ -165,26 +155,4 @@ export function matchProvider(providers: Provider[], modelRef: string, providerI
 
 export function matchModel(models: ModelInfo[], modelRef: string): ModelInfo | undefined {
   return models.find((m) => matchLogic(m.match, modelRef))
-}
-
-export function calcPriceInternal(
-  usage: Usage,
-  modelId: string,
-  providers: Provider[],
-  options?: Omit<PriceOptions, 'awaitAutoUpdate'>
-): PriceCalculationResult {
-  const provider = matchProvider(providers, modelId, options?.providerId, options?.providerApiUrl)
-  if (!provider) return null
-  const model = matchModel(provider.models, modelId)
-  if (!model) return null
-  const timestamp = options?.timestamp ?? new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcModelPrice(usage, modelPrice)
-  return {
-    auto_update_timestamp: undefined,
-    model,
-    model_price: modelPrice,
-    provider,
-    ...priceResult,
-  }
 }

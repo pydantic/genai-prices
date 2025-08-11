@@ -1,19 +1,14 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { calcPrice, enableAutoUpdate, Provider, waitForUpdate } from '../index'
+import { calcPrice, updatePrices, Provider, waitForUpdate } from '../index'
 
 // You can bump this to a longer TTL if you want to cache the data for longer
 const PRICE_TTL = 1000 ///* 60 // * 60 * 60 * 24 // 24 hours
 
 const GENAI_DATA_FILE = path.join(process.cwd(), '.genai-prices-cache.json')
 
-enableAutoUpdate(async ({ embeddedDataTimestamp, remoteDataUrl, setProviderData }) => {
-  if (Date.now() - embeddedDataTimestamp < PRICE_TTL) {
-    console.log('genai prices data is fresh (embedded)')
-    return
-  }
-
+updatePrices(async ({ remoteDataUrl, setProviderData }) => {
   try {
     const stats = fs.statSync(GENAI_DATA_FILE)
     const fileModTime = stats.mtime.getTime()

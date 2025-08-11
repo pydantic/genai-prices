@@ -7,7 +7,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "homepage": "https://pydantic.dev/",
+  "homepage": "https://github.com/pydantic/genai-prices/",
   "bugs": {
     "url": "https://github.com/pydantic/genai-prices/issues"
   },
@@ -87,8 +87,7 @@
   "files": [
     "dist",
     "LICENSE",
-    "README.md",
-    "CHANGELOG.md"
+    "README.md"
   ],
   "license": "MIT"
 }

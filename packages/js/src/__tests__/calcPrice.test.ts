@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { ModelPrice, Usage } from '../types'
 
-import { calcModelPrice } from '../engine'
+import { calcPrice } from '../engine'
 
 describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
@@ -16,7 +16,7 @@ describe('Core Price Calculation Function', () => {
         output_mtok: 2.0, // $2.00 per million output tokens
       }
 
-      const result = calcModelPrice(usage, modelPrice)
+      const result = calcPrice(usage, modelPrice)
 
       expect(result).toMatchObject({
         input_price: 0.0015, // 1000 * 1.5 / 1_000_000
@@ -39,7 +39,7 @@ describe('Core Price Calculation Function', () => {
         output_mtok: 2.0,
       }
 
-      const result = calcModelPrice(usage, modelPrice)
+      const result = calcPrice(usage, modelPrice)
 
       expect(result).toMatchObject({
         input_price: 0.001 + 0.0001 + 0.00001, // input + cache_write + cache_read
@@ -58,7 +58,7 @@ describe('Core Price Calculation Function', () => {
         output_audio_mtok: 20.0,
       }
 
-      const result = calcModelPrice(usage, modelPrice)
+      const result = calcPrice(usage, modelPrice)
 
       expect(result).toMatchObject({
         input_price: 0.001, // 100 * 10.0 / 1_000_000
@@ -78,7 +78,7 @@ describe('Core Price Calculation Function', () => {
         requests_kcount: 0.5, // $0.50 per request
       }
 
-      const result = calcModelPrice(usage, modelPrice)
+      const result = calcPrice(usage, modelPrice)
 
       expect(result).toMatchObject({
         input_price: 0.001 + 0.0005, // input tokens + requests (0.5 / 1000)
@@ -102,7 +102,7 @@ describe('Core Price Calculation Function', () => {
         output_mtok: 2.0,
       }
 
-      const result = calcModelPrice(usage, modelPrice)
+      const result = calcPrice(usage, modelPrice)
 
       // Input: 100k at $1.0 + 50k at $0.5 = 0.1 + 0.025 = 0.125
       // Output: 50k at $2.0 = 0.1
@@ -133,7 +133,7 @@ describe('Core Price Calculation Function', () => {
         usage: { input_tokens: 1000, output_tokens: 0 } as Usage,
       },
     ])('should handle $name', ({ expected, modelPrice, usage }) => {
-      const result = calcModelPrice(usage, modelPrice)
+      const result = calcPrice(usage, modelPrice)
       expect(result).toMatchObject(expected)
     })
   })

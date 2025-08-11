@@ -26,17 +26,17 @@ if (result) {
 }
 ```
 
-### `enableAutoUpdate`
+### `updatePrices`
 
-You can optionally use `enableAutoUpdate` to implement logic that can periodically update the data used by `calcPrice`.
+You can optionally use `updatePrices` to implement logic that can periodically update the data used by `calcPrice`.
 See the `src/examples/browser` directory for an example that implements a local storage-backed auto-update and `src/examples/node-script.ts` for an example of a file-based asynchronous auto-update implementation.
 
-`calcPrice` is a synchronous function that uses the currently available data - either the bundled one, or the last data fetched from the `enableAutoUpdate` setup. To force `calcPrice` to await potential in-progress data updates that can happen in `enableAutoUpdate`, await the `waitForUpdate()` return value before calling `calcPrice`
+`calcPrice` is a synchronous function that uses the currently available data - either the bundled one, or the last data fetched from the `updatePrices` setup. To force `calcPrice` to await potential in-progress data updates that can happen in `enableAutoUpdate`, await the `waitForUpdate()` return value before calling `calcPrice`
 
 ```ts
-import { calcPrice, enableAutoUpdate } from '@pydantic/genai-prices'
+import { calcPrice, updatePrices } from '@pydantic/genai-prices'
 
-enableAutoUpdate(/** auto-update logic */)
+updatePrices(/** auto-update logic */)
 
 // ...
 

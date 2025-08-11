@@ -1,7 +1,7 @@
 import type { PriceCalculationResult, PriceOptions, Provider, StorageFactoryParams, Usage } from './types'
 
-import { data as embeddedData, dataTimestamp as embeddedDataTimestamp } from './data'
-import { calcPriceInternal } from './engine'
+import { data as embeddedData } from './data'
+import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModel, matchProvider } from './engine'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
@@ -27,9 +27,8 @@ function onCalc(cb: () => void) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function enableAutoUpdate(factory: (options: StorageFactoryParams) => any): void {
+export function updatePrices(factory: (options: StorageFactoryParams) => any): void {
   factory({
-    embeddedDataTimestamp,
     onCalc,
     remoteDataUrl: REMOTE_DATA_JSON_URL,
     setProviderData,
@@ -42,5 +41,18 @@ export function waitForUpdate() {
 
 export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
   autoUpdateCb?.()
-  return calcPriceInternal(usage, modelId, providerData, options)
+  const provider = matchProvider(providerData, modelId, options?.providerId, options?.providerApiUrl)
+  if (!provider) return null
+  const model = matchModel(provider.models, modelId)
+  if (!model) return null
+  const timestamp = options?.timestamp ?? new Date()
+  const modelPrice = getActiveModelPrice(model, timestamp)
+  const priceResult = calcPriceInternal(usage, modelPrice)
+  return {
+    auto_update_timestamp: undefined,
+    model,
+    model_price: modelPrice,
+    provider,
+    ...priceResult,
+  }
 }
