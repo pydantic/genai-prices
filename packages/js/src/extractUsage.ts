@@ -1,6 +1,6 @@
 import { Provider, Usage, UsageExtractor } from './types.js'
 
-export function extractUsage(provider: Provider, responseData: any, apiFlavor?: string): [string, Usage] {
+export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): [string, Usage] {
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
@@ -50,34 +50,35 @@ export function extractUsage(provider: Provider, responseData: any, apiFlavor?: 
 
 function extractPath<T>(
   path: string | string[],
-  data: Record<string, any>,
+  data: Record<string, unknown>,
   typeCheck: TypeCheck<T>,
   required: true,
   dataPath: string[],
 ): T
 function extractPath<T>(
   path: string | string[],
-  data: Record<string, any>,
+  data: Record<string, unknown>,
   typeCheck: TypeCheck<T>,
   required: boolean,
   dataPath: string[],
 ): T | null
 function extractPath<T>(
   path: string | string[],
-  data: Record<string, any>,
+  data: Record<string, unknown>,
   typeCheck: TypeCheck<T>,
   required: boolean,
   dataPath: string[],
 ): T | null {
   const [last, ...steps] = asArray(path).reverse()
+  let currentStepData: Record<string, unknown> = data
   steps.reverse()
 
   const errorPath: string[] = []
 
   for (const step of steps) {
     errorPath.push(step)
-    data = data[step]
-    const dataType = typeName(data)
+    currentStepData = currentStepData[step] as Record<string, unknown>
+    const dataType = typeName(currentStepData)
     if (dataType === 'undefined') {
       if (required) {
         throw new Error(`Missing value at \`${[...dataPath, ...errorPath].join('.')}\``)
@@ -89,7 +90,7 @@ function extractPath<T>(
     }
   }
 
-  const value = data[last]
+  const value = currentStepData[last]
   if (typeof value === 'undefined') {
     if (required) {
       errorPath.push(last)
@@ -109,9 +110,12 @@ function extractPath<T>(
   }
 }
 
-const asArray = (v: string | string[]): string[] => (Array.isArray(v) ? v : [v])
+function asArray(v: string | string[]): string[] {
+  // return a shallow copy of the array, otherwise the reverse calls above modify our data in-place.
+  return Array.isArray(v) ? [...v] : [v]
+}
 
-function typeName(v: any): string {
+function typeName(v: unknown): string {
   if (v === null) {
     return 'null'
   } else if (Array.isArray(v)) {
@@ -128,17 +132,17 @@ interface TypeCheck<T> {
   name: string
 }
 
-const mappingCheck: TypeCheck<Record<string, any>> = {
-  guard: (value: any): value is Record<string, any> => typeName(value) === 'mapping',
+const mappingCheck: TypeCheck<Record<string, unknown>> = {
+  guard: (value: unknown): value is Record<string, unknown> => typeName(value) === 'mapping',
   name: 'mapping',
 }
 
 const stringCheck: TypeCheck<string> = {
-  guard: (value: any): value is string => typeof value === 'string',
+  guard: (value: unknown): value is string => typeof value === 'string',
   name: 'string',
 }
 
 const numberCheck: TypeCheck<number> = {
-  guard: (value: any): value is number => typeof value === 'number',
+  guard: (value: unknown): value is number => typeof value === 'number',
   name: 'number',
 }

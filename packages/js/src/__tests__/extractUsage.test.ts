@@ -78,6 +78,28 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract usage with audio apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-4.1',
+        usage: {
+          prompt_tokens: 100,
+          completion_tokens: 200,
+          completion_tokens_details: {
+            audio_tokens: 150,
+          },
+        },
+      }
+
+      const [model, usage] = extractUsage(openaiProvider, responseData, 'chat')
+
+      expect(model).toBe('gpt-4.1')
+      expect(usage).toEqual({
+        input_tokens: 100,
+        output_tokens: 200,
+        output_audio_tokens: 150,
+      })
+    })
+
     it('should extract usage with responses apiFlavor', () => {
       const responseData = {
         model: 'gpt-5',
