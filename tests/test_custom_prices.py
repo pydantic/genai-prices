@@ -4,10 +4,12 @@ from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal
 
+import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, calc_price_sync, data, types
-from genai_prices.sources import DataSnapshot, SyncSource
+from genai_prices import Usage, calc_price, data, types
+from genai_prices.calc import DataSnapshot, set_custom_snapshot
+from genai_prices.update_prices import UpdatePrices
 
 
 @dataclass
@@ -21,7 +23,7 @@ class CustomModelPrice(types.ModelPrice):
         return price
 
 
-class AltPricesSource(SyncSource):
+class AltUpdatePrices(UpdatePrices):
     def fetch(self) -> DataSnapshot | None:
         custom_providers = [
             types.Provider(
@@ -51,7 +53,7 @@ class AltPricesSource(SyncSource):
         return DataSnapshot(providers=custom_providers, from_auto_update=False)
 
 
-class ExtraPricesSource(SyncSource):
+class ExtraUpdatePrices(UpdatePrices):
     def fetch(self) -> DataSnapshot | None:
         providers = deepcopy(data.providers)
         openai = next(provider for provider in providers if provider.id == 'openai')
@@ -90,60 +92,73 @@ class CustomUsage:
 
 
 def test_alt_source():
-    price = calc_price_sync(
-        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
-        model_ref='foobar',
-        provider_id='testing',
-        auto_update=AltPricesSource(),
-    )
-    assert price.input_price == snapshot(Decimal('1'))
-    assert price.output_price == snapshot(Decimal('2'))
-    assert price.total_price == snapshot(Decimal('3'))
-    assert price.model.name == snapshot('Foobar')
-    assert price.provider.id == snapshot('testing')
-    assert price.auto_update_timestamp is None
+    with AltUpdatePrices() as update_prices:
+        update_prices.wait()
+        price = calc_price(
+            Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+            model_ref='foobar',
+            provider_id='testing',
+        )
+        assert price.input_price == snapshot(Decimal('1'))
+        assert price.output_price == snapshot(Decimal('2'))
+        assert price.total_price == snapshot(Decimal('3'))
+        assert price.model.name == snapshot('Foobar')
+        assert price.provider.id == snapshot('testing')
+        assert price.auto_update_timestamp is None
+
+    with pytest.raises(LookupError, match="Unable to find provider provider_id='testing'"):
+        calc_price(
+            Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+            model_ref='foobar',
+            provider_id='testing',
+        )
 
 
 def test_alt_source_sausage():
-    price = calc_price_sync(
-        CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
-        model_ref='sausage',
-        provider_id='testing',
-        auto_update=AltPricesSource(),
-    )
-    assert price.input_price == snapshot(Decimal('1'))
-    assert price.output_price == snapshot(Decimal('2'))
-    assert price.total_price == snapshot(Decimal('12'))
-    assert price.model.name == snapshot('Sausage')
-    assert price.provider.id == snapshot('testing')
-    assert price.auto_update_timestamp is None
+    set_custom_snapshot(AltUpdatePrices().fetch())
+    try:
+        price = calc_price(
+            CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
+            model_ref='sausage',
+            provider_id='testing',
+        )
+        assert price.input_price == snapshot(Decimal('1'))
+        assert price.output_price == snapshot(Decimal('2'))
+        assert price.total_price == snapshot(Decimal('12'))
+        assert price.model.name == snapshot('Sausage')
+        assert price.provider.id == snapshot('testing')
+        assert price.auto_update_timestamp is None
+    finally:
+        set_custom_snapshot(None)
 
 
 def test_extra_source_normal():
-    price = calc_price_sync(
-        CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
-        model_ref='gpt-4',
-        provider_id='openai',
-        auto_update=ExtraPricesSource(),
-    )
-    assert price.input_price == snapshot(Decimal('30'))
-    assert price.output_price == snapshot(Decimal('60'))
-    assert price.total_price == snapshot(Decimal('90'))
-    assert price.model.name == snapshot('gpt 4')
-    assert price.provider.id == snapshot('openai')
-    assert price.auto_update_timestamp is None
+    with ExtraUpdatePrices() as update_prices:
+        update_prices.wait()
+        price = calc_price(
+            CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
+            model_ref='gpt-4',
+            provider_id='openai',
+        )
+        assert price.input_price == snapshot(Decimal('30'))
+        assert price.output_price == snapshot(Decimal('60'))
+        assert price.total_price == snapshot(Decimal('90'))
+        assert price.model.name == snapshot('gpt 4')
+        assert price.provider.id == snapshot('openai')
+        assert price.auto_update_timestamp is None
 
 
 def test_extra_source_sausage():
-    price = calc_price_sync(
-        CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
-        model_ref='gpt-4o',
-        provider_id='openai',
-        auto_update=ExtraPricesSource(),
-    )
-    assert price.input_price == snapshot(Decimal('1'))
-    assert price.output_price == snapshot(Decimal('2'))
-    assert price.total_price == snapshot(Decimal('12'))
-    assert price.model.name == snapshot('gpt-4o Custom')
-    assert price.provider.id == snapshot('openai')
-    assert price.auto_update_timestamp is None
+    with ExtraUpdatePrices() as update_prices:
+        update_prices.wait()
+        price = calc_price(
+            CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
+            model_ref='gpt-4o',
+            provider_id='openai',
+        )
+        assert price.input_price == snapshot(Decimal('1'))
+        assert price.output_price == snapshot(Decimal('2'))
+        assert price.total_price == snapshot(Decimal('12'))
+        assert price.model.name == snapshot('gpt-4o Custom')
+        assert price.provider.id == snapshot('openai')
+        assert price.auto_update_timestamp is None

@@ -30,20 +30,12 @@ See [the project README](https://github.com/pydantic/genai-prices?tab=readme-ov-
 
 ## Usage
 
-The library provides separated input and output pricing, giving you detailed breakdown of costs:
-
-- `price_data.total_price` - Total cost for the request
-- `price_data.input_price` - Cost for input/prompt tokens
-- `price_data.output_price` - Cost for output/completion tokens
-
-Since this library may need to make a network call to download prices, both sync and async veriants of `calc_price` are provided.
-
-### Sync API Example
+### `calc_price`
 
 ```python
-from genai_prices import Usage, calc_price_sync
+from genai_prices import Usage, calc_price
 
-price_data = calc_price_sync(
+price_data = calc_price(
     Usage(input_tokens=1000, output_tokens=100),
     model_ref='gpt-4o',
     provider_id='openai',
@@ -51,48 +43,91 @@ price_data = calc_price_sync(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
-### Async API Example
+### `extract_usage`
 
-```python
-import asyncio
+`extract_usage` can be used to extract usage data and the `model_ref` from response data,
+which in turn can be used to calculate prices:
 
-from genai_prices import Usage, calc_price_async
+```py
+from genai_prices import extract_usage
 
-async def main():
-    price_data = await calc_price_async(
-        Usage(input_tokens=1000, output_tokens=100),
-        model_ref='gpt-4o',
-        provider_id='openai',
-    )
-    print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
-
-if __name__ == '__main__':
-    asyncio.run(main())
+response_data = {
+    'model': 'claude-sonnet-4-20250514',
+    'usage': {
+        'input_tokens': 504,
+        'cache_creation_input_tokens': 123,
+        'cache_read_input_tokens': 0,
+        'output_tokens': 97,
+    },
+}
+extracted_usage = extract_usage(response_data, provider_id='anthropic')
+price = extracted_usage.calc_price()
+print(price.total_price)
 ```
 
-### Auto Update
+or with OpenAI where there are two API flavors:
 
-Both `calc_price_sync` and `calc_price_async` can be configured to auto-update by passing `auto_update=True` as an argument.
-This will cause the library to periodically check for updates to the price data.
+```py
+from genai_prices import extract_usage
+
+response_data = {
+    'model': 'gpt-5',
+    'usage': {'prompt_tokens': 100, 'completion_tokens': 200},
+}
+extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
+price = extracted_usage.calc_price()
+print(price.total_price)
+```
+
+### `UpdatePrices`
+
+`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
 
 Please note:
 
 - this functionality is explicitly opt-in
 - we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
 
-You may also pass a custom source to `auto_update` to customize auto-update behavior.
-
 At the time of writing, the `data.json` file
-downloaded by auto-update is around 26KB when compressed, so is generally very quick to download.
+downloaded by `UpdatePrices` is around 26KB when compressed, so is generally very quick to download.
 
-None-the-less, the library tries hard to avoid making a network call when the user calls
-`calc_price_sync` or `calc_price_async`:
+By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
 
-- data is cached for one hour by default
-- when the cached data is 30minutes old, the library will attempt to update the cache in the background
-- You may pre-fetch data at program startup using `genai_prices.prefetch_async()` and `genai_prices.prefetch_sync()`,
-  these are both sync methods which return immediately and update the cache in the background, the only difference is that
-  `calc_price_async` will wait for the `prefetch_async` task to complete when it is first called, and `calc_price_sync` will wait for the `prefetch_sync` concurrent future to complete when it is first called.
+Usage with `UpdatePrices` as as context manager:
+
+```py
+from genai_prices import UpdatePrices, Usage, calc_price
+
+with UpdatePrices() as update_prices:
+    update_prices.wait()  # optionally wait for prices to have updated
+    p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
+    print(p)
+```
+
+Usage with `UpdatePrices` as a simple class:
+
+```py
+from genai_prices import UpdatePrices, Usage, calc_price
+
+update_prices = UpdatePrices()
+update_prices.start(wait=True)  # start updating prices, optionally wait for prices to have updated
+p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
+print(p)
+update_prices.stop()  # stop updating prices
+```
+
+Only one `UpdatePrices` instance can be running at a time.
+
+If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
+
+```py
+from genai_prices import wait_prices_updated_sync
+
+wait_prices_updated_sync()
+...
+```
+
+Or it's async variant, `wait_prices_updated_async`.
 
 ### CLI Usage
 
