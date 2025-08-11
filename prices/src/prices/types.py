@@ -59,15 +59,16 @@ class Provider(_Model):
 
     @field_validator('extractors', mode='after')
     @classmethod
-    def validate_extract(cls, extract: list[UsageExtractor]) -> list[UsageExtractor]:
-        unique_flavors: set[str] = set()
-        duplicates: list[str] = []
-        for extraction in extract:
-            if extraction.api_flavor in unique_flavors:
-                duplicates.append(extraction.api_flavor)
-            unique_flavors.add(extraction.api_flavor)
-        if duplicates:
-            raise ValueError(f'Duplicate extraction api_flavor: {duplicates}')
+    def validate_extract(cls, extract: list[UsageExtractor] | None) -> list[UsageExtractor] | None:
+        if extract:
+            unique_flavors: set[str] = set()
+            duplicates: list[str] = []
+            for extraction in extract:
+                if extraction.api_flavor in unique_flavors:
+                    duplicates.append(extraction.api_flavor)
+                unique_flavors.add(extraction.api_flavor)
+            if duplicates:
+                raise ValueError(f'Duplicate extraction api_flavor: {duplicates}')
         return extract
 
     @field_validator('models', mode='after')
