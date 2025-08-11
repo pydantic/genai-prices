@@ -76,7 +76,8 @@ class UpdatePrices:
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         self._thread.start()
         if wait or self.wait:
-            _prices_updated.wait()
+            if not _prices_updated.wait(timeout=30):
+                raise TimeoutError('Timed out waiting for prices to be updated in the background task.')
             if self._background_exc:
                 raise self._background_exc
 
