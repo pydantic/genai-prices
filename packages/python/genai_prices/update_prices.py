@@ -59,7 +59,7 @@ class UpdatePrices:
     """The URL to fetch prices from."""
     request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
-    wait_on_start: bool = False
+    wait: bool = False
     """Whether to wait for the prices to be updated before returning from `start` or `__enter__`."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
     _thread: threading.Thread | None = field(default=None, init=False)
@@ -75,7 +75,7 @@ class UpdatePrices:
         self._background_exc = None
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         self._thread.start()
-        if wait or self.wait_on_start:
+        if wait or self.wait:
             _prices_updated.wait()
             if self._background_exc:
                 raise self._background_exc

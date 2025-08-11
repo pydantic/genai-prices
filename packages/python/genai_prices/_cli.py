@@ -3,7 +3,6 @@ from __future__ import annotations as _annotations
 import argparse
 import sys
 from collections.abc import Sequence
-from contextlib import ExitStack
 from datetime import datetime
 
 import pydantic
@@ -61,8 +60,11 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
 
     if args.command == 'calc':
         return calc_prices(args)
-    else:
+    elif args.command == 'list':
         return list_models(args)
+    else:
+        parser.print_help()
+        return 1
 
 
 def calc_prices(args: argparse.Namespace) -> int:
@@ -84,15 +86,15 @@ def calc_prices(args: argparse.Namespace) -> int:
         if args.timestamp:
             genai_request_timestamp = pydantic.TypeAdapter(datetime).validate_python(args.timestamp)
 
-        with ExitStack() as exit_stack:
-            if args.update_prices:
-                exit_stack.enter_context(update_prices.UpdatePrices(wait_on_start=True))
-            price_calc = calc_price(
-                usage,
-                model_ref=model,
-                provider_id=provider_id,
-                genai_request_timestamp=genai_request_timestamp,
-            )
+        if args.update_prices:
+            price_update = update_prices.UpdatePrices()
+            price_update.start(wait=True)
+        price_calc = calc_price(
+            usage,
+            model_ref=model,
+            provider_id=provider_id,
+            genai_request_timestamp=genai_request_timestamp,
+        )
         w = price_calc.model.context_window
         output: list[tuple[str, str | None]] = [
             ('Provider', price_calc.provider.name),

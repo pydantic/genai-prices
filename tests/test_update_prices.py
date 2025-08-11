@@ -13,7 +13,7 @@ pytestmark = pytest.mark.anyio
 @pytest.mark.vcr()
 def test_update_prices_wait_on_start():
     assert calc._custom_snapshot is None
-    with UpdatePrices(wait_on_start=True):
+    with UpdatePrices(wait=True):
         assert calc._custom_snapshot is not None
         price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
         assert price.input_price == snapshot(Decimal('0.0025'))
@@ -60,7 +60,7 @@ async def test_wait_prices_updated_async():
 def test_update_prices_failed():
     assert calc._custom_snapshot is None
     with pytest.raises(httpx.HTTPStatusError):
-        with UpdatePrices(wait_on_start=True, url='https://demo-endpoints.pydantic.workers.dev/bin?status=404'):
+        with UpdatePrices(wait=True, url='https://demo-endpoints.pydantic.workers.dev/bin?status=404'):
             assert calc._custom_snapshot is not None
 
 
