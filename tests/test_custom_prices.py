@@ -92,7 +92,8 @@ class CustomUsage:
 
 
 def test_alt_source():
-    with AltUpdatePrices(wait=True):
+    with AltUpdatePrices() as update_pries:
+        update_pries.wait()
         price = calc_price(
             Usage(input_tokens=1_000_000, output_tokens=1_000_000),
             model_ref='foobar',
@@ -132,7 +133,8 @@ def test_alt_source_sausage():
 
 
 def test_extra_source_normal():
-    with ExtraUpdatePrices(wait=True):
+    with ExtraUpdatePrices() as update_pries:
+        update_pries.wait()
         price = calc_price(
             CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
             model_ref='gpt-4',
@@ -147,7 +149,8 @@ def test_extra_source_normal():
 
 
 def test_extra_source_sausage():
-    with ExtraUpdatePrices(wait=True):
+    with ExtraUpdatePrices() as update_pries:
+        update_pries.wait()
         price = calc_price(
             CustomUsage(sausages=3, input_tokens=1_000_000, output_tokens=1_000_000),
             model_ref='gpt-4o',

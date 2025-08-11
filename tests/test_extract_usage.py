@@ -79,7 +79,7 @@ def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usag
     assert extracted_usage.usage == expected_usage
     assert extracted_usage.provider.name == 'Anthropic'
 
-    assert extracted_usage.calc_prices().total_price == expected_price
+    assert extracted_usage.calc_price().total_price == expected_price
 
 
 def test_openai():
@@ -93,12 +93,26 @@ def test_openai():
     usage = provider.extract_usage(response_data, api_flavor='chat')
     assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200)))
 
+    extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
+    assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model.name == snapshot('gpt 4.1')
+
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0018'))
+
     response_data = {
         'model': 'gpt-5',
         'usage': {'input_tokens': 100, 'output_tokens': 200},
     }
     usage = provider.extract_usage(response_data, api_flavor='responses')
     assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=200)))
+
+    extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='responses')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
+    assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model.name == snapshot('GPT-5')
+
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.002125'))
 
     with pytest.raises(ValueError, match='No api_flavor specified and multiple extractors available'):
         provider.extract_usage(response_data)

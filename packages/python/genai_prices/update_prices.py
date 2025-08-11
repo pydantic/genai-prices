@@ -19,7 +19,7 @@ __all__ = (
 
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
-_prices_updated = threading.Event()
+_global_update_prices: UpdatePrices | None = None
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -31,7 +31,9 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     Returns:
         True if prices were updated, False otherwise.
     """
-    return _prices_updated.wait(timeout)
+    if _global_update_prices:
+        return _global_update_prices.wait(timeout)
+    return False
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
@@ -59,37 +61,64 @@ class UpdatePrices:
     """The URL to fetch prices from."""
     request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
-    wait: bool = False
-    """Whether to wait for the prices to be updated before returning from `start` or `__enter__`."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
+    _prices_updated: threading.Event = field(default_factory=threading.Event)
     _thread: threading.Thread | None = field(default=None, init=False)
     _background_exc: Exception | None = field(default=None, init=False)
 
-    def start(self, wait: bool = False):
-        """Start the background task."""
+    def start(self, *, wait: bool | float = False):
+        """Start the background task.
+
+        Args:
+            wait: Whether to wait for the prices to be updated before returning, if an int is passed
+                wait for that many seconds, if `True` wait for 30 seconds.
+        """
+        global _global_update_prices
+
         if self._thread is not None:
             raise RuntimeError('UpdatePrices background task already started')
 
-        _prices_updated.clear()
+        if _global_update_prices is not None:
+            raise RuntimeError(
+                'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+            )
+
+        _global_update_prices = self
+        self._prices_updated.clear()
         self._stop_event.clear()
         self._background_exc = None
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         self._thread.start()
-        if wait or self.wait:
-            if not _prices_updated.wait(timeout=30):
-                raise TimeoutError('Timed out waiting for prices to be updated in the background task.')
-            if self._background_exc:
-                raise self._background_exc
+        if wait:
+            self.wait(timeout=30 if wait is True else wait)
+
+    def wait(self, timeout: float | None = None) -> bool:
+        """Wait for the prices to be updated in the background task.
+
+        Args:
+            timeout: The maximum time to wait for the prices to be updated in seconds.
+        """
+        prices_updated = self._prices_updated.wait(timeout=timeout)
+        if self._background_exc:
+            exc = self._background_exc
+            self._background_exc = None
+            raise exc
+        return prices_updated
 
     def stop(self):
         """Stop the background task."""
+        global _global_update_prices
+
+        _global_update_prices = None
         calc.set_custom_snapshot(None)
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
-            if self._background_exc:
-                raise self._background_exc
+        if self._background_exc:
+            exc = self._background_exc
+            self._background_exc = None
+            raise exc
 
     def __enter__(self):
         self.start()
@@ -99,17 +128,19 @@ class UpdatePrices:
         self.stop()
 
     def _background_task(self) -> None:
+        logger.info('Starting genai-prices background task')
         try:
-            self._update_prices()
-            _prices_updated.set()
             while True:
+                self._update_prices()
+                self._prices_updated.set()
                 if self._stop_event.wait(self.update_interval):
                     break
-                self._update_prices()
         except Exception as e:
-            _prices_updated.set()
-            logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
             self._background_exc = e
+            self._prices_updated.set()
+            logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+        else:
+            logger.info('genai-prices background task stopped')
 
     def _update_prices(self):
         start = time()

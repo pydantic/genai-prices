@@ -59,11 +59,15 @@ def calc_price(
 
 
 @overload
-def extract_usage(response_data: Any, *, provider_id: types.ProviderID | str) -> types.ExtractedUsage: ...
+def extract_usage(
+    response_data: Any, *, provider_id: types.ProviderID | str, api_flavor: str | None = None
+) -> types.ExtractedUsage: ...
 
 
 @overload
-def extract_usage(response_data: Any, *, provider_api_url: str) -> types.ExtractedUsage: ...
+def extract_usage(
+    response_data: Any, *, provider_api_url: str, api_flavor: str | None = None
+) -> types.ExtractedUsage: ...
 
 
 def extract_usage(
@@ -71,6 +75,7 @@ def extract_usage(
     *,
     provider_id: types.ProviderID | str | None = None,
     provider_api_url: str | None = None,
+    api_flavor: str | None = None,
 ) -> types.ExtractedUsage:
     """Extract usage information from a response.
 
@@ -81,8 +86,9 @@ def extract_usage(
         provider: The provider to extract usage information for.
         provider_id: The ID of the provider to extract usage information for.
         provider_api_url: The API URL of the provider to extract usage information for.
+        api_flavor: The API flavor of the provider to extract usage information for.
 
     Returns:
         The extracted usage information, model ref and provider used.
     """
-    return calc.get_snapshot().extract_usage(response_data, provider_id, provider_api_url)
+    return calc.get_snapshot().extract_usage(response_data, provider_id, provider_api_url, api_flavor)

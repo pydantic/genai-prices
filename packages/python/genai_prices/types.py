@@ -107,7 +107,7 @@ class ExtractedUsage:
     provider: Provider = dataclasses.field(repr=False)
     auto_update_timestamp: datetime | None
 
-    def calc_prices(self, genai_request_timestamp: datetime | None = None) -> PriceCalculation:
+    def calc_price(self, genai_request_timestamp: datetime | None = None) -> PriceCalculation:
         return self.model.calc_price(
             self.usage,
             self.provider,

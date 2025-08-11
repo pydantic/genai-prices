@@ -69,9 +69,10 @@ class DataSnapshot:
         response_data: Any,
         provider_id: types.ProviderID | str | None = None,
         provider_api_url: str | None = None,
+        api_flavor: str | None = None,
     ) -> types.ExtractedUsage:
         provider = self.find_provider(None, provider_id, provider_api_url)
-        model_ref, usage = provider.extract_usage(response_data)
+        model_ref, usage = provider.extract_usage(response_data, api_flavor=api_flavor)
         _, model = self.find_provider_model(model_ref, provider, None, None)
         return types.ExtractedUsage(usage, model, provider, self.timestamp if self.from_auto_update else None)
 
