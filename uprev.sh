@@ -13,3 +13,6 @@ make sync
 
 echo "setting JS package version to $1"
 npm version --workspace=packages/js $1
+
+git checkout -b "release/$1"
+git commit -am "prep release of v0.0.21"

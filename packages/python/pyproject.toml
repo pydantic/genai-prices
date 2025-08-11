@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "genai-prices"
-version = "0.0.20"
+version = "0.0.21"
 description = "Calculate prices for calling LLM inference APIs."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
