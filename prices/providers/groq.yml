@@ -4,6 +4,16 @@ id: groq
 pricing_urls:
   - https://groq.com/pricing/
 api_pattern: 'https://api\.groq\.com'
+
+# https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
+extractors:
+  - root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: completion_tokens
+        dest: output_tokens
+
 models:
   - id: gemma-7b-it
     match:

@@ -2,8 +2,8 @@ from __future__ import annotations as _annotations
 
 import argparse
 import sys
+from collections.abc import Sequence
 from datetime import datetime
-from typing import Sequence
 
 import pydantic
 

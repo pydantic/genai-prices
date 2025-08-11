@@ -12,6 +12,33 @@ model_match:
     - starts_with: "gpt-"
     - regex: "^o[134]"
 
+extractors:
+  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/completion_usage.py
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/responses/response_usage.py
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+
 models:
   - id: ada
     match:

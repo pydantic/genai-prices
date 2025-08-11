@@ -10,3 +10,4 @@ export {
 } from './dataLoader.js'
 export { matchProvider, matchModel } from './matcher.js'
 export type { Usage, PriceCalculation, PriceCalculationResult, Provider, ModelInfo, CalcPrice } from './types.js'
+export { extractUsage } from './extractUsage.js'

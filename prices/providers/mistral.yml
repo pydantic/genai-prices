@@ -8,6 +8,16 @@ provider_match:
   starts_with: mistral
 model_match:
   regex: (?:mi|code|dev|magi|mini)stral
+
+# https://github.com/mistralai/client-python/blob/v1.9.3/src/mistralai/models/usageinfo.py
+extractors:
+  - root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: completion_tokens
+        dest: output_tokens
+
 models:
   - id: codestral
     name: Codestral

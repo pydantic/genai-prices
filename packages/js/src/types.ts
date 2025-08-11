@@ -54,6 +54,25 @@ export type MatchLogic =
   | { or: MatchLogic[] }
   | { and: MatchLogic[] }
 
+export interface UsageExtractorMapping {
+  path: string | string[]
+  dest:
+    | 'input_tokens'
+    | 'cache_write_tokens'
+    | 'cache_read_tokens'
+    | 'output_tokens'
+    | 'input_audio_tokens'
+    | 'cache_audio_read_tokens'
+    | 'output_audio_tokens'
+  required: boolean
+}
+export interface UsageExtractor {
+  root: string | string[]
+  mappings: UsageExtractorMapping[]
+  api_flavor: string
+  model_path: string | string[]
+}
+
 export interface ModelInfo {
   id: string
   match: MatchLogic
@@ -74,6 +93,7 @@ export interface Provider {
   model_match?: MatchLogic
   provider_match?: MatchLogic
   models: ModelInfo[]
+  extractors?: UsageExtractor[]
 }
 
 export interface CalcPrice {

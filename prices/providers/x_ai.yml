@@ -6,6 +6,23 @@ pricing_urls:
 api_pattern: 'https://api\.x\.ai'
 model_match:
   contains: grok
+
+extractors:
+  # assuming this API matches OpenAI
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
 models:
   - id: grok-2-1212
     name: Grok 2 1212

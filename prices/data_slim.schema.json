@@ -416,8 +416,16 @@
           "description": "Logic to find a provider based on the provider identifier.",
           "title": "Provider Match"
         },
+        "extractors": {
+          "items": {
+            "$ref": "#/$defs/UsageExtractor"
+          },
+          "type": "array",
+          "description": "Logic to extract usage information from the provider's API responses.",
+          "title": "Extractors"
+        },
         "models": {
-          "description": "List of models provided by this organization",
+          "description": "List of models supported by this provider",
           "items": {
             "$ref": "#/$defs/ModelInfo"
           },
@@ -520,6 +528,110 @@
         "end_time"
       ],
       "title": "TimeOfDateConstraint",
+      "type": "object"
+    },
+    "UsageExtractor": {
+      "additionalProperties": false,
+      "description": "Logic for extracting usage information from a response.",
+      "properties": {
+        "api_flavor": {
+          "default": "default",
+          "description": "Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`.",
+          "title": "Api Flavor",
+          "type": "string"
+        },
+        "root": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Path to the root of the usage information in the response, generally `usage`.",
+          "title": "Root"
+        },
+        "model_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "default": "model",
+          "description": "Path to the model name in the response.\n\nAlmost all APIs return this in the 'model' field, hence the default value.",
+          "title": "Model Path"
+        },
+        "mappings": {
+          "description": "Mappings from used to build usage.",
+          "items": {
+            "$ref": "#/$defs/UsageExtractorMapping"
+          },
+          "title": "Mappings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "root",
+        "mappings"
+      ],
+      "title": "UsageExtractor",
+      "type": "object"
+    },
+    "UsageExtractorMapping": {
+      "additionalProperties": false,
+      "description": "Mappings from used to build usage.",
+      "properties": {
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Path to the value to extract",
+          "title": "Path"
+        },
+        "dest": {
+          "description": "Destination field to store the extracted value.\n\nIf multiple mappings point to the same destination, the values are summed.",
+          "enum": [
+            "input_tokens",
+            "cache_write_tokens",
+            "cache_read_tokens",
+            "output_tokens",
+            "input_audio_tokens",
+            "cache_audio_read_tokens",
+            "output_audio_tokens"
+          ],
+          "title": "Dest",
+          "type": "string"
+        },
+        "required": {
+          "default": true,
+          "description": "Whether the value is required to be present in the response",
+          "title": "Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "path",
+        "dest"
+      ],
+      "title": "UsageExtractorMapping",
       "type": "object"
     }
   },

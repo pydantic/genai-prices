@@ -7,6 +7,20 @@ api_pattern: 'https://api\.anthropic\.com'
 # see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
 model_match:
   contains: claude
+# https://github.com/anthropics/anthropic-sdk-python/blob/v0.62.0/src/anthropic/types/usage.py#L12
+extractors:
+  - root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
 models:
   - id: claude-2
     name: Claude 2.0 / 2.1
