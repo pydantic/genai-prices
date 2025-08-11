@@ -1,24 +1,27 @@
-import { describe, it, expect } from 'vitest'
-import { extractUsage } from '../index.js'
-import type { Provider } from '../types.js'
-import { data } from '../data.js'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { describe, expect, it } from 'vitest'
 
-const anthropicProvider: Provider = data[0]
+import type { Provider } from '../types.js'
+
+import { data } from '../data.js'
+import { extractUsage } from '../index.js'
+
+const anthropicProvider: Provider = data[0]!
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
     it('should extract usage with cache tokens', () => {
       const responseData = {
         id: 'msg_0152tnC3YpjyASTB9qxqDJXu',
-        type: 'message',
-        role: 'assistant',
         model: 'claude-sonnet-4-20250514',
+        role: 'assistant',
         stop_reason: 'tool_use',
         stop_sequence: null,
+        type: 'message',
         usage: {
-          input_tokens: 504,
           cache_creation_input_tokens: 123,
           cache_read_input_tokens: 0,
+          input_tokens: 504,
           output_tokens: 97,
           service_tier: 'standard',
         },
@@ -28,9 +31,9 @@ describe('extractUsage', () => {
 
       expect(model).toBe('claude-sonnet-4-20250514')
       expect(usage).toEqual({
-        input_tokens: 504,
-        cache_write_tokens: 123,
         cache_read_tokens: 0,
+        cache_write_tokens: 123,
+        input_tokens: 504,
         output_tokens: 97,
       })
     })
@@ -66,7 +69,7 @@ describe('extractUsage', () => {
     it('should extract usage with chat apiFlavor', () => {
       const responseData = {
         model: 'gpt-4.1',
-        usage: { prompt_tokens: 100, completion_tokens: 200 },
+        usage: { completion_tokens: 200, prompt_tokens: 100 },
       }
 
       const [model, usage] = extractUsage(openaiProvider, responseData, 'chat')
@@ -82,11 +85,11 @@ describe('extractUsage', () => {
       const responseData = {
         model: 'gpt-4.1',
         usage: {
-          prompt_tokens: 100,
           completion_tokens: 200,
           completion_tokens_details: {
             audio_tokens: 150,
           },
+          prompt_tokens: 100,
         },
       }
 
@@ -95,8 +98,8 @@ describe('extractUsage', () => {
       expect(model).toBe('gpt-4.1')
       expect(usage).toEqual({
         input_tokens: 100,
-        output_tokens: 200,
         output_audio_tokens: 150,
+        output_tokens: 200,
       })
     })
 
@@ -121,9 +124,7 @@ describe('extractUsage', () => {
         usage: { input_tokens: 100, output_tokens: 200 },
       }
 
-      expect(() => extractUsage(openaiProvider, responseData)).toThrow(
-        'No apiFlavor specified and multiple extractors available',
-      )
+      expect(() => extractUsage(openaiProvider, responseData)).toThrow('No apiFlavor specified and multiple extractors available')
     })
   })
 
@@ -134,10 +135,7 @@ describe('extractUsage', () => {
       [{ model: 'x' }, 'Missing value at `usage`'],
       [{ model: 'x', usage: {} }, 'Missing value at `usage.input_tokens`'],
       [{ model: 'x', usage: 123 }, 'Expected `usage` value to be a mapping, got number'],
-      [
-        { model: 'x', usage: { input_tokens: 'not-a-number' } },
-        'Expected `usage.input_tokens` value to be a number, got string',
-      ],
+      [{ model: 'x', usage: { input_tokens: 'not-a-number' } }, 'Expected `usage.input_tokens` value to be a number, got string'],
       [{ model: 'x', usage: { input_tokens: [] } }, 'Expected `usage.input_tokens` value to be a number, got array'],
     ])('should throw error for invalid data: %j', (responseData, expectedError) => {
       expect(() => extractUsage(anthropicProvider, responseData)).toThrow(expectedError)
@@ -151,9 +149,7 @@ describe('extractUsage', () => {
         usage: { input_tokens: 100, output_tokens: 50 },
       }
 
-      expect(() => extractUsage(anthropicProvider, responseData, 'wrong')).toThrow(
-        "Unknown apiFlavor 'wrong', allowed values: default",
-      )
+      expect(() => extractUsage(anthropicProvider, responseData, 'wrong')).toThrow("Unknown apiFlavor 'wrong', allowed values: default")
     })
 
     it('should work with correct apiFlavor', () => {
@@ -175,10 +171,10 @@ describe('extractUsage', () => {
   describe('provider without extractors', () => {
     it('should throw error when no extraction logic is defined', () => {
       const providerWithoutExtractors: Provider = {
-        id: 'test',
-        name: 'Test',
         api_pattern: 'x',
+        id: 'test',
         models: [],
+        name: 'Test',
       }
 
       const responseData = {
@@ -186,9 +182,7 @@ describe('extractUsage', () => {
         usage: { input_tokens: 100, output_tokens: 50 },
       }
 
-      expect(() => extractUsage(providerWithoutExtractors, responseData)).toThrow(
-        'No extraction logic defined for this provider',
-      )
+      expect(() => extractUsage(providerWithoutExtractors, responseData)).toThrow('No extraction logic defined for this provider')
     })
   })
 })

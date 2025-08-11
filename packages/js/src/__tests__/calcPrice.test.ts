@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest'
-import { calcPrice } from '../priceCalc.js'
-import type { Usage, ModelPrice } from '../types.js'
+import { describe, expect, it } from 'vitest'
+
+import type { ModelPrice, Usage } from '../types'
+
+import { calcPrice } from '../engine'
 
 describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
@@ -25,15 +27,15 @@ describe('Core Price Calculation Function', () => {
 
     it('should handle cache tokens as input costs', () => {
       const usage: Usage = {
-        input_tokens: 1000,
-        cache_write_tokens: 200,
         cache_read_tokens: 100,
+        cache_write_tokens: 200,
+        input_tokens: 1000,
         output_tokens: 500,
       }
       const modelPrice: ModelPrice = {
-        input_mtok: 1.0,
-        cache_write_mtok: 0.5,
         cache_read_mtok: 0.1,
+        cache_write_mtok: 0.5,
+        input_mtok: 1.0,
         output_mtok: 2.0,
       }
 
@@ -94,7 +96,7 @@ describe('Core Price Calculation Function', () => {
         input_mtok: {
           base: 1.0,
           tiers: [
-            { start: 100000, price: 0.5 }, // $0.50 per million after 100k
+            { price: 0.5, start: 100000 }, // $0.50 per million after 100k
           ],
         },
         output_mtok: 2.0,
@@ -113,24 +115,24 @@ describe('Core Price Calculation Function', () => {
 
     it.each([
       {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
         name: 'zero tokens',
         usage: { input_tokens: 0, output_tokens: 0 } as Usage,
-        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
-        expected: { input_price: 0, output_price: 0, total_price: 0 },
       },
       {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
         name: 'undefined tokens',
         usage: {} as Usage,
-        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
-        expected: { input_price: 0, output_price: 0, total_price: 0 },
       },
       {
+        expected: { input_price: 0.001, output_price: 0, total_price: 0.001 },
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
         name: 'mixed zero and defined tokens',
         usage: { input_tokens: 1000, output_tokens: 0 } as Usage,
-        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
-        expected: { input_price: 0.001, output_price: 0, total_price: 0.001 },
       },
-    ])('should handle $name', ({ usage, modelPrice, expected }) => {
+    ])('should handle $name', ({ expected, modelPrice, usage }) => {
       const result = calcPrice(usage, modelPrice)
       expect(result).toMatchObject(expected)
     })

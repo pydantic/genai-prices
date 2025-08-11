@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest'
-import { matchProvider } from '../matcher.js'
-import { data } from '../data.js'
+import { describe, expect, it } from 'vitest'
+
+import { data } from '../data'
+import { matchProvider } from '../engine'
 
 const actualProviders = data
 

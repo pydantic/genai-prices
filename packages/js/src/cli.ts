@@ -1,22 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-conversion */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { calcPriceSync, calcPriceAsync, enableAutoUpdate } from './index.js'
-import type { Provider } from './types.js'
+
+import type { Provider } from './types'
+
+import { data as embeddedData } from './data'
+import { calcPrice } from './index'
 
 interface Argv {
-  _: (string | number)[]
   $0: string
+  _: (number | string)[]
   'auto-update'?: boolean
   autoUpdate?: boolean
-  provider?: string
-  model?: string | string[]
-  'input-tokens'?: number
-  'cache-write-tokens'?: number
-  'cache-read-tokens'?: number
-  'output-tokens'?: number
-  'input-audio-tokens'?: number
   'cache-audio-read-tokens'?: number
+  'cache-read-tokens'?: number
+  'cache-write-tokens'?: number
+  'input-audio-tokens'?: number
+  'input-tokens'?: number
+  model?: string | string[]
   'output-audio-tokens'?: number
+  'output-tokens'?: number
+  provider?: string
   requests?: number
   timestamp?: string
 }
@@ -24,11 +29,11 @@ interface Argv {
 const argv = yargs(hideBin(process.argv))
   .scriptName('genai-prices')
   .command('list [provider]', 'List providers and models', (y) =>
-    y.positional('provider', { type: 'string', describe: 'Provider ID to filter' }),
+    y.positional('provider', { describe: 'Provider ID to filter', type: 'string' })
   )
   .command('calc <model...>', 'Calculate price', (y) =>
     y
-      .positional('model', { type: 'string', describe: 'Model(s) (optionally provider:model)', array: true })
+      .positional('model', { array: true, describe: 'Model(s) (optionally provider:model)', type: 'string' })
       .option('input-tokens', { type: 'number' })
       .option('cache-write-tokens', { type: 'number' })
       .option('cache-read-tokens', { type: 'number' })
@@ -38,10 +43,10 @@ const argv = yargs(hideBin(process.argv))
       .option('output-audio-tokens', { type: 'number' })
       .option('requests', { type: 'number' })
       .option('provider', { type: 'string' })
-      .option('auto-update', { type: 'boolean', default: false })
-      .option('timestamp', { type: 'string', describe: 'RFC3339 timestamp' }),
+      .option('auto-update', { default: false, type: 'boolean' })
+      .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
   )
-  .option('auto-update', { type: 'boolean', describe: 'Enable auto-update from GitHub' })
+  .option('auto-update', { describe: 'Enable auto-update from GitHub', type: 'boolean' })
   .option('input-tokens', { type: 'number' })
   .option('cache-write-tokens', { type: 'number' })
   .option('cache-read-tokens', { type: 'number' })
@@ -51,56 +56,30 @@ const argv = yargs(hideBin(process.argv))
   .option('output-audio-tokens', { type: 'number' })
   .option('requests', { type: 'number' })
   .option('provider', { type: 'string' })
-  .option('timestamp', { type: 'string', describe: 'RFC3339 timestamp' })
+  .option('timestamp', { describe: 'RFC3339 timestamp', type: 'string' })
   .version('0.1.0')
   .help()
   .parseSync() as Argv
 
-async function main() {
-  if (argv['auto-update']) enableAutoUpdate()
-
+function main() {
   // Handle list command
   if (argv._[0] === 'list') {
-    if (argv['auto-update']) {
-      const { getProvidersAsync } = await import('./dataLoader.js')
-      const providers: Provider[] = await getProvidersAsync()
-      if (argv.provider) {
-        const p = providers.find((p: Provider) => p.id === argv.provider)
-        if (!p) {
-          console.error(`Provider ${argv.provider} not found.`)
-          process.exit(1)
-        }
-        console.log(`${p.name}: (${p.models.length} models)`)
-        for (const m of p.models) {
-          console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`)
-        }
-      } else {
-        for (const p of providers) {
-          console.log(`${p.name}: (${p.models.length} models)`)
-          for (const m of p.models) {
-            console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`)
-          }
-        }
+    const providers = embeddedData
+    if (argv.provider) {
+      const p = providers.find((p: Provider) => p.id === argv.provider)
+      if (!p) {
+        console.error(`Provider ${argv.provider} not found.`)
+        process.exit(1)
+      }
+      console.log(`${p.name}: (${p.models.length} models)`)
+      for (const m of p.models) {
+        console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`)
       }
     } else {
-      const { getProvidersSync } = await import('./dataLoader.js')
-      const providers: Provider[] = getProvidersSync()
-      if (argv.provider) {
-        const p = providers.find((p: Provider) => p.id === argv.provider)
-        if (!p) {
-          console.error(`Provider ${argv.provider} not found.`)
-          process.exit(1)
-        }
+      for (const p of providers) {
         console.log(`${p.name}: (${p.models.length} models)`)
         for (const m of p.models) {
           console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`)
-        }
-      } else {
-        for (const p of providers) {
-          console.log(`${p.name}: (${p.models.length} models)`)
-          for (const m of p.models) {
-            console.log(`  ${p.id}:${m.id}${m.name ? ': ' + m.name : ''}`)
-          }
         }
       }
     }
@@ -109,44 +88,39 @@ async function main() {
 
   // Handle calc command or direct model names
   const isCalcCommand = argv._[0] === 'calc'
-  const models = isCalcCommand
-    ? Array.isArray(argv.model)
-      ? argv.model
-      : [argv.model]
-    : (argv._.filter((arg) => typeof arg === 'string') as string[])
+  const models = isCalcCommand ? (Array.isArray(argv.model) ? argv.model : [argv.model]) : argv._.filter((arg) => typeof arg === 'string')
 
   if (models.length > 0) {
     const usage = {
-      input_tokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
-      cache_write_tokens: argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
+      cache_audio_read_tokens: argv['cache-audio-read-tokens'] !== undefined ? Number(argv['cache-audio-read-tokens']) : undefined,
       cache_read_tokens: argv['cache-read-tokens'] !== undefined ? Number(argv['cache-read-tokens']) : undefined,
-      output_tokens: argv['output-tokens'] !== undefined ? Number(argv['output-tokens']) : undefined,
+      cache_write_tokens: argv['cache-write-tokens'] !== undefined ? Number(argv['cache-write-tokens']) : undefined,
       input_audio_tokens: argv['input-audio-tokens'] !== undefined ? Number(argv['input-audio-tokens']) : undefined,
-      cache_audio_read_tokens:
-        argv['cache-audio-read-tokens'] !== undefined ? Number(argv['cache-audio-read-tokens']) : undefined,
+      input_tokens: argv['input-tokens'] !== undefined ? Number(argv['input-tokens']) : undefined,
       output_audio_tokens: argv['output-audio-tokens'] !== undefined ? Number(argv['output-audio-tokens']) : undefined,
-      requests: argv['requests'] !== undefined ? Number(argv['requests']) : undefined,
+      output_tokens: argv['output-tokens'] !== undefined ? Number(argv['output-tokens']) : undefined,
+      requests: argv.requests !== undefined ? Number(argv.requests) : undefined,
     }
     const timestamp = argv.timestamp ? new Date(String(argv.timestamp)) : undefined
-    const fn = argv['auto-update'] ? calcPriceAsync : calcPriceSync
     let hadError = false
     for (const modelArg of models) {
       let providerId: string | undefined
-      let modelRef = modelArg as string
-      if (modelRef.includes(':')) {
-        ;[providerId, modelRef] = modelRef.split(':', 2)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      let modelId = modelArg!
+      if (modelId.includes(':')) {
+        ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
       }
       try {
-        const result = await fn(usage, modelRef, { providerId, timestamp })
+        const result = calcPrice(usage, modelId, { providerId, timestamp })
         if (!result) {
           hadError = true
           console.error(`No price found for model ${modelArg}`)
           continue
         }
         const w = result.model.context_window
-        const output: [string, string | number | undefined][] = [
+        const output: [string, number | string | undefined][] = [
           ['Provider', result.provider.name],
-          ['Model', result.model.name || result.model.id],
+          ['Model', result.model.name ?? result.model.id],
           ['Model Prices', JSON.stringify(result.model_price)],
           ['Context Window', w !== undefined ? w.toLocaleString() : undefined],
           ['Total Price', `$${result.total_price}`],
@@ -159,9 +133,11 @@ async function main() {
           }
         }
         console.log('')
-      } catch (e: any) {
+      } catch (e: unknown) {
         hadError = true
-        console.error(`Error for model ${modelArg}:`, e.message)
+        if (e instanceof Error) {
+          console.error(`Error for model ${modelArg}:`, e.message)
+        }
       }
     }
     process.exit(hadError ? 1 : 0)
