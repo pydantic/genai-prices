@@ -2,6 +2,7 @@ from __future__ import annotations as _annotations
 
 from datetime import datetime
 from importlib.metadata import version as _metadata_version
+from typing import Any, overload
 
 from . import calc, types
 from .types import Usage
@@ -9,6 +10,26 @@ from .update_prices import UpdatePrices, wait_prices_updated_async, wait_prices_
 
 __version__ = _metadata_version('genai_prices')
 __all__ = 'Usage', 'calc_price', 'UpdatePrices', 'wait_prices_updated_sync', 'wait_prices_updated_async', '__version__'
+
+
+@overload
+def calc_price(
+    usage: types.AbstractUsage,
+    model_ref: str,
+    *,
+    provider_id: types.ProviderID | str | None = None,
+    genai_request_timestamp: datetime | None = None,
+) -> types.PriceCalculation: ...
+
+
+@overload
+def calc_price(
+    usage: types.AbstractUsage,
+    model_ref: str,
+    *,
+    provider_api_url: str | None = None,
+    genai_request_timestamp: datetime | None = None,
+) -> types.PriceCalculation: ...
 
 
 def calc_price(
@@ -35,3 +56,33 @@ def calc_price(
         The price calculation details.
     """
     return calc.get_snapshot().calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
+
+
+@overload
+def extract_usage(response_data: Any, *, provider_id: types.ProviderID | str) -> types.ExtractedUsage: ...
+
+
+@overload
+def extract_usage(response_data: Any, *, provider_api_url: str) -> types.ExtractedUsage: ...
+
+
+def extract_usage(
+    response_data: Any,
+    *,
+    provider_id: types.ProviderID | str | None = None,
+    provider_api_url: str | None = None,
+) -> types.ExtractedUsage:
+    """Extract usage information from a response.
+
+    One of `provider_id` or `provider_api_url` is required.
+
+    Args:
+        response_data: The response data to extract usage information from.
+        provider: The provider to extract usage information for.
+        provider_id: The ID of the provider to extract usage information for.
+        provider_api_url: The API URL of the provider to extract usage information for.
+
+    Returns:
+        The extracted usage information, model ref and provider used.
+    """
+    return calc.get_snapshot().extract_usage(response_data, provider_id, provider_api_url)

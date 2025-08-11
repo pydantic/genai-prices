@@ -4,7 +4,7 @@ import dataclasses
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
 
@@ -82,8 +82,8 @@ class PriceCalculation:
     input_price: Decimal
     output_price: Decimal
     total_price: Decimal
+    model: ModelInfo = dataclasses.field(repr=False)
     provider: Provider = dataclasses.field(repr=False)
-    model: ModelInfo
     model_price: ModelPrice
     auto_update_timestamp: datetime | None
 
@@ -93,9 +93,34 @@ class PriceCalculation:
             f'input_price={self.input_price!r}, '
             f'output_price={self.output_price!r}, '
             f'total_price={self.total_price!r}, '
-            f'provider=Provider(id={self.provider.id!r}, name={self.provider.name!r}, ...), '
-            f'model=Model(id={self.model.id!r}, name={self.model.name!r}, ...), '
+            f'model={self.model.summary()}, '
+            f'provider={self.provider.summary()}, '
             f'model_price=ModelPrice({self.model_price}), '
+            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+        )
+
+
+@dataclass(repr=False)
+class ExtractedUsage:
+    usage: Usage
+    model: ModelInfo = dataclasses.field(repr=False)
+    provider: Provider = dataclasses.field(repr=False)
+    auto_update_timestamp: datetime | None
+
+    def calc_prices(self, genai_request_timestamp: datetime | None = None) -> PriceCalculation:
+        return self.model.calc_price(
+            self.usage,
+            self.provider,
+            genai_request_timestamp=genai_request_timestamp,
+            auto_update_timestamp=self.auto_update_timestamp,
+        )
+
+    def __repr__(self) -> str:
+        return (
+            'ExtractedUsage('
+            f'usage={self.usage!r}, '
+            f'model={self.model.summary()}, '
+            f'provider={self.provider.summary()}, '
             f'auto_update_timestamp={self.auto_update_timestamp!r})'
         )
 
@@ -215,6 +240,9 @@ class Provider:
                 raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
 
         return extractor.extract(response_data)
+
+    def summary(self) -> str:
+        return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
 
 
 UsageField = Literal[
@@ -397,6 +425,32 @@ class ModelInfo:
                 if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
                     return conditional_price.prices
             return self.prices[0].prices
+
+    def calc_price(
+        self,
+        usage: AbstractUsage,
+        provider: Provider,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        auto_update_timestamp: datetime | None = None,
+    ) -> PriceCalculation:
+        """Calculate the price for the given usage."""
+        genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
+
+        model_price = self.get_prices(genai_request_timestamp)
+        price = model_price.calc_price(usage)
+        return PriceCalculation(
+            input_price=price['input_price'],
+            output_price=price['output_price'],
+            total_price=price['total_price'],
+            model=self,
+            provider=provider,
+            model_price=model_price,
+            auto_update_timestamp=auto_update_timestamp,
+        )
+
+    def summary(self) -> str:
+        return f'Model(id={self.id!r}, name={self.name!r}, ...)'
 
 
 class CalcPrice(TypedDict):

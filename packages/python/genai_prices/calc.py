@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from functools import cache
+from typing import Any
 
 from . import types
 
@@ -55,30 +56,41 @@ class DataSnapshot:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        provider, model = self.find_provider_model(model_ref, provider_id, provider_api_url)
-        model_price = model.get_prices(genai_request_timestamp)
-        price = model_price.calc_price(usage)
-        return types.PriceCalculation(
-            input_price=price['input_price'],
-            output_price=price['output_price'],
-            total_price=price['total_price'],
-            provider=provider,
-            model=model,
-            model_price=model_price,
+        provider, model = self.find_provider_model(model_ref, None, provider_id, provider_api_url)
+        return model.calc_price(
+            usage,
+            provider,
+            genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
         )
+
+    def extract_usage(
+        self,
+        response_data: Any,
+        provider_id: types.ProviderID | str | None = None,
+        provider_api_url: str | None = None,
+    ) -> types.ExtractedUsage:
+        provider = self.find_provider(None, provider_id, provider_api_url)
+        model_ref, usage = provider.extract_usage(response_data)
+        _, model = self.find_provider_model(model_ref, provider, None, None)
+        return types.ExtractedUsage(usage, model, provider, self.timestamp if self.from_auto_update else None)
 
     def find_provider_model(
         self,
         model_ref: str,
+        provider: types.Provider | None,
         provider_id: str | None,
         provider_api_url: str | None,
     ) -> tuple[types.Provider, types.ModelInfo]:
         """Find the provider and model for the given model reference and optional provider identifier."""
-        if provider_model := self._lookup_cache.get((provider_id, provider_api_url, model_ref)):
-            return provider_model
+        if provider:
+            if provider_model := self._lookup_cache.get((provider.id, None, model_ref)):
+                return provider_model
+        else:
+            if provider_model := self._lookup_cache.get((provider_id, provider_api_url, model_ref)):
+                return provider_model
 
-        provider = self.find_provider(model_ref, provider_id, provider_api_url)
+            provider = self.find_provider(model_ref, provider_id, provider_api_url)
 
         if model := provider.find_model(model_ref):
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
@@ -88,12 +100,11 @@ class DataSnapshot:
 
     def find_provider(
         self,
-        model_ref: str,
+        model_ref: str | None,
         provider_id: str | None,
         provider_api_url: str | None,
     ) -> types.Provider:
         if provider_id is not None:
-            provider = find_provider_by_id(self.providers, provider_id)
             if provider := find_provider_by_id(self.providers, provider_id):
                 return provider
             raise LookupError(f'Unable to find provider {provider_id=!r}')
@@ -104,9 +115,10 @@ class DataSnapshot:
                     return provider
             raise LookupError(f'Unable to find provider {provider_api_url=!r}')
 
-        for provider in self.providers:
-            if provider.model_match is not None and provider.model_match.is_match(model_ref):
-                return provider
+        if model_ref:
+            for provider in self.providers:
+                if provider.model_match is not None and provider.model_match.is_match(model_ref):
+                    return provider
 
         raise LookupError(f'Unable to find provider with model matching {model_ref!r}')
 
