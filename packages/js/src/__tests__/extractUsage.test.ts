@@ -1,14 +1,45 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, it } from 'vitest'
 
-import type { Provider } from '../types.js'
+import type { Provider } from '../types'
 
-import { data } from '../data.js'
-import { extractUsage } from '../index.js'
+import { data } from '../data'
+import { calcPrice, extractUsage, findProvider } from '../index'
 
 const anthropicProvider: Provider = data[0]!
 
 describe('extractUsage', () => {
+  describe('end-to-end extract, calculate', () => {
+    it('extract then calc_price', () => {
+      const provider = findProvider({ providerId: 'anthropic' })
+      expect(provider).not.toBeUndefined()
+      console.log(provider)
+      expect(provider?.name).toEqual('Anthropic')
+
+      const responseData = {
+        model: 'claude-sonnet-4-20250514',
+        usage: {
+          cache_creation_input_tokens: 123,
+          cache_read_input_tokens: 0,
+          input_tokens: 504,
+          output_tokens: 97,
+        },
+      }
+      const [model, usage] = extractUsage(provider!, responseData)
+
+      const result = calcPrice(usage, model, { provider: provider! })
+      expect(result).not.toBeNull()
+
+      expect(result).toMatchObject({
+        input_price: 123,
+        model: { name: 'Claude 4 Sonnet' },
+        output_price: 123,
+        provider: { name: 'Anthropic' },
+        total_price: 123,
+      })
+    })
+  })
+
   describe('successful extraction', () => {
     it('should extract usage with cache tokens', () => {
       const responseData = {

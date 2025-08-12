@@ -32,8 +32,8 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
-      - id: format-prettier
-        name: format prettier
+      - id: format-js
+        name: format js
         entry: npm
         args: [run, format]
         language: system
