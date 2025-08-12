@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Deepseek](prices/providers/deepseek.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 7 models
 - [Google](prices/providers/google.yml) - 22 models
-- [Groq](prices/providers/groq.yml) - 10 models
+- [Groq](prices/providers/groq.yml) - 16 models
 - [Mistral](prices/providers/mistral.yml) - 23 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 44 models

@@ -15,19 +15,44 @@ extractors:
         dest: output_tokens
 
 models:
-  - id: gemma-7b-it
+  - id: deepseek-r1-distill-llama-70b
+    name: DeepSeek R1 Distill Llama 70B
+    context_window: 131072
     match:
-      equals: gemma-7b-it
+      equals: deepseek-r1-distill-llama-70b
+    prices_checked: 2025-08-12
     prices:
-      input_mtok: 0.07
-      output_mtok: 0.07
+      input_mtok: 0.75
+      output_mtok: 0.99
 
   - id: gemma2-9b-it
+    name: Gemma 2 9B 8k
     match:
-      equals: gemma2-9b-it
+      or:
+        - equals: gemma2-9b-it
+        - equals: gemma2-9b
+    prices_checked: 2025-08-12
     prices:
       input_mtok: 0.2
       output_mtok: 0.2
+
+  - id: llama-3.1-8b-instant
+    name: Llama 3.1 8B Instant 128k
+    match:
+      equals: llama-3.1-8b-instant
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.08
+
+  - id: llama-3.3-70b-versatile
+    name: Llama 3.3 70B Versatile 128k
+    match:
+      equals: llama-3.3-70b-versatile
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.59
+      output_mtok: 0.79
 
   - id: llama2-70b-4096
     match:
@@ -64,12 +89,44 @@ models:
       input_mtok: 0.19
       output_mtok: 0.19
 
-  - id: mixtral-8x7b-32768
+  - id: meta-llama/llama-4-maverick-17b-128e-instruct
+    name: Llama 4 Maverick 17B 128E
+    context_window: 131072
     match:
-      equals: mixtral-8x7b-32768
+      equals: meta-llama/llama-4-maverick-17b-128e-instruct
+    prices_checked: 2025-08-12
     prices:
-      input_mtok: 0.24
-      output_mtok: 0.24
+      input_mtok: 0.2
+      output_mtok: 0.6
+
+  - id: meta-llama/llama-4-scout-17b-16e-instruct
+    name: Llama 4 Scout (17Bx16E) 128k
+    match:
+      equals: meta-llama/llama-4-scout-17b-16e-instruct
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.11
+      output_mtok: 0.34
+
+  - id: meta-llama/llama-guard-4-12b
+    name: Llama Guard 4 12B
+    context_window: 131072
+    match:
+      equals: meta-llama/llama-guard-4-12b
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: moonshotai/kimi-k2-instruct
+    name: Kimi K2 1T 128k
+    context_window: 131072
+    match:
+      equals: moonshotai/kimi-k2-instruct
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 1
+      output_mtok: 3
 
   # https://console.groq.com/docs/model/openai/gpt-oss-120b
   - id: openai/gpt-oss-120b
@@ -96,3 +153,12 @@ models:
     prices:
       input_mtok: 0.10
       output_mtok: 0.50
+
+  - id: qwen/qwen3-32b
+    name: Qwen3 32B 131k
+    match:
+      equals: qwen/qwen3-32b
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.29
+      output_mtok: 0.59
