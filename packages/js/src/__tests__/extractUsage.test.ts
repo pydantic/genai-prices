@@ -33,7 +33,7 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         cache_read_tokens: 0,
         cache_write_tokens: 123,
-        input_tokens: 504,
+        input_tokens: 627,
         output_tokens: 97,
       })
     })

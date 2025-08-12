@@ -44,8 +44,8 @@ class MyMapping(Mapping[str, Any]):
                 },
             },
             snapshot('claude-sonnet-4-20250514'),
-            snapshot(Usage(input_tokens=504, cache_write_tokens=123, cache_read_tokens=0, output_tokens=97)),
-            snapshot(Decimal('0.00342825')),
+            snapshot(Usage(input_tokens=627, cache_write_tokens=123, cache_read_tokens=0, output_tokens=97)),
+            snapshot(Decimal('0.00379725')),
         ),
         (
             {

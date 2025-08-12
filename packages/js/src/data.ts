@@ -25,6 +25,16 @@ export const data: Provider[] = [
           },
           {
             path: 'cache_creation_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
             required: false,
           },

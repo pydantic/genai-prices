@@ -20,6 +20,8 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
                     UsageExtractorMapping(
                         path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
                     ),
