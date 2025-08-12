@@ -299,7 +299,7 @@ wheels = [
 
 [[package]]
 name = "genai-prices"
-version = "0.0.21"
+version = "0.0.22"
 source = { editable = "packages/python" }
 dependencies = [
     { name = "eval-type-backport", marker = "python_full_version < '3.11'" },
