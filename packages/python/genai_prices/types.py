@@ -206,6 +206,7 @@ class Provider:
     """List of models supported by this provider"""
 
     def find_model(self, model_ref: str) -> ModelInfo | None:
+        model_ref = model_ref.lower()
         for model in self.models:
             if model.is_match(model_ref):
                 return model

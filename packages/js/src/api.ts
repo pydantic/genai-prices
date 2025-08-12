@@ -41,10 +41,12 @@ export function waitForUpdate() {
 
 export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
   autoUpdateCb?.()
+  const lowerModelId = modelId.toLowerCase().trim()
   const provider =
-    options?.provider ?? matchProvider(providerData, { modelId, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
+    options?.provider ??
+    matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
   if (!provider) return null
-  const model = matchModel(provider.models, modelId)
+  const model = matchModel(provider.models, lowerModelId)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)

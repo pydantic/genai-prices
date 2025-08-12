@@ -4,6 +4,8 @@ id: aws
 pricing_urls:
   - https://aws.amazon.com/bedrock/pricing/
 api_pattern: 'https://bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com/'
+provider_match:
+  contains: bedrock
 models:
   - id: meta.llama3-8b-instruct-v1%3A0
     match:

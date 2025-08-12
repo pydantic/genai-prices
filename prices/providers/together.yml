@@ -4,6 +4,10 @@ id: together
 pricing_urls:
   - https://www.together.ai/pricing
 api_pattern: 'https://api\.together\.xyz'
+provider_match:
+  or:
+    - equals: together-ai
+    - equals: together_ai
 models:
   - id: Austism/chronos-hermes-13b
     match:

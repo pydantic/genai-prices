@@ -6,7 +6,8 @@ pricing_urls:
 api_pattern: 'https://api\.x\.ai'
 model_match:
   contains: grok
-
+provider_match:
+  equals: xai
 extractors:
   # assuming this API matches OpenAI
   - api_flavor: chat

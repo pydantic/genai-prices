@@ -14,6 +14,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.anthropic\\.com',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
         model_match=ClauseContains(contains='claude'),
+        provider_match=ClauseContains(contains='anthropic'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -80,6 +81,8 @@ providers: list[Provider] = [
                     or_=[
                         ClauseStartsWith(starts_with='claude-3-7-sonnet'),
                         ClauseStartsWith(starts_with='claude-3.7-sonnet'),
+                        ClauseStartsWith(starts_with='claude-sonnet-3.7'),
+                        ClauseStartsWith(starts_with='claude-sonnet-3-7'),
                     ]
                 ),
                 name='Claude Sonnet 3.7',
@@ -135,8 +138,9 @@ providers: list[Provider] = [
                 id='claude-opus-4-0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='claude-opus-4'),
-                        ClauseStartsWith(starts_with='claude-4-opus-20250522'),
+                        ClauseStartsWith(starts_with='claude-opus-4-0'),
+                        ClauseStartsWith(starts_with='claude-4-opus'),
+                        ClauseEquals(equals='claude-opus-4-20250514'),
                     ]
                 ),
                 name='Claude Opus 4',
@@ -151,12 +155,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-opus-4-1',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='claude-opus-4'),
-                        ClauseStartsWith(starts_with='claude-4-opus-20250522'),
-                    ]
-                ),
+                match=ClauseStartsWith(starts_with='claude-opus-4-1'),
                 name='Claude Opus 4.1',
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
@@ -172,7 +171,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='claude-sonnet-4'),
-                        ClauseStartsWith(starts_with='claude-4-sonnet-20250522'),
+                        ClauseStartsWith(starts_with='claude-4-sonnet'),
                     ]
                 ),
                 name='Claude Sonnet 4',
@@ -220,6 +219,7 @@ providers: list[Provider] = [
         name='AWS Bedrock',
         api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
+        provider_match=ClauseContains(contains='bedrock'),
         models=[
             ModelInfo(
                 id='meta.llama3-8b-instruct-v1%3A0',
@@ -656,6 +656,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.cohere\\.ai',
         pricing_urls=['https://cohere.com/pricing'],
         model_match=ClauseStartsWith(starts_with='command-'),
+        provider_match=ClauseContains(contains='cohere'),
         extractors=[
             UsageExtractor(
                 root=['usage', 'billed_units'],
@@ -677,7 +678,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='command-a',
-                match=ClauseEquals(equals='command-a'),
+                match=ClauseStartsWith(starts_with='command-a'),
                 name='Command A',
                 description='Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
@@ -882,7 +883,13 @@ providers: list[Provider] = [
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
         model_match=ClauseContains(contains='gemini'),
-        provider_match=ClauseOr(or_=[ClauseContains(contains='google'), ClauseEquals(equals='gemini')]),
+        provider_match=ClauseOr(
+            or_=[
+                ClauseContains(contains='google'),
+                ClauseContains(contains='vertex'),
+                ClauseContains(contains='gemini'),
+            ]
+        ),
         extractors=[
             UsageExtractor(
                 root='UsageMetadata',
@@ -1042,7 +1049,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-2.5-flash',
-                match=ClauseEquals(equals='gemini-2.5-flash'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-2.5-flash'), ClauseEquals(equals='gemini-2.5-flash-latest')]
+                ),
                 name='Gemini 2.5 Flash',
                 description='Gemini 2.5 Flash is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
                 prices=ModelPrice(
@@ -1156,74 +1165,17 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='gemma-2-27b-it',
-                match=ClauseEquals(equals='gemma-2-27b-it'),
-                name='Gemma 2 27B',
-                description='Gemma 2 27B by Google is an open model built from the same research and technology used to create the Gemini models.',
-                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('0.8')),
-            ),
-            ModelInfo(
-                id='gemma-2-9b-it',
-                match=ClauseEquals(equals='gemma-2-9b-it'),
-                name='Gemma 2 9B',
-                description='Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.',
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
-                id='gemma-2-9b-it:free',
-                match=ClauseEquals(equals='gemma-2-9b-it:free'),
-                name='Gemma 2 9B (free)',
-                description='Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.',
+                id='gemma-3',
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='gemma-3-'), ClauseEquals(equals='gemma-3')]),
+                name='Gemma 3 (free)',
+                description='Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.',
                 prices=ModelPrice(),
             ),
             ModelInfo(
-                id='gemma-3-12b-it',
-                match=ClauseEquals(equals='gemma-3-12b-it'),
-                name='Gemma 3 12B',
-                description='Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family of Gemma 3 models after Gemma 3 27B',
-                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.1')),
-            ),
-            ModelInfo(
-                id='gemma-3-12b-it:free',
-                match=ClauseEquals(equals='gemma-3-12b-it:free'),
-                name='Gemma 3 12B (free)',
-                description='Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family of Gemma 3 models after Gemma 3 27B',
-                prices=ModelPrice(),
-            ),
-            ModelInfo(
-                id='gemma-3-27b-it',
-                match=ClauseEquals(equals='gemma-3-27b-it'),
-                name='Gemma 3 27B',
-                description="Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2",
-                price_comments="I can't find anything so trusting these prices, not sure the model still exists on Vertex or GCP",
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
-                id='gemma-3-27b-it:free',
-                match=ClauseEquals(equals='gemma-3-27b-it:free'),
-                name='Gemma 3 27B (free)',
-                description="Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2",
-                prices=ModelPrice(),
-            ),
-            ModelInfo(
-                id='gemma-3-4b-it',
-                match=ClauseEquals(equals='gemma-3-4b-it'),
-                name='Gemma 3 4B',
-                description='Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling.',
-                prices=ModelPrice(input_mtok=Decimal('0.02'), output_mtok=Decimal('0.04')),
-            ),
-            ModelInfo(
-                id='gemma-3-4b-it:free',
-                match=ClauseEquals(equals='gemma-3-4b-it:free'),
-                name='Gemma 3 4B (free)',
-                description='Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling.',
-                prices=ModelPrice(),
-            ),
-            ModelInfo(
-                id='gemma-3n-e4b-it:free',
-                match=ClauseEquals(equals='gemma-3n-e4b-it:free'),
-                name='Gemma 3n 4B (free)',
-                description='Gemma 3n E4B-it is optimized for efficient execution on mobile and low-resource devices, such as phones, laptops, and tablets. It supports multimodal inputs—including text, visual data, and audio—enabling diverse tasks such as text generation, speech recognition, translation, and image analysis. Leveraging innovations like Per-Layer Embedding (PLE) caching and the MatFormer architecture, Gemma 3n dynamically manages memory usage and computational load by selectively activating model parameters, significantly reducing runtime resource requirements.',
+                id='gemma-3n',
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='gemma-3n')]),
+                name='Gemma 3n (free)',
+                description='Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.',
                 prices=ModelPrice(),
             ),
         ],
@@ -1246,14 +1198,29 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
-                id='gemma-7b-it',
-                match=ClauseEquals(equals='gemma-7b-it'),
-                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.07')),
+                id='deepseek-r1-distill-llama-70b',
+                match=ClauseEquals(equals='deepseek-r1-distill-llama-70b'),
+                name='DeepSeek R1 Distill Llama 70B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.75'), output_mtok=Decimal('0.99')),
             ),
             ModelInfo(
                 id='gemma2-9b-it',
-                match=ClauseEquals(equals='gemma2-9b-it'),
+                match=ClauseOr(or_=[ClauseEquals(equals='gemma2-9b-it'), ClauseEquals(equals='gemma2-9b')]),
+                name='Gemma 2 9B 8k',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='llama-3.1-8b-instant',
+                match=ClauseEquals(equals='llama-3.1-8b-instant'),
+                name='Llama 3.1 8B Instant 128k',
+                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.08')),
+            ),
+            ModelInfo(
+                id='llama-3.3-70b-versatile',
+                match=ClauseEquals(equals='llama-3.3-70b-versatile'),
+                name='Llama 3.3 70B Versatile 128k',
+                prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
             ),
             ModelInfo(
                 id='llama2-70b-4096',
@@ -1281,9 +1248,31 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.19'), output_mtok=Decimal('0.19')),
             ),
             ModelInfo(
-                id='mixtral-8x7b-32768',
-                match=ClauseEquals(equals='mixtral-8x7b-32768'),
-                prices=ModelPrice(input_mtok=Decimal('0.24'), output_mtok=Decimal('0.24')),
+                id='meta-llama/llama-4-maverick-17b-128e-instruct',
+                match=ClauseEquals(equals='meta-llama/llama-4-maverick-17b-128e-instruct'),
+                name='Llama 4 Maverick 17B 128E',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-4-scout-17b-16e-instruct',
+                match=ClauseEquals(equals='meta-llama/llama-4-scout-17b-16e-instruct'),
+                name='Llama 4 Scout (17Bx16E) 128k',
+                prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.34')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-guard-4-12b',
+                match=ClauseEquals(equals='meta-llama/llama-guard-4-12b'),
+                name='Llama Guard 4 12B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-instruct',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-instruct'),
+                name='Kimi K2 1T 128k',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
@@ -1298,6 +1287,12 @@ providers: list[Provider] = [
                 description="GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-32b',
+                match=ClauseEquals(equals='qwen/qwen3-32b'),
+                name='Qwen3 32B 131k',
+                prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
             ),
         ],
     ),
@@ -1342,21 +1337,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
-                id='magistral-medium-2506',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='magistral-medium-2506'),
-                        ClauseEquals(equals='magistral-medium-2506:thinking'),
-                    ]
-                ),
-                name='Magistral Medium 2506',
+                id='magistral-medium',
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='magistral-medium')]),
+                name='Magistral Medium',
                 description="Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing and better accuracy than with non-reasoning LLMs. From legal research and financial forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency and precision are critical.",
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
-                id='magistral-small-2506',
-                match=ClauseEquals(equals='magistral-small-2506'),
-                name='Magistral Small 2506',
+                id='magistral-small',
+                match=ClauseStartsWith(starts_with='magistral-small-'),
+                name='Magistral Small',
                 description='Magistral Small is a 24B parameter instruction-tuned model based on Mistral-Small-3.1 (2503), enhanced through supervised fine-tuning on traces from Magistral Medium and further refined via reinforcement learning. It is optimized for reasoning and supports a wide multilingual range, including over 20 languages.',
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
             ),
@@ -1369,40 +1359,16 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='ministral-8b',
-                match=ClauseEquals(equals='ministral-8b'),
-                name='Ministral 8B',
+                match=ClauseStartsWith(starts_with='ministral-8b'),
+                name='Ministral 8B 24.10',
                 description='Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.',
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
-                id='mistral-7b-instruct',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='mistral-7b-instruct'), ClauseEquals(equals='mistral-7b-instruct-v0.3')]
-                ),
-                name='Mistral 7B Instruct',
-                description='A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.',
-                prices=ModelPrice(input_mtok=Decimal('0.028'), output_mtok=Decimal('0.054')),
-            ),
-            ModelInfo(
-                id='mistral-7b-instruct-v0.1',
-                match=ClauseEquals(equals='mistral-7b-instruct-v0.1'),
-                name='Mistral 7B Instruct v0.1',
-                description='A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.',
-                prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.19')),
-            ),
-            ModelInfo(
-                id='mistral-7b-instruct-v0.2',
-                match=ClauseEquals(equals='mistral-7b-instruct-v0.2'),
-                name='Mistral 7B Instruct v0.2',
-                description='A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.',
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
-                id='mistral-7b-instruct:free',
-                match=ClauseEquals(equals='mistral-7b-instruct:free'),
-                name='Mistral 7B Instruct (free)',
-                description='A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.',
-                prices=ModelPrice(),
+                id='mistral-7b',
+                match=ClauseOr(or_=[ClauseEquals(equals='mistral-7b'), ClauseEquals(equals='open-mistral-7b')]),
+                name='Mistral 7B',
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.25')),
             ),
             ModelInfo(
                 id='mistral-embed',
@@ -1425,16 +1391,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral-medium-3',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='mistral-medium-3'), ClauseEquals(equals='mistral-medium-latest')]
-                ),
+                match=ClauseStartsWith(starts_with='mistral-medium'),
                 name='Mistral Medium 3',
                 description='Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
                 prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistral-nemo',
-                match=ClauseEquals(equals='mistral-nemo'),
+                match=ClauseOr(or_=[ClauseEquals(equals='mistral-nemo'), ClauseEquals(equals='open-mistral-nemo')]),
                 name='Mistral NeMo',
                 description='A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
@@ -1455,7 +1419,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral-small',
-                match=ClauseEquals(equals='mistral-small'),
+                match=ClauseStartsWith(starts_with='mistral-small'),
                 name='Mistral Small',
                 description='With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo] and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English, French, German, Italian, and Spanish.',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
@@ -1497,20 +1461,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
             ),
             ModelInfo(
-                id='mixtral-8x7b-instruct',
-                match=ClauseEquals(equals='mixtral-8x7b-instruct'),
-                name='Mixtral 8x7B Instruct',
-                description='Mixtral 8x7B Instruct is a pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.',
-                prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.24')),
-            ),
-            ModelInfo(
-                id='open-mistral-7b',
-                match=ClauseEquals(equals='open-mistral-7b'),
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.25')),
-            ),
-            ModelInfo(
-                id='open-mixtral-8x7b',
-                match=ClauseEquals(equals='open-mixtral-8x7b'),
+                id='mixtral-8x7b',
+                match=ClauseOr(
+                    or_=[ClauseStartsWith(starts_with='mixtral-8x7b'), ClauseEquals(equals='open-mixtral-8x7b')]
+                ),
+                name='Mixtral 8x7B',
                 prices=ModelPrice(input_mtok=Decimal('0.7'), output_mtok=Decimal('0.7')),
             ),
             ModelInfo(
@@ -1725,6 +1680,7 @@ providers: list[Provider] = [
             'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         ],
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='gpt-'), ClauseRegex(regex='^o[134]')]),
+        provider_match=ClauseContains(contains='openai'),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -5572,6 +5528,7 @@ providers: list[Provider] = [
         name='Together AI',
         api_pattern='https://api\\.together\\.xyz',
         pricing_urls=['https://www.together.ai/pricing'],
+        provider_match=ClauseOr(or_=[ClauseEquals(equals='together-ai'), ClauseEquals(equals='together_ai')]),
         models=[
             ModelInfo(
                 id='Austism/chronos-hermes-13b',
@@ -5957,6 +5914,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.x\\.ai',
         pricing_urls=['https://docs.x.ai/docs/models'],
         model_match=ClauseContains(contains='grok'),
+        provider_match=ClauseEquals(equals='xai'),
         extractors=[
             UsageExtractor(
                 root='usage',
