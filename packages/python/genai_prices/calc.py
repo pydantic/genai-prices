@@ -84,6 +84,7 @@ class DataSnapshot:
         provider_api_url: str | None,
     ) -> tuple[types.Provider, types.ModelInfo]:
         """Find the provider and model for the given model reference and optional provider identifier."""
+        model_ref = model_ref.lower()
         if provider:
             if provider_model := self._lookup_cache.get((provider.id, None, model_ref)):
                 return provider_model

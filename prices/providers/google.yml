@@ -11,7 +11,8 @@ model_match:
 provider_match:
   or:
     - contains: google
-    - equals: gemini
+    - contains: vertex
+    - contains: gemini
 
 # https://github.com/googleapis/nodejs-vertexai/blob/v1.10.0/src/types/content.ts#L465
 # Note, this suggests `promptTokenCount` and `candidatesTokenCount` are optional, but they seem to be always present
@@ -217,7 +218,9 @@ models:
       mathematics, and scientific tasks. It includes built-in "thinking" capabilities,
       enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
-      equals: gemini-2.5-flash
+      or:
+        - equals: gemini-2.5-flash
+        - equals: gemini-2.5-flash-latest
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.3
@@ -393,117 +396,22 @@ models:
           - start: 128000
             price: 10
 
-  - id: gemma-2-27b-it
-    name: Gemma 2 27B
-    description: >-
-      Gemma 2 27B by Google is an open model built from the same research and technology used to create the Gemini models.
+  - id: gemma-3
+    name: Gemma 3 (free)
+    description: Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.
+    prices_checked: 2025-08-12
     match:
-      equals: gemma-2-27b-it
-    prices:
-      input_mtok: 0.8
-      output_mtok: 0.8
-
-  - id: gemma-2-9b-it
-    name: Gemma 2 9B
-    description: >-
-      Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance
-      in its size class.
-    match:
-      equals: gemma-2-9b-it
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
-
-  - id: gemma-2-9b-it:free
-    name: Gemma 2 9B (free)
-    description: >-
-      Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance
-      in its size class.
-    match:
-      equals: gemma-2-9b-it:free
+      or:
+        - starts_with: gemma-3-
+        - equals: gemma-3
     prices: {}
 
-  - id: gemma-3-12b-it
-    name: Gemma 3 12B
-    description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
-      128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family
-      of Gemma 3 models after Gemma 3 27B
+  - id: gemma-3n
+    name: Gemma 3n (free)
+    description: Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.
+    collapse: false
+    prices_checked: 2025-08-12
     match:
-      equals: gemma-3-12b-it
-    prices:
-      input_mtok: 0.05
-      output_mtok: 0.1
-
-  - id: gemma-3-12b-it:free
-    name: Gemma 3 12B (free)
-    description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
-      128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family
-      of Gemma 3 models after Gemma 3 27B
-    match:
-      equals: gemma-3-12b-it:free
-    prices: {}
-
-  - id: gemma-3-27b-it
-    name: Gemma 3 27B
-    description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
-      128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source
-      model, successor to Gemma 2
-    match:
-      equals: gemma-3-27b-it
-    prices_checked: 2025-07-04
-    price_comments: I can't find anything so trusting these prices, not sure the model still exists on Vertex or GCP
-    prices:
-      input_mtok: 0.1
-      output_mtok: 0.2
-
-  - id: gemma-3-27b-it:free
-    name: Gemma 3 27B (free)
-    description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
-      128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source
-      model, successor to Gemma 2
-    match:
-      equals: gemma-3-27b-it:free
-    prices: {}
-
-  - id: gemma-3-4b-it
-    name: Gemma 3 4B
-    description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
-      128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling.
-    match:
-      equals: gemma-3-4b-it
-    prices:
-      input_mtok: 0.02
-      output_mtok: 0.04
-
-  - id: gemma-3-4b-it:free
-    name: Gemma 3 4B (free)
-    description: >-
-      Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to
-      128k tokens, understands over 140 languages, and offers improved math, reasoning,
-      and chat capabilities, including structured outputs and function calling.
-    match:
-      equals: gemma-3-4b-it:free
-    prices: {}
-
-  - id: gemma-3n-e4b-it:free
-    name: Gemma 3n 4B (free)
-    description: >-
-      Gemma 3n E4B-it is optimized for efficient execution on mobile and low-resource devices, such as phones, laptops, and
-      tablets. It supports multimodal inputs—including text, visual data, and audio—enabling
-      diverse tasks such as text generation, speech recognition, translation, and image analysis. Leveraging innovations like
-      Per-Layer Embedding (PLE) caching and the MatFormer architecture, Gemma 3n dynamically
-      manages memory usage and computational load by selectively activating model parameters, significantly reducing runtime
-      resource requirements.
-    match:
-      equals: gemma-3n-e4b-it:free
+      or:
+        - starts_with: gemma-3n
     prices: {}

@@ -6,7 +6,8 @@ pricing_urls:
 api_pattern: 'https://api\.cohere\.ai'
 model_match:
   starts_with: "command-"
-
+provider_match:
+  contains: cohere
 # https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L13
 # and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_billed_units.py
 extractors:
@@ -38,7 +39,7 @@ models:
       Compared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware
       costs, excelling on business-critical agentic and multilingual tasks.
     match:
-      equals: command-a
+      starts_with: command-a
     prices_checked: 2025-07-04
     prices:
       input_mtok: 2.5

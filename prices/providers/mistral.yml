@@ -57,8 +57,8 @@ models:
       equals: devstral-small:free
     prices: {}
 
-  - id: magistral-medium-2506
-    name: Magistral Medium 2506
+  - id: magistral-medium
+    name: Magistral Medium
     description: >-
       Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing
       and better accuracy than with non-reasoning LLMs. From legal research and financial
@@ -66,20 +66,21 @@ models:
       and precision are critical.
     match:
       or:
-        - equals: magistral-medium-2506
-        - equals: magistral-medium-2506:thinking
+        - starts_with: magistral-medium
+    prices_checked: 2025-08-12
     prices:
       input_mtok: 2
       output_mtok: 5
 
-  - id: magistral-small-2506
-    name: Magistral Small 2506
+  - id: magistral-small
+    name: Magistral Small
     description: >-
       Magistral Small is a 24B parameter instruction-tuned model based on Mistral-Small-3.1 (2503), enhanced through supervised
       fine-tuning on traces from Magistral Medium and further refined via reinforcement
       learning. It is optimized for reasoning and supports a wide multilingual range, including over 20 languages.
     match:
-      equals: magistral-small-2506
+      starts_with: magistral-small-
+    prices_checked: 2025-08-12
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
@@ -98,57 +99,29 @@ models:
       output_mtok: 0.04
 
   - id: ministral-8b
-    name: Ministral 8B
+    name: Ministral 8B 24.10
     description: >-
       Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient
       inference. Designed for edge use cases, it supports up to 128k context
       length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect
       for low-latency, privacy-first applications.
     match:
-      equals: ministral-8b
+      starts_with: ministral-8b
+    prices_checked: 2025-08-12
     prices:
       input_mtok: 0.1
-      output_mtok: 0.1
+      output_mtok: 1
 
-  - id: mistral-7b-instruct
-    name: Mistral 7B Instruct
-    description: >-
-      A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
+  - id: mistral-7b
+    name: Mistral 7B
     match:
       or:
-        - equals: mistral-7b-instruct
-        - equals: mistral-7b-instruct-v0.3
+        - equals: mistral-7b
+        - equals: open-mistral-7b
+    prices_checked: 2025-08-12
     prices:
-      input_mtok: 0.028
-      output_mtok: 0.054
-
-  - id: mistral-7b-instruct-v0.1
-    name: Mistral 7B Instruct v0.1
-    description: >-
-      A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.
-    match:
-      equals: mistral-7b-instruct-v0.1
-    prices:
-      input_mtok: 0.11
-      output_mtok: 0.19
-
-  - id: mistral-7b-instruct-v0.2
-    name: Mistral 7B Instruct v0.2
-    description: >-
-      A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
-    match:
-      equals: mistral-7b-instruct-v0.2
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.2
-
-  - id: mistral-7b-instruct:free
-    name: Mistral 7B Instruct (free)
-    description: >-
-      A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
-    match:
-      equals: mistral-7b-instruct:free
-    prices: {}
+      input_mtok: 0.25
+      output_mtok: 0.25
 
   - id: mistral-embed
     match:
@@ -182,10 +155,8 @@ models:
       and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable
       deployments across professional and industrial use cases.
     match:
-      or:
-        - equals: mistral-medium-3
-        - equals: mistral-medium-latest
-    prices_checked: 2025-07-04
+      starts_with: mistral-medium
+    prices_checked: 2025-08-12
     prices:
       input_mtok: 0.4
       output_mtok: 2
@@ -195,7 +166,9 @@ models:
     description: >-
       A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.
     match:
-      equals: mistral-nemo
+      or:
+        - equals: mistral-nemo
+        - equals: open-mistral-nemo
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.15
@@ -235,7 +208,7 @@ models:
       can produce and reason about code, and is multiligual, supporting English,
       French, German, Italian, and Spanish.
     match:
-      equals: mistral-small
+      starts_with: mistral-small
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
@@ -301,27 +274,13 @@ models:
       input_mtok: 0.9
       output_mtok: 0.9
 
-  - id: mixtral-8x7b-instruct
-    name: Mixtral 8x7B Instruct
-    description: >-
-      Mixtral 8x7B Instruct is a pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction
-      use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.
+  - id: mixtral-8x7b
+    name: Mixtral 8x7B
     match:
-      equals: mixtral-8x7b-instruct
-    prices:
-      input_mtok: 0.08
-      output_mtok: 0.24
-
-  - id: open-mistral-7b
-    match:
-      equals: open-mistral-7b
-    prices:
-      input_mtok: 0.25
-      output_mtok: 0.25
-
-  - id: open-mixtral-8x7b
-    match:
-      equals: open-mixtral-8x7b
+      or:
+        - starts_with: mixtral-8x7b
+        - equals: open-mixtral-8x7b
+    prices_checked: 2025-08-12
     prices:
       input_mtok: 0.7
       output_mtok: 0.7

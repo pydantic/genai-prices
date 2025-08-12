@@ -11,7 +11,8 @@ model_match:
   or:
     - starts_with: "gpt-"
     - regex: "^o[134]"
-
+provider_match:
+  contains: openai
 extractors:
   # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/completion_usage.py
   - api_flavor: chat

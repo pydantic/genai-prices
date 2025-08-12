@@ -9,6 +9,9 @@ export const data: Provider[] = [
     model_match: {
       contains: 'claude',
     },
+    provider_match: {
+      contains: 'anthropic',
+    },
     extractors: [
       {
         api_flavor: 'default',
@@ -118,6 +121,12 @@ export const data: Provider[] = [
             {
               starts_with: 'claude-3.7-sonnet',
             },
+            {
+              starts_with: 'claude-sonnet-3.7',
+            },
+            {
+              starts_with: 'claude-sonnet-3-7',
+            },
           ],
         },
         context_window: 200000,
@@ -182,10 +191,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-opus-4',
+              starts_with: 'claude-opus-4-0',
             },
             {
-              starts_with: 'claude-4-opus-20250522',
+              starts_with: 'claude-4-opus',
+            },
+            {
+              equals: 'claude-opus-4-20250514',
             },
           ],
         },
@@ -202,14 +214,7 @@ export const data: Provider[] = [
         name: 'Claude Opus 4.1',
         description: 'Most intelligent model for complex tasks',
         match: {
-          or: [
-            {
-              starts_with: 'claude-opus-4',
-            },
-            {
-              starts_with: 'claude-4-opus-20250522',
-            },
-          ],
+          starts_with: 'claude-opus-4-1',
         },
         context_window: 200000,
         prices: {
@@ -229,7 +234,7 @@ export const data: Provider[] = [
               starts_with: 'claude-sonnet-4',
             },
             {
-              starts_with: 'claude-4-sonnet-20250522',
+              starts_with: 'claude-4-sonnet',
             },
           ],
         },
@@ -296,6 +301,9 @@ export const data: Provider[] = [
     name: 'AWS Bedrock',
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
     api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
+    provider_match: {
+      contains: 'bedrock',
+    },
     models: [
       {
         id: 'meta.llama3-8b-instruct-v1%3A0',
@@ -1138,6 +1146,9 @@ export const data: Provider[] = [
     model_match: {
       starts_with: 'command-',
     },
+    provider_match: {
+      contains: 'cohere',
+    },
     extractors: [
       {
         api_flavor: 'default',
@@ -1177,7 +1188,7 @@ export const data: Provider[] = [
         description:
           'Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
         match: {
-          equals: 'command-a',
+          starts_with: 'command-a',
         },
         prices: {
           input_mtok: 2.5,
@@ -1520,7 +1531,10 @@ export const data: Provider[] = [
           contains: 'google',
         },
         {
-          equals: 'gemini',
+          contains: 'vertex',
+        },
+        {
+          contains: 'gemini',
         },
       ],
     },
@@ -1794,7 +1808,14 @@ export const data: Provider[] = [
         description:
           'Gemini 2.5 Flash is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
         match: {
-          equals: 'gemini-2.5-flash',
+          or: [
+            {
+              equals: 'gemini-2.5-flash',
+            },
+            {
+              equals: 'gemini-2.5-flash-latest',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.3,
@@ -2038,117 +2059,31 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'gemma-2-27b-it',
-        name: 'Gemma 2 27B',
-        description: 'Gemma 2 27B by Google is an open model built from the same research and technology used to create the Gemini models.',
+        id: 'gemma-3',
+        name: 'Gemma 3 (free)',
+        description: 'Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.',
         match: {
-          equals: 'gemma-2-27b-it',
-        },
-        prices: {
-          input_mtok: 0.8,
-          output_mtok: 0.8,
-        },
-      },
-      {
-        id: 'gemma-2-9b-it',
-        name: 'Gemma 2 9B',
-        description:
-          'Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.',
-        match: {
-          equals: 'gemma-2-9b-it',
-        },
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'gemma-2-9b-it:free',
-        name: 'Gemma 2 9B (free)',
-        description:
-          'Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.',
-        match: {
-          equals: 'gemma-2-9b-it:free',
+          or: [
+            {
+              starts_with: 'gemma-3-',
+            },
+            {
+              equals: 'gemma-3',
+            },
+          ],
         },
         prices: {},
       },
       {
-        id: 'gemma-3-12b-it',
-        name: 'Gemma 3 12B',
-        description:
-          'Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family of Gemma 3 models after Gemma 3 27B',
+        id: 'gemma-3n',
+        name: 'Gemma 3n (free)',
+        description: 'Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.',
         match: {
-          equals: 'gemma-3-12b-it',
-        },
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.1,
-        },
-      },
-      {
-        id: 'gemma-3-12b-it:free',
-        name: 'Gemma 3 12B (free)',
-        description:
-          'Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 12B is the second largest in the family of Gemma 3 models after Gemma 3 27B',
-        match: {
-          equals: 'gemma-3-12b-it:free',
-        },
-        prices: {},
-      },
-      {
-        id: 'gemma-3-27b-it',
-        name: 'Gemma 3 27B',
-        description:
-          "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2",
-        match: {
-          equals: 'gemma-3-27b-it',
-        },
-        price_comments: "I can't find anything so trusting these prices, not sure the model still exists on Vertex or GCP",
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'gemma-3-27b-it:free',
-        name: 'Gemma 3 27B (free)',
-        description:
-          "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling. Gemma 3 27B is Google's latest open source model, successor to Gemma 2",
-        match: {
-          equals: 'gemma-3-27b-it:free',
-        },
-        prices: {},
-      },
-      {
-        id: 'gemma-3-4b-it',
-        name: 'Gemma 3 4B',
-        description:
-          'Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling.',
-        match: {
-          equals: 'gemma-3-4b-it',
-        },
-        prices: {
-          input_mtok: 0.02,
-          output_mtok: 0.04,
-        },
-      },
-      {
-        id: 'gemma-3-4b-it:free',
-        name: 'Gemma 3 4B (free)',
-        description:
-          'Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 128k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs and function calling.',
-        match: {
-          equals: 'gemma-3-4b-it:free',
-        },
-        prices: {},
-      },
-      {
-        id: 'gemma-3n-e4b-it:free',
-        name: 'Gemma 3n 4B (free)',
-        description:
-          'Gemma 3n E4B-it is optimized for efficient execution on mobile and low-resource devices, such as phones, laptops, and tablets. It supports multimodal inputs—including text, visual data, and audio—enabling diverse tasks such as text generation, speech recognition, translation, and image analysis. Leveraging innovations like Per-Layer Embedding (PLE) caching and the MatFormer architecture, Gemma 3n dynamically manages memory usage and computational load by selectively activating model parameters, significantly reducing runtime resource requirements.',
-        match: {
-          equals: 'gemma-3n-e4b-it:free',
+          or: [
+            {
+              starts_with: 'gemma-3n',
+            },
+          ],
         },
         prices: {},
       },
@@ -2362,17 +2297,14 @@ export const data: Provider[] = [
         prices: {},
       },
       {
-        id: 'magistral-medium-2506',
-        name: 'Magistral Medium 2506',
+        id: 'magistral-medium',
+        name: 'Magistral Medium',
         description:
           "Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing and better accuracy than with non-reasoning LLMs. From legal research and financial forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency and precision are critical.",
         match: {
           or: [
             {
-              equals: 'magistral-medium-2506',
-            },
-            {
-              equals: 'magistral-medium-2506:thinking',
+              starts_with: 'magistral-medium',
             },
           ],
         },
@@ -2382,12 +2314,12 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'magistral-small-2506',
-        name: 'Magistral Small 2506',
+        id: 'magistral-small',
+        name: 'Magistral Small',
         description:
           'Magistral Small is a 24B parameter instruction-tuned model based on Mistral-Small-3.1 (2503), enhanced through supervised fine-tuning on traces from Magistral Medium and further refined via reinforcement learning. It is optimized for reasoning and supports a wide multilingual range, including over 20 languages.',
         match: {
-          equals: 'magistral-small-2506',
+          starts_with: 'magistral-small-',
         },
         prices: {
           input_mtok: 0.5,
@@ -2409,69 +2341,34 @@ export const data: Provider[] = [
       },
       {
         id: 'ministral-8b',
-        name: 'Ministral 8B',
+        name: 'Ministral 8B 24.10',
         description:
           'Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.',
         match: {
-          equals: 'ministral-8b',
+          starts_with: 'ministral-8b',
         },
         prices: {
           input_mtok: 0.1,
-          output_mtok: 0.1,
+          output_mtok: 1,
         },
       },
       {
-        id: 'mistral-7b-instruct',
-        name: 'Mistral 7B Instruct',
-        description: 'A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.',
+        id: 'mistral-7b',
+        name: 'Mistral 7B',
         match: {
           or: [
             {
-              equals: 'mistral-7b-instruct',
+              equals: 'mistral-7b',
             },
             {
-              equals: 'mistral-7b-instruct-v0.3',
+              equals: 'open-mistral-7b',
             },
           ],
         },
         prices: {
-          input_mtok: 0.028,
-          output_mtok: 0.054,
+          input_mtok: 0.25,
+          output_mtok: 0.25,
         },
-      },
-      {
-        id: 'mistral-7b-instruct-v0.1',
-        name: 'Mistral 7B Instruct v0.1',
-        description:
-          'A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.',
-        match: {
-          equals: 'mistral-7b-instruct-v0.1',
-        },
-        prices: {
-          input_mtok: 0.11,
-          output_mtok: 0.19,
-        },
-      },
-      {
-        id: 'mistral-7b-instruct-v0.2',
-        name: 'Mistral 7B Instruct v0.2',
-        description: 'A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.',
-        match: {
-          equals: 'mistral-7b-instruct-v0.2',
-        },
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'mistral-7b-instruct:free',
-        name: 'Mistral 7B Instruct (free)',
-        description: 'A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.',
-        match: {
-          equals: 'mistral-7b-instruct:free',
-        },
-        prices: {},
       },
       {
         id: 'mistral-embed',
@@ -2515,14 +2412,7 @@ export const data: Provider[] = [
         description:
           'Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
         match: {
-          or: [
-            {
-              equals: 'mistral-medium-3',
-            },
-            {
-              equals: 'mistral-medium-latest',
-            },
-          ],
+          starts_with: 'mistral-medium',
         },
         prices: {
           input_mtok: 0.4,
@@ -2534,7 +2424,14 @@ export const data: Provider[] = [
         name: 'Mistral NeMo',
         description: 'A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
         match: {
-          equals: 'mistral-nemo',
+          or: [
+            {
+              equals: 'mistral-nemo',
+            },
+            {
+              equals: 'open-mistral-nemo',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.15,
@@ -2576,7 +2473,7 @@ export const data: Provider[] = [
         description:
           'With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo] and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English, French, German, Italian, and Spanish.',
         match: {
-          equals: 'mistral-small',
+          starts_with: 'mistral-small',
         },
         prices: {
           input_mtok: 0.2,
@@ -2645,32 +2542,17 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'mixtral-8x7b-instruct',
-        name: 'Mixtral 8x7B Instruct',
-        description:
-          'Mixtral 8x7B Instruct is a pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.',
+        id: 'mixtral-8x7b',
+        name: 'Mixtral 8x7B',
         match: {
-          equals: 'mixtral-8x7b-instruct',
-        },
-        prices: {
-          input_mtok: 0.08,
-          output_mtok: 0.24,
-        },
-      },
-      {
-        id: 'open-mistral-7b',
-        match: {
-          equals: 'open-mistral-7b',
-        },
-        prices: {
-          input_mtok: 0.25,
-          output_mtok: 0.25,
-        },
-      },
-      {
-        id: 'open-mixtral-8x7b',
-        match: {
-          equals: 'open-mixtral-8x7b',
+          or: [
+            {
+              starts_with: 'mixtral-8x7b',
+            },
+            {
+              equals: 'open-mixtral-8x7b',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.7,
@@ -3093,6 +2975,9 @@ export const data: Provider[] = [
           regex: '^o[134]',
         },
       ],
+    },
+    provider_match: {
+      contains: 'openai',
     },
     extractors: [
       {
@@ -9957,6 +9842,16 @@ export const data: Provider[] = [
     name: 'Together AI',
     pricing_urls: ['https://www.together.ai/pricing'],
     api_pattern: 'https://api\\.together\\.xyz',
+    provider_match: {
+      or: [
+        {
+          equals: 'together-ai',
+        },
+        {
+          equals: 'together_ai',
+        },
+      ],
+    },
     models: [
       {
         id: 'Austism/chronos-hermes-13b',
@@ -10746,6 +10641,9 @@ export const data: Provider[] = [
     api_pattern: 'https://api\\.x\\.ai',
     model_match: {
       contains: 'grok',
+    },
+    provider_match: {
+      equals: 'xai',
     },
     extractors: [
       {
