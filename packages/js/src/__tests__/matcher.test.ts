@@ -8,39 +8,39 @@ const actualProviders = data
 describe('Provider Matching', () => {
   describe('matchProvider with providerId', () => {
     it('should find providers by exact ID match', () => {
-      expect(matchProvider(actualProviders, 'any-model', 'google')?.id).toBe('google')
-      expect(matchProvider(actualProviders, 'any-model', 'anthropic')?.id).toBe('anthropic')
-      expect(matchProvider(actualProviders, 'any-model', 'openai')?.id).toBe('openai')
+      expect(matchProvider(actualProviders, { providerId: 'google' })?.id).toBe('google')
+      expect(matchProvider(actualProviders, { providerId: 'anthropic' })?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, { providerId: 'openai' })?.id).toBe('openai')
     })
 
     it('should find providers by provider_match logic', () => {
-      expect(matchProvider(actualProviders, 'any-model', 'google-gla')?.id).toBe('google')
-      expect(matchProvider(actualProviders, 'any-model', 'google-vertex')?.id).toBe('google')
-      expect(matchProvider(actualProviders, 'any-model', 'gemini')?.id).toBe('google')
-      expect(matchProvider(actualProviders, 'any-model', 'mistral')?.id).toBe('mistral')
-      expect(matchProvider(actualProviders, 'any-model', 'mistralai')?.id).toBe('mistral')
-      expect(matchProvider(actualProviders, 'any-model', 'anthropic')?.id).toBe('anthropic')
-      expect(matchProvider(actualProviders, 'any-model', 'openai')?.id).toBe('openai')
+      expect(matchProvider(actualProviders, { providerId: 'google-gla' })?.id).toBe('google')
+      expect(matchProvider(actualProviders, { providerId: 'google-vertex' })?.id).toBe('google')
+      expect(matchProvider(actualProviders, { providerId: 'gemini' })?.id).toBe('google')
+      expect(matchProvider(actualProviders, { providerId: 'mistral' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { providerId: 'mistralai' })?.id).toBe('mistral')
+      expect(matchProvider(actualProviders, { providerId: 'anthropic' })?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, { providerId: 'openai' })?.id).toBe('openai')
     })
 
     it('should handle case insensitive matching', () => {
-      expect(matchProvider(actualProviders, 'any-model', 'GOOGLE-GLA')?.id).toBe('google')
-      expect(matchProvider(actualProviders, 'any-model', 'ANTHROPIC')?.id).toBe('anthropic')
+      expect(matchProvider(actualProviders, { providerId: 'GOOGLE-GLA' })?.id).toBe('google')
+      expect(matchProvider(actualProviders, { providerId: 'ANTHROPIC' })?.id).toBe('anthropic')
     })
 
     it('should handle whitespace', () => {
-      expect(matchProvider(actualProviders, 'any-model', '  google-gla  ')?.id).toBe('google')
-      expect(matchProvider(actualProviders, 'any-model', 'openai ')?.id).toBe('openai')
+      expect(matchProvider(actualProviders, { providerId: '  google-gla  ' })?.id).toBe('google')
+      expect(matchProvider(actualProviders, { providerId: 'openai ' })?.id).toBe('openai')
     })
 
     it('should return undefined for unknown providers', () => {
-      expect(matchProvider(actualProviders, 'any-model', 'unknown-provider')).toBeUndefined()
-      expect(matchProvider(actualProviders, 'any-model', 'custom-ai')).toBeUndefined()
+      expect(matchProvider(actualProviders, { providerId: 'unknown-provider' })).toBeUndefined()
+      expect(matchProvider(actualProviders, { providerId: 'custom-ai' })).toBeUndefined()
     })
 
     it('should not match model names as providers', () => {
-      expect(matchProvider(actualProviders, 'any-model', 'claude')).toBeUndefined()
-      expect(matchProvider(actualProviders, 'any-model', 'gpt')).toBeUndefined()
+      expect(matchProvider(actualProviders, { providerId: 'claude' })).toBeUndefined()
+      expect(matchProvider(actualProviders, { providerId: 'gpt' })).toBeUndefined()
     })
   })
 })

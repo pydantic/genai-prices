@@ -1,4 +1,4 @@
-import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, TieredPrices, Usage } from './types'
+import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
 
 function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
   if (tokens <= 0) return 0
@@ -141,12 +141,7 @@ function findProviderById(providers: Provider[], providerId: string): Provider |
   return providers.find((p) => p.provider_match && matchLogic(p.provider_match, normalizedProviderId))
 }
 
-export function matchProvider(
-  providers: Provider[],
-  modelRef?: string,
-  providerId?: string,
-  providerApiUrl?: string
-): Provider | undefined {
+export function matchProvider(providers: Provider[], { modelRef, providerApiUrl, providerId }: ProviderFindOptions): Provider | undefined {
   if (providerId) {
     return findProviderById(providers, providerId)
   } else if (providerApiUrl) {
