@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Usage } from '../types.js'
 
-import { calcPrice, waitForUpdate } from '../'
+import { calcPrice, extractUsage, findProvider, waitForUpdate } from '../'
 import { matchModel, matchProvider } from '../engine'
 
 // Mock data for tests
@@ -368,14 +368,14 @@ describe('Comprehensive API Tests', () => {
       { expectedId: 'anthropic', name: 'Anthropic', providerId: 'anthropic' },
     ])('should match $name provider correctly', ({ expectedId, providerId }) => {
       const providers = mockProviders
-      const provider = matchProvider(providers, providerId, providerId)
+      const provider = matchProvider(providers, { providerId })
       expect(provider).not.toBeUndefined()
       expect(provider).toMatchObject({ id: expectedId })
     })
 
     it('should return undefined for non-existent provider', () => {
       const providers = mockProviders
-      const result = matchProvider(providers, 'non-existent', 'non-existent')
+      const result = matchProvider(providers, {})
       expect(result).toBeUndefined()
     })
 
@@ -455,6 +455,33 @@ describe('Comprehensive API Tests', () => {
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
       expect(result!.input_price).toBeGreaterThanOrEqual(0)
       expect(result!.output_price).toBeGreaterThanOrEqual(0)
+    })
+  })
+  describe('end-to-end extract, calculate', () => {
+    it('extract then calc_price', () => {
+      const provider = findProvider({ providerId: 'anthropic' })
+      expect(provider).not.toBeUndefined()
+      expect(provider?.name).toEqual('Anthropic')
+
+      const responseData = {
+        model: 'claude-4-opus-20250522',
+        usage: {
+          cache_creation_input_tokens: 1234,
+          cache_read_input_tokens: 2345,
+          input_tokens: 3456,
+          output_tokens: 4567,
+        },
+      }
+      const [model, usage] = extractUsage(provider!, responseData)
+
+      const result = calcPrice(usage, model, { provider: provider! })
+      expect(result).not.toBeNull()
+
+      expect(result!.provider.name).toEqual('Anthropic')
+      expect(result!.model.name).toEqual('Claude Opus 4')
+      expect(result!.input_price).toBeCloseTo(0.078, 2)
+      expect(result!.output_price).toBeCloseTo(0.342, 2)
+      expect(result!.total_price).toBeCloseTo(0.421, 2)
     })
   })
 })

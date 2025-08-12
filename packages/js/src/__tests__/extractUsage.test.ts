@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, it } from 'vitest'
 
-import type { Provider } from '../types.js'
+import type { Provider } from '../types'
 
-import { data } from '../data.js'
-import { extractUsage } from '../index.js'
+import { data } from '../data'
+import { extractUsage } from '../index'
 
 const anthropicProvider: Provider = data[0]!
 

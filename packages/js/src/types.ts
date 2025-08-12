@@ -126,7 +126,14 @@ export interface StorageFactoryParams {
   setProviderData: (data: Promise<Provider[]> | Provider[]) => void
 }
 
+export interface ProviderFindOptions {
+  modelId?: string
+  providerApiUrl?: string
+  providerId?: string
+}
+
 export interface PriceOptions {
+  provider?: Provider
   providerApiUrl?: string
   providerId?: string
   timestamp?: Date

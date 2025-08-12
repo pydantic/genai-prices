@@ -1,4 +1,4 @@
-import type { PriceCalculationResult, PriceOptions, Provider, StorageFactoryParams, Usage } from './types'
+import type { PriceCalculationResult, PriceOptions, Provider, ProviderFindOptions, StorageFactoryParams, Usage } from './types'
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModel, matchProvider } from './engine'
@@ -41,7 +41,8 @@ export function waitForUpdate() {
 
 export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
   autoUpdateCb?.()
-  const provider = matchProvider(providerData, modelId, options?.providerId, options?.providerApiUrl)
+  const provider =
+    options?.provider ?? matchProvider(providerData, { modelId, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
   if (!provider) return null
   const model = matchModel(provider.models, modelId)
   if (!model) return null
@@ -55,4 +56,9 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     provider,
     ...priceResult,
   }
+}
+
+export function findProvider(options: ProviderFindOptions): Provider | undefined {
+  autoUpdateCb?.()
+  return matchProvider(providerData, options)
 }
