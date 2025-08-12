@@ -127,7 +127,7 @@ export interface StorageFactoryParams {
 }
 
 export interface ProviderFindOptions {
-  modelRef?: string
+  modelId?: string
   providerApiUrl?: string
   providerId?: string
 }

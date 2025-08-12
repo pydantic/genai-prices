@@ -39,12 +39,12 @@ export function waitForUpdate() {
   return providerDataPromise
 }
 
-export function calcPrice(usage: Usage, modelRef: string, options?: PriceOptions): PriceCalculationResult {
+export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
   autoUpdateCb?.()
   const provider =
-    options?.provider ?? matchProvider(providerData, { modelRef, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
+    options?.provider ?? matchProvider(providerData, { modelId, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
   if (!provider) return null
-  const model = matchModel(provider.models, modelRef)
+  const model = matchModel(provider.models, modelId)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
