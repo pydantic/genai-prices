@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { describe, expect, it } from 'vitest'
 
-import type { Usage } from '../types.js'
+import type { Usage } from '../types'
 
 import { calcPrice, extractUsage, findProvider, waitForUpdate } from '../'
 import { matchModel, matchProvider } from '../engine'
