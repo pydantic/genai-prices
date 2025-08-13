@@ -8,7 +8,7 @@ from time import time
 
 import httpx
 
-from . import calc
+from . import data_snapshot
 
 __all__ = (
     'DEFAULT_UPDATE_URL',
@@ -110,7 +110,7 @@ class UpdatePrices:
         global _global_update_prices
 
         _global_update_prices = None
-        calc.set_custom_snapshot(None)
+        data_snapshot.set_custom_snapshot(None)
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
@@ -151,12 +151,12 @@ class UpdatePrices:
         else:
             logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
 
-        calc.set_custom_snapshot(snapshot)
+        data_snapshot.set_custom_snapshot(snapshot)
 
-    def fetch(self) -> calc.DataSnapshot | None:
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
         from . import data
 
         r = httpx.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
-        return calc.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)
+        return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)

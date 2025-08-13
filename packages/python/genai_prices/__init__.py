@@ -4,7 +4,7 @@ from datetime import datetime
 from importlib.metadata import version as _metadata_version
 from typing import Any, overload
 
-from . import calc, types
+from . import data_snapshot, types
 from .types import Usage
 from .update_prices import UpdatePrices, wait_prices_updated_async, wait_prices_updated_sync
 
@@ -55,7 +55,7 @@ def calc_price(
     Returns:
         The price calculation details.
     """
-    return calc.get_snapshot().calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
+    return data_snapshot.get_snapshot().calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
 
 
 @overload
@@ -91,4 +91,4 @@ def extract_usage(
     Returns:
         The extracted usage information, model ref and provider used.
     """
-    return calc.get_snapshot().extract_usage(response_data, provider_id, provider_api_url, api_flavor)
+    return data_snapshot.get_snapshot().extract_usage(response_data, provider_id, provider_api_url, api_flavor)

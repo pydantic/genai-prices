@@ -1,8 +1,8 @@
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices.calc import find_provider_by_id
 from genai_prices.data import providers
+from genai_prices.data_snapshot import find_provider_by_id
 
 mark_xfail_todo = pytest.mark.xfail(reason='todo')
 
