@@ -47,7 +47,7 @@
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint",
-    "format": "eslint --fix --quiet",
+    "lint-fix": "eslint --fix --quiet",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

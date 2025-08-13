@@ -9,8 +9,8 @@
     "packages/python"
   ],
   "scripts": {
-    "format": "prettier --write -- . && npm run format --workspace=packages/js",
-    "lint": "prettier --check -- . && npm run lint --workspace=packages/js",
+    "format": "prettier --write -- . && npm run lint-fix",
+    "lint-fix": "npm run lint-fix --workspace=packages/js",
     "typecheck": "npm run typecheck --workspace=packages/js",
     "build": "npm run build --workspace=packages/js",
     "test": "npm run test --workspace=packages/js",

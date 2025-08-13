@@ -32,10 +32,17 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
-      - id: format-js
-        name: format js
+      - id: prettier
+        name: prettier
+        entry: npx
+        args: [prettier, --write, --ignore-unknown]
+        language: system
+      - id: lint-fix
+        name: lint fix
         entry: npm
-        args: [run, format]
+        args: [run, lint-fix]
+        files: "packages/js/"
+        types_or: [ts, javascript]
         language: system
         pass_filenames: false
       - id: lint-python
@@ -71,7 +78,7 @@ repos:
         name: inject providers into README.md
         entry: make
         args: [inject-providers]
-        types_or: [yaml]
+        types: [yaml]
         files: "prices/"
         language: system
         pass_filenames: false
