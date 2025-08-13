@@ -130,7 +130,10 @@ class AbstractUsage(Protocol):
 
     @property
     def input_tokens(self) -> int | None:
-        """Number of text input/prompt tokens."""
+        """Total number of text input/prompt tokens.
+
+        Note this should INCLUDE both uncached and cached tokens.
+        """
 
     @property
     def cache_write_tokens(self) -> int | None:
@@ -138,7 +141,10 @@ class AbstractUsage(Protocol):
 
     @property
     def cache_read_tokens(self) -> int | None:
-        """Number of tokens read from the cache."""
+        """Number of tokens read from the cache.
+
+        For many models this is described as just "cached tokens".
+        """
 
     @property
     def output_tokens(self) -> int | None:
@@ -465,7 +471,7 @@ class ModelPrice:
     """Set of prices for using a model"""
 
     input_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million text input/prompt token"""
+    """price in USD per million uncached text input/prompt token"""
 
     cache_write_mtok: Decimal | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
@@ -490,7 +496,16 @@ class ModelPrice:
         input_price = Decimal(0)
         output_price = Decimal(0)
 
-        input_price += calc_mtok_price(self.input_mtok, usage.input_tokens)
+        if uncached_input_tokens := usage.input_tokens:
+            if cache_write_tokens := usage.cache_write_tokens:
+                uncached_input_tokens -= cache_write_tokens
+            if cache_read_tokens := usage.cache_read_tokens:
+                uncached_input_tokens -= cache_read_tokens
+
+            if uncached_input_tokens < 0:
+                raise ValueError('uncached_input_tokens cannot be negative')
+            input_price += calc_mtok_price(self.input_mtok, uncached_input_tokens)
+
         input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
         input_price += calc_mtok_price(self.cache_read_mtok, usage.cache_read_tokens)
         output_price += calc_mtok_price(self.output_mtok, usage.output_tokens)

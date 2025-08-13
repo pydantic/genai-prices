@@ -22,13 +22,13 @@ def test_sync_success_with_provider():
 
 def test_sync_success_with_url():
     price = calc_price(
-        Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=1000, cache_read_tokens=1000),
+        Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),
         model_ref='claude-3.5-sonnet@abc',
         provider_api_url='https://api.anthropic.com/foo/bar',
     )
-    assert price.input_price == snapshot(Decimal('0.00705'))
+    assert price.input_price == snapshot(Decimal('0.002934'))
     assert price.output_price == snapshot(Decimal('0.0015'))
-    assert price.total_price == snapshot(Decimal('0.00855'))
+    assert price.total_price == snapshot(Decimal('0.004434'))
     assert price.model.name == snapshot('Claude Sonnet 3.5')
     assert price.provider.name == snapshot('Anthropic')
     assert price.auto_update_timestamp is None

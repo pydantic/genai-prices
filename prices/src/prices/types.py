@@ -222,7 +222,7 @@ class ModelPrice(_Model):
     """Set of prices for using a model"""
 
     input_mtok: DollarPrice | TieredPrices | None = None
-    """price in USD per million text input/prompt token"""
+    """price in USD per million uncached text input/prompt token"""
 
     cache_write_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million tokens written to the cache"""
