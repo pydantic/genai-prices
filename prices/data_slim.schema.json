@@ -256,7 +256,7 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ],
-          "description": "price in USD per million text input/prompt token",
+          "description": "price in USD per million uncached text input/prompt token",
           "title": "Input Mtok"
         },
         "cache_write_mtok": {
