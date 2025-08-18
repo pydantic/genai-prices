@@ -322,6 +322,7 @@ test_cases: list[tuple[str, str, str]] = [
     pytest.param('deepinfra', 'qwen/qwen3-32b', None, marks=mark_xfail_todo),
     ('anthropic', 'claude-sonnet-3.7', snapshot(('anthropic', 'claude-3-7-sonnet-latest'))),
     ('openai', 'o4-mini-high', snapshot(('openai', 'o4-mini'))),
+    ('openai', 'gpt-5-nano-2025-08-07', snapshot(('openai', 'gpt-5-nano'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
 ]
 
