@@ -2022,7 +2022,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5-nano',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-nano'), ClauseEquals(equals='gpt-5-nano-2025-04-14')]),
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-nano'), ClauseStartsWith(starts_with='gpt-5-nano-')]),
                 name='GPT-5 nano',
                 description="GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification tasks.",
                 context_window=400000,

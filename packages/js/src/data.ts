@@ -3691,7 +3691,7 @@ export const data: Provider[] = [
               equals: 'gpt-5-nano',
             },
             {
-              equals: 'gpt-5-nano-2025-04-14',
+              starts_with: 'gpt-5-nano-',
             },
           ],
         },
