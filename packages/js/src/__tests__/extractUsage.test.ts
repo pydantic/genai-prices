@@ -185,4 +185,50 @@ describe('extractUsage', () => {
       expect(() => extractUsage(providerWithoutExtractors, responseData)).toThrow('No extraction logic defined for this provider')
     })
   })
+
+  describe('Google provider', () => {
+    const googleProvider: Provider = data.find((provider) => provider.id === 'google')!
+
+    it('should find the model correctly', () => {
+      const responseData = {
+        candidates: [
+          {
+            avgLogprobs: -0.9116603003607856,
+            content: {
+              parts: [
+                {
+                  functionCall: {
+                    args: { city: 'London', dob: '1987-01-28', name: 'Samuel' },
+                    name: 'final_result',
+                  },
+                  thoughtSignature: 'testing',
+                },
+              ],
+              role: 'model',
+            },
+            finishReason: 'STOP',
+          },
+        ],
+        createTime: '2025-08-25T14:26:17.534704Z',
+        modelVersion: 'gemini-2.5-flash',
+        responseId: 'iXKsaLDRIPqsgLUPotqEyA0',
+        usageMetadata: {
+          candidatesTokenCount: 18,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 18 }],
+          promptTokenCount: 75,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 75 }],
+          thoughtsTokenCount: 144,
+          totalTokenCount: 237,
+          trafficType: 'ON_DEMAND',
+        },
+      }
+      const [model, usage] = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_tokens: 75,
+        output_tokens: 18,
+      })
+    })
+  })
 })

@@ -1551,8 +1551,8 @@ export const data: Provider[] = [
     extractors: [
       {
         api_flavor: 'default',
-        root: 'UsageMetadata',
-        model_path: 'model',
+        root: 'usageMetadata',
+        model_path: 'modelVersion',
         mappings: [
           {
             path: 'promptTokenCount',

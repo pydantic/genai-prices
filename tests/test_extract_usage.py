@@ -161,3 +161,45 @@ def test_no_flavors():
 
     with pytest.raises(ValueError, match='No extraction logic defined for this provider'):
         provider.extract_usage({})
+
+
+gemini_response_data = {
+    'candidates': [
+        {
+            'content': {
+                'role': 'model',
+                'parts': [
+                    {
+                        'functionCall': {
+                            'name': 'final_result',
+                            'args': {'dob': '1987-01-28', 'name': 'Samuel', 'city': 'London'},
+                        },
+                        'thoughtSignature': 'testing',
+                    }
+                ],
+            },
+            'finishReason': 'STOP',
+            'avgLogprobs': -0.9116603003607856,
+        }
+    ],
+    'usageMetadata': {
+        'promptTokenCount': 75,
+        'candidatesTokenCount': 18,
+        'totalTokenCount': 237,
+        'trafficType': 'ON_DEMAND',
+        'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 75}],
+        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 18}],
+        'thoughtsTokenCount': 144,
+    },
+    'modelVersion': 'gemini-2.5-flash',
+    'createTime': '2025-08-25T14:26:17.534704Z',
+    'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
+}
+
+
+def test_google():
+    provider = next(provider for provider in providers if provider.id == 'google')
+    assert provider.name == 'Google'
+    assert provider.extractors is not None
+    usage = provider.extract_usage(gemini_response_data)
+    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))

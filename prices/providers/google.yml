@@ -17,7 +17,8 @@ provider_match:
 # https://github.com/googleapis/nodejs-vertexai/blob/v1.10.0/src/types/content.ts#L465
 # Note, this suggests `promptTokenCount` and `candidatesTokenCount` are optional, but they seem to be always present
 extractors:
-  - root: UsageMetadata
+  - root: usageMetadata
+    model_path: modelVersion
     mappings:
       - path: promptTokenCount
         dest: input_tokens
