@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Provider, Usage, UsageExtractor } from './types.js'
+import { matchLogic } from './engine'
+import { ExtractPath, FindItem, Provider, Usage, UsageExtractor } from './types'
 
 export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): [string, Usage] {
   if (!provider.extractors) {
@@ -49,59 +50,67 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
   return [modelName, usage]
 }
 
-function extractPath<T>(
-  path: string | string[],
-  data: Record<string, unknown>,
-  typeCheck: TypeCheck<T>,
-  required: true,
-  dataPath: string[]
-): T
+function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (FindItem | string)[]): T
 // eslint-disable-next-line no-redeclare
 function extractPath<T>(
-  path: string | string[],
-  data: Record<string, unknown>,
+  path: ExtractPath,
+  data: unknown,
   typeCheck: TypeCheck<T>,
   required: boolean,
-  dataPath: string[]
+  dataPath: (FindItem | string)[]
 ): null | T
 // eslint-disable-next-line no-redeclare
 function extractPath<T>(
-  path: string | string[],
-  data: Record<string, unknown>,
+  path: ExtractPath,
+  data: unknown,
   typeCheck: TypeCheck<T>,
   required: boolean,
-  dataPath: string[]
+  dataPath: (FindItem | string)[]
 ): null | T {
   const [last, ...steps] = asArray(path).reverse()
   if (typeof last !== 'string') {
     throw new Error(`Expected last step of path to be a string, got ${typeName(last)}`)
   }
-
-  let currentStepData: Record<string, unknown> = data
   steps.reverse()
 
-  const errorPath: string[] = []
+  let currentStepData = data
+  const errorPath: (FindItem | string)[] = []
 
   for (const step of steps) {
     errorPath.push(step)
-    currentStepData = currentStepData[step] as Record<string, unknown>
-    const dataType = typeName(currentStepData)
-    if (dataType === 'undefined') {
+    if (typeof step === 'object') {
+      if (Array.isArray(currentStepData)) {
+        currentStepData = extractFindItem(step, currentStepData)
+      } else {
+        throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
+      }
+    } else {
+      if (mappingCheck.guard(currentStepData)) {
+        currentStepData = currentStepData[step]
+      } else {
+        throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
+      }
+    }
+
+    if (typeof currentStepData === 'undefined') {
       if (required) {
-        throw new Error(`Missing value at \`${[...dataPath, ...errorPath].join('.')}\``)
+        const msg = typeof step === 'object' ? 'Unable to find item' : 'Missing value'
+        throw new Error(`${msg} at \`${dottedPath(dataPath, errorPath)}\``)
       } else {
         return null
       }
-    } else if (dataType !== 'mapping') {
-      throw new Error(`Expected \`${[...dataPath, ...errorPath].join('.')}\` value to be a mapping, got ${dataType}`)
     }
+  }
+
+  if (!mappingCheck.guard(currentStepData)) {
+    throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
   }
 
   const value = currentStepData[last]
   if (typeof value === 'undefined') {
     if (required) {
       errorPath.push(last)
-      throw new Error(`Missing value at \`${[...dataPath, ...errorPath].join('.')}\``)
+      throw new Error(`Missing value at \`${dottedPath(dataPath, errorPath)}\``)
     } else {
       return null
     }
@@ -111,11 +120,22 @@ function extractPath<T>(
     return value
   } else {
     errorPath.push(last)
-    throw new Error(`Expected \`${[...dataPath, ...errorPath].join('.')}\` value to be a ${typeCheck.name}, got ${typeName(value)}`)
+    throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a ${typeCheck.name}, got ${typeName(value)}`)
   }
 }
 
-function asArray(v: string | string[]): string[] {
+function extractFindItem(finder: FindItem, items: unknown[]): Record<string, unknown> | undefined {
+  for (const item of items) {
+    if (mappingCheck.guard(item)) {
+      const itemField = item[finder.find_item_with]
+      if (typeof itemField === 'string' && matchLogic(finder.match, itemField)) {
+        return item
+      }
+    }
+  }
+}
+
+function asArray(v: ExtractPath): (FindItem | string)[] {
   // return a shallow copy of the array, otherwise the reverse calls above modify our data in-place.
   return Array.isArray(v) ? [...v] : [v]
 }
@@ -151,3 +171,8 @@ const numberCheck: TypeCheck<number> = {
   guard: (value: unknown): value is number => typeof value === 'number',
   name: 'number',
 }
+
+const dottedPath = (dataPath: (FindItem | string)[], errorPath: (FindItem | string)[]): string =>
+  [...dataPath.map(asString), ...errorPath.map(asString)].join('.')
+
+const asString = (v: FindItem | string): string => (typeof v === 'string' ? v : JSON.stringify(v))

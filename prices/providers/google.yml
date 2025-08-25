@@ -22,8 +22,21 @@ extractors:
     mappings:
       - path: promptTokenCount
         dest: input_tokens
-      - path: cachedContentTokenCount
+      - path:
+          - cacheTokensDetails
+          - find_item_with: modality
+            match:
+              equals: TEXT
+          - tokenCount
         dest: cache_read_tokens
+        required: false
+      - path:
+          - cacheTokensDetails
+          - find_item_with: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: cache_audio_read_tokens
         required: false
       - path: candidatesTokenCount
         dest: output_tokens

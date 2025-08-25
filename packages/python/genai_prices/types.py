@@ -2,14 +2,14 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
 
 import pydantic
-from typing_extensions import TypedDict
+from typing_extensions import TypedDict, TypeGuard
 
 __all__ = (
     'ProviderID',
@@ -34,6 +34,7 @@ __all__ = (
     'ClauseOr',
     'ClauseAnd',
     'MatchLogic',
+    'FindItem',
     'providers_schema',
 )
 
@@ -75,6 +76,21 @@ ProviderID = Literal[
     'cohere',
     'openrouter',
 ]
+
+
+@dataclass
+class FindItem:
+    find_item_with: str
+    match: MatchLogic
+
+    def extract(self, items: Sequence[Any]) -> Mapping[str, Any] | None:
+        for item in items:
+            if _is_mapping(item) and (item_field := item.get(self.find_item_with)):
+                if self.match.is_match(item_field):
+                    return item
+
+
+ExtractPath = Union[str, Sequence[Union[str, FindItem]]]
 
 
 @dataclass(repr=False)
@@ -267,7 +283,7 @@ UsageField = Literal[
 class UsageExtractorMapping:
     """Mappings from used to build usage."""
 
-    path: str | list[str]
+    path: ExtractPath
     """Path to the value to extract"""
     dest: UsageField
     """Destination field to store the extracted value.
@@ -282,13 +298,13 @@ class UsageExtractorMapping:
 class UsageExtractor:
     """Logic for extracting usage information from a response."""
 
-    root: str | list[str]
+    root: ExtractPath
     """Path to the root of the usage information in the response, generally `usage`."""
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
     api_flavor: str = 'default'
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
-    model_path: str | list[str] = 'model'
+    model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
 
     def extract(self, response_data: Any) -> tuple[str, Usage]:
@@ -303,11 +319,6 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        if not isinstance(response_data, Mapping):
-            raise ValueError(f'Expected response data to be a dict, got {_type_name(response_data)}')
-
-        response_data = cast(Mapping[str, Any], response_data)
-
         model_name = _extract_path(self.model_path, response_data, str, True, [])
 
         root = self.root
@@ -334,50 +345,65 @@ E = TypeVar('E')
 
 @overload
 def _extract_path(
-    path: str | list[str], data: Mapping[str, Any], extract_type: type[E], required: Literal[True], data_path: list[str]
+    path: ExtractPath, data: Any, extract_type: type[E], required: Literal[True], data_path: Sequence[str | FindItem]
 ) -> E: ...
 
 
 @overload
 def _extract_path(
-    path: str | list[str],
-    data: Mapping[str, Any],
+    path: ExtractPath,
+    data: Any,
     extract_type: type[E],
     required: Literal[False],
-    data_path: list[str],
+    data_path: Sequence[str | FindItem],
 ) -> E | None: ...
 
 
 def _extract_path(
-    path: str | list[str], data: Mapping[str, Any], extract_type: type[E], required: bool, data_path: list[str]
+    path: ExtractPath, data: Any, extract_type: type[E], required: bool, data_path: Sequence[str | FindItem]
 ) -> E | None:
     if isinstance(path, str):
         path = [path]
 
     *steps, last = path
+    last = cast(str, last)
 
-    error_path: list[str] = []
+    error_path: list[str | FindItem] = []
     for step in steps:
         error_path.append(step)
-        try:
-            data = data[step]
-        except KeyError:
-            if required:
-                raise ValueError(f'Missing value at `{".".join(data_path + error_path)}`')
+        if isinstance(step, FindItem):
+            if not _is_sequence(data):
+                raise ValueError(
+                    f'Expected `{_dot_path(data_path, error_path)}` value to be a sequence, got {_type_name(data)}'
+                )
+            if extracted_data := step.extract(data):
+                data = extracted_data
+            elif required:
+                raise ValueError(f'Unable to find item at `{_dot_path(data_path, error_path)}`')
             else:
                 return None
         else:
-            if not isinstance(data, Mapping):  # type: ignore[reportUnnecessaryIsInstance]
+            if not _is_mapping(data):
                 raise ValueError(
-                    f'Expected `{".".join(data_path + error_path)}` value to be a dict, got {_type_name(data)}'
+                    f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}'
                 )
+            try:
+                data = data[step]
+            except KeyError as e:
+                if required:
+                    raise ValueError(f'Missing value at `{_dot_path(data_path, error_path)}`') from e
+                else:
+                    return None
+
+    if not _is_mapping(data):
+        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
 
     try:
         value = data[last]
-    except KeyError:
+    except KeyError as e:
         if required:
             error_path.append(last)
-            raise ValueError(f'Missing value at `{".".join(data_path + error_path)}`')
+            raise ValueError(f'Missing value at `{_dot_path(data_path, error_path)}`') from e
         else:
             return None
     else:
@@ -386,8 +412,20 @@ def _extract_path(
         else:
             error_path.append(last)
             raise ValueError(
-                f'Expected `{".".join(data_path + error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
+                f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
             )
+
+
+def _is_mapping(item: Any) -> TypeGuard[Mapping[str, Any]]:
+    return isinstance(item, Mapping)
+
+
+def _is_sequence(item: Any) -> TypeGuard[Sequence[Any]]:
+    return isinstance(item, Sequence)
+
+
+def _dot_path(data_path: Sequence[str | FindItem], error_path: Sequence[str | FindItem]) -> str:
+    return '.'.join([str(p) for p in data_path] + [str(p) for p in error_path])
 
 
 def _type_name(v: Any) -> str:

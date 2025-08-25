@@ -164,24 +164,6 @@ def test_no_flavors():
 
 
 gemini_response_data = {
-    'candidates': [
-        {
-            'content': {
-                'role': 'model',
-                'parts': [
-                    {
-                        'functionCall': {
-                            'name': 'final_result',
-                            'args': {'dob': '1987-01-28', 'name': 'Samuel', 'city': 'London'},
-                        },
-                        'thoughtSignature': 'testing',
-                    }
-                ],
-            },
-            'finishReason': 'STOP',
-            'avgLogprobs': -0.9116603003607856,
-        }
-    ],
     'usageMetadata': {
         'promptTokenCount': 75,
         'candidatesTokenCount': 18,
@@ -195,11 +177,37 @@ gemini_response_data = {
     'createTime': '2025-08-25T14:26:17.534704Z',
     'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
 }
+goolgle_provider = next(provider for provider in providers if provider.id == 'google')
+assert goolgle_provider.name == 'Google'
+assert goolgle_provider.extractors is not None
 
 
 def test_google():
-    provider = next(provider for provider in providers if provider.id == 'google')
-    assert provider.name == 'Google'
-    assert provider.extractors is not None
-    usage = provider.extract_usage(gemini_response_data)
+    usage = goolgle_provider.extract_usage(gemini_response_data)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+
+
+gemini_response_data_caching = {
+    'usageMetadata': {
+        'promptTokenCount': 14152,
+        'candidatesTokenCount': 50,
+        'totalTokenCount': 14271,
+        'cachedContentTokenCount': 12239,
+        'trafficType': 'ON_DEMAND',
+        'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 14002}, {'modality': 'AUDIO', 'tokenCount': 150}],
+        'cacheTokensDetails': [{'modality': 'AUDIO', 'tokenCount': 129}, {'modality': 'TEXT', 'tokenCount': 12110}],
+        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 50}],
+        'thoughtsTokenCount': 69,
+    },
+    'modelVersion': 'gemini-2.5-flash',
+}
+
+
+def test_google_caching():
+    usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    assert usage == snapshot(
+        (
+            'gemini-2.5-flash',
+            Usage(input_tokens=14152, cache_read_tokens=12110, output_tokens=50, cache_audio_read_tokens=129),
+        )
+    )

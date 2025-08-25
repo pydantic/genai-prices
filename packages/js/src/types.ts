@@ -54,6 +54,13 @@ export type MatchLogic =
   | { regex: string }
   | { starts_with: string }
 
+export interface FindItem {
+  find_item_with: string
+  match: MatchLogic
+}
+
+export type ExtractPath = (FindItem | string)[] | string
+
 export interface UsageExtractorMapping {
   dest:
     | 'cache_audio_read_tokens'
@@ -63,14 +70,14 @@ export interface UsageExtractorMapping {
     | 'input_tokens'
     | 'output_audio_tokens'
     | 'output_tokens'
-  path: string | string[]
+  path: ExtractPath
   required: boolean
 }
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
-  model_path: string | string[]
-  root: string | string[]
+  model_path: ExtractPath
+  root: ExtractPath
 }
 
 export interface ModelInfo {

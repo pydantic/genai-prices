@@ -897,7 +897,24 @@ providers: list[Provider] = [
                 root='usageMetadata',
                 mappings=[
                     UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cachedContentTokenCount', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
+                            FindItem(find_item_with='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='cache_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
+                            FindItem(find_item_with='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='cache_audio_read_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',

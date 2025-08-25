@@ -122,7 +122,7 @@ UsageField = Literal[
 class UsageExtractorMapping(_Model):
     """Mappings from used to build usage."""
 
-    path: str | list[str]
+    path: ExtractPath
     """Path to the value to extract"""
     dest: UsageField
     """Destination field to store the extracted value.
@@ -138,9 +138,9 @@ class UsageExtractor(_Model):
 
     api_flavor: str = 'default'
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
-    root: str | list[str]
+    root: ExtractPath
     """Path to the root of the usage information in the response, generally `usage`."""
-    model_path: str | list[str] = 'model'
+    model_path: ExtractPath = 'model'
     """Path to the model name in the response.
 
     Almost all APIs return this in the 'model' field, hence the default value.
@@ -385,5 +385,22 @@ MatchLogic = Annotated[
     Discriminator(clause_discriminator),
 ]
 match_logic_schema: TypeAdapter[MatchLogic] = TypeAdapter(MatchLogic)
+
+
+class FindItem(_Model):
+    find_item_with: str
+    match: MatchLogic
+
+
+def doesnt_end_with_find_item(path: str | list[str | FindItem]) -> str | list[str | FindItem]:
+    if isinstance(path, list):
+        if not path:
+            raise ValueError('ExtractPath should not be empty')
+        if isinstance(path[-1], FindItem):
+            raise ValueError('ExtractPath should not end with a `FindItem` object')
+    return path
+
+
+ExtractPath = Annotated[Union[str, list[Union[str, FindItem]]], AfterValidator(doesnt_end_with_find_item)]
 
 providers_schema = TypeAdapter(list[Provider])

@@ -176,6 +176,47 @@
       "title": "ConditionalPrice",
       "type": "object"
     },
+    "FindItem": {
+      "additionalProperties": false,
+      "properties": {
+        "find_item_with": {
+          "title": "Find Item With",
+          "type": "string"
+        },
+        "match": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ClauseStartsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseEndsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseContains"
+            },
+            {
+              "$ref": "#/$defs/ClauseRegex"
+            },
+            {
+              "$ref": "#/$defs/ClauseEquals"
+            },
+            {
+              "$ref": "#/$defs/ClauseOr"
+            },
+            {
+              "$ref": "#/$defs/ClauseAnd"
+            }
+          ],
+          "title": "Match"
+        }
+      },
+      "required": [
+        "find_item_with",
+        "match"
+      ],
+      "title": "FindItem",
+      "type": "object"
+    },
     "ModelInfo": {
       "additionalProperties": false,
       "description": "Information about an LLM model",
@@ -481,7 +522,14 @@
             },
             {
               "items": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FindItem"
+                  }
+                ]
               },
               "type": "array"
             }
@@ -496,7 +544,14 @@
             },
             {
               "items": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FindItem"
+                  }
+                ]
               },
               "type": "array"
             }
@@ -532,7 +587,14 @@
             },
             {
               "items": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FindItem"
+                  }
+                ]
               },
               "type": "array"
             }
