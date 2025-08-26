@@ -18,4 +18,4 @@ npm version --workspace=packages/js $1
 git checkout -b "release/$1"
 echo "Switched to branch 'release/$1', next run:"
 echo ""
-echo "git commit -am 'Release $1'"
+echo "git commit -am 'Release $1' && gh pr create"
