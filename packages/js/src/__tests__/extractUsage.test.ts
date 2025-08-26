@@ -185,4 +185,64 @@ describe('extractUsage', () => {
       expect(() => extractUsage(providerWithoutExtractors, responseData)).toThrow('No extraction logic defined for this provider')
     })
   })
+
+  describe('Google provider', () => {
+    const googleProvider: Provider = data.find((provider) => provider.id === 'google')!
+
+    it('should find the model correctly and have correct usage without caching', () => {
+      const responseData = {
+        createTime: '2025-08-25T14:26:17.534704Z',
+        modelVersion: 'gemini-2.5-flash',
+        responseId: 'iXKsaLDRIPqsgLUPotqEyA0',
+        usageMetadata: {
+          candidatesTokenCount: 18,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 18 }],
+          promptTokenCount: 75,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 75 }],
+          thoughtsTokenCount: 144,
+          totalTokenCount: 237,
+          trafficType: 'ON_DEMAND',
+        },
+      }
+      const [model, usage] = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_tokens: 75,
+        output_tokens: 18,
+      })
+    })
+
+    it('should have correct usage with caching', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          cachedContentTokenCount: 12239,
+          cacheTokensDetails: [
+            { modality: 'AUDIO', tokenCount: 129 },
+            { modality: 'TEXT', tokenCount: 12110 },
+          ],
+          candidatesTokenCount: 50,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 50 }],
+          promptTokenCount: 14152,
+          promptTokensDetails: [
+            { modality: 'TEXT', tokenCount: 14002 },
+            { modality: 'AUDIO', tokenCount: 150 },
+          ],
+          thoughtsTokenCount: 69,
+          totalTokenCount: 14271,
+          trafficType: 'ON_DEMAND',
+        },
+      }
+      const [model, usage] = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        cache_audio_read_tokens: 129,
+        cache_read_tokens: 12110,
+        input_tokens: 14152,
+        output_tokens: 50,
+      })
+    })
+  })
 })

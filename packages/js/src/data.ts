@@ -1551,8 +1551,8 @@ export const data: Provider[] = [
     extractors: [
       {
         api_flavor: 'default',
-        root: 'UsageMetadata',
-        model_path: 'model',
+        root: 'usageMetadata',
+        model_path: 'modelVersion',
         mappings: [
           {
             path: 'promptTokenCount',
@@ -1560,8 +1560,33 @@ export const data: Provider[] = [
             required: true,
           },
           {
-            path: 'cachedContentTokenCount',
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_audio_read_tokens',
             required: false,
           },
           {

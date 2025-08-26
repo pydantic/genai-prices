@@ -1,5 +1,52 @@
 {
   "$defs": {
+    "ArrayMatch": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "array-match",
+          "title": "Type",
+          "type": "string"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "match": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ClauseStartsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseEndsWith"
+            },
+            {
+              "$ref": "#/$defs/ClauseContains"
+            },
+            {
+              "$ref": "#/$defs/ClauseRegex"
+            },
+            {
+              "$ref": "#/$defs/ClauseEquals"
+            },
+            {
+              "$ref": "#/$defs/ClauseOr"
+            },
+            {
+              "$ref": "#/$defs/ClauseAnd"
+            }
+          ],
+          "title": "Match"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "match"
+      ],
+      "title": "ArrayMatch",
+      "type": "object"
+    },
     "ClauseAnd": {
       "additionalProperties": false,
       "properties": {
@@ -481,7 +528,14 @@
             },
             {
               "items": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayMatch"
+                  }
+                ]
               },
               "type": "array"
             }
@@ -496,7 +550,14 @@
             },
             {
               "items": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayMatch"
+                  }
+                ]
               },
               "type": "array"
             }
@@ -532,7 +593,14 @@
             },
             {
               "items": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayMatch"
+                  }
+                ]
               },
               "type": "array"
             }

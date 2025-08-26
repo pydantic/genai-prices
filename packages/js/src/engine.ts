@@ -107,29 +107,24 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
   return model.prices[0]!.prices
 }
 
-function matchLogic(logic: MatchLogic, text: string): boolean {
+export function matchLogic(logic: MatchLogic, text: string): boolean {
   if ('or' in logic) {
     return logic.or.some((clause) => matchLogic(clause, text))
-  }
-  if ('and' in logic) {
+  } else if ('and' in logic) {
     return logic.and.every((clause) => matchLogic(clause, text))
-  }
-  if ('equals' in logic) {
+  } else if ('equals' in logic) {
     return text === logic.equals
-  }
-  if ('starts_with' in logic) {
+  } else if ('starts_with' in logic) {
     return text.startsWith(logic.starts_with)
-  }
-  if ('ends_with' in logic) {
+  } else if ('ends_with' in logic) {
     return text.endsWith(logic.ends_with)
-  }
-  if ('contains' in logic) {
+  } else if ('contains' in logic) {
     return text.includes(logic.contains)
-  }
-  if ('regex' in logic) {
+  } else if ('regex' in logic) {
     return new RegExp(logic.regex).test(text)
+  } else {
+    return false
   }
-  return false
 }
 
 function findProviderById(providers: Provider[], providerId: string): Provider | undefined {

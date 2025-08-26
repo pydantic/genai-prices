@@ -161,3 +161,53 @@ def test_no_flavors():
 
     with pytest.raises(ValueError, match='No extraction logic defined for this provider'):
         provider.extract_usage({})
+
+
+gemini_response_data = {
+    'usageMetadata': {
+        'promptTokenCount': 75,
+        'candidatesTokenCount': 18,
+        'totalTokenCount': 237,
+        'trafficType': 'ON_DEMAND',
+        'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 75}],
+        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 18}],
+        'thoughtsTokenCount': 144,
+    },
+    'modelVersion': 'gemini-2.5-flash',
+    'createTime': '2025-08-25T14:26:17.534704Z',
+    'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
+}
+goolgle_provider = next(provider for provider in providers if provider.id == 'google')
+assert goolgle_provider.name == 'Google'
+assert goolgle_provider.extractors is not None
+
+
+def test_google():
+    usage = goolgle_provider.extract_usage(gemini_response_data)
+    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+
+
+gemini_response_data_caching = {
+    'usageMetadata': {
+        'promptTokenCount': 14152,
+        'candidatesTokenCount': 50,
+        'totalTokenCount': 14271,
+        'cachedContentTokenCount': 12239,
+        'trafficType': 'ON_DEMAND',
+        'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 14002}, {'modality': 'AUDIO', 'tokenCount': 150}],
+        'cacheTokensDetails': [{'modality': 'AUDIO', 'tokenCount': 129}, {'modality': 'TEXT', 'tokenCount': 12110}],
+        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 50}],
+        'thoughtsTokenCount': 69,
+    },
+    'modelVersion': 'gemini-2.5-flash',
+}
+
+
+def test_google_caching():
+    usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    assert usage == snapshot(
+        (
+            'gemini-2.5-flash',
+            Usage(input_tokens=14152, cache_read_tokens=12110, output_tokens=50, cache_audio_read_tokens=129),
+        )
+    )
