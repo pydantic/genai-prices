@@ -900,7 +900,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'cacheTokensDetails',
-                            FindItem(find_item_with='modality', match=ClauseEquals(equals='TEXT')),
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
                             'tokenCount',
                         ],
                         dest='cache_read_tokens',
@@ -909,7 +909,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'cacheTokensDetails',
-                            FindItem(find_item_with='modality', match=ClauseEquals(equals='AUDIO')),
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
                             'tokenCount',
                         ],
                         dest='cache_audio_read_tokens',

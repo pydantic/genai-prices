@@ -54,12 +54,13 @@ export type MatchLogic =
   | { regex: string }
   | { starts_with: string }
 
-export interface FindItem {
-  find_item_with: string
+export interface ArrayMatch {
+  field: string
   match: MatchLogic
+  type: 'array-match'
 }
 
-export type ExtractPath = (FindItem | string)[] | string
+export type ExtractPath = (ArrayMatch | string)[] | string
 
 export interface UsageExtractorMapping {
   dest:

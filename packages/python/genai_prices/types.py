@@ -34,7 +34,7 @@ __all__ = (
     'ClauseOr',
     'ClauseAnd',
     'MatchLogic',
-    'FindItem',
+    'ArrayMatch',
     'providers_schema',
 )
 
@@ -79,18 +79,19 @@ ProviderID = Literal[
 
 
 @dataclass
-class FindItem:
-    find_item_with: str
+class ArrayMatch:
+    type: Literal['array-match']
+    field: str
     match: MatchLogic
 
     def extract(self, items: Sequence[Any]) -> Mapping[str, Any] | None:
         for item in items:
-            if _is_mapping(item) and (item_field := item.get(self.find_item_with)):
+            if _is_mapping(item) and (item_field := item.get(self.field)):
                 if self.match.is_match(item_field):
                     return item
 
 
-ExtractPath = Union[str, Sequence[Union[str, FindItem]]]
+ExtractPath = Union[str, Sequence[Union[str, ArrayMatch]]]
 
 
 @dataclass(repr=False)
@@ -345,7 +346,7 @@ E = TypeVar('E')
 
 @overload
 def _extract_path(
-    path: ExtractPath, data: Any, extract_type: type[E], required: Literal[True], data_path: Sequence[str | FindItem]
+    path: ExtractPath, data: Any, extract_type: type[E], required: Literal[True], data_path: Sequence[str | ArrayMatch]
 ) -> E: ...
 
 
@@ -355,12 +356,12 @@ def _extract_path(
     data: Any,
     extract_type: type[E],
     required: Literal[False],
-    data_path: Sequence[str | FindItem],
+    data_path: Sequence[str | ArrayMatch],
 ) -> E | None: ...
 
 
 def _extract_path(
-    path: ExtractPath, data: Any, extract_type: type[E], required: bool, data_path: Sequence[str | FindItem]
+    path: ExtractPath, data: Any, extract_type: type[E], required: bool, data_path: Sequence[str | ArrayMatch]
 ) -> E | None:
     if isinstance(path, str):
         path = [path]
@@ -368,10 +369,10 @@ def _extract_path(
     *steps, last = path
     last = cast(str, last)
 
-    error_path: list[str | FindItem] = []
+    error_path: list[str | ArrayMatch] = []
     for step in steps:
         error_path.append(step)
-        if isinstance(step, FindItem):
+        if isinstance(step, ArrayMatch):
             if not _is_sequence(data):
                 raise ValueError(
                     f'Expected `{_dot_path(data_path, error_path)}` value to be a sequence, got {_type_name(data)}'
@@ -424,7 +425,7 @@ def _is_sequence(item: Any) -> TypeGuard[Sequence[Any]]:
     return isinstance(item, Sequence)
 
 
-def _dot_path(data_path: Sequence[str | FindItem], error_path: Sequence[str | FindItem]) -> str:
+def _dot_path(data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | ArrayMatch]) -> str:
     return '.'.join([str(p) for p in data_path] + [str(p) for p in error_path])
 
 

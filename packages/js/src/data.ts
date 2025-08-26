@@ -1563,7 +1563,8 @@ export const data: Provider[] = [
             path: [
               'cacheTokensDetails',
               {
-                find_item_with: 'modality',
+                type: 'array-match',
+                field: 'modality',
                 match: {
                   equals: 'TEXT',
                 },
@@ -1577,7 +1578,8 @@ export const data: Provider[] = [
             path: [
               'cacheTokensDetails',
               {
-                find_item_with: 'modality',
+                type: 'array-match',
+                field: 'modality',
                 match: {
                   equals: 'AUDIO',
                 },

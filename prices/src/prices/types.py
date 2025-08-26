@@ -387,20 +387,21 @@ MatchLogic = Annotated[
 match_logic_schema: TypeAdapter[MatchLogic] = TypeAdapter(MatchLogic)
 
 
-class FindItem(_Model):
-    find_item_with: str
+class ArrayMatch(_Model):
+    type: Literal['array-match']
+    field: str
     match: MatchLogic
 
 
-def doesnt_end_with_find_item(path: str | list[str | FindItem]) -> str | list[str | FindItem]:
+def doesnt_end_with_find_item(path: str | list[str | ArrayMatch]) -> str | list[str | ArrayMatch]:
     if isinstance(path, list):
         if not path:
             raise ValueError('ExtractPath should not be empty')
-        if isinstance(path[-1], FindItem):
-            raise ValueError('ExtractPath should not end with a `FindItem` object')
+        if isinstance(path[-1], ArrayMatch):
+            raise ValueError('ExtractPath should not end with a `ArrayMatch` object')
     return path
 
 
-ExtractPath = Annotated[Union[str, list[Union[str, FindItem]]], AfterValidator(doesnt_end_with_find_item)]
+ExtractPath = Annotated[Union[str, list[Union[str, ArrayMatch]]], AfterValidator(doesnt_end_with_find_item)]
 
 providers_schema = TypeAdapter(list[Provider])
