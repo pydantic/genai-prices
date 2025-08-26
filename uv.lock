@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version >= '3.11' and platform_python_implementation == 'PyPy'",
@@ -299,7 +299,7 @@ wheels = [
 
 [[package]]
 name = "genai-prices"
-version = "0.0.23"
+version = "0.0.24"
 source = { editable = "packages/python" }
 dependencies = [
     { name = "eval-type-backport", marker = "python_full_version < '3.11'" },
