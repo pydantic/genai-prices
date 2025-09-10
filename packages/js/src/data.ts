@@ -1597,7 +1597,7 @@ export const data: Provider[] = [
           {
             path: 'thoughtsTokenCount',
             dest: 'output_tokens',
-            required: true,
+            required: false,
           },
         ],
       },
