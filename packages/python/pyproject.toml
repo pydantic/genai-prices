@@ -10,6 +10,7 @@ readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
 requires-python = ">=3.9"
 license = "MIT"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
