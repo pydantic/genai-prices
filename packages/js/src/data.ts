@@ -1594,6 +1594,11 @@ export const data: Provider[] = [
             dest: 'output_tokens',
             required: true,
           },
+          {
+            path: 'thoughtsTokenCount',
+            dest: 'output_tokens',
+            required: true,
+          },
         ],
       },
     ],

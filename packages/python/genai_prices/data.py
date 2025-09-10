@@ -916,6 +916,7 @@ providers: list[Provider] = [
                         required=False,
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=True),
+                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',
