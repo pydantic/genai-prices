@@ -44,6 +44,7 @@ extractors:
         dest: output_tokens
       - path: thoughtsTokenCount
         dest: output_tokens
+        required: false
 
 models:
   - id: claude-3-5-haiku

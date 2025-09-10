@@ -211,3 +211,23 @@ def test_google_caching():
             Usage(input_tokens=14152, cache_read_tokens=12110, output_tokens=119, cache_audio_read_tokens=129),
         )
     )
+
+
+gemini_response_data_thoughtless = {
+    'usageMetadata': {
+        'promptTokenCount': 75,
+        'candidatesTokenCount': 18,
+        'totalTokenCount': 237,
+        'trafficType': 'ON_DEMAND',
+        'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 75}],
+        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 18}],
+    },
+    'modelVersion': 'gemini-2.5-flash',
+    'createTime': '2025-08-25T14:26:17.534704Z',
+    'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
+}
+
+
+def test_gemini_response_thoughtless():
+    usage = goolgle_provider.extract_usage(gemini_response_data_thoughtless)
+    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
