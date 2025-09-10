@@ -209,7 +209,7 @@ describe('extractUsage', () => {
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
         input_tokens: 75,
-        output_tokens: 18,
+        output_tokens: 162,
       })
     })
 
@@ -241,7 +241,7 @@ describe('extractUsage', () => {
         cache_audio_read_tokens: 129,
         cache_read_tokens: 12110,
         input_tokens: 14152,
-        output_tokens: 50,
+        output_tokens: 119,
       })
     })
   })

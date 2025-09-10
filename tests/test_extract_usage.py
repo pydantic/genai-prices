@@ -184,7 +184,7 @@ assert goolgle_provider.extractors is not None
 
 def test_google():
     usage = goolgle_provider.extract_usage(gemini_response_data)
-    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
 
 
 gemini_response_data_caching = {
@@ -208,6 +208,6 @@ def test_google_caching():
     assert usage == snapshot(
         (
             'gemini-2.5-flash',
-            Usage(input_tokens=14152, cache_read_tokens=12110, output_tokens=50, cache_audio_read_tokens=129),
+            Usage(input_tokens=14152, cache_read_tokens=12110, output_tokens=119, cache_audio_read_tokens=129),
         )
     )
