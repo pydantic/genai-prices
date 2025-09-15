@@ -189,3 +189,70 @@ EXAMPLES: list[tuple[str, str]] = [
 @pytest.mark.parametrize('provider,model', EXAMPLES)
 def test_models_found(provider: str, model: str):
     calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model, provider_id=provider)
+
+
+def test_complex_usage():
+    # Based on https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash
+    # Input price
+    #   $0.30 (text / image / video)
+    #   $1.00 (audio)
+    # Output price (including thinking tokens)
+    #   $2.50
+    # Context caching price
+    #   $0.075 (text / image / video)
+    #   $0.25 (audio)
+
+    mil = 1_000_000
+    assert calc_price(
+        Usage(input_tokens=mil),
+        'gemini-2.5-flash',
+    ).total_price == snapshot(Decimal('0.3'))
+
+    # input_audio_tokens == input_tokens means all tokens are audio tokens
+    assert calc_price(
+        Usage(input_tokens=mil, input_audio_tokens=mil),
+        'gemini-2.5-flash',
+    ).total_price == snapshot(Decimal('1.0'))
+
+    assert calc_price(
+        Usage(output_tokens=mil),
+        'gemini-2.5-flash',
+    ).total_price == snapshot(Decimal('2.5'))
+
+    # All cached text tokens
+    assert calc_price(
+        Usage(input_tokens=mil, cache_read_tokens=mil),
+        'gemini-2.5-flash',
+    ).total_price == snapshot(Decimal('0.075'))
+
+    # All cached audio tokens
+    assert calc_price(
+        Usage(input_tokens=mil, input_audio_tokens=mil, cache_read_tokens=mil, cache_audio_read_tokens=mil),
+        'gemini-2.5-flash',
+    ).total_price == snapshot(Decimal('0.25'))
+
+    cached_text_tokens = 1
+    uncached_text_tokens = 1_000
+    cached_audio_tokens = 1_000_000
+    uncached_audio_tokens = 1_000_000_000
+    cached_tokens = cached_text_tokens + cached_audio_tokens
+    audio_tokens = uncached_audio_tokens + cached_audio_tokens
+    total_input_tokens = cached_text_tokens + uncached_text_tokens + cached_audio_tokens + uncached_audio_tokens
+    assert total_input_tokens == 1_001_001_001
+
+    assert (
+        calc_price(
+            Usage(
+                input_tokens=total_input_tokens,
+                input_audio_tokens=audio_tokens,
+                cache_read_tokens=cached_tokens,
+                cache_audio_read_tokens=cached_audio_tokens,
+            ),
+            'gemini-2.5-flash',
+        ).total_price
+        == snapshot(Decimal('1000.250_300_075'))
+        == Decimal('0.075') * cached_text_tokens / mil
+        + Decimal('0.3') * uncached_text_tokens / mil
+        + Decimal('0.25') * cached_audio_tokens / mil
+        + Decimal('1.0') * uncached_audio_tokens / mil
+    )
