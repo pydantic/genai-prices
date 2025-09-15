@@ -147,7 +147,7 @@ class AbstractUsage(Protocol):
 
     @property
     def input_tokens(self) -> int | None:
-        """Total number of text input/prompt tokens.
+        """Total number of input/prompt tokens.
 
         Note this should INCLUDE both uncached and cached tokens.
         """
@@ -165,7 +165,7 @@ class AbstractUsage(Protocol):
 
     @property
     def output_tokens(self) -> int | None:
-        """Number of text output/completion tokens."""
+        """Number of output/completion tokens."""
 
     @property
     def input_audio_tokens(self) -> int | None:
@@ -185,7 +185,7 @@ class Usage:
     """Simple implementation of `AbstractUsage` as a dataclass."""
 
     input_tokens: int | None = None
-    """Number of text input/prompt tokens."""
+    """Number of input/prompt tokens."""
 
     cache_write_tokens: int | None = None
     """Number of tokens written to the cache."""
@@ -193,7 +193,7 @@ class Usage:
     """Number of tokens read from the cache."""
 
     output_tokens: int | None = None
-    """Number of text output/completion tokens."""
+    """Number of output/completion tokens."""
 
     input_audio_tokens: int | None = None
     """Number of audio input tokens."""
