@@ -915,6 +915,15 @@ providers: list[Provider] = [
                         dest='cache_audio_read_tokens',
                         required=False,
                     ),
+                    UsageExtractorMapping(
+                        path=[
+                            'promptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='input_audio_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=True),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
                 ],

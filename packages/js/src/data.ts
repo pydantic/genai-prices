@@ -1590,6 +1590,21 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
             path: 'candidatesTokenCount',
             dest: 'output_tokens',
             required: true,
