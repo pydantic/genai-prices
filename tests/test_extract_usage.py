@@ -215,7 +215,7 @@ def test_google_caching():
             cache_audio_read_tokens=129,
         ),
     )
-    assert calc_price(usage, model).total_price == snapshot(Decimal('0.00187160'))
+    assert calc_price(usage, model).total_price == snapshot(Decimal('0.00186530'))
 
 
 gemini_response_data_thoughtless = {
