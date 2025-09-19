@@ -300,7 +300,6 @@
           "title": "Prices"
         },
         "price_discrepancies": {
-          "additionalProperties": true,
           "type": "object",
           "description": "List of price discrepancies based on external sources.",
           "title": "Price Discrepancies"
