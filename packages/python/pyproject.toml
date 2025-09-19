@@ -35,7 +35,7 @@ classifiers = [
 dependencies = [
     "eval-type-backport>=0.2; python_version < '3.11'",
     "httpx>=0.28.1",
-    "pydantic>=2.11.7",
+    "pydantic>=2.10",
 ]
 
 [project.scripts]
