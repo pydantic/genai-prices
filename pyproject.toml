@@ -53,6 +53,9 @@ quote-style = "single"
 testpaths = "tests"
 xfail_strict = true
 filterwarnings = ["error"]
+markers = [
+    "requires_latest_pydantic: marks tests that require Pydantic >2.10 for schema generation",
+]
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]

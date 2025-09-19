@@ -55,6 +55,10 @@ jobs:
           name: coverage-${{ matrix.python-version }}
           path: coverage
           include-hidden-files: true
+      - name: test with lowest dependency version
+        run: |
+          uv sync --all-packages --all-extras --resolution lowest-direct
+          uv run --no-sync pytest -m "not requires_latest_pydantic"
 
   coverage:
     runs-on: ubuntu-latest

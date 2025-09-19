@@ -1,5 +1,6 @@
 from typing import Any, cast
 
+import pytest
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 from pydantic_core import core_schema, from_json
 
@@ -26,6 +27,7 @@ def remove_ignored_fields(json_schema: Any):
             remove_ignored_fields(item)
 
 
+@pytest.mark.requires_latest_pydantic
 def test_package_schema():
     package_schema = simplify_json_schema(providers_schema.json_schema(schema_generator=CustomGenerateJsonSchema))
     remove_ignored_fields(package_schema)
