@@ -147,7 +147,7 @@ class AbstractUsage(Protocol):
 
     @property
     def input_tokens(self) -> int | None:
-        """Total number of text input/prompt tokens.
+        """Total number of input/prompt tokens.
 
         Note this should INCLUDE both uncached and cached tokens.
         """
@@ -165,7 +165,7 @@ class AbstractUsage(Protocol):
 
     @property
     def output_tokens(self) -> int | None:
-        """Number of text output/completion tokens."""
+        """Number of output/completion tokens."""
 
     @property
     def input_audio_tokens(self) -> int | None:
@@ -185,7 +185,7 @@ class Usage:
     """Simple implementation of `AbstractUsage` as a dataclass."""
 
     input_tokens: int | None = None
-    """Number of text input/prompt tokens."""
+    """Number of input/prompt tokens."""
 
     cache_write_tokens: int | None = None
     """Number of tokens written to the cache."""
@@ -193,7 +193,7 @@ class Usage:
     """Number of tokens read from the cache."""
 
     output_tokens: int | None = None
-    """Number of text output/completion tokens."""
+    """Number of output/completion tokens."""
 
     input_audio_tokens: int | None = None
     """Number of audio input tokens."""
@@ -535,20 +535,34 @@ class ModelPrice:
         input_price = Decimal(0)
         output_price = Decimal(0)
 
-        if uncached_input_tokens := usage.input_tokens:
-            if cache_write_tokens := usage.cache_write_tokens:
-                uncached_input_tokens -= cache_write_tokens
-            if cache_read_tokens := usage.cache_read_tokens:
-                uncached_input_tokens -= cache_read_tokens
+        uncached_audio_input_tokens = usage.input_audio_tokens or 0
+        if cache_audio_read_tokens := (usage.cache_audio_read_tokens or 0):
+            uncached_audio_input_tokens -= cache_audio_read_tokens
 
-            if uncached_input_tokens < 0:
-                raise ValueError('uncached_input_tokens cannot be negative')
-            input_price += calc_mtok_price(self.input_mtok, uncached_input_tokens)
+        if uncached_audio_input_tokens < 0:
+            raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
+        input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens)
+
+        uncached_text_input_tokens = usage.input_tokens or 0
+        uncached_text_input_tokens -= uncached_audio_input_tokens
+        if cache_write_tokens := usage.cache_write_tokens:
+            uncached_text_input_tokens -= cache_write_tokens
+        if cache_read_tokens := usage.cache_read_tokens:
+            uncached_text_input_tokens -= cache_read_tokens
+
+        if uncached_text_input_tokens < 0:
+            raise ValueError('Uncached text input tokens cannot be negative')
+        input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens)
+
+        cached_text_input_tokens = usage.cache_read_tokens or 0
+        cached_text_input_tokens -= cache_audio_read_tokens
+
+        if cached_text_input_tokens < 0:
+            raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
+        input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens)
 
         input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
-        input_price += calc_mtok_price(self.cache_read_mtok, usage.cache_read_tokens)
         output_price += calc_mtok_price(self.output_mtok, usage.output_tokens)
-        input_price += calc_mtok_price(self.input_audio_mtok, usage.input_audio_tokens)
         input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
         output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
 

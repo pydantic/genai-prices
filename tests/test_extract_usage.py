@@ -5,7 +5,7 @@ from typing import Any
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, extract_usage
+from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
 from genai_prices.types import Provider
 
@@ -204,13 +204,18 @@ gemini_response_data_caching = {
 
 
 def test_google_caching():
-    usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    model, usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    assert model == snapshot('gemini-2.5-flash')
     assert usage == snapshot(
-        (
-            'gemini-2.5-flash',
-            Usage(input_tokens=14152, cache_read_tokens=12110, output_tokens=119, cache_audio_read_tokens=129),
-        )
+        Usage(
+            input_tokens=14152,
+            cache_read_tokens=12110,
+            output_tokens=119,
+            input_audio_tokens=150,
+            cache_audio_read_tokens=129,
+        ),
     )
+    assert calc_price(usage, model).total_price == snapshot(Decimal('0.001855625'))
 
 
 gemini_response_data_thoughtless = {

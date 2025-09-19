@@ -240,6 +240,7 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         cache_audio_read_tokens: 129,
         cache_read_tokens: 12110,
+        input_audio_tokens: 150,
         input_tokens: 14152,
         output_tokens: 119,
       })
