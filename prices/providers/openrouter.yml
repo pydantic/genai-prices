@@ -1021,6 +1021,9 @@ models:
         - equals: gemini-2.5-pro
         - equals: gemini-2.5-pro-preview
         - equals: gemini-2.5-pro-preview-05-06
+        - equals: google/gemini-2.5-pro
+        - equals: google/gemini-2.5-pro-preview
+        - equals: google/gemini-2.5-pro-preview-05-06
     prices:
       input_mtok: 1.25
       cache_write_mtok: 1.625

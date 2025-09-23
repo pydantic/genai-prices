@@ -5495,6 +5495,15 @@ export const data: Provider[] = [
             {
               equals: 'gemini-2.5-pro-preview-05-06',
             },
+            {
+              equals: 'google/gemini-2.5-pro',
+            },
+            {
+              equals: 'google/gemini-2.5-pro-preview',
+            },
+            {
+              equals: 'google/gemini-2.5-pro-preview-05-06',
+            },
           ],
         },
         prices: {
