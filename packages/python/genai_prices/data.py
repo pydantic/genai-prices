@@ -3079,6 +3079,9 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gemini-2.5-pro'),
                         ClauseEquals(equals='gemini-2.5-pro-preview'),
                         ClauseEquals(equals='gemini-2.5-pro-preview-05-06'),
+                        ClauseEquals(equals='openrouter/gemini-2.5-pro'),
+                        ClauseEquals(equals='openrouter/gemini-2.5-pro-preview'),
+                        ClauseEquals(equals='openrouter/gemini-2.5-pro-preview-05-06'),
                     ]
                 ),
                 name='Gemini 2.5 Pro',
