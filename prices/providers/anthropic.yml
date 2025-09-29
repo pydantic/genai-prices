@@ -30,6 +30,8 @@ extractors:
         required: false
       - path: output_tokens
         dest: output_tokens
+
+# See https://github.com/anthropics/anthropic-sdk-python/blob/v0.69.0/src/anthropic/types/model.py
 models:
   - id: claude-2
     name: Claude 2.0 / 2.1
@@ -145,7 +147,7 @@ models:
         - starts_with: claude-4-opus
         - equals: claude-opus-4-20250514
     context_window: 200000
-    prices_checked: 2025-08-08
+    prices_checked: 2025-09-29
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
@@ -159,7 +161,7 @@ models:
       starts_with: claude-opus-4-1
     context_window: 200000
     collapse: true
-    prices_checked: 2025-08-08
+    prices_checked: 2025-09-29
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
@@ -171,12 +173,44 @@ models:
     description: Optimal balance of intelligence, cost, and speed
     match:
       or:
-        - starts_with: claude-sonnet-4
+        - starts_with: claude-sonnet-4-2025
+        - starts_with: claude-sonnet-4-0
+        - starts_with: claude-sonnet-4@
+        - equals: claude-sonnet-4
         - starts_with: claude-4-sonnet
     context_window: 200000
-    prices_checked: 2025-08-08
+    prices_checked: 2025-09-29
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+
+  - id: claude-sonnet-4-5
+    name: Claude Sonnet 4.5
+    description: Most intelligent model for building agents and coding
+    match:
+      starts_with: claude-sonnet-4-5
+    context_window: 1000000
+    prices_checked: 2025-09-29
+    prices:
+      input_mtok:
+        base: 3
+        tiers:
+          - start: 200000
+            price: 6
+      cache_read_mtok:
+        base: 0.30
+        tiers:
+          - start: 200000
+            price: 0.60
+      cache_write_mtok:
+        base: 3.75
+        tiers:
+          - start: 200000
+            price: 7.50
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 200000
+            price: 22.50
