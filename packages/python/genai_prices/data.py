@@ -172,7 +172,8 @@ providers: list[Provider] = [
                 id='claude-sonnet-4-0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='claude-sonnet-4'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-2025'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-0'),
                         ClauseStartsWith(starts_with='claude-4-sonnet'),
                     ]
                 ),
@@ -184,6 +185,21 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-4-5',
+                match=ClauseStartsWith(starts_with='claude-sonnet-4-5'),
+                name='Claude Sonnet 4.5',
+                description='Most intelligent model for building agents and coding',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
                 ),
             ),
         ],

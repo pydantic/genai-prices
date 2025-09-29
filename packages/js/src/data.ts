@@ -241,7 +241,10 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'claude-sonnet-4',
+              starts_with: 'claude-sonnet-4-2025',
+            },
+            {
+              starts_with: 'claude-sonnet-4-0',
             },
             {
               starts_with: 'claude-4-sonnet',
@@ -254,6 +257,53 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'claude-sonnet-4-5',
+        name: 'Claude Sonnet 4.5',
+        description: 'Most intelligent model for building agents and coding',
+        match: {
+          starts_with: 'claude-sonnet-4-5',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
         },
       },
     ],
