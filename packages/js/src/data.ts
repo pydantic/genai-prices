@@ -247,6 +247,12 @@ export const data: Provider[] = [
               starts_with: 'claude-sonnet-4-0',
             },
             {
+              starts_with: 'claude-sonnet-4@',
+            },
+            {
+              equals: 'claude-sonnet-4',
+            },
+            {
               starts_with: 'claude-4-sonnet',
             },
           ],

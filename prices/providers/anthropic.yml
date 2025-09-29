@@ -175,6 +175,8 @@ models:
       or:
         - starts_with: claude-sonnet-4-2025
         - starts_with: claude-sonnet-4-0
+        - starts_with: claude-sonnet-4@
+        - equals: claude-sonnet-4
         - starts_with: claude-4-sonnet
     context_window: 200000
     prices_checked: 2025-09-29

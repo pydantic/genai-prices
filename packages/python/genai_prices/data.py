@@ -174,6 +174,8 @@ providers: list[Provider] = [
                     or_=[
                         ClauseStartsWith(starts_with='claude-sonnet-4-2025'),
                         ClauseStartsWith(starts_with='claude-sonnet-4-0'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4@'),
+                        ClauseEquals(equals='claude-sonnet-4'),
                         ClauseStartsWith(starts_with='claude-4-sonnet'),
                     ]
                 ),
