@@ -396,6 +396,9 @@ def _extract_path(
                 else:
                     return None
 
+    if data is None and not required:
+        return None
+
     if not _is_mapping(data):
         raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
 
@@ -410,7 +413,7 @@ def _extract_path(
     else:
         if isinstance(value, extract_type):
             return value
-        else:
+        elif required:
             error_path.append(last)
             raise ValueError(
                 f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
