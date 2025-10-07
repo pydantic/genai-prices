@@ -88,7 +88,12 @@ def test_openai():
     assert provider.extractors is not None
     response_data = {
         'model': 'gpt-4.1',
-        'usage': {'prompt_tokens': 100, 'completion_tokens': 200},
+        'usage': {
+            'prompt_tokens': 100,
+            'completion_tokens': 200,
+            'prompt_tokens_details': {'cached_tokens': None},
+            'completion_tokens_details': None,
+        },
     }
     usage = provider.extract_usage(response_data, api_flavor='chat')
     assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200)))
