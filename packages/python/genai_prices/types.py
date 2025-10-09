@@ -556,6 +556,7 @@ class ModelPrice:
         if uncached_text_input_tokens < 0:
             raise ValueError('Uncached text input tokens cannot be negative')
         input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens)
+        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
 
         cached_text_input_tokens = usage.cache_read_tokens or 0
         cached_text_input_tokens -= cache_audio_read_tokens
@@ -563,10 +564,13 @@ class ModelPrice:
         if cached_text_input_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
         input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens)
-
-        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
-        output_price += calc_mtok_price(self.output_mtok, usage.output_tokens)
         input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
+
+        text_output_tokens = usage.output_tokens or 0
+        text_output_tokens -= usage.output_audio_tokens or 0
+        if text_output_tokens < 0:
+            raise ValueError('output_audio_tokens cannot be greater than output_tokens')
+        output_price += calc_mtok_price(self.output_mtok, text_output_tokens)
         output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
 
         total_price = input_price + output_price

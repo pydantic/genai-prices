@@ -256,3 +256,30 @@ def test_complex_usage():
         + Decimal('0.25') * cached_audio_tokens / mil
         + Decimal('1.0') * uncached_audio_tokens / mil
     )
+
+
+def test_output_audio_usage():
+    mil = 1_000_000
+
+    assert calc_price(
+        Usage(output_tokens=mil),
+        'gpt-4o-realtime-preview',
+    ).total_price == snapshot(Decimal('20.0'))
+
+    # All audio tokens
+    assert calc_price(
+        Usage(output_tokens=mil, output_audio_tokens=mil),
+        'gpt-4o-realtime-preview',
+    ).total_price == snapshot(Decimal('80.0'))
+
+    output_text_tokens = mil
+    output_audio_tokens = mil * 1000
+    total_output_tokens = output_text_tokens + output_audio_tokens
+    assert (
+        calc_price(
+            Usage(output_tokens=total_output_tokens, output_audio_tokens=output_audio_tokens),
+            'gpt-4o-realtime-preview',
+        ).total_price
+        == snapshot(Decimal('80020.0'))
+        == Decimal('20') * output_text_tokens / mil + Decimal('80') * output_audio_tokens / mil
+    )
