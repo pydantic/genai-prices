@@ -92,14 +92,14 @@ def test_openai():
             'prompt_tokens': 100,
             'completion_tokens': 200,
             'prompt_tokens_details': {'cached_tokens': None},
-            'completion_tokens_details': {'audio_tokens': 50},
+            'completion_tokens_details': None,
         },
     }
     usage = provider.extract_usage(response_data, api_flavor='chat')
-    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200, output_audio_tokens=50)))
+    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200)))
 
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
-    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200, output_audio_tokens=50))
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
     assert extracted_usage.model.name == snapshot('gpt 4.1')
 
