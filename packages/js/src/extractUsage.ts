@@ -3,7 +3,6 @@ import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage, UsageExtractor } from './types'
 
 export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string, modelName?: string): [string, Usage] {
-  console.log('provider', provider)
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
