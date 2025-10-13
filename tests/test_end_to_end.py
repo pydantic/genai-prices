@@ -133,3 +133,17 @@ def test_openai_caching():
     assert price.input_price == snapshot(Decimal('0.065842'))
     assert price.output_price == snapshot(Decimal('0.00488'))
     assert price.total_price == snapshot(Decimal('0.070722'))
+
+
+def test_bedrock_without_caching():
+    response = dict(
+        metrics=dict(latencyMs=543),
+        usage=dict(inputTokens=406, outputTokens=53, serverToolUsage={}, totalTokens=459),
+    )
+
+    extracted_usage = extract_usage(response, provider_id='aws', model_name='amazon.nova-micro-v1:0')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
+    price = extracted_usage.calc_price()
+    assert price.input_price == snapshot(Decimal('0.00001421'))
+    assert price.output_price == snapshot(Decimal('0.00000742'))
+    assert price.total_price == snapshot(Decimal('0.00002163'))

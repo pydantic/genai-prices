@@ -247,24 +247,11 @@ describe('extractUsage', () => {
     })
   })
 
-  describe('AWS Bedrock provider', () => {
+  describe.only('AWS Bedrock provider', () => {
     const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
 
-    it.only('should extract usage with model name', () => {
+    it('should extract usage with model name', () => {
       const responseData = {
-        metrics: { latencyMs: 543 },
-        output: {
-          message: {
-            content: [
-              {
-                text: '<thinking> To determine the capital of France, I will use the available "capital_of" tool. I will provide the name "France" as the argument to this tool.</thinking>\n',
-              },
-              { toolUse: { input: { name: 'France' }, name: 'capital_of', toolUseId: 'tooluse_cxBXIRmcRem3Q2KL_QAx-Q' } },
-            ],
-            role: 'assistant',
-          },
-        },
-        stopReason: 'tool_use',
         usage: { inputTokens: 406, outputTokens: 53, serverToolUsage: {}, totalTokens: 459 },
       }
 

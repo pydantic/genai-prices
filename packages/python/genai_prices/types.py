@@ -235,12 +235,16 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: Any, *, api_flavor: str | None = None) -> tuple[str, Usage]:
+    def extract_usage(
+        self, response_data: Any, *, api_flavor: str | None = None, model_name: str | None = None
+    ) -> tuple[str, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
             response_data: The response data from the provider's API.
             api_flavor: The flavor of API used for this request.
+            model_name: The name of the model to extract usage information for, if not provided, the model name will be
+                extracted from the response data.
 
         Raises:
             ValueError: If the response data is invalid or the API flavor is not found.
@@ -263,7 +267,7 @@ class Provider:
                 fs = ', '.join(e.api_flavor for e in self.extractors)
                 raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
 
-        return extractor.extract(response_data)
+        return extractor.extract(response_data, model_name)
 
     def summary(self) -> str:
         return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
@@ -308,11 +312,13 @@ class UsageExtractor:
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
 
-    def extract(self, response_data: Any) -> tuple[str, Usage]:
+    def extract(self, response_data: Any, model_name: str | None = None) -> tuple[str, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
             response_data: The response data to extract usage information from, generally the decoded JSON response.
+            model_name: The name of the model to extract usage information for, if not provided, the model name will be
+                extracted from the response data.
 
         Raises:
             ValueError: If no usage information is found at the root.
@@ -320,7 +326,7 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        model_name = _extract_path(self.model_path, response_data, str, True, [])
+        model_name = model_name or _extract_path(self.model_path, response_data, str, True, [])
 
         root = self.root
         if isinstance(root, str):

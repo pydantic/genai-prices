@@ -406,7 +406,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          equals: 'nova-lite-v1',
+          equals: 'amazon.nova-lite-v1:0',
         },
         prices: {
           input_mtok: 0.06,
@@ -419,7 +419,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          equals: 'nova-micro-v1',
+          equals: 'amazon.nova-micro-v1:0',
         },
         prices: {
           input_mtok: 0.035,
