@@ -2,7 +2,8 @@
 import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage, UsageExtractor } from './types'
 
-export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): [string, Usage] {
+export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string, modelName?: string): [string, Usage] {
+  console.log('provider', provider)
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
@@ -28,7 +29,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`Expected response data to be a mapping object, got ${typeName(responseData)}`)
   }
 
-  const modelName = extractPath(extractor.model_path, responseData, stringCheck, true, [])
+  modelName = modelName ?? extractPath(extractor.model_path, responseData, stringCheck, true, [])
 
   const root = asArray(extractor.root)
   const usageObj = extractPath(root, responseData, mappingCheck, true, [])

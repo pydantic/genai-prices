@@ -240,6 +240,17 @@ providers: list[Provider] = [
         api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
         provider_match=ClauseContains(contains='bedrock'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='inputTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='meta.llama3-8b-instruct-v1%3A0',

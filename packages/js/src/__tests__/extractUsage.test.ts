@@ -246,4 +246,33 @@ describe('extractUsage', () => {
       })
     })
   })
+
+  describe('AWS Bedrock provider', () => {
+    const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
+    console.log(bedrockProvider)
+
+    it.only('should extract usage with model name', () => {
+      const responseData = {
+        metrics: { latencyMs: 543 },
+        output: {
+          message: {
+            content: [
+              {
+                text: '<thinking> To determine the capital of France, I will use the available "capital_of" tool. I will provide the name "France" as the argument to this tool.</thinking>\n',
+              },
+              { toolUse: { input: { name: 'France' }, name: 'capital_of', toolUseId: 'tooluse_cxBXIRmcRem3Q2KL_QAx-Q' } },
+            ],
+            role: 'assistant',
+          },
+        },
+        stopReason: 'tool_use',
+        usage: { inputTokens: 406, outputTokens: 53, serverToolUsage: {}, totalTokens: 459 },
+      }
+
+      const [model, usage] = extractUsage(bedrockProvider, responseData, undefined, 'amazon.nova-micro-v1:0')
+
+      expect(model).toBe('amazon.nova-micro-v1:0')
+      expect(usage).toEqual({ input_tokens: 406, output_tokens: 53 })
+    })
+  })
 })

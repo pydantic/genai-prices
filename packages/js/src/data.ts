@@ -370,6 +370,25 @@ export const data: Provider[] = [
     provider_match: {
       contains: 'bedrock',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'inputTokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'outputTokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'meta.llama3-8b-instruct-v1%3A0',
