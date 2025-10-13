@@ -259,14 +259,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='nova-lite-v1',
-                match=ClauseEquals(equals='amazon.nova-lite-v1:0'),
+                match=ClauseEquals(equals='nova-lite-v1'),
                 name='Nova Lite 1.0',
                 description='Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
                 prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.24')),
             ),
             ModelInfo(
                 id='nova-micro-v1',
-                match=ClauseEquals(equals='amazon.nova-micro-v1:0'),
+                match=ClauseEquals(equals='nova-micro-v1'),
                 name='Nova Micro 1.0',
                 description='Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
                 prices=ModelPrice(input_mtok=Decimal('0.035'), output_mtok=Decimal('0.14')),

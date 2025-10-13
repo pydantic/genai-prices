@@ -28,7 +28,7 @@ models:
       and text inputs to generate text output. Amazon Nova Lite can handle real-time
       customer interactions, document analysis, and visual question-answering tasks with high accuracy.
     match:
-      equals: amazon.nova-lite-v1:0
+      equals: nova-lite-v1
     prices:
       input_mtok: 0.06
       output_mtok: 0.24
@@ -42,7 +42,7 @@ models:
       chat, and brainstorming. It has  simple mathematical reasoning and coding
       abilities.
     match:
-      equals: amazon.nova-micro-v1:0
+      equals: nova-micro-v1
     prices:
       input_mtok: 0.035
       output_mtok: 0.14
