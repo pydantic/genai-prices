@@ -249,7 +249,6 @@ describe('extractUsage', () => {
 
   describe('AWS Bedrock provider', () => {
     const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
-    console.log(bedrockProvider)
 
     it.only('should extract usage with model name', () => {
       const responseData = {
