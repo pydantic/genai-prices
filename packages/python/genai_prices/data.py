@@ -1759,6 +1759,12 @@ providers: list[Provider] = [
                 api_flavor='responses',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
