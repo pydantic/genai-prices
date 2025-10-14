@@ -120,12 +120,18 @@ class PriceCalculation:
 @dataclass(repr=False)
 class ExtractedUsage:
     usage: Usage
-    model: ModelInfo = dataclasses.field(repr=False)
+    model: ModelInfo | None = dataclasses.field(repr=False)
     provider: Provider = dataclasses.field(repr=False)
     auto_update_timestamp: datetime | None
 
-    def calc_price(self, genai_request_timestamp: datetime | None = None) -> PriceCalculation:
-        return self.model.calc_price(
+    def calc_price(
+        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+    ) -> PriceCalculation:
+        model = model or self.model
+        if model is None:
+            raise ValueError('No model reference found in response data')
+
+        return model.calc_price(
             self.usage,
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
@@ -136,7 +142,7 @@ class ExtractedUsage:
         return (
             'ExtractedUsage('
             f'usage={self.usage!r}, '
-            f'model={self.model.summary()}, '
+            f'model={self.model.summary() if self.model else None}, '
             f'provider={self.provider.summary()}, '
             f'auto_update_timestamp={self.auto_update_timestamp!r})'
         )
@@ -235,7 +241,7 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: Any, *, api_flavor: str | None = None) -> tuple[str, Usage]:
+    def extract_usage(self, response_data: Any, *, api_flavor: str | None = None) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
@@ -308,7 +314,7 @@ class UsageExtractor:
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
 
-    def extract(self, response_data: Any) -> tuple[str, Usage]:
+    def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
@@ -320,7 +326,10 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        model_name = _extract_path(self.model_path, response_data, str, True, [])
+        try:
+            model_name = _extract_path(self.model_path, response_data, str, True, [])
+        except ValueError:
+            model_name = None
 
         root = self.root
         if isinstance(root, str):

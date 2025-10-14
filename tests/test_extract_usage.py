@@ -101,6 +101,7 @@ def test_openai():
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('gpt 4.1')
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0018'))
@@ -115,6 +116,7 @@ def test_openai():
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='responses')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('GPT-5')
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.002125'))
@@ -126,8 +128,8 @@ def test_openai():
 @pytest.mark.parametrize(
     'response_data,error',
     [
-        ({}, snapshot('Missing value at `model`')),
-        ({'model': None}, snapshot('Expected `model` value to be a str, got None')),
+        ({}, snapshot('Missing value at `usage`')),
+        ({'model': None}, snapshot('Missing value at `usage`')),
         ({'model': 'x'}, snapshot('Missing value at `usage`')),
         ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
         ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
@@ -220,6 +222,7 @@ def test_google_caching():
             cache_audio_read_tokens=129,
         ),
     )
+    assert model is not None
     assert calc_price(usage, model).total_price == snapshot(Decimal('0.001855625'))
 
 
@@ -247,9 +250,9 @@ def test_bedrock():
     provider = next(provider for provider in providers if provider.id == 'aws')
     response_data = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
     usage = provider.extract_usage(response_data)
-    assert usage == snapshot()
+    assert usage == snapshot((None, Usage(input_tokens=406, output_tokens=53)))
 
     extracted_usage = extract_usage(response_data, provider_id='aws')
-    assert extracted_usage.usage == snapshot()
-    assert extracted_usage.provider.name == snapshot('OpenAI')
-    assert extracted_usage.model.name == snapshot('gpt 4.1')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
