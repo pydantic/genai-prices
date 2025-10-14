@@ -27,7 +27,7 @@ describe('extractUsage', () => {
         },
       }
 
-      const [model, usage] = extractUsage(anthropicProvider, responseData)
+      const { model, usage } = extractUsage(anthropicProvider, responseData)
 
       expect(model).toBe('claude-sonnet-4-20250514')
       expect(usage).toEqual({
@@ -48,7 +48,7 @@ describe('extractUsage', () => {
         },
       }
 
-      const [model, usage] = extractUsage(anthropicProvider, responseData)
+      const { model, usage } = extractUsage(anthropicProvider, responseData)
 
       expect(model).toBe('x')
       expect(usage).toEqual({
@@ -72,7 +72,7 @@ describe('extractUsage', () => {
         usage: { completion_tokens: 200, prompt_tokens: 100 },
       }
 
-      const [model, usage] = extractUsage(openaiProvider, responseData, 'chat')
+      const { model, usage } = extractUsage(openaiProvider, responseData, 'chat')
 
       expect(model).toBe('gpt-4.1')
       expect(usage).toEqual({
@@ -93,7 +93,7 @@ describe('extractUsage', () => {
         },
       }
 
-      const [model, usage] = extractUsage(openaiProvider, responseData, 'chat')
+      const { model, usage } = extractUsage(openaiProvider, responseData, 'chat')
 
       expect(model).toBe('gpt-4.1')
       expect(usage).toEqual({
@@ -109,7 +109,7 @@ describe('extractUsage', () => {
         usage: { input_tokens: 100, output_tokens: 200 },
       }
 
-      const [model, usage] = extractUsage(openaiProvider, responseData, 'responses')
+      const { model, usage } = extractUsage(openaiProvider, responseData, 'responses')
 
       expect(model).toBe('gpt-5')
       expect(usage).toEqual({
@@ -130,8 +130,7 @@ describe('extractUsage', () => {
 
   describe('error handling', () => {
     it.each([
-      [{}, 'Missing value at `model`'],
-      [{ model: null }, 'Expected `model` value to be a string, got null'],
+      [{}, 'Missing value at `usage`'],
       [{ model: 'x' }, 'Missing value at `usage`'],
       [{ model: 'x', usage: {} }, 'Missing value at `usage.input_tokens`'],
       [{ model: 'x', usage: 123 }, 'Expected `usage` value to be a mapping, got number'],
@@ -158,7 +157,7 @@ describe('extractUsage', () => {
         usage: { input_tokens: 100, output_tokens: 50 },
       }
 
-      const [model, usage] = extractUsage(anthropicProvider, responseData, 'default')
+      const { model, usage } = extractUsage(anthropicProvider, responseData, 'default')
 
       expect(model).toBe('test-model')
       expect(usage).toEqual({
@@ -204,7 +203,7 @@ describe('extractUsage', () => {
           trafficType: 'ON_DEMAND',
         },
       }
-      const [model, usage] = extractUsage(googleProvider, responseData)
+      const { model, usage } = extractUsage(googleProvider, responseData)
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
@@ -234,7 +233,7 @@ describe('extractUsage', () => {
           trafficType: 'ON_DEMAND',
         },
       }
-      const [model, usage] = extractUsage(googleProvider, responseData)
+      const { model, usage } = extractUsage(googleProvider, responseData)
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
@@ -247,7 +246,7 @@ describe('extractUsage', () => {
     })
   })
 
-  describe.only('AWS Bedrock provider', () => {
+  describe('AWS Bedrock provider', () => {
     const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
 
     it('should extract usage with model name', () => {
@@ -255,9 +254,9 @@ describe('extractUsage', () => {
         usage: { inputTokens: 406, outputTokens: 53, serverToolUsage: {}, totalTokens: 459 },
       }
 
-      const [model, usage] = extractUsage(bedrockProvider, responseData, undefined, 'amazon.nova-micro-v1:0')
+      const { model, usage } = extractUsage(bedrockProvider, responseData)
 
-      expect(model).toBe('amazon.nova-micro-v1:0')
+      expect(model).toBeNull()
       expect(usage).toEqual({ input_tokens: 406, output_tokens: 53 })
     })
   })

@@ -182,13 +182,13 @@ gemini_response_data = {
     'createTime': '2025-08-25T14:26:17.534704Z',
     'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
 }
-goolgle_provider = next(provider for provider in providers if provider.id == 'google')
-assert goolgle_provider.name == 'Google'
-assert goolgle_provider.extractors is not None
+google_provider = next(provider for provider in providers if provider.id == 'google')
+assert google_provider.name == 'Google'
+assert google_provider.extractors is not None
 
 
 def test_google():
-    usage = goolgle_provider.extract_usage(gemini_response_data)
+    usage = google_provider.extract_usage(gemini_response_data)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
 
 
@@ -209,7 +209,7 @@ gemini_response_data_caching = {
 
 
 def test_google_caching():
-    model, usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    model, usage = google_provider.extract_usage(gemini_response_data_caching)
     assert model == snapshot('gemini-2.5-flash')
     assert usage == snapshot(
         Usage(
@@ -239,5 +239,17 @@ gemini_response_data_thoughtless = {
 
 
 def test_gemini_response_thoughtless():
-    usage = goolgle_provider.extract_usage(gemini_response_data_thoughtless)
+    usage = google_provider.extract_usage(gemini_response_data_thoughtless)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+
+
+def test_bedrock():
+    provider = next(provider for provider in providers if provider.id == 'aws')
+    response_data = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
+    usage = provider.extract_usage(response_data)
+    assert usage == snapshot()
+
+    extracted_usage = extract_usage(response_data, provider_id='aws')
+    assert extracted_usage.usage == snapshot()
+    assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model.name == snapshot('gpt 4.1')
