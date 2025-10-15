@@ -6,6 +6,13 @@ pricing_urls:
 api_pattern: 'https://bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com/'
 provider_match:
   contains: bedrock
+extractors:
+  - root: usage
+    mappings:
+      - path: inputTokens
+        dest: input_tokens
+      - path: outputTokens
+        dest: output_tokens
 models:
   - id: meta.llama3-8b-instruct-v1%3A0
     match:

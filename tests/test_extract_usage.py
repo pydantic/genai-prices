@@ -101,6 +101,7 @@ def test_openai():
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('gpt 4.1')
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0018'))
@@ -115,6 +116,7 @@ def test_openai():
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='responses')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('GPT-5')
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.002125'))
@@ -126,8 +128,8 @@ def test_openai():
 @pytest.mark.parametrize(
     'response_data,error',
     [
-        ({}, snapshot('Missing value at `model`')),
-        ({'model': None}, snapshot('Expected `model` value to be a str, got None')),
+        ({}, snapshot('Missing value at `usage`')),
+        ({'model': None}, snapshot('Missing value at `usage`')),
         ({'model': 'x'}, snapshot('Missing value at `usage`')),
         ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
         ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
@@ -182,13 +184,13 @@ gemini_response_data = {
     'createTime': '2025-08-25T14:26:17.534704Z',
     'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
 }
-goolgle_provider = next(provider for provider in providers if provider.id == 'google')
-assert goolgle_provider.name == 'Google'
-assert goolgle_provider.extractors is not None
+google_provider = next(provider for provider in providers if provider.id == 'google')
+assert google_provider.name == 'Google'
+assert google_provider.extractors is not None
 
 
 def test_google():
-    usage = goolgle_provider.extract_usage(gemini_response_data)
+    usage = google_provider.extract_usage(gemini_response_data)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
 
 
@@ -209,7 +211,7 @@ gemini_response_data_caching = {
 
 
 def test_google_caching():
-    model, usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    model, usage = google_provider.extract_usage(gemini_response_data_caching)
     assert model == snapshot('gemini-2.5-flash')
     assert usage == snapshot(
         Usage(
@@ -220,6 +222,7 @@ def test_google_caching():
             cache_audio_read_tokens=129,
         ),
     )
+    assert model is not None
     assert calc_price(usage, model).total_price == snapshot(Decimal('0.001855625'))
 
 
@@ -239,5 +242,17 @@ gemini_response_data_thoughtless = {
 
 
 def test_gemini_response_thoughtless():
-    usage = goolgle_provider.extract_usage(gemini_response_data_thoughtless)
+    usage = google_provider.extract_usage(gemini_response_data_thoughtless)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+
+
+def test_bedrock():
+    provider = next(provider for provider in providers if provider.id == 'aws')
+    response_data = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
+    usage = provider.extract_usage(response_data)
+    assert usage == snapshot((None, Usage(input_tokens=406, output_tokens=53)))
+
+    extracted_usage = extract_usage(response_data, provider_id='aws')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
