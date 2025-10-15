@@ -195,6 +195,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-haiku-4-5',
+        name: 'Claude Haiku 4.5',
+        description: 'Fastest and most intelligent Haiku model',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-haiku-4-5',
+            },
+            {
+              starts_with: 'claude-4.5-haiku',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
+        },
+      },
+      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
