@@ -136,7 +136,7 @@ class ExtractedUsage:
         """
         model = model or self.model
         if model is None:
-            raise ValueError('No model reference found in response data')
+            raise ValueError('No model reference found in response data and model not provided')
 
         return model.calc_price(
             self.usage,
