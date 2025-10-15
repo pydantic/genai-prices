@@ -127,6 +127,13 @@ class ExtractedUsage:
     def calc_price(
         self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
     ) -> PriceCalculation:
+        """Calculate the price for the given usage.
+
+        Args:
+            genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
+                time.
+            model: The model to calculate the price for, if `None` the model from the response data is used.
+        """
         model = model or self.model
         if model is None:
             raise ValueError('No model reference found in response data')
@@ -326,10 +333,7 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        try:
-            model_name = _extract_path(self.model_path, response_data, str, True, [])
-        except ValueError:
-            model_name = None
+        model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
         if isinstance(root, str):
