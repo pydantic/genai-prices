@@ -58,11 +58,12 @@ class OpenRouterModel(BaseModel):
             name=self.model_name(),
             description=description,
             match=ClauseEquals(equals=model_id),
-            prices=self.pricing.mmodel_price(),
+            prices=self.pricing.model_price(),
         )
 
 
 class OpenRouterPricing(BaseModel, extra='forbid'):
+    audio: Decimal | None = None
     prompt: Decimal | None = None
     completion: Decimal | None = None
     request: Decimal | None = None
@@ -72,7 +73,7 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
     input_cache_write: Decimal | None = None
     input_cache_read: Decimal | None = None
 
-    def mmodel_price(self) -> ModelPrice:
+    def model_price(self) -> ModelPrice:
         return ModelPrice(
             input_mtok=mtok(self.prompt),
             cache_write_mtok=mtok(self.input_cache_write),
