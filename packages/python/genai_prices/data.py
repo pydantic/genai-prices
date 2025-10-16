@@ -137,6 +137,24 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-haiku-4-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-haiku-4-5'),
+                        ClauseStartsWith(starts_with='claude-4.5-haiku'),
+                    ]
+                ),
+                name='Claude Haiku 4.5',
+                description='Fastest and most intelligent Haiku model',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.1'),
+                    output_mtok=Decimal('5'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-opus-4-0',
                 match=ClauseOr(
                     or_=[
