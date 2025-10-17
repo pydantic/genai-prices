@@ -248,7 +248,7 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: Any, *, api_flavor: str | None = None) -> tuple[str | None, Usage]:
+    def extract_usage(self, response_data: Any, *, api_flavor: str = 'default') -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
@@ -264,7 +264,7 @@ class Provider:
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
-        if api_flavor is None:
+        if api_flavor == 'default':
             if len(self.extractors) == 1:
                 extractor = self.extractors[0]
             else:
