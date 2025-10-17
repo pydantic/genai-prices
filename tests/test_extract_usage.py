@@ -1,3 +1,4 @@
+import re
 from collections.abc import Mapping
 from decimal import Decimal
 from typing import Any
@@ -121,7 +122,7 @@ def test_openai():
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.002125'))
 
-    with pytest.raises(ValueError, match='No api_flavor specified and multiple extractors available'):
+    with pytest.raises(ValueError, match=re.escape("Unknown api_flavor 'default', allowed values: chat, responses")):
         provider.extract_usage(response_data)
 
 
@@ -256,3 +257,24 @@ def test_bedrock():
     assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
     assert extracted_usage.provider.name == snapshot('AWS Bedrock')
     assert extracted_usage.model == snapshot(None)
+
+
+anthropic_response_data = {
+    'model': 'claude-sonnet-4-20250514',
+    'usage': {
+        'input_tokens': 483,
+        'cache_creation_input_tokens': 0,
+        'cache_read_input_tokens': 0,
+        'output_tokens': 78,
+    },
+}
+
+
+def test_google_anthropic():
+    usage = google_provider.extract_usage(anthropic_response_data, api_flavor='anthropic')
+    assert usage == snapshot(
+        (
+            'claude-sonnet-4-20250514',
+            Usage(input_tokens=483, cache_write_tokens=0, cache_read_tokens=0, output_tokens=78),
+        )
+    )

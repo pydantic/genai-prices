@@ -60,13 +60,13 @@ def calc_price(
 
 @overload
 def extract_usage(
-    response_data: Any, *, provider_id: types.ProviderID | str, api_flavor: str | None = None
+    response_data: Any, *, provider_id: types.ProviderID | str, api_flavor: str = 'default'
 ) -> types.ExtractedUsage: ...
 
 
 @overload
 def extract_usage(
-    response_data: Any, *, provider_api_url: str, api_flavor: str | None = None
+    response_data: Any, *, provider_api_url: str, api_flavor: str = 'default'
 ) -> types.ExtractedUsage: ...
 
 
@@ -75,7 +75,7 @@ def extract_usage(
     *,
     provider_id: types.ProviderID | str | None = None,
     provider_api_url: str | None = None,
-    api_flavor: str | None = None,
+    api_flavor: str = 'default',
 ) -> types.ExtractedUsage:
     """Extract usage information from a response.
 

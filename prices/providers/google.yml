@@ -54,6 +54,26 @@ extractors:
       - path: thoughtsTokenCount
         dest: output_tokens
         required: false
+  # https://github.com/anthropics/anthropic-sdk-python/blob/v0.62.0/src/anthropic/types/usage.py#L12
+  - root: usage
+    api_flavor: anthropic
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
 
 models:
   - id: claude-3-5-haiku
