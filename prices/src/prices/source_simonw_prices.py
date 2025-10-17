@@ -1,4 +1,4 @@
-"""Pricing data from https://github.com/simonw/llm-prices/pull/7."""
+"""Pricing data from https://www.llm-prices.com/current-v1.json."""
 
 from __future__ import annotations
 
@@ -23,8 +23,7 @@ simonw_response_schema = TypeAdapter(dict[str, OnErrorOmit[SimonWModel]])
 
 def get_simonw_prices():
     """Get prices from github.com/simonw/llm-prices."""
-    # from https://github.com/simonw/llm-prices/pull/7/files -> prices.json
-    url = 'https://raw.githubusercontent.com/simonw/llm-prices/0c49de5ec2d34b2be8ed948e257f2328f20f3268/prices.json'
+    url = 'https://www.llm-prices.com/current-v1.json'
     r = httpx.get(url)
     r.raise_for_status()
     response_data = simonw_response_schema.validate_json(r.content)
