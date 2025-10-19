@@ -124,7 +124,7 @@ describe('extractUsage', () => {
         usage: { input_tokens: 100, output_tokens: 200 },
       }
 
-      expect(() => extractUsage(openaiProvider, responseData)).toThrow('No apiFlavor specified and multiple extractors available')
+      expect(() => extractUsage(openaiProvider, responseData)).toThrow("Unknown apiFlavor 'default', allowed values: chat, responses")
     })
   })
 

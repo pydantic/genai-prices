@@ -264,14 +264,11 @@ class Provider:
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
-        if len(self.extractors) == 1:
-            extractor = self.extractors[0]
-        else:
-            try:
-                extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
-            except StopIteration as e:
-                fs = ', '.join(e.api_flavor for e in self.extractors)
-                raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
+        try:
+            extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
+        except StopIteration as e:
+            fs = ', '.join(e.api_flavor for e in self.extractors)
+            raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
 
         return extractor.extract(response_data)
 
