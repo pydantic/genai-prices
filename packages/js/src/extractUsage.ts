@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { matchLogic } from './engine'
-import { ArrayMatch, ExtractPath, Provider, Usage, UsageExtractor } from './types'
+import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
 
 interface ExtractedUsage {
   model: null | string
@@ -8,25 +7,16 @@ interface ExtractedUsage {
 }
 
 export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): ExtractedUsage {
+  apiFlavor = apiFlavor ?? 'default'
+
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
-  let extractor: UsageExtractor
 
-  if (!apiFlavor) {
-    if (provider.extractors.length === 1) {
-      extractor = provider.extractors[0]!
-    } else {
-      throw new Error('No apiFlavor specified and multiple extractors available')
-    }
-  } else {
-    const foundExtractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
-    if (foundExtractor) {
-      extractor = foundExtractor
-    } else {
-      const availableFlavors = provider.extractors.map((e) => e.api_flavor).join(', ')
-      throw new Error(`Unknown apiFlavor '${apiFlavor}', allowed values: ${availableFlavors}`)
-    }
+  const extractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
+  if (!extractor) {
+    const availableFlavors = provider.extractors.map((e) => e.api_flavor).join(', ')
+    throw new Error(`Unknown apiFlavor '${apiFlavor}', allowed values: ${availableFlavors}`)
   }
 
   if (!mappingCheck.guard(responseData)) {

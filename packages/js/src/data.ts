@@ -1734,6 +1734,43 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'anthropic',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
