@@ -264,11 +264,8 @@ class Provider:
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
-        if api_flavor == 'default':
-            if len(self.extractors) == 1:
-                extractor = self.extractors[0]
-            else:
-                raise ValueError('No api_flavor specified and multiple extractors available')
+        if len(self.extractors) == 1:
+            extractor = self.extractors[0]
         else:
             try:
                 extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)

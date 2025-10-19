@@ -155,15 +155,6 @@ def test_extract_usage_error(response_data: Any, error: str):
     assert str(exc_info.value) == error
 
 
-def test_unknown_flavor():
-    provider = providers[0]
-    assert provider.name == 'Anthropic'
-    assert provider.extractors is not None
-
-    with pytest.raises(ValueError, match="Unknown api_flavor 'wrong', allowed values: default"):
-        provider.extract_usage({}, api_flavor='wrong')
-
-
 def test_no_flavors():
     provider = Provider(id='test', name='Test', api_pattern='x')
 
