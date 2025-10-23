@@ -6,6 +6,13 @@ pricing_urls:
 api_pattern: 'https://bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com/'
 provider_match:
   contains: bedrock
+extractors:
+  - root: usage
+    mappings:
+      - path: inputTokens
+        dest: input_tokens
+      - path: outputTokens
+        dest: output_tokens
 models:
   - id: meta.llama3-8b-instruct-v1%3A0
     match:
@@ -21,7 +28,9 @@ models:
       and text inputs to generate text output. Amazon Nova Lite can handle real-time
       customer interactions, document analysis, and visual question-answering tasks with high accuracy.
     match:
-      equals: nova-lite-v1
+      or:
+        - equals: nova-lite-v1
+        - equals: amazon.nova-lite-v1:0
     prices:
       input_mtok: 0.06
       output_mtok: 0.24
@@ -35,7 +44,9 @@ models:
       chat, and brainstorming. It has  simple mathematical reasoning and coding
       abilities.
     match:
-      equals: nova-micro-v1
+      or:
+        - equals: nova-micro-v1
+        - equals: amazon.nova-micro-v1:0
     prices:
       input_mtok: 0.035
       output_mtok: 0.14
@@ -47,7 +58,9 @@ models:
       and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art
       performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).
     match:
-      equals: nova-pro-v1
+      or:
+        - equals: nova-pro-v1
+        - equals: amazon.nova-pro-v1:0
     prices:
       input_mtok: 0.8
       output_mtok: 3.2

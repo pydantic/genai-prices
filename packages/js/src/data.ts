@@ -195,6 +195,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-haiku-4-5',
+        name: 'Claude Haiku 4.5',
+        description: 'Fastest and most intelligent Haiku model',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-haiku-4-5',
+            },
+            {
+              starts_with: 'claude-4.5-haiku',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
+        },
+      },
+      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -370,6 +392,25 @@ export const data: Provider[] = [
     provider_match: {
       contains: 'bedrock',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'inputTokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'outputTokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'meta.llama3-8b-instruct-v1%3A0',
@@ -387,7 +428,14 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          equals: 'nova-lite-v1',
+          or: [
+            {
+              equals: 'nova-lite-v1',
+            },
+            {
+              equals: 'amazon.nova-lite-v1:0',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.06,
@@ -400,7 +448,14 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          equals: 'nova-micro-v1',
+          or: [
+            {
+              equals: 'nova-micro-v1',
+            },
+            {
+              equals: 'amazon.nova-micro-v1:0',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.035,
@@ -413,7 +468,14 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
         match: {
-          equals: 'nova-pro-v1',
+          or: [
+            {
+              equals: 'nova-pro-v1',
+            },
+            {
+              equals: 'amazon.nova-pro-v1:0',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.8,
@@ -1669,6 +1731,43 @@ export const data: Provider[] = [
             path: 'thoughtsTokenCount',
             dest: 'output_tokens',
             required: false,
+          },
+        ],
+      },
+      {
+        api_flavor: 'anthropic',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
           },
         ],
       },

@@ -472,7 +472,7 @@ describe('Comprehensive API Tests', () => {
           output_tokens: 4567,
         },
       }
-      const [model, usage] = extractUsage(provider!, responseData)
+      const { model, usage } = extractUsage(provider!, responseData)
       expect(usage).toMatchObject({
         cache_read_tokens: 2345,
         cache_write_tokens: 1234,
@@ -480,7 +480,7 @@ describe('Comprehensive API Tests', () => {
         output_tokens: 4567,
       })
 
-      const result = calcPrice(usage, model, { provider: provider! })
+      const result = calcPrice(usage, model!, { provider: provider! })
       expect(result).not.toBeNull()
 
       expect(result!.provider.name).toEqual('Anthropic')
