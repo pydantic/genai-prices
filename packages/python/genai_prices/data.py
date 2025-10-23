@@ -3086,7 +3086,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-2.5-flash',
-                match=ClauseEquals(equals='gemini-2.5-flash'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-2.5-flash'), ClauseEquals(equals='google/gemini-2.5-flash')]
+                ),
                 name='Gemini 2.5 Flash',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'),
@@ -3315,9 +3317,48 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='google/gemini-2.5-flash-image',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-2.5-flash-image'),
+                        ClauseEquals(equals='google/gemini-2.5-flash-image-preview'),
+                    ]
+                ),
+                name='Gemini 2.5 Flash Image (Nano Banana)',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('2.5')),
+            ),
+            ModelInfo(
+                id='google/gemini-2.5-flash-lite',
+                match=ClauseEquals(equals='google/gemini-2.5-flash-lite'),
+                name='Gemini 2.5 Flash Lite',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'),
+                    cache_write_mtok=Decimal('0.183'),
+                    cache_read_mtok=Decimal('0.025'),
+                    output_mtok=Decimal('0.4'),
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-2.5-flash-lite-preview-09-2025',
+                match=ClauseEquals(equals='google/gemini-2.5-flash-lite-preview-09-2025'),
+                name='Gemini 2.5 Flash Lite Preview 09-2025',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.4')),
+            ),
+            ModelInfo(
                 id='google/gemini-2.5-flash-preview',
                 match=ClauseEquals(equals='google/gemini-2.5-flash-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
+                id='google/gemini-2.5-flash-preview-09-2025',
+                match=ClauseEquals(equals='google/gemini-2.5-flash-preview-09-2025'),
+                name='Gemini 2.5 Flash Preview 09-2025',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'),
+                    cache_write_mtok=Decimal('0.383'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('2.5'),
+                ),
             ),
             ModelInfo(
                 id='google/gemini-2.5-flash-preview:thinking',
