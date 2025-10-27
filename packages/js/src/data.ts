@@ -5575,7 +5575,14 @@ export const data: Provider[] = [
         id: 'gemini-2.5-flash',
         name: 'Gemini 2.5 Flash',
         match: {
-          equals: 'gemini-2.5-flash',
+          or: [
+            {
+              equals: 'gemini-2.5-flash',
+            },
+            {
+              equals: 'google/gemini-2.5-flash',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.3,
@@ -5915,6 +5922,48 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'google/gemini-2.5-flash-image',
+        name: 'Gemini 2.5 Flash Image (Nano Banana)',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-2.5-flash-image',
+            },
+            {
+              equals: 'google/gemini-2.5-flash-image-preview',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'google/gemini-2.5-flash-lite',
+        name: 'Gemini 2.5 Flash Lite',
+        match: {
+          equals: 'google/gemini-2.5-flash-lite',
+        },
+        prices: {
+          input_mtok: 0.1,
+          cache_write_mtok: 0.183,
+          cache_read_mtok: 0.025,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'google/gemini-2.5-flash-lite-preview-09-2025',
+        name: 'Gemini 2.5 Flash Lite Preview 09-2025',
+        match: {
+          equals: 'google/gemini-2.5-flash-lite-preview-09-2025',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.4,
+        },
+      },
+      {
         id: 'google/gemini-2.5-flash-preview',
         match: {
           equals: 'google/gemini-2.5-flash-preview',
@@ -5922,6 +5971,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'google/gemini-2.5-flash-preview-09-2025',
+        name: 'Gemini 2.5 Flash Preview 09-2025',
+        match: {
+          equals: 'google/gemini-2.5-flash-preview-09-2025',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_write_mtok: 0.383,
+          cache_read_mtok: 0.075,
+          output_mtok: 2.5,
         },
       },
       {
