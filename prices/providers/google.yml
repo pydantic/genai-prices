@@ -307,7 +307,8 @@ models:
       capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       or:
-        - equals: gemini-2.5-flash-preview-05-20
+        - contains: gemini-2.5-flash-preview-05-20
+        - contains: gemini-2.5-flash-preview-04-17
         - equals: gemini-2.5-flash-preview-05-20:thinking
         - equals: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview:thinking

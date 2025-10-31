@@ -223,13 +223,13 @@ def test_complex_usage():
     assert calc_price(
         Usage(input_tokens=mil, cache_read_tokens=mil),
         'gemini-2.5-flash',
-    ).total_price == snapshot(Decimal('0.075'))
+    ).total_price == snapshot(Decimal('0.03'))
 
     # All cached audio tokens
     assert calc_price(
         Usage(input_tokens=mil, input_audio_tokens=mil, cache_read_tokens=mil, cache_audio_read_tokens=mil),
         'gemini-2.5-flash',
-    ).total_price == snapshot(Decimal('0.25'))
+    ).total_price == snapshot(Decimal('0.10'))
 
     cached_text_tokens = 1
     uncached_text_tokens = 1_000
@@ -250,10 +250,10 @@ def test_complex_usage():
             ),
             'gemini-2.5-flash',
         ).total_price
-        == snapshot(Decimal('1000.250_300_075'))
-        == Decimal('0.075') * cached_text_tokens / mil
+        == snapshot(Decimal('1000.10030003'))
+        == Decimal('0.03') * cached_text_tokens / mil
         + Decimal('0.3') * uncached_text_tokens / mil
-        + Decimal('0.25') * cached_audio_tokens / mil
+        + Decimal('0.1') * cached_audio_tokens / mil
         + Decimal('1.0') * uncached_audio_tokens / mil
     )
 

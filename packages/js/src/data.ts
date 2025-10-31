@@ -2070,7 +2070,10 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              equals: 'gemini-2.5-flash-preview-05-20',
+              contains: 'gemini-2.5-flash-preview-05-20',
+            },
+            {
+              contains: 'gemini-2.5-flash-preview-04-17',
             },
             {
               equals: 'gemini-2.5-flash-preview-05-20:thinking',

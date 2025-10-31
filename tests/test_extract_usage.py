@@ -215,7 +215,7 @@ def test_google_caching():
         ),
     )
     assert model is not None
-    assert calc_price(usage, model).total_price == snapshot(Decimal('0.001855625'))
+    assert calc_price(usage, model).total_price == snapshot(Decimal('0.00129713'))
 
 
 gemini_response_data_thoughtless = {
