@@ -2025,14 +2025,17 @@ export const data: Provider[] = [
             {
               equals: 'gemini-2.5-flash-latest',
             },
+            {
+              equals: 'gemini-2.5-flash-preview-09-2025',
+            },
           ],
         },
         prices: {
           input_mtok: 0.3,
-          cache_read_mtok: 0.075,
+          cache_read_mtok: 0.03,
           output_mtok: 2.5,
           input_audio_mtok: 1,
-          cache_audio_read_mtok: 0.25,
+          cache_audio_read_mtok: 0.1,
         },
       },
       {
@@ -2053,10 +2056,10 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: 0.025,
+          cache_read_mtok: 0.01,
           output_mtok: 0.4,
-          input_audio_mtok: 0.5,
-          cache_audio_read_mtok: 0.125,
+          input_audio_mtok: 0.3,
+          cache_audio_read_mtok: 0.03,
         },
       },
       {
@@ -2066,9 +2069,6 @@ export const data: Provider[] = [
           'Gemini 2.5 Flash May 20th Checkpoint is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
         match: {
           or: [
-            {
-              contains: 'gemini-2.5-flash-preview',
-            },
             {
               equals: 'gemini-2.5-flash-preview-05-20',
             },
@@ -2109,11 +2109,11 @@ export const data: Provider[] = [
             ],
           },
           cache_read_mtok: {
-            base: 0.31,
+            base: 0.125,
             tiers: [
               {
                 start: 200000,
-                price: 0.625,
+                price: 0.25,
               },
             ],
           },

@@ -269,12 +269,13 @@ models:
       or:
         - equals: gemini-2.5-flash
         - equals: gemini-2.5-flash-latest
-    prices_checked: 2025-07-04
+        - equals: gemini-2.5-flash-preview-09-2025
+    prices_checked: 2025-10-31
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
-      cache_read_mtok: 0.075
-      cache_audio_read_mtok: 0.25
+      cache_read_mtok: 0.03
+      cache_audio_read_mtok: 0.1
       output_mtok: 2.5
 
   - id: gemini-2.5-flash-lite
@@ -290,13 +291,13 @@ models:
         - equals: gemini-2.5-flash-lite
         - starts_with: gemini-2.5-flash-lite-preview
     context_window: 1000000
-    prices_checked: 2025-07-13
+    prices_checked: 2025-10-31
     prices:
       input_mtok: 0.1
-      cache_read_mtok: 0.025
+      input_audio_mtok: 0.3
+      cache_read_mtok: 0.01
+      cache_audio_read_mtok: 0.03
       output_mtok: 0.4
-      input_audio_mtok: 0.5
-      cache_audio_read_mtok: 0.125
 
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
@@ -306,13 +307,12 @@ models:
       capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.
     match:
       or:
-        - contains: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview-05-20
         - equals: gemini-2.5-flash-preview-05-20:thinking
         - equals: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview:thinking
     price_comments: from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
-    prices_checked: 2025-07-04
+    prices_checked: 2025-10-31
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
@@ -328,7 +328,7 @@ models:
     match:
       starts_with: gemini-2.5-pro
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro
-    prices_checked: 2025-07-05
+    prices_checked: 2025-10-31
     prices:
       input_mtok:
         base: 1.25
@@ -336,10 +336,10 @@ models:
           - start: 200000
             price: 2.5
       cache_read_mtok:
-        base: 0.31
+        base: 0.125
         tiers:
           - start: 200000
-            price: 0.625
+            price: 0.25
       output_mtok:
         base: 10
         tiers:
@@ -456,7 +456,8 @@ models:
 
   - id: gemma-3n
     name: Gemma 3n (free)
-    description: Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.
+    description: Our open model built for efficient performance on everyday devices like mobile phones, laptops, and
+      tablets.
     collapse: false
     prices_checked: 2025-08-12
     match:
