@@ -14,6 +14,20 @@ extractors:
       - path: outputTokens
         dest: output_tokens
 models:
+  - id: global.anthropic.claude-haiku-4-5-20251001-v1:0
+    match:
+      equals: global.anthropic.claude-haiku-4-5-20251001-v1:0
+    prices:
+      input_mtok: 1
+      output_mtok: 5
+
+  - id: global.anthropic.claude-sonnet-4-5-20250929-v1:0
+    match:
+      equals: global.anthropic.claude-sonnet-4-5-20250929-v1:0
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
   - id: meta.llama3-8b-instruct-v1%3A0
     match:
       equals: meta.llama3-8b-instruct-v1%3A0
