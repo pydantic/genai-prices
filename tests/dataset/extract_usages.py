@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 import json
 from itertools import combinations
@@ -8,6 +10,14 @@ from utils import raw_bodies_path, this_dir
 from genai_prices import extract_usage
 from genai_prices.data_snapshot import get_snapshot
 from genai_prices.types import Provider, UsageExtractor
+
+
+@dataclasses.dataclass
+class Case:
+    provider_id: str
+    api_flavor: str
+    model_ref: str | None
+    usage_dict: dict[str, Any]
 
 
 def main():
@@ -25,27 +35,24 @@ def main():
         if extracted:
             this_result: dict[str, Any] = {'body': body, 'extracted': []}
             result.append(this_result)
-            models = {e1[2] for e1 in extracted if e1[2]}
+            models: set[str] = {case.model_ref for case in extracted if case.model_ref}
             assert len(models) in (0, 1), models
             if models:
                 this_result['model'] = models.pop()
 
-            for e1, e2 in combinations(extracted, 2):
-                u1 = e1[3]
-                u2 = e2[3]
-                for k, v in u1.items():
-                    if k in u2:
-                        assert v == u2[k]
+            for case1, case2 in combinations(extracted, 2):
+                for k, v in case1.usage_dict.items():
+                    if k in case2.usage_dict:
+                        assert v == case2.usage_dict[k]
 
-            for provider_id, flavor, _model_ref, usage_dict in extracted:
+            for case in extracted:
+                extractor_dict = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
                 for other in this_result['extracted']:
-                    if usage_dict == other['usage']:
-                        other['extractors'].append({'provider_id': provider_id, 'api_flavor': flavor})
+                    if case.usage_dict == other['usage']:
+                        other['extractors'].append(extractor_dict)
                         break
                 else:
-                    this_result['extracted'].append(
-                        {'usage': usage_dict, 'extractors': [{'provider_id': provider_id, 'api_flavor': flavor}]}
-                    )
+                    this_result['extracted'].append({'usage': case.usage_dict, 'extractors': [extractor_dict]})
 
     (this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True))
 
@@ -73,7 +80,7 @@ def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider:
         assert extracted.model and extracted.model.is_match(model_ref)
         assert usage == extracted.usage
     usage_dict = {k: v for k, v in dataclasses.asdict(usage).items() if v}
-    return provider.id, flavor, model_ref, usage_dict
+    return Case(provider.id, flavor, model_ref, usage_dict)
 
 
 main()
