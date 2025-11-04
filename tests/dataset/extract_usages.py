@@ -52,32 +52,38 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
             if models:
                 this_result['model'] = models.pop()
 
-            for case1, case2 in combinations(cases, 2):
-                for k, v in case1.usage_dict.items():
-                    if k in case2.usage_dict:
-                        assert v == case2.usage_dict[k]
+            check_cases_usages_match(cases)
 
             for case in cases:
-                extractor_dict: dict[str, Any] = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
-                if case.model_ref:
-                    try:
-                        price = calc_price(
-                            Usage(**case.usage_dict), provider_id=case.provider_id, model_ref=case.model_ref
-                        )
-                    except LookupError:
-                        pass
-                    else:
-                        assert price.input_price + price.output_price == price.total_price
-                        extractor_dict['input_price'] = str(price.input_price)
-                        extractor_dict['output_price'] = str(price.output_price)
-                for other in this_result['extracted']:
-                    if case.usage_dict == other['usage']:
-                        other['extractors'].append(extractor_dict)
-                        break
-                else:
-                    this_result['extracted'].append({'usage': case.usage_dict, 'extractors': [extractor_dict]})
+                case_to_result(case, this_result)
 
     return result
+
+
+def case_to_result(case: Case, this_result: dict[str, Any]):
+    extractor_dict: dict[str, Any] = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
+    if case.model_ref:
+        try:
+            price = calc_price(Usage(**case.usage_dict), provider_id=case.provider_id, model_ref=case.model_ref)
+        except LookupError:
+            pass
+        else:
+            assert price.input_price + price.output_price == price.total_price
+            extractor_dict['input_price'] = str(price.input_price)
+            extractor_dict['output_price'] = str(price.output_price)
+    for other in this_result['extracted']:
+        if case.usage_dict == other['usage']:
+            other['extractors'].append(extractor_dict)
+            break
+    else:
+        this_result['extracted'].append({'usage': case.usage_dict, 'extractors': [extractor_dict]})
+
+
+def check_cases_usages_match(cases: list[Case]):
+    for case1, case2 in combinations(cases, 2):
+        for k, v in case1.usage_dict.items():
+            if k in case2.usage_dict:
+                assert v == case2.usage_dict[k]
 
 
 def get_body_keys(extractor: UsageExtractor) -> set[str]:
