@@ -27,6 +27,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00005625",
+            "output_price": "0.01719",
             "provider_id": "openai"
           }
         ],
@@ -59,6 +61,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0013825",
+            "output_price": "0.01867",
             "provider_id": "google"
           }
         ],
@@ -96,6 +100,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "5.25E-7",
+            "output_price": "0.0000051",
             "provider_id": "google"
           }
         ],
@@ -134,6 +140,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9E-7",
+            "output_price": "0.0000204",
             "provider_id": "google"
           }
         ],
@@ -172,6 +180,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9E-7",
+            "output_price": "0.0000224",
             "provider_id": "google"
           }
         ],
@@ -217,6 +227,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0013455",
+            "output_price": "0.0001836",
             "provider_id": "google"
           }
         ],
@@ -316,10 +328,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00489",
+            "output_price": "0.001635",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00489",
+            "output_price": "0.001635",
             "provider_id": "google"
           },
           {
@@ -368,6 +384,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000054",
+            "output_price": "0.0000564",
             "provider_id": "google"
           }
         ],
@@ -405,6 +423,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "5.25E-7",
+            "output_price": "0.0000033",
             "provider_id": "google"
           }
         ],
@@ -447,6 +467,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001059",
+            "output_price": "0.0000088",
             "provider_id": "google"
           }
         ],
@@ -486,6 +508,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000013",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
@@ -525,6 +549,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00002125",
+            "output_price": "0.00414",
             "provider_id": "google"
           }
         ],
@@ -564,6 +590,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00026125",
+            "output_price": "0.00337",
             "provider_id": "google"
           }
         ],
@@ -606,6 +634,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0019875",
+            "output_price": "0.0000412",
             "provider_id": "google"
           }
         ],
@@ -647,6 +677,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000027",
+            "output_price": "0.0000524",
             "provider_id": "google"
           }
         ],
@@ -684,6 +716,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000013",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
@@ -721,6 +755,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "1.5E-7",
+            "output_price": "0.0000033",
             "provider_id": "google"
           }
         ],
@@ -767,6 +803,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0025674",
+            "output_price": "0.000024",
             "provider_id": "google"
           }
         ],
@@ -812,6 +850,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000268",
+            "output_price": "0.0000648",
             "provider_id": "google"
           }
         ],
@@ -889,10 +929,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.032427",
+            "output_price": "0.00966",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.032427",
+            "output_price": "0.00966",
             "provider_id": "google"
           },
           {
@@ -934,6 +978,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000376",
+            "output_price": "0.0000164",
             "provider_id": "google"
           }
         ],
@@ -1040,6 +1086,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001059",
+            "output_price": "0.0000076",
             "provider_id": "google"
           }
         ],
@@ -1114,6 +1162,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0003367",
+            "output_price": "0.0000036",
             "provider_id": "google"
           }
         ],
@@ -1192,6 +1242,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001817",
+            "output_price": "0.000002",
             "provider_id": "google"
           }
         ],
@@ -1229,6 +1281,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000007575",
+            "output_price": "0.0000042",
             "provider_id": "google"
           }
         ],
@@ -1266,6 +1320,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000009225",
+            "output_price": "0.0000063",
             "provider_id": "google"
           }
         ],
@@ -1342,6 +1398,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00031125",
+            "output_price": "0.00541",
             "provider_id": "google"
           }
         ],
@@ -1384,6 +1442,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0002589",
+            "output_price": "0.0000132",
             "provider_id": "google"
           }
         ],
@@ -1421,6 +1481,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000005",
+            "output_price": "0.0000184",
             "provider_id": "google"
           }
         ],
@@ -1458,6 +1520,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000614",
+            "output_price": "0.0000264",
             "provider_id": "google"
           }
         ],
@@ -1497,6 +1561,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00001875",
+            "output_price": "0.0066",
             "provider_id": "google"
           }
         ],
@@ -1536,6 +1602,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00004875",
+            "output_price": "0.00598",
             "provider_id": "google"
           }
         ],
@@ -1573,6 +1641,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9.75E-7",
+            "output_price": "0.0000024",
             "provider_id": "google"
           }
         ],
@@ -1610,6 +1680,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000008",
+            "output_price": "0.0000052",
             "provider_id": "google"
           }
         ],
@@ -1688,6 +1760,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001305",
+            "output_price": "0.0000044",
             "provider_id": "google"
           }
         ],
@@ -1730,6 +1804,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001569",
+            "output_price": "0.000024",
             "provider_id": "google"
           }
         ],
@@ -1762,6 +1838,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000249",
+            "output_price": "0.000115",
             "provider_id": "google"
           }
         ],
@@ -1803,6 +1881,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000542",
+            "output_price": "0.0000068",
             "provider_id": "google"
           }
         ],
@@ -1905,6 +1985,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000013",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
@@ -1942,6 +2024,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000025",
+            "output_price": "0.000008",
             "provider_id": "google"
           }
         ],
@@ -1979,6 +2063,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000021",
+            "output_price": "4E-7",
             "provider_id": "google"
           }
         ],
@@ -2016,6 +2102,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000027",
+            "output_price": "0.000002",
             "provider_id": "google"
           }
         ],
@@ -2048,6 +2136,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000036",
+            "output_price": "0.0022875",
             "provider_id": "google"
           }
         ],
@@ -2092,6 +2182,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000268",
+            "output_price": "0.0000556",
             "provider_id": "google"
           }
         ],
@@ -2129,6 +2221,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000021",
+            "output_price": "0.000006",
             "provider_id": "google"
           }
         ],
@@ -2161,6 +2255,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000425",
+            "output_price": "0.01246",
             "provider_id": "google"
           }
         ],
@@ -2193,6 +2289,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0012225",
+            "output_price": "0.02417",
             "provider_id": "google"
           }
         ],
@@ -2299,6 +2397,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0019875",
+            "output_price": "0.000082",
             "provider_id": "google"
           }
         ],
@@ -2336,6 +2436,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000024",
+            "output_price": "0.0000108",
             "provider_id": "google"
           }
         ],
@@ -2373,6 +2475,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "2.25E-7",
+            "output_price": "0.0000057",
             "provider_id": "google"
           }
         ],
@@ -2415,6 +2519,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0002589",
+            "output_price": "0.0000204",
             "provider_id": "google"
           }
         ],
@@ -2452,6 +2558,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000033",
+            "output_price": "0.000002",
             "provider_id": "google"
           }
         ],
@@ -2489,6 +2597,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000047",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
@@ -2526,6 +2636,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9.75E-7",
+            "output_price": "0.0000015",
             "provider_id": "google"
           }
         ],
@@ -2557,10 +2669,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000795",
+            "output_price": "0.000465",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000795",
+            "output_price": "0.000465",
             "provider_id": "google"
           },
           {
@@ -2596,10 +2712,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0003",
+            "output_price": "0.00075",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0003",
+            "output_price": "0.00075",
             "provider_id": "google"
           },
           {
@@ -2635,10 +2755,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001377",
+            "output_price": "0.00057",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001377",
+            "output_price": "0.00057",
             "provider_id": "google"
           },
           {
@@ -2674,10 +2798,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00153",
+            "output_price": "0.000255",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00153",
+            "output_price": "0.000255",
             "provider_id": "google"
           },
           {
@@ -2713,10 +2841,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.004731",
+            "output_price": "0.00129",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.004731",
+            "output_price": "0.00129",
             "provider_id": "google"
           },
           {
@@ -2752,10 +2884,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.005037",
+            "output_price": "0.00024",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005037",
+            "output_price": "0.00024",
             "provider_id": "google"
           },
           {
@@ -2791,10 +2927,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.004845",
+            "output_price": "0.00042",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.004845",
+            "output_price": "0.00042",
             "provider_id": "google"
           },
           {
@@ -2830,10 +2970,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001335",
+            "output_price": "0.000345",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001335",
+            "output_price": "0.000345",
             "provider_id": "google"
           },
           {
@@ -2869,10 +3013,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001491",
+            "output_price": "0.00084",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001491",
+            "output_price": "0.00084",
             "provider_id": "google"
           },
           {
@@ -2911,10 +3059,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.034296",
+            "output_price": "0.00366",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.034296",
+            "output_price": "0.00366",
             "provider_id": "google"
           },
           {
@@ -2958,6 +3110,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000916",
+            "output_price": "0.000136",
             "provider_id": "openai"
           }
         ],
@@ -2989,10 +3143,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.008046",
+            "output_price": "0.001515",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.008046",
+            "output_price": "0.001515",
             "provider_id": "google"
           },
           {
@@ -3028,10 +3186,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000064",
+            "output_price": "0.000084",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0000064",
+            "output_price": "0.000084",
             "provider_id": "google"
           },
           {
@@ -3067,10 +3229,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001149",
+            "output_price": "0.000975",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001149",
+            "output_price": "0.000975",
             "provider_id": "google"
           },
           {
@@ -3106,10 +3272,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00138",
+            "output_price": "0.001365",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00138",
+            "output_price": "0.001365",
             "provider_id": "google"
           },
           {
@@ -3145,10 +3315,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.002139",
+            "output_price": "0.00249",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002139",
+            "output_price": "0.00249",
             "provider_id": "google"
           },
           {
@@ -3184,10 +3358,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0003384",
+            "output_price": "0.000808",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0003384",
+            "output_price": "0.000808",
             "provider_id": "google"
           },
           {
@@ -3223,10 +3401,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0006168",
+            "output_price": "0.000308",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0006168",
+            "output_price": "0.000308",
             "provider_id": "google"
           },
           {
@@ -3262,10 +3444,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000268",
+            "output_price": "0.000588",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000268",
+            "output_price": "0.000588",
             "provider_id": "google"
           },
           {
@@ -3301,10 +3487,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0002368",
+            "output_price": "0.000364",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0002368",
+            "output_price": "0.000364",
             "provider_id": "google"
           },
           {
@@ -3340,10 +3530,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000315",
+            "output_price": "0.000825",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000315",
+            "output_price": "0.000825",
             "provider_id": "google"
           },
           {
@@ -3379,10 +3573,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001116",
+            "output_price": "0.000735",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001116",
+            "output_price": "0.000735",
             "provider_id": "google"
           },
           {
@@ -3418,10 +3616,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.006075",
+            "output_price": "0.001215",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.006075",
+            "output_price": "0.001215",
             "provider_id": "google"
           },
           {
@@ -3460,10 +3662,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.008022",
+            "output_price": "0.005595",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.008022",
+            "output_price": "0.005595",
             "provider_id": "google"
           },
           {
@@ -3502,10 +3708,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.015786",
+            "output_price": "0.005535",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.015786",
+            "output_price": "0.005535",
             "provider_id": "google"
           },
           {
@@ -3541,10 +3751,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000276",
+            "output_price": "0.00294",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000276",
+            "output_price": "0.00294",
             "provider_id": "google"
           },
           {
@@ -3580,10 +3794,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000504",
+            "output_price": "0.00348",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000504",
+            "output_price": "0.00348",
             "provider_id": "google"
           },
           {
@@ -3627,6 +3845,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00002875",
+            "output_price": "0.02211",
             "provider_id": "openai"
           }
         ],
@@ -3658,10 +3878,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.004029",
+            "output_price": "0.00807",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.004029",
+            "output_price": "0.00807",
             "provider_id": "google"
           },
           {
@@ -3701,10 +3925,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.026952",
+            "output_price": "0.0078",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.026952",
+            "output_price": "0.0078",
             "provider_id": "google"
           },
           {
@@ -3744,10 +3972,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.059577",
+            "output_price": "0.00816",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.059577",
+            "output_price": "0.00816",
             "provider_id": "google"
           },
           {
@@ -3783,10 +4015,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000126",
+            "output_price": "0.005445",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000126",
+            "output_price": "0.005445",
             "provider_id": "google"
           },
           {
@@ -3822,10 +4058,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000873",
+            "output_price": "0.007065",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000873",
+            "output_price": "0.007065",
             "provider_id": "google"
           },
           {
@@ -3865,10 +4105,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.048249",
+            "output_price": "0.002475",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.048249",
+            "output_price": "0.002475",
             "provider_id": "google"
           },
           {
@@ -3904,10 +4148,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001191",
+            "output_price": "0.00237",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001191",
+            "output_price": "0.00237",
             "provider_id": "google"
           },
           {
@@ -3943,10 +4191,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.001704",
+            "output_price": "0.001755",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001704",
+            "output_price": "0.001755",
             "provider_id": "google"
           },
           {
@@ -3995,6 +4247,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000013",
+            "output_price": "0.000014",
             "provider_id": "google"
           }
         ],
@@ -4029,10 +4283,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.005049",
+            "output_price": "0.001695",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005049",
+            "output_price": "0.001695",
             "provider_id": "google"
           },
           {
@@ -4072,10 +4330,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.005313",
+            "output_price": "0.002565",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005313",
+            "output_price": "0.002565",
             "provider_id": "google"
           },
           {
@@ -4115,10 +4377,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.005223",
+            "output_price": "0.002145",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005223",
+            "output_price": "0.002145",
             "provider_id": "google"
           },
           {
@@ -4154,10 +4420,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000123",
+            "output_price": "0.00132",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000123",
+            "output_price": "0.00132",
             "provider_id": "google"
           },
           {
@@ -4201,6 +4471,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0098604",
             "provider_id": "openai"
           }
         ],
@@ -4329,6 +4601,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9E-7",
+            "output_price": "0.000028",
             "provider_id": "google"
           }
         ],
@@ -4375,6 +4649,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0025674",
+            "output_price": "0.0000504",
             "provider_id": "google"
           }
         ],
@@ -4420,6 +4696,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9E-7",
+            "output_price": "0.0000232",
             "provider_id": "google"
           }
         ],
@@ -4462,6 +4740,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001059",
+            "output_price": "0.0000128",
             "provider_id": "google"
           }
         ],
@@ -4505,6 +4785,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001059",
+            "output_price": "0.0000092",
             "provider_id": "google"
           }
         ],
@@ -4544,6 +4826,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "7E-7",
+            "output_price": "0.0000036",
             "provider_id": "google"
           }
         ],
@@ -4586,6 +4870,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0019875",
+            "output_price": "0.0001196",
             "provider_id": "google"
           }
         ],
@@ -4628,6 +4914,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0002589",
+            "output_price": "0.000016",
             "provider_id": "google"
           }
         ],
@@ -4670,6 +4958,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0001569",
+            "output_price": "0.0000212",
             "provider_id": "google"
           }
         ],
@@ -4712,6 +5002,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0002589",
+            "output_price": "0.0000208",
             "provider_id": "google"
           }
         ],
@@ -4754,6 +5046,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0019875",
+            "output_price": "0.0000448",
             "provider_id": "google"
           }
         ],
@@ -4794,6 +5088,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "7.5E-7",
+            "output_price": "0.0000738",
             "provider_id": "google"
           }
         ],
@@ -4863,6 +5159,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000021",
+            "output_price": "4E-7",
             "provider_id": "google"
           }
         ],
@@ -4900,6 +5198,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000027",
+            "output_price": "0.000002",
             "provider_id": "google"
           }
         ],
@@ -4939,6 +5239,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0089232",
             "provider_id": "openai"
           }
         ],
@@ -4971,6 +5273,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00012015",
+            "output_price": "0.0013878",
             "provider_id": "google"
           }
         ],
@@ -5008,6 +5312,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000017",
+            "output_price": "0.000008",
             "provider_id": "google"
           }
         ],
@@ -5045,6 +5351,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000032",
+            "output_price": "0.000002",
             "provider_id": "google"
           }
         ],
@@ -5082,6 +5390,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000046",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
@@ -5183,6 +5493,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9E-7",
+            "output_price": "0.0000084",
             "provider_id": "google"
           }
         ],
@@ -5220,6 +5532,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000008",
+            "output_price": "0.0000224",
             "provider_id": "google"
           }
         ],
@@ -5255,6 +5569,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000268",
+            "output_price": "0.0000064",
             "provider_id": "google"
           }
         ],
@@ -5298,6 +5614,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9E-7",
+            "output_price": "0.0000288",
             "provider_id": "google"
           }
         ],
@@ -5335,6 +5653,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000253",
+            "output_price": "0.0000108",
             "provider_id": "google"
           }
         ],
@@ -5376,6 +5696,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00002025",
+            "output_price": "0.000033",
             "provider_id": "google"
           }
         ],
@@ -5413,6 +5735,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000024",
+            "output_price": "0.0000028",
             "provider_id": "google"
           }
         ],
@@ -5450,6 +5774,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000041",
+            "output_price": "0.0000028",
             "provider_id": "google"
           }
         ],
@@ -5482,6 +5808,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000475",
+            "output_price": "0.00389",
             "provider_id": "google"
           }
         ],
@@ -5518,6 +5846,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00045",
+            "output_price": "0.00212",
             "provider_id": "google"
           }
         ],
@@ -5555,6 +5885,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "9.75E-7",
+            "output_price": "0.0000024",
             "provider_id": "google"
           }
         ],
@@ -5592,6 +5924,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000046",
+            "output_price": "0.0000184",
             "provider_id": "google"
           }
         ],
@@ -5629,6 +5963,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000024",
+            "output_price": "0.0000028",
             "provider_id": "google"
           }
         ],
@@ -5666,6 +6002,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000041",
+            "output_price": "0.0000028",
             "provider_id": "google"
           }
         ],
@@ -5703,6 +6041,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000024",
+            "output_price": "0.0000028",
             "provider_id": "google"
           }
         ],
@@ -5740,6 +6080,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000108",
+            "output_price": "0.0000088",
             "provider_id": "google"
           }
         ],
@@ -5777,6 +6119,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00000105",
+            "output_price": "0.0000081",
             "provider_id": "google"
           }
         ],
@@ -5814,6 +6158,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "7E-7",
+            "output_price": "0.0000036",
             "provider_id": "google"
           }
         ],
@@ -6382,6 +6728,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00006",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -6437,6 +6785,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000121",
+            "output_price": "0.0035596",
             "provider_id": "openai"
           },
           {
@@ -6480,6 +6830,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000515",
+            "output_price": "0.0000024",
             "provider_id": "openai"
           }
         ],
@@ -6586,6 +6938,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000143",
+            "output_price": "0.0010472",
             "provider_id": "openai"
           },
           {
@@ -6641,6 +6995,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -6696,6 +7052,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00023",
+            "output_price": "0.00015",
             "provider_id": "openai"
           },
           {
@@ -6841,6 +7199,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001625",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -6911,6 +7271,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0001725",
+            "output_price": "0.00072",
             "provider_id": "openai"
           }
         ],
@@ -6963,6 +7325,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006",
+            "output_price": "0.0015",
             "provider_id": "openai"
           },
           {
@@ -7018,6 +7382,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -7073,6 +7439,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001125",
+            "output_price": "0.00026",
             "provider_id": "openai"
           },
           {
@@ -7183,6 +7551,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002",
+            "output_price": "0.000024",
             "provider_id": "openai"
           },
           {
@@ -7238,6 +7608,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003",
+            "output_price": "0.000024",
             "provider_id": "openai"
           },
           {
@@ -7293,6 +7665,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0007025",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -7348,6 +7722,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0007775",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -7403,6 +7779,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000115",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -7458,6 +7836,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0012575",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -7561,6 +7941,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000012",
+            "output_price": "0.000006",
             "provider_id": "openai"
           },
           {
@@ -7616,6 +7998,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00017",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -7671,6 +8055,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002225",
+            "output_price": "0.00036",
             "provider_id": "openai"
           },
           {
@@ -7714,6 +8100,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.008426",
             "provider_id": "openai"
           }
         ],
@@ -7765,6 +8153,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006347",
+            "output_price": "0.010208",
             "provider_id": "openai"
           },
           {
@@ -7820,6 +8210,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0027975",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -7971,6 +8363,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002725",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -8026,6 +8420,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000325",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -8081,6 +8477,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005875",
+            "output_price": "0.00016",
             "provider_id": "openai"
           },
           {
@@ -8136,6 +8534,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006825",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -8191,6 +8591,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000735",
+            "output_price": "0.00021",
             "provider_id": "openai"
           },
           {
@@ -8246,6 +8648,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -8301,6 +8705,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -8356,6 +8762,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001575",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -8411,6 +8819,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0041975",
+            "output_price": "0.00025",
             "provider_id": "openai"
           },
           {
@@ -8514,6 +8924,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000515",
+            "output_price": "0.0000024",
             "provider_id": "openai"
           },
           {
@@ -8569,6 +8981,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000115",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -8624,6 +9038,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0029625",
+            "output_price": "0.00009",
             "provider_id": "openai"
           },
           {
@@ -8679,6 +9095,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00007",
             "provider_id": "openai"
           },
           {
@@ -8734,6 +9152,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005875",
+            "output_price": "0.00013",
             "provider_id": "openai"
           },
           {
@@ -8789,6 +9209,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000033",
+            "output_price": "0.0009328",
             "provider_id": "openai"
           },
           {
@@ -8830,6 +9252,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000023",
+            "output_price": "0.000002",
             "provider_id": "google"
           }
         ],
@@ -8867,6 +9291,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000035",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
@@ -8918,6 +9344,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000156",
+            "output_price": "0.0000096",
             "provider_id": "openai"
           },
           {
@@ -8973,6 +9401,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001935",
+            "output_price": "0.0000054",
             "provider_id": "openai"
           },
           {
@@ -9028,6 +9458,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000077",
+            "output_price": "0.000374",
             "provider_id": "openai"
           },
           {
@@ -9083,6 +9515,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -9138,6 +9572,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004525",
+            "output_price": "0.00025",
             "provider_id": "openai"
           },
           {
@@ -9208,6 +9644,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.00011",
+            "output_price": "0.00009",
             "provider_id": "openai"
           }
         ],
@@ -9544,6 +9982,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00002875",
+            "output_price": "0.0203",
             "provider_id": "openai"
           }
         ],
@@ -10007,6 +10447,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00000975",
+            "output_price": "0.0000024",
             "provider_id": "mistral"
           },
           {
@@ -10052,6 +10494,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00043965",
+            "output_price": "0.0000105",
             "provider_id": "mistral"
           },
           {
@@ -10099,6 +10543,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0071104",
             "provider_id": "openai"
           }
         ],
@@ -10136,6 +10582,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.001328",
+            "output_price": "0.003735",
             "provider_id": "mistral"
           },
           {
@@ -10191,6 +10639,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00248075",
+            "output_price": "0.00638",
             "provider_id": "openai"
           }
         ],
@@ -10231,6 +10681,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00154",
+            "output_price": "0.00098",
             "provider_id": "openai"
           }
         ],
@@ -10270,6 +10722,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0001275",
+            "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
@@ -10309,6 +10763,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000135",
+            "output_price": "0.00018",
             "provider_id": "openai"
           }
         ],
@@ -10348,6 +10804,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000105",
+            "output_price": "0.00008",
             "provider_id": "openai"
           }
         ],
@@ -10387,6 +10845,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0009988",
             "provider_id": "openai"
           }
         ],
@@ -10426,6 +10886,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00281625",
+            "output_price": "0.01755",
             "provider_id": "openai"
           }
         ],
@@ -10465,6 +10927,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00073375",
+            "output_price": "0.02587",
             "provider_id": "openai"
           }
         ],
@@ -10512,6 +10976,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00042625",
+            "output_price": "0.00125",
             "provider_id": "openai"
           }
         ],
@@ -10552,6 +11018,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00099125",
+            "output_price": "0.00007",
             "provider_id": "openai"
           }
         ],
@@ -10591,6 +11059,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           }
         ],
@@ -10638,6 +11108,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00306375",
+            "output_price": "0.0161",
             "provider_id": "openai"
           }
         ],
@@ -10686,6 +11158,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00246875",
+            "output_price": "0.0066",
             "provider_id": "openai"
           }
         ],
@@ -10726,6 +11200,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0013277",
+            "output_price": "0.002354",
             "provider_id": "openai"
           }
         ],
@@ -10765,6 +11241,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0012199",
+            "output_price": "0.0019536",
             "provider_id": "openai"
           }
         ],
@@ -10804,6 +11282,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002265",
+            "output_price": "0.01313",
             "provider_id": "openai"
           }
         ],
@@ -10843,6 +11323,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0011715",
+            "output_price": "0.003344",
             "provider_id": "openai"
           }
         ],
@@ -10882,6 +11364,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0002675",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -10921,6 +11405,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000325",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -10960,6 +11446,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0016575",
+            "output_price": "0.0002",
             "provider_id": "openai"
           }
         ],
@@ -10999,6 +11487,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000125",
+            "output_price": "0.00001",
             "provider_id": "openai"
           }
         ],
@@ -11038,6 +11528,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000155",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -11077,6 +11569,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0002125",
+            "output_price": "0.0002",
             "provider_id": "openai"
           }
         ],
@@ -11116,6 +11610,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00236125",
+            "output_price": "0.01434",
             "provider_id": "openai"
           }
         ],
@@ -11163,6 +11659,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00155625",
+            "output_price": "0.00707",
             "provider_id": "openai"
           }
         ],
@@ -11211,6 +11709,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.0037515",
+            "output_price": "0.01844",
             "provider_id": "openai"
           }
         ],
@@ -11259,6 +11759,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00211975",
+            "output_price": "0.00577",
             "provider_id": "openai"
           }
         ],
@@ -11307,6 +11809,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.0022345",
+            "output_price": "0.00439",
             "provider_id": "openai"
           }
         ],
@@ -11347,6 +11851,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00009",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -11386,6 +11892,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0001475",
+            "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
@@ -11425,6 +11933,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0008",
+            "output_price": "0.00159",
             "provider_id": "openai"
           }
         ],
@@ -11456,10 +11966,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000126",
+            "output_price": "0.004365",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000126",
+            "output_price": "0.004365",
             "provider_id": "google"
           },
           {
@@ -11503,6 +12017,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0003825",
+            "output_price": "0.03134",
             "provider_id": "openai"
           }
         ],
@@ -11542,6 +12058,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00001625",
+            "output_price": "0.00248",
             "provider_id": "openai"
           }
         ],
@@ -11581,6 +12099,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0001775",
+            "output_price": "0.00355",
             "provider_id": "openai"
           }
         ],
@@ -11620,6 +12140,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000125",
+            "output_price": "0.00001",
             "provider_id": "openai"
           }
         ],
@@ -11659,6 +12181,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000125",
+            "output_price": "0.00001",
             "provider_id": "openai"
           }
         ],
@@ -11706,6 +12230,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.0020925",
+            "output_price": "0.0001",
             "provider_id": "openai"
           }
         ],
@@ -11746,6 +12272,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000155",
+            "output_price": "0.01926",
             "provider_id": "openai"
           }
         ],
@@ -11793,6 +12321,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.00030475",
+            "output_price": "0.00124",
             "provider_id": "openai"
           }
         ],
@@ -11833,6 +12363,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00006",
+            "output_price": "0.00008",
             "provider_id": "openai"
           }
         ],
@@ -11872,6 +12404,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000715",
+            "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
@@ -11911,6 +12445,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000072",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -11950,6 +12486,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000122",
+            "output_price": "0.000448",
             "provider_id": "openai"
           }
         ],
@@ -11997,6 +12535,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.0411775",
+            "output_price": "0.0172",
             "provider_id": "openai"
           }
         ],
@@ -12076,6 +12616,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000165",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -12115,6 +12657,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0002225",
+            "output_price": "0.00016",
             "provider_id": "openai"
           }
         ],
@@ -12154,6 +12698,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0001",
+            "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
@@ -12193,6 +12739,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0029625",
+            "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
@@ -12232,6 +12780,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000968",
+            "output_price": "0.0024068",
             "provider_id": "openai"
           }
         ],
@@ -12271,6 +12821,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00223625",
+            "output_price": "0.01312",
             "provider_id": "openai"
           }
         ],
@@ -12310,6 +12862,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0003825",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -12349,6 +12903,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00044",
+            "output_price": "0.00026",
             "provider_id": "openai"
           }
         ],
@@ -12388,6 +12944,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00064",
+            "output_price": "0.00018",
             "provider_id": "openai"
           }
         ],
@@ -12427,6 +12985,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0007175",
+            "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
@@ -12466,6 +13026,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0000125",
+            "output_price": "0.00001",
             "provider_id": "openai"
           }
         ],
@@ -12505,6 +13067,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00",
+            "output_price": "0",
             "provider_id": "openai"
           }
         ],
@@ -12541,6 +13105,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0008375",
+            "output_price": "0.00044",
             "provider_id": "openai"
           }
         ],
@@ -12580,6 +13146,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0007075",
+            "output_price": "0.00012",
             "provider_id": "openai"
           }
         ],
@@ -12619,6 +13187,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000765",
+            "output_price": "0.00022",
             "provider_id": "openai"
           }
         ],
@@ -12658,6 +13228,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00001625",
+            "output_price": "0.02199",
             "provider_id": "openai"
           }
         ],
@@ -12697,6 +13269,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0003925",
+            "output_price": "0.02737",
             "provider_id": "openai"
           }
         ],
@@ -12736,6 +13310,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00048625",
+            "output_price": "0.00721",
             "provider_id": "openai"
           }
         ],
@@ -12775,6 +13351,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0016175",
+            "output_price": "0.00065",
             "provider_id": "openai"
           }
         ],
@@ -12814,6 +13392,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00012875",
+            "output_price": "0.00409",
             "provider_id": "openai"
           }
         ],
@@ -12851,6 +13431,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00002832",
+            "output_price": "0.00000632",
             "provider_id": "groq"
           },
           {
@@ -12900,6 +13482,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00002655",
+            "output_price": "0.00006525",
             "provider_id": "groq"
           },
           {
@@ -12941,6 +13525,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.00001155",
+            "output_price": "0.00309666",
             "provider_id": "deepseek"
           },
           {
@@ -12949,6 +13535,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00001575",
+            "output_price": "0.00139986",
             "provider_id": "groq"
           },
           {
@@ -12990,6 +13578,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0002882",
+            "output_price": "0.0034821",
             "provider_id": "deepseek"
           },
           {
@@ -12998,6 +13588,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.000393",
+            "output_price": "0.0015741",
             "provider_id": "groq"
           },
           {
@@ -13047,6 +13639,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00025784",
+            "output_price": "0.0000187",
             "provider_id": "groq"
           },
           {
@@ -13096,6 +13690,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00002832",
+            "output_price": "0.00000632",
             "provider_id": "groq"
           },
           {
@@ -13145,6 +13741,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00008239",
+            "output_price": "0.00003638",
             "provider_id": "groq"
           },
           {
@@ -13194,6 +13792,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00002112",
+            "output_price": "0.00000272",
             "provider_id": "groq"
           },
           {
@@ -13243,6 +13843,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00028072",
+            "output_price": "0.00000374",
             "provider_id": "groq"
           },
           {
@@ -13292,6 +13894,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.0000267",
+            "output_price": "0.0000705",
             "provider_id": "groq"
           },
           {
@@ -13390,6 +13994,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00004245",
+            "output_price": "0.00003675",
             "provider_id": "groq"
           },
           {
@@ -13439,6 +14045,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00004785",
+            "output_price": "0.000072",
             "provider_id": "groq"
           },
           {
@@ -13484,6 +14092,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0000066",
+            "output_price": "0.00172791",
             "provider_id": "deepseek"
           },
           {
@@ -13555,6 +14165,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
             "provider_id": "openai"
           },
           {
@@ -13610,6 +14222,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00019",
             "provider_id": "openai"
           },
           {
@@ -13665,6 +14279,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -13720,6 +14336,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001175",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -13775,6 +14393,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002175",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -13830,6 +14450,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00029",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -13885,6 +14507,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000095",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -13940,6 +14564,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -13995,6 +14621,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
             "provider_id": "openai"
           },
           {
@@ -14050,6 +14678,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00019",
             "provider_id": "openai"
           },
           {
@@ -14105,6 +14735,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -14160,6 +14792,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -14215,6 +14849,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -14270,6 +14906,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
             "provider_id": "openai"
           },
           {
@@ -14325,6 +14963,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001675",
+            "output_price": "0.00009",
             "provider_id": "openai"
           },
           {
@@ -14380,6 +15020,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -14435,6 +15077,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
             "provider_id": "openai"
           },
           {
@@ -14490,6 +15134,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -14545,6 +15191,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -14668,6 +15316,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0007625",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -14723,6 +15373,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00363",
+            "output_price": "0.00029",
             "provider_id": "openai"
           },
           {
@@ -14778,6 +15430,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -14833,6 +15487,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00056",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -14888,6 +15544,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005075",
+            "output_price": "0.00015",
             "provider_id": "openai"
           },
           {
@@ -14943,6 +15601,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000625",
+            "output_price": "0.00015",
             "provider_id": "openai"
           },
           {
@@ -14998,6 +15658,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006925",
+            "output_price": "0.00022",
             "provider_id": "openai"
           },
           {
@@ -15034,6 +15696,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00075625",
+            "output_price": "0.00168",
             "provider_id": "google"
           }
         ],
@@ -15069,6 +15733,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00082125",
+            "output_price": "0.00005",
             "provider_id": "google"
           }
         ],
@@ -15121,6 +15787,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004875",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -15176,6 +15844,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0033875",
+            "output_price": "0.00024",
             "provider_id": "openai"
           },
           {
@@ -15231,6 +15901,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0008575",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -15286,6 +15958,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000935",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -15341,6 +16015,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00067",
+            "output_price": "0.00018",
             "provider_id": "openai"
           },
           {
@@ -15396,6 +16072,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00075",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -15451,6 +16129,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0007625",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -15506,6 +16186,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00083",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -15561,6 +16243,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004875",
+            "output_price": "0.00019",
             "provider_id": "openai"
           },
           {
@@ -15616,6 +16300,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005675",
+            "output_price": "0.00013",
             "provider_id": "openai"
           },
           {
@@ -15671,6 +16357,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004775",
+            "output_price": "0.00012",
             "provider_id": "openai"
           },
           {
@@ -15726,6 +16414,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00333",
+            "output_price": "0.00019",
             "provider_id": "openai"
           },
           {
@@ -15781,6 +16471,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004875",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -15836,6 +16528,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000555",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -15891,6 +16585,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000475",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -15946,6 +16642,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0033225",
+            "output_price": "0.00015",
             "provider_id": "openai"
           },
           {
@@ -16001,6 +16699,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000485",
+            "output_price": "0.00018",
             "provider_id": "openai"
           },
           {
@@ -16056,6 +16756,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000585",
+            "output_price": "0.00019",
             "provider_id": "openai"
           },
           {
@@ -16111,6 +16813,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004825",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -16166,6 +16870,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00053",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -16221,6 +16927,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001125",
+            "output_price": "0.00015",
             "provider_id": "openai"
           },
           {
@@ -16276,6 +16984,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -16331,6 +17041,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -16386,6 +17098,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -16437,6 +17151,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.0121425",
+            "output_price": "0.0115",
             "provider_id": "openai"
           }
         ],
@@ -16489,6 +17205,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
             "provider_id": "openai"
           },
           {
@@ -16544,6 +17262,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001675",
+            "output_price": "0.00009",
             "provider_id": "openai"
           },
           {
@@ -16599,6 +17319,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001175",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -16654,6 +17376,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002175",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -16709,6 +17433,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00029",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -16764,6 +17490,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
             "provider_id": "openai"
           },
           {
@@ -16819,6 +17547,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00019",
             "provider_id": "openai"
           },
           {
@@ -16874,6 +17604,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
             "provider_id": "openai"
           },
           {
@@ -16929,6 +17661,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -16984,6 +17718,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000095",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -17039,6 +17775,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17070,10 +17808,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000096",
+            "output_price": "0.000075",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000096",
+            "output_price": "0.000075",
             "provider_id": "google"
           },
           {
@@ -17115,6 +17857,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00000175",
+            "output_price": "0.000002",
             "provider_id": "groq"
           },
           {
@@ -17206,6 +17950,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000341",
+            "output_price": "0.0020548",
             "provider_id": "openai"
           },
           {
@@ -17247,6 +17993,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000001875",
+            "output_price": "0.0000024",
             "provider_id": "google"
           }
         ],
@@ -17307,6 +18055,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.0000028",
+            "output_price": "0.000006",
             "provider_id": "mistral"
           },
           {
@@ -17366,6 +18116,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17421,6 +18173,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17476,6 +18230,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17531,6 +18287,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17586,6 +18344,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001175",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -17641,6 +18401,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002175",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
@@ -17696,6 +18458,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00029",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -17751,6 +18515,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17806,6 +18572,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00008",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -17861,6 +18629,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001275",
+            "output_price": "0.0001",
             "provider_id": "openai"
           },
           {
@@ -17916,6 +18686,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -17971,6 +18743,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
             "provider_id": "openai"
           },
           {
@@ -18026,6 +18800,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.0002",
             "provider_id": "openai"
           },
           {
@@ -18081,6 +18857,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
             "provider_id": "openai"
           },
           {
@@ -18136,6 +18914,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00022",
             "provider_id": "openai"
           },
           {
@@ -18191,6 +18971,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -18246,6 +19028,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
             "provider_id": "openai"
           },
           {
@@ -18288,6 +19072,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "7E-7",
+            "output_price": "0.0000036",
             "provider_id": "google"
           }
         ],
@@ -18339,6 +19125,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00009",
             "provider_id": "openai"
           },
           {
@@ -18463,7 +19251,7 @@
           }
         ],
         "pydantic_ai_gateway": {
-          "cost_estimate": 1.125e-06
+          "cost_estimate": 1.125e-6
         },
         "totalTokenCount": 9,
         "trafficType": "ON_DEMAND"
@@ -18474,6 +19262,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "5.25E-7",
+            "output_price": "6E-7",
             "provider_id": "google"
           }
         ],
@@ -18528,6 +19318,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001625",
+            "output_price": "0.00011",
             "provider_id": "openai"
           },
           {
@@ -18549,7 +19341,7 @@
         "inputTokens": 7,
         "outputTokens": 96,
         "pydantic_ai_gateway": {
-          "cost_estimate": 1.3685000000000002e-05
+          "cost_estimate": 1.3685000000000002e-5
         },
         "serverToolUsage": {},
         "totalTokens": 103
@@ -18579,7 +19371,7 @@
         "prompt_time": 0.01168072,
         "prompt_tokens": 42,
         "pydantic_ai_gateway": {
-          "cost_estimate": 3.11e-05
+          "cost_estimate": 3.11e-5
         },
         "queue_time": 0.084482342,
         "total_time": 0.013935661,
@@ -18599,6 +19391,8 @@
           },
           {
             "api_flavor": "default",
+            "input_price": "0.00002478",
+            "output_price": "0.00000632",
             "provider_id": "groq"
           },
           {
@@ -18645,10 +19439,14 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000042",
+            "output_price": "0.00015",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000042",
+            "output_price": "0.00015",
             "provider_id": "google"
           },
           {
@@ -18677,7 +19475,7 @@
           "reasoning_tokens": 0
         },
         "pydantic_ai_gateway": {
-          "cost_estimate": 9.625000000000001e-05
+          "cost_estimate": 9.625000000000001e-5
         },
         "total_tokens": 21
       }
@@ -18695,6 +19493,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00001625",
+            "output_price": "0.00008",
             "provider_id": "openai"
           }
         ],

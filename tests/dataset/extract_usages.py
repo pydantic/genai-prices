@@ -7,7 +7,7 @@ from typing import Any
 
 from utils import raw_bodies_path, this_dir
 
-from genai_prices import extract_usage
+from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data_snapshot import get_snapshot
 from genai_prices.types import Provider, UsageExtractor
 
@@ -48,7 +48,18 @@ def main():
                         assert v == case2.usage_dict[k]
 
             for case in cases:
-                extractor_dict = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
+                extractor_dict: dict[str, Any] = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
+                if case.model_ref:
+                    try:
+                        price = calc_price(
+                            Usage(**case.usage_dict), provider_id=case.provider_id, model_ref=case.model_ref
+                        )
+                    except LookupError:
+                        pass
+                    else:
+                        assert price.input_price + price.output_price == price.total_price
+                        extractor_dict['input_price'] = str(price.input_price)
+                        extractor_dict['output_price'] = str(price.output_price)
                 for other in this_result['extracted']:
                     if case.usage_dict == other['usage']:
                         other['extractors'].append(extractor_dict)
