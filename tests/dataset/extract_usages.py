@@ -27,15 +27,18 @@ extractors = [
 
 def main():
     usages_file = this_dir / 'usages.json'
+    current_result = json.loads(usages_file.read_text())
     if raw_bodies_path.exists():
         bodies = json.loads(raw_bodies_path.read_text())
         result = get_usages(bodies)
     else:
-        result = json.loads(usages_file.read_text())
+        result = current_result
     simplified_bodies = [r['body'] for r in result]
     assert get_usages(simplified_bodies) == result
     dumped = json.dumps(result, indent=2, sort_keys=True)
     usages_file.write_text(dumped + '\n')
+    if result != current_result:
+        raise AssertionError('usages.json updated!!!')
 
 
 def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:

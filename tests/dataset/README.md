@@ -10,3 +10,4 @@ Running `extract_usages.py` will:
   - Calculate prices
   - Extract a reduced body
 - Write all this data to `usages.json`.
+- Raise an error if `usages.json` changed.
