@@ -17,15 +17,15 @@ def main():
     extractors = [(provider, e) for provider in snapshot.providers if provider.extractors for e in provider.extractors]
     usages: list[Any] = []
     for body in bodies:
-        body_keys: set[str] = set()
+        body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
+        body = {k: body[k] for k in body_keys if k in body}
+
         extracteds: list[Any] = []
         for provider, extractor in extractors:
-            body_keys.update(get_body_keys(extractor))
             extracted = extract_and_check(body, extractor, provider)
             if extracted:
                 extracteds.append(extracted)
         if extracteds:
-            body = {k: body[k] for k in body_keys if k in body}
             usages.append((body, extracteds))
 
     result: list[Any] = []
