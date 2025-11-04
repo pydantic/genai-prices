@@ -25,27 +25,29 @@ def main():
     snapshot = get_snapshot()
 
     extractors = [(provider, e) for provider in snapshot.providers if provider.extractors for e in provider.extractors]
-    result: list[Any] = []
+    result: list[dict[str, Any]] = []
 
     for body in bodies:
         body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
         body = {k: body[k] for k in body_keys if k in body}
 
-        extracted = [e for provider, extractor in extractors if (e := extract_and_check(body, extractor, provider))]
-        if extracted:
+        cases: list[Case] = [
+            e for provider, extractor in extractors if (e := extract_and_check(body, extractor, provider))
+        ]
+        if cases:
             this_result: dict[str, Any] = {'body': body, 'extracted': []}
             result.append(this_result)
-            models: set[str] = {case.model_ref for case in extracted if case.model_ref}
+            models: set[str] = {case.model_ref for case in cases if case.model_ref}
             assert len(models) in (0, 1), models
             if models:
                 this_result['model'] = models.pop()
 
-            for case1, case2 in combinations(extracted, 2):
+            for case1, case2 in combinations(cases, 2):
                 for k, v in case1.usage_dict.items():
                     if k in case2.usage_dict:
                         assert v == case2.usage_dict[k]
 
-            for case in extracted:
+            for case in cases:
                 extractor_dict = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
                 for other in this_result['extracted']:
                     if case.usage_dict == other['usage']:
@@ -57,7 +59,7 @@ def main():
     (this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True))
 
 
-def get_body_keys(extractor: UsageExtractor):
+def get_body_keys(extractor: UsageExtractor) -> set[str]:
     keys = set[str]()
     for path in [extractor.model_path, extractor.root]:
         if path:
@@ -68,7 +70,7 @@ def get_body_keys(extractor: UsageExtractor):
     return keys
 
 
-def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider: Provider):
+def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider: Provider) -> Case | None:
     try:
         model_ref, usage = extractor.extract(body)
     except (LookupError, ValueError):
