@@ -26,12 +26,16 @@ extractors = [
 
 
 def main():
-    bodies = json.loads(raw_bodies_path.read_text())
-    result = get_usages(bodies)
+    usages_file = this_dir / 'usages.json'
+    if raw_bodies_path.exists():
+        bodies = json.loads(raw_bodies_path.read_text())
+        result = get_usages(bodies)
+    else:
+        result = json.loads(usages_file.read_text())
     simplified_bodies = [r['body'] for r in result]
     assert get_usages(simplified_bodies) == result
     dumped = json.dumps(result, indent=2, sort_keys=True)
-    (this_dir / 'usages.json').write_text(dumped + '\n')
+    usages_file.write_text(dumped + '\n')
 
 
 def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
