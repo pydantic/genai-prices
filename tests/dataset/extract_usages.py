@@ -20,11 +20,11 @@ def main():
         body_keys: set[str] = set()
         extracteds: list[Any] = []
         for provider, extractor in extractors:
+            body_keys.update(get_body_keys(extractor))
             try:
                 model_ref, usage = extractor.extract(body)
             except (LookupError, ValueError):
                 continue
-            body_keys.update(get_body_keys(extractor))
 
             flavor = extractor.api_flavor
             assert (model_ref, usage) == provider.extract_usage(body, api_flavor=flavor)
