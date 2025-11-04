@@ -7,7 +7,7 @@ from utils import raw_bodies_path, this_dir
 
 from genai_prices import extract_usage
 from genai_prices.data_snapshot import get_snapshot
-from genai_prices.types import UsageExtractor
+from genai_prices.types import Provider, UsageExtractor
 
 
 def main():
@@ -21,19 +21,9 @@ def main():
         extracteds: list[Any] = []
         for provider, extractor in extractors:
             body_keys.update(get_body_keys(extractor))
-            try:
-                model_ref, usage = extractor.extract(body)
-            except (LookupError, ValueError):
-                continue
-
-            flavor = extractor.api_flavor
-            assert (model_ref, usage) == provider.extract_usage(body, api_flavor=flavor)
-            if model_ref and provider.find_model(model_ref):
-                extracted = extract_usage(body, provider_id=provider.id, api_flavor=flavor)
-                assert extracted.model and extracted.model.is_match(model_ref)
-                assert usage == extracted.usage
-            usage_dict = {k: v for k, v in dataclasses.asdict(usage).items() if v}
-            extracteds.append((provider.id, flavor, model_ref, usage_dict))
+            extracted = extract_and_check(body, extractor, provider)
+            if extracted:
+                extracteds.append(extracted)
         if extracteds:
             body = {k: body[k] for k in body_keys if k in body}
             usages.append((body, extracteds))
@@ -76,6 +66,21 @@ def get_body_keys(extractor: UsageExtractor):
             assert isinstance(path, str)
             keys.add(path)
     return keys
+
+
+def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider: Provider):
+    try:
+        model_ref, usage = extractor.extract(body)
+    except (LookupError, ValueError):
+        return None
+    flavor = extractor.api_flavor
+    assert (model_ref, usage) == provider.extract_usage(body, api_flavor=flavor)
+    if model_ref and provider.find_model(model_ref):
+        extracted = extract_usage(body, provider_id=provider.id, api_flavor=flavor)
+        assert extracted.model and extracted.model.is_match(model_ref)
+        assert usage == extracted.usage
+    usage_dict = {k: v for k, v in dataclasses.asdict(usage).items() if v}
+    return provider.id, flavor, model_ref, usage_dict
 
 
 main()
