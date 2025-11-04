@@ -9,7 +9,7 @@ for f in (this_dir / '../../../pydantic-ai/tests').rglob('*.yaml'):
     text = f.read_text()
     if len(text) > 3_000_000:
         continue
-    parsed = yaml.load(text, yaml.Loader)
+    parsed = yaml.safe_load(text)
     interactions = parsed.get('interactions', [])
     for interaction in interactions:
         parsed_body = interaction.get('response', {}).get('parsed_body', {})
