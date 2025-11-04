@@ -84,6 +84,7 @@ typecheck:
 .PHONY: test
 test: ## Run tests and collect coverage data
 	uv run coverage run -m pytest
+	uv run python tests/dataset/extract_usages.py
 	@uv run coverage report
 
 .PHONY: testcov
