@@ -1,6 +1,7 @@
 import dataclasses
 import json
 from itertools import combinations
+from typing import Any
 
 from utils import raw_bodies_path, this_dir
 
@@ -11,10 +12,10 @@ bodies = json.loads(raw_bodies_path.read_text())
 snapshot = get_snapshot()
 
 extractors = [(provider, e) for provider in snapshot.providers if provider.extractors for e in provider.extractors]
-usages = []
+usages: list[Any] = []
 for body in bodies:
     body_keys: set[str] = set()
-    extracteds = []
+    extracteds: list[Any] = []
     for provider, extractor in extractors:
         try:
             model_ref, usage = extractor.extract(body)
@@ -39,9 +40,9 @@ for body in bodies:
         body = {k: body[k] for k in body_keys if k in body}
         usages.append((body, extracteds))
 
-result = []
+result: list[Any] = []
 for body, extracted in usages:
-    this_result = {'body': body, 'extracted': []}
+    this_result: dict[str, Any] = {'body': body, 'extracted': []}
     result.append(this_result)
     models = {e1[2] for e1 in extracted if e1[2]}
     assert len(models) in (0, 1), models
