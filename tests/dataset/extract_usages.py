@@ -66,4 +66,4 @@ for body, extracted in usages:
             )
 
 
-(this_dir / 'usages.json').write_text(json.dumps(result, indent=2))
+(this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True))
