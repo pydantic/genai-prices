@@ -19251,7 +19251,7 @@
           }
         ],
         "pydantic_ai_gateway": {
-          "cost_estimate": 1.125e-6
+          "cost_estimate": 1.125e-06
         },
         "totalTokenCount": 9,
         "trafficType": "ON_DEMAND"
@@ -19341,7 +19341,7 @@
         "inputTokens": 7,
         "outputTokens": 96,
         "pydantic_ai_gateway": {
-          "cost_estimate": 1.3685000000000002e-5
+          "cost_estimate": 1.3685000000000002e-05
         },
         "serverToolUsage": {},
         "totalTokens": 103
@@ -19371,7 +19371,7 @@
         "prompt_time": 0.01168072,
         "prompt_tokens": 42,
         "pydantic_ai_gateway": {
-          "cost_estimate": 3.11e-5
+          "cost_estimate": 3.11e-05
         },
         "queue_time": 0.084482342,
         "total_time": 0.013935661,
@@ -19475,7 +19475,7 @@
           "reasoning_tokens": 0
         },
         "pydantic_ai_gateway": {
-          "cost_estimate": 9.625000000000001e-5
+          "cost_estimate": 9.625000000000001e-05
         },
         "total_tokens": 21
       }

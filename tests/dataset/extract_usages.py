@@ -20,11 +20,21 @@ class Case:
     usage_dict: dict[str, Any]
 
 
+extractors = [
+    (provider, e) for provider in get_snapshot().providers if provider.extractors for e in provider.extractors
+]
+
+
 def main():
     bodies = json.loads(raw_bodies_path.read_text())
-    snapshot = get_snapshot()
+    result = get_usages(bodies)
+    simplified_bodies = [r['body'] for r in result]
+    assert get_usages(simplified_bodies) == result
+    dumped = json.dumps(result, indent=2, sort_keys=True)
+    (this_dir / 'usages.json').write_text(dumped + '\n')
 
-    extractors = [(provider, e) for provider in snapshot.providers if provider.extractors for e in provider.extractors]
+
+def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
 
     for body in bodies:
@@ -67,7 +77,7 @@ def main():
                 else:
                     this_result['extracted'].append({'usage': case.usage_dict, 'extractors': [extractor_dict]})
 
-    (this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True))
+    return result
 
 
 def get_body_keys(extractor: UsageExtractor) -> set[str]:
