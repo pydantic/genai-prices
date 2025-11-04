@@ -39,6 +39,7 @@ def main():
     usages_file.write_text(dumped + '\n')
     if result != current_result:
         raise AssertionError('usages.json updated!!!')
+    print('usages.json is up to date.')
 
 
 def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
