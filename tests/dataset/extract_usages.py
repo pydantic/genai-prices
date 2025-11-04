@@ -15,44 +15,37 @@ def main():
     snapshot = get_snapshot()
 
     extractors = [(provider, e) for provider in snapshot.providers if provider.extractors for e in provider.extractors]
-    usages: list[Any] = []
+    result: list[Any] = []
+
     for body in bodies:
         body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
         body = {k: body[k] for k in body_keys if k in body}
 
-        extracteds: list[Any] = []
-        for provider, extractor in extractors:
-            extracted = extract_and_check(body, extractor, provider)
-            if extracted:
-                extracteds.append(extracted)
-        if extracteds:
-            usages.append((body, extracteds))
+        extracted = [e for provider, extractor in extractors if (e := extract_and_check(body, extractor, provider))]
+        if extracted:
+            this_result: dict[str, Any] = {'body': body, 'extracted': []}
+            result.append(this_result)
+            models = {e1[2] for e1 in extracted if e1[2]}
+            assert len(models) in (0, 1), models
+            if models:
+                this_result['model'] = models.pop()
 
-    result: list[Any] = []
-    for body, extracted in usages:
-        this_result: dict[str, Any] = {'body': body, 'extracted': []}
-        result.append(this_result)
-        models = {e1[2] for e1 in extracted if e1[2]}
-        assert len(models) in (0, 1), models
-        if models:
-            this_result['model'] = models.pop()
+            for e1, e2 in combinations(extracted, 2):
+                u1 = e1[3]
+                u2 = e2[3]
+                for k, v in u1.items():
+                    if k in u2:
+                        assert v == u2[k]
 
-        for e1, e2 in combinations(extracted, 2):
-            u1 = e1[3]
-            u2 = e2[3]
-            for k, v in u1.items():
-                if k in u2:
-                    assert v == u2[k]
-
-        for provider_id, flavor, _model_ref, usage_dict in extracted:
-            for other in this_result['extracted']:
-                if usage_dict == other['usage']:
-                    other['extractors'].append({'provider_id': provider_id, 'api_flavor': flavor})
-                    break
-            else:
-                this_result['extracted'].append(
-                    {'usage': usage_dict, 'extractors': [{'provider_id': provider_id, 'api_flavor': flavor}]}
-                )
+            for provider_id, flavor, _model_ref, usage_dict in extracted:
+                for other in this_result['extracted']:
+                    if usage_dict == other['usage']:
+                        other['extractors'].append({'provider_id': provider_id, 'api_flavor': flavor})
+                        break
+                else:
+                    this_result['extracted'].append(
+                        {'usage': usage_dict, 'extractors': [{'provider_id': provider_id, 'api_flavor': flavor}]}
+                    )
 
     (this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True))
 
