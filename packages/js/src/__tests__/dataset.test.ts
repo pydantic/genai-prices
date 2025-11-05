@@ -2,7 +2,7 @@
 import { readFileSync } from 'fs'
 import path from 'path'
 import { describe, it, expect } from 'vitest'
-import { extractUsage, findProvider, Usage } from '../index'
+import { extractUsage, findProvider, Usage, calcPrice } from '../index'
 
 const USAGES_FILE = path.join(__dirname, '../../../../tests/dataset/usages.json')
 const USAGES_STRING = readFileSync(USAGES_FILE, 'utf-8')
@@ -80,8 +80,18 @@ describe('dataset', () => {
         for (const extractor of extracted.extractors) {
           const provider = findProvider({ providerId: extractor.provider_id })!
           const { model, usage: extractedUsage } = extractUsage(provider, usage.body, extractor.api_flavor)
-          if (model) {
+          if (!model) {
+            expect(usage.model).toBeUndefined()
+          } else {
             expect(model).toBe(usage.model)
+            const price = calcPrice(extracted.usage, model, { provider })
+            if (price) {
+              expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!))
+              expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!))
+            } else {
+              expect(extractor.input_price).toBeUndefined()
+              expect(extractor.output_price).toBeUndefined()
+            }
           }
           for (const key of Object.keys(extracted.usage)) {
             const k = key as keyof Usage
