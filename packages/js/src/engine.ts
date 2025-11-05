@@ -39,23 +39,49 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   let inputPrice = 0
   let outputPrice = 0
 
-  // Input-related prices
-  inputPrice += calcMtokPrice(modelPrice.input_mtok, usage.input_tokens, 'input_mtok')
-  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, usage.cache_write_tokens, 'cache_write_mtok')
-  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, usage.cache_read_tokens, 'cache_read_mtok')
-  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, usage.input_audio_tokens, 'input_audio_mtok')
-  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, usage.cache_audio_read_tokens, 'cache_audio_read_mtok')
+  const cacheReadTokens = usage.cache_read_tokens ?? 0
+  const cacheWriteTokens = usage.cache_write_tokens ?? 0
+  const cacheAudioReadTokens = usage.cache_audio_read_tokens ?? 0
+  const outputAudioTokens = usage.output_audio_tokens ?? 0
 
-  // Output-related prices
-  outputPrice += calcMtokPrice(modelPrice.output_mtok, usage.output_tokens, 'output_mtok')
-  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok')
-
-  // Requests price (counted as input cost)
-  if (modelPrice.requests_kcount !== undefined) {
-    inputPrice += modelPrice.requests_kcount / 1000
+  let uncachedAudioInputTokens = usage.input_audio_tokens ?? 0
+  uncachedAudioInputTokens -= cacheAudioReadTokens
+  if (uncachedAudioInputTokens < 0) {
+    throw new Error('cache_audio_read_tokens cannot be greater than input_audio_tokens')
   }
 
-  const totalPrice = inputPrice + outputPrice
+  let uncachedTextInputTokens = usage.input_tokens ?? 0
+  uncachedTextInputTokens -= cacheReadTokens
+  uncachedTextInputTokens -= cacheWriteTokens
+  uncachedTextInputTokens -= uncachedAudioInputTokens
+  if (uncachedTextInputTokens < 0) {
+    throw new Error('Uncached text input tokens cannot be negative')
+  }
+
+  let cachedTextInputTokens = cacheReadTokens
+  cachedTextInputTokens -= cacheAudioReadTokens
+  if (cachedTextInputTokens < 0) {
+    throw new Error('cache_audio_read_tokens cannot be greater than cache_read_tokens')
+  }
+
+  inputPrice += calcMtokPrice(modelPrice.input_mtok, uncachedTextInputTokens, 'input_mtok')
+  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, cachedTextInputTokens, 'cache_read_mtok')
+  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, cacheWriteTokens, 'cache_write_mtok')
+  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, uncachedAudioInputTokens, 'input_audio_mtok')
+  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, cacheAudioReadTokens, 'cache_audio_read_mtok')
+
+  let textOutputTokens = usage.output_tokens ?? 0
+  textOutputTokens -= outputAudioTokens
+  if (textOutputTokens < 0) {
+    throw new Error('output_audio_tokens cannot be greater than output_tokens')
+  }
+  outputPrice += calcMtokPrice(modelPrice.output_mtok, textOutputTokens, 'output_mtok')
+  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok')
+
+  let totalPrice = inputPrice + outputPrice
+  if (modelPrice.requests_kcount !== undefined) {
+    totalPrice += modelPrice.requests_kcount / 1000
+  }
 
   return {
     input_price: inputPrice,

@@ -41,17 +41,26 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
+      const uncachedInputTokens = 1000 - 200 - 100
+      const uncachedInputPrice = (uncachedInputTokens * 1.0) / 1_000_000
+      const cacheWritePrice = (200 * 0.5) / 1_000_000
+      const cacheReadPrice = (100 * 0.1) / 1_000_000
+      const inputPrice = uncachedInputPrice + cacheWritePrice + cacheReadPrice
+      const outputPrice = (500 * 2.0) / 1_000_000
+      const totalPrice = inputPrice + outputPrice
       expect(result).toMatchObject({
-        input_price: 0.001 + 0.0001 + 0.00001, // input + cache_write + cache_read
-        output_price: 0.001, // output only
-        total_price: 0.001 + 0.0001 + 0.00001 + 0.001,
+        input_price: inputPrice,
+        output_price: outputPrice,
+        total_price: totalPrice,
       })
     })
 
     it('should handle audio tokens correctly', () => {
       const usage: Usage = {
         input_audio_tokens: 100,
+        input_tokens: 100,
         output_audio_tokens: 50,
+        output_tokens: 50,
       }
       const modelPrice: ModelPrice = {
         input_audio_mtok: 10.0,
@@ -67,7 +76,7 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
-    it('should handle requests as input cost', () => {
+    it('should handle requests as total cost', () => {
       const usage: Usage = {
         input_tokens: 1000,
         output_tokens: 500,
@@ -81,9 +90,9 @@ describe('Core Price Calculation Function', () => {
       const result = calcPrice(usage, modelPrice)
 
       expect(result).toMatchObject({
-        input_price: 0.001 + 0.0005, // input tokens + requests (0.5 / 1000)
+        input_price: 0.001, // input tokens only
         output_price: 0.001, // output tokens only
-        total_price: 0.001 + 0.0005 + 0.001,
+        total_price: 0.001 + 0.001 + 0.0005, // add requests (0.5 / 1000) to total only
       })
     })
 
