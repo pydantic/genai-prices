@@ -76,12 +76,16 @@ function extractPath<T>(
     if (typeof step === 'object') {
       if (Array.isArray(currentStepData)) {
         currentStepData = extractArrayMatch(step, currentStepData)
+      } else if (!required) {
+        return null
       } else {
         throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
       }
     } else {
       if (mappingCheck.guard(currentStepData)) {
         currentStepData = currentStepData[step]
+      } else if (!required) {
+        return null
       } else {
         throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
       }
@@ -98,7 +102,11 @@ function extractPath<T>(
   }
 
   if (!mappingCheck.guard(currentStepData)) {
-    throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
+    if (required) {
+      throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
+    } else {
+      return null
+    }
   }
 
   const value = currentStepData[last]
@@ -113,9 +121,11 @@ function extractPath<T>(
 
   if (typeCheck.guard(value)) {
     return value
-  } else {
+  } else if (required) {
     errorPath.push(last)
     throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a ${typeCheck.name}, got ${typeName(value)}`)
+  } else {
+    return null
   }
 }
 
