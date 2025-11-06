@@ -27,8 +27,15 @@ def update_price_discrepancies(check_threshold: date | None = None):
                             if not isinstance(model.prices, ModelPrice):
                                 continue  # TODO
                             if prices_conflict(model.prices, price):
-                                provider_yml.set_price_discrepency(model.id, source, price)
-                                discs += 1
+                                # TODO the current workflow is not sustainable as these discrepancies
+                                #   will 'reappear' every 30 days.
+                                #   Commenting this out for now while I use this code for *missing* models.
+                                continue
+                                # provider_yml.set_price_discrepency(model.id, source, price)
+                                # discs += 1
+                    else:
+                        # TODO
+                        print(source)
 
         if discs:
             if not found:
