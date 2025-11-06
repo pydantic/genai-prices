@@ -86,10 +86,10 @@ describe('dataset', () => {
             expect(usage.model).toBeUndefined()
           } else {
             expect(model).toBe(usage.model)
-            const price = calcPrice(extracted.usage, model, { provider })
+            const price = calcPrice(extracted.usage, model, { provider, timestamp: new Date(2025, 11, 6, 12, 0, 0) })
             if (price) {
-              expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!))
-              expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!))
+              expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!), 8)
+              expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!), 8)
             } else {
               expect(extractor.input_price).toBeUndefined()
               expect(extractor.output_price).toBeUndefined()
