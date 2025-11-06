@@ -18,3 +18,4 @@ node_modules/
 # macOS system files
 .DS_Store
 packages/js/.genai-prices-cache.json
+.idea/
