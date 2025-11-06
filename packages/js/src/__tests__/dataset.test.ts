@@ -1,8 +1,10 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { readFileSync } from 'fs'
 import path from 'path'
-import { describe, it, expect } from 'vitest'
-import { extractUsage, findProvider, Usage, calcPrice } from '../index'
+import { describe, expect, it } from 'vitest'
+
+import { calcPrice, extractUsage, findProvider, Usage } from '../index'
 
 const USAGES_FILE = path.join(__dirname, '../../../../tests/dataset/usages.json')
 const USAGES_STRING = readFileSync(USAGES_FILE, 'utf-8')
@@ -68,14 +70,14 @@ interface ExtractedUsage {
 
 interface ExtractorInfo {
   api_flavor: string
-  provider_id: string
   input_price?: string
   output_price?: string
+  provider_id: string
 }
 
 describe('dataset', () => {
   USAGES.forEach((usage, index) => {
-    it(`should handle row ${index + 1}`, () => {
+    it(`should handle row ${(index + 1).toString()}`, () => {
       for (const extracted of usage.extracted) {
         for (const extractor of extracted.extractors) {
           const provider = findProvider({ providerId: extractor.provider_id })!
@@ -84,10 +86,10 @@ describe('dataset', () => {
             expect(usage.model).toBeUndefined()
           } else {
             expect(model).toBe(usage.model)
-            const price = calcPrice(extracted.usage, model, { provider })
+            const price = calcPrice(extracted.usage, model, { provider, timestamp: new Date(2025, 11, 6, 12, 0, 0) })
             if (price) {
-              expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!))
-              expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!))
+              expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!), 8)
+              expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!), 8)
             } else {
               expect(extractor.input_price).toBeUndefined()
               expect(extractor.output_price).toBeUndefined()
