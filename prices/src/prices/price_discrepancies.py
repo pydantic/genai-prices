@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 from prices.source_prices import load_source_prices
-from prices.types import ModelPrice
+from prices.types import ModelPrice, TieredPrices
 from prices.update import get_providers_yaml
 
 
@@ -74,9 +74,10 @@ def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool
         # prices are identical
         return False
 
-    current_prices_dict = current_price.model_dump(exclude_none=True)
     for field, value in source_price.model_dump(exclude_none=True).items():
-        if current_value := current_prices_dict.get(field):
+        if current_value := getattr(current_price, field):
+            if isinstance(current_value, TieredPrices) and current_value.base == value:
+                continue
             if current_value != value:
                 return True
         else:
