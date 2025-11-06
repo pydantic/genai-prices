@@ -5279,6 +5279,18 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'deepseek-v3.1-terminus',
+        name: 'DeepSeek V3.1 Terminus',
+        match: {
+          equals: 'deepseek-v3.1-terminus',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.23,
+          output_mtok: 0.9,
+        },
+      },
+      {
         id: 'deepseek/deepseek-chat',
         match: {
           equals: 'deepseek/deepseek-chat',
@@ -5304,6 +5316,18 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-chat-v3-0324:free',
         },
         prices: {},
+      },
+      {
+        id: 'deepseek/deepseek-chat-v3.1',
+        name: 'DeepSeek Chat V3.1',
+        match: {
+          equals: 'deepseek/deepseek-chat-v3.1',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.8,
+        },
       },
       {
         id: 'deepseek/deepseek-chat:free',
@@ -5413,6 +5437,17 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v3-base:free',
         },
         prices: {},
+      },
+      {
+        id: 'deepseek/deepseek-v3.2-exp',
+        name: 'DeepSeek V3.2 Experimental',
+        match: {
+          equals: 'deepseek/deepseek-v3.2-exp',
+        },
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 0.4,
+        },
       },
       {
         id: 'devstral-small',

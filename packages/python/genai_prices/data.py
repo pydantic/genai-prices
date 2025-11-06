@@ -2911,6 +2911,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='deepseek-v3.1-terminus',
+                match=ClauseEquals(equals='deepseek-v3.1-terminus'),
+                name='DeepSeek V3.1 Terminus',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('0.23'), output_mtok=Decimal('0.9')),
+            ),
+            ModelInfo(
                 id='deepseek/deepseek-chat',
                 match=ClauseEquals(equals='deepseek/deepseek-chat'),
                 prices=ModelPrice(input_mtok=Decimal('0.38'), output_mtok=Decimal('0.89')),
@@ -2924,6 +2931,13 @@ providers: list[Provider] = [
                 id='deepseek/deepseek-chat-v3-0324:free',
                 match=ClauseEquals(equals='deepseek/deepseek-chat-v3-0324:free'),
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-chat-v3.1',
+                match=ClauseEquals(equals='deepseek/deepseek-chat-v3.1'),
+                name='DeepSeek Chat V3.1',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
                 id='deepseek/deepseek-chat:free',
@@ -2989,6 +3003,12 @@ providers: list[Provider] = [
                 id='deepseek/deepseek-v3-base:free',
                 match=ClauseEquals(equals='deepseek/deepseek-v3-base:free'),
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3.2-exp',
+                match=ClauseEquals(equals='deepseek/deepseek-v3.2-exp'),
+                name='DeepSeek V3.2 Experimental',
+                prices=ModelPrice(input_mtok=Decimal('0.27'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='devstral-small',
