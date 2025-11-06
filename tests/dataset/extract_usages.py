@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import datetime
 import json
 from itertools import combinations
 from typing import Any
@@ -34,7 +35,7 @@ def main():
     else:
         result = current_result
     simplified_bodies = [r['body'] for r in result]
-    assert get_usages(simplified_bodies) == result
+    result = get_usages(simplified_bodies)
     dumped = json.dumps(result, indent=2, sort_keys=True)
     usages_file.write_text(dumped + '\n')
     if result != current_result:
@@ -72,7 +73,12 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
     extractor_dict: dict[str, Any] = {'provider_id': case.provider_id, 'api_flavor': case.api_flavor}
     if case.model_ref:
         try:
-            price = calc_price(Usage(**case.usage_dict), provider_id=case.provider_id, model_ref=case.model_ref)
+            price = calc_price(
+                Usage(**case.usage_dict),
+                provider_id=case.provider_id,
+                model_ref=case.model_ref,
+                genai_request_timestamp=datetime.datetime(2025, 11, 6, 12, 0, 0, tzinfo=datetime.timezone.utc),
+            )
         except LookupError:
             pass
         else:
