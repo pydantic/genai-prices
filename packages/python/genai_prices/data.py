@@ -5630,6 +5630,18 @@ providers: list[Provider] = [
                 name='Yi Large',
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
+            ModelInfo(
+                id='z-ai/glm-4.5',
+                match=ClauseEquals(equals='z-ai/glm-4.5'),
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.35'), output_mtok=Decimal('1.55')),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.6',
+                match=ClauseEquals(equals='z-ai/glm-4.6'),
+                context_window=202752,
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('1.75')),
+            ),
         ],
     ),
     Provider(
