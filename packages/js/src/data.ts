@@ -2052,10 +2052,9 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.',
         prices: {
           input_mtok: 0.3,
-          cache_read_mtok: 0.075,
           output_mtok: 30,
         },
       },

@@ -13675,8 +13675,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.000002835",
-            "output_price": "0.0007777",
+            "input_price": "0.00001155",
+            "output_price": "0.00309666",
             "provider_id": "deepseek"
           },
           {
@@ -13728,8 +13728,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00007074",
-            "output_price": "0.0008745",
+            "input_price": "0.0002882",
+            "output_price": "0.0034821",
             "provider_id": "deepseek"
           },
           {
@@ -14242,8 +14242,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00000162",
-            "output_price": "0.00043395",
+            "input_price": "0.0000066",
+            "output_price": "0.00172791",
             "provider_id": "deepseek"
           },
           {
