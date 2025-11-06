@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import date, timedelta
+from typing import Any
 
 from prices.source_prices import load_source_prices
 from prices.types import ModelPrice, TieredPrices
@@ -18,7 +19,10 @@ def update_price_discrepancies(check_threshold: date | None = None):
     found = False
 
     for provider_yml in providers_yml.values():
+        print(f'Checking {provider_yml.provider.name}...')
+        print('------------\n\n')
         discs = 0
+        missing: dict[str, Any] = {}
         for source, source_prices in prices.items():
             if provider_prices := source_prices.get(provider_yml.provider.id):
                 for model_id, price in provider_prices.items():
@@ -34,8 +38,21 @@ def update_price_discrepancies(check_threshold: date | None = None):
                                 # provider_yml.set_price_discrepency(model.id, source, price)
                                 # discs += 1
                     else:
-                        # TODO
-                        print(source)
+                        new = missing.setdefault(model_id, [])
+                        for other in new:
+                            if not prices_conflict(price, other['price']):
+                                other['sources'].append(source)
+                                break
+                        else:
+                            new.append(dict(price=price, sources=[source]))
+        for model_id, entries in missing.items():
+            print(model_id)
+            for entry in entries:
+                sources = ', '.join(entry['sources'])
+                print(f'  missing from {sources}: {entry["price"]}')
+            print('------------\n')
+            # break
+        break
 
         if discs:
             if not found:
