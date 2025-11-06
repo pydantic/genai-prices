@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
-from .source_prices import load_source_prices
-from .types import ModelPrice
-from .update import get_providers_yaml
+from prices.source_prices import load_source_prices
+from prices.types import ModelPrice
+from prices.update import get_providers_yaml
 
 
 def update_price_discrepancies(check_threshold: date | None = None):
@@ -24,7 +24,8 @@ def update_price_discrepancies(check_threshold: date | None = None):
                 for model_id, price in provider_prices.items():
                     if model := provider_yml.provider.find_model(model_id):
                         if not model.prices_checked or model.prices_checked < check_threshold:
-                            assert isinstance(model.prices, ModelPrice)
+                            if not isinstance(model.prices, ModelPrice):
+                                continue  # TODO
                             if prices_conflict(model.prices, price):
                                 provider_yml.set_price_discrepency(model.id, source, price)
                                 discs += 1
@@ -81,3 +82,7 @@ def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool
         else:
             return True
     return False
+
+
+if __name__ == '__main__':
+    update_price_discrepancies()
