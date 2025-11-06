@@ -261,6 +261,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000054",
+            "output_price": "0.00144",
             "provider_id": "google"
           }
         ],
@@ -298,6 +300,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000003",
+            "output_price": "0.03912",
             "provider_id": "google"
           }
         ],
@@ -894,6 +898,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000027",
+            "output_price": "0.03885",
             "provider_id": "google"
           }
         ],
@@ -1201,6 +1207,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000051",
+            "output_price": "0.04008",
             "provider_id": "google"
           }
         ],
@@ -1359,6 +1367,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.0000042",
+            "output_price": "0.04005",
             "provider_id": "google"
           }
         ],
@@ -1719,6 +1729,8 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.000003",
+            "output_price": "0.03909",
             "provider_id": "google"
           }
         ],
@@ -2236,6 +2248,72 @@
   },
   {
     "body": {
+      "modelVersion": "gemini-2.5-flash-lite",
+      "usageMetadata": {
+        "candidatesTokenCount": 8,
+        "promptTokenCount": 8,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8
+          }
+        ],
+        "totalTokenCount": 16
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "8E-7",
+            "output_price": "0.0000032",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8,
+          "output_tokens": 8
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash-lite"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash-lite",
+      "usageMetadata": {
+        "candidatesTokenCount": 9,
+        "promptTokenCount": 8,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8
+          }
+        ],
+        "totalTokenCount": 17
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "8E-7",
+            "output_price": "0.0000036",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8,
+          "output_tokens": 9
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash-lite"
+  },
+  {
+    "body": {
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 429,
@@ -2651,7 +2729,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -2690,7 +2768,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -2737,7 +2815,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -2776,11 +2854,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -2819,7 +2897,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -2909,7 +2987,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -2948,11 +3026,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -2991,11 +3069,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3034,11 +3112,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3080,7 +3158,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -3125,7 +3203,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3164,11 +3242,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-haiku-20241022",
+      "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3186,14 +3264,12 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000064",
-            "output_price": "0.000084",
+            "input_price": "0.000008",
+            "output_price": "0.000105",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.0000064",
-            "output_price": "0.000084",
             "provider_id": "google"
           },
           {
@@ -3207,11 +3283,11 @@
         }
       }
     ],
-    "model": "claude-3-5-haiku-20241022"
+    "model": "claude-haiku-4-5-20251001"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3250,11 +3326,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3293,11 +3369,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3336,11 +3412,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-haiku-20241022",
+      "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3358,14 +3434,12 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0003384",
-            "output_price": "0.000808",
+            "input_price": "0.000423",
+            "output_price": "0.00101",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.0003384",
-            "output_price": "0.000808",
             "provider_id": "google"
           },
           {
@@ -3379,11 +3453,11 @@
         }
       }
     ],
-    "model": "claude-3-5-haiku-20241022"
+    "model": "claude-haiku-4-5-20251001"
   },
   {
     "body": {
-      "model": "claude-3-5-haiku-20241022",
+      "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3401,14 +3475,12 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0006168",
-            "output_price": "0.000308",
+            "input_price": "0.000771",
+            "output_price": "0.000385",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.0006168",
-            "output_price": "0.000308",
             "provider_id": "google"
           },
           {
@@ -3422,11 +3494,11 @@
         }
       }
     ],
-    "model": "claude-3-5-haiku-20241022"
+    "model": "claude-haiku-4-5-20251001"
   },
   {
     "body": {
-      "model": "claude-3-5-haiku-20241022",
+      "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3444,14 +3516,12 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.000268",
-            "output_price": "0.000588",
+            "input_price": "0.000335",
+            "output_price": "0.000735",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.000268",
-            "output_price": "0.000588",
             "provider_id": "google"
           },
           {
@@ -3465,11 +3535,11 @@
         }
       }
     ],
-    "model": "claude-3-5-haiku-20241022"
+    "model": "claude-haiku-4-5-20251001"
   },
   {
     "body": {
-      "model": "claude-3-5-haiku-20241022",
+      "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3487,14 +3557,12 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0002368",
-            "output_price": "0.000364",
+            "input_price": "0.000296",
+            "output_price": "0.000455",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.0002368",
-            "output_price": "0.000364",
             "provider_id": "google"
           },
           {
@@ -3508,7 +3576,7 @@
         }
       }
     ],
-    "model": "claude-3-5-haiku-20241022"
+    "model": "claude-haiku-4-5-20251001"
   },
   {
     "body": {
@@ -3555,7 +3623,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3594,11 +3662,11 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3637,7 +3705,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -3733,7 +3801,7 @@
   },
   {
     "body": {
-      "model": "claude-3-7-sonnet-20250219",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3772,11 +3840,11 @@
         }
       }
     ],
-    "model": "claude-3-7-sonnet-20250219"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-7-sonnet-20250219",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3815,7 +3883,7 @@
         }
       }
     ],
-    "model": "claude-3-7-sonnet-20250219"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -3997,7 +4065,7 @@
   },
   {
     "body": {
-      "model": "claude-3-7-sonnet-20250219",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -4036,11 +4104,11 @@
         }
       }
     ],
-    "model": "claude-3-7-sonnet-20250219"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-7-sonnet-20250219",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -4079,11 +4147,11 @@
         }
       }
     ],
-    "model": "claude-3-7-sonnet-20250219"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -4126,7 +4194,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -4402,7 +4470,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -4441,7 +4509,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -12034,6 +12102,88 @@
     "body": {
       "model": "gpt-5-2025-08-07",
       "usage": {
+        "input_tokens": 40,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 148,
+        "output_tokens_details": {
+          "reasoning_tokens": 128
+        },
+        "total_tokens": 188
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00005",
+            "output_price": "0.00148",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 40,
+          "output_tokens": 148
+        }
+      }
+    ],
+    "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "model": "gpt-5-2025-08-07",
+      "usage": {
+        "input_tokens": 257,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 5,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 262
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00032125",
+            "output_price": "0.00005",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 257,
+          "output_tokens": 5
+        }
+      }
+    ],
+    "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "model": "gpt-5-2025-08-07",
+      "usage": {
         "input_tokens": 13,
         "input_tokens_details": {
           "cached_tokens": 0
@@ -12920,7 +13070,7 @@
     "body": {
       "model": "gpt-4o-2024-08-06",
       "usage": {
-        "input_tokens": 256,
+        "input_tokens": 40,
         "input_tokens_details": {
           "cached_tokens": 0
         },
@@ -12928,7 +13078,7 @@
         "output_tokens_details": {
           "reasoning_tokens": 0
         },
-        "total_tokens": 274
+        "total_tokens": 58
       }
     },
     "extracted": [
@@ -12944,13 +13094,13 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.00064",
+            "input_price": "0.0001",
             "output_price": "0.00018",
             "provider_id": "openai"
           }
         ],
         "usage": {
-          "input_tokens": 256,
+          "input_tokens": 40,
           "output_tokens": 18
         }
       }
@@ -12961,7 +13111,7 @@
     "body": {
       "model": "gpt-4o-2024-08-06",
       "usage": {
-        "input_tokens": 287,
+        "input_tokens": 67,
         "input_tokens_details": {
           "cached_tokens": 0
         },
@@ -12969,7 +13119,7 @@
         "output_tokens_details": {
           "reasoning_tokens": 0
         },
-        "total_tokens": 298
+        "total_tokens": 78
       }
     },
     "extracted": [
@@ -12985,13 +13135,13 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.0007175",
+            "input_price": "0.0001675",
             "output_price": "0.00011",
             "provider_id": "openai"
           }
         ],
         "usage": {
-          "input_tokens": 287,
+          "input_tokens": 67,
           "output_tokens": 11
         }
       }
@@ -17794,7 +17944,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation_input_tokens": 0,
         "cache_read_input_tokens": 0,
@@ -17829,7 +17979,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -19418,7 +19568,7 @@
   },
   {
     "body": {
-      "model": "claude-3-5-sonnet-20241022",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -19460,7 +19610,7 @@
         }
       }
     ],
-    "model": "claude-3-5-sonnet-20241022"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
