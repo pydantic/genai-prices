@@ -4127,3 +4127,19 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 3
+
+  - id: z-ai/glm-4.5
+    match:
+      equals: z-ai/glm-4.5
+    prices:
+      input_mtok: 0.35
+      output_mtok: 1.55
+    context_window: 131072
+
+  - id: z-ai/glm-4.6
+    match:
+      equals: z-ai/glm-4.6
+    prices:
+      input_mtok: 0.40
+      output_mtok: 1.75
+    context_window: 202752

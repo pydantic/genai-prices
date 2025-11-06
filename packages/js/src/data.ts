@@ -10144,6 +10144,28 @@ export const data: Provider[] = [
           output_mtok: 3,
         },
       },
+      {
+        id: 'z-ai/glm-4.5',
+        match: {
+          equals: 'z-ai/glm-4.5',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 1.55,
+        },
+      },
+      {
+        id: 'z-ai/glm-4.6',
+        match: {
+          equals: 'z-ai/glm-4.6',
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 1.75,
+        },
+      },
     ],
   },
   {
