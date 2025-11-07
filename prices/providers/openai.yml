@@ -406,6 +406,9 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.3
       output_mtok: 2.4
+      input_audio_mtok: 10
+      cache_audio_read_mtok: 0.3
+      output_audio_mtok: 20
 
   - id: gpt-4o-mini-transcribe
     match:

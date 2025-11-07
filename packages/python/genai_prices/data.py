@@ -2146,7 +2146,12 @@ providers: list[Provider] = [
                 id='gpt-4o-mini-realtime-preview',
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-realtime'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('2.4')
+                    input_mtok=Decimal('0.6'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('2.4'),
+                    input_audio_mtok=Decimal('10'),
+                    cache_audio_read_mtok=Decimal('0.3'),
+                    output_audio_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
