@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from typing import Any
 
 from prices.source_prices import load_source_prices
-from prices.types import ModelPrice, TieredPrices
+from prices.types import ClauseEquals, ModelInfo, ModelPrice, TieredPrices
 from prices.update import get_providers_yaml
 
 
@@ -46,12 +46,19 @@ def update_price_discrepancies(check_threshold: date | None = None):
                         else:
                             new.append(dict(price=price, sources=[source]))
         for model_id, entries in missing.items():
+            if len(entries) == 1:
+                provider_yml.add_model(
+                    ModelInfo(id=model_id, prices=entries[0]['price'], match=ClauseEquals(equals=model_id))
+                )
+                continue
             print(model_id)
             for entry in entries:
                 sources = ', '.join(entry['sources'])
                 print(f'  missing from {sources}: {entry["price"]}')
             print('------------\n')
             # break
+        provider_yml.save()
+
         break
 
         if discs:

@@ -155,6 +155,22 @@ models:
       cache_read_mtok: 0.10
       output_mtok: 5
 
+  - id: claude-instant-1
+    description: Retired, here to match price sources
+    match:
+      equals: claude-instant-1
+    prices:
+      input_mtok: 1.63
+      output_mtok: 55.1
+
+  - id: claude-instant-1.2
+    description: Retired, here to match price sources
+    match:
+      equals: claude-instant-1.2
+    prices:
+      input_mtok: 1.63
+      output_mtok: 5.51
+
   - id: claude-opus-4-0
     name: Claude Opus 4
     description: Most intelligent model for complex tasks
@@ -236,3 +252,11 @@ models:
         tiers:
           - start: 200000
             price: 22.50
+
+  - id: claude-v1
+    description: Retired, here to match price sources
+    match:
+      equals: claude-v1
+    prices:
+      input_mtok: 8
+      output_mtok: 24

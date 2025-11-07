@@ -141,6 +141,8 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='claude-haiku-4-5'),
+                        ClauseStartsWith(starts_with='claude-haiku-4.5'),
+                        ClauseStartsWith(starts_with='claude-4-5-haiku'),
                         ClauseStartsWith(starts_with='claude-4.5-haiku'),
                     ]
                 ),
@@ -155,11 +157,24 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-instant-1',
+                match=ClauseEquals(equals='claude-instant-1'),
+                description='Retired, here to match price sources',
+                prices=ModelPrice(input_mtok=Decimal('1.63'), output_mtok=Decimal('55.1')),
+            ),
+            ModelInfo(
+                id='claude-instant-1.2',
+                match=ClauseEquals(equals='claude-instant-1.2'),
+                description='Retired, here to match price sources',
+                prices=ModelPrice(input_mtok=Decimal('1.63'), output_mtok=Decimal('5.51')),
+            ),
+            ModelInfo(
                 id='claude-opus-4-0',
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='claude-opus-4-0'),
                         ClauseStartsWith(starts_with='claude-4-opus'),
+                        ClauseEquals(equals='claude-opus-4'),
                         ClauseEquals(equals='claude-opus-4-20250514'),
                     ]
                 ),
@@ -175,7 +190,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-opus-4-1',
-                match=ClauseStartsWith(starts_with='claude-opus-4-1'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-4-1'),
+                        ClauseStartsWith(starts_with='claude-opus-4.1'),
+                    ]
+                ),
                 name='Claude Opus 4.1',
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
@@ -209,7 +229,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='claude-sonnet-4-5',
-                match=ClauseStartsWith(starts_with='claude-sonnet-4-5'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-sonnet-4-5'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4.5'),
+                    ]
+                ),
                 name='Claude Sonnet 4.5',
                 description='Most intelligent model for building agents and coding',
                 context_window=1000000,
@@ -221,6 +246,12 @@ providers: list[Provider] = [
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
                 ),
+            ),
+            ModelInfo(
+                id='claude-v1',
+                match=ClauseEquals(equals='claude-v1'),
+                description='Retired, here to match price sources',
+                prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
             ),
         ],
     ),

@@ -204,6 +204,12 @@ export const data: Provider[] = [
               starts_with: 'claude-haiku-4-5',
             },
             {
+              starts_with: 'claude-haiku-4.5',
+            },
+            {
+              starts_with: 'claude-4-5-haiku',
+            },
+            {
               starts_with: 'claude-4.5-haiku',
             },
           ],
@@ -217,6 +223,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-instant-1',
+        description: 'Retired, here to match price sources',
+        match: {
+          equals: 'claude-instant-1',
+        },
+        prices: {
+          input_mtok: 1.63,
+          output_mtok: 55.1,
+        },
+      },
+      {
+        id: 'claude-instant-1.2',
+        description: 'Retired, here to match price sources',
+        match: {
+          equals: 'claude-instant-1.2',
+        },
+        prices: {
+          input_mtok: 1.63,
+          output_mtok: 5.51,
+        },
+      },
+      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -227,6 +255,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-4-opus',
+            },
+            {
+              equals: 'claude-opus-4',
             },
             {
               equals: 'claude-opus-4-20250514',
@@ -246,7 +277,14 @@ export const data: Provider[] = [
         name: 'Claude Opus 4.1',
         description: 'Most intelligent model for complex tasks',
         match: {
-          starts_with: 'claude-opus-4-1',
+          or: [
+            {
+              starts_with: 'claude-opus-4-1',
+            },
+            {
+              starts_with: 'claude-opus-4.1',
+            },
+          ],
         },
         context_window: 200000,
         prices: {
@@ -292,7 +330,14 @@ export const data: Provider[] = [
         name: 'Claude Sonnet 4.5',
         description: 'Most intelligent model for building agents and coding',
         match: {
-          starts_with: 'claude-sonnet-4-5',
+          or: [
+            {
+              starts_with: 'claude-sonnet-4-5',
+            },
+            {
+              starts_with: 'claude-sonnet-4.5',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -332,6 +377,17 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'claude-v1',
+        description: 'Retired, here to match price sources',
+        match: {
+          equals: 'claude-v1',
+        },
+        prices: {
+          input_mtok: 8,
+          output_mtok: 24,
         },
       },
     ],
