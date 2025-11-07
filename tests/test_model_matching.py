@@ -78,7 +78,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-4o-mini-search-preview', snapshot(('openai', 'gpt-4o-mini'))),
     pytest.param('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0', None, marks=mark_xfail_todo),
     ('openai', 'gpt-3.5-turbo', snapshot(('openai', 'gpt-3.5-turbo'))),
-    ('openai', 'o4-mini-deep-research-2025-06-26', snapshot(('openai', 'o4-mini'))),
+    ('openai', 'o4-mini-deep-research-2025-06-26', snapshot(('openai', 'o4-mini-deep-research'))),
     ('Google', 'gemini-2.5-flash', snapshot(('google', 'gemini-2.5-flash'))),
     ('google-vertex', 'gemini-2.0-flash-lite-001', snapshot(('google', 'gemini-2.0-flash'))),
     pytest.param(
@@ -210,7 +210,7 @@ test_cases: list[tuple[str, str, str]] = [
     pytest.param('nebius', 'meta-llama/Llama-3.3-70B-Instruct', None, marks=mark_xfail_todo),
     ('google-gla', 'gemini-1.5-pro', snapshot(('google', 'gemini-1.5-pro'))),
     pytest.param('nebius', 'meta-llama/Meta-Llama-3.1-8B-Instruct', None, marks=mark_xfail_todo),
-    ('openai', 'o4-mini-deep-research', snapshot(('openai', 'o4-mini'))),
+    ('openai', 'o4-mini-deep-research', snapshot(('openai', 'o4-mini-deep-research'))),
     pytest.param('nebius', 'deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     ('openai.chat', 'o3-mini-2025-01-31', snapshot(('openai', 'o3-mini'))),
     ('openai.chat', 'o3-mini', snapshot(('openai', 'o3-mini'))),
