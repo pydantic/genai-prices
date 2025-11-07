@@ -2208,6 +2208,15 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-embedding-001',
+        match: {
+          equals: 'gemini-embedding-001',
+        },
+        prices: {
+          input_mtok: 0.15,
+        },
+      },
+      {
         id: 'gemini-flash-1.5',
         name: 'Gemini 1.5 Flash',
         description:
@@ -2284,6 +2293,25 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-live-2.5-flash-preview',
+        match: {
+          or: [
+            {
+              starts_with: 'gemini-live-2.5-flash-preview',
+            },
+            {
+              starts_with: 'gemini-2.5-flash-native-audio-preview',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
         },
       },
       {

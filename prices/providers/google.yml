@@ -288,7 +288,9 @@ models:
         - equals: gemini-2.5-flash-image-preview
     context_window: 1000000
     prices_checked: 2025-11-04
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at
+      $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
+      model.
     prices:
       input_mtok: 0.3
       output_mtok: 30.0
@@ -362,6 +364,12 @@ models:
           - start: 200000
             price: 15
 
+  - id: gemini-embedding-001
+    match:
+      equals: gemini-embedding-001
+    prices:
+      input_mtok: 0.15
+
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
     description: >-
@@ -416,6 +424,17 @@ models:
         tiers:
           - start: 128000
             price: 0.3
+
+  - id: gemini-live-2.5-flash-preview
+    match:
+      or:
+        - starts_with: gemini-live-2.5-flash-preview
+        - starts_with: gemini-2.5-flash-native-audio-preview
+    prices:
+      input_mtok: 0.5
+      input_audio_mtok: 3
+      output_mtok: 2
+      output_audio_mtok: 12
 
   - id: gemini-pro
     name: gemini 1.0 pro
@@ -472,7 +491,8 @@ models:
 
   - id: gemma-3n
     name: Gemma 3n (free)
-    description: Our open model built for efficient performance on everyday devices like mobile phones, laptops, and tablets.
+    description: Our open model built for efficient performance on everyday devices like mobile phones, laptops, and
+      tablets.
     collapse: false
     prices_checked: 2025-08-12
     match:

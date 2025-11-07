@@ -1250,6 +1250,11 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-embedding-001',
+                match=ClauseEquals(equals='gemini-embedding-001'),
+                prices=ModelPrice(input_mtok=Decimal('0.15')),
+            ),
+            ModelInfo(
                 id='gemini-flash-1.5',
                 match=ClauseEquals(equals='gemini-flash-1.5'),
                 name='Gemini 1.5 Flash',
@@ -1276,6 +1281,21 @@ providers: list[Provider] = [
                         base=Decimal('0.01'), tiers=[Tier(start=128000, price=Decimal('0.02'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('0.15'), tiers=[Tier(start=128000, price=Decimal('0.3'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gemini-live-2.5-flash-preview',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='gemini-live-2.5-flash-preview'),
+                        ClauseStartsWith(starts_with='gemini-2.5-flash-native-audio-preview'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('2'),
+                    input_audio_mtok=Decimal('3'),
+                    output_audio_mtok=Decimal('12'),
                 ),
             ),
             ModelInfo(
