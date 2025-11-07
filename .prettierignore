@@ -5,3 +5,4 @@
 /.html_cache/
 /htmlcov/
 /tests/cassettes/
+/tests/dataset/*.json

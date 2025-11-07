@@ -485,9 +485,9 @@ describe('Comprehensive API Tests', () => {
 
       expect(result!.provider.name).toEqual('Anthropic')
       expect(result!.model.name).toEqual('Claude Opus 4')
-      expect(result!.input_price).toBeCloseTo(0.132, 2)
+      expect(result!.input_price).toBeCloseTo(0.078495, 2)
       expect(result!.output_price).toBeCloseTo(0.342, 2)
-      expect(result!.total_price).toBeCloseTo(0.475, 2)
+      expect(result!.total_price).toBeCloseTo(0.420495, 2)
     })
   })
 })

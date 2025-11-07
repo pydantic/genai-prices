@@ -32,19 +32,19 @@ The following providers are currently supported:
 
 [comment]: <> (providers-start)
 
-- [Anthropic](prices/providers/anthropic.yml) - 12 models
+- [Anthropic](prices/providers/anthropic.yml) - 15 models
 - [Avian](prices/providers/avian.yml) - 4 models
 - [AWS Bedrock](prices/providers/aws.yml) - 4 models
 - [Microsoft Azure](prices/providers/azure.yml) - 50 models
 - [Cohere](prices/providers/cohere.yml) - 5 models
 - [Deepseek](prices/providers/deepseek.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 7 models
-- [Google](prices/providers/google.yml) - 22 models
+- [Google](prices/providers/google.yml) - 25 models
 - [Groq](prices/providers/groq.yml) - 16 models
 - [Mistral](prices/providers/mistral.yml) - 23 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 44 models
-- [OpenRouter](prices/providers/openrouter.yml) - 552 models
+- [OpenAI](prices/providers/openai.yml) - 57 models
+- [OpenRouter](prices/providers/openrouter.yml) - 557 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [X AI](prices/providers/x_ai.yml) - 7 models
