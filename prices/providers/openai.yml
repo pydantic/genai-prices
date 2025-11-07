@@ -126,6 +126,15 @@ models:
       input_mtok: 0.3
       output_mtok: 1.2
 
+  - id: gpt-3.5-0301
+    match:
+      or:
+        - equals: gpt-3.5-turbo-0301
+        - equals: gpt-3.5-0301
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
   - id: gpt-3.5-turbo
     name: gpt 3.5 turbo
     description: GPT-3.5 Turbo offers a balance between cost and performance.
@@ -437,6 +446,7 @@ models:
         - equals: gpt-5-2025-08-07
         - equals: gpt-5-chat
         - equals: gpt-5-chat-latest
+        - equals: gpt-5-codex
     context_window: 400000
     prices_checked: 2025-08-08
     prices:
@@ -474,6 +484,13 @@ models:
       input_mtok: 0.05
       cache_read_mtok: 0.005
       output_mtok: 0.4
+
+  - id: gpt-5-pro
+    match:
+      equals: gpt-5-pro
+    prices:
+      input_mtok: 15
+      output_mtok: 120
 
   - id: o1
     name: o1
@@ -541,6 +558,14 @@ models:
           input_mtok: 2
           cache_read_mtok: 0.5
           output_mtok: 8
+
+  - id: o3-deep-research
+    match:
+      equals: o3-deep-research
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 2.5
+      output_mtok: 40
 
   - id: o3-mini
     name: o3 Mini

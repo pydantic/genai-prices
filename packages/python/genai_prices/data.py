@@ -1907,6 +1907,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
+                id='gpt-3.5-0301',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-3.5-turbo-0301'), ClauseEquals(equals='gpt-3.5-0301')]),
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
                 id='gpt-3.5-turbo',
                 match=ClauseOr(
                     or_=[
@@ -2151,6 +2156,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-2025-08-07'),
                         ClauseEquals(equals='gpt-5-chat'),
                         ClauseEquals(equals='gpt-5-chat-latest'),
+                        ClauseEquals(equals='gpt-5-codex'),
                     ]
                 ),
                 name='GPT-5',
@@ -2179,6 +2185,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.4')
                 ),
+            ),
+            ModelInfo(
+                id='gpt-5-pro',
+                match=ClauseEquals(equals='gpt-5-pro'),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
                 id='o1',
@@ -2230,6 +2241,11 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='o3-deep-research',
+                match=ClauseEquals(equals='o3-deep-research'),
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
             ),
             ModelInfo(
                 id='o3-mini',

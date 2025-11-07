@@ -3527,6 +3527,23 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-3.5-0301',
+        match: {
+          or: [
+            {
+              equals: 'gpt-3.5-turbo-0301',
+            },
+            {
+              equals: 'gpt-3.5-0301',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 2,
+        },
+      },
+      {
         id: 'gpt-3.5-turbo',
         name: 'gpt 3.5 turbo',
         description: 'GPT-3.5 Turbo offers a balance between cost and performance.',
@@ -3954,6 +3971,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-chat-latest',
             },
+            {
+              equals: 'gpt-5-codex',
+            },
           ],
         },
         context_window: 400000,
@@ -4003,6 +4023,16 @@ export const data: Provider[] = [
           input_mtok: 0.05,
           cache_read_mtok: 0.005,
           output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'gpt-5-pro',
+        match: {
+          equals: 'gpt-5-pro',
+        },
+        prices: {
+          input_mtok: 15,
+          output_mtok: 120,
         },
       },
       {
@@ -4101,6 +4131,17 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'o3-deep-research',
+        match: {
+          equals: 'o3-deep-research',
+        },
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 2.5,
+          output_mtok: 40,
+        },
       },
       {
         id: 'o3-mini',

@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-from .types import ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
+from .types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
 from .utils import package_dir
 
 yaml = YAML()
@@ -114,6 +114,9 @@ class ProviderYaml:
         else:
             self._extra_prices.append(model)
             return 1
+
+    def add_price(self, model_id: str, price: ModelPrice) -> None:
+        self.add_model(ModelInfo(id=model_id, prices=price, match=ClauseEquals(equals=model_id)))
 
     def remove_model(self, model_id: str) -> None:
         self._removed_models.add(model_id)

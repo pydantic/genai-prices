@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from typing import Any
 
 from prices.source_prices import load_source_prices
-from prices.types import ClauseEquals, ModelInfo, ModelPrice, TieredPrices
+from prices.types import ModelPrice, TieredPrices
 from prices.update import get_providers_yaml
 
 
@@ -19,6 +19,8 @@ def update_price_discrepancies(check_threshold: date | None = None):
     found = False
 
     for provider_yml in providers_yml.values():
+        if provider_yml.provider.id != 'openai':
+            continue
         print(f'Checking {provider_yml.provider.name}...')
         print('------------\n\n')
         discs = 0
@@ -40,23 +42,28 @@ def update_price_discrepancies(check_threshold: date | None = None):
                     else:
                         new = missing.setdefault(model_id, [])
                         for other in new:
-                            if not prices_conflict(price, other['price']):
+                            if not prices_conflict(price, other['price']) or not prices_conflict(other['price'], price):
                                 other['sources'].append(source)
                                 break
                         else:
                             new.append(dict(price=price, sources=[source]))
-        for model_id, entries in missing.items():
-            if len(entries) == 1:
-                provider_yml.add_model(
-                    ModelInfo(id=model_id, prices=entries[0]['price'], match=ClauseEquals(equals=model_id))
-                )
-                continue
-            print(model_id)
-            for entry in entries:
-                sources = ', '.join(entry['sources'])
-                print(f'  missing from {sources}: {entry["price"]}')
-            print('------------\n')
-            # break
+        # for model_id, entries in missing.items():
+        #     # if provider_yml.provider.id == 'openai' and len(entries) == 1 and entries[0]['sources'] == ['openrouter']:
+        #     if 'batch' in model_id or model_id.startswith(('gpt-oss-',)):
+        #         continue
+        #     if len(entries) == 1:
+        #         [entry] = entries
+        #         if len(entry['sources']) > 1:
+        #             provider_yml.add_price(model_id, entry['price'])
+        #             continue
+        #     print(model_id)
+        #     for entry in entries:
+        #         sources = ', '.join(entry['sources'])
+        #         if len(entry['sources']) > 1:
+        #             print(model_id)
+        #             print(f'  missing from {sources}: {entry["price"]}')
+        #     # print('------------\n')
+        #     # break
         provider_yml.save()
 
         break
