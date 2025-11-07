@@ -5,7 +5,7 @@ from typing import Any
 
 from prices.source_prices import load_source_prices
 from prices.types import ModelPrice, TieredPrices
-from prices.update import get_providers_yaml
+from prices.update import ProviderYaml, get_providers_yaml
 
 
 def update_price_discrepancies(check_threshold: date | None = None):
@@ -19,10 +19,6 @@ def update_price_discrepancies(check_threshold: date | None = None):
     found = False
 
     for provider_yml in providers_yml.values():
-        if provider_yml.provider.id != 'openai':
-            continue
-        print(f'Checking {provider_yml.provider.name}...')
-        print('------------\n\n')
         discs = 0
         missing: dict[str, Any] = {}
         for source, source_prices in prices.items():
@@ -47,68 +43,16 @@ def update_price_discrepancies(check_threshold: date | None = None):
                                 break
                         else:
                             new.append(dict(price=price, sources=[source]))
-        # for model_id, entries in missing.items():
-        #     # if provider_yml.provider.id == 'openai' and len(entries) == 1 and entries[0]['sources'] == ['openrouter']:
-        #     if provider_yml.provider.id == 'openai' and (
-        #         'batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))
-        #     ):
-        #         continue
-        #     [entry] = entries
-        #     # if len(entries) == 1:
-        #     #     [entry] = entries
-        #     #     if len(entry['sources']) > 1:
-        #     #         provider_yml.add_price(model_id, entry['price'])
-        #     #         continue
-        #     matching_by_price = [
-        #         m
-        #         for m in provider_yml.provider.models
-        #         if isinstance(m.prices, ModelPrice)
-        #         and (not prices_conflict(m.prices, entry['price']) or not prices_conflict(entry['price'], m.prices))
-        #     ]
-        #     print('Unrecognized model:', model_id)
-        #     print('Sources:', ', '.join(entry['sources']))
-        #     new_price = entry['price'].model_dump(exclude_none=True, mode='json')
-        #     print('Price:', new_price)
-        #     for i, model in enumerate(matching_by_price):
-        #         print('  Possible match:', i, model.id)
-        #         if model.prices == entry['price']:
-        #             print('    Exact price match')
-        #         else:
-        #             old_price = model.prices.model_dump(exclude_none=True, mode='json')
-        #             print('    Old price:', old_price)
-        #             print('    Differences:', new_price.items() ^ old_price.items())
-        #     print()
-        #     action = input('Action? ')
-        #     if action == 'n':
-        #         provider_yml.add_price(model_id, entry['price'])
-        #         continue
-        #     if action.isnumeric():
-        #         index = int(action)
-        #         model = matching_by_price[index]
-        #         provider_yml.add_id_to_model(model.id, model_id)
-        #         continue
-        #     if len(matching_by_price) == 1:
-        #         [model] = matching_by_price
-        #         print(model_id)
-        #         print(model.id)
-        #         print(entry['sources'])
-        #
-        #     # print()
-        #     # if input('Add?') == 'y':
-        #     #     provider_yml.add_id_to_model(model.id, model_id)
-        #
-        #     # print(f'Adding missing prices for model {model_id} from sources {entry["sources"]}')
-        #     # provider_yml.update_model(model.id, model.model_info(), set_prices=True)
-        #     # continue
-        #     # print(model_id)
-        #     # for entry in entries:
-        #     #     sources = ', '.join(entry['sources'])
-        #     #     print(f'  missing from {sources}: {entry["price"]}')
-        #     # print('------------\n')
-        #     # break
-        provider_yml.save()
 
-        break
+        for model_id, entries in missing.items():
+            if provider_yml.provider.id == 'openai' and (
+                'batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))
+            ):
+                continue
+            [entry] = entries
+            print('Unrecognized model:', model_id)
+            print('Sources:', ', '.join(entry['sources']))
+            discs += handle_missing_model(entry['price'], model_id, provider_yml)
 
         if discs:
             if not found:
@@ -119,6 +63,39 @@ def update_price_discrepancies(check_threshold: date | None = None):
 
     if not found:
         print('no price discrepancies found')
+
+
+def handle_missing_model(price: ModelPrice, model_id: str, provider_yml: ProviderYaml):
+    matching_by_price = [
+        m
+        for m in provider_yml.provider.models
+        if isinstance(m.prices, ModelPrice)
+        and (not prices_conflict(m.prices, price) or not prices_conflict(price, m.prices))
+    ]
+    new_price = price.model_dump(exclude_none=True, mode='json')
+    print('Price:', new_price)
+    for i, model in enumerate(matching_by_price):
+        print('  Possible match:', i, model.id)
+        if model.prices == price:
+            print('    Exact price match')
+        else:
+            old_price = model.prices.model_dump(exclude_none=True, mode='json')  # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType, reportUnknownVariableType]
+            print('    Old price:', old_price)  # pyright: ignore[reportUnknownArgumentType]
+            print('    Differences:', new_price.items() ^ old_price.items())  # pyright: ignore[reportUnknownArgumentType, reportUnknownMemberType]
+    print()
+
+    action = input('Action? ')
+    if action == 'n':
+        provider_yml.add_price(model_id, price)
+        return True
+
+    if action.isnumeric():
+        index = int(action)
+        model = matching_by_price[index]
+        provider_yml.add_id_to_model(model.id, model_id)
+        return True
+
+    return False
 
 
 def check_for_price_discrepancies() -> int:
