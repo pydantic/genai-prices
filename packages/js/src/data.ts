@@ -1325,9 +1325,12 @@ export const data: Provider[] = [
   {
     id: 'cerebras',
     name: 'Cerebras',
-    pricing_urls: ['https://inference-docs.cerebras.ai/models/openai-oss'],
+    pricing_urls: ['https://www.cerebras.ai/pricing#pricing', 'https://inference-docs.cerebras.ai/models/openai-oss'],
     api_pattern: 'https://api\\.cerebras\\.ai',
     model_match: {
+      contains: 'cerebras',
+    },
+    provider_match: {
       contains: 'cerebras',
     },
     extractors: [
@@ -1356,7 +1359,7 @@ export const data: Provider[] = [
         description:
           "OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).",
         match: {
-          contains: 'gpt-oss-120b',
+          equals: 'gpt-oss-120b',
         },
         context_window: 131072,
         price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
@@ -1371,17 +1374,7 @@ export const data: Provider[] = [
         description:
           "Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
         match: {
-          or: [
-            {
-              equals: 'llama-3.3-70b',
-            },
-            {
-              starts_with: 'cerebras/llama-3.3-70b',
-            },
-            {
-              starts_with: 'cerebras:llama-3.3-70b',
-            },
-          ],
+          equals: 'llama-3.3-70b',
         },
         context_window: 128000,
         price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
@@ -1396,17 +1389,7 @@ export const data: Provider[] = [
         description:
           "Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
         match: {
-          or: [
-            {
-              equals: 'llama3.1-8b',
-            },
-            {
-              starts_with: 'cerebras/llama3.1-8b',
-            },
-            {
-              starts_with: 'cerebras:llama3.1-8b',
-            },
-          ],
+          equals: 'llama3.1-8b',
         },
         context_window: 32768,
         price_comments: 'Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
@@ -1421,17 +1404,7 @@ export const data: Provider[] = [
         description:
           "Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
         match: {
-          or: [
-            {
-              equals: 'qwen-3-32b',
-            },
-            {
-              starts_with: 'cerebras/qwen-3-32b',
-            },
-            {
-              starts_with: 'cerebras:qwen-3-32b',
-            },
-          ],
+          equals: 'qwen-3-32b',
         },
         context_window: 131072,
         price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
