@@ -4036,6 +4036,14 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moderation',
+        description: 'All OpenAI moderation models and endpoints are free of charge',
+        match: {
+          contains: 'moderation',
+        },
+        prices: {},
+      },
+      {
         id: 'o1',
         name: 'o1',
         description: 'O1 is a model that offers a balance between cost and performance.',

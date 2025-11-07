@@ -2192,6 +2192,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
+                id='moderation',
+                match=ClauseContains(contains='moderation'),
+                description='All OpenAI moderation models and endpoints are free of charge',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
                 id='o1',
                 match=ClauseOr(
                     or_=[

@@ -51,20 +51,18 @@ def update_price_discrepancies(check_threshold: date | None = None):
         #     # if provider_yml.provider.id == 'openai' and len(entries) == 1 and entries[0]['sources'] == ['openrouter']:
         #     if 'batch' in model_id or model_id.startswith(('gpt-oss-',)):
         #         continue
-        #     if len(entries) == 1:
-        #         [entry] = entries
-        #         if len(entry['sources']) > 1:
-        #             provider_yml.add_price(model_id, entry['price'])
-        #             continue
+        #     # if len(entries) == 1:
+        #     #     [entry] = entries
+        #     #     if len(entry['sources']) > 1:
+        #     #         provider_yml.add_price(model_id, entry['price'])
+        #     #         continue
         #     print(model_id)
         #     for entry in entries:
         #         sources = ', '.join(entry['sources'])
-        #         if len(entry['sources']) > 1:
-        #             print(model_id)
-        #             print(f'  missing from {sources}: {entry["price"]}')
+        #         print(f'  missing from {sources}: {entry["price"]}')
         #     # print('------------\n')
         #     # break
-        provider_yml.save()
+        # provider_yml.save()
 
         break
 
