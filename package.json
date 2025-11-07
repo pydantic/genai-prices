@@ -5,8 +5,7 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "packages/js",
-    "packages/python"
+    "packages/js"
   ],
   "scripts": {
     "format": "prettier --write -- . && npm run lint-fix",
