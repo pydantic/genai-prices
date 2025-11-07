@@ -1871,7 +1871,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='codex-mini',
-                match=ClauseEquals(equals='codex-mini'),
+                match=ClauseOr(or_=[ClauseEquals(equals='codex-mini'), ClauseEquals(equals='codex-mini-latest')]),
                 name='Codex Mini',
                 description='codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we recommend starting with gpt-4.1.',
                 prices=ModelPrice(
@@ -1896,13 +1896,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='ft:gpt-4o-2024-08-06:',
-                match=ClauseStartsWith(starts_with='ft:gpt-4o-2024-08-06:'),
+                match=ClauseStartsWith(starts_with='ft:gpt-4o-2024-08-06'),
                 description='GPT-4o fine tuned.',
                 prices=ModelPrice(input_mtok=Decimal('3.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='ft:gpt-4o-mini-2024-07-18:',
-                match=ClauseStartsWith(starts_with='ft:gpt-4o-mini-2024-07-18:'),
+                match=ClauseStartsWith(starts_with='ft:gpt-4o-mini-2024-07-18'),
                 description='GPT-4o Mini fine tuned.',
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
             ),
@@ -2256,7 +2256,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='o3-deep-research',
-                match=ClauseEquals(equals='o3-deep-research'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='o3-deep-research'), ClauseEquals(equals='o3-deep-research-2025-06-26')]
+                ),
                 prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
             ),
             ModelInfo(

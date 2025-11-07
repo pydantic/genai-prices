@@ -60,14 +60,16 @@ def update_price_discrepancies(check_threshold: date | None = None):
         #     matching_by_price = [
         #         m
         #         for m in provider_yml.provider.models
-        #         if m.prices == entry['price']
-        #         # if isinstance(m.prices, ModelPrice) and not prices_conflict(m.prices, entry['price'])
+        #         # if m.prices == entry['price']
+        #         if isinstance(m.prices, ModelPrice) and not prices_conflict(m.prices, entry['price'])
         #     ]
         #     if len(matching_by_price) == 1:
         #         [model] = matching_by_price
         #         # new_model = model.model_copy(update=dict(match=Cla))
         #         print(model_id)
         #         print(model.id)
+        #         print(entry['sources'])
+        #
         #         print()
         #         if input('Add?') == 'y':
         #             provider_yml.add_id_to_model(model.id, model_id)

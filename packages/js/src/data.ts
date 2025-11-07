@@ -3451,7 +3451,14 @@ export const data: Provider[] = [
         description:
           'codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we recommend starting with gpt-4.1.',
         match: {
-          equals: 'codex-mini',
+          or: [
+            {
+              equals: 'codex-mini',
+            },
+            {
+              equals: 'codex-mini-latest',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.5,
@@ -3508,7 +3515,7 @@ export const data: Provider[] = [
         id: 'ft:gpt-4o-2024-08-06:',
         description: 'GPT-4o fine tuned.',
         match: {
-          starts_with: 'ft:gpt-4o-2024-08-06:',
+          starts_with: 'ft:gpt-4o-2024-08-06',
         },
         prices: {
           input_mtok: 3.75,
@@ -3519,7 +3526,7 @@ export const data: Provider[] = [
         id: 'ft:gpt-4o-mini-2024-07-18:',
         description: 'GPT-4o Mini fine tuned.',
         match: {
-          starts_with: 'ft:gpt-4o-mini-2024-07-18:',
+          starts_with: 'ft:gpt-4o-mini-2024-07-18',
         },
         prices: {
           input_mtok: 0.3,
@@ -4167,7 +4174,14 @@ export const data: Provider[] = [
       {
         id: 'o3-deep-research',
         match: {
-          equals: 'o3-deep-research',
+          or: [
+            {
+              equals: 'o3-deep-research',
+            },
+            {
+              equals: 'o3-deep-research-2025-06-26',
+            },
+          ],
         },
         prices: {
           input_mtok: 10,
