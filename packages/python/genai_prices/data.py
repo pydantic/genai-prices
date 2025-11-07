@@ -1174,16 +1174,20 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gemini-2.5-flash',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='gemini-2.5-flash'), ClauseEquals(equals='gemini-2.5-flash-latest')]
+                    or_=[
+                        ClauseEquals(equals='gemini-2.5-flash'),
+                        ClauseEquals(equals='gemini-2.5-flash-latest'),
+                        ClauseEquals(equals='gemini-2.5-flash-preview-09-2025'),
+                    ]
                 ),
                 name='Gemini 2.5 Flash',
                 description='Gemini 2.5 Flash is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'),
-                    cache_read_mtok=Decimal('0.075'),
+                    cache_read_mtok=Decimal('0.03'),
                     output_mtok=Decimal('2.5'),
                     input_audio_mtok=Decimal('1'),
-                    cache_audio_read_mtok=Decimal('0.25'),
+                    cache_audio_read_mtok=Decimal('0.1'),
                 ),
             ),
             ModelInfo(
@@ -1213,18 +1217,18 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'),
-                    cache_read_mtok=Decimal('0.025'),
+                    cache_read_mtok=Decimal('0.01'),
                     output_mtok=Decimal('0.4'),
-                    input_audio_mtok=Decimal('0.5'),
-                    cache_audio_read_mtok=Decimal('0.125'),
+                    input_audio_mtok=Decimal('0.3'),
+                    cache_audio_read_mtok=Decimal('0.03'),
                 ),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-preview',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='gemini-2.5-flash-preview'),
-                        ClauseEquals(equals='gemini-2.5-flash-preview-05-20'),
+                        ClauseContains(contains='gemini-2.5-flash-preview-05-20'),
+                        ClauseContains(contains='gemini-2.5-flash-preview-04-17'),
                         ClauseEquals(equals='gemini-2.5-flash-preview-05-20:thinking'),
                         ClauseEquals(equals='gemini-2.5-flash-preview'),
                         ClauseEquals(equals='gemini-2.5-flash-preview:thinking'),
@@ -1244,7 +1248,7 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
                     cache_read_mtok=TieredPrices(
-                        base=Decimal('0.31'), tiers=[Tier(start=200000, price=Decimal('0.625'))]
+                        base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
