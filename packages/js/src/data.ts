@@ -3880,6 +3880,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-4o-mini-search-preview',
             },
+            {
+              equals: 'gpt-4o-mini-search-preview-2025-03-11',
+            },
           ],
         },
         context_window: 128000,
@@ -3924,6 +3927,27 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-4o-mini-transcribe',
+        match: {
+          equals: 'gpt-4o-mini-transcribe',
+        },
+        prices: {
+          input_mtok: 1.25,
+          output_mtok: 5,
+          input_audio_mtok: 3,
+        },
+      },
+      {
+        id: 'gpt-4o-mini-tts',
+        match: {
+          equals: 'gpt-4o-mini-tts',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_audio_mtok: 12,
+        },
+      },
+      {
         id: 'gpt-4o-realtime-preview',
         match: {
           starts_with: 'gpt-4o-realtime',
@@ -3955,6 +3979,24 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-4o-transcribe',
+        match: {
+          or: [
+            {
+              equals: 'gpt-4o-transcribe',
+            },
+            {
+              equals: 'gpt-4o-transcribe-diarize',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2.5,
+          output_mtok: 10,
+          input_audio_mtok: 6,
         },
       },
       {
@@ -3998,6 +4040,30 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5-image',
+        match: {
+          equals: 'gpt-5-image',
+        },
+        price_comments: 'Seen on OpenRouter before OpenAI',
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 1.25,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5-image-mini',
+        match: {
+          equals: 'gpt-5-image-mini',
+        },
+        price_comments: 'Seen on OpenRouter before OpenAI',
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 2,
         },
       },
       {
@@ -4057,6 +4123,43 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 15,
           output_mtok: 120,
+        },
+      },
+      {
+        id: 'gpt-realtime',
+        match: {
+          or: [
+            {
+              equals: 'gpt-realtime',
+            },
+            {
+              equals: 'gpt-realtime-2025-08-28',
+            },
+          ],
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.4,
+          output_mtok: 16,
+          input_audio_mtok: 32,
+          cache_audio_read_mtok: 0.4,
+          output_audio_mtok: 64,
+        },
+      },
+      {
+        id: 'gpt-realtime-mini',
+        match: {
+          equals: 'gpt-realtime-mini',
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 2.4,
+          input_audio_mtok: 10,
+          cache_audio_read_mtok: 0.3,
+          output_audio_mtok: 20,
         },
       },
       {

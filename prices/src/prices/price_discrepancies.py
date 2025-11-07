@@ -60,30 +60,51 @@ def update_price_discrepancies(check_threshold: date | None = None):
         #     matching_by_price = [
         #         m
         #         for m in provider_yml.provider.models
-        #         # if m.prices == entry['price']
-        #         if isinstance(m.prices, ModelPrice) and not prices_conflict(m.prices, entry['price'])
+        #         if isinstance(m.prices, ModelPrice)
+        #         and (not prices_conflict(m.prices, entry['price']) or not prices_conflict(entry['price'], m.prices))
         #     ]
-        #     if len(matching_by_price) == 1:
-        #         [model] = matching_by_price
-        #         # new_model = model.model_copy(update=dict(match=Cla))
-        #         print(model_id)
-        #         print(model.id)
-        #         print(entry['sources'])
+        #     print('Unrecognized model:', model_id)
+        #     print('Sources:', ', '.join(entry['sources']))
+        #     new_price = entry['price'].model_dump(exclude_none=True, mode='json')
+        #     print('Price:', new_price)
+        #     for i, model in enumerate(matching_by_price):
+        #         print('  Possible match:', i, model.id)
+        #         if model.prices == entry['price']:
+        #             print('    Exact price match')
+        #         else:
+        #             old_price = model.prices.model_dump(exclude_none=True, mode='json')
+        #             print('    Old price:', old_price)
+        #             print('    Differences:', new_price.items() ^ old_price.items())
+        #     print()
+        #     action = input('Action? ')
+        #     if action == 'n':
+        #         provider_yml.add_price(model_id, entry['price'])
+        #         continue
+        #     if action.isnumeric():
+        #         index = int(action)
+        #         model = matching_by_price[index]
+        #         provider_yml.add_id_to_model(model.id, model_id)
+        #         continue
+        #     # if len(matching_by_price) == 1:
+        #     #     [model] = matching_by_price
+        #     #     print(model_id)
+        #     #     print(model.id)
+        #     #     print(entry['sources'])
         #
-        #         print()
-        #         if input('Add?') == 'y':
-        #             provider_yml.add_id_to_model(model.id, model_id)
+        #     # print()
+        #     # if input('Add?') == 'y':
+        #     #     provider_yml.add_id_to_model(model.id, model_id)
         #
-        #         # print(f'Adding missing prices for model {model_id} from sources {entry["sources"]}')
-        #         # provider_yml.update_model(model.id, model.model_info(), set_prices=True)
-        #         # continue
+        #     # print(f'Adding missing prices for model {model_id} from sources {entry["sources"]}')
+        #     # provider_yml.update_model(model.id, model.model_info(), set_prices=True)
+        #     # continue
         #     # print(model_id)
         #     # for entry in entries:
         #     #     sources = ', '.join(entry['sources'])
         #     #     print(f'  missing from {sources}: {entry["price"]}')
         #     # print('------------\n')
         #     # break
-        # provider_yml.save()
+        provider_yml.save()
 
         break
 
@@ -130,6 +151,9 @@ def prices_conflict(current_price: ModelPrice, source_price: ModelPrice) -> bool
     if current_price == source_price:
         # prices are identical
         return False
+
+    if current_price.is_free() != source_price.is_free():
+        return True
 
     for field, value in source_price.model_dump(exclude_none=True).items():
         if current_value := getattr(current_price, field):

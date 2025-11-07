@@ -2094,6 +2094,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-4o-mini'),
                         ClauseEquals(equals='gpt-4o-mini-2024-07-18'),
                         ClauseEquals(equals='gpt-4o-mini-search-preview'),
+                        ClauseEquals(equals='gpt-4o-mini-search-preview-2025-03-11'),
                     ]
                 ),
                 name='gpt 4o mini',
@@ -2124,6 +2125,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-4o-mini-transcribe',
+                match=ClauseEquals(equals='gpt-4o-mini-transcribe'),
+                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5'), input_audio_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='gpt-4o-mini-tts',
+                match=ClauseEquals(equals='gpt-4o-mini-tts'),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_audio_mtok=Decimal('12')),
+            ),
+            ModelInfo(
                 id='gpt-4o-realtime-preview',
                 match=ClauseStartsWith(starts_with='gpt-4o-realtime'),
                 prices=ModelPrice(
@@ -2146,6 +2157,13 @@ providers: list[Provider] = [
                 name='GPT-4o Search Preview',
                 description='GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gpt-4o-transcribe',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='gpt-4o:extended',
@@ -2173,6 +2191,18 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-5-image',
+                match=ClauseEquals(equals='gpt-5-image'),
+                price_comments='Seen on OpenRouter before OpenAI',
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gpt-5-image-mini',
+                match=ClauseEquals(equals='gpt-5-image-mini'),
+                price_comments='Seen on OpenRouter before OpenAI',
+                prices=ModelPrice(input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
                 id='gpt-5-mini',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-mini'), ClauseEquals(equals='gpt-5-mini-2025-08-07')]),
                 name='GPT-5 mini',
@@ -2196,6 +2226,34 @@ providers: list[Provider] = [
                 id='gpt-5-pro',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-pro'), ClauseEquals(equals='gpt-5-pro-2025-10-06')]),
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
+            ),
+            ModelInfo(
+                id='gpt-realtime',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-realtime'), ClauseEquals(equals='gpt-realtime-2025-08-28')]
+                ),
+                price_comments="Missing image token prices which we don't support yet",
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_read_mtok=Decimal('0.4'),
+                    output_mtok=Decimal('16'),
+                    input_audio_mtok=Decimal('32'),
+                    cache_audio_read_mtok=Decimal('0.4'),
+                    output_audio_mtok=Decimal('64'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-realtime-mini',
+                match=ClauseEquals(equals='gpt-realtime-mini'),
+                price_comments="Missing image token prices which we don't support yet",
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    cache_read_mtok=Decimal('0.06'),
+                    output_mtok=Decimal('2.4'),
+                    input_audio_mtok=Decimal('10'),
+                    cache_audio_read_mtok=Decimal('0.3'),
+                    output_audio_mtok=Decimal('20'),
+                ),
             ),
             ModelInfo(
                 id='moderation',
