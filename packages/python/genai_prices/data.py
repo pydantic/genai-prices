@@ -733,6 +733,35 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='cerebras',
+        name='Cerebras',
+        api_pattern='https://api\\.cerebras\\.ai',
+        pricing_urls=['https://inference-docs.cerebras.ai/models/openai-oss'],
+        model_match=ClauseContains(contains='cerebras'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='gpt-oss-120b',
+                match=ClauseContains(contains='gpt-oss-120b'),
+                name='GPT-OSS 120B',
+                description="OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).",
+                context_window=131072,
+                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+                prices=ModelPrice(input_mtok=Decimal('0.35'), output_mtok=Decimal('0.75')),
+            )
+        ],
+    ),
+    Provider(
         id='cohere',
         name='Cohere',
         api_pattern='https://api\\.cohere\\.ai',

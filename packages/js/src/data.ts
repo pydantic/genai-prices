@@ -1323,6 +1323,51 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'cerebras',
+    name: 'Cerebras',
+    pricing_urls: ['https://inference-docs.cerebras.ai/models/openai-oss'],
+    api_pattern: 'https://api\\.cerebras\\.ai',
+    model_match: {
+      contains: 'cerebras',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'gpt-oss-120b',
+        name: 'GPT-OSS 120B',
+        description:
+          "OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).",
+        match: {
+          contains: 'gpt-oss-120b',
+        },
+        context_window: 131072,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 0.75,
+        },
+      },
+    ],
+  },
+  {
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],

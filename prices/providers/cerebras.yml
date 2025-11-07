@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=.schema.json
+name: Cerebras
+id: cerebras
+pricing_urls:
+  - https://inference-docs.cerebras.ai/models/openai-oss
+api_pattern: 'https://api\.cerebras\.ai'
+model_match:
+  contains: cerebras
+
+# Cerebras uses OpenAI-compatible API format
+# https://inference-docs.cerebras.ai/api-reference/chat-completions
+extractors:
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: completion_tokens
+        dest: output_tokens
+
+models:
+  - id: gpt-oss-120b
+    name: GPT-OSS 120B
+    description: >-
+      OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with
+      120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with
+      record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).
+    match:
+      contains: gpt-oss-120b
+    context_window: 131072
+    prices_checked: 2025-11-06
+    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
+    prices:
+      input_mtok: 0.35
+      output_mtok: 0.75
