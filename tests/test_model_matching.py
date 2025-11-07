@@ -176,7 +176,7 @@ test_cases: list[tuple[str, str, str]] = [
     pytest.param('perplexity', 'perplexity/sonar', None, marks=mark_xfail_todo),
     ('openrouter', 'google/gemini-2.0-flash-001', snapshot(('openrouter', 'google/gemini-2.0-flash-001'))),
     pytest.param('openrouter', 'openrouter/google/gemini-2.0-flash-001', None, marks=mark_xfail_todo),
-    ('openai', 'ft:gpt-4o-2024-08-06:org-id::A112', snapshot(('openai', 'ft:gpt-4o-2024-08-06:'))),
+    ('openai', 'ft:gpt-4o-2024-08-06:org-id::A112', snapshot(('openai', 'ft:gpt-4o'))),
     ('anthropic.messages', 'claude-opus-4-20250514', snapshot(('anthropic', 'claude-opus-4-0'))),
     ('mistral_ai', 'open-mistral-nemo', snapshot(('mistral', 'mistral-nemo'))),
     ('anthropic', 'claude-3-haiku-20240307', snapshot(('anthropic', 'claude-3-haiku'))),
@@ -203,7 +203,7 @@ test_cases: list[tuple[str, str, str]] = [
     (
         'openai',
         'ft:gpt-4o-2024-08-06:ting-ai:noob:B85223',
-        snapshot(('openai', 'ft:gpt-4o-2024-08-06:')),
+        snapshot(('openai', 'ft:gpt-4o')),
     ),
     pytest.param('aws.bedrock', 'us.amazon.nova-micro-v1:0', None, marks=mark_xfail_todo),
     ('openai', 'gpt-4o-audio-preview', snapshot(('openai', 'gpt-4o-audio-preview'))),
