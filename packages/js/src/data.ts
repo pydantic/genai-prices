@@ -1365,6 +1365,81 @@ export const data: Provider[] = [
           output_mtok: 0.75,
         },
       },
+      {
+        id: 'llama-3.3-70b',
+        name: 'Llama 3.3 70B',
+        description:
+          "Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'llama-3.3-70b',
+            },
+            {
+              starts_with: 'cerebras/llama-3.3-70b',
+            },
+            {
+              starts_with: 'cerebras:llama-3.3-70b',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
+        prices: {
+          input_mtok: 0.85,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'llama3.1-8b',
+        name: 'Llama 3.1 8B',
+        description:
+          "Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'llama3.1-8b',
+            },
+            {
+              starts_with: 'cerebras/llama3.1-8b',
+            },
+            {
+              starts_with: 'cerebras:llama3.1-8b',
+            },
+          ],
+        },
+        context_window: 32768,
+        price_comments: 'Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'qwen-3-32b',
+        name: 'Qwen 3 32B',
+        description:
+          "Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'qwen-3-32b',
+            },
+            {
+              starts_with: 'cerebras/qwen-3-32b',
+            },
+            {
+              starts_with: 'cerebras:qwen-3-32b',
+            },
+          ],
+        },
+        context_window: 131072,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.8,
+        },
+      },
     ],
   },
   {

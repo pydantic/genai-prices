@@ -9119,6 +9119,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0000357",
+            "output_price": "0.0000096",
             "provider_id": "cerebras"
           },
           {
