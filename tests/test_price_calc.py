@@ -199,8 +199,8 @@ def test_complex_usage():
     # Output price (including thinking tokens)
     #   $2.50
     # Context caching price
-    #   $0.075 (text / image / video)
-    #   $0.25 (audio)
+    #   $0.03 (text / image / video)
+    #   $0.10 (audio)
 
     mil = 1_000_000
     assert calc_price(
@@ -250,7 +250,7 @@ def test_complex_usage():
             ),
             'gemini-2.5-flash',
         ).total_price
-        == snapshot(Decimal('1000.10030003'))
+        == snapshot(Decimal('1000.100_300_03'))
         == Decimal('0.03') * cached_text_tokens / mil
         + Decimal('0.3') * uncached_text_tokens / mil
         + Decimal('0.1') * cached_audio_tokens / mil
