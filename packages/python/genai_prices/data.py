@@ -1913,13 +1913,24 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-3.5-turbo'),
                         ClauseEquals(equals='gpt-35-turbo'),
                         ClauseEquals(equals='gpt-3.5-turbo-0125'),
-                        ClauseEquals(equals='gpt-3.5-turbo-1106'),
                     ]
                 ),
                 name='gpt 3.5 turbo',
                 description='GPT-3.5 Turbo offers a balance between cost and performance.',
                 context_window=16385,
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='gpt-3.5-turbo-0613',
+                match=ClauseEquals(equals='gpt-3.5-turbo-0613'),
+                context_window=16385,
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='gpt-3.5-turbo-1106',
+                match=ClauseEquals(equals='gpt-3.5-turbo-1106'),
+                context_window=16385,
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-16k',

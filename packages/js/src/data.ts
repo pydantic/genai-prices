@@ -3541,15 +3541,34 @@ export const data: Provider[] = [
             {
               equals: 'gpt-3.5-turbo-0125',
             },
-            {
-              equals: 'gpt-3.5-turbo-1106',
-            },
           ],
         },
         context_window: 16385,
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'gpt-3.5-turbo-0613',
+        match: {
+          equals: 'gpt-3.5-turbo-0613',
+        },
+        context_window: 16385,
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-3.5-turbo-1106',
+        match: {
+          equals: 'gpt-3.5-turbo-1106',
+        },
+        context_window: 16385,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
