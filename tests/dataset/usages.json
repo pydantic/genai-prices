@@ -6951,6 +6951,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003",
+            "output_price": "0.00293",
             "provider_id": "openai"
           },
           {
@@ -7564,6 +7566,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000275",
+            "output_price": "0.00017",
             "provider_id": "openai"
           },
           {
