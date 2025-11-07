@@ -51,15 +51,34 @@ def update_price_discrepancies(check_threshold: date | None = None):
         #     # if provider_yml.provider.id == 'openai' and len(entries) == 1 and entries[0]['sources'] == ['openrouter']:
         #     if 'batch' in model_id or model_id.startswith(('gpt-oss-',)):
         #         continue
+        #     [entry] = entries
         #     # if len(entries) == 1:
         #     #     [entry] = entries
         #     #     if len(entry['sources']) > 1:
         #     #         provider_yml.add_price(model_id, entry['price'])
         #     #         continue
-        #     print(model_id)
-        #     for entry in entries:
-        #         sources = ', '.join(entry['sources'])
-        #         print(f'  missing from {sources}: {entry["price"]}')
+        #     matching_by_price = [
+        #         m
+        #         for m in provider_yml.provider.models
+        #         if m.prices == entry['price']
+        #         # if isinstance(m.prices, ModelPrice) and not prices_conflict(m.prices, entry['price'])
+        #     ]
+        #     if len(matching_by_price) == 1:
+        #         [model] = matching_by_price
+        #         # new_model = model.model_copy(update=dict(match=Cla))
+        #         print(model_id)
+        #         print(model.id)
+        #         print()
+        #         if input('Add?') == 'y':
+        #             provider_yml.add_id_to_model(model.id, model_id)
+        #
+        #         # print(f'Adding missing prices for model {model_id} from sources {entry["sources"]}')
+        #         # provider_yml.update_model(model.id, model.model_info(), set_prices=True)
+        #         # continue
+        #     # print(model_id)
+        #     # for entry in entries:
+        #     #     sources = ', '.join(entry['sources'])
+        #     #     print(f'  missing from {sources}: {entry["price"]}')
         #     # print('------------\n')
         #     # break
         # provider_yml.save()

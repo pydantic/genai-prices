@@ -1890,7 +1890,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='ft:gpt-3.5-turbo-',
-                match=ClauseStartsWith(starts_with='ft:gpt-3.5-turbo-'),
+                match=ClauseStartsWith(starts_with='ft:gpt-3.5-turbo'),
                 description='GPT-3.5 Turbo fine tuned.',
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('6')),
             ),
@@ -1944,6 +1944,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-3.5-turbo-16k'),
                         ClauseEquals(equals='gpt-3.5-turbo-16k-0613'),
                         ClauseEquals(equals='gpt-35-turbo-16k-0613'),
+                        ClauseEquals(equals='gpt-35-turbo-16k'),
                     ]
                 ),
                 name='GPT-3.5 Turbo 16k',
@@ -2136,7 +2137,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-4o-search-preview',
-                match=ClauseEquals(equals='gpt-4o-search-preview'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-4o-search-preview'),
+                        ClauseEquals(equals='gpt-4o-search-preview-2025-03-11'),
+                    ]
+                ),
                 name='GPT-4o Search Preview',
                 description='GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
@@ -2188,7 +2194,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5-pro',
-                match=ClauseEquals(equals='gpt-5-pro'),
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-pro'), ClauseEquals(equals='gpt-5-pro-2025-10-06')]),
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
@@ -2224,7 +2230,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='o1-pro',
-                match=ClauseEquals(equals='o1-pro'),
+                match=ClauseOr(or_=[ClauseEquals(equals='o1-pro'), ClauseEquals(equals='o1-pro-2025-03-19')]),
                 name='o1-pro',
                 description='The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide consistently better answers.',
                 prices=ModelPrice(input_mtok=Decimal('150'), output_mtok=Decimal('600')),
@@ -2270,7 +2276,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='o3-pro',
-                match=ClauseEquals(equals='o3-pro'),
+                match=ClauseOr(or_=[ClauseEquals(equals='o3-pro'), ClauseEquals(equals='o3-pro-2025-06-10')]),
                 name='o3 Pro',
                 description='The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently better answers.',
                 prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('80')),

@@ -3497,7 +3497,7 @@ export const data: Provider[] = [
         id: 'ft:gpt-3.5-turbo-',
         description: 'GPT-3.5 Turbo fine tuned.',
         match: {
-          starts_with: 'ft:gpt-3.5-turbo-',
+          starts_with: 'ft:gpt-3.5-turbo',
         },
         prices: {
           input_mtok: 3,
@@ -3603,6 +3603,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-35-turbo-16k-0613',
+            },
+            {
+              equals: 'gpt-35-turbo-16k',
             },
           ],
         },
@@ -3933,7 +3936,14 @@ export const data: Provider[] = [
         description:
           'GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.',
         match: {
-          equals: 'gpt-4o-search-preview',
+          or: [
+            {
+              equals: 'gpt-4o-search-preview',
+            },
+            {
+              equals: 'gpt-4o-search-preview-2025-03-11',
+            },
+          ],
         },
         prices: {
           input_mtok: 2.5,
@@ -4028,7 +4038,14 @@ export const data: Provider[] = [
       {
         id: 'gpt-5-pro',
         match: {
-          equals: 'gpt-5-pro',
+          or: [
+            {
+              equals: 'gpt-5-pro',
+            },
+            {
+              equals: 'gpt-5-pro-2025-10-06',
+            },
+          ],
         },
         prices: {
           input_mtok: 15,
@@ -4097,7 +4114,14 @@ export const data: Provider[] = [
         description:
           'The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide consistently better answers.',
         match: {
-          equals: 'o1-pro',
+          or: [
+            {
+              equals: 'o1-pro',
+            },
+            {
+              equals: 'o1-pro-2025-03-19',
+            },
+          ],
         },
         prices: {
           input_mtok: 150,
@@ -4181,7 +4205,14 @@ export const data: Provider[] = [
         description:
           'The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently better answers.',
         match: {
-          equals: 'o3-pro',
+          or: [
+            {
+              equals: 'o3-pro',
+            },
+            {
+              equals: 'o3-pro-2025-06-10',
+            },
+          ],
         },
         prices: {
           input_mtok: 20,

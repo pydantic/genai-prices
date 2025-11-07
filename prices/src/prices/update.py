@@ -100,6 +100,11 @@ class ProviderYaml:
             match_or = ClauseOr.model_validate({'or': [current_match, model.match]})
             yaml_model['match'] = match_or.model_dump(by_alias=True, mode='json')
 
+    def add_id_to_model(self, lookup_id: str, new_model_id: str) -> None:
+        [model] = [m for m in self.provider.models if m.id == lookup_id]
+        model = model.model_copy(update=dict(match=ClauseEquals(equals=new_model_id)))
+        self.update_model(lookup_id, model)
+
     def set_price_discrepency(self, lookup_id: str, source: str, price: ModelPrice) -> None:
         yaml_model = self._get_model(lookup_id)
         data = price.model_dump(by_alias=True, mode='json', exclude_none=True)
