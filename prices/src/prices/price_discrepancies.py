@@ -21,8 +21,9 @@ def update_price_discrepancies(check_threshold: date | None = None):
     for provider_yml in providers_yml.values():
         discs = 0
         missing: dict[str, Any] = {}
+        provider_id = provider_yml.provider.id
         for source, source_prices in prices.items():
-            if provider_prices := source_prices.get(provider_yml.provider.id):
+            if provider_prices := source_prices.get(provider_id):
                 for model_id, price in provider_prices.items():
                     if model := provider_yml.provider.find_model(model_id):
                         if not model.prices_checked or model.prices_checked < check_threshold:
@@ -45,10 +46,29 @@ def update_price_discrepancies(check_threshold: date | None = None):
                             new.append(dict(price=price, sources=[source]))
 
         for model_id, entries in missing.items():
-            if provider_yml.provider.id == 'openai' and (
-                'batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))
+            if provider_id == 'openai' and ('batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))):
+                continue
+
+            if provider_id == 'google' and (
+                'gecko' in model_id
+                or 'bison' in model_id
+                or 'multimodalembedding' in model_id
+                or model_id in ['gemini-flash-experimental', 'gemini-pro-experimental', 'gemini-pro-vision']
+                or model_id.startswith(
+                    (
+                        'gemma-2-',
+                        'gemini/',
+                        'vertex_ai/',
+                        'gemini-1.0-',
+                        'gemini-2.0-pro',
+                        'text-embedding-',
+                        'text-multilingual-embedding-',
+                        'text-unicorn',
+                    )
+                )
             ):
                 continue
+
             [entry] = entries
             print('Unrecognized model:', model_id)
             print('Sources:', ', '.join(entry['sources']))
