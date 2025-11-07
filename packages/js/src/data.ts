@@ -4377,9 +4377,6 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'o4-mini',
-            },
-            {
               equals: 'o4-mini-2025-04-16',
             },
             {
@@ -4394,6 +4391,24 @@ export const data: Provider[] = [
           input_mtok: 1.1,
           cache_read_mtok: 0.275,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'o4-mini-deep-research',
+        match: {
+          or: [
+            {
+              equals: 'o4-mini-deep-research',
+            },
+            {
+              equals: 'o4-mini-deep-research-2025-06-26',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 8,
         },
       },
       {

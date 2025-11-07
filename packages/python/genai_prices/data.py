@@ -2370,7 +2370,6 @@ providers: list[Provider] = [
                 id='o4-mini',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='o4-mini'),
                         ClauseEquals(equals='o4-mini-2025-04-16'),
                         ClauseEquals(equals='o4-mini-high'),
                         ClauseEquals(equals='o4-mini'),
@@ -2381,6 +2380,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1.1'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('4.4')
                 ),
+            ),
+            ModelInfo(
+                id='o4-mini-deep-research',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='o4-mini-deep-research'),
+                        ClauseEquals(equals='o4-mini-deep-research-2025-06-26'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='text-davinci-002',
