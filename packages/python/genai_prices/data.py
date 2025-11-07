@@ -1895,14 +1895,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
-                id='ft:gpt-4o-2024-08-06:',
-                match=ClauseStartsWith(starts_with='ft:gpt-4o-2024-08-06'),
+                id='ft:gpt-4o',
+                match=ClauseStartsWith(starts_with='ft:gpt-4o-2024-'),
                 description='GPT-4o fine tuned.',
                 prices=ModelPrice(input_mtok=Decimal('3.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
-                id='ft:gpt-4o-mini-2024-07-18:',
-                match=ClauseStartsWith(starts_with='ft:gpt-4o-mini-2024-07-18'),
+                id='ft:gpt-4o-mini',
+                match=ClauseStartsWith(starts_with='ft:gpt-4o-mini-2024-'),
                 description='GPT-4o Mini fine tuned.',
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
             ),
@@ -1972,6 +1972,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-4'),
                         ClauseEquals(equals='gpt-4-0314'),
                         ClauseEquals(equals='gpt-4-0613'),
+                        ClauseStartsWith(starts_with='ft:gpt-4-0'),
                     ]
                 ),
                 name='gpt 4',

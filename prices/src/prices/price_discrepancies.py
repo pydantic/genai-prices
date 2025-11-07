@@ -49,7 +49,9 @@ def update_price_discrepancies(check_threshold: date | None = None):
                             new.append(dict(price=price, sources=[source]))
         # for model_id, entries in missing.items():
         #     # if provider_yml.provider.id == 'openai' and len(entries) == 1 and entries[0]['sources'] == ['openrouter']:
-        #     if 'batch' in model_id or model_id.startswith(('gpt-oss-',)):
+        #     if provider_yml.provider.id == 'openai' and (
+        #         'batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))
+        #     ):
         #         continue
         #     [entry] = entries
         #     # if len(entries) == 1:
@@ -85,11 +87,11 @@ def update_price_discrepancies(check_threshold: date | None = None):
         #         model = matching_by_price[index]
         #         provider_yml.add_id_to_model(model.id, model_id)
         #         continue
-        #     # if len(matching_by_price) == 1:
-        #     #     [model] = matching_by_price
-        #     #     print(model_id)
-        #     #     print(model.id)
-        #     #     print(entry['sources'])
+        #     if len(matching_by_price) == 1:
+        #         [model] = matching_by_price
+        #         print(model_id)
+        #         print(model.id)
+        #         print(entry['sources'])
         #
         #     # print()
         #     # if input('Add?') == 'y':

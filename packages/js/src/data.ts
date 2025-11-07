@@ -3512,10 +3512,10 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'ft:gpt-4o-2024-08-06:',
+        id: 'ft:gpt-4o',
         description: 'GPT-4o fine tuned.',
         match: {
-          starts_with: 'ft:gpt-4o-2024-08-06',
+          starts_with: 'ft:gpt-4o-2024-',
         },
         prices: {
           input_mtok: 3.75,
@@ -3523,10 +3523,10 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'ft:gpt-4o-mini-2024-07-18:',
+        id: 'ft:gpt-4o-mini',
         description: 'GPT-4o Mini fine tuned.',
         match: {
-          starts_with: 'ft:gpt-4o-mini-2024-07-18',
+          starts_with: 'ft:gpt-4o-mini-2024-',
         },
         prices: {
           input_mtok: 0.3,
@@ -3657,6 +3657,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-4-0613',
+            },
+            {
+              starts_with: 'ft:gpt-4-0',
             },
           ],
         },
