@@ -756,7 +756,7 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='gpt-oss-120b',
-                match=ClauseEquals(equals='gpt-oss-120b'),
+                match=ClauseContains(contains='gpt-oss-120b'),
                 name='GPT-OSS 120B',
                 description="OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).",
                 context_window=131072,
@@ -765,7 +765,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='llama-3.3-70b',
-                match=ClauseEquals(equals='llama-3.3-70b'),
+                match=ClauseContains(contains='llama-3.3-70b'),
                 name='Llama 3.3 70B',
                 description="Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
                 context_window=128000,
@@ -774,7 +774,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='llama3.1-8b',
-                match=ClauseEquals(equals='llama3.1-8b'),
+                match=ClauseContains(contains='llama3.1-8b'),
                 name='Llama 3.1 8B',
                 description="Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
                 context_window=32768,
@@ -783,7 +783,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen-3-32b',
-                match=ClauseEquals(equals='qwen-3-32b'),
+                match=ClauseContains(contains='qwen-3-32b'),
                 name='Qwen 3 32B',
                 description="Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
                 context_window=131072,

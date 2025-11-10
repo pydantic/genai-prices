@@ -1359,7 +1359,7 @@ export const data: Provider[] = [
         description:
           "OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).",
         match: {
-          equals: 'gpt-oss-120b',
+          contains: 'gpt-oss-120b',
         },
         context_window: 131072,
         price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
@@ -1374,7 +1374,7 @@ export const data: Provider[] = [
         description:
           "Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
         match: {
-          equals: 'llama-3.3-70b',
+          contains: 'llama-3.3-70b',
         },
         context_window: 128000,
         price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
@@ -1389,7 +1389,7 @@ export const data: Provider[] = [
         description:
           "Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
         match: {
-          equals: 'llama3.1-8b',
+          contains: 'llama3.1-8b',
         },
         context_window: 32768,
         price_comments: 'Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
@@ -1404,7 +1404,7 @@ export const data: Provider[] = [
         description:
           "Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
         match: {
-          equals: 'qwen-3-32b',
+          contains: 'qwen-3-32b',
         },
         context_window: 131072,
         price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',

@@ -13892,8 +13892,6 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00006195",
-            "output_price": "0.00006525",
             "provider_id": "cerebras"
           },
           {
@@ -14338,8 +14336,6 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.0000623",
-            "output_price": "0.0000705",
             "provider_id": "cerebras"
           },
           {
@@ -14448,8 +14444,6 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00009905",
-            "output_price": "0.00003675",
             "provider_id": "cerebras"
           },
           {
@@ -14505,8 +14499,6 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00011165",
-            "output_price": "0.000072",
             "provider_id": "cerebras"
           },
           {
