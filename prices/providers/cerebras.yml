@@ -29,7 +29,10 @@ models:
       120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with
       record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).
     match:
-      contains: gpt-oss-120b
+      or:
+        - equals: gpt-oss-120b
+        - starts_with: cerebras/gpt-oss-120b
+        - starts_with: cerebras:gpt-oss-120b
     context_window: 131072
     prices_checked: 2025-11-06
     price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
@@ -44,7 +47,10 @@ models:
       instruction following, mathematics, and reasoning with high-speed inference on Cerebras
       hardware (~2,100 tokens/second).
     match:
-      contains: llama-3.3-70b
+      or:
+        - equals: llama-3.3-70b
+        - starts_with: cerebras/llama-3.3-70b
+        - starts_with: cerebras:llama-3.3-70b
     context_window: 128000
     prices_checked: 2025-11-07
     price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 128k context."
@@ -59,7 +65,10 @@ models:
       and instruction following. Optimized for fast inference on Cerebras hardware
       (~2,200 tokens/second).
     match:
-      contains: llama3.1-8b
+      or:
+        - equals: llama3.1-8b
+        - starts_with: cerebras/llama3.1-8b
+        - starts_with: cerebras:llama3.1-8b
     context_window: 32768
     prices_checked: 2025-11-07
     price_comments: "Developer tier pricing. Free tier: 8k context, Paid tier: 32k context."
@@ -74,7 +83,10 @@ models:
       Supports both standard and reasoning modes for complex tasks, with fast inference
       speeds on Cerebras hardware (~2,600 tokens/second).
     match:
-      contains: qwen-3-32b
+      or:
+        - equals: qwen-3-32b
+        - starts_with: cerebras/qwen-3-32b
+        - starts_with: cerebras:qwen-3-32b
     context_window: 131072
     prices_checked: 2025-11-07
     price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
