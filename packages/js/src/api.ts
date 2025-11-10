@@ -1,4 +1,12 @@
-import type { PriceCalculationResult, PriceOptions, Provider, ProviderFindOptions, StorageFactoryParams, Usage } from './types'
+import type {
+  PriceCalculationResult,
+  PriceOptions,
+  Provider,
+  ProviderDataPayload,
+  ProviderFindOptions,
+  StorageFactoryParams,
+  Usage,
+} from './types'
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModel, matchProvider } from './engine'
@@ -9,7 +17,8 @@ let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
 let autoUpdateCb: (() => void) | null = null
 
-function setProviderData(data: null | Promise<null | Provider[]> | Provider[]) {
+function setProviderData(data: ProviderDataPayload) {
+  // null means the update failed; keep existing data
   if (data === null) {
     return
   }
