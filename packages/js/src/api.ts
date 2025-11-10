@@ -6,15 +6,20 @@ import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModel, matchP
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
 let providerData: Provider[] = embeddedData
-let providerDataPromise: Promise<Provider[]> = Promise.resolve(embeddedData)
+let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
 let autoUpdateCb: (() => void) | null = null
 
-function setProviderData(data: Promise<Provider[]> | Provider[]) {
+function setProviderData(data: null | Promise<null | Provider[]> | Provider[]) {
+  if (data === null) {
+    return
+  }
   if ('then' in data) {
     providerDataPromise = data
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     data.then((data) => {
-      providerData = data
+      if (data !== null) {
+        providerData = data
+      }
     })
   } else {
     providerDataPromise = Promise.resolve(data)
