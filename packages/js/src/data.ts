@@ -2475,6 +2475,16 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'llama-3.1-405b-reasoning',
+        match: {
+          equals: 'llama-3.1-405b-reasoning',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.79,
+        },
+      },
+      {
         id: 'llama-3.1-70b-versatile',
         match: {
           equals: 'llama-3.1-70b-versatile',
@@ -2716,7 +2726,14 @@ export const data: Provider[] = [
         description:
           "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
-          equals: 'openai/gpt-oss-120b',
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-safeguard-20b',
+            },
+          ],
         },
         context_window: 131072,
         prices: {

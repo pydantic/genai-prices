@@ -1378,6 +1378,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='llama-3.1-405b-reasoning',
+                match=ClauseEquals(equals='llama-3.1-405b-reasoning'),
+                prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
+            ),
+            ModelInfo(
                 id='llama-3.1-70b-versatile',
                 match=ClauseEquals(equals='llama-3.1-70b-versatile'),
                 prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
@@ -1503,7 +1508,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
-                match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-oss-120b'),
+                        ClauseEquals(equals='openai/gpt-oss-safeguard-20b'),
+                    ]
+                ),
                 description="GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
                 context_window=131072,
                 prices=ModelPrice(
