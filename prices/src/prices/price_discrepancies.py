@@ -25,6 +25,9 @@ def update_price_discrepancies(check_threshold: date | None = None):
         for source, source_prices in prices.items():
             if provider_prices := source_prices.get(provider_id):
                 for model_id, price in provider_prices.items():
+                    if provider_id == 'groq':
+                        model_id = model_id.removeprefix('groq/')
+
                     if model := provider_yml.provider.find_model(model_id):
                         if not model.prices_checked or model.prices_checked < check_threshold:
                             if not isinstance(model.prices, ModelPrice):
@@ -46,27 +49,7 @@ def update_price_discrepancies(check_threshold: date | None = None):
                             new.append(dict(price=price, sources=[source]))
 
         for model_id, entries in missing.items():
-            if provider_id == 'openai' and ('batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))):
-                continue
-
-            if provider_id == 'google' and (
-                'gecko' in model_id
-                or 'bison' in model_id
-                or 'multimodalembedding' in model_id
-                or model_id in ['gemini-flash-experimental', 'gemini-pro-experimental', 'gemini-pro-vision']
-                or model_id.startswith(
-                    (
-                        'gemma-2-',
-                        'gemini/',
-                        'vertex_ai/',
-                        'gemini-1.0-',
-                        'gemini-2.0-pro',
-                        'text-embedding-',
-                        'text-multilingual-embedding-',
-                        'text-unicorn',
-                    )
-                )
-            ):
+            if can_ignore_missing_model(provider_id, model_id):
                 continue
 
             [entry] = entries
@@ -83,6 +66,33 @@ def update_price_discrepancies(check_threshold: date | None = None):
 
     if not found:
         print('no price discrepancies found')
+
+
+def can_ignore_missing_model(provider_id: str, model_id: str) -> bool:
+    if provider_id == 'openai' and ('batch' in model_id or model_id.startswith(('gpt-oss-', 'openai/'))):
+        return True
+
+    if provider_id == 'google' and (
+        'gecko' in model_id
+        or 'bison' in model_id
+        or 'multimodalembedding' in model_id
+        or model_id in ['gemini-flash-experimental', 'gemini-pro-experimental', 'gemini-pro-vision']
+        or model_id.startswith(
+            (
+                'gemma-2-',
+                'gemini/',
+                'vertex_ai/',
+                'gemini-1.0-',
+                'gemini-2.0-pro',
+                'text-embedding-',
+                'text-multilingual-embedding-',
+                'text-unicorn',
+            )
+        )
+    ):
+        return True
+
+    return False
 
 
 def handle_missing_model(price: ModelPrice, model_id: str, provider_yml: ProviderYaml):

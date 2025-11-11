@@ -1367,10 +1367,20 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.75'), output_mtok=Decimal('0.99')),
             ),
             ModelInfo(
+                id='gemma-7b-it',
+                match=ClauseEquals(equals='gemma-7b-it'),
+                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.07')),
+            ),
+            ModelInfo(
                 id='gemma2-9b-it',
                 match=ClauseOr(or_=[ClauseEquals(equals='gemma2-9b-it'), ClauseEquals(equals='gemma2-9b')]),
                 name='Gemma 2 9B 8k',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='llama-3.1-70b-versatile',
+                match=ClauseEquals(equals='llama-3.1-70b-versatile'),
+                prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
             ),
             ModelInfo(
                 id='llama-3.1-8b-instant',
@@ -1379,10 +1389,50 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.08')),
             ),
             ModelInfo(
+                id='llama-3.2-11b-text-preview',
+                match=ClauseEquals(equals='llama-3.2-11b-text-preview'),
+                prices=ModelPrice(input_mtok=Decimal('0.18'), output_mtok=Decimal('0.18')),
+            ),
+            ModelInfo(
+                id='llama-3.2-11b-vision-preview',
+                match=ClauseEquals(equals='llama-3.2-11b-vision-preview'),
+                prices=ModelPrice(input_mtok=Decimal('0.18'), output_mtok=Decimal('0.18')),
+            ),
+            ModelInfo(
+                id='llama-3.2-1b-preview',
+                match=ClauseEquals(equals='llama-3.2-1b-preview'),
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.04')),
+            ),
+            ModelInfo(
+                id='llama-3.2-3b-preview',
+                match=ClauseEquals(equals='llama-3.2-3b-preview'),
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.06')),
+            ),
+            ModelInfo(
+                id='llama-3.2-90b-text-preview',
+                match=ClauseEquals(equals='llama-3.2-90b-text-preview'),
+                prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
+            ),
+            ModelInfo(
+                id='llama-3.2-90b-vision-preview',
+                match=ClauseEquals(equals='llama-3.2-90b-vision-preview'),
+                prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
+            ),
+            ModelInfo(
+                id='llama-3.3-70b-specdec',
+                match=ClauseEquals(equals='llama-3.3-70b-specdec'),
+                prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.99')),
+            ),
+            ModelInfo(
                 id='llama-3.3-70b-versatile',
                 match=ClauseEquals(equals='llama-3.3-70b-versatile'),
                 name='Llama 3.3 70B Versatile 128k',
                 prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
+            ),
+            ModelInfo(
+                id='llama-guard-3-8b',
+                match=ClauseEquals(equals='llama-guard-3-8b'),
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
                 id='llama2-70b-4096',
@@ -1430,25 +1480,44 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='mistral-saba-24b',
+                match=ClauseEquals(equals='mistral-saba-24b'),
+                prices=ModelPrice(input_mtok=Decimal('0.79'), output_mtok=Decimal('0.79')),
+            ),
+            ModelInfo(
+                id='mixtral-8x7b-32768',
+                match=ClauseEquals(equals='mixtral-8x7b-32768'),
+                prices=ModelPrice(input_mtok=Decimal('0.24'), output_mtok=Decimal('0.24')),
+            ),
+            ModelInfo(
                 id='moonshotai/kimi-k2-instruct',
-                match=ClauseEquals(equals='moonshotai/kimi-k2-instruct'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='moonshotai/kimi-k2-instruct'),
+                        ClauseEquals(equals='moonshotai/kimi-k2-instruct-0905'),
+                    ]
+                ),
                 name='Kimi K2 1T 128k',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
                 match=ClauseEquals(equals='openai/gpt-oss-120b'),
                 description="GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.75')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('0.6')
+                ),
             ),
             ModelInfo(
                 id='openai/gpt-oss-20b',
                 match=ClauseEquals(equals='openai/gpt-oss-20b'),
                 description="GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n20 billion parameters and 32 experts.\n",
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('0.3')
+                ),
             ),
             ModelInfo(
                 id='qwen/qwen3-32b',
