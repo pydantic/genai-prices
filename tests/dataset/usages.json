@@ -13637,7 +13637,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.00002655",
-            "output_price": "0.00006525",
+            "output_price": "0.0000522",
             "provider_id": "groq"
           },
           {
@@ -14049,7 +14049,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000267",
-            "output_price": "0.0000705",
+            "output_price": "0.0000564",
             "provider_id": "groq"
           },
           {
@@ -14149,7 +14149,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.00004245",
-            "output_price": "0.00003675",
+            "output_price": "0.0000294",
             "provider_id": "groq"
           },
           {
@@ -14200,7 +14200,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.00004785",
-            "output_price": "0.000072",
+            "output_price": "0.0000576",
             "provider_id": "groq"
           },
           {
