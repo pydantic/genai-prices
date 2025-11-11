@@ -2447,6 +2447,16 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemma-7b-it',
+        match: {
+          equals: 'gemma-7b-it',
+        },
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.07,
+        },
+      },
+      {
         id: 'gemma2-9b-it',
         name: 'Gemma 2 9B 8k',
         match: {
@@ -2465,6 +2475,26 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'llama-3.1-405b-reasoning',
+        match: {
+          equals: 'llama-3.1-405b-reasoning',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'llama-3.1-70b-versatile',
+        match: {
+          equals: 'llama-3.1-70b-versatile',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.79,
+        },
+      },
+      {
         id: 'llama-3.1-8b-instant',
         name: 'Llama 3.1 8B Instant 128k',
         match: {
@@ -2476,6 +2506,76 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'llama-3.2-11b-text-preview',
+        match: {
+          equals: 'llama-3.2-11b-text-preview',
+        },
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'llama-3.2-11b-vision-preview',
+        match: {
+          equals: 'llama-3.2-11b-vision-preview',
+        },
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'llama-3.2-1b-preview',
+        match: {
+          equals: 'llama-3.2-1b-preview',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
+        },
+      },
+      {
+        id: 'llama-3.2-3b-preview',
+        match: {
+          equals: 'llama-3.2-3b-preview',
+        },
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.06,
+        },
+      },
+      {
+        id: 'llama-3.2-90b-text-preview',
+        match: {
+          equals: 'llama-3.2-90b-text-preview',
+        },
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'llama-3.2-90b-vision-preview',
+        match: {
+          equals: 'llama-3.2-90b-vision-preview',
+        },
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'llama-3.3-70b-specdec',
+        match: {
+          equals: 'llama-3.3-70b-specdec',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.99,
+        },
+      },
+      {
         id: 'llama-3.3-70b-versatile',
         name: 'Llama 3.3 70B Versatile 128k',
         match: {
@@ -2484,6 +2584,16 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.59,
           output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'llama-guard-3-8b',
+        match: {
+          equals: 'llama-guard-3-8b',
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
         },
       },
       {
@@ -2572,14 +2682,42 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistral-saba-24b',
+        match: {
+          equals: 'mistral-saba-24b',
+        },
+        prices: {
+          input_mtok: 0.79,
+          output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'mixtral-8x7b-32768',
+        match: {
+          equals: 'mixtral-8x7b-32768',
+        },
+        prices: {
+          input_mtok: 0.24,
+          output_mtok: 0.24,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k2-instruct',
         name: 'Kimi K2 1T 128k',
         match: {
-          equals: 'moonshotai/kimi-k2-instruct',
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2-instruct',
+            },
+            {
+              equals: 'moonshotai/kimi-k2-instruct-0905',
+            },
+          ],
         },
         context_window: 131072,
         prices: {
           input_mtok: 1,
+          cache_read_mtok: 0.5,
           output_mtok: 3,
         },
       },
@@ -2588,12 +2726,20 @@ export const data: Provider[] = [
         description:
           "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
-          equals: 'openai/gpt-oss-120b',
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-safeguard-20b',
+            },
+          ],
         },
         context_window: 131072,
         prices: {
           input_mtok: 0.15,
-          output_mtok: 0.75,
+          cache_read_mtok: 0.075,
+          output_mtok: 0.6,
         },
       },
       {
@@ -2605,8 +2751,9 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.5,
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0375,
+          output_mtok: 0.3,
         },
       },
       {
