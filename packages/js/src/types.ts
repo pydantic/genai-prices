@@ -128,10 +128,13 @@ export interface PriceDataStorage {
   set: (data: string) => Promise<void>
 }
 
+type OptionalProviders = null | Provider[]
+export type ProviderDataPayload = OptionalProviders | Promise<OptionalProviders>
+
 export interface StorageFactoryParams {
   onCalc: (cb: () => void) => void
   remoteDataUrl: string
-  setProviderData: (data: Promise<Provider[]> | Provider[]) => void
+  setProviderData: (data: ProviderDataPayload) => void
 }
 
 export interface ProviderFindOptions {
