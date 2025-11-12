@@ -6255,6 +6255,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6300,6 +6304,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -6349,6 +6357,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6394,6 +6406,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -6443,6 +6459,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6488,6 +6508,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -6537,6 +6561,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6582,6 +6610,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -6631,6 +6663,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6678,6 +6714,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6723,6 +6763,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -6780,6 +6824,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6835,6 +6883,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -6935,6 +6987,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6990,6 +7046,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7049,6 +7109,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7106,6 +7170,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7153,6 +7221,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7196,6 +7268,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7251,6 +7327,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7311,6 +7391,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7379,6 +7463,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7434,6 +7522,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7493,6 +7585,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7548,6 +7644,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7607,6 +7707,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7662,6 +7766,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7721,6 +7829,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7776,6 +7888,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7835,6 +7951,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7892,6 +8012,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -7940,6 +8064,12 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000259",
+            "output_price": "0.000027",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -7995,6 +8125,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8054,6 +8188,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8109,6 +8247,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8209,6 +8351,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8266,6 +8412,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8316,6 +8466,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8362,6 +8516,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8417,6 +8575,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8476,6 +8638,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8531,6 +8697,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8590,6 +8760,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8645,6 +8819,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8704,6 +8882,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8759,6 +8941,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8818,6 +9004,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8875,6 +9065,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -8923,6 +9117,12 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000357",
+            "output_price": "0.0000096",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -8978,6 +9178,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -9037,6 +9241,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -9092,6 +9300,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -9151,6 +9363,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -9208,6 +9424,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -9263,6 +9483,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -9400,6 +9624,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -9455,6 +9683,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -9514,6 +9746,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -9571,6 +9807,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -9626,6 +9866,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -9686,6 +9930,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -10507,6 +10755,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -10552,6 +10804,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -10640,6 +10896,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -13577,6 +13837,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -13628,6 +13892,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -13677,6 +13945,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "input_price": "0.00001155",
@@ -13732,6 +14004,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0002882",
             "output_price": "0.0034821",
             "provider_id": "deepseek"
@@ -13785,6 +14061,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -13834,6 +14114,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -13887,6 +14171,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -13936,6 +14224,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -13989,6 +14281,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14038,6 +14334,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14091,6 +14391,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14138,6 +14442,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14189,6 +14497,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14244,6 +14556,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "input_price": "0.0000066",
@@ -14303,6 +14619,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14360,6 +14680,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14415,6 +14739,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14474,6 +14802,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14529,6 +14861,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14588,6 +14924,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14643,6 +14983,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14702,6 +15046,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14757,6 +15105,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -14816,6 +15168,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14873,6 +15229,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14930,6 +15290,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -14985,6 +15349,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15042,6 +15410,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15101,6 +15473,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15156,6 +15532,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15215,6 +15595,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15272,6 +15656,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15327,6 +15715,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15454,6 +15846,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15509,6 +15905,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15568,6 +15968,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15623,6 +16027,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15682,6 +16090,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15739,6 +16151,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15794,6 +16210,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -15925,6 +16345,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -15980,6 +16404,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16039,6 +16467,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16094,6 +16526,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16153,6 +16589,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16208,6 +16648,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16267,6 +16711,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16322,6 +16770,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16381,6 +16833,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16436,6 +16892,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16495,6 +16955,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16550,6 +17014,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16609,6 +17077,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16664,6 +17136,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16723,6 +17199,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16778,6 +17258,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16837,6 +17321,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -16892,6 +17380,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -16951,6 +17443,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17006,6 +17502,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -17065,6 +17565,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17122,6 +17626,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17179,6 +17687,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17234,6 +17746,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -17343,6 +17859,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17398,6 +17918,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -17457,6 +17981,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17512,6 +18040,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -17571,6 +18103,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17626,6 +18162,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -17685,6 +18225,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17740,6 +18284,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -17799,6 +18347,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17856,6 +18408,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -17911,6 +18467,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18003,6 +18563,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18086,6 +18650,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18197,6 +18765,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18254,6 +18826,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18311,6 +18887,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18368,6 +18948,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18423,6 +19007,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18482,6 +19070,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18537,6 +19129,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18596,6 +19192,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18651,6 +19251,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18710,6 +19314,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18765,6 +19373,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18824,6 +19436,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18879,6 +19495,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -18938,6 +19558,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -18993,6 +19617,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -19052,6 +19680,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -19109,6 +19741,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -19164,6 +19800,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -19263,6 +19903,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -19310,6 +19954,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -19353,6 +20001,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
@@ -19456,6 +20108,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -19535,6 +20191,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
