@@ -6286,6 +6286,17 @@
           "input_tokens": 30,
           "output_tokens": 29
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30
+        }
       }
     ],
     "model": "Qwen/Qwen2.5-72B-Instruct-fast"
@@ -6336,6 +6347,17 @@
         "usage": {
           "input_tokens": 92,
           "output_tokens": 23
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 92
         }
       }
     ],
@@ -6388,6 +6410,17 @@
           "input_tokens": 26,
           "output_tokens": 2
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 26
+        }
       }
     ],
     "model": "Qwen/Qwen2.5-72B-Instruct-fast"
@@ -6438,6 +6471,17 @@
         "usage": {
           "input_tokens": 7625,
           "output_tokens": 49
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7625
         }
       }
     ],
@@ -6490,6 +6534,17 @@
           "input_tokens": 30,
           "output_tokens": 33
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30
+        }
       }
     ],
     "model": "Qwen/Qwen2.5-72B-Instruct-fast"
@@ -6540,6 +6595,17 @@
         "usage": {
           "input_tokens": 269,
           "output_tokens": 15
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 269
         }
       }
     ],
@@ -6592,6 +6658,17 @@
           "input_tokens": 30,
           "output_tokens": 29
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30
+        }
       }
     ],
     "model": "Qwen/Qwen2.5-72B-Instruct-fast"
@@ -6642,6 +6719,17 @@
         "usage": {
           "input_tokens": 6,
           "output_tokens": 165
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 6
         }
       }
     ],
@@ -6694,6 +6782,17 @@
           "input_tokens": 30,
           "output_tokens": 40
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30
+        }
       }
     ],
     "model": "Qwen/Qwen2.5-72B-Instruct-fast"
@@ -6745,6 +6844,17 @@
           "input_tokens": 15,
           "output_tokens": 1090
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 15
+        }
       }
     ],
     "model": "Qwen/Qwen3-235B-A22B"
@@ -6795,6 +6905,17 @@
         "usage": {
           "input_tokens": 691,
           "output_tokens": 1860
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 691
         }
       }
     ],
@@ -6857,6 +6978,19 @@
           "input_tokens": 24,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00006",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 24
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -6917,6 +7051,19 @@
         "usage": {
           "input_tokens": 11,
           "output_tokens": 809
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000121",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 11
         }
       }
     ],
@@ -7020,6 +7167,19 @@
           "input_tokens": 12,
           "output_tokens": 293
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00003",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12
+        }
       }
     ],
     "model": "gpt-4o-search-preview-2025-03-11"
@@ -7080,6 +7240,19 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 238
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000143",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13
         }
       }
     ],
@@ -7142,6 +7315,19 @@
           "input_tokens": 71,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 71
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -7203,6 +7389,19 @@
           "input_tokens": 92,
           "output_tokens": 15
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00023",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 92
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -7252,6 +7451,17 @@
           "input_tokens": 35,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 35
+        }
       }
     ],
     "model": "gemini-2.5-pro-preview-05-06"
@@ -7300,6 +7510,17 @@
         "usage": {
           "input_tokens": 66,
           "output_tokens": 6
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 66
         }
       }
     ],
@@ -7361,6 +7582,19 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00001625",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13
         }
       }
     ],
@@ -7435,6 +7669,19 @@
           "input_tokens": 81,
           "output_tokens": 72
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 81
+        }
       }
     ],
     "model": "gpt-4o-audio-preview-2024-12-17"
@@ -7495,6 +7742,19 @@
         "usage": {
           "input_tokens": 8,
           "output_tokens": 10
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0006",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8
         }
       }
     ],
@@ -7557,6 +7817,19 @@
           "input_tokens": 8,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00002",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -7617,6 +7890,19 @@
         "usage": {
           "input_tokens": 45,
           "output_tokens": 26
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001125",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 45
         }
       }
     ],
@@ -7679,6 +7965,19 @@
           "input_tokens": 11,
           "output_tokens": 17
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000275",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 11
+        }
       }
     ],
     "model": "gpt-4o-search-preview-2025-03-11"
@@ -7739,6 +8038,19 @@
         "usage": {
           "input_tokens": 50,
           "output_tokens": 15
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00002",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 50
         }
       }
     ],
@@ -7801,6 +8113,19 @@
           "input_tokens": 75,
           "output_tokens": 15
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00003",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 75
+        }
       }
     ],
     "model": "gpt-4.1-mini-2025-04-14"
@@ -7861,6 +8186,19 @@
         "usage": {
           "input_tokens": 281,
           "output_tokens": 17
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0007025",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 281
         }
       }
     ],
@@ -7923,6 +8261,19 @@
           "input_tokens": 311,
           "output_tokens": 17
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0007775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 311
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -7983,6 +8334,19 @@
         "usage": {
           "input_tokens": 46,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000115",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 46
         }
       }
     ],
@@ -8045,6 +8409,19 @@
           "input_tokens": 503,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0012575",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 503
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -8098,6 +8475,17 @@
         "usage": {
           "input_tokens": 74,
           "output_tokens": 36
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 74
         }
       }
     ],
@@ -8160,6 +8548,19 @@
           "input_tokens": 8,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000012",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8
+        }
       }
     ],
     "model": "gpt-4o-mini-2024-07-18"
@@ -8221,6 +8622,19 @@
           "input_tokens": 68,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00017",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 68
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -8281,6 +8695,19 @@
         "usage": {
           "input_tokens": 89,
           "output_tokens": 36
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0002225",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 89
         }
       }
     ],
@@ -8384,6 +8811,19 @@
           "input_tokens": 577,
           "output_tokens": 2320
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0006347",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 577
+        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -8445,6 +8885,19 @@
           "input_tokens": 1119,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0027975",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1119
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -8497,6 +8950,17 @@
           "input_tokens": 304,
           "output_tokens": 25
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 304
+        }
       }
     ],
     "model": "qwen-3-coder-480b"
@@ -8548,6 +9012,17 @@
         "usage": {
           "input_tokens": 364,
           "output_tokens": 33
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 364
         }
       }
     ],
@@ -8610,6 +9085,19 @@
           "input_tokens": 109,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0002725",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 109
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -8670,6 +9158,19 @@
         "usage": {
           "input_tokens": 130,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000325",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 130
         }
       }
     ],
@@ -8732,6 +9233,19 @@
           "input_tokens": 235,
           "output_tokens": 16
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0005875",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 235
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -8792,6 +9306,19 @@
         "usage": {
           "input_tokens": 273,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0006825",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 273
         }
       }
     ],
@@ -8854,6 +9381,19 @@
           "input_tokens": 294,
           "output_tokens": 21
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000735",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 294
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -8914,6 +9454,19 @@
         "usage": {
           "input_tokens": 8,
           "output_tokens": 10
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00002",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8
         }
       }
     ],
@@ -8976,6 +9529,19 @@
           "input_tokens": 42,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000105",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 42
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -9036,6 +9602,19 @@
         "usage": {
           "input_tokens": 63,
           "output_tokens": 10
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001575",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 63
         }
       }
     ],
@@ -9098,6 +9677,19 @@
           "input_tokens": 1679,
           "output_tokens": 25
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0041975",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1679
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -9151,6 +9743,17 @@
         "usage": {
           "input_tokens": 42,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 42
         }
       }
     ],
@@ -9213,6 +9816,19 @@
           "input_tokens": 515,
           "output_tokens": 6
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000515",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 515
+        }
       }
     ],
     "model": "gpt-4.1-nano-2025-04-14"
@@ -9273,6 +9889,19 @@
         "usage": {
           "input_tokens": 46,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000115",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 46
         }
       }
     ],
@@ -9335,6 +9964,19 @@
           "input_tokens": 1185,
           "output_tokens": 9
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0029625",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1185
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -9395,6 +10037,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 7
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -9457,6 +10112,19 @@
           "input_tokens": 235,
           "output_tokens": 13
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0005875",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 235
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -9517,6 +10185,19 @@
         "usage": {
           "input_tokens": 30,
           "output_tokens": 212
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000033",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30
         }
       }
     ],
@@ -9657,6 +10338,19 @@
           "input_tokens": 104,
           "output_tokens": 16
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000156",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 104
+        }
       }
     ],
     "model": "gpt-4o-mini-2024-07-18"
@@ -9717,6 +10411,19 @@
         "usage": {
           "input_tokens": 129,
           "output_tokens": 9
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00001935",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 129
         }
       }
     ],
@@ -9779,6 +10486,19 @@
           "input_tokens": 7,
           "output_tokens": 85
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000077",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7
+        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -9840,6 +10560,19 @@
           "input_tokens": 160,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 160
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -9900,6 +10633,19 @@
         "usage": {
           "input_tokens": 181,
           "output_tokens": 25
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004525",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 181
         }
       }
     ],
@@ -9973,6 +10719,19 @@
           "input_audio_tokens": 44,
           "input_tokens": 64,
           "output_tokens": 9
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 64
         }
       }
     ],
@@ -10788,6 +11547,17 @@
           "input_tokens": 65,
           "output_tokens": 16
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 65
+        }
       }
     ],
     "model": "pixtral-12b-latest"
@@ -10838,6 +11608,17 @@
         "usage": {
           "input_tokens": 2931,
           "output_tokens": 70
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2931
         }
       }
     ],
@@ -10930,6 +11711,17 @@
         "usage": {
           "input_tokens": 664,
           "output_tokens": 747
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 664
         }
       }
     ],
@@ -13870,6 +14662,17 @@
           "input_tokens": 48,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 48
+        }
       }
     ],
     "model": "llama-3.3-70b-versatile"
@@ -13924,6 +14727,17 @@
         "usage": {
           "input_tokens": 177,
           "output_tokens": 87
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 177
         }
       }
     ],
@@ -13982,6 +14796,17 @@
           "input_tokens": 21,
           "output_tokens": 1414
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 21
+        }
       }
     ],
     "model": "deepseek-r1-distill-llama-70b"
@@ -14039,6 +14864,17 @@
           "input_tokens": 524,
           "output_tokens": 1590
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 524
+        }
       }
     ],
     "model": "deepseek-r1-distill-llama-70b"
@@ -14093,6 +14929,17 @@
         "usage": {
           "input_tokens": 2344,
           "output_tokens": 55
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2344
         }
       }
     ],
@@ -14149,6 +14996,17 @@
           "input_tokens": 48,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 48
+        }
       }
     ],
     "model": "llama-3.3-70b-versatile"
@@ -14203,6 +15061,17 @@
         "usage": {
           "input_tokens": 749,
           "output_tokens": 107
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 749
         }
       }
     ],
@@ -14259,6 +15128,17 @@
           "input_tokens": 192,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 192
+        }
       }
     ],
     "model": "meta-llama/llama-4-scout-17b-16e-instruct"
@@ -14313,6 +15193,17 @@
         "usage": {
           "input_tokens": 2552,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2552
         }
       }
     ],
@@ -14369,6 +15260,17 @@
           "input_tokens": 178,
           "output_tokens": 94
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 178
+        }
       }
     ],
     "model": "openai/gpt-oss-120b"
@@ -14421,6 +15323,17 @@
         "usage": {
           "input_tokens": 5296,
           "output_tokens": 387
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 5296
         }
       }
     ],
@@ -14477,6 +15390,17 @@
           "input_tokens": 283,
           "output_tokens": 49
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 283
+        }
       }
     ],
     "model": "openai/gpt-oss-120b"
@@ -14531,6 +15455,17 @@
         "usage": {
           "input_tokens": 319,
           "output_tokens": 96
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 319
         }
       }
     ],
@@ -14590,6 +15525,17 @@
         "usage": {
           "input_tokens": 12,
           "output_tokens": 789
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12
         }
       }
     ],
@@ -14652,6 +15598,19 @@
           "input_tokens": 71,
           "output_tokens": 46
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 71
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -14713,6 +15672,19 @@
           "input_tokens": 133,
           "output_tokens": 19
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0003325",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 133
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -14773,6 +15745,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -14835,6 +15820,19 @@
           "input_tokens": 47,
           "output_tokens": 17
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001175",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 47
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -14895,6 +15893,19 @@
         "usage": {
           "input_tokens": 87,
           "output_tokens": 17
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0002175",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 87
         }
       }
     ],
@@ -14957,6 +15968,19 @@
           "input_tokens": 116,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00029",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 116
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15018,6 +16042,19 @@
           "input_tokens": 38,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000095",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 38
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15078,6 +16115,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -15140,6 +16190,19 @@
           "input_tokens": 71,
           "output_tokens": 46
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 71
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15201,66 +16264,18 @@
           "input_tokens": 133,
           "output_tokens": 19
         }
-      }
-    ],
-    "model": "gpt-4o-2024-08-06"
-  },
-  {
-    "body": {
-      "model": "gpt-4o-2024-08-06",
-      "usage": {
-        "completion_tokens": 8,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": 0,
-          "audio_tokens": 0,
-          "reasoning_tokens": 0,
-          "rejected_prediction_tokens": 0
-        },
-        "prompt_tokens": 14,
-        "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 0
-        },
-        "total_tokens": 22
-      }
-    },
-    "extracted": [
+      },
       {
         "extractors": [
           {
-            "api_flavor": "chat",
-            "provider_id": "cerebras"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
+            "api_flavor": "embeddings",
+            "input_price": "0.0003325",
+            "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
-          "input_tokens": 14,
-          "output_tokens": 8
+          "input_tokens": 133
         }
       }
     ],
@@ -15323,6 +16338,19 @@
           "input_tokens": 14,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15383,6 +16411,93 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "completion_tokens": 8,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 14,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 22
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -15444,6 +16559,19 @@
         "usage": {
           "input_tokens": 42,
           "output_tokens": 13
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000105",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 42
         }
       }
     ],
@@ -15506,6 +16634,19 @@
           "input_tokens": 67,
           "output_tokens": 9
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001675",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 67
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15566,6 +16707,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -15628,66 +16782,18 @@
           "input_tokens": 42,
           "output_tokens": 13
         }
-      }
-    ],
-    "model": "gpt-4o-2024-08-06"
-  },
-  {
-    "body": {
-      "model": "gpt-4o-2024-08-06",
-      "usage": {
-        "completion_tokens": 8,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": 0,
-          "audio_tokens": 0,
-          "reasoning_tokens": 0,
-          "rejected_prediction_tokens": 0
-        },
-        "prompt_tokens": 14,
-        "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 0
-        },
-        "total_tokens": 22
-      }
-    },
-    "extracted": [
+      },
       {
         "extractors": [
           {
-            "api_flavor": "chat",
-            "provider_id": "cerebras"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
+            "api_flavor": "embeddings",
+            "input_price": "0.000105",
+            "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
-          "input_tokens": 14,
-          "output_tokens": 8
+          "input_tokens": 42
         }
       }
     ],
@@ -15749,6 +16855,93 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "completion_tokens": 8,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 14,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 22
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -15879,6 +17072,19 @@
           "input_tokens": 305,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0007625",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 305
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15939,6 +17145,19 @@
         "usage": {
           "input_tokens": 1452,
           "output_tokens": 29
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00363",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1452
         }
       }
     ],
@@ -16001,6 +17220,19 @@
           "input_tokens": 200,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0005",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 200
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16061,6 +17293,19 @@
         "usage": {
           "input_tokens": 224,
           "output_tokens": 12
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00056",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 224
         }
       }
     ],
@@ -16123,6 +17368,19 @@
           "input_tokens": 203,
           "output_tokens": 15
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0005075",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 203
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16184,6 +17442,19 @@
           "input_tokens": 250,
           "output_tokens": 15
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000625",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 250
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16244,6 +17515,19 @@
         "usage": {
           "input_tokens": 277,
           "output_tokens": 22
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0006925",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 277
         }
       }
     ],
@@ -16378,6 +17662,19 @@
           "input_tokens": 195,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004875",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 195
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16438,6 +17735,19 @@
         "usage": {
           "input_tokens": 1355,
           "output_tokens": 24
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0033875",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1355
         }
       }
     ],
@@ -16500,6 +17810,19 @@
           "input_tokens": 343,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0008575",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 343
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16560,6 +17883,19 @@
         "usage": {
           "input_tokens": 374,
           "output_tokens": 10
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000935",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 374
         }
       }
     ],
@@ -16622,6 +17958,19 @@
           "input_tokens": 268,
           "output_tokens": 18
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00067",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 268
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16682,6 +18031,19 @@
         "usage": {
           "input_tokens": 300,
           "output_tokens": 12
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00075",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 300
         }
       }
     ],
@@ -16744,6 +18106,19 @@
           "input_tokens": 305,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0007625",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 305
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16804,6 +18179,19 @@
         "usage": {
           "input_tokens": 332,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00083",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 332
         }
       }
     ],
@@ -16866,6 +18254,19 @@
           "input_tokens": 195,
           "output_tokens": 19
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004875",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 195
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16926,6 +18327,19 @@
         "usage": {
           "input_tokens": 227,
           "output_tokens": 13
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0005675",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 227
         }
       }
     ],
@@ -16988,6 +18402,19 @@
           "input_tokens": 191,
           "output_tokens": 12
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 191
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17048,6 +18475,19 @@
         "usage": {
           "input_tokens": 1332,
           "output_tokens": 19
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00333",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1332
         }
       }
     ],
@@ -17110,6 +18550,19 @@
           "input_tokens": 195,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004875",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 195
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17170,6 +18623,19 @@
         "usage": {
           "input_tokens": 222,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000555",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 222
         }
       }
     ],
@@ -17232,6 +18698,19 @@
           "input_tokens": 190,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000475",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 190
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17292,6 +18771,19 @@
         "usage": {
           "input_tokens": 1329,
           "output_tokens": 15
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0033225",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1329
         }
       }
     ],
@@ -17354,6 +18846,19 @@
           "input_tokens": 194,
           "output_tokens": 18
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000485",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 194
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17414,6 +18919,19 @@
         "usage": {
           "input_tokens": 234,
           "output_tokens": 19
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000585",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 234
         }
       }
     ],
@@ -17476,6 +18994,19 @@
           "input_tokens": 193,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004825",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 193
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17536,6 +19067,19 @@
         "usage": {
           "input_tokens": 212,
           "output_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00053",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 212
         }
       }
     ],
@@ -17598,66 +19142,18 @@
           "input_tokens": 45,
           "output_tokens": 15
         }
-      }
-    ],
-    "model": "gpt-4o-2024-08-06"
-  },
-  {
-    "body": {
-      "model": "gpt-4o-2024-08-06",
-      "usage": {
-        "completion_tokens": 8,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": 0,
-          "audio_tokens": 0,
-          "reasoning_tokens": 0,
-          "rejected_prediction_tokens": 0
-        },
-        "prompt_tokens": 14,
-        "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 0
-        },
-        "total_tokens": 22
-      }
-    },
-    "extracted": [
+      },
       {
         "extractors": [
           {
-            "api_flavor": "chat",
-            "provider_id": "cerebras"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
+            "api_flavor": "embeddings",
+            "input_price": "0.0001125",
+            "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
-          "input_tokens": 14,
-          "output_tokens": 8
+          "input_tokens": 45
         }
       }
     ],
@@ -17720,6 +19216,19 @@
           "input_tokens": 14,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17780,6 +19289,93 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "completion_tokens": 8,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 14,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 22
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -17892,6 +19488,19 @@
           "input_tokens": 42,
           "output_tokens": 13
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000105",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 42
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17952,6 +19561,19 @@
         "usage": {
           "input_tokens": 67,
           "output_tokens": 9
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001675",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 67
         }
       }
     ],
@@ -18014,6 +19636,19 @@
           "input_tokens": 47,
           "output_tokens": 17
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001175",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 47
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18074,6 +19709,19 @@
         "usage": {
           "input_tokens": 87,
           "output_tokens": 17
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0002175",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 87
         }
       }
     ],
@@ -18136,6 +19784,19 @@
           "input_tokens": 116,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00029",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 116
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18196,6 +19857,19 @@
         "usage": {
           "input_tokens": 71,
           "output_tokens": 46
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 71
         }
       }
     ],
@@ -18258,6 +19932,19 @@
           "input_tokens": 133,
           "output_tokens": 19
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0003325",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 133
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18319,6 +20006,19 @@
           "input_tokens": 42,
           "output_tokens": 13
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000105",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 42
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18379,6 +20079,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -18441,6 +20154,19 @@
           "input_tokens": 38,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000095",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 38
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18501,6 +20227,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -18596,6 +20335,17 @@
           "input_tokens": 35,
           "output_tokens": 25
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 35
+        }
       }
     ],
     "model": "llama3-8b-8192"
@@ -18684,6 +20434,19 @@
         "usage": {
           "input_tokens": 31,
           "output_tokens": 467
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000341",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31
         }
       }
     ],
@@ -18798,6 +20561,17 @@
           "input_tokens": 28,
           "output_tokens": 6
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 28
+        }
       }
     ],
     "model": "ministral-8b-latest"
@@ -18859,66 +20633,18 @@
           "input_tokens": 14,
           "output_tokens": 8
         }
-      }
-    ],
-    "model": "gpt-4o-2024-08-06"
-  },
-  {
-    "body": {
-      "model": "gpt-4o-2024-08-06",
-      "usage": {
-        "completion_tokens": 8,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": 0,
-          "audio_tokens": 0,
-          "reasoning_tokens": 0,
-          "rejected_prediction_tokens": 0
-        },
-        "prompt_tokens": 14,
-        "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 0
-        },
-        "total_tokens": 22
-      }
-    },
-    "extracted": [
+      },
       {
         "extractors": [
           {
-            "api_flavor": "chat",
-            "provider_id": "cerebras"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
-            "output_price": "0.00008",
+            "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
-          "input_tokens": 14,
-          "output_tokens": 8
+          "input_tokens": 14
         }
       }
     ],
@@ -18981,6 +20707,19 @@
           "input_tokens": 14,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19041,6 +20780,93 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "completion_tokens": 8,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 14,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 22
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -19103,6 +20929,19 @@
           "input_tokens": 47,
           "output_tokens": 17
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001175",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 47
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19163,6 +21002,19 @@
         "usage": {
           "input_tokens": 87,
           "output_tokens": 17
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0002175",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 87
         }
       }
     ],
@@ -19225,6 +21077,19 @@
           "input_tokens": 116,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00029",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 116
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19285,6 +21150,19 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -19347,6 +21225,19 @@
           "input_tokens": 32,
           "output_tokens": 10
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00008",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 32
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19407,6 +21298,19 @@
         "usage": {
           "input_tokens": 51,
           "output_tokens": 10
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001275",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 51
         }
       }
     ],
@@ -19469,6 +21373,19 @@
           "input_tokens": 14,
           "output_tokens": 8
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19529,6 +21446,19 @@
         "usage": {
           "input_tokens": 71,
           "output_tokens": 46
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 71
         }
       }
     ],
@@ -19591,6 +21521,19 @@
           "input_tokens": 133,
           "output_tokens": 20
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0003325",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 133
+        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19651,6 +21594,19 @@
         "usage": {
           "input_tokens": 71,
           "output_tokens": 46
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0001775",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 71
         }
       }
     ],
@@ -19713,66 +21669,18 @@
           "input_tokens": 133,
           "output_tokens": 22
         }
-      }
-    ],
-    "model": "gpt-4o-2024-08-06"
-  },
-  {
-    "body": {
-      "model": "gpt-4o-2024-08-06",
-      "usage": {
-        "completion_tokens": 8,
-        "completion_tokens_details": {
-          "accepted_prediction_tokens": 0,
-          "audio_tokens": 0,
-          "reasoning_tokens": 0,
-          "rejected_prediction_tokens": 0
-        },
-        "prompt_tokens": 14,
-        "prompt_tokens_details": {
-          "audio_tokens": 0,
-          "cached_tokens": 0
-        },
-        "total_tokens": 22
-      }
-    },
-    "extracted": [
+      },
       {
         "extractors": [
           {
-            "api_flavor": "chat",
-            "provider_id": "cerebras"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "deepseek"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
+            "api_flavor": "embeddings",
+            "input_price": "0.0003325",
+            "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
-          "input_tokens": 14,
-          "output_tokens": 8
+          "input_tokens": 133
         }
       }
     ],
@@ -19834,6 +21742,93 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "completion_tokens": 8,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 14,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 22
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -19936,6 +21931,19 @@
           "input_tokens": 14,
           "output_tokens": 9
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.000035",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
       }
     ],
     "model": "gpt-4o-2024-11-20"
@@ -19985,6 +21993,17 @@
           "input_tokens": 8,
           "output_tokens": 17
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8
+        }
       }
     ],
     "model": "google/gemini-2.0-flash-exp:free"
@@ -20033,6 +22052,17 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 51
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
         }
       }
     ],
@@ -20141,6 +22171,19 @@
           "input_tokens": 13,
           "output_tokens": 11
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00001625",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13
+        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -20225,6 +22268,17 @@
         "usage": {
           "input_tokens": 42,
           "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 42
         }
       }
     ],

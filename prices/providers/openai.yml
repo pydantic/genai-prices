@@ -42,6 +42,12 @@ extractors:
         required: false
       - path: output_tokens
         dest: output_tokens
+  # https://github.com/openai/openai-python/blob/v2.3.0/src/openai/types/create_embedding_response.py
+  - api_flavor: embeddings
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
 
 models:
   - id: ada
