@@ -1,3 +1,4 @@
+import re
 from collections.abc import Mapping
 from decimal import Decimal
 from typing import Any
@@ -101,6 +102,7 @@ def test_openai():
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('gpt 4.1')
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0018'))
@@ -115,19 +117,20 @@ def test_openai():
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='responses')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
     assert extracted_usage.provider.name == snapshot('OpenAI')
+    assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('GPT-5')
 
     assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.002125'))
 
-    with pytest.raises(ValueError, match='No api_flavor specified and multiple extractors available'):
+    with pytest.raises(ValueError, match=re.escape("Unknown api_flavor 'default', allowed values: chat, responses")):
         provider.extract_usage(response_data)
 
 
 @pytest.mark.parametrize(
     'response_data,error',
     [
-        ({}, snapshot('Missing value at `model`')),
-        ({'model': None}, snapshot('Expected `model` value to be a str, got None')),
+        ({}, snapshot('Missing value at `usage`')),
+        ({'model': None}, snapshot('Missing value at `usage`')),
         ({'model': 'x'}, snapshot('Missing value at `usage`')),
         ({'model': 'x', 'usage': {}}, snapshot('Missing value at `usage.input_tokens`')),
         ({'model': 'x', 'usage': 123}, snapshot('Expected `usage` value to be a Mapping, got int')),
@@ -152,15 +155,6 @@ def test_extract_usage_error(response_data: Any, error: str):
     assert str(exc_info.value) == error
 
 
-def test_unknown_flavor():
-    provider = providers[0]
-    assert provider.name == 'Anthropic'
-    assert provider.extractors is not None
-
-    with pytest.raises(ValueError, match="Unknown api_flavor 'wrong', allowed values: default"):
-        provider.extract_usage({}, api_flavor='wrong')
-
-
 def test_no_flavors():
     provider = Provider(id='test', name='Test', api_pattern='x')
 
@@ -182,13 +176,13 @@ gemini_response_data = {
     'createTime': '2025-08-25T14:26:17.534704Z',
     'responseId': 'iXKsaLDRIPqsgLUPotqEyA0',
 }
-goolgle_provider = next(provider for provider in providers if provider.id == 'google')
-assert goolgle_provider.name == 'Google'
-assert goolgle_provider.extractors is not None
+google_provider = next(provider for provider in providers if provider.id == 'google')
+assert google_provider.name == 'Google'
+assert google_provider.extractors is not None
 
 
 def test_google():
-    usage = goolgle_provider.extract_usage(gemini_response_data)
+    usage = google_provider.extract_usage(gemini_response_data)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
 
 
@@ -209,7 +203,7 @@ gemini_response_data_caching = {
 
 
 def test_google_caching():
-    model, usage = goolgle_provider.extract_usage(gemini_response_data_caching)
+    model, usage = google_provider.extract_usage(gemini_response_data_caching)
     assert model == snapshot('gemini-2.5-flash')
     assert usage == snapshot(
         Usage(
@@ -220,7 +214,8 @@ def test_google_caching():
             cache_audio_read_tokens=129,
         ),
     )
-    assert calc_price(usage, model).total_price == snapshot(Decimal('0.001855625'))
+    assert model is not None
+    assert calc_price(usage, model).total_price == snapshot(Decimal('0.00129713'))
 
 
 gemini_response_data_thoughtless = {
@@ -239,5 +234,38 @@ gemini_response_data_thoughtless = {
 
 
 def test_gemini_response_thoughtless():
-    usage = goolgle_provider.extract_usage(gemini_response_data_thoughtless)
+    usage = google_provider.extract_usage(gemini_response_data_thoughtless)
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+
+
+def test_bedrock():
+    provider = next(provider for provider in providers if provider.id == 'aws')
+    response_data = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
+    usage = provider.extract_usage(response_data)
+    assert usage == snapshot((None, Usage(input_tokens=406, output_tokens=53)))
+
+    extracted_usage = extract_usage(response_data, provider_id='aws')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
+
+
+anthropic_response_data = {
+    'model': 'claude-sonnet-4-20250514',
+    'usage': {
+        'input_tokens': 483,
+        'cache_creation_input_tokens': 0,
+        'cache_read_input_tokens': 0,
+        'output_tokens': 78,
+    },
+}
+
+
+def test_google_anthropic():
+    usage = google_provider.extract_usage(anthropic_response_data, api_flavor='anthropic')
+    assert usage == snapshot(
+        (
+            'claude-sonnet-4-20250514',
+            Usage(input_tokens=483, cache_write_tokens=0, cache_read_tokens=0, output_tokens=78),
+        )
+    )

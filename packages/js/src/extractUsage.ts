@@ -1,34 +1,29 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { matchLogic } from './engine'
-import { ArrayMatch, ExtractPath, Provider, Usage, UsageExtractor } from './types'
+import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
 
-export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): [string, Usage] {
+interface ExtractedUsage {
+  model: null | string
+  usage: Usage
+}
+
+export function extractUsage(provider: Provider, responseData: unknown, apiFlavor?: string): ExtractedUsage {
+  apiFlavor = apiFlavor ?? 'default'
+
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
-  let extractor: UsageExtractor
 
-  if (!apiFlavor) {
-    if (provider.extractors.length === 1) {
-      extractor = provider.extractors[0]!
-    } else {
-      throw new Error('No apiFlavor specified and multiple extractors available')
-    }
-  } else {
-    const foundExtractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
-    if (foundExtractor) {
-      extractor = foundExtractor
-    } else {
-      const availableFlavors = provider.extractors.map((e) => e.api_flavor).join(', ')
-      throw new Error(`Unknown apiFlavor '${apiFlavor}', allowed values: ${availableFlavors}`)
-    }
+  const extractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
+  if (!extractor) {
+    const availableFlavors = provider.extractors.map((e) => e.api_flavor).join(', ')
+    throw new Error(`Unknown apiFlavor '${apiFlavor}', allowed values: ${availableFlavors}`)
   }
 
   if (!mappingCheck.guard(responseData)) {
     throw new Error(`Expected response data to be a mapping object, got ${typeName(responseData)}`)
   }
 
-  const modelName = extractPath(extractor.model_path, responseData, stringCheck, true, [])
+  const model = extractPath(extractor.model_path, responseData, stringCheck, false, [])
 
   const root = asArray(extractor.root)
   const usageObj = extractPath(root, responseData, mappingCheck, true, [])
@@ -47,7 +42,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`No usage information found at ${JSON.stringify(extractor.root)}`)
   }
 
-  return [modelName, usage]
+  return { model, usage }
 }
 
 function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (ArrayMatch | string)[]): T
@@ -81,12 +76,16 @@ function extractPath<T>(
     if (typeof step === 'object') {
       if (Array.isArray(currentStepData)) {
         currentStepData = extractArrayMatch(step, currentStepData)
+      } else if (!required) {
+        return null
       } else {
         throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
       }
     } else {
       if (mappingCheck.guard(currentStepData)) {
         currentStepData = currentStepData[step]
+      } else if (!required) {
+        return null
       } else {
         throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
       }
@@ -103,7 +102,11 @@ function extractPath<T>(
   }
 
   if (!mappingCheck.guard(currentStepData)) {
-    throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
+    if (required) {
+      throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a mapping, got ${typeName(currentStepData)}`)
+    } else {
+      return null
+    }
   }
 
   const value = currentStepData[last]
@@ -118,9 +121,11 @@ function extractPath<T>(
 
   if (typeCheck.guard(value)) {
     return value
-  } else {
+  } else if (required) {
     errorPath.push(last)
     throw new Error(`Expected \`${dottedPath(dataPath, errorPath)}\` value to be a ${typeCheck.name}, got ${typeName(value)}`)
+  } else {
+    return null
   }
 }
 

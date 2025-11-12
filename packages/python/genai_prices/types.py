@@ -120,12 +120,25 @@ class PriceCalculation:
 @dataclass(repr=False)
 class ExtractedUsage:
     usage: Usage
-    model: ModelInfo = dataclasses.field(repr=False)
+    model: ModelInfo | None = dataclasses.field(repr=False)
     provider: Provider = dataclasses.field(repr=False)
     auto_update_timestamp: datetime | None
 
-    def calc_price(self, genai_request_timestamp: datetime | None = None) -> PriceCalculation:
-        return self.model.calc_price(
+    def calc_price(
+        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+    ) -> PriceCalculation:
+        """Calculate the price for the given usage.
+
+        Args:
+            genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
+                time.
+            model: The model to calculate the price for, if `None` the model from the response data is used.
+        """
+        model = model or self.model
+        if model is None:
+            raise ValueError('No model reference found in response data and model not provided')
+
+        return model.calc_price(
             self.usage,
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
@@ -136,7 +149,7 @@ class ExtractedUsage:
         return (
             'ExtractedUsage('
             f'usage={self.usage!r}, '
-            f'model={self.model.summary()}, '
+            f'model={self.model.summary() if self.model else None}, '
             f'provider={self.provider.summary()}, '
             f'auto_update_timestamp={self.auto_update_timestamp!r})'
         )
@@ -235,7 +248,7 @@ class Provider:
                 return model
         return None
 
-    def extract_usage(self, response_data: Any, *, api_flavor: str | None = None) -> tuple[str, Usage]:
+    def extract_usage(self, response_data: Any, *, api_flavor: str = 'default') -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
@@ -251,17 +264,11 @@ class Provider:
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
-        if api_flavor is None:
-            if len(self.extractors) == 1:
-                extractor = self.extractors[0]
-            else:
-                raise ValueError('No api_flavor specified and multiple extractors available')
-        else:
-            try:
-                extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
-            except StopIteration as e:
-                fs = ', '.join(e.api_flavor for e in self.extractors)
-                raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
+        try:
+            extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
+        except StopIteration as e:
+            fs = ', '.join(e.api_flavor for e in self.extractors)
+            raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
 
         return extractor.extract(response_data)
 
@@ -308,7 +315,7 @@ class UsageExtractor:
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
 
-    def extract(self, response_data: Any) -> tuple[str, Usage]:
+    def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
         Args:
@@ -320,7 +327,7 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
-        model_name = _extract_path(self.model_path, response_data, str, True, [])
+        model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
         if isinstance(root, str):

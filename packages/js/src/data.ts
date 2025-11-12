@@ -195,6 +195,56 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-haiku-4-5',
+        name: 'Claude Haiku 4.5',
+        description: 'Fastest and most intelligent Haiku model',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-haiku-4-5',
+            },
+            {
+              starts_with: 'claude-haiku-4.5',
+            },
+            {
+              starts_with: 'claude-4-5-haiku',
+            },
+            {
+              starts_with: 'claude-4.5-haiku',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'claude-instant-1',
+        description: 'Retired, here to match price sources',
+        match: {
+          equals: 'claude-instant-1',
+        },
+        prices: {
+          input_mtok: 1.63,
+          output_mtok: 55.1,
+        },
+      },
+      {
+        id: 'claude-instant-1.2',
+        description: 'Retired, here to match price sources',
+        match: {
+          equals: 'claude-instant-1.2',
+        },
+        prices: {
+          input_mtok: 1.63,
+          output_mtok: 5.51,
+        },
+      },
+      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -205,6 +255,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-4-opus',
+            },
+            {
+              equals: 'claude-opus-4',
             },
             {
               equals: 'claude-opus-4-20250514',
@@ -224,7 +277,14 @@ export const data: Provider[] = [
         name: 'Claude Opus 4.1',
         description: 'Most intelligent model for complex tasks',
         match: {
-          starts_with: 'claude-opus-4-1',
+          or: [
+            {
+              starts_with: 'claude-opus-4-1',
+            },
+            {
+              starts_with: 'claude-opus-4.1',
+            },
+          ],
         },
         context_window: 200000,
         prices: {
@@ -270,7 +330,14 @@ export const data: Provider[] = [
         name: 'Claude Sonnet 4.5',
         description: 'Most intelligent model for building agents and coding',
         match: {
-          starts_with: 'claude-sonnet-4-5',
+          or: [
+            {
+              starts_with: 'claude-sonnet-4-5',
+            },
+            {
+              starts_with: 'claude-sonnet-4.5',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -310,6 +377,17 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'claude-v1',
+        description: 'Retired, here to match price sources',
+        match: {
+          equals: 'claude-v1',
+        },
+        prices: {
+          input_mtok: 8,
+          output_mtok: 24,
         },
       },
     ],
@@ -370,6 +448,25 @@ export const data: Provider[] = [
     provider_match: {
       contains: 'bedrock',
     },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'inputTokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'outputTokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'meta.llama3-8b-instruct-v1%3A0',
@@ -387,7 +484,14 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          equals: 'nova-lite-v1',
+          or: [
+            {
+              equals: 'nova-lite-v1',
+            },
+            {
+              equals: 'amazon.nova-lite-v1:0',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.06,
@@ -400,7 +504,14 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          equals: 'nova-micro-v1',
+          or: [
+            {
+              equals: 'nova-micro-v1',
+            },
+            {
+              equals: 'amazon.nova-micro-v1:0',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.035,
@@ -413,7 +524,14 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
         match: {
-          equals: 'nova-pro-v1',
+          or: [
+            {
+              equals: 'nova-pro-v1',
+            },
+            {
+              equals: 'amazon.nova-pro-v1:0',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.8,
@@ -1205,6 +1323,139 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'cerebras',
+    name: 'Cerebras',
+    pricing_urls: ['https://www.cerebras.ai/pricing#pricing', 'https://inference-docs.cerebras.ai/models/openai-oss'],
+    api_pattern: 'https://api\\.cerebras\\.ai',
+    model_match: {
+      contains: 'cerebras',
+    },
+    provider_match: {
+      contains: 'cerebras',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'gpt-oss-120b',
+        name: 'GPT-OSS 120B',
+        description:
+          "OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with 120 billion parameters and 128 experts. Delivers frontier reasoning capabilities with record-breaking inference speeds on Cerebras hardware (~3,000 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'gpt-oss-120b',
+            },
+            {
+              starts_with: 'cerebras/gpt-oss-120b',
+            },
+            {
+              starts_with: 'cerebras:gpt-oss-120b',
+            },
+          ],
+        },
+        context_window: 131072,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'llama-3.3-70b',
+        name: 'Llama 3.3 70B',
+        description:
+          "Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'llama-3.3-70b',
+            },
+            {
+              starts_with: 'cerebras/llama-3.3-70b',
+            },
+            {
+              starts_with: 'cerebras:llama-3.3-70b',
+            },
+          ],
+        },
+        context_window: 128000,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
+        prices: {
+          input_mtok: 0.85,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'llama3.1-8b',
+        name: 'Llama 3.1 8B',
+        description:
+          "Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'llama3.1-8b',
+            },
+            {
+              starts_with: 'cerebras/llama3.1-8b',
+            },
+            {
+              starts_with: 'cerebras:llama3.1-8b',
+            },
+          ],
+        },
+        context_window: 32768,
+        price_comments: 'Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'qwen-3-32b',
+        name: 'Qwen 3 32B',
+        description:
+          "Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
+        match: {
+          or: [
+            {
+              equals: 'qwen-3-32b',
+            },
+            {
+              starts_with: 'cerebras/qwen-3-32b',
+            },
+            {
+              starts_with: 'cerebras:qwen-3-32b',
+            },
+          ],
+        },
+        context_window: 131072,
+        price_comments: 'Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.8,
+        },
+      },
+    ],
+  },
+  {
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],
@@ -1672,6 +1923,43 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'anthropic',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -1926,14 +2214,40 @@ export const data: Provider[] = [
             {
               equals: 'gemini-2.5-flash-latest',
             },
+            {
+              equals: 'gemini-2.5-flash-preview-09-2025',
+            },
           ],
         },
         prices: {
           input_mtok: 0.3,
-          cache_read_mtok: 0.075,
+          cache_read_mtok: 0.03,
           output_mtok: 2.5,
           input_audio_mtok: 1,
-          cache_audio_read_mtok: 0.25,
+          cache_audio_read_mtok: 0.1,
+        },
+      },
+      {
+        id: 'gemini-2.5-flash-image',
+        name: 'Gemini 2.5 Flash Image',
+        description:
+          "Google's specialized image generation model optimized for fast, high-quality image generation. Outputs images at 1024x1024 resolution, with each image consuming 1290 output tokens.",
+        match: {
+          or: [
+            {
+              equals: 'gemini-2.5-flash-image',
+            },
+            {
+              equals: 'gemini-2.5-flash-image-preview',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.',
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 30,
         },
       },
       {
@@ -1954,10 +2268,10 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: 0.025,
+          cache_read_mtok: 0.01,
           output_mtok: 0.4,
-          input_audio_mtok: 0.5,
-          cache_audio_read_mtok: 0.125,
+          input_audio_mtok: 0.3,
+          cache_audio_read_mtok: 0.03,
         },
       },
       {
@@ -1968,10 +2282,10 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'gemini-2.5-flash-preview',
+              contains: 'gemini-2.5-flash-preview-05-20',
             },
             {
-              equals: 'gemini-2.5-flash-preview-05-20',
+              contains: 'gemini-2.5-flash-preview-04-17',
             },
             {
               equals: 'gemini-2.5-flash-preview-05-20:thinking',
@@ -2010,11 +2324,11 @@ export const data: Provider[] = [
             ],
           },
           cache_read_mtok: {
-            base: 0.31,
+            base: 0.125,
             tiers: [
               {
                 start: 200000,
-                price: 0.625,
+                price: 0.25,
               },
             ],
           },
@@ -2027,6 +2341,15 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-embedding-001',
+        match: {
+          equals: 'gemini-embedding-001',
+        },
+        prices: {
+          input_mtok: 0.15,
         },
       },
       {
@@ -2106,6 +2429,25 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-live-2.5-flash-preview',
+        match: {
+          or: [
+            {
+              starts_with: 'gemini-live-2.5-flash-preview',
+            },
+            {
+              starts_with: 'gemini-2.5-flash-native-audio-preview',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
         },
       },
       {
@@ -2238,6 +2580,16 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemma-7b-it',
+        match: {
+          equals: 'gemma-7b-it',
+        },
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.07,
+        },
+      },
+      {
         id: 'gemma2-9b-it',
         name: 'Gemma 2 9B 8k',
         match: {
@@ -2256,6 +2608,26 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'llama-3.1-405b-reasoning',
+        match: {
+          equals: 'llama-3.1-405b-reasoning',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'llama-3.1-70b-versatile',
+        match: {
+          equals: 'llama-3.1-70b-versatile',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.79,
+        },
+      },
+      {
         id: 'llama-3.1-8b-instant',
         name: 'Llama 3.1 8B Instant 128k',
         match: {
@@ -2267,6 +2639,76 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'llama-3.2-11b-text-preview',
+        match: {
+          equals: 'llama-3.2-11b-text-preview',
+        },
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'llama-3.2-11b-vision-preview',
+        match: {
+          equals: 'llama-3.2-11b-vision-preview',
+        },
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'llama-3.2-1b-preview',
+        match: {
+          equals: 'llama-3.2-1b-preview',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
+        },
+      },
+      {
+        id: 'llama-3.2-3b-preview',
+        match: {
+          equals: 'llama-3.2-3b-preview',
+        },
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.06,
+        },
+      },
+      {
+        id: 'llama-3.2-90b-text-preview',
+        match: {
+          equals: 'llama-3.2-90b-text-preview',
+        },
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'llama-3.2-90b-vision-preview',
+        match: {
+          equals: 'llama-3.2-90b-vision-preview',
+        },
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'llama-3.3-70b-specdec',
+        match: {
+          equals: 'llama-3.3-70b-specdec',
+        },
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.99,
+        },
+      },
+      {
         id: 'llama-3.3-70b-versatile',
         name: 'Llama 3.3 70B Versatile 128k',
         match: {
@@ -2275,6 +2717,16 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.59,
           output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'llama-guard-3-8b',
+        match: {
+          equals: 'llama-guard-3-8b',
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
         },
       },
       {
@@ -2363,14 +2815,42 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistral-saba-24b',
+        match: {
+          equals: 'mistral-saba-24b',
+        },
+        prices: {
+          input_mtok: 0.79,
+          output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'mixtral-8x7b-32768',
+        match: {
+          equals: 'mixtral-8x7b-32768',
+        },
+        prices: {
+          input_mtok: 0.24,
+          output_mtok: 0.24,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k2-instruct',
         name: 'Kimi K2 1T 128k',
         match: {
-          equals: 'moonshotai/kimi-k2-instruct',
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2-instruct',
+            },
+            {
+              equals: 'moonshotai/kimi-k2-instruct-0905',
+            },
+          ],
         },
         context_window: 131072,
         prices: {
           input_mtok: 1,
+          cache_read_mtok: 0.5,
           output_mtok: 3,
         },
       },
@@ -2379,12 +2859,20 @@ export const data: Provider[] = [
         description:
           "GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with\n120 billion parameters and 128 experts.\n",
         match: {
-          equals: 'openai/gpt-oss-120b',
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-safeguard-20b',
+            },
+          ],
         },
         context_window: 131072,
         prices: {
           input_mtok: 0.15,
-          output_mtok: 0.75,
+          cache_read_mtok: 0.075,
+          output_mtok: 0.6,
         },
       },
       {
@@ -2396,8 +2884,9 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.5,
+          input_mtok: 0.075,
+          cache_read_mtok: 0.0375,
+          output_mtok: 0.3,
         },
       },
       {
@@ -3285,7 +3774,14 @@ export const data: Provider[] = [
         description:
           'codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we recommend starting with gpt-4.1.',
         match: {
-          equals: 'codex-mini',
+          or: [
+            {
+              equals: 'codex-mini',
+            },
+            {
+              equals: 'codex-mini-latest',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.5,
@@ -3331,7 +3827,7 @@ export const data: Provider[] = [
         id: 'ft:gpt-3.5-turbo-',
         description: 'GPT-3.5 Turbo fine tuned.',
         match: {
-          starts_with: 'ft:gpt-3.5-turbo-',
+          starts_with: 'ft:gpt-3.5-turbo',
         },
         prices: {
           input_mtok: 3,
@@ -3339,10 +3835,10 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'ft:gpt-4o-2024-08-06:',
+        id: 'ft:gpt-4o',
         description: 'GPT-4o fine tuned.',
         match: {
-          starts_with: 'ft:gpt-4o-2024-08-06:',
+          starts_with: 'ft:gpt-4o-2024-',
         },
         prices: {
           input_mtok: 3.75,
@@ -3350,14 +3846,31 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'ft:gpt-4o-mini-2024-07-18:',
+        id: 'ft:gpt-4o-mini',
         description: 'GPT-4o Mini fine tuned.',
         match: {
-          starts_with: 'ft:gpt-4o-mini-2024-07-18:',
+          starts_with: 'ft:gpt-4o-mini-2024-',
         },
         prices: {
           input_mtok: 0.3,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'gpt-3.5-0301',
+        match: {
+          or: [
+            {
+              equals: 'gpt-3.5-turbo-0301',
+            },
+            {
+              equals: 'gpt-3.5-0301',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 2,
         },
       },
       {
@@ -3375,15 +3888,34 @@ export const data: Provider[] = [
             {
               equals: 'gpt-3.5-turbo-0125',
             },
-            {
-              equals: 'gpt-3.5-turbo-1106',
-            },
           ],
         },
         context_window: 16385,
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'gpt-3.5-turbo-0613',
+        match: {
+          equals: 'gpt-3.5-turbo-0613',
+        },
+        context_window: 16385,
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'gpt-3.5-turbo-1106',
+        match: {
+          equals: 'gpt-3.5-turbo-1106',
+        },
+        context_window: 16385,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -3401,6 +3933,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-35-turbo-16k-0613',
+            },
+            {
+              equals: 'gpt-35-turbo-16k',
             },
           ],
         },
@@ -3445,6 +3980,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-4-0613',
+            },
+            {
+              starts_with: 'ft:gpt-4-0',
             },
           ],
         },
@@ -3668,6 +4206,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-4o-mini-search-preview',
             },
+            {
+              equals: 'gpt-4o-mini-search-preview-2025-03-11',
+            },
           ],
         },
         context_window: 128000,
@@ -3709,6 +4250,30 @@ export const data: Provider[] = [
           input_mtok: 0.6,
           cache_read_mtok: 0.3,
           output_mtok: 2.4,
+          input_audio_mtok: 10,
+          cache_audio_read_mtok: 0.3,
+          output_audio_mtok: 20,
+        },
+      },
+      {
+        id: 'gpt-4o-mini-transcribe',
+        match: {
+          equals: 'gpt-4o-mini-transcribe',
+        },
+        prices: {
+          input_mtok: 1.25,
+          output_mtok: 5,
+          input_audio_mtok: 3,
+        },
+      },
+      {
+        id: 'gpt-4o-mini-tts',
+        match: {
+          equals: 'gpt-4o-mini-tts',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_audio_mtok: 12,
         },
       },
       {
@@ -3731,11 +4296,36 @@ export const data: Provider[] = [
         description:
           'GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.',
         match: {
-          equals: 'gpt-4o-search-preview',
+          or: [
+            {
+              equals: 'gpt-4o-search-preview',
+            },
+            {
+              equals: 'gpt-4o-search-preview-2025-03-11',
+            },
+          ],
         },
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-4o-transcribe',
+        match: {
+          or: [
+            {
+              equals: 'gpt-4o-transcribe',
+            },
+            {
+              equals: 'gpt-4o-transcribe-diarize',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2.5,
+          output_mtok: 10,
+          input_audio_mtok: 6,
         },
       },
       {
@@ -3769,6 +4359,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-chat-latest',
             },
+            {
+              equals: 'gpt-5-codex',
+            },
           ],
         },
         context_window: 400000,
@@ -3776,6 +4369,30 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5-image',
+        match: {
+          equals: 'gpt-5-image',
+        },
+        price_comments: 'Seen on OpenRouter before OpenAI',
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 1.25,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5-image-mini',
+        match: {
+          equals: 'gpt-5-image-mini',
+        },
+        price_comments: 'Seen on OpenRouter before OpenAI',
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 2,
         },
       },
       {
@@ -3819,6 +4436,68 @@ export const data: Provider[] = [
           cache_read_mtok: 0.005,
           output_mtok: 0.4,
         },
+      },
+      {
+        id: 'gpt-5-pro',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5-pro',
+            },
+            {
+              equals: 'gpt-5-pro-2025-10-06',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 15,
+          output_mtok: 120,
+        },
+      },
+      {
+        id: 'gpt-realtime',
+        match: {
+          or: [
+            {
+              equals: 'gpt-realtime',
+            },
+            {
+              equals: 'gpt-realtime-2025-08-28',
+            },
+          ],
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.4,
+          output_mtok: 16,
+          input_audio_mtok: 32,
+          cache_audio_read_mtok: 0.4,
+          output_audio_mtok: 64,
+        },
+      },
+      {
+        id: 'gpt-realtime-mini',
+        match: {
+          equals: 'gpt-realtime-mini',
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 2.4,
+          input_audio_mtok: 10,
+          cache_audio_read_mtok: 0.3,
+          output_audio_mtok: 20,
+        },
+      },
+      {
+        id: 'moderation',
+        description: 'All OpenAI moderation models and endpoints are free of charge',
+        match: {
+          contains: 'moderation',
+        },
+        prices: {},
       },
       {
         id: 'o1',
@@ -3874,7 +4553,14 @@ export const data: Provider[] = [
         description:
           'The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide consistently better answers.',
         match: {
-          equals: 'o1-pro',
+          or: [
+            {
+              equals: 'o1-pro',
+            },
+            {
+              equals: 'o1-pro-2025-03-19',
+            },
+          ],
         },
         prices: {
           input_mtok: 150,
@@ -3918,6 +4604,24 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'o3-deep-research',
+        match: {
+          or: [
+            {
+              equals: 'o3-deep-research',
+            },
+            {
+              equals: 'o3-deep-research-2025-06-26',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 2.5,
+          output_mtok: 40,
+        },
+      },
+      {
         id: 'o3-mini',
         name: 'o3 Mini',
         description:
@@ -3947,7 +4651,14 @@ export const data: Provider[] = [
         description:
           'The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently better answers.',
         match: {
-          equals: 'o3-pro',
+          or: [
+            {
+              equals: 'o3-pro',
+            },
+            {
+              equals: 'o3-pro-2025-06-10',
+            },
+          ],
         },
         prices: {
           input_mtok: 20,
@@ -3960,9 +4671,6 @@ export const data: Provider[] = [
         description: 'OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.',
         match: {
           or: [
-            {
-              starts_with: 'o4-mini',
-            },
             {
               equals: 'o4-mini-2025-04-16',
             },
@@ -3978,6 +4686,24 @@ export const data: Provider[] = [
           input_mtok: 1.1,
           cache_read_mtok: 0.275,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'o4-mini-deep-research',
+        match: {
+          or: [
+            {
+              equals: 'o4-mini-deep-research',
+            },
+            {
+              equals: 'o4-mini-deep-research-2025-06-26',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 8,
         },
       },
       {
@@ -5169,6 +5895,18 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'deepseek-v3.1-terminus',
+        name: 'DeepSeek V3.1 Terminus',
+        match: {
+          equals: 'deepseek-v3.1-terminus',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.23,
+          output_mtok: 0.9,
+        },
+      },
+      {
         id: 'deepseek/deepseek-chat',
         match: {
           equals: 'deepseek/deepseek-chat',
@@ -5194,6 +5932,18 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-chat-v3-0324:free',
         },
         prices: {},
+      },
+      {
+        id: 'deepseek/deepseek-chat-v3.1',
+        name: 'DeepSeek Chat V3.1',
+        match: {
+          equals: 'deepseek/deepseek-chat-v3.1',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.8,
+        },
       },
       {
         id: 'deepseek/deepseek-chat:free',
@@ -5303,6 +6053,17 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v3-base:free',
         },
         prices: {},
+      },
+      {
+        id: 'deepseek/deepseek-v3.2-exp',
+        name: 'DeepSeek V3.2 Experimental',
+        match: {
+          equals: 'deepseek/deepseek-v3.2-exp',
+        },
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 0.4,
+        },
       },
       {
         id: 'devstral-small',
@@ -5488,7 +6249,14 @@ export const data: Provider[] = [
         id: 'gemini-2.5-flash',
         name: 'Gemini 2.5 Flash',
         match: {
-          equals: 'gemini-2.5-flash',
+          or: [
+            {
+              equals: 'gemini-2.5-flash',
+            },
+            {
+              equals: 'google/gemini-2.5-flash',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.3,
@@ -5828,6 +6596,48 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'google/gemini-2.5-flash-image',
+        name: 'Gemini 2.5 Flash Image (Nano Banana)',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-2.5-flash-image',
+            },
+            {
+              equals: 'google/gemini-2.5-flash-image-preview',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'google/gemini-2.5-flash-lite',
+        name: 'Gemini 2.5 Flash Lite',
+        match: {
+          equals: 'google/gemini-2.5-flash-lite',
+        },
+        prices: {
+          input_mtok: 0.1,
+          cache_write_mtok: 0.183,
+          cache_read_mtok: 0.025,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'google/gemini-2.5-flash-lite-preview-09-2025',
+        name: 'Gemini 2.5 Flash Lite Preview 09-2025',
+        match: {
+          equals: 'google/gemini-2.5-flash-lite-preview-09-2025',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.4,
+        },
+      },
+      {
         id: 'google/gemini-2.5-flash-preview',
         match: {
           equals: 'google/gemini-2.5-flash-preview',
@@ -5835,6 +6645,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'google/gemini-2.5-flash-preview-09-2025',
+        name: 'Gemini 2.5 Flash Preview 09-2025',
+        match: {
+          equals: 'google/gemini-2.5-flash-preview-09-2025',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_write_mtok: 0.383,
+          cache_read_mtok: 0.075,
+          output_mtok: 2.5,
         },
       },
       {
@@ -9935,6 +10758,28 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 3,
           output_mtok: 3,
+        },
+      },
+      {
+        id: 'z-ai/glm-4.5',
+        match: {
+          equals: 'z-ai/glm-4.5',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.35,
+          output_mtok: 1.55,
+        },
+      },
+      {
+        id: 'z-ai/glm-4.6',
+        match: {
+          equals: 'z-ai/glm-4.6',
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 1.75,
         },
       },
     ],
