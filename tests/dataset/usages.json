@@ -3588,8 +3588,8 @@
         },
         "cache_creation_input_tokens": 0,
         "cache_read_input_tokens": 0,
-        "input_tokens": 105,
-        "output_tokens": 55,
+        "input_tokens": 106,
+        "output_tokens": 71,
         "service_tier": "standard"
       }
     },
@@ -3598,14 +3598,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.000315",
-            "output_price": "0.000825",
+            "input_price": "0.000318",
+            "output_price": "0.001065",
             "provider_id": "anthropic"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.000315",
-            "output_price": "0.000825",
+            "input_price": "0.000318",
+            "output_price": "0.001065",
             "provider_id": "google"
           },
           {
@@ -3614,8 +3614,8 @@
           }
         ],
         "usage": {
-          "input_tokens": 105,
-          "output_tokens": 55
+          "input_tokens": 106,
+          "output_tokens": 71
         }
       }
     ],
@@ -12418,6 +12418,47 @@
       }
     ],
     "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "model": "gpt-5-pro-2025-10-06",
+      "usage": {
+        "input_tokens": 13,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 90
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.000195",
+            "output_price": "0.00924",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 77
+        }
+      }
+    ],
+    "model": "gpt-5-pro-2025-10-06"
   },
   {
     "body": {
@@ -22070,13 +22111,13 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash-002",
+      "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
-        "candidatesTokenCount": 2,
+        "candidatesTokenCount": 8,
         "candidatesTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 2
+            "tokenCount": 8
           }
         ],
         "promptTokenCount": 7,
@@ -22087,9 +22128,10 @@
           }
         ],
         "pydantic_ai_gateway": {
-          "cost_estimate": 1.125e-06
+          "cost_estimate": 0.0001546
         },
-        "totalTokenCount": 9,
+        "thoughtsTokenCount": 53,
+        "totalTokenCount": 68,
         "trafficType": "ON_DEMAND"
       }
     },
@@ -22098,18 +22140,18 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "5.25E-7",
-            "output_price": "6E-7",
+            "input_price": "0.0000021",
+            "output_price": "0.0001525",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 7,
-          "output_tokens": 2
+          "output_tokens": 61
         }
       }
     ],
-    "model": "gemini-1.5-flash-002"
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -22338,14 +22380,14 @@
         "input_tokens_details": {
           "cached_tokens": 0
         },
-        "output_tokens": 8,
+        "output_tokens": 72,
         "output_tokens_details": {
-          "reasoning_tokens": 0
+          "reasoning_tokens": 64
         },
         "pydantic_ai_gateway": {
-          "cost_estimate": 9.625000000000001e-05
+          "cost_estimate": 0.00073625
         },
-        "total_tokens": 21
+        "total_tokens": 85
       }
     },
     "extracted": [
@@ -22362,13 +22404,13 @@
           {
             "api_flavor": "responses",
             "input_price": "0.00001625",
-            "output_price": "0.00008",
+            "output_price": "0.00072",
             "provider_id": "openai"
           }
         ],
         "usage": {
           "input_tokens": 13,
-          "output_tokens": 8
+          "output_tokens": 72
         }
       }
     ],
