@@ -4443,9 +4443,40 @@ export const data: Provider[] = [
             },
           ],
         },
+        context_window: 400000,
         prices: {
           input_mtok: 15,
           output_mtok: 120,
+        },
+      },
+      {
+        id: 'gpt-5.1',
+        name: 'GPT-5.1',
+        description: 'The best model for coding and agentic tasks across industries',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.1',
+            },
+            {
+              equals: 'gpt-5.1-2025-11-13',
+            },
+            {
+              equals: 'gpt-5.1-codex',
+            },
+            {
+              equals: 'gpt-5.1-mini',
+            },
+            {
+              equals: 'gpt-5.1-chat-latest',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
         },
       },
       {
