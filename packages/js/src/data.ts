@@ -469,13 +469,13 @@ export const data: Provider[] = [
     ],
     models: [
       {
-        id: 'meta.llama3-8b-instruct-v1%3A0',
+        id: 'meta.llama3-8b-instruct-v1:0',
         match: {
-          equals: 'meta.llama3-8b-instruct-v1%3A0',
+          contains: 'llama3-8b-instruct-v1',
         },
         prices: {
-          input_mtok: 220,
-          output_mtok: 720,
+          input_mtok: 0.3,
+          output_mtok: 0.6,
         },
       },
       {
@@ -486,15 +486,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              equals: 'nova-lite-v1',
-            },
-            {
-              equals: 'amazon.nova-lite-v1:0',
+              contains: 'nova-lite-v1',
             },
           ],
         },
         prices: {
           input_mtok: 0.06,
+          cache_read_mtok: 0.015,
           output_mtok: 0.24,
         },
       },
@@ -506,15 +504,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              equals: 'nova-micro-v1',
-            },
-            {
-              equals: 'amazon.nova-micro-v1:0',
+              contains: 'nova-micro-v1',
             },
           ],
         },
         prices: {
           input_mtok: 0.035,
+          cache_read_mtok: 0.00875,
           output_mtok: 0.14,
         },
       },
@@ -526,15 +522,13 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              equals: 'nova-pro-v1',
-            },
-            {
-              equals: 'amazon.nova-pro-v1:0',
+              contains: 'nova-pro-v1',
             },
           ],
         },
         prices: {
           input_mtok: 0.8,
+          cache_read_mtok: 0.2,
           output_mtok: 3.2,
         },
       },
