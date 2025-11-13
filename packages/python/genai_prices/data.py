@@ -302,7 +302,7 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
-                id='meta.llama3-8b-instruct-v1%3A0',
+                id='meta.llama3-8b-instruct-v1:0',
                 match=ClauseContains(contains='llama3-8b-instruct-v1'),
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
             ),

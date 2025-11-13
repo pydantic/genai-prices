@@ -469,7 +469,7 @@ export const data: Provider[] = [
     ],
     models: [
       {
-        id: 'meta.llama3-8b-instruct-v1%3A0',
+        id: 'meta.llama3-8b-instruct-v1:0',
         match: {
           contains: 'llama3-8b-instruct-v1',
         },
