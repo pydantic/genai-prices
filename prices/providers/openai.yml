@@ -489,7 +489,7 @@ models:
         - equals: gpt-5-chat-latest
         - equals: gpt-5-codex
     context_window: 400000
-    prices_checked: 2025-08-08
+    prices_checked: 2025-11-13
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.125
@@ -522,7 +522,7 @@ models:
         - equals: gpt-5-mini
         - equals: gpt-5-mini-2025-08-07
     context_window: 400000
-    prices_checked: 2025-08-08
+    prices_checked: 2025-11-13
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.025
@@ -538,7 +538,7 @@ models:
         - equals: gpt-5-nano
         - starts_with: gpt-5-nano-
     context_window: 400000
-    prices_checked: 2025-08-08
+    prices_checked: 2025-11-13
     prices:
       input_mtok: 0.05
       cache_read_mtok: 0.005
@@ -549,9 +549,30 @@ models:
       or:
         - equals: gpt-5-pro
         - equals: gpt-5-pro-2025-10-06
+    context_window: 400000
+    prices_checked: 2025-11-13
     prices:
       input_mtok: 15
       output_mtok: 120
+
+  - id: gpt-5.1
+    name: GPT-5.1
+    description: The best model for coding and agentic tasks across industries
+    collapse: false
+    match:
+      # see https://github.com/openai/openai-python/blob/9b8c7e3e84e3e7bb8b0d88bb7d0538c39bb47a40/src/openai/types/shared/chat_model.py#L8-L12
+      or:
+        - equals: gpt-5.1
+        - equals: gpt-5.1-2025-11-13
+        - equals: gpt-5.1-codex
+        - equals: gpt-5.1-mini
+        - equals: gpt-5.1-chat-latest
+    context_window: 400000
+    prices_checked: 2025-11-13
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.125
+      output_mtok: 10
 
   - id: gpt-realtime
     match:
@@ -583,8 +604,8 @@ models:
     description: All OpenAI moderation models and endpoints are free of charge
     match:
       contains: moderation
-    prices:
-      input_mtok:
+    prices: {}
+
   - id: o1
     name: o1
     description: O1 is a model that offers a balance between cost and performance.
