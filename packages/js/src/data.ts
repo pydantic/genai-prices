@@ -1908,10 +1908,15 @@ export const data: Provider[] = [
           {
             path: 'candidatesTokenCount',
             dest: 'output_tokens',
-            required: true,
+            required: false,
           },
           {
             path: 'thoughtsTokenCount',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'toolUsePromptTokenCount',
             dest: 'output_tokens',
             required: false,
           },
