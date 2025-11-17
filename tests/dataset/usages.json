@@ -389,13 +389,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000054",
-            "output_price": "0.0000564",
+            "output_price": "0.0001208",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 54,
-          "output_tokens": 141
+          "output_tokens": 302
         }
       }
     ],
@@ -554,13 +554,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.00002125",
-            "output_price": "0.00414",
+            "output_price": "0.00533",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 17,
-          "output_tokens": 414
+          "output_tokens": 533
         }
       }
     ],
@@ -595,13 +595,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.00026125",
-            "output_price": "0.00337",
+            "output_price": "0.00623",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 209,
-          "output_tokens": 337
+          "output_tokens": 623
         }
       }
     ],
@@ -1409,13 +1409,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.00031125",
-            "output_price": "0.00541",
+            "output_price": "0.0086",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 249,
-          "output_tokens": 541
+          "output_tokens": 860
         }
       }
     ],
@@ -1572,13 +1572,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.00001875",
-            "output_price": "0.0066",
+            "output_price": "0.01335",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 15,
-          "output_tokens": 660
+          "output_tokens": 1335
         }
       }
     ],
@@ -1613,13 +1613,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.00004875",
-            "output_price": "0.00598",
+            "output_price": "0.01235",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 39,
-          "output_tokens": 598
+          "output_tokens": 1235
         }
       }
     ],
@@ -1862,6 +1862,37 @@
       }
     ],
     "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-1.5-flash",
+      "usageMetadata": {
+        "promptTokenCount": 14,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 14
+          }
+        ],
+        "totalTokenCount": 14
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.00000105",
+            "output_price": "0.0",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14
+        }
+      }
+    ],
+    "model": "gemini-1.5-flash"
   },
   {
     "body": {
@@ -4316,13 +4347,13 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000013",
-            "output_price": "0.000014",
+            "output_price": "0.0000264",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 13,
-          "output_tokens": 35
+          "output_tokens": 66
         }
       }
     ],
@@ -20285,6 +20316,37 @@
       }
     ],
     "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-1.5-flash",
+      "usageMetadata": {
+        "promptTokenCount": 7,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7
+          }
+        ],
+        "totalTokenCount": 7
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "5.25E-7",
+            "output_price": "0.0",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7
+        }
+      }
+    ],
+    "model": "gemini-1.5-flash"
   },
   {
     "body": {
