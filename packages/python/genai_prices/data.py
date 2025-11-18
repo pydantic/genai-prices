@@ -2077,6 +2077,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='computer-use',
+                match=ClauseStartsWith(starts_with='computer-use'),
+                name='Computer use',
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('12')),
+            ),
+            ModelInfo(
                 id='curie',
                 match=ClauseOr(or_=[ClauseEquals(equals='curie'), ClauseEquals(equals='text-curie-001')]),
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
@@ -2439,7 +2445,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5.1'),
                         ClauseEquals(equals='gpt-5.1-2025-11-13'),
                         ClauseEquals(equals='gpt-5.1-codex'),
-                        ClauseEquals(equals='gpt-5.1-mini'),
                         ClauseEquals(equals='gpt-5.1-chat-latest'),
                     ]
                 ),
@@ -2448,6 +2453,15 @@ providers: list[Provider] = [
                 context_window=400000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.1-codex-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.1-codex-mini'), ClauseEquals(equals='gpt-5.1-mini')]),
+                name='GPT-5.1 Codex Mini',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
                 ),
             ),
             ModelInfo(

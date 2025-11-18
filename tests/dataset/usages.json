@@ -13855,6 +13855,8 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000045",
+            "output_price": "0.00216",
             "provider_id": "openai"
           }
         ],
