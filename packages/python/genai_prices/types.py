@@ -381,9 +381,12 @@ def _extract_path(
         error_path.append(step)
         if isinstance(step, ArrayMatch):
             if not _is_sequence(data):
-                raise ValueError(
-                    f'Expected `{_dot_path(data_path, error_path)}` value to be a sequence, got {_type_name(data)}'
-                )
+                if required:
+                    raise ValueError(
+                        f'Expected `{_dot_path(data_path, error_path)}` value to be a sequence, got {_type_name(data)}'
+                    )
+                else:
+                    return None
             if extracted_data := step.extract(data):
                 data = extracted_data
             elif required:

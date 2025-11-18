@@ -1064,16 +1064,8 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usageMetadata',
                 mappings=[
-                    UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=True),
-                    UsageExtractorMapping(
-                        path=[
-                            'cacheTokensDetails',
-                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
-                            'tokenCount',
-                        ],
-                        dest='cache_read_tokens',
-                        required=False,
-                    ),
+                    UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cachedContentTokenCount', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(
                         path=[
                             'cacheTokensDetails',
@@ -1090,6 +1082,15 @@ providers: list[Provider] = [
                             'tokenCount',
                         ],
                         dest='input_audio_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='output_audio_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
