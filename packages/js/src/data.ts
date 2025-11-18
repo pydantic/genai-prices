@@ -2348,6 +2348,43 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3-pro-preview',
+        name: 'Gemini 3 Pro Preview',
+        description: 'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
+        match: {
+          starts_with: 'gemini-3-pro-preview',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 200000,
+                price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gemini-embedding-001',
         match: {
           equals: 'gemini-embedding-001',
