@@ -92,6 +92,14 @@ models:
       cache_read_mtok: 0.375
       output_mtok: 6
 
+  - id: computer-use
+    name: Computer use
+    match:
+      starts_with: computer-use
+    prices:
+      input_mtok: 3
+      output_mtok: 12
+
   - id: curie
     match:
       or:
@@ -565,7 +573,6 @@ models:
         - equals: gpt-5.1
         - equals: gpt-5.1-2025-11-13
         - equals: gpt-5.1-codex
-        - equals: gpt-5.1-mini
         - equals: gpt-5.1-chat-latest
     context_window: 400000
     prices_checked: 2025-11-13
@@ -573,6 +580,21 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
+
+  - id: gpt-5.1-codex-mini
+    name: GPT-5.1 Codex Mini
+    collapse: false
+    match:
+      # see https://github.com/openai/openai-python/blob/9b8c7e3e84e3e7bb8b0d88bb7d0538c39bb47a40/src/openai/types/shared/chat_model.py#L8-L12
+      or:
+        - equals: gpt-5.1-codex-mini
+        - equals: gpt-5.1-mini
+    context_window: 400000
+    prices_checked: 2025-11-13
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 2
 
   - id: gpt-realtime
     match:

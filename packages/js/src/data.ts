@@ -3794,6 +3794,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'computer-use',
+        name: 'Computer use',
+        match: {
+          starts_with: 'computer-use',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 12,
+        },
+      },
+      {
         id: 'curie',
         match: {
           or: [
@@ -4475,9 +4486,6 @@ export const data: Provider[] = [
               equals: 'gpt-5.1-codex',
             },
             {
-              equals: 'gpt-5.1-mini',
-            },
-            {
               equals: 'gpt-5.1-chat-latest',
             },
           ],
@@ -4487,6 +4495,26 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5.1-codex-mini',
+        name: 'GPT-5.1 Codex Mini',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.1-codex-mini',
+            },
+            {
+              equals: 'gpt-5.1-mini',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 2,
         },
       },
       {
