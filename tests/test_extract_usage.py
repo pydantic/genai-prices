@@ -189,13 +189,13 @@ def test_google():
 gemini_response_data_caching = {
     'usageMetadata': {
         'promptTokenCount': 14152,
-        'candidatesTokenCount': 50,
+        'candidatesTokenCount': 60,
         'totalTokenCount': 14271,
         'cachedContentTokenCount': 12239,
         'trafficType': 'ON_DEMAND',
         'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 14002}, {'modality': 'AUDIO', 'tokenCount': 150}],
         'cacheTokensDetails': [{'modality': 'AUDIO', 'tokenCount': 129}, {'modality': 'TEXT', 'tokenCount': 12110}],
-        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 50}],
+        'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 50}, {'modality': 'AUDIO', 'tokenCount': 10}],
         'thoughtsTokenCount': 69,
     },
     'modelVersion': 'gemini-2.5-flash',
@@ -208,14 +208,15 @@ def test_google_caching():
     assert usage == snapshot(
         Usage(
             input_tokens=14152,
-            cache_read_tokens=12110,
-            output_tokens=119,
+            cache_read_tokens=12239,
+            output_tokens=129,
             input_audio_tokens=150,
             cache_audio_read_tokens=129,
+            output_audio_tokens=10,
         ),
     )
     assert model is not None
-    assert calc_price(usage, model).total_price == snapshot(Decimal('0.00129713'))
+    assert calc_price(usage, model).total_price == snapshot(Decimal('0.0012623'))
 
 
 gemini_response_data_thoughtless = {

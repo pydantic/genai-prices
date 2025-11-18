@@ -1858,20 +1858,10 @@ export const data: Provider[] = [
           {
             path: 'promptTokenCount',
             dest: 'input_tokens',
-            required: true,
+            required: false,
           },
           {
-            path: [
-              'cacheTokensDetails',
-              {
-                type: 'array-match',
-                field: 'modality',
-                match: {
-                  equals: 'TEXT',
-                },
-              },
-              'tokenCount',
-            ],
+            path: 'cachedContentTokenCount',
             dest: 'cache_read_tokens',
             required: false,
           },
@@ -1903,6 +1893,21 @@ export const data: Provider[] = [
               'tokenCount',
             ],
             dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_audio_tokens',
             required: false,
           },
           {
