@@ -6,6 +6,7 @@ from typing import Any
 import boto3
 
 from prices.types import ClauseContains, ModelInfo, ModelPrice
+from prices.update import get_providers_yaml
 
 # Pricing API client (must be us-east-1)
 pricing_client = boto3.client('pricing', region_name='us-east-1')
@@ -118,7 +119,7 @@ def get_model(price):
 models = list(get_available_models())
 
 
-def main():
+def get_model_infos():
     raw_prices = list(get_bedrock_pricing_data())
     parsed_prices = [x for p in raw_prices for x in parse_pricing_item(p)]
     models_by_id = {m['modelId']: m for m in models}
@@ -135,6 +136,8 @@ def main():
         model_price = ModelPrice()
         for price in model['prices']:
             price_mtok = Decimal(price['price_data']['pricePerUnit']['USD']) * 1000
+            if not price_mtok:
+                continue
             attributes = price['attributes']
             inference_type = attributes.get('inferenceType', '').lower()
             assert 'token' in inference_type, attributes
@@ -179,13 +182,42 @@ def main():
             id=model_id, name=model['modelName'], prices=model_price, match=ClauseContains(contains=simple_model_id)
         )
         model_infos.append(model_info)
+
     for model_info in model_infos:
+        assert model_info.match.is_match(model_info.id)
         for other in model_infos:
             if model_info is other:
                 continue
             assert other.name
             assert not model_info.match.is_match(other.id)
             assert not model_info.match.is_match(other.name)
+
+    return model_infos
+
+
+def main():
+    model_infos = get_model_infos()
+    providers_yaml = get_providers_yaml()
+
+    # add all models to the openrouter provider
+    provider_yaml = providers_yaml['aws']
+    models_added = 0
+    models_updated = 0
+    for model_info in model_infos:
+        assert isinstance(model_info.prices, ModelPrice)
+        try:
+            provider_yaml.update_model(model_info.id, model_info)
+        except LookupError:
+            models_added += provider_yaml.add_model(model_info)
+        else:
+            models_updated += 1
+
+    if models_added or models_updated:
+        if models_added:
+            print(f'  {models_added} models added')
+        if models_updated:
+            print(f'  {models_updated} models updated')
+        provider_yaml.save()
 
 
 main()
