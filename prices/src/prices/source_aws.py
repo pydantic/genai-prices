@@ -1,8 +1,11 @@
 import json
 import re
+from decimal import Decimal
 from typing import Any
 
 import boto3
+
+from prices.types import ClauseContains, ModelInfo, ModelPrice
 
 # Pricing API client (must be us-east-1)
 pricing_client = boto3.client('pricing', region_name='us-east-1')
@@ -67,12 +70,6 @@ def parse_pricing_item(product: dict[str, Any]):
                 continue
             assert unit == '1K tokens'
 
-            inference_type = attributes.get('inferenceType', '').lower()
-            assert 'token' in inference_type, attributes
-            assert 'input' in inference_type or 'output' in inference_type, attributes
-            if 'cache' in inference_type:
-                assert 'read' in inference_type or 'write' in inference_type, attributes
-
             model_keys = [k for k in attributes if 'model' in k.lower()]
             assert len(model_keys) == 1, attributes
             [model_key] = model_keys
@@ -115,10 +112,80 @@ def get_model(price):
         ]
         return
     assert len(matches) == 1, (price, matches, provider_models)
+    return matches[0]
 
 
-raw_prices = list(get_bedrock_pricing_data())
-parsed_prices = [x for p in raw_prices for x in parse_pricing_item(p)]
 models = list(get_available_models())
-for p in parsed_prices:
-    get_model(p)
+
+
+def main():
+    raw_prices = list(get_bedrock_pricing_data())
+    parsed_prices = [x for p in raw_prices for x in parse_pricing_item(p)]
+    models_by_id = {m['modelId']: m for m in models}
+    assert len(models_by_id) == len(models), 'Duplicate model IDs found'
+    for p in parsed_prices:
+        model = get_model(p)
+        if not model:
+            continue
+        model.setdefault('prices', []).append(p)
+    model_infos: list[ModelInfo] = []
+    for model in models:
+        if 'prices' not in model:
+            continue
+        model_price = ModelPrice()
+        for price in model['prices']:
+            price_mtok = Decimal(price['price_data']['pricePerUnit']['USD']) * 1000
+            attributes = price['attributes']
+            inference_type = attributes.get('inferenceType', '').lower()
+            assert 'token' in inference_type, attributes
+            if 'flex' in inference_type or 'priority' in inference_type or 'batch' in inference_type:
+                # TODO
+                continue
+            # TODO audio tokens
+            key = None
+            audio = 'audio' in inference_type or 'speech' in inference_type
+            if 'input' in inference_type:
+                if audio:
+                    if 'cache' in inference_type:
+                        assert 'write' not in inference_type
+                        key = 'cache_audio_read_mtok'
+                    else:
+                        key = 'input_audio_mtok'
+                elif 'cache' in inference_type:
+                    if 'read' in inference_type:
+                        key = 'cache_read_mtok'
+                    elif 'write' in inference_type:
+                        key = 'cache_write_mtok'
+                else:
+                    key = 'input_mtok'
+            elif 'output' in inference_type:
+                if audio:
+                    key = 'output_audio_mtok'
+                else:
+                    key = 'output_mtok'
+            assert key, inference_type
+            assert getattr(model_price, key) is None, (model_price, model, key, price)
+            setattr(model_price, key, price_mtok)
+        model_id = model['modelId']
+        simple_model_id = re.sub(r'-v?\d(:\d)?$', '', model_id)
+        assert model_id != simple_model_id, model_id
+        provider_prefix = model['providerName'].lower()
+        if provider_prefix == 'mistral ai':
+            provider_prefix = 'mistral'
+        provider_prefix += '.'
+        assert simple_model_id.startswith(provider_prefix), (simple_model_id, provider_prefix)
+        simple_model_id = simple_model_id.removeprefix(provider_prefix)
+        model_info = ModelInfo(
+            id=model_id, name=model['modelName'], prices=model_price, match=ClauseContains(contains=simple_model_id)
+        )
+        model_infos.append(model_info)
+    for model_info in model_infos:
+        for other in model_infos:
+            if model_info is other:
+                continue
+            assert other.name
+            assert not model_info.match.is_match(other.id)
+            assert not model_info.match.is_match(other.name)
+
+
+main()
