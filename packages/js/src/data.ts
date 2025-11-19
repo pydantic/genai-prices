@@ -469,26 +469,12 @@ export const data: Provider[] = [
     ],
     models: [
       {
-        id: 'meta.llama3-8b-instruct-v1:0',
-        match: {
-          contains: 'llama3-8b-instruct-v1',
-        },
-        prices: {
-          input_mtok: 0.3,
-          output_mtok: 0.6,
-        },
-      },
-      {
-        id: 'nova-lite-v1',
-        name: 'Nova Lite 1.0',
+        id: 'amazon.nova-lite-v1:0',
+        name: 'Nova Lite',
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          or: [
-            {
-              contains: 'nova-lite-v1',
-            },
-          ],
+          contains: 'nova-lite',
         },
         prices: {
           input_mtok: 0.06,
@@ -497,16 +483,12 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'nova-micro-v1',
-        name: 'Nova Micro 1.0',
+        id: 'amazon.nova-micro-v1:0',
+        name: 'Nova Micro',
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          or: [
-            {
-              contains: 'nova-micro-v1',
-            },
-          ],
+          contains: 'nova-micro',
         },
         prices: {
           input_mtok: 0.035,
@@ -515,21 +497,315 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'nova-pro-v1',
-        name: 'Nova Pro 1.0',
+        id: 'amazon.nova-premier-v1:0',
+        name: 'Nova Premier',
+        match: {
+          contains: 'nova-premier',
+        },
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.625,
+          output_mtok: 12.5,
+        },
+      },
+      {
+        id: 'amazon.nova-pro-v1:0',
+        name: 'Nova Pro',
         description:
           'Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
         match: {
-          or: [
-            {
-              contains: 'nova-pro-v1',
-            },
-          ],
+          contains: 'nova-pro',
         },
         prices: {
           input_mtok: 0.8,
           cache_read_mtok: 0.2,
           output_mtok: 3.2,
+        },
+      },
+      {
+        id: 'amazon.nova-sonic-v1:0',
+        name: 'Nova Sonic',
+        match: {
+          contains: 'nova-sonic',
+        },
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.24,
+          input_audio_mtok: 3.4,
+          output_audio_mtok: 13.6,
+        },
+      },
+      {
+        id: 'amazon.titan-embed-text-v1',
+        name: 'Titan Embeddings G1 - Text',
+        match: {
+          contains: 'titan-embed-text',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+      },
+      {
+        id: 'amazon.titan-text-express-v1',
+        name: 'Titan Text G1 - Express',
+        match: {
+          contains: 'titan-text-express',
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'amazon.titan-text-lite-v1',
+        name: 'Titan Text G1 - Lite',
+        match: {
+          contains: 'titan-text-lite',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'anthropic.claude-3-haiku-20240307-v1:0',
+        name: 'Claude 3 Haiku',
+        match: {
+          contains: 'claude-3-haiku-20240307',
+        },
+        prices: {
+          input_mtok: 0.25,
+        },
+      },
+      {
+        id: 'deepseek.r1-v1:0',
+        name: 'DeepSeek-R1',
+        match: {
+          contains: 'r1',
+        },
+        prices: {
+          input_mtok: 1.35,
+          output_mtok: 5.4,
+        },
+      },
+      {
+        id: 'meta.llama3-1-70b-instruct-v1:0',
+        name: 'Llama 3.1 70B Instruct',
+        match: {
+          contains: 'llama3-1-70b-instruct',
+        },
+        prices: {
+          input_mtok: 0.72,
+          output_mtok: 0.72,
+        },
+      },
+      {
+        id: 'meta.llama3-1-8b-instruct-v1:0',
+        name: 'Llama 3.1 8B Instruct',
+        match: {
+          contains: 'llama3-1-8b-instruct',
+        },
+        prices: {
+          input_mtok: 0.22,
+          output_mtok: 0.22,
+        },
+      },
+      {
+        id: 'meta.llama3-2-11b-instruct-v1:0',
+        name: 'Llama 3.2 11B Instruct',
+        match: {
+          contains: 'llama3-2-11b-instruct',
+        },
+        prices: {
+          input_mtok: 0.16,
+          output_mtok: 0.16,
+        },
+      },
+      {
+        id: 'meta.llama3-2-1b-instruct-v1:0',
+        name: 'Llama 3.2 1B Instruct',
+        match: {
+          contains: 'llama3-2-1b-instruct',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'meta.llama3-2-3b-instruct-v1:0',
+        name: 'Llama 3.2 3B Instruct',
+        match: {
+          contains: 'llama3-2-3b-instruct',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'meta.llama3-2-90b-instruct-v1:0',
+        name: 'Llama 3.2 90B Instruct',
+        match: {
+          contains: 'llama3-2-90b-instruct',
+        },
+        prices: {
+          input_mtok: 0.72,
+          output_mtok: 0.72,
+        },
+      },
+      {
+        id: 'meta.llama3-3-70b-instruct-v1:0',
+        name: 'Llama 3.3 70B Instruct',
+        match: {
+          contains: 'llama3-3-70b-instruct',
+        },
+        prices: {
+          input_mtok: 0.72,
+          output_mtok: 0.72,
+        },
+      },
+      {
+        id: 'meta.llama3-70b-instruct-v1:0',
+        name: 'Llama 3 70B Instruct',
+        match: {
+          contains: 'llama3-70b-instruct',
+        },
+        prices: {
+          input_mtok: 2.65,
+          output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'meta.llama3-8b-instruct-v1:0',
+        name: 'Llama 3 8B Instruct',
+        match: {
+          contains: 'llama3-8b-instruct',
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'meta.llama4-maverick-17b-instruct-v1:0',
+        name: 'Llama 4 Maverick 17B Instruct',
+        match: {
+          contains: 'llama4-maverick-17b-instruct',
+        },
+        prices: {
+          input_mtok: 0.24,
+          output_mtok: 0.97,
+        },
+      },
+      {
+        id: 'meta.llama4-scout-17b-instruct-v1:0',
+        name: 'Llama 4 Scout 17B Instruct',
+        match: {
+          contains: 'llama4-scout-17b-instruct',
+        },
+        prices: {
+          input_mtok: 0.17,
+          output_mtok: 0.66,
+        },
+      },
+      {
+        id: 'mistral.mistral-7b-instruct-v0:2',
+        name: 'Mistral 7B Instruct',
+        match: {
+          contains: 'mistral-7b-instruct',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'mistral.mistral-large-2402-v1:0',
+        name: 'Mistral Large (24.02)',
+        match: {
+          contains: 'mistral-large-2402',
+        },
+        prices: {
+          input_mtok: 4,
+          output_mtok: 12,
+        },
+      },
+      {
+        id: 'mistral.mistral-small-2402-v1:0',
+        name: 'Mistral Small (24.02)',
+        match: {
+          contains: 'mistral-small-2402',
+        },
+        prices: {
+          input_mtok: 1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'mistral.mixtral-8x7b-instruct-v0:1',
+        name: 'Mixtral 8x7B Instruct',
+        match: {
+          contains: 'mixtral-8x7b-instruct',
+        },
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 0.7,
+        },
+      },
+      {
+        id: 'mistral.pixtral-large-2502-v1:0',
+        name: 'Pixtral Large (25.02)',
+        match: {
+          contains: 'pixtral-large-2502',
+        },
+        prices: {
+          input_mtok: 2,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'openai.gpt-oss-120b-1:0',
+        name: 'gpt-oss-120b',
+        match: {
+          contains: 'gpt-oss-120b',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'openai.gpt-oss-20b-1:0',
+        name: 'gpt-oss-20b',
+        match: {
+          contains: 'gpt-oss-20b',
+        },
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'qwen.qwen3-32b-v1:0',
+        name: 'Qwen3 32B (dense)',
+        match: {
+          contains: 'qwen3-32b',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'qwen.qwen3-coder-30b-a3b-v1:0',
+        name: 'Qwen3-Coder-30B-A3B-Instruct',
+        match: {
+          contains: 'qwen3-coder-30b-a3b',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
         },
       },
     ],
