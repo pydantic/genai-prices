@@ -1858,20 +1858,10 @@ export const data: Provider[] = [
           {
             path: 'promptTokenCount',
             dest: 'input_tokens',
-            required: true,
+            required: false,
           },
           {
-            path: [
-              'cacheTokensDetails',
-              {
-                type: 'array-match',
-                field: 'modality',
-                match: {
-                  equals: 'TEXT',
-                },
-              },
-              'tokenCount',
-            ],
+            path: 'cachedContentTokenCount',
             dest: 'cache_read_tokens',
             required: false,
           },
@@ -1903,6 +1893,21 @@ export const data: Provider[] = [
               'tokenCount',
             ],
             dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_audio_tokens',
             required: false,
           },
           {
@@ -2337,6 +2342,43 @@ export const data: Provider[] = [
               {
                 start: 200000,
                 price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gemini-3-pro-preview',
+        name: 'Gemini 3 Pro Preview',
+        description: 'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
+        match: {
+          starts_with: 'gemini-3-pro-preview',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 200000,
+                price: 18,
               },
             ],
           },
@@ -3789,6 +3831,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'computer-use',
+        name: 'Computer use',
+        match: {
+          starts_with: 'computer-use',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 12,
+        },
+      },
+      {
         id: 'curie',
         match: {
           or: [
@@ -4470,9 +4523,6 @@ export const data: Provider[] = [
               equals: 'gpt-5.1-codex',
             },
             {
-              equals: 'gpt-5.1-mini',
-            },
-            {
               equals: 'gpt-5.1-chat-latest',
             },
           ],
@@ -4482,6 +4532,26 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-5.1-codex-mini',
+        name: 'GPT-5.1 Codex Mini',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.1-codex-mini',
+            },
+            {
+              equals: 'gpt-5.1-mini',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 2,
         },
       },
       {

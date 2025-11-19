@@ -1064,16 +1064,8 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usageMetadata',
                 mappings=[
-                    UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=True),
-                    UsageExtractorMapping(
-                        path=[
-                            'cacheTokensDetails',
-                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
-                            'tokenCount',
-                        ],
-                        dest='cache_read_tokens',
-                        required=False,
-                    ),
+                    UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cachedContentTokenCount', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(
                         path=[
                             'cacheTokensDetails',
@@ -1090,6 +1082,15 @@ providers: list[Provider] = [
                             'tokenCount',
                         ],
                         dest='input_audio_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='output_audio_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
@@ -1340,6 +1341,17 @@ providers: list[Provider] = [
                         base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3-pro-preview',
+                match=ClauseStartsWith(starts_with='gemini-3-pro-preview'),
+                name='Gemini 3 Pro Preview',
+                description='The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
                 ),
             ),
             ModelInfo(
@@ -2077,6 +2089,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='computer-use',
+                match=ClauseStartsWith(starts_with='computer-use'),
+                name='Computer use',
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('12')),
+            ),
+            ModelInfo(
                 id='curie',
                 match=ClauseOr(or_=[ClauseEquals(equals='curie'), ClauseEquals(equals='text-curie-001')]),
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
@@ -2439,7 +2457,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5.1'),
                         ClauseEquals(equals='gpt-5.1-2025-11-13'),
                         ClauseEquals(equals='gpt-5.1-codex'),
-                        ClauseEquals(equals='gpt-5.1-mini'),
                         ClauseEquals(equals='gpt-5.1-chat-latest'),
                     ]
                 ),
@@ -2448,6 +2465,15 @@ providers: list[Provider] = [
                 context_window=400000,
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.1-codex-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.1-codex-mini'), ClauseEquals(equals='gpt-5.1-mini')]),
+                name='GPT-5.1 Codex Mini',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
                 ),
             ),
             ModelInfo(

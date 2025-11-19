@@ -40,11 +40,11 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 5 models
 - [Deepseek](prices/providers/deepseek.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 7 models
-- [Google](prices/providers/google.yml) - 25 models
+- [Google](prices/providers/google.yml) - 26 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [Mistral](prices/providers/mistral.yml) - 23 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 59 models
+- [OpenAI](prices/providers/openai.yml) - 61 models
 - [OpenRouter](prices/providers/openrouter.yml) - 557 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models

@@ -15,20 +15,17 @@ provider_match:
     - contains: gemini
 
 # https://github.com/googleapis/nodejs-vertexai/blob/v1.10.0/src/types/content.ts#L465
-# Note, this suggests `promptTokenCount` and `candidatesTokenCount` are optional, but they seem to be always present
+# A previous comment said:
+# > Note, this suggests `promptTokenCount` and `candidatesTokenCount` are optional, but they seem to be always present
+# Then we found a case where `candidatesTokenCount` was missing, so we assume `promptTokenCount` can be missing too.
 extractors:
   - root: usageMetadata
     model_path: modelVersion
     mappings:
       - path: promptTokenCount
         dest: input_tokens
-      - path:
-          - cacheTokensDetails
-          - type: array-match
-            field: modality
-            match:
-              equals: TEXT
-          - tokenCount
+        required: false
+      - path: cachedContentTokenCount
         dest: cache_read_tokens
         required: false
       - path:
@@ -48,6 +45,15 @@ extractors:
               equals: AUDIO
           - tokenCount
         dest: input_audio_tokens
+        required: false
+      - path:
+          - candidatesTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: output_audio_tokens
         required: false
       - path: candidatesTokenCount
         dest: output_tokens
@@ -368,6 +374,29 @@ models:
         tiers:
           - start: 200000
             price: 15
+
+  - id: gemini-3-pro-preview
+    name: Gemini 3 Pro Preview
+    description: The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.
+    match:
+      starts_with: gemini-3-pro-preview
+    prices_checked: 2025-11-18
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 200000
+            price: 0.4
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 200000
+            price: 18
 
   - id: gemini-embedding-001
     match:
