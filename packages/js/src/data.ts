@@ -568,16 +568,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'anthropic.claude-3-haiku-20240307-v1:0',
-        name: 'Claude 3 Haiku',
-        match: {
-          contains: 'claude-3-haiku-20240307',
-        },
-        prices: {
-          input_mtok: 0.25,
-        },
-      },
-      {
         id: 'deepseek.r1-v1:0',
         name: 'DeepSeek-R1',
         match: {
@@ -586,6 +576,42 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.35,
           output_mtok: 5.4,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-haiku-4-5-20251001-v1:0',
+        match: {
+          equals: 'global.anthropic.claude-haiku-4-5-20251001-v1:0',
+        },
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
+        match: {
+          equals: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        match: {
+          equals: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
@@ -806,6 +832,126 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-5-haiku-20241022-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-3-5-haiku-20241022-v1:0',
+        },
+        prices: {
+          input_mtok: 0.8,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-5-sonnet-20240620-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-3-5-sonnet-20240620-v1:0',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
+        match: {
+          equals: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-haiku-20240307-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-3-haiku-20240307-v1:0',
+        },
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-opus-20240229-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-3-opus-20240229-v1:0',
+        },
+        prices: {
+          input_mtok: 15,
+          output_mtok: 75,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-3-sonnet-20240229-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-3-sonnet-20240229-v1:0',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+        },
+        prices: {
+          input_mtok: 1.1,
+          output_mtok: 5.5,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-opus-4-1-20250805-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-opus-4-1-20250805-v1:0',
+        },
+        prices: {
+          input_mtok: 15,
+          output_mtok: 75,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-opus-4-20250514-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-opus-4-20250514-v1:0',
+        },
+        prices: {
+          input_mtok: 15,
+          output_mtok: 75,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
+        },
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        match: {
+          equals: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        },
+        prices: {
+          input_mtok: 3.3,
+          output_mtok: 16.5,
         },
       },
     ],

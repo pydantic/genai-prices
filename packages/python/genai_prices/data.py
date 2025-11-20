@@ -366,16 +366,40 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
-                id='anthropic.claude-3-haiku-20240307-v1:0',
-                match=ClauseContains(contains='claude-3-haiku-20240307'),
-                name='Claude 3 Haiku',
-                prices=ModelPrice(input_mtok=Decimal('0.25')),
-            ),
-            ModelInfo(
                 id='deepseek.r1-v1:0',
                 match=ClauseContains(contains='r1'),
                 name='DeepSeek-R1',
                 prices=ModelPrice(input_mtok=Decimal('1.35'), output_mtok=Decimal('5.4')),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
+                match=ClauseEquals(equals='global.anthropic.claude-haiku-4-5-20251001-v1:0'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.1'),
+                    output_mtok=Decimal('5'),
+                ),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-sonnet-4-20250514-v1:0',
+                match=ClauseEquals(equals='global.anthropic.claude-sonnet-4-20250514-v1:0'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
+                match=ClauseEquals(equals='global.anthropic.claude-sonnet-4-5-20250929-v1:0'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
             ),
             ModelInfo(
                 id='meta.llama3-1-70b-instruct-v1:0',
@@ -496,6 +520,66 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='qwen3-coder-30b-a3b'),
                 name='Qwen3-Coder-30B-A3B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-5-haiku-20241022-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-5-haiku-20241022-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('4')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-5-sonnet-20240620-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-5-sonnet-20240620-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-5-sonnet-20241022-v2:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-5-sonnet-20241022-v2:0'),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-7-sonnet-20250219-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-7-sonnet-20250219-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-haiku-20240307-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-haiku-20240307-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.25')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-opus-20240229-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-opus-20240229-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-3-sonnet-20240229-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-3-sonnet-20240229-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-haiku-4-5-20251001-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-haiku-4-5-20251001-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('1.1'), output_mtok=Decimal('5.5')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-opus-4-1-20250805-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-opus-4-1-20250805-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-opus-4-20250514-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-opus-4-20250514-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-sonnet-4-20250514-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-sonnet-4-20250514-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+                match=ClauseEquals(equals='us.anthropic.claude-sonnet-4-5-20250929-v1:0'),
+                prices=ModelPrice(input_mtok=Decimal('3.3'), output_mtok=Decimal('16.5')),
             ),
         ],
     ),
