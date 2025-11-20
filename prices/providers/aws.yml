@@ -97,13 +97,6 @@ models:
       input_mtok: 0.15
       output_mtok: 0.2
 
-  - id: anthropic.claude-3-haiku-20240307-v1:0
-    name: Claude 3 Haiku
-    match:
-      contains: claude-3-haiku-20240307
-    prices:
-      input_mtok: 0.25
-
   - id: deepseek.r1-v1:0
     name: DeepSeek-R1
     match:
@@ -326,6 +319,13 @@ models:
     prices:
       input_mtok: 3
       output_mtok: 15
+
+  - id: us.anthropic.claude-3-haiku-20240307-v1:0
+    match:
+      equals: us.anthropic.claude-3-haiku-20240307-v1:0
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.25
 
   - id: us.anthropic.claude-3-opus-20240229-v1:0
     match:
