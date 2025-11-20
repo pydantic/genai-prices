@@ -872,9 +872,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-5-haiku-20241022-v1:0',
+        id: 'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-5-haiku-20241022-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-5-haiku-20241022-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-5-haiku-20241022-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-5-haiku-20241022-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-5-haiku-20241022-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-5-haiku-20241022-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-5-haiku-20241022-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.8,
@@ -884,9 +903,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-5-sonnet-20240620-v1:0',
+        id: 'regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-5-sonnet-20240620-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-5-sonnet-20240620-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-5-sonnet-20240620-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-5-sonnet-20240620-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-5-sonnet-20240620-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-5-sonnet-20240620-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-5-sonnet-20240620-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 3,
@@ -896,9 +934,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
+        id: 'regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-5-sonnet-20241022-v2',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-5-sonnet-20241022-v2',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-5-sonnet-20241022-v2',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-5-sonnet-20241022-v2',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-5-sonnet-20241022-v2',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-5-sonnet-20241022-v2',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-5-sonnet-20241022-v2',
+            },
+          ],
         },
         prices: {
           input_mtok: 3,
@@ -908,9 +965,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
+        id: 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-7-sonnet-20250219-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-7-sonnet-20250219-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-7-sonnet-20250219-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-7-sonnet-20250219-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-7-sonnet-20250219-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-7-sonnet-20250219-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-7-sonnet-20250219-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 3,
@@ -920,9 +996,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-haiku-20240307-v1:0',
+        id: 'regional.anthropic.claude-3-haiku-20240307-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-haiku-20240307-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-haiku-20240307-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-haiku-20240307-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-haiku-20240307-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-haiku-20240307-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-haiku-20240307-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-haiku-20240307-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.25,
@@ -930,9 +1025,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-opus-20240229-v1:0',
+        id: 'regional.anthropic.claude-3-opus-20240229-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-opus-20240229-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-opus-20240229-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-opus-20240229-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-opus-20240229-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-opus-20240229-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-opus-20240229-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-opus-20240229-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 15,
@@ -940,9 +1054,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-3-sonnet-20240229-v1:0',
+        id: 'regional.anthropic.claude-3-sonnet-20240229-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-3-sonnet-20240229-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-3-sonnet-20240229-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-3-sonnet-20240229-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-3-sonnet-20240229-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-3-sonnet-20240229-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-3-sonnet-20240229-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-3-sonnet-20240229-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 3,
@@ -952,9 +1085,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
+        id: 'regional.anthropic.claude-haiku-4-5-20251001-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-haiku-4-5-20251001-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-haiku-4-5-20251001-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-haiku-4-5-20251001-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-haiku-4-5-20251001-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-haiku-4-5-20251001-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-haiku-4-5-20251001-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-haiku-4-5-20251001-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.1,
@@ -964,9 +1116,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-opus-4-1-20250805-v1:0',
+        id: 'regional.anthropic.claude-opus-4-1-20250805-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-opus-4-1-20250805-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-opus-4-1-20250805-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-opus-4-1-20250805-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-opus-4-1-20250805-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-opus-4-1-20250805-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-opus-4-1-20250805-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-opus-4-1-20250805-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 15,
@@ -976,9 +1147,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-opus-4-20250514-v1:0',
+        id: 'regional.anthropic.claude-opus-4-20250514-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-opus-4-20250514-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-opus-4-20250514-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-opus-4-20250514-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-opus-4-20250514-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-opus-4-20250514-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-opus-4-20250514-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-opus-4-20250514-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 15,
@@ -988,9 +1178,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
+        id: 'regional.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-sonnet-4-20250514-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-sonnet-4-20250514-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-sonnet-4-20250514-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-sonnet-4-20250514-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-sonnet-4-20250514-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-sonnet-4-20250514-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-sonnet-4-20250514-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 3,
@@ -1000,9 +1209,28 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'us.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        id: 'regional.anthropic.claude-sonnet-4-5-20250929-v1:0',
         match: {
-          starts_with: 'us.anthropic.claude-sonnet-4-5-20250929-v1',
+          or: [
+            {
+              starts_with: 'us.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+            {
+              starts_with: 'au.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+            {
+              starts_with: 'apac.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+            {
+              starts_with: 'eu.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+            {
+              starts_with: 'us-gov.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+            {
+              starts_with: 'jp.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+          ],
         },
         prices: {
           input_mtok: 3.3,
