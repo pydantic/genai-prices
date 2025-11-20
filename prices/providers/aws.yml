@@ -13,6 +13,26 @@ extractors:
         dest: input_tokens
       - path: outputTokens
         dest: output_tokens
+  - api_flavor: anthropic
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        # when Anthropic quotes prices for input tokens, they included all input tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
 models:
   - id: amazon.nova-lite-v1:0
     name: Nova Lite

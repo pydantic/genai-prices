@@ -23,6 +23,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -335,6 +339,10 @@
             "input_price": "0.00489",
             "output_price": "0.001635",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -938,6 +946,10 @@
             "input_price": "0.032427",
             "output_price": "0.00966",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -2784,6 +2796,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.000795",
             "output_price": "0.000465",
             "provider_id": "google"
@@ -2824,6 +2840,10 @@
             "input_price": "0.0003",
             "output_price": "0.00075",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -2870,6 +2890,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.001377",
             "output_price": "0.00057",
             "provider_id": "google"
@@ -2910,6 +2934,10 @@
             "input_price": "0.00153",
             "output_price": "0.000255",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -2956,6 +2984,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.004731",
             "output_price": "0.00129",
             "provider_id": "google"
@@ -2996,6 +3028,10 @@
             "input_price": "0.005037",
             "output_price": "0.00024",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3042,6 +3078,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.004845",
             "output_price": "0.00042",
             "provider_id": "google"
@@ -3085,6 +3125,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.001335",
             "output_price": "0.000345",
             "provider_id": "google"
@@ -3125,6 +3169,10 @@
             "input_price": "0.001491",
             "output_price": "0.00084",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3174,6 +3222,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.034296",
             "output_price": "0.00366",
             "provider_id": "google"
@@ -3212,6 +3264,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3258,6 +3314,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.008046",
             "output_price": "0.001515",
             "provider_id": "google"
@@ -3301,6 +3361,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -3339,6 +3403,10 @@
             "input_price": "0.001149",
             "output_price": "0.000975",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3385,6 +3453,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.00138",
             "output_price": "0.001365",
             "provider_id": "google"
@@ -3425,6 +3497,10 @@
             "input_price": "0.002139",
             "output_price": "0.00249",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3471,6 +3547,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -3509,6 +3589,10 @@
             "input_price": "0.000771",
             "output_price": "0.000385",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3553,6 +3637,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -3594,6 +3682,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -3632,6 +3724,10 @@
             "input_price": "0.000318",
             "output_price": "0.001065",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3678,6 +3774,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.001116",
             "output_price": "0.000735",
             "provider_id": "google"
@@ -3718,6 +3818,10 @@
             "input_price": "0.006075",
             "output_price": "0.001215",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3767,6 +3871,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.008022",
             "output_price": "0.005595",
             "provider_id": "google"
@@ -3813,6 +3921,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.015786",
             "output_price": "0.005535",
             "provider_id": "google"
@@ -3853,6 +3965,10 @@
             "input_price": "0.000276",
             "output_price": "0.00294",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3899,6 +4015,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.000504",
             "output_price": "0.00348",
             "provider_id": "google"
@@ -3937,6 +4057,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -3980,6 +4104,10 @@
             "input_price": "0.004029",
             "output_price": "0.00807",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -4030,6 +4158,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.026952",
             "output_price": "0.0078",
             "provider_id": "google"
@@ -4077,6 +4209,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.059577",
             "output_price": "0.00816",
             "provider_id": "google"
@@ -4120,6 +4256,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.000126",
             "output_price": "0.005445",
             "provider_id": "google"
@@ -4160,6 +4300,10 @@
             "input_price": "0.000873",
             "output_price": "0.007065",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -4210,6 +4354,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.048249",
             "output_price": "0.002475",
             "provider_id": "google"
@@ -4253,6 +4401,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.001191",
             "output_price": "0.00237",
             "provider_id": "google"
@@ -4293,6 +4445,10 @@
             "input_price": "0.001704",
             "output_price": "0.001755",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -4388,6 +4544,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.005049",
             "output_price": "0.001695",
             "provider_id": "google"
@@ -4432,6 +4592,10 @@
             "input_price": "0.005313",
             "output_price": "0.002565",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -4482,6 +4646,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.005223",
             "output_price": "0.002145",
             "provider_id": "google"
@@ -4525,6 +4693,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.000123",
             "output_price": "0.00132",
             "provider_id": "google"
@@ -4563,6 +4735,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -5331,6 +5507,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -7124,6 +7304,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -8765,6 +8949,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -11088,6 +11276,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -11679,6 +11871,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -11782,6 +11978,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           }
         ],
@@ -11832,6 +12032,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -11870,6 +12074,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -11914,6 +12122,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -11952,6 +12164,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -11996,6 +12212,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12034,6 +12254,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12078,6 +12302,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12116,6 +12344,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12169,6 +12401,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12210,6 +12446,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12248,6 +12488,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12301,6 +12545,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           }
         ],
@@ -12351,6 +12599,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12389,6 +12641,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12433,6 +12689,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12471,6 +12731,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12515,6 +12779,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12553,6 +12821,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12597,6 +12869,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12635,6 +12911,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12679,6 +12959,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12717,6 +13001,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12761,6 +13049,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12802,6 +13094,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -12840,6 +13136,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12893,6 +13193,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           }
         ],
@@ -12940,6 +13244,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -12993,6 +13301,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           }
         ],
@@ -13043,6 +13355,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13084,6 +13400,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13122,6 +13442,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13168,6 +13492,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.000126",
             "output_price": "0.004365",
             "provider_id": "google"
@@ -13206,6 +13534,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13250,6 +13582,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13288,6 +13624,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13332,6 +13672,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13370,6 +13714,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13414,6 +13762,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13455,6 +13807,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13493,6 +13849,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13546,6 +13906,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13584,6 +13948,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13637,6 +14005,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13675,6 +14047,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13719,6 +14095,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13760,6 +14140,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13798,6 +14182,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13851,6 +14239,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13889,6 +14281,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -13933,6 +14329,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -13971,6 +14371,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14015,6 +14419,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14053,6 +14461,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14097,6 +14509,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14135,6 +14551,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14179,6 +14599,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14217,6 +14641,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14261,6 +14689,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14299,6 +14731,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14343,6 +14779,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14378,6 +14818,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14422,6 +14866,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14460,6 +14908,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14504,6 +14956,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14542,6 +14998,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -14586,6 +15046,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14627,6 +15091,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           },
           {
@@ -14665,6 +15133,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -19479,6 +19951,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "provider_id": "google"
           }
         ],
@@ -20369,6 +20845,10 @@
             "input_price": "0.000096",
             "output_price": "0.000075",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
@@ -22419,6 +22899,10 @@
           },
           {
             "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
             "input_price": "0.000042",
             "output_price": "0.00015",
             "provider_id": "google"
@@ -22460,6 +22944,10 @@
           {
             "api_flavor": "default",
             "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
           },
           {
             "api_flavor": "anthropic",
