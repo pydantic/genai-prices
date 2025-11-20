@@ -841,6 +841,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.8,
+          cache_write_mtok: 1,
+          cache_read_mtok: 0.08,
           output_mtok: 4,
         },
       },
@@ -851,6 +853,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
           output_mtok: 15,
         },
       },
@@ -861,6 +865,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
           output_mtok: 15,
         },
       },
@@ -871,6 +877,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
           output_mtok: 15,
         },
       },
@@ -901,6 +909,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
           output_mtok: 15,
         },
       },
@@ -911,6 +921,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.1,
+          cache_write_mtok: 1.375,
+          cache_read_mtok: 0.11,
           output_mtok: 5.5,
         },
       },
@@ -921,6 +933,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 15,
+          cache_write_mtok: 18.75,
+          cache_read_mtok: 1.5,
           output_mtok: 75,
         },
       },
@@ -931,6 +945,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 15,
+          cache_write_mtok: 18.75,
+          cache_read_mtok: 1.5,
           output_mtok: 75,
         },
       },
@@ -941,6 +957,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
           output_mtok: 15,
         },
       },
@@ -951,6 +969,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3.3,
+          cache_write_mtok: 4.125,
+          cache_read_mtok: 0.33,
           output_mtok: 16.5,
         },
       },
