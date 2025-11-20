@@ -22,6 +22,8 @@ def update_price_discrepancies(check_threshold: date | None = None):
         discs = 0
         missing: dict[str, Any] = {}
         provider_id = provider_yml.provider.id
+        if provider_id != 'aws':
+            continue
         for source, source_prices in prices.items():
             if provider_prices := source_prices.get(provider_id):
                 for model_id, price in provider_prices.items():
@@ -53,8 +55,12 @@ def update_price_discrepancies(check_threshold: date | None = None):
                 continue
 
             [entry] = entries
+            if 'litellm' not in entry['sources']:
+                continue
+            if not model_id.startswith(('us.anthropic.', 'global.')):
+                continue
             print('Unrecognized model:', model_id)
-            print('Sources:', ', '.join(entry['sources']))
+            # print('Sources:', ', '.join(entry['sources']))
             discs += handle_missing_model(entry['price'], model_id, provider_yml)
 
         if discs:
