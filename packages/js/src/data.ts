@@ -1270,6 +1270,111 @@ export const data: Provider[] = [
     api_pattern: '(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com)',
     price_comments:
       'These are prices for "*-Global" models, prices for "Regional" models are often slightly higher. Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models',
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'anthropic',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_creation_input_tokens',
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'ada',
