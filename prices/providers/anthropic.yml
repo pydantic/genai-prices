@@ -30,6 +30,17 @@ extractors:
         required: false
       - path: output_tokens
         dest: output_tokens
+  # https://platform.claude.com/docs/en/api/openai-sdk#response-fields
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
 
 # See https://github.com/anthropics/anthropic-sdk-python/blob/v0.69.0/src/anthropic/types/model.py
 models:

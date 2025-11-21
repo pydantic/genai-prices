@@ -6466,6 +6466,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -6526,6 +6530,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -6590,6 +6598,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -6650,6 +6662,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -6714,6 +6730,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -6774,6 +6794,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -6838,6 +6862,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -6898,6 +6926,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -6962,6 +6994,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7024,6 +7060,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7084,6 +7124,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7154,6 +7198,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7228,6 +7276,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7349,6 +7401,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7421,6 +7477,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7497,6 +7557,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7571,6 +7635,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7635,6 +7703,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7693,6 +7765,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7763,6 +7839,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7840,6 +7920,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -7925,6 +8009,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7997,6 +8085,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -8073,6 +8165,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8145,6 +8241,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -8221,6 +8321,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8293,6 +8397,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -8369,6 +8477,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8441,6 +8553,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -8517,6 +8633,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8591,6 +8711,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8656,6 +8780,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "input_price": "0.0000259",
@@ -8728,6 +8856,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -8804,6 +8936,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -8876,6 +9012,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -8997,6 +9137,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9071,6 +9215,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9138,6 +9286,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9199,6 +9351,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -9269,6 +9425,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -9345,6 +9505,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9417,6 +9581,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -9493,6 +9661,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9565,6 +9737,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -9641,6 +9817,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9713,6 +9893,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -9789,6 +9973,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9863,6 +10051,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -9928,6 +10120,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "input_price": "0.0000357",
@@ -10000,6 +10196,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -10076,6 +10276,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10148,6 +10352,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -10224,6 +10432,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10298,6 +10510,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10370,6 +10586,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -10524,6 +10744,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10596,6 +10820,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -10672,6 +10900,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10746,6 +10978,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -10818,6 +11054,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -10895,6 +11135,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -11737,6 +11981,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -11797,6 +12045,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -11904,6 +12156,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -15175,6 +15431,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15241,6 +15501,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15305,6 +15569,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -15375,6 +15643,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15443,6 +15715,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15507,6 +15783,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -15575,6 +15855,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15639,6 +15923,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -15707,6 +15995,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15771,6 +16063,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -15839,6 +16135,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15901,6 +16201,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -15967,6 +16271,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -16039,6 +16347,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16109,6 +16421,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -16185,6 +16501,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16257,6 +16577,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -16333,6 +16657,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16405,6 +16733,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -16481,6 +16813,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16553,6 +16889,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -16629,6 +16969,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16701,6 +17045,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -16777,6 +17125,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16851,6 +17203,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16925,6 +17281,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -16997,6 +17357,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -17071,6 +17435,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -17147,6 +17515,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -17219,6 +17591,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -17295,6 +17671,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -17369,6 +17749,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -17441,6 +17825,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -17585,6 +17973,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -17657,6 +18049,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -17733,6 +18129,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -17805,6 +18205,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -17881,6 +18285,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -17955,6 +18363,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18027,6 +18439,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -18175,6 +18591,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18247,6 +18667,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -18323,6 +18747,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18395,6 +18823,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -18471,6 +18903,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18543,6 +18979,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -18619,6 +19059,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18691,6 +19135,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -18767,6 +19215,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18839,6 +19291,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -18915,6 +19371,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -18987,6 +19447,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -19063,6 +19527,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19135,6 +19603,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -19211,6 +19683,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19283,6 +19759,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -19359,6 +19839,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19431,6 +19915,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -19507,6 +19995,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19579,6 +20071,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -19655,6 +20151,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19729,6 +20229,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19803,6 +20307,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19875,6 +20383,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -20005,6 +20517,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20077,6 +20593,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -20153,6 +20673,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20225,6 +20749,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -20301,6 +20829,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20373,6 +20905,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -20449,6 +20985,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20521,6 +21061,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -20597,6 +21141,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20671,6 +21219,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20743,6 +21295,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -20887,6 +21443,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -20985,6 +21545,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -21113,6 +21677,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21185,6 +21753,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21259,6 +21831,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21333,6 +21909,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21405,6 +21985,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -21481,6 +22065,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21553,6 +22141,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -21629,6 +22221,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21701,6 +22297,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -21777,6 +22377,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21849,6 +22453,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -21925,6 +22533,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -21997,6 +22609,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -22073,6 +22689,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22145,6 +22765,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -22221,6 +22845,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22295,6 +22923,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22367,6 +22999,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -22483,6 +23119,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22547,6 +23187,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22605,6 +23249,12 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000042",
+            "output_price": "0.000765",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"
@@ -22724,6 +23374,10 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22820,6 +23474,10 @@
     "extracted": [
       {
         "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
           {
             "api_flavor": "chat",
             "provider_id": "cerebras"

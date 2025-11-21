@@ -30,7 +30,17 @@ providers: list[Provider] = [
                 ],
                 api_flavor='default',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cached_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
