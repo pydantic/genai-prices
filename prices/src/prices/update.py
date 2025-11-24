@@ -38,7 +38,6 @@ def get_providers_yaml() -> dict[str, ProviderYaml]:
 class ProviderYaml:
     path: Path
     data: ProviderYamlDict
-    privder_id: str
     provider: Provider
     _extra_prices: list[ModelInfo]
     _removed_models: set[str]
@@ -143,19 +142,25 @@ class ProviderYaml:
                 m['description'] = FoldedScalarString(description.strip())
 
         existing_models += new_models
-        self.data['models'] = sorted(existing_models, key=itemgetter('id'))
+        self.data['models'] = existing_models
 
-        buffer = StringIO()
-        yaml.dump(self.data, buffer)  # pyright: ignore[reportUnknownMemberType]
-        yaml_data = buffer.getvalue()
-
-        # remove new lines between item
-        yaml_data = re.sub(r'\n\n( +\w+:)', r'\n\1', yaml_data)
-        # inject a new line between models
-        yaml_data = re.sub(r'(\d|\})\n( +- *id:)', r'\1\n\n\2', yaml_data)
-        self.path.write_text(yaml_data)
+        self.path.write_text(get_provider_yaml_string(self.data))
 
 
 class ProviderYamlDict(TypedDict):
     id: str
     models: list[CommentedMap]
+
+
+def get_provider_yaml_string(data: ProviderYamlDict) -> str:
+    data['models'].sort(key=itemgetter('id'))
+
+    buffer = StringIO()
+    yaml.dump(data, buffer)  # pyright: ignore[reportUnknownMemberType]
+    yaml_data = buffer.getvalue()
+
+    # remove new lines between item
+    yaml_data = re.sub(r'\n\n( +\w+:)', r'\n\1', yaml_data)
+    # inject a new line between models
+    yaml_data = re.sub(r'(\d|})\n( +- *id:)', r'\1\n\n\2', yaml_data)
+    return yaml_data

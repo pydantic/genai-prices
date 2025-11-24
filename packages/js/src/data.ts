@@ -3673,6 +3673,2341 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'huggingface_cerebras',
+    name: 'HuggingFace (cerebras)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/cerebras',
+    models: [
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        name: 'Qwen3-235B-A22B-Instruct-2507',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          equals: 'Qwen/Qwen3-32B',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        prices: {
+          input_mtok: 0.85,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.69,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_fireworks-ai',
+    name: 'HuggingFace (fireworks-ai)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/fireworks-ai',
+    models: [
+      {
+        id: 'Qwen/Qwen2.5-VL-32B-Instruct',
+        name: 'Qwen2.5-VL-32B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-VL-32B-Instruct',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.22,
+          output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B',
+        name: 'Qwen3-235B-A22B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen/Qwen3-235B-A22B',
+            },
+            {
+              equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+            },
+            {
+              equals: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.22,
+          output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-30B-A3B',
+        name: 'Qwen3-30B-A3B',
+        match: {
+          equals: 'Qwen/Qwen3-30B-A3B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'SentientAGI/Dobby-Unhinged-Llama-3.3-70B',
+        name: 'Dobby-Unhinged-Llama-3.3-70B',
+        match: {
+          equals: 'SentientAGI/Dobby-Unhinged-Llama-3.3-70B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-0528',
+        name: 'DeepSeek-R1-0528',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-0528',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3-0324',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-405B-Instruct',
+        name: 'Llama-3.1-405B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-405B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-70B-Instruct',
+        name: 'Llama-3.1-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.9,
+          output_mtok: 0.9,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct',
+        name: 'Llama-4-Maverick-17B-128E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.22,
+          output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama-4-Scout-17B-16E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Instruct',
+        name: 'Kimi-K2-Instruct',
+        match: {
+          equals: 'moonshotai/Kimi-K2-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5',
+        name: 'GLM-4.5',
+        match: {
+          equals: 'zai-org/GLM-4.5',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.55,
+          output_mtok: 2.19,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_groq',
+    name: 'HuggingFace (groq)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/groq',
+    models: [
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          equals: 'Qwen/Qwen3-32B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.29,
+          output_mtok: 0.59,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.59,
+          output_mtok: 0.79,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct',
+        name: 'Llama-4-Maverick-17B-128E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama-4-Scout-17B-16E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.11,
+          output_mtok: 0.34,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-Guard-4-12B',
+        name: 'Llama-Guard-4-12B',
+        match: {
+          equals: 'meta-llama/Llama-Guard-4-12B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.5,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_hyperbolic',
+    name: 'HuggingFace (hyperbolic)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/hyperbolic',
+    models: [
+      {
+        id: 'Qwen/QwQ-32B',
+        name: 'QwQ-32B',
+        match: {
+          equals: 'Qwen/QwQ-32B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-72B-Instruct',
+        name: 'Qwen2.5-72B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-72B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+        name: 'Qwen2.5-Coder-32B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        name: 'Qwen2.5-VL-72B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-VL-7B-Instruct',
+        name: 'Qwen2.5-VL-7B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-VL-7B-Instruct',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        name: 'Qwen3-235B-A22B-Instruct-2507',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        name: 'Qwen3-Next-80B-A3B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+        name: 'Qwen3-Next-80B-A3B-Thinking',
+        match: {
+          equals: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1',
+        name: 'DeepSeek-R1',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-0528',
+        name: 'DeepSeek-R1-0528',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-0528',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3-0324',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 1.25,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-70B-Instruct',
+        name: 'Llama-3.1-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.2-3B-Instruct',
+        name: 'Llama-3.2-3B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.2-3B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'meta-llama/Meta-Llama-3-70B-Instruct',
+        name: 'Meta-Llama-3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Meta-Llama-3-70B-Instruct',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_nebius',
+    name: 'HuggingFace (nebius)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/nebius',
+    models: [
+      {
+        id: 'NousResearch/Hermes-4-405B',
+        name: 'Hermes-4-405B',
+        match: {
+          equals: 'NousResearch/Hermes-4-405B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'NousResearch/Hermes-4-70B',
+        name: 'Hermes-4-70B',
+        match: {
+          equals: 'NousResearch/Hermes-4-70B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-Coder-7B',
+        name: 'Qwen2.5-Coder-7B',
+        match: {
+          equals: 'Qwen/Qwen2.5-Coder-7B',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.09,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        name: 'Qwen2.5-VL-72B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        name: 'Qwen3-235B-A22B-Instruct-2507',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+        name: 'Qwen3-235B-A22B-Thinking-2507',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-30B-A3B-Instruct-2507',
+        name: 'Qwen3-30B-A3B-Instruct-2507',
+        match: {
+          equals: 'Qwen/Qwen3-30B-A3B-Instruct-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-30B-A3B-Thinking-2507',
+        name: 'Qwen3-30B-A3B-Thinking-2507',
+        match: {
+          equals: 'Qwen/Qwen3-30B-A3B-Thinking-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          equals: 'Qwen/Qwen3-32B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+        name: 'Qwen3-Coder-30B-A3B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-0528',
+        name: 'DeepSeek-R1-0528',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-0528',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.8,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3-0324',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 2.25,
+        },
+      },
+      {
+        id: 'google/gemma-2-2b-it',
+        name: 'gemma-2-2b-it',
+        match: {
+          equals: 'google/gemma-2-2b-it',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.02,
+          output_mtok: 0.06,
+        },
+      },
+      {
+        id: 'google/gemma-2-9b-it',
+        name: 'gemma-2-9b-it',
+        match: {
+          equals: 'google/gemma-2-9b-it',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.09,
+        },
+      },
+      {
+        id: 'google/gemma-3-27b-it',
+        name: 'gemma-3-27b-it',
+        match: {
+          equals: 'google/gemma-3-27b-it',
+        },
+        context_window: 110000,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.09,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Instruct',
+        name: 'Kimi-K2-Instruct',
+        match: {
+          equals: 'moonshotai/Kimi-K2-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'nvidia/Llama-3_1-Nemotron-Ultra-253B-v1',
+        name: 'Llama-3_1-Nemotron-Ultra-253B-v1',
+        match: {
+          equals: 'nvidia/Llama-3_1-Nemotron-Ultra-253B-v1',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-Nano-12B-v2',
+        name: 'NVIDIA-Nemotron-Nano-12B-v2',
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-Nano-12B-v2',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5',
+        name: 'GLM-4.5',
+        match: {
+          equals: 'zai-org/GLM-4.5',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5-Air',
+        name: 'GLM-4.5-Air',
+        match: {
+          equals: 'zai-org/GLM-4.5-Air',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 1.2,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_novita',
+    name: 'HuggingFace (novita)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/novita',
+    models: [
+      {
+        id: 'MiniMaxAI/MiniMax-M1-80k',
+        name: 'MiniMax-M1-80k',
+        match: {
+          equals: 'MiniMaxAI/MiniMax-M1-80k',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.55,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'MiniMaxAI/MiniMax-M2',
+        name: 'MiniMax-M2',
+        match: {
+          equals: 'MiniMaxAI/MiniMax-M2',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'NousResearch/Hermes-2-Pro-Llama-3-8B',
+        name: 'Hermes-2-Pro-Llama-3-8B',
+        match: {
+          equals: 'NousResearch/Hermes-2-Pro-Llama-3-8B',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.14,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-72B-Instruct',
+        name: 'Qwen2.5-72B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-72B-Instruct',
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.38,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B',
+        name: 'Qwen3-235B-A22B',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        name: 'Qwen3-235B-A22B-Instruct-2507',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.58,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+        name: 'Qwen3-235B-A22B-Thinking-2507',
+        match: {
+          equals: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-30B-A3B',
+        name: 'Qwen3-30B-A3B',
+        match: {
+          equals: 'Qwen/Qwen3-30B-A3B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.45,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.29,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        name: 'Qwen3-Next-80B-A3B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+        name: 'Qwen3-Next-80B-A3B-Thinking',
+        match: {
+          equals: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-235B-A22B-Instruct',
+        name: 'Qwen3-VL-235B-A22B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-235B-A22B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-235B-A22B-Thinking',
+        name: 'Qwen3-VL-235B-A22B-Thinking',
+        match: {
+          equals: 'Qwen/Qwen3-VL-235B-A22B-Thinking',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.98,
+          output_mtok: 3.95,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-30B-A3B-Instruct',
+        name: 'Qwen3-VL-30B-A3B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-30B-A3B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.7,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-30B-A3B-Thinking',
+        name: 'Qwen3-VL-30B-A3B-Thinking',
+        match: {
+          equals: 'Qwen/Qwen3-VL-30B-A3B-Thinking',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-8B-Instruct',
+        name: 'Qwen3-VL-8B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-8B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'Sao10K/L3-70B-Euryale-v2.1',
+        name: 'L3-70B-Euryale-v2.1',
+        match: {
+          equals: 'Sao10K/L3-70B-Euryale-v2.1',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 1.48,
+          output_mtok: 1.48,
+        },
+      },
+      {
+        id: 'Sao10K/L3-8B-Lunaris-v1',
+        name: 'L3-8B-Lunaris-v1',
+        match: {
+          equals: 'Sao10K/L3-8B-Lunaris-v1',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'Sao10K/L3-8B-Stheno-v3.2',
+        name: 'L3-8B-Stheno-v3.2',
+        match: {
+          equals: 'Sao10K/L3-8B-Stheno-v3.2',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'alpindale/WizardLM-2-8x22B',
+        name: 'WizardLM-2-8x22B',
+        match: {
+          equals: 'alpindale/WizardLM-2-8x22B',
+        },
+        context_window: 65535,
+        prices: {
+          input_mtok: 0.62,
+          output_mtok: 0.62,
+        },
+      },
+      {
+        id: 'baichuan-inc/Baichuan-M2-32B',
+        name: 'Baichuan-M2-32B',
+        match: {
+          equals: 'baichuan-inc/Baichuan-M2-32B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.07,
+        },
+      },
+      {
+        id: 'baidu/ERNIE-4.5-21B-A3B-PT',
+        name: 'ERNIE-4.5-21B-A3B-PT',
+        match: {
+          equals: 'baidu/ERNIE-4.5-21B-A3B-PT',
+        },
+        context_window: 120000,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'baidu/ERNIE-4.5-300B-A47B-Base-PT',
+        name: 'ERNIE-4.5-300B-A47B-Base-PT',
+        match: {
+          equals: 'baidu/ERNIE-4.5-300B-A47B-Base-PT',
+        },
+        context_window: 123000,
+        prices: {
+          input_mtok: 0.28,
+          output_mtok: 1.1,
+        },
+      },
+      {
+        id: 'baidu/ERNIE-4.5-VL-28B-A3B-PT',
+        name: 'ERNIE-4.5-VL-28B-A3B-PT',
+        match: {
+          equals: 'baidu/ERNIE-4.5-VL-28B-A3B-PT',
+        },
+        context_window: 30000,
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.56,
+        },
+      },
+      {
+        id: 'baidu/ERNIE-4.5-VL-424B-A47B-Base-PT',
+        name: 'ERNIE-4.5-VL-424B-A47B-Base-PT',
+        match: {
+          equals: 'baidu/ERNIE-4.5-VL-424B-A47B-Base-PT',
+        },
+        context_window: 123000,
+        prices: {
+          input_mtok: 0.42,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-Prover-V2-671B',
+        name: 'DeepSeek-Prover-V2-671B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-Prover-V2-671B',
+        },
+        context_window: 160000,
+        prices: {
+          input_mtok: 0.7,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1',
+        name: 'DeepSeek-R1',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-R1',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-R1-0528',
+            },
+          ],
+        },
+        context_window: 64000,
+        prices: {
+          input_mtok: 0.7,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
+        name: 'DeepSeek-R1-0528-Qwen3-8B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.09,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.8,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
+        name: 'DeepSeek-R1-Distill-Qwen-14B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+        name: 'DeepSeek-R1-Distill-Qwen-32B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+        },
+        context_window: 64000,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3',
+        name: 'DeepSeek-V3',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3',
+        },
+        context_window: 64000,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 1.3,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3-0324',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 1.12,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3.1',
+        name: 'DeepSeek-V3.1',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V3.1',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V3.1-Terminus',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3.2-Exp',
+        name: 'DeepSeek-V3.2-Exp',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3.2-Exp',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 0.41,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.02,
+          output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.2-3B-Instruct',
+        name: 'Llama-3.2-3B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.2-3B-Instruct',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.39,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+        name: 'Llama-4-Maverick-17B-128E-Instruct-FP8',
+        match: {
+          equals: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.17,
+          output_mtok: 0.85,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama-4-Scout-17B-16E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'meta-llama/Meta-Llama-3-70B-Instruct',
+        name: 'Meta-Llama-3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Meta-Llama-3-70B-Instruct',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.51,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'meta-llama/Meta-Llama-3-8B-Instruct',
+        name: 'Meta-Llama-3-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Meta-Llama-3-8B-Instruct',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Instruct',
+        name: 'Kimi-K2-Instruct',
+        match: {
+          equals: 'moonshotai/Kimi-K2-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.57,
+          output_mtok: 2.3,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Instruct-0905',
+        name: 'Kimi-K2-Instruct-0905',
+        match: {
+          equals: 'moonshotai/Kimi-K2-Instruct-0905',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Thinking',
+        name: 'Kimi-K2-Thinking',
+        match: {
+          equals: 'moonshotai/Kimi-K2-Thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.25,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4-32B-0414',
+        name: 'GLM-4-32B-0414',
+        match: {
+          equals: 'zai-org/GLM-4-32B-0414',
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.55,
+          output_mtok: 1.66,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.1V-9B-Thinking',
+        name: 'GLM-4.1V-9B-Thinking',
+        match: {
+          equals: 'zai-org/GLM-4.1V-9B-Thinking',
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.035,
+          output_mtok: 0.138,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5',
+        name: 'GLM-4.5',
+        match: {
+          equals: 'zai-org/GLM-4.5',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5-Air',
+        name: 'GLM-4.5-Air',
+        match: {
+          equals: 'zai-org/GLM-4.5-Air',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.13,
+          output_mtok: 0.85,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5V',
+        name: 'GLM-4.5V',
+        match: {
+          equals: 'zai-org/GLM-4.5V',
+        },
+        context_window: 65536,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.6',
+        name: 'GLM-4.6',
+        match: {
+          equals: 'zai-org/GLM-4.6',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.2,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_nscale',
+    name: 'HuggingFace (nscale)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/nscale',
+    models: [
+      {
+        id: 'Qwen/QwQ-32B',
+        name: 'QwQ-32B',
+        match: {
+          equals: 'Qwen/QwQ-32B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.18,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+        name: 'Qwen2.5-Coder-32B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-Coder-3B-Instruct',
+        name: 'Qwen2.5-Coder-3B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-Coder-3B-Instruct',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.01,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
+        name: 'Qwen2.5-Coder-7B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-Coder-7B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.01,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-14B',
+        name: 'Qwen3-14B',
+        match: {
+          equals: 'Qwen/Qwen3-14B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B',
+        name: 'Qwen3-235B-A22B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen/Qwen3-235B-A22B',
+            },
+            {
+              equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+            },
+          ],
+        },
+        context_window: 32000,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          equals: 'Qwen/Qwen3-32B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.25,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-4B-Instruct-2507',
+        name: 'Qwen3-4B-Instruct-2507',
+        match: {
+          equals: 'Qwen/Qwen3-4B-Instruct-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.01,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-4B-Thinking-2507',
+        name: 'Qwen3-4B-Thinking-2507',
+        match: {
+          equals: 'Qwen/Qwen3-4B-Thinking-2507',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.01,
+          output_mtok: 0.03,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-8B',
+        name: 'Qwen3-8B',
+        match: {
+          equals: 'Qwen/Qwen3-8B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
+        name: 'DeepSeek-R1-Distill-Llama-8B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.05,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
+        name: 'DeepSeek-R1-Distill-Qwen-1.5B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
+        name: 'DeepSeek-R1-Distill-Qwen-14B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+        name: 'DeepSeek-R1-Distill-Qwen-32B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
+        name: 'DeepSeek-R1-Distill-Qwen-7B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.06,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama-4-Scout-17B-16E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        },
+        context_window: 890000,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.29,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.2,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_publicai',
+    name: 'HuggingFace (publicai)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/publicai',
+    models: [
+      {
+        id: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
+        name: 'Gemma-SEA-LION-v4-27B-IT',
+        match: {
+          equals: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
+        },
+        prices: {},
+      },
+      {
+        id: 'swiss-ai/Apertus-70B-Instruct-2509',
+        name: 'Apertus-70B-Instruct-2509',
+        match: {
+          equals: 'swiss-ai/Apertus-70B-Instruct-2509',
+        },
+        prices: {},
+      },
+      {
+        id: 'swiss-ai/Apertus-8B-Instruct-2509',
+        name: 'Apertus-8B-Instruct-2509',
+        match: {
+          equals: 'swiss-ai/Apertus-8B-Instruct-2509',
+        },
+        prices: {},
+      },
+    ],
+  },
+  {
+    id: 'huggingface_sambanova',
+    name: 'HuggingFace (sambanova)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/sambanova',
+    models: [
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          equals: 'Qwen/Qwen3-32B',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-0528',
+        name: 'DeepSeek-R1-0528',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-0528',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 5,
+          output_mtok: 7,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.7,
+          output_mtok: 1.4,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3-0324',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 4.5,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.1-8B-Instruct',
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct',
+        name: 'Llama-4-Maverick-17B-128E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.63,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.22,
+          output_mtok: 0.59,
+        },
+      },
+      {
+        id: 'tokyotech-llm/Llama-3.3-Swallow-70B-Instruct-v0.4',
+        name: 'Llama-3.3-Swallow-70B-Instruct-v0.4',
+        match: {
+          equals: 'tokyotech-llm/Llama-3.3-Swallow-70B-Instruct-v0.4',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.2,
+        },
+      },
+    ],
+  },
+  {
+    id: 'huggingface_together',
+    name: 'HuggingFace (together)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/together',
+    models: [
+      {
+        id: 'Qwen/Qwen2.5-72B-Instruct',
+        name: 'Qwen2.5-72B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-72B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 1.2,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-7B-Instruct',
+        name: 'Qwen2.5-7B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen2.5-7B-Instruct',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-235B-A22B',
+        name: 'Qwen3-235B-A22B',
+        match: {
+          or: [
+            {
+              equals: 'Qwen/Qwen3-235B-A22B',
+            },
+            {
+              equals: 'Qwen/Qwen3-235B-A22B-FP8',
+            },
+            {
+              equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+            },
+          ],
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+            },
+            {
+              equals: 'Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        name: 'Qwen3-Next-80B-A3B-Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-Next-80B-A3B-Instruct',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+        name: 'Qwen3-Next-80B-A3B-Thinking',
+        match: {
+          equals: 'Qwen/Qwen3-Next-80B-A3B-Thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'deepcogito/cogito-671b-v2.1',
+        name: 'cogito-671b-v2.1',
+        match: {
+          or: [
+            {
+              equals: 'deepcogito/cogito-671b-v2.1',
+            },
+            {
+              equals: 'deepcogito/cogito-671b-v2.1-FP8',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 1.25,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'deepcogito/cogito-v2-preview-llama-109B-MoE',
+        name: 'cogito-v2-preview-llama-109B-MoE',
+        match: {
+          equals: 'deepcogito/cogito-v2-preview-llama-109B-MoE',
+        },
+        context_window: 32767,
+        prices: {
+          input_mtok: 0.18000000000000002,
+          output_mtok: 0.5900000000000001,
+        },
+      },
+      {
+        id: 'deepcogito/cogito-v2-preview-llama-405B',
+        name: 'cogito-v2-preview-llama-405B',
+        match: {
+          equals: 'deepcogito/cogito-v2-preview-llama-405B',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 3.5,
+          output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'deepcogito/cogito-v2-preview-llama-70B',
+        name: 'cogito-v2-preview-llama-70B',
+        match: {
+          equals: 'deepcogito/cogito-v2-preview-llama-70B',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.88,
+          output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1',
+        name: 'DeepSeek-R1',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-R1',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-R1-0528',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 7,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3',
+        name: 'DeepSeek-V3',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/DeepSeek-V3',
+            },
+            {
+              equals: 'deepseek-ai/DeepSeek-V3-0324',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 1.25,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3.1',
+        name: 'DeepSeek-V3.1',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V3.1',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.7,
+        },
+      },
+      {
+        id: 'marin-community/marin-8b-instruct',
+        name: 'marin-8b-instruct',
+        match: {
+          equals: 'marin-community/marin-8b-instruct',
+        },
+        context_window: 4096,
+        prices: {
+          input_mtok: 0.18000000000000002,
+          output_mtok: 0.18000000000000002,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.2-3B-Instruct',
+        name: 'Llama-3.2-3B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.2-3B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.060000000000000005,
+          output_mtok: 0.060000000000000005,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-3.3-70B-Instruct',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.88,
+          output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+        name: 'Llama-4-Maverick-17B-128E-Instruct-FP8',
+        match: {
+          equals: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.27,
+          output_mtok: 0.85,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        name: 'Llama-4-Scout-17B-16E-Instruct',
+        match: {
+          equals: 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.18000000000000002,
+          output_mtok: 0.5900000000000001,
+        },
+      },
+      {
+        id: 'meta-llama/Meta-Llama-3-70B-Instruct',
+        name: 'Meta-Llama-3-70B-Instruct',
+        match: {
+          equals: 'meta-llama/Meta-Llama-3-70B-Instruct',
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.88,
+          output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Instruct',
+        name: 'Kimi-K2-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/Kimi-K2-Instruct',
+            },
+            {
+              equals: 'moonshotai/Kimi-K2-Instruct-0905',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2-Thinking',
+        name: 'Kimi-K2-Thinking',
+        match: {
+          equals: 'moonshotai/Kimi-K2-Thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.2,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.5-Air-FP8',
+        name: 'GLM-4.5-Air-FP8',
+        match: {
+          equals: 'zai-org/GLM-4.5-Air-FP8',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 1.1,
+        },
+      },
+    ],
+  },
+  {
     id: 'mistral',
     name: 'Mistral',
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],

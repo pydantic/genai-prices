@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_publicai
+name: HuggingFace (publicai)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/publicai
+models:
+  - id: aisingapore/Gemma-SEA-LION-v4-27B-IT
+    name: Gemma-SEA-LION-v4-27B-IT
+    match:
+      equals: aisingapore/Gemma-SEA-LION-v4-27B-IT
+    prices: {}
+
+  - id: swiss-ai/Apertus-70B-Instruct-2509
+    name: Apertus-70B-Instruct-2509
+    match:
+      equals: swiss-ai/Apertus-70B-Instruct-2509
+    prices: {}
+
+  - id: swiss-ai/Apertus-8B-Instruct-2509
+    name: Apertus-8B-Instruct-2509
+    match:
+      equals: swiss-ai/Apertus-8B-Instruct-2509
+    prices: {}

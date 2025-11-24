@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_sambanova
+name: HuggingFace (sambanova)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/sambanova
+models:
+  - id: Qwen/Qwen3-32B
+    name: Qwen3-32B
+    match:
+      equals: Qwen/Qwen3-32B
+    context_window: 32768
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.8
+
+  - id: deepseek-ai/DeepSeek-R1-0528
+    name: DeepSeek-R1-0528
+    match:
+      equals: deepseek-ai/DeepSeek-R1-0528
+    context_window: 131072
+    prices:
+      input_mtok: 5
+      output_mtok: 7
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+    name: DeepSeek-R1-Distill-Llama-70B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+    context_window: 131072
+    prices:
+      input_mtok: 0.7
+      output_mtok: 1.4
+
+  - id: deepseek-ai/DeepSeek-V3-0324
+    name: DeepSeek-V3-0324
+    match:
+      equals: deepseek-ai/DeepSeek-V3-0324
+    context_window: 131072
+    prices:
+      input_mtok: 3
+      output_mtok: 4.5
+
+  - id: meta-llama/Llama-3.1-8B-Instruct
+    name: Llama-3.1-8B-Instruct
+    match:
+      equals: meta-llama/Llama-3.1-8B-Instruct
+    context_window: 16384
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.2
+
+  - id: meta-llama/Llama-3.3-70B-Instruct
+    name: Llama-3.3-70B-Instruct
+    match:
+      equals: meta-llama/Llama-3.3-70B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.6
+      output_mtok: 1.2
+
+  - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+    name: Llama-4-Maverick-17B-128E-Instruct
+    match:
+      equals: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.63
+      output_mtok: 1.8
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      equals: openai/gpt-oss-120b
+    context_window: 131072
+    prices:
+      input_mtok: 0.22
+      output_mtok: 0.59
+
+  - id: tokyotech-llm/Llama-3.3-Swallow-70B-Instruct-v0.4
+    name: Llama-3.3-Swallow-70B-Instruct-v0.4
+    match:
+      equals: tokyotech-llm/Llama-3.3-Swallow-70B-Instruct-v0.4
+    context_window: 131072
+    prices:
+      input_mtok: 0.6
+      output_mtok: 1.2

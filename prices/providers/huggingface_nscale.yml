@@ -1,0 +1,198 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_nscale
+name: HuggingFace (nscale)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/nscale
+models:
+  - id: Qwen/QwQ-32B
+    name: QwQ-32B
+    match:
+      equals: Qwen/QwQ-32B
+    context_window: 131072
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.2
+
+  - id: Qwen/Qwen2.5-Coder-32B-Instruct
+    name: Qwen2.5-Coder-32B-Instruct
+    match:
+      equals: Qwen/Qwen2.5-Coder-32B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.2
+
+  - id: Qwen/Qwen2.5-Coder-3B-Instruct
+    name: Qwen2.5-Coder-3B-Instruct
+    match:
+      equals: Qwen/Qwen2.5-Coder-3B-Instruct
+    context_window: 32768
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.03
+
+  - id: Qwen/Qwen2.5-Coder-7B-Instruct
+    name: Qwen2.5-Coder-7B-Instruct
+    match:
+      equals: Qwen/Qwen2.5-Coder-7B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.03
+
+  - id: Qwen/Qwen3-14B
+    name: Qwen3-14B
+    match:
+      equals: Qwen/Qwen3-14B
+    context_window: 40960
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.2
+
+  - id: Qwen/Qwen3-235B-A22B
+    name: Qwen3-235B-A22B
+    match:
+      or:
+        - equals: Qwen/Qwen3-235B-A22B
+        - equals: Qwen/Qwen3-235B-A22B-Instruct-2507
+    context_window: 32000
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+
+  - id: Qwen/Qwen3-32B
+    name: Qwen3-32B
+    match:
+      equals: Qwen/Qwen3-32B
+    context_window: 40960
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.25
+
+  - id: Qwen/Qwen3-4B-Instruct-2507
+    name: Qwen3-4B-Instruct-2507
+    match:
+      equals: Qwen/Qwen3-4B-Instruct-2507
+    context_window: 262144
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.03
+
+  - id: Qwen/Qwen3-4B-Thinking-2507
+    name: Qwen3-4B-Thinking-2507
+    match:
+      equals: Qwen/Qwen3-4B-Thinking-2507
+    context_window: 262144
+    prices:
+      input_mtok: 0.01
+      output_mtok: 0.03
+
+  - id: Qwen/Qwen3-8B
+    name: Qwen3-8B
+    match:
+      equals: Qwen/Qwen3-8B
+    context_window: 40960
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.18
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+    name: DeepSeek-R1-Distill-Llama-70B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+    context_window: 131072
+    prices:
+      input_mtok: 0.75
+      output_mtok: 0.75
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+    name: DeepSeek-R1-Distill-Llama-8B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.05
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+    name: DeepSeek-R1-Distill-Qwen-1.5B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+    context_window: 131072
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+    name: DeepSeek-R1-Distill-Qwen-14B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+    context_window: 131072
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+    name: DeepSeek-R1-Distill-Qwen-32B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+    context_window: 131072
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.3
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+    name: DeepSeek-R1-Distill-Qwen-7B
+    match:
+      equals: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+    context_window: 131072
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+
+  - id: meta-llama/Llama-3.1-8B-Instruct
+    name: Llama-3.1-8B-Instruct
+    match:
+      equals: meta-llama/Llama-3.1-8B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.06
+
+  - id: meta-llama/Llama-3.3-70B-Instruct
+    name: Llama-3.3-70B-Instruct
+    match:
+      equals: meta-llama/Llama-3.3-70B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.4
+
+  - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+    name: Llama-4-Scout-17B-16E-Instruct
+    match:
+      equals: meta-llama/Llama-4-Scout-17B-16E-Instruct
+    context_window: 890000
+    prices:
+      input_mtok: 0.09
+      output_mtok: 0.29
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      equals: openai/gpt-oss-120b
+    context_window: 131072
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.4
+
+  - id: openai/gpt-oss-20b
+    name: gpt-oss-20b
+    match:
+      equals: openai/gpt-oss-20b
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.2

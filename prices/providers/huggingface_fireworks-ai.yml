@@ -1,0 +1,163 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_fireworks-ai
+name: HuggingFace (fireworks-ai)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/fireworks-ai
+models:
+  - id: Qwen/Qwen2.5-VL-32B-Instruct
+    name: Qwen2.5-VL-32B-Instruct
+    match:
+      equals: Qwen/Qwen2.5-VL-32B-Instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.22
+      output_mtok: 0.88
+
+  - id: Qwen/Qwen3-235B-A22B
+    name: Qwen3-235B-A22B
+    match:
+      or:
+        - equals: Qwen/Qwen3-235B-A22B
+        - equals: Qwen/Qwen3-235B-A22B-Instruct-2507
+        - equals: Qwen/Qwen3-235B-A22B-Thinking-2507
+    context_window: 131072
+    prices:
+      input_mtok: 0.22
+      output_mtok: 0.88
+
+  - id: Qwen/Qwen3-30B-A3B
+    name: Qwen3-30B-A3B
+    match:
+      equals: Qwen/Qwen3-30B-A3B
+    context_window: 131072
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: Qwen/Qwen3-Coder-480B-A35B-Instruct
+    name: Qwen3-Coder-480B-A35B-Instruct
+    match:
+      equals: Qwen/Qwen3-Coder-480B-A35B-Instruct
+    context_window: 262144
+    prices:
+      input_mtok: 0.45
+      output_mtok: 1.8
+
+  - id: SentientAGI/Dobby-Unhinged-Llama-3.3-70B
+    name: Dobby-Unhinged-Llama-3.3-70B
+    match:
+      equals: SentientAGI/Dobby-Unhinged-Llama-3.3-70B
+    context_window: 131072
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: deepseek-ai/DeepSeek-R1-0528
+    name: DeepSeek-R1-0528
+    match:
+      equals: deepseek-ai/DeepSeek-R1-0528
+    context_window: 163840
+    prices:
+      input_mtok: 3
+      output_mtok: 8
+
+  - id: deepseek-ai/DeepSeek-V3-0324
+    name: DeepSeek-V3-0324
+    match:
+      equals: deepseek-ai/DeepSeek-V3-0324
+    context_window: 163840
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: meta-llama/Llama-3.1-405B-Instruct
+    name: Llama-3.1-405B-Instruct
+    match:
+      equals: meta-llama/Llama-3.1-405B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 3
+      output_mtok: 3
+
+  - id: meta-llama/Llama-3.1-70B-Instruct
+    name: Llama-3.1-70B-Instruct
+    match:
+      equals: meta-llama/Llama-3.1-70B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: meta-llama/Llama-3.1-8B-Instruct
+    name: Llama-3.1-8B-Instruct
+    match:
+      equals: meta-llama/Llama-3.1-8B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: meta-llama/Llama-3.3-70B-Instruct
+    name: Llama-3.3-70B-Instruct
+    match:
+      equals: meta-llama/Llama-3.3-70B-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+    name: Llama-4-Maverick-17B-128E-Instruct
+    match:
+      equals: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+    context_window: 1048576
+    prices:
+      input_mtok: 0.22
+      output_mtok: 0.88
+
+  - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+    name: Llama-4-Scout-17B-16E-Instruct
+    match:
+      equals: meta-llama/Llama-4-Scout-17B-16E-Instruct
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: moonshotai/Kimi-K2-Instruct
+    name: Kimi-K2-Instruct
+    match:
+      equals: moonshotai/Kimi-K2-Instruct
+    context_window: 131072
+    prices:
+      input_mtok: 0.6
+      output_mtok: 2.5
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      equals: openai/gpt-oss-120b
+    context_window: 131072
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: openai/gpt-oss-20b
+    name: gpt-oss-20b
+    match:
+      equals: openai/gpt-oss-20b
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.2
+
+  - id: zai-org/GLM-4.5
+    name: GLM-4.5
+    match:
+      equals: zai-org/GLM-4.5
+    context_window: 131072
+    prices:
+      input_mtok: 0.55
+      output_mtok: 2.19

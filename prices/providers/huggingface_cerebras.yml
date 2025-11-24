@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=.schema.json
+id: huggingface_cerebras
+name: HuggingFace (cerebras)
+pricing_urls:
+  - https://router.huggingface.co/v1/models
+  - https://huggingface.co/inference/models
+api_pattern: https://router\.huggingface\.co/cerebras
+models:
+  - id: Qwen/Qwen3-235B-A22B-Instruct-2507
+    name: Qwen3-235B-A22B-Instruct-2507
+    match:
+      equals: Qwen/Qwen3-235B-A22B-Instruct-2507
+    prices:
+      input_mtok: 0.6
+      output_mtok: 1.2
+
+  - id: Qwen/Qwen3-32B
+    name: Qwen3-32B
+    match:
+      equals: Qwen/Qwen3-32B
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.8
+
+  - id: meta-llama/Llama-3.1-8B-Instruct
+    name: Llama-3.1-8B-Instruct
+    match:
+      equals: meta-llama/Llama-3.1-8B-Instruct
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: meta-llama/Llama-3.3-70B-Instruct
+    name: Llama-3.3-70B-Instruct
+    match:
+      equals: meta-llama/Llama-3.3-70B-Instruct
+    prices:
+      input_mtok: 0.85
+      output_mtok: 1.2
+
+  - id: openai/gpt-oss-120b
+    name: gpt-oss-120b
+    match:
+      equals: openai/gpt-oss-120b
+    prices:
+      input_mtok: 0.25
+      output_mtok: 0.69
