@@ -85,15 +85,6 @@ models:
       input_mtok: 0.2
       output_mtok: 0.6
 
-  - id: Qwen/Qwen3-235B-A22B-Thinking-2507
-    name: Qwen3-235B-A22B-Thinking-2507
-    match:
-      equals: Qwen/Qwen3-235B-A22B-Thinking-2507
-    context_window: 262144
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.8
-
   - id: Qwen/Qwen3-30B-A3B-Instruct-2507
     name: Qwen3-30B-A3B-Instruct-2507
     match:

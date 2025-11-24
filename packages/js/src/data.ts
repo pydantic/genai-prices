@@ -3957,9 +3957,6 @@ export const data: Provider[] = [
             {
               equals: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
             },
-            {
-              equals: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
-            },
           ],
         },
         context_window: 131072,
@@ -4677,18 +4674,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
-        name: 'Qwen3-235B-A22B-Thinking-2507',
-        match: {
-          equals: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
-        },
-        context_window: 262144,
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.8,
-        },
-      },
-      {
         id: 'Qwen/Qwen3-30B-A3B-Instruct-2507',
         name: 'Qwen3-30B-A3B-Instruct-2507',
         match: {
@@ -4976,8 +4961,8 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         prices: {
-          input_mtok: 0.55,
-          output_mtok: 2.2,
+          input_mtok: 0.44,
+          output_mtok: 1.76,
         },
       },
       {
@@ -4988,8 +4973,8 @@ export const data: Provider[] = [
         },
         context_window: 204800,
         prices: {
-          input_mtok: 0.3,
-          output_mtok: 1.2,
+          input_mtok: 0.24,
+          output_mtok: 0.96,
         },
       },
       {
@@ -5012,8 +4997,8 @@ export const data: Provider[] = [
         },
         context_window: 32000,
         prices: {
-          input_mtok: 0.38,
-          output_mtok: 0.4,
+          input_mtok: 0.304,
+          output_mtok: 0.32,
         },
       },
       {
@@ -5024,8 +5009,8 @@ export const data: Provider[] = [
         },
         context_window: 40960,
         prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.8,
+          input_mtok: 0.16,
+          output_mtok: 0.64,
         },
       },
       {
@@ -5036,8 +5021,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.58,
+          input_mtok: 0.072,
+          output_mtok: 0.464,
         },
       },
       {
@@ -5048,8 +5033,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.3,
-          output_mtok: 3,
+          input_mtok: 0.24,
+          output_mtok: 2.4,
         },
       },
       {
@@ -5060,8 +5045,20 @@ export const data: Provider[] = [
         },
         context_window: 40960,
         prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.45,
+          input_mtok: 0.072,
+          output_mtok: 0.36,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          equals: 'Qwen/Qwen3-32B',
+        },
+        context_window: 40960,
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.36,
         },
       },
       {
@@ -5072,8 +5069,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 0.29,
-          output_mtok: 1.2,
+          input_mtok: 0.232,
+          output_mtok: 0.96,
         },
       },
       {
@@ -5084,8 +5081,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.15,
-          output_mtok: 1.5,
+          input_mtok: 0.12,
+          output_mtok: 1.2,
         },
       },
       {
@@ -5096,8 +5093,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.15,
-          output_mtok: 1.5,
+          input_mtok: 0.12,
+          output_mtok: 1.2,
         },
       },
       {
@@ -5108,8 +5105,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.3,
-          output_mtok: 1.5,
+          input_mtok: 0.24,
+          output_mtok: 1.2,
         },
       },
       {
@@ -5120,8 +5117,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.98,
-          output_mtok: 3.95,
+          input_mtok: 0.784,
+          output_mtok: 3.16,
         },
       },
       {
@@ -5132,8 +5129,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.7,
+          input_mtok: 0.16,
+          output_mtok: 0.56,
         },
       },
       {
@@ -5144,8 +5141,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.2,
-          output_mtok: 1,
+          input_mtok: 0.16,
+          output_mtok: 0.8,
         },
       },
       {
@@ -5156,8 +5153,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.08,
-          output_mtok: 0.5,
+          input_mtok: 0.064,
+          output_mtok: 0.4,
         },
       },
       {
@@ -5204,8 +5201,8 @@ export const data: Provider[] = [
         },
         context_window: 65535,
         prices: {
-          input_mtok: 0.62,
-          output_mtok: 0.62,
+          input_mtok: 0.496,
+          output_mtok: 0.496,
         },
       },
       {
@@ -5216,8 +5213,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.07,
-          output_mtok: 0.07,
+          input_mtok: 0.056,
+          output_mtok: 0.056,
         },
       },
       {
@@ -5228,8 +5225,8 @@ export const data: Provider[] = [
         },
         context_window: 120000,
         prices: {
-          input_mtok: 0.07,
-          output_mtok: 0.28,
+          input_mtok: 0.056,
+          output_mtok: 0.224,
         },
       },
       {
@@ -5240,8 +5237,8 @@ export const data: Provider[] = [
         },
         context_window: 123000,
         prices: {
-          input_mtok: 0.28,
-          output_mtok: 1.1,
+          input_mtok: 0.224,
+          output_mtok: 0.88,
         },
       },
       {
@@ -5252,8 +5249,8 @@ export const data: Provider[] = [
         },
         context_window: 30000,
         prices: {
-          input_mtok: 0.14,
-          output_mtok: 0.56,
+          input_mtok: 0.112,
+          output_mtok: 0.448,
         },
       },
       {
@@ -5264,8 +5261,8 @@ export const data: Provider[] = [
         },
         context_window: 123000,
         prices: {
-          input_mtok: 0.42,
-          output_mtok: 1.25,
+          input_mtok: 0.336,
+          output_mtok: 1,
         },
       },
       {
@@ -5276,8 +5273,8 @@ export const data: Provider[] = [
         },
         context_window: 160000,
         prices: {
-          input_mtok: 0.7,
-          output_mtok: 2.5,
+          input_mtok: 0.56,
+          output_mtok: 2,
         },
       },
       {
@@ -5295,8 +5292,8 @@ export const data: Provider[] = [
         },
         context_window: 64000,
         prices: {
-          input_mtok: 0.7,
-          output_mtok: 2.5,
+          input_mtok: 0.56,
+          output_mtok: 2,
         },
       },
       {
@@ -5319,8 +5316,8 @@ export const data: Provider[] = [
         },
         context_window: 8192,
         prices: {
-          input_mtok: 0.8,
-          output_mtok: 0.8,
+          input_mtok: 0.64,
+          output_mtok: 0.64,
         },
       },
       {
@@ -5343,8 +5340,8 @@ export const data: Provider[] = [
         },
         context_window: 64000,
         prices: {
-          input_mtok: 0.3,
-          output_mtok: 0.3,
+          input_mtok: 0.24,
+          output_mtok: 0.24,
         },
       },
       {
@@ -5355,8 +5352,8 @@ export const data: Provider[] = [
         },
         context_window: 64000,
         prices: {
-          input_mtok: 0.4,
-          output_mtok: 1.3,
+          input_mtok: 0.32,
+          output_mtok: 1.04,
         },
       },
       {
@@ -5367,8 +5364,8 @@ export const data: Provider[] = [
         },
         context_window: 163840,
         prices: {
-          input_mtok: 0.27,
-          output_mtok: 1.12,
+          input_mtok: 0.216,
+          output_mtok: 0.896,
         },
       },
       {
@@ -5386,8 +5383,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.27,
-          output_mtok: 1,
+          input_mtok: 0.216,
+          output_mtok: 0.8,
         },
       },
       {
@@ -5398,8 +5395,8 @@ export const data: Provider[] = [
         },
         context_window: 163840,
         prices: {
-          input_mtok: 0.27,
-          output_mtok: 0.41,
+          input_mtok: 0.216,
+          output_mtok: 0.328,
         },
       },
       {
@@ -5422,8 +5419,8 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         prices: {
-          input_mtok: 0.03,
-          output_mtok: 0.05,
+          input_mtok: 0.024,
+          output_mtok: 0.04,
         },
       },
       {
@@ -5434,8 +5431,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.13,
-          output_mtok: 0.39,
+          input_mtok: 0.104,
+          output_mtok: 0.312,
         },
       },
       {
@@ -5446,8 +5443,8 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         prices: {
-          input_mtok: 0.17,
-          output_mtok: 0.85,
+          input_mtok: 0.136,
+          output_mtok: 0.68,
         },
       },
       {
@@ -5458,8 +5455,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.5,
+          input_mtok: 0.08,
+          output_mtok: 0.4,
         },
       },
       {
@@ -5482,8 +5479,8 @@ export const data: Provider[] = [
         },
         context_window: 8192,
         prices: {
-          input_mtok: 0.04,
-          output_mtok: 0.04,
+          input_mtok: 0.032,
+          output_mtok: 0.032,
         },
       },
       {
@@ -5494,8 +5491,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.57,
-          output_mtok: 2.3,
+          input_mtok: 0.456,
+          output_mtok: 1.84,
         },
       },
       {
@@ -5506,8 +5503,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 0.6,
-          output_mtok: 2.5,
+          input_mtok: 0.48,
+          output_mtok: 2,
         },
       },
       {
@@ -5518,8 +5515,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 0.6,
-          output_mtok: 2.5,
+          input_mtok: 0.48,
+          output_mtok: 2,
         },
       },
       {
@@ -5530,8 +5527,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.25,
+          input_mtok: 0.04,
+          output_mtok: 0.2,
         },
       },
       {
@@ -5542,8 +5539,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.04,
-          output_mtok: 0.15,
+          input_mtok: 0.032,
+          output_mtok: 0.12,
         },
       },
       {
@@ -5566,8 +5563,8 @@ export const data: Provider[] = [
         },
         context_window: 65536,
         prices: {
-          input_mtok: 0.035,
-          output_mtok: 0.138,
+          input_mtok: 0.028,
+          output_mtok: 0.1104,
         },
       },
       {
@@ -5578,8 +5575,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.6,
-          output_mtok: 2.2,
+          input_mtok: 0.48,
+          output_mtok: 1.76,
         },
       },
       {
@@ -5590,8 +5587,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.13,
-          output_mtok: 0.85,
+          input_mtok: 0.104,
+          output_mtok: 0.68,
         },
       },
       {
@@ -5602,8 +5599,8 @@ export const data: Provider[] = [
         },
         context_window: 65536,
         prices: {
-          input_mtok: 0.6,
-          output_mtok: 1.8,
+          input_mtok: 0.48,
+          output_mtok: 1.44,
         },
       },
       {
@@ -5614,8 +5611,8 @@ export const data: Provider[] = [
         },
         context_window: 204800,
         prices: {
-          input_mtok: 0.6,
-          output_mtok: 2.2,
+          input_mtok: 0.48,
+          output_mtok: 1.76,
         },
       },
     ],
@@ -6139,18 +6136,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.63,
           output_mtok: 1.8,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-120b',
-        name: 'gpt-oss-120b',
-        match: {
-          equals: 'openai/gpt-oss-120b',
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.22,
-          output_mtok: 0.59,
         },
       },
       {

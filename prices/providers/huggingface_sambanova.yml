@@ -103,15 +103,6 @@ models:
       input_mtok: 0.63
       output_mtok: 1.8
 
-  - id: openai/gpt-oss-120b
-    name: gpt-oss-120b
-    match:
-      equals: openai/gpt-oss-120b
-    context_window: 131072
-    prices:
-      input_mtok: 0.22
-      output_mtok: 0.59
-
   - id: tokyotech-llm/Llama-3.3-Swallow-70B-Instruct-v0.4
     name: Llama-3.3-Swallow-70B-Instruct-v0.4
     match:

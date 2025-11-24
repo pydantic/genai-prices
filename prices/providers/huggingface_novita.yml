@@ -46,8 +46,8 @@ models:
       equals: MiniMaxAI/MiniMax-M1-80k
     context_window: 1000000
     prices:
-      input_mtok: 0.55
-      output_mtok: 2.2
+      input_mtok: 0.44
+      output_mtok: 1.76
 
   - id: MiniMaxAI/MiniMax-M2
     name: MiniMax-M2
@@ -55,8 +55,8 @@ models:
       equals: MiniMaxAI/MiniMax-M2
     context_window: 204800
     prices:
-      input_mtok: 0.3
-      output_mtok: 1.2
+      input_mtok: 0.24
+      output_mtok: 0.96
 
   - id: NousResearch/Hermes-2-Pro-Llama-3-8B
     name: Hermes-2-Pro-Llama-3-8B
@@ -73,8 +73,8 @@ models:
       equals: Qwen/Qwen2.5-72B-Instruct
     context_window: 32000
     prices:
-      input_mtok: 0.38
-      output_mtok: 0.4
+      input_mtok: 0.304
+      output_mtok: 0.32
 
   - id: Qwen/Qwen3-235B-A22B
     name: Qwen3-235B-A22B
@@ -82,8 +82,8 @@ models:
       equals: Qwen/Qwen3-235B-A22B
     context_window: 40960
     prices:
-      input_mtok: 0.2
-      output_mtok: 0.8
+      input_mtok: 0.16
+      output_mtok: 0.64
 
   - id: Qwen/Qwen3-235B-A22B-Instruct-2507
     name: Qwen3-235B-A22B-Instruct-2507
@@ -91,8 +91,8 @@ models:
       equals: Qwen/Qwen3-235B-A22B-Instruct-2507
     context_window: 131072
     prices:
-      input_mtok: 0.09
-      output_mtok: 0.58
+      input_mtok: 0.072
+      output_mtok: 0.464
 
   - id: Qwen/Qwen3-235B-A22B-Thinking-2507
     name: Qwen3-235B-A22B-Thinking-2507
@@ -100,8 +100,8 @@ models:
       equals: Qwen/Qwen3-235B-A22B-Thinking-2507
     context_window: 131072
     prices:
-      input_mtok: 0.3
-      output_mtok: 3
+      input_mtok: 0.24
+      output_mtok: 2.4
 
   - id: Qwen/Qwen3-30B-A3B
     name: Qwen3-30B-A3B
@@ -109,8 +109,17 @@ models:
       equals: Qwen/Qwen3-30B-A3B
     context_window: 40960
     prices:
-      input_mtok: 0.09
-      output_mtok: 0.45
+      input_mtok: 0.072
+      output_mtok: 0.36
+
+  - id: Qwen/Qwen3-32B
+    name: Qwen3-32B
+    match:
+      equals: Qwen/Qwen3-32B
+    context_window: 40960
+    prices:
+      input_mtok: 0.08
+      output_mtok: 0.36
 
   - id: Qwen/Qwen3-Coder-480B-A35B-Instruct
     name: Qwen3-Coder-480B-A35B-Instruct
@@ -118,8 +127,8 @@ models:
       equals: Qwen/Qwen3-Coder-480B-A35B-Instruct
     context_window: 262144
     prices:
-      input_mtok: 0.29
-      output_mtok: 1.2
+      input_mtok: 0.232
+      output_mtok: 0.96
 
   - id: Qwen/Qwen3-Next-80B-A3B-Instruct
     name: Qwen3-Next-80B-A3B-Instruct
@@ -127,8 +136,8 @@ models:
       equals: Qwen/Qwen3-Next-80B-A3B-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.15
-      output_mtok: 1.5
+      input_mtok: 0.12
+      output_mtok: 1.2
 
   - id: Qwen/Qwen3-Next-80B-A3B-Thinking
     name: Qwen3-Next-80B-A3B-Thinking
@@ -136,8 +145,8 @@ models:
       equals: Qwen/Qwen3-Next-80B-A3B-Thinking
     context_window: 131072
     prices:
-      input_mtok: 0.15
-      output_mtok: 1.5
+      input_mtok: 0.12
+      output_mtok: 1.2
 
   - id: Qwen/Qwen3-VL-235B-A22B-Instruct
     name: Qwen3-VL-235B-A22B-Instruct
@@ -145,8 +154,8 @@ models:
       equals: Qwen/Qwen3-VL-235B-A22B-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.3
-      output_mtok: 1.5
+      input_mtok: 0.24
+      output_mtok: 1.2
 
   - id: Qwen/Qwen3-VL-235B-A22B-Thinking
     name: Qwen3-VL-235B-A22B-Thinking
@@ -154,8 +163,8 @@ models:
       equals: Qwen/Qwen3-VL-235B-A22B-Thinking
     context_window: 131072
     prices:
-      input_mtok: 0.98
-      output_mtok: 3.95
+      input_mtok: 0.784
+      output_mtok: 3.16
 
   - id: Qwen/Qwen3-VL-30B-A3B-Instruct
     name: Qwen3-VL-30B-A3B-Instruct
@@ -163,8 +172,8 @@ models:
       equals: Qwen/Qwen3-VL-30B-A3B-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.2
-      output_mtok: 0.7
+      input_mtok: 0.16
+      output_mtok: 0.56
 
   - id: Qwen/Qwen3-VL-30B-A3B-Thinking
     name: Qwen3-VL-30B-A3B-Thinking
@@ -172,8 +181,8 @@ models:
       equals: Qwen/Qwen3-VL-30B-A3B-Thinking
     context_window: 131072
     prices:
-      input_mtok: 0.2
-      output_mtok: 1
+      input_mtok: 0.16
+      output_mtok: 0.8
 
   - id: Qwen/Qwen3-VL-8B-Instruct
     name: Qwen3-VL-8B-Instruct
@@ -181,8 +190,8 @@ models:
       equals: Qwen/Qwen3-VL-8B-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.08
-      output_mtok: 0.5
+      input_mtok: 0.064
+      output_mtok: 0.4
 
   - id: Sao10K/L3-70B-Euryale-v2.1
     name: L3-70B-Euryale-v2.1
@@ -217,8 +226,8 @@ models:
       equals: alpindale/WizardLM-2-8x22B
     context_window: 65535
     prices:
-      input_mtok: 0.62
-      output_mtok: 0.62
+      input_mtok: 0.496
+      output_mtok: 0.496
 
   - id: baichuan-inc/Baichuan-M2-32B
     name: Baichuan-M2-32B
@@ -226,8 +235,8 @@ models:
       equals: baichuan-inc/Baichuan-M2-32B
     context_window: 131072
     prices:
-      input_mtok: 0.07
-      output_mtok: 0.07
+      input_mtok: 0.056
+      output_mtok: 0.056
 
   - id: baidu/ERNIE-4.5-21B-A3B-PT
     name: ERNIE-4.5-21B-A3B-PT
@@ -235,8 +244,8 @@ models:
       equals: baidu/ERNIE-4.5-21B-A3B-PT
     context_window: 120000
     prices:
-      input_mtok: 0.07
-      output_mtok: 0.28
+      input_mtok: 0.056
+      output_mtok: 0.224
 
   - id: baidu/ERNIE-4.5-300B-A47B-Base-PT
     name: ERNIE-4.5-300B-A47B-Base-PT
@@ -244,8 +253,8 @@ models:
       equals: baidu/ERNIE-4.5-300B-A47B-Base-PT
     context_window: 123000
     prices:
-      input_mtok: 0.28
-      output_mtok: 1.1
+      input_mtok: 0.224
+      output_mtok: 0.88
 
   - id: baidu/ERNIE-4.5-VL-28B-A3B-PT
     name: ERNIE-4.5-VL-28B-A3B-PT
@@ -253,8 +262,8 @@ models:
       equals: baidu/ERNIE-4.5-VL-28B-A3B-PT
     context_window: 30000
     prices:
-      input_mtok: 0.14
-      output_mtok: 0.56
+      input_mtok: 0.112
+      output_mtok: 0.448
 
   - id: baidu/ERNIE-4.5-VL-424B-A47B-Base-PT
     name: ERNIE-4.5-VL-424B-A47B-Base-PT
@@ -262,8 +271,8 @@ models:
       equals: baidu/ERNIE-4.5-VL-424B-A47B-Base-PT
     context_window: 123000
     prices:
-      input_mtok: 0.42
-      output_mtok: 1.25
+      input_mtok: 0.336
+      output_mtok: 1
 
   - id: deepseek-ai/DeepSeek-Prover-V2-671B
     name: DeepSeek-Prover-V2-671B
@@ -271,8 +280,8 @@ models:
       equals: deepseek-ai/DeepSeek-Prover-V2-671B
     context_window: 160000
     prices:
-      input_mtok: 0.7
-      output_mtok: 2.5
+      input_mtok: 0.56
+      output_mtok: 2
 
   - id: deepseek-ai/DeepSeek-R1
     name: DeepSeek-R1
@@ -282,8 +291,8 @@ models:
         - equals: deepseek-ai/DeepSeek-R1-0528
     context_window: 64000
     prices:
-      input_mtok: 0.7
-      output_mtok: 2.5
+      input_mtok: 0.56
+      output_mtok: 2
 
   - id: deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
     name: DeepSeek-R1-0528-Qwen3-8B
@@ -300,8 +309,8 @@ models:
       equals: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
     context_window: 8192
     prices:
-      input_mtok: 0.8
-      output_mtok: 0.8
+      input_mtok: 0.64
+      output_mtok: 0.64
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     name: DeepSeek-R1-Distill-Qwen-14B
@@ -318,8 +327,8 @@ models:
       equals: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
     context_window: 64000
     prices:
-      input_mtok: 0.3
-      output_mtok: 0.3
+      input_mtok: 0.24
+      output_mtok: 0.24
 
   - id: deepseek-ai/DeepSeek-V3
     name: DeepSeek-V3
@@ -327,8 +336,8 @@ models:
       equals: deepseek-ai/DeepSeek-V3
     context_window: 64000
     prices:
-      input_mtok: 0.4
-      output_mtok: 1.3
+      input_mtok: 0.32
+      output_mtok: 1.04
 
   - id: deepseek-ai/DeepSeek-V3-0324
     name: DeepSeek-V3-0324
@@ -336,8 +345,8 @@ models:
       equals: deepseek-ai/DeepSeek-V3-0324
     context_window: 163840
     prices:
-      input_mtok: 0.27
-      output_mtok: 1.12
+      input_mtok: 0.216
+      output_mtok: 0.896
 
   - id: deepseek-ai/DeepSeek-V3.1
     name: DeepSeek-V3.1
@@ -347,8 +356,8 @@ models:
         - equals: deepseek-ai/DeepSeek-V3.1-Terminus
     context_window: 131072
     prices:
-      input_mtok: 0.27
-      output_mtok: 1
+      input_mtok: 0.216
+      output_mtok: 0.8
 
   - id: deepseek-ai/DeepSeek-V3.2-Exp
     name: DeepSeek-V3.2-Exp
@@ -356,8 +365,8 @@ models:
       equals: deepseek-ai/DeepSeek-V3.2-Exp
     context_window: 163840
     prices:
-      input_mtok: 0.27
-      output_mtok: 0.41
+      input_mtok: 0.216
+      output_mtok: 0.328
 
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
@@ -374,8 +383,8 @@ models:
       equals: meta-llama/Llama-3.2-3B-Instruct
     context_window: 32768
     prices:
-      input_mtok: 0.03
-      output_mtok: 0.05
+      input_mtok: 0.024
+      output_mtok: 0.04
 
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
@@ -383,8 +392,8 @@ models:
       equals: meta-llama/Llama-3.3-70B-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.13
-      output_mtok: 0.39
+      input_mtok: 0.104
+      output_mtok: 0.312
 
   - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
     name: Llama-4-Maverick-17B-128E-Instruct-FP8
@@ -392,8 +401,8 @@ models:
       equals: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
     context_window: 1048576
     prices:
-      input_mtok: 0.17
-      output_mtok: 0.85
+      input_mtok: 0.136
+      output_mtok: 0.68
 
   - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
     name: Llama-4-Scout-17B-16E-Instruct
@@ -401,8 +410,8 @@ models:
       equals: meta-llama/Llama-4-Scout-17B-16E-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.1
-      output_mtok: 0.5
+      input_mtok: 0.08
+      output_mtok: 0.4
 
   - id: meta-llama/Meta-Llama-3-70B-Instruct
     name: Meta-Llama-3-70B-Instruct
@@ -419,8 +428,8 @@ models:
       equals: meta-llama/Meta-Llama-3-8B-Instruct
     context_window: 8192
     prices:
-      input_mtok: 0.04
-      output_mtok: 0.04
+      input_mtok: 0.032
+      output_mtok: 0.032
 
   - id: moonshotai/Kimi-K2-Instruct
     name: Kimi-K2-Instruct
@@ -428,8 +437,8 @@ models:
       equals: moonshotai/Kimi-K2-Instruct
     context_window: 131072
     prices:
-      input_mtok: 0.57
-      output_mtok: 2.3
+      input_mtok: 0.456
+      output_mtok: 1.84
 
   - id: moonshotai/Kimi-K2-Instruct-0905
     name: Kimi-K2-Instruct-0905
@@ -437,8 +446,8 @@ models:
       equals: moonshotai/Kimi-K2-Instruct-0905
     context_window: 262144
     prices:
-      input_mtok: 0.6
-      output_mtok: 2.5
+      input_mtok: 0.48
+      output_mtok: 2
 
   - id: moonshotai/Kimi-K2-Thinking
     name: Kimi-K2-Thinking
@@ -446,8 +455,8 @@ models:
       equals: moonshotai/Kimi-K2-Thinking
     context_window: 262144
     prices:
-      input_mtok: 0.6
-      output_mtok: 2.5
+      input_mtok: 0.48
+      output_mtok: 2
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -455,8 +464,8 @@ models:
       equals: openai/gpt-oss-120b
     context_window: 131072
     prices:
-      input_mtok: 0.05
-      output_mtok: 0.25
+      input_mtok: 0.04
+      output_mtok: 0.2
 
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
@@ -464,8 +473,8 @@ models:
       equals: openai/gpt-oss-20b
     context_window: 131072
     prices:
-      input_mtok: 0.04
-      output_mtok: 0.15
+      input_mtok: 0.032
+      output_mtok: 0.12
 
   - id: zai-org/GLM-4-32B-0414
     name: GLM-4-32B-0414
@@ -482,8 +491,8 @@ models:
       equals: zai-org/GLM-4.1V-9B-Thinking
     context_window: 65536
     prices:
-      input_mtok: 0.035
-      output_mtok: 0.138
+      input_mtok: 0.028
+      output_mtok: 0.1104
 
   - id: zai-org/GLM-4.5
     name: GLM-4.5
@@ -491,8 +500,8 @@ models:
       equals: zai-org/GLM-4.5
     context_window: 131072
     prices:
-      input_mtok: 0.6
-      output_mtok: 2.2
+      input_mtok: 0.48
+      output_mtok: 1.76
 
   - id: zai-org/GLM-4.5-Air
     name: GLM-4.5-Air
@@ -500,8 +509,8 @@ models:
       equals: zai-org/GLM-4.5-Air
     context_window: 131072
     prices:
-      input_mtok: 0.13
-      output_mtok: 0.85
+      input_mtok: 0.104
+      output_mtok: 0.68
 
   - id: zai-org/GLM-4.5V
     name: GLM-4.5V
@@ -509,8 +518,8 @@ models:
       equals: zai-org/GLM-4.5V
     context_window: 65536
     prices:
-      input_mtok: 0.6
-      output_mtok: 1.8
+      input_mtok: 0.48
+      output_mtok: 1.44
 
   - id: zai-org/GLM-4.6
     name: GLM-4.6
@@ -518,5 +527,5 @@ models:
       equals: zai-org/GLM-4.6
     context_window: 204800
     prices:
-      input_mtok: 0.6
-      output_mtok: 2.2
+      input_mtok: 0.48
+      output_mtok: 1.76

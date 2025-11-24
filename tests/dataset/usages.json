@@ -20065,8 +20065,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00000885",
-            "output_price": "0.00002175",
+            "input_price": "0.00000708",
+            "output_price": "0.0000174",
             "provider_id": "huggingface_novita"
           },
           {
@@ -20081,8 +20081,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00003894",
-            "output_price": "0.00005133",
             "provider_id": "huggingface_sambanova"
           },
           {
@@ -21031,8 +21029,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000089",
-            "output_price": "0.0000235",
+            "input_price": "0.00000712",
+            "output_price": "0.0000188",
             "provider_id": "huggingface_novita"
           },
           {
@@ -21047,8 +21045,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00003916",
-            "output_price": "0.00005546",
             "provider_id": "huggingface_sambanova"
           },
           {
@@ -21283,8 +21279,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00001415",
-            "output_price": "0.00001225",
+            "input_price": "0.00001132",
+            "output_price": "0.0000098",
             "provider_id": "huggingface_novita"
           },
           {
@@ -21299,8 +21295,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00006226",
-            "output_price": "0.00002891",
             "provider_id": "huggingface_sambanova"
           },
           {
@@ -21419,8 +21413,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00001595",
-            "output_price": "0.000024",
+            "input_price": "0.00001276",
+            "output_price": "0.0000192",
             "provider_id": "huggingface_novita"
           },
           {
@@ -21435,8 +21429,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00007018",
-            "output_price": "0.00005664",
             "provider_id": "huggingface_sambanova"
           },
           {
