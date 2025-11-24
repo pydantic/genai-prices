@@ -217,6 +217,26 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-4-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-4-5'),
+                        ClauseStartsWith(starts_with='claude-opus-4.5'),
+                        ClauseStartsWith(starts_with='claude-4-5-opus'),
+                        ClauseStartsWith(starts_with='claude-4.5-opus'),
+                    ]
+                ),
+                name='Claude Opus 4.5',
+                description='Premium model combining maximum intelligence with practical performance',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-sonnet-4-0',
                 match=ClauseOr(
                     or_=[
