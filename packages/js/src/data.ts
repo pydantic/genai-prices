@@ -3677,6 +3677,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (cerebras)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/cerebras',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'cerebras',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
@@ -3740,6 +3784,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (fireworks-ai)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/fireworks-ai',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'fireworks-ai',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/Qwen2.5-VL-32B-Instruct',
@@ -3962,6 +4050,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (groq)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/groq',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'groq',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/Qwen3-32B',
@@ -4054,6 +4186,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (hyperbolic)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/hyperbolic',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'hyperbolic',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/QwQ-32B',
@@ -4290,6 +4466,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (nebius)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/nebius',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'nebius',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'NousResearch/Hermes-4-405B',
@@ -4598,6 +4818,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (novita)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/novita',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'novita',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'MiniMaxAI/MiniMax-M1-80k',
@@ -5256,6 +5520,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (nscale)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/nscale',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'nscale',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/QwQ-32B',
@@ -5523,6 +5831,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (publicai)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/publicai',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'publicai',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
@@ -5555,6 +5907,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (sambanova)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/sambanova',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'sambanova',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/Qwen3-32B',
@@ -5671,6 +6067,50 @@ export const data: Provider[] = [
     name: 'HuggingFace (together)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
     api_pattern: 'https://router\\.huggingface\\.co/together',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'together',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'Qwen/Qwen2.5-72B-Instruct',

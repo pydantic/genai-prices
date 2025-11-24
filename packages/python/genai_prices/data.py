@@ -2074,6 +2074,27 @@ providers: list[Provider] = [
         name='HuggingFace (cerebras)',
         api_pattern='https://router\\.huggingface\\.co/cerebras',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='cerebras')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/Qwen3-235B-A22B-Instruct-2507',
@@ -2112,6 +2133,29 @@ providers: list[Provider] = [
         name='HuggingFace (fireworks-ai)',
         api_pattern='https://router\\.huggingface\\.co/fireworks-ai',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(
+            and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='fireworks-ai')]
+        ),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/Qwen2.5-VL-32B-Instruct',
@@ -2245,6 +2289,27 @@ providers: list[Provider] = [
         name='HuggingFace (groq)',
         api_pattern='https://router\\.huggingface\\.co/groq',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='groq')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/Qwen3-32B',
@@ -2302,6 +2367,27 @@ providers: list[Provider] = [
         name='HuggingFace (hyperbolic)',
         api_pattern='https://router\\.huggingface\\.co/hyperbolic',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='hyperbolic')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/QwQ-32B',
@@ -2443,6 +2529,27 @@ providers: list[Provider] = [
         name='HuggingFace (nebius)',
         api_pattern='https://router\\.huggingface\\.co/nebius',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='nebius')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='NousResearch/Hermes-4-405B',
@@ -2626,6 +2733,27 @@ providers: list[Provider] = [
         name='HuggingFace (novita)',
         api_pattern='https://router\\.huggingface\\.co/novita',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='novita')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='MiniMaxAI/MiniMax-M1-80k',
@@ -3015,6 +3143,27 @@ providers: list[Provider] = [
         name='HuggingFace (nscale)',
         api_pattern='https://router\\.huggingface\\.co/nscale',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='nscale')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/QwQ-32B',
@@ -3175,6 +3324,27 @@ providers: list[Provider] = [
         name='HuggingFace (publicai)',
         api_pattern='https://router\\.huggingface\\.co/publicai',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='publicai')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='aisingapore/Gemma-SEA-LION-v4-27B-IT',
@@ -3201,6 +3371,27 @@ providers: list[Provider] = [
         name='HuggingFace (sambanova)',
         api_pattern='https://router\\.huggingface\\.co/sambanova',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='sambanova')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/Qwen3-32B',
@@ -3272,6 +3463,27 @@ providers: list[Provider] = [
         name='HuggingFace (together)',
         api_pattern='https://router\\.huggingface\\.co/together',
         pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='together')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='Qwen/Qwen2.5-72B-Instruct',
