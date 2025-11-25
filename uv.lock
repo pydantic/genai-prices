@@ -299,7 +299,7 @@ wheels = [
 
 [[package]]
 name = "genai-prices"
-version = "0.0.46"
+version = "0.0.47"
 source = { editable = "packages/python" }
 dependencies = [
     { name = "eval-type-backport", marker = "python_full_version < '3.11'" },
@@ -310,7 +310,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "eval-type-backport", marker = "python_full_version < '3.11'", specifier = ">=0.2" },
-    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "pydantic", specifier = ">=2.10" },
 ]
 
@@ -778,7 +778,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "pydantic", specifier = ">=2.10" },
     { name = "ruamel-yaml", specifier = ">=0.18.14" },
 ]
