@@ -473,7 +473,7 @@ class ModelInfo:
     """
 
     def is_match(self, model_ref: str) -> bool:
-        return self.match.is_match(model_ref)
+        return self.match.is_match(model_ref.lower())
 
     def get_prices(self, request_timestamp: datetime) -> ModelPrice:
         if isinstance(self.prices, ModelPrice):
