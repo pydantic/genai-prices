@@ -46,10 +46,10 @@ The following providers are currently supported:
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 17 models
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 7 models
 - [HuggingFace (hyperbolic)](prices/providers/huggingface_hyperbolic.yml) - 19 models
-- [HuggingFace (nebius)](prices/providers/huggingface_nebius.yml) - 24 models
+- [HuggingFace (nebius)](prices/providers/huggingface_nebius.yml) - 23 models
 - [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 54 models
 - [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 21 models
-- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 3 models
+- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 5 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [Mistral](prices/providers/mistral.yml) - 23 models
