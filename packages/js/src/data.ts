@@ -317,6 +317,34 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-4-5',
+        name: 'Claude Opus 4.5',
+        description: 'Premium model combining maximum intelligence with practical performance',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-4-5',
+            },
+            {
+              starts_with: 'claude-opus-4.5',
+            },
+            {
+              starts_with: 'claude-4-5-opus',
+            },
+            {
+              starts_with: 'claude-4.5-opus',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'claude-sonnet-4-0',
         name: 'Claude Sonnet 4',
         description: 'Optimal balance of intelligence, cost, and speed',
