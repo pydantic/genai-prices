@@ -30,7 +30,7 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
                 input_mtok=pricing['input'] or None,
                 output_mtok=pricing['output'] or None,
             ),
-            match=ClauseEquals(equals=model_id),
+            match=ClauseEquals(equals=model_id.lower()),
             context_window=provider_info.get('context_length'),
         )
 
@@ -85,4 +85,10 @@ def main():
             provider_yaml.save()
 
 
-main()
+def get_huggingface_prices():
+    """Download and update HuggingFace provider prices."""
+    main()
+
+
+if __name__ == '__main__':
+    main()

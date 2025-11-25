@@ -489,5 +489,35 @@ describe('Comprehensive API Tests', () => {
       expect(result!.output_price).toBeCloseTo(0.342, 2)
       expect(result!.total_price).toBeCloseTo(0.420495, 2)
     })
+
+    it('huggingface_together', () => {
+      const provider = findProvider({ providerId: 'huggingface_together' })
+      expect(provider).not.toBeUndefined()
+
+      const responseData = {
+        choices: [{ finish_reason: 'tool_calls', index: 0, logprobs: null, seed: null }],
+        created: 1764089800,
+        id: 'oLhaKdz-zqrih-9a42ae2cdf01c6d5',
+        metadata: { weight_version: 'default' },
+        model: 'moonshotai/Kimi-K2-Thinking',
+        object: 'chat.completion',
+        prompt: [],
+        usage: { completion_tokens: 194, prompt_tokens: 142, total_tokens: 336 },
+      }
+
+      const { model, usage } = extractUsage(provider!, responseData, 'chat')
+      expect(usage).toMatchObject({
+        input_tokens: 142,
+        output_tokens: 194,
+      })
+
+      console.log(provider)
+      const result = calcPrice(usage, model!, { provider: provider! })
+      expect(result).not.toBeNull()
+      expect(result!.model.name).toEqual('Kimi K2 Thinking')
+      expect(result!.input_price).toBeCloseTo(0.000071, 6)
+      expect(result!.output_price).toBeCloseTo(0.000291, 6)
+      expect(result!.total_price).toBeCloseTo(0.000362, 6)
+    })
   })
 })

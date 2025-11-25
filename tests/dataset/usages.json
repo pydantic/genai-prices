@@ -7224,10 +7224,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.004575",
+            "output_price": "0.0000294",
             "provider_id": "huggingface_hyperbolic"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00190625",
+            "output_price": "0.00003675",
             "provider_id": "huggingface_nebius"
           },
           {
@@ -7452,10 +7456,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001614",
+            "output_price": "0.000009",
             "provider_id": "huggingface_hyperbolic"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00006725",
+            "output_price": "0.00001125",
             "provider_id": "huggingface_nebius"
           },
           {
@@ -7672,6 +7680,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000018",
+            "output_price": "0.00132",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
@@ -7680,14 +7690,20 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000018",
+            "output_price": "0.000495",
             "provider_id": "huggingface_hyperbolic"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000048",
+            "output_price": "0.000396",
             "provider_id": "huggingface_nebius"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000336",
+            "output_price": "0.00033",
             "provider_id": "huggingface_novita"
           },
           {
@@ -7700,10 +7716,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003",
+            "output_price": "0.001155",
             "provider_id": "huggingface_sambanova"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000018",
+            "output_price": "0.001155",
             "provider_id": "huggingface_together"
           },
           {
@@ -7900,6 +7920,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000033",
+            "output_price": "0.0009592",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
@@ -7916,10 +7938,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000024",
+            "output_price": "0.0006976",
             "provider_id": "huggingface_novita"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000003",
+            "output_price": "0.000654",
             "provider_id": "huggingface_nscale"
           },
           {
@@ -7932,6 +7958,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000003",
+            "output_price": "0.000654",
             "provider_id": "huggingface_together"
           },
           {
@@ -8014,6 +8042,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00015202",
+            "output_price": "0.0016368",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
@@ -8030,10 +8060,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00011056",
+            "output_price": "0.0011904",
             "provider_id": "huggingface_novita"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001382",
+            "output_price": "0.001116",
             "provider_id": "huggingface_nscale"
           },
           {
@@ -8046,6 +8080,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001382",
+            "output_price": "0.001116",
             "provider_id": "huggingface_together"
           },
           {
@@ -20413,10 +20449,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003516",
+            "output_price": "0.000033",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00025784",
+            "output_price": "0.0000187",
             "provider_id": "huggingface_groq"
           },
           {
@@ -20429,10 +20469,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00018752",
+            "output_price": "0.000022",
             "provider_id": "huggingface_novita"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00021096",
+            "output_price": "0.00001595",
             "provider_id": "huggingface_nscale"
           },
           {
@@ -20445,6 +20489,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00042192000000000004688",
+            "output_price": "0.0000324500000000000055",
             "provider_id": "huggingface_together"
           },
           {
@@ -20649,10 +20695,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00011235",
+            "output_price": "0.0000642",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00008239",
+            "output_price": "0.00003638",
             "provider_id": "huggingface_groq"
           },
           {
@@ -20665,10 +20715,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00005992",
+            "output_price": "0.0000428",
             "provider_id": "huggingface_novita"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00006741",
+            "output_price": "0.00003103",
             "provider_id": "huggingface_nscale"
           },
           {
@@ -20681,6 +20735,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00013482000000000001498",
+            "output_price": "0.0000631300000000000107",
             "provider_id": "huggingface_together"
           },
           {
@@ -20767,10 +20823,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000288",
+            "output_price": "0.0000048",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002112",
+            "output_price": "0.00000272",
             "provider_id": "huggingface_groq"
           },
           {
@@ -20783,10 +20843,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001536",
+            "output_price": "0.0000032",
             "provider_id": "huggingface_novita"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001728",
+            "output_price": "0.00000232",
             "provider_id": "huggingface_nscale"
           },
           {
@@ -20799,6 +20863,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003456000000000000384",
+            "output_price": "0.0000047200000000000008",
             "provider_id": "huggingface_together"
           },
           {
@@ -20885,10 +20951,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003828",
+            "output_price": "0.0000066",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00028072",
+            "output_price": "0.00000374",
             "provider_id": "huggingface_groq"
           },
           {
@@ -20901,10 +20971,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00020416",
+            "output_price": "0.0000044",
             "provider_id": "huggingface_novita"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00022968",
+            "output_price": "0.00000319",
             "provider_id": "huggingface_nscale"
           },
           {
@@ -20917,6 +20991,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00045936000000000005104",
+            "output_price": "0.0000064900000000000011",
             "provider_id": "huggingface_together"
           },
           {

@@ -43,7 +43,7 @@ models:
   - id: Qwen/Qwen3-32B
     name: Qwen3-32B
     match:
-      equals: Qwen/Qwen3-32B
+      equals: qwen/qwen3-32b
     context_window: 131072
     prices:
       input_mtok: 0.29
@@ -52,7 +52,7 @@ models:
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
     match:
-      equals: meta-llama/Llama-3.3-70B-Instruct
+      equals: meta-llama/llama-3.3-70b-instruct
     context_window: 131072
     prices:
       input_mtok: 0.59
@@ -61,7 +61,7 @@ models:
   - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct
     name: Llama-4-Maverick-17B-128E-Instruct
     match:
-      equals: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+      equals: meta-llama/llama-4-maverick-17b-128e-instruct
     context_window: 131072
     prices:
       input_mtok: 0.2
@@ -70,7 +70,7 @@ models:
   - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
     name: Llama-4-Scout-17B-16E-Instruct
     match:
-      equals: meta-llama/Llama-4-Scout-17B-16E-Instruct
+      equals: meta-llama/llama-4-scout-17b-16e-instruct
     context_window: 131072
     prices:
       input_mtok: 0.11
@@ -79,7 +79,7 @@ models:
   - id: meta-llama/Llama-Guard-4-12B
     name: Llama-Guard-4-12B
     match:
-      equals: meta-llama/Llama-Guard-4-12B
+      equals: meta-llama/llama-guard-4-12b
     context_window: 131072
     prices:
       input_mtok: 0.2

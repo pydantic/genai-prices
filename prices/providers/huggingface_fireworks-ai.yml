@@ -43,7 +43,7 @@ models:
   - id: Qwen/Qwen2.5-VL-32B-Instruct
     name: Qwen2.5-VL-32B-Instruct
     match:
-      equals: Qwen/Qwen2.5-VL-32B-Instruct
+      equals: qwen/qwen2.5-vl-32b-instruct
     context_window: 128000
     prices:
       input_mtok: 0.22
@@ -53,8 +53,8 @@ models:
     name: Qwen3-235B-A22B
     match:
       or:
-        - equals: Qwen/Qwen3-235B-A22B
-        - equals: Qwen/Qwen3-235B-A22B-Instruct-2507
+        - equals: qwen/qwen3-235b-a22b
+        - equals: qwen/qwen3-235b-a22b-instruct-2507
     context_window: 131072
     prices:
       input_mtok: 0.22
@@ -63,7 +63,7 @@ models:
   - id: Qwen/Qwen3-30B-A3B
     name: Qwen3-30B-A3B
     match:
-      equals: Qwen/Qwen3-30B-A3B
+      equals: qwen/qwen3-30b-a3b
     context_window: 131072
     prices:
       input_mtok: 0.15
@@ -72,7 +72,7 @@ models:
   - id: Qwen/Qwen3-Coder-480B-A35B-Instruct
     name: Qwen3-Coder-480B-A35B-Instruct
     match:
-      equals: Qwen/Qwen3-Coder-480B-A35B-Instruct
+      equals: qwen/qwen3-coder-480b-a35b-instruct
     context_window: 262144
     prices:
       input_mtok: 0.45
@@ -81,7 +81,7 @@ models:
   - id: SentientAGI/Dobby-Unhinged-Llama-3.3-70B
     name: Dobby-Unhinged-Llama-3.3-70B
     match:
-      equals: SentientAGI/Dobby-Unhinged-Llama-3.3-70B
+      equals: sentientagi/dobby-unhinged-llama-3.3-70b
     context_window: 131072
     prices:
       input_mtok: 0.9
@@ -90,7 +90,7 @@ models:
   - id: deepseek-ai/DeepSeek-R1-0528
     name: DeepSeek-R1-0528
     match:
-      equals: deepseek-ai/DeepSeek-R1-0528
+      equals: deepseek-ai/deepseek-r1-0528
     context_window: 163840
     prices:
       input_mtok: 3
@@ -99,7 +99,7 @@ models:
   - id: deepseek-ai/DeepSeek-V3-0324
     name: DeepSeek-V3-0324
     match:
-      equals: deepseek-ai/DeepSeek-V3-0324
+      equals: deepseek-ai/deepseek-v3-0324
     context_window: 163840
     prices:
       input_mtok: 0.9
@@ -108,7 +108,7 @@ models:
   - id: meta-llama/Llama-3.1-405B-Instruct
     name: Llama-3.1-405B-Instruct
     match:
-      equals: meta-llama/Llama-3.1-405B-Instruct
+      equals: meta-llama/llama-3.1-405b-instruct
     context_window: 131072
     prices:
       input_mtok: 3
@@ -117,7 +117,7 @@ models:
   - id: meta-llama/Llama-3.1-70B-Instruct
     name: Llama-3.1-70B-Instruct
     match:
-      equals: meta-llama/Llama-3.1-70B-Instruct
+      equals: meta-llama/llama-3.1-70b-instruct
     context_window: 131072
     prices:
       input_mtok: 0.9
@@ -126,7 +126,7 @@ models:
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
     match:
-      equals: meta-llama/Llama-3.1-8B-Instruct
+      equals: meta-llama/llama-3.1-8b-instruct
     context_window: 131072
     prices:
       input_mtok: 0.2
@@ -135,7 +135,7 @@ models:
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
     match:
-      equals: meta-llama/Llama-3.3-70B-Instruct
+      equals: meta-llama/llama-3.3-70b-instruct
     context_window: 131072
     prices:
       input_mtok: 0.9
@@ -144,7 +144,7 @@ models:
   - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct
     name: Llama-4-Maverick-17B-128E-Instruct
     match:
-      equals: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+      equals: meta-llama/llama-4-maverick-17b-128e-instruct
     context_window: 1048576
     prices:
       input_mtok: 0.22
@@ -153,7 +153,7 @@ models:
   - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
     name: Llama-4-Scout-17B-16E-Instruct
     match:
-      equals: meta-llama/Llama-4-Scout-17B-16E-Instruct
+      equals: meta-llama/llama-4-scout-17b-16e-instruct
     context_window: 1048576
     prices:
       input_mtok: 0.15
@@ -162,7 +162,7 @@ models:
   - id: moonshotai/Kimi-K2-Instruct
     name: Kimi-K2-Instruct
     match:
-      equals: moonshotai/Kimi-K2-Instruct
+      equals: moonshotai/kimi-k2-instruct
     context_window: 131072
     prices:
       input_mtok: 0.6
@@ -189,7 +189,7 @@ models:
   - id: zai-org/GLM-4.5
     name: GLM-4.5
     match:
-      equals: zai-org/GLM-4.5
+      equals: zai-org/glm-4.5
     context_window: 131072
     prices:
       input_mtok: 0.55
