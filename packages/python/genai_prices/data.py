@@ -2757,13 +2757,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('1.8')),
             ),
             ModelInfo(
-                id='nvidia/NVIDIA-Nemotron-Nano-12B-v2',
-                match=ClauseEquals(equals='nvidia/NVIDIA-Nemotron-Nano-12B-v2'),
-                name='NVIDIA-Nemotron-Nano-12B-v2',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
                 id='openai/gpt-oss-120b',
                 match=ClauseEquals(equals='openai/gpt-oss-120b'),
                 name='gpt-oss-120b',
@@ -3026,7 +3019,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-R1-0528-Qwen3-8B'),
                 name='DeepSeek-R1-0528-Qwen3-8B',
                 context_window=128000,
-                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.09')),
+                prices=ModelPrice(input_mtok=Decimal('0.048'), output_mtok=Decimal('0.072')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
@@ -3040,7 +3033,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-R1-Distill-Qwen-14B'),
                 name='DeepSeek-R1-Distill-Qwen-14B',
                 context_window=32768,
-                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
+                prices=ModelPrice(input_mtok=Decimal('0.12'), output_mtok=Decimal('0.12')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
@@ -3422,6 +3415,18 @@ providers: list[Provider] = [
                 id='aisingapore/Gemma-SEA-LION-v4-27B-IT',
                 match=ClauseEquals(equals='aisingapore/Gemma-SEA-LION-v4-27B-IT'),
                 name='Gemma-SEA-LION-v4-27B-IT',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='aisingapore/Qwen-SEA-LION-v4-32B-IT',
+                match=ClauseEquals(equals='aisingapore/Qwen-SEA-LION-v4-32B-IT'),
+                name='Qwen-SEA-LION-v4-32B-IT',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='allenai/Olmo-3-7B-Instruct',
+                match=ClauseEquals(equals='allenai/Olmo-3-7B-Instruct'),
+                name='Olmo-3-7B-Instruct',
                 prices=ModelPrice(),
             ),
             ModelInfo(

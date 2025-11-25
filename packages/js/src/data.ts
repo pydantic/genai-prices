@@ -4870,18 +4870,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'nvidia/NVIDIA-Nemotron-Nano-12B-v2',
-        name: 'NVIDIA-Nemotron-Nano-12B-v2',
-        match: {
-          equals: 'nvidia/NVIDIA-Nemotron-Nano-12B-v2',
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.07,
-          output_mtok: 0.2,
-        },
-      },
-      {
         id: 'openai/gpt-oss-120b',
         name: 'gpt-oss-120b',
         match: {
@@ -5332,8 +5320,8 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.09,
+          input_mtok: 0.048,
+          output_mtok: 0.072,
         },
       },
       {
@@ -5356,8 +5344,8 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         prices: {
-          input_mtok: 0.15,
-          output_mtok: 0.15,
+          input_mtok: 0.12,
+          output_mtok: 0.12,
         },
       },
       {
@@ -6011,6 +5999,22 @@ export const data: Provider[] = [
         name: 'Gemma-SEA-LION-v4-27B-IT',
         match: {
           equals: 'aisingapore/Gemma-SEA-LION-v4-27B-IT',
+        },
+        prices: {},
+      },
+      {
+        id: 'aisingapore/Qwen-SEA-LION-v4-32B-IT',
+        name: 'Qwen-SEA-LION-v4-32B-IT',
+        match: {
+          equals: 'aisingapore/Qwen-SEA-LION-v4-32B-IT',
+        },
+        prices: {},
+      },
+      {
+        id: 'allenai/Olmo-3-7B-Instruct',
+        name: 'Olmo-3-7B-Instruct',
+        match: {
+          equals: 'allenai/Olmo-3-7B-Instruct',
         },
         prices: {},
       },

@@ -300,8 +300,8 @@ models:
       equals: deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
     context_window: 128000
     prices:
-      input_mtok: 0.06
-      output_mtok: 0.09
+      input_mtok: 0.048
+      output_mtok: 0.072
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B
@@ -318,8 +318,8 @@ models:
       equals: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     context_window: 32768
     prices:
-      input_mtok: 0.15
-      output_mtok: 0.15
+      input_mtok: 0.12
+      output_mtok: 0.12
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
     name: DeepSeek-R1-Distill-Qwen-32B

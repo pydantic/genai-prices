@@ -46,6 +46,18 @@ models:
       equals: aisingapore/Gemma-SEA-LION-v4-27B-IT
     prices: {}
 
+  - id: aisingapore/Qwen-SEA-LION-v4-32B-IT
+    name: Qwen-SEA-LION-v4-32B-IT
+    match:
+      equals: aisingapore/Qwen-SEA-LION-v4-32B-IT
+    prices: {}
+
+  - id: allenai/Olmo-3-7B-Instruct
+    name: Olmo-3-7B-Instruct
+    match:
+      equals: allenai/Olmo-3-7B-Instruct
+    prices: {}
+
   - id: swiss-ai/Apertus-70B-Instruct-2509
     name: Apertus-70B-Instruct-2509
     match:
