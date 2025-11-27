@@ -35,7 +35,7 @@ Please do not:
 
 This project supports pulling prices from
 [Helicone](https://github.com/Helicone/helicone/tree/main/packages/cost),
-[Open Router](https://openrouter.ai/docs/api-reference/list-available-models),
+[Open Router](https://openrouter.ai/docs/api/api-reference/models/get-models),
 [LiteLLM](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json) and
 Simon Willison's [llm-prices](https://github.com/simonw/llm-prices/pull/7)
 
