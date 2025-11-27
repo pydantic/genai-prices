@@ -8120,9 +8120,39 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.5')),
             ),
             ModelInfo(
+                id='x-ai/grok-4-fast',
+                match=ClauseEquals(equals='x-ai/grok-4-fast'),
+                context_window=2000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.1-fast',
+                match=ClauseEquals(equals='x-ai/grok-4.1-fast'),
+                context_window=2000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.1-fast:free',
+                match=ClauseEquals(equals='x-ai/grok-4.1-fast:free'),
+                context_window=2000000,
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
                 id='x-ai/grok-beta',
                 match=ClauseEquals(equals='x-ai/grok-beta'),
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='x-ai/grok-code-fast-1',
+                match=ClauseEquals(equals='x-ai/grok-code-fast-1'),
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
+                ),
             ),
             ModelInfo(
                 id='x-ai/grok-vision-beta',
@@ -8728,44 +8758,6 @@ providers: list[Provider] = [
                 description='A flagship model, offering unparalleled performance in natural language, math and reasoning - the perfect jack of all trades.',
                 context_window=256000,
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15')),
-            ),
-            ModelInfo(
-                id='grok-4-fast',
-                match=ClauseEquals(equals='grok-4-fast'),
-                name='Grok 4 Fast',
-                description='Fast version of Grok 4 with reduced latency.',
-                context_window=2000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
-                ),
-            ),
-            ModelInfo(
-                id='grok-4.1-fast',
-                match=ClauseEquals(equals='grok-4.1-fast'),
-                name='Grok 4.1 Fast',
-                description='Best agentic tool calling model with 2M context window.',
-                context_window=2000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
-                ),
-            ),
-            ModelInfo(
-                id='grok-4.1-fast-free',
-                match=ClauseEquals(equals='grok-4.1-fast:free'),
-                name='Grok 4.1 Fast Free',
-                description='Free tier version of Grok 4.1 Fast.',
-                context_window=2000000,
-                prices=ModelPrice(),
-            ),
-            ModelInfo(
-                id='grok-code-fast-1',
-                match=ClauseEquals(equals='grok-code-fast-1'),
-                name='Grok Code Fast 1',
-                description='Speedy reasoning model for agentic coding with 256K context window.',
-                context_window=256000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
-                ),
             ),
         ],
     ),

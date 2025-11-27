@@ -55,10 +55,10 @@ The following providers are currently supported:
 - [Mistral](prices/providers/mistral.yml) - 23 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 61 models
-- [OpenRouter](prices/providers/openrouter.yml) - 557 models
+- [OpenRouter](prices/providers/openrouter.yml) - 561 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
-- [X AI](prices/providers/x_ai.yml) - 11 models
+- [X AI](prices/providers/x_ai.yml) - 7 models
 
 [comment]: <> (providers-end)
 
