@@ -8120,9 +8120,33 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.5')),
             ),
             ModelInfo(
+                id='x-ai/grok-4-fast',
+                match=ClauseEquals(equals='x-ai/grok-4-fast'),
+                context_window=2000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=128000, price=Decimal('0.4'))]),
+                    cache_read_mtok=Decimal('0.05'),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=128000, price=Decimal('1'))]),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.1-fast:free',
+                match=ClauseEquals(equals='x-ai/grok-4.1-fast:free'),
+                context_window=2000000,
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
                 id='x-ai/grok-beta',
                 match=ClauseEquals(equals='x-ai/grok-beta'),
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='x-ai/grok-code-fast-1',
+                match=ClauseEquals(equals='x-ai/grok-code-fast-1'),
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
+                ),
             ),
             ModelInfo(
                 id='x-ai/grok-vision-beta',
