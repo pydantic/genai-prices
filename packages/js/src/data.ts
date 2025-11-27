@@ -15635,6 +15635,58 @@ export const data: Provider[] = [
           output_mtok: 15,
         },
       },
+      {
+        id: 'grok-4-fast',
+        name: 'Grok 4 Fast',
+        description: 'Fast version of Grok 4 with reduced latency.',
+        match: {
+          equals: 'grok-4-fast',
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4.1-fast',
+        name: 'Grok 4.1 Fast',
+        description: 'Best agentic tool calling model with 2M context window.',
+        match: {
+          equals: 'grok-4.1-fast',
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4.1-fast-free',
+        name: 'Grok 4.1 Fast Free',
+        description: 'Free tier version of Grok 4.1 Fast.',
+        match: {
+          equals: 'grok-4.1-fast:free',
+        },
+        context_window: 2000000,
+        prices: {},
+      },
+      {
+        id: 'grok-code-fast-1',
+        name: 'Grok Code Fast 1',
+        description: 'Speedy reasoning model for agentic coding with 256K context window.',
+        match: {
+          equals: 'grok-code-fast-1',
+        },
+        context_window: 256000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.5,
+        },
+      },
     ],
   },
 ]

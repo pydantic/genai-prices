@@ -58,7 +58,7 @@ The following providers are currently supported:
 - [OpenRouter](prices/providers/openrouter.yml) - 557 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
-- [X AI](prices/providers/x_ai.yml) - 7 models
+- [X AI](prices/providers/x_ai.yml) - 11 models
 
 [comment]: <> (providers-end)
 
