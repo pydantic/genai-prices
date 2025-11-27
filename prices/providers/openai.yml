@@ -780,6 +780,7 @@ models:
     description: Text Embedding 3 is a model that offers a balance between cost and performance.
     match:
       equals: text-embedding-3-large
+    context_window: 8192
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.13
@@ -789,6 +790,7 @@ models:
     description: Text Embedding 3 is a model that offers a balance between cost and performance.
     match:
       equals: text-embedding-3-small
+    context_window: 8192
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.02
@@ -801,6 +803,7 @@ models:
         - equals: text-embedding-ada
         - equals: text-embedding-ada-002
         - equals: text-embedding-ada-002-v2
+    context_window: 8192
     prices_checked: 2025-07-04
     prices:
       input_mtok: 0.1
