@@ -14452,21 +14452,25 @@ export const data: Provider[] = [
         },
         context_window: 2000000,
         prices: {
-          input_mtok: 0.2,
+          input_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 128000,
+                price: 0.4,
+              },
+            ],
+          },
           cache_read_mtok: 0.05,
-          output_mtok: 0.5,
-        },
-      },
-      {
-        id: 'x-ai/grok-4.1-fast',
-        match: {
-          equals: 'x-ai/grok-4.1-fast',
-        },
-        context_window: 2000000,
-        prices: {
-          input_mtok: 0.2,
-          cache_read_mtok: 0.05,
-          output_mtok: 0.5,
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 128000,
+                price: 1,
+              },
+            ],
+          },
         },
       },
       {

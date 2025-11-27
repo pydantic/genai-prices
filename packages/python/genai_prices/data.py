@@ -8124,15 +8124,9 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='x-ai/grok-4-fast'),
                 context_window=2000000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
-                ),
-            ),
-            ModelInfo(
-                id='x-ai/grok-4.1-fast',
-                match=ClauseEquals(equals='x-ai/grok-4.1-fast'),
-                context_window=2000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
+                    input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=128000, price=Decimal('0.4'))]),
+                    cache_read_mtok=Decimal('0.05'),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=128000, price=Decimal('1'))]),
                 ),
             ),
             ModelInfo(
