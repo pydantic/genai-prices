@@ -38,6 +38,8 @@ def get_body_keys(extractor: UsageExtractor) -> set[str]:
 
 
 body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
+assert 'file' not in body_keys
+body_keys.add('file')
 
 
 def main():
@@ -76,6 +78,7 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
             else:
                 assert 'model' not in body
 
+            # TODO
             # check_cases_usages_match(cases)
 
             has_price = False

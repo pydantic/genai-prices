@@ -1,6 +1,7 @@
 [
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_no_tools_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -56,6 +57,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_none_tool_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -111,6 +113,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_none_tool_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -166,6 +169,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_mixed_tools_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -221,6 +225,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_mixed_tools_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -276,6 +281,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_unsupported_strict_true_tool_basemodel_output.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -331,6 +337,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_unsupported_strict_true_tool_basemodel_output.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -386,6 +393,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_true_tool_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -441,6 +449,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_true_tool_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -496,6 +505,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_none_tool_basemodel_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -551,6 +561,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_none_tool_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -606,6 +617,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_none_tool_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -661,6 +673,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_no_tools_basemodel_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -716,6 +729,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_true_tool_basemodel_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -771,6 +785,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_true_tool_basemodel_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -826,6 +841,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_false_tool_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -881,6 +897,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_false_tool_native_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -936,6 +953,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_true_tool_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -991,6 +1009,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_true_tool_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1046,6 +1065,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_false_tool_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1101,6 +1121,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_strict_false_tool_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1156,6 +1177,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_no_tools_native_output_strict_true.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1211,6 +1233,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_unsupported_strict_true_tool_no_output.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -1266,6 +1289,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_unsupported_strict_true_tool_no_output.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -1321,6 +1345,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_mixed_tools_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1376,6 +1401,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_mixed_tools_no_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1431,6 +1457,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_mixed_tools_basemodel_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1486,6 +1513,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_mixed_tools_basemodel_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1541,6 +1569,7 @@
   },
   {
     "body": {
+      "file": "models/anthropic/cassettes/test_output/test_no_tools_native_output_strict_none.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -1596,6 +1625,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_optional_fields_native_output_gemini_2_0.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 32,
@@ -1635,6 +1665,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_optional_fields_native_output_gemini_2_0.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 32,
@@ -1674,6 +1705,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_thinking_part_from_other_model.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 45,
@@ -1731,6 +1763,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_thinking_part_from_other_model.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 778,
@@ -1765,6 +1798,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_image_generation_with_web_search.yaml",
       "modelVersion": "gemini-3-pro-image-preview",
       "usageMetadata": {
         "candidatesTokenCount": 1780,
@@ -1803,6 +1837,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_empty_user_prompt.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 53,
@@ -1837,6 +1872,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[VideoUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 51,
@@ -1877,6 +1913,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input_force_download.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 56,
@@ -1917,6 +1954,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_youtube_video_url_input_with_vendor_metadata.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 459,
@@ -1965,6 +2003,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_recursive_schema_native_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 48,
@@ -2004,6 +2043,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_image_or_text_output.yaml",
       "modelVersion": "gemini-2.5-flash-image",
       "usageMetadata": {
         "candidatesTokenCount": 48,
@@ -2037,6 +2077,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_image_or_text_output.yaml",
       "modelVersion": "gemini-2.5-flash-image",
       "usageMetadata": {
         "candidatesTokenCount": 1304,
@@ -2076,6 +2117,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_server_tool_receive_history_from_another_provider.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation_input_tokens": 0,
@@ -2130,6 +2172,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_server_tool_receive_history_from_another_provider.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 141,
@@ -2176,6 +2219,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 11,
@@ -2215,6 +2259,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[AudioUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 22,
@@ -2260,6 +2305,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_vertex_labels.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -2300,6 +2346,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_web_search_tool.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 201,
@@ -2341,6 +2388,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_web_search_tool.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 206,
@@ -2382,6 +2430,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[DocumentUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 103,
@@ -2426,6 +2475,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_prefix_items_native_output_gemini_2_0.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 32,
@@ -2465,6 +2515,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_video_as_binary_content_input_with_vendor_metadata.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 131,
@@ -2508,6 +2559,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_instructions.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -2547,6 +2599,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_optional_fields_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 24,
@@ -2581,6 +2634,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_optional_fields_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 6,
@@ -2615,6 +2669,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_timeout.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 11,
@@ -2654,6 +2709,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[VideoUrl (YouTube)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 60,
@@ -2703,6 +2759,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_video_as_binary_content_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 162,
@@ -2749,6 +2806,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_vertexai_image_generation.yaml",
       "modelVersion": "gemini-2.5-flash-image",
       "usageMetadata": {
         "candidatesTokenCount": 1295,
@@ -2793,6 +2851,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_receive_web_search_history_from_another_provider.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -2852,6 +2911,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_receive_web_search_history_from_another_provider.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 41,
@@ -2891,6 +2951,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_text_output_function.yaml",
       "modelVersion": "models/gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 12,
@@ -2923,6 +2984,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_text_output_function.yaml",
       "modelVersion": "models/gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -2955,6 +3017,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_dict_with_additional_properties_native_output_gemini_2_0.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 40,
@@ -2994,6 +3057,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[AudioUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 19,
@@ -3039,6 +3103,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_thinking_config.yaml",
       "modelVersion": "models/gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -3071,6 +3136,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_native_output_with_builtin_tools_gemini_3.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 21,
@@ -3105,6 +3171,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_native_output_with_builtin_tools_gemini_3.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 21,
@@ -3139,6 +3206,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_nested_models_with_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 64,
@@ -3173,6 +3241,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_image_as_binary_content_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -3216,6 +3285,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_image_and_text_output.yaml",
       "modelVersion": "gemini-2.5-flash-image",
       "usageMetadata": {
         "candidatesTokenCount": 1336,
@@ -3255,6 +3325,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_image_url_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -3298,6 +3369,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_structured_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 14,
@@ -3337,6 +3409,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_structured_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 21,
@@ -3376,6 +3449,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_web_search_tool_stream.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 240,
@@ -3417,6 +3491,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[ImageUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 33,
@@ -3461,6 +3536,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_native_output_multiple.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 46,
@@ -3500,6 +3576,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_thinking_with_tool_calls_from_other_model.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 37,
@@ -3557,6 +3634,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_thinking_with_tool_calls_from_other_model.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 379,
@@ -3614,6 +3692,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_thinking_with_tool_calls_from_other_model.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 23,
@@ -3648,6 +3727,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_text_document_url_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 66,
@@ -3687,6 +3767,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_code_execution_tool.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 177,
@@ -3728,6 +3809,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_code_execution_tool.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 58,
@@ -3769,6 +3851,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_top_p.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -3808,6 +3891,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_discriminated_union_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 16,
@@ -3842,6 +3926,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_prompted_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 13,
@@ -3881,6 +3966,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_multiple_images.yaml",
       "modelVersion": "gemini-2.5-flash-image",
       "usageMetadata": {
         "candidatesTokenCount": 1303,
@@ -3920,6 +4006,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_discriminated_union_native_output_gemini_2_0.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 32,
@@ -3959,6 +4046,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_integer_enum_native_output_gemini_2_0.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 19,
@@ -3998,6 +4086,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_document_url_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 11,
@@ -4041,6 +4130,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_nested_models_without_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 93,
@@ -4075,6 +4165,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[VideoUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 60,
@@ -4119,6 +4210,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_builtin_tools_with_other_tools.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 13,
@@ -4153,6 +4245,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_safety_settings.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "promptTokenCount": 14,
@@ -4184,6 +4277,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_multiple_documents_in_history.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 17,
@@ -4227,6 +4321,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_dict_with_additional_properties_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 25,
@@ -4261,6 +4356,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_retry.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 15,
@@ -4295,6 +4391,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_retry.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 16,
@@ -4329,6 +4426,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_retry.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 1,
@@ -4363,6 +4461,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_vertex_provider.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -4403,6 +4502,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_native_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 20,
@@ -4442,6 +4542,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_tool_config_any_with_tool_without_args.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 1,
@@ -4481,6 +4582,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_tool_config_any_with_tool_without_args.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -4520,6 +4622,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_usage_limit_not_exceeded.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 109,
@@ -4554,6 +4657,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_video_url_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 139,
@@ -4600,6 +4704,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_text_as_binary_content_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 15,
@@ -4639,6 +4744,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_integer_enum_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 13,
@@ -4673,6 +4779,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_httpx_client_is_not_closed.yaml",
       "modelVersion": "gemini-2.5-flash-lite",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -4706,6 +4813,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_httpx_client_is_not_closed.yaml",
       "modelVersion": "gemini-2.5-flash-lite",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -4739,6 +4847,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_thinking_part.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 736,
@@ -4773,6 +4882,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_thinking_part.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 958,
@@ -4807,6 +4917,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_prompted_output_with_tools.yaml",
       "modelVersion": "models/gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 12,
@@ -4839,6 +4950,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_prompted_output_with_tools.yaml",
       "modelVersion": "models/gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 13,
@@ -4871,6 +4983,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[DocumentUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 205,
@@ -4915,6 +5028,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_prompted_output_multiple.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 27,
@@ -4954,6 +5068,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_empty_assistant_response.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 119,
@@ -4988,6 +5103,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_url_input[ImageUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 51,
@@ -5032,6 +5148,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_recursive_schema_native_output_gemini_2_5.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 16,
@@ -5066,6 +5183,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_tool_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -5105,6 +5223,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_tool_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -5144,6 +5263,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_max_tokens.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -5183,6 +5303,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_model_retrying_after_empty_response.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -5217,6 +5338,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_google/test_google_prefix_items_native_output.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 18,
@@ -5251,6 +5373,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_with_native_options.yaml",
       "model": "x-ai/grok-4",
       "usage": {
         "completion_tokens": 240,
@@ -5379,6 +5502,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_preserve_reasoning_block.yaml",
       "model": "openai/gpt-5-mini",
       "usage": {
         "completion_tokens": 15,
@@ -5494,6 +5618,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_preserve_reasoning_block.yaml",
       "model": "openai/gpt-5-mini",
       "usage": {
         "completion_tokens": 1457,
@@ -5609,6 +5734,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_map_messages_reasoning.yaml",
       "model": "anthropic/claude-3.7-sonnet:thinking",
       "usage": {
         "completion_tokens": 402,
@@ -5721,6 +5847,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_usage.yaml",
       "model": "openai/gpt-5-mini",
       "usage": {
         "completion_tokens": 1515,
@@ -5836,6 +5963,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_usage.yaml",
       "model": "openai/gpt-5-mini",
       "usage": {
         "completion_tokens": 2177,
@@ -5964,6 +6092,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_tool_calling.yaml",
       "model": "mistralai/mistral-small",
       "usage": {
         "completion_tokens": 43,
@@ -6076,6 +6205,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_with_preset.yaml",
       "model": "google/gemini-2.5-flash-lite",
       "usage": {
         "completion_tokens": 21,
@@ -6195,6 +6325,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openrouter/test_openrouter_with_reasoning.yaml",
       "model": "z-ai/glm-4.6",
       "usage": {
         "completion_tokens": 2801,
@@ -6314,6 +6445,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_prompted_output_multiple.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6369,6 +6501,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_cache_messages_real_api.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6433,6 +6566,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_cache_messages_real_api.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6498,6 +6632,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_mixed_strict_tool_run.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6553,6 +6688,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_mixed_strict_tool_run.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6608,6 +6744,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_mixed_strict_tool_run.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6663,6 +6800,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_instructions.yaml",
       "model": "claude-3-opus-20240229",
       "usage": {
         "cache_creation": {
@@ -6718,6 +6856,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_prompted_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6773,6 +6912,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_prompted_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6828,6 +6968,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_memory_tool.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6883,6 +7024,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_memory_tool.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6938,6 +7080,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_document_binary_content_input.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -6993,6 +7136,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_tool_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7048,6 +7192,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_tool_output.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7103,6 +7248,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_server_tool_pass_history_to_another_provider.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7158,6 +7304,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_server_tool_pass_history_to_another_provider.yaml",
       "model": "gpt-4.1-2025-04-14",
       "usage": {
         "input_tokens": 329,
@@ -7215,6 +7362,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_web_fetch_tool.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -7274,6 +7422,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_web_fetch_tool.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -7329,6 +7478,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_document_url_input.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7384,6 +7534,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_extra_headers.yaml",
       "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
@@ -7437,6 +7588,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_text_output_function.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7492,6 +7644,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_text_output_function.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7547,6 +7700,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_text_document_url_input.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7602,6 +7756,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_multiple_parallel_tool_calls.yaml",
       "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
@@ -7655,6 +7810,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_multiple_parallel_tool_calls.yaml",
       "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
@@ -7708,6 +7864,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_image_url_input_invalid_mime_type.yaml",
       "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
@@ -7761,6 +7918,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_image_url_input.yaml",
       "model": "claude-haiku-4-5-20251001",
       "usage": {
         "cache_creation": {
@@ -7814,6 +7972,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_output_tool_with_thinking.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7869,6 +8028,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_image_as_binary_content_tool_response.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7924,6 +8084,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_image_as_binary_content_tool_response.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -7979,6 +8140,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_mcp_servers.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8037,6 +8199,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_mcp_servers.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8095,6 +8258,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_thinking_part_redacted.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -8150,6 +8314,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_thinking_part_redacted.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -8205,6 +8370,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_usage_limit_not_exceeded.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -8260,6 +8426,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_thinking_part_from_other_model.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 23,
@@ -8317,6 +8484,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_thinking_part_from_other_model.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8372,6 +8540,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_web_search_tool.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8431,6 +8600,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_web_search_tool.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8490,6 +8660,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_thinking_part.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -8545,6 +8716,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_thinking_part.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -8600,6 +8772,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_text_parts_ahead_of_built_in_tool_call.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -8659,6 +8832,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_tool_with_thinking.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8714,6 +8888,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_tool_with_thinking.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8769,6 +8944,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_server_tool_receive_history_from_another_provider.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 35,
@@ -8815,6 +8991,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_server_tool_receive_history_from_another_provider.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8873,6 +9050,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_code_execution_tool.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8932,6 +9110,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_code_execution_tool.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -8991,6 +9170,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_anthropic/test_anthropic_model_empty_message_on_history.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -9046,6 +9226,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_cohere/test_cohere_model_thinking_part.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "input_tokens": 13,
@@ -9103,6 +9284,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_cohere/test_cohere_model_thinking_part.yaml",
       "usage": {
         "billed_units": {
           "input_tokens": 431,
@@ -9131,6 +9313,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_cohere/test_cohere_model_instructions.yaml",
       "usage": {
         "billed_units": {
           "input_tokens": 13,
@@ -9159,6 +9342,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_cohere/test_request_simple_success_with_vcr.yaml",
       "usage": {
         "billed_units": {
           "input_tokens": 1,
@@ -9187,6 +9371,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[VideoUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 70,
@@ -9233,6 +9418,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[VideoUrl (YouTube)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 126,
@@ -9282,6 +9468,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input_force_download.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 58,
@@ -9328,6 +9515,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[AudioUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 32,
@@ -9373,6 +9561,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[AudioUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 23,
@@ -9418,6 +9607,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_labels.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -9458,6 +9648,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[DocumentUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 299,
@@ -9502,6 +9693,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[ImageUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 40,
@@ -9546,6 +9738,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[VideoUrl].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 53,
@@ -9590,6 +9783,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[ImageUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 52,
@@ -9634,6 +9828,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini_vertex/test_url_input[DocumentUrl (gs)].yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 112,
@@ -9678,6 +9873,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_video_url_input.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 246,
@@ -9720,6 +9916,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_text_output_function.yaml",
       "modelVersion": "models/gemini-2.5-pro-preview-05-06",
       "usageMetadata": {
         "candidatesTokenCount": 44,
@@ -9752,6 +9949,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_tool_config_any_with_tool_without_args.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 1,
@@ -9791,6 +9989,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_tool_config_any_with_tool_without_args.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -9830,6 +10029,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_model_thinking_part.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "input_tokens": 13,
@@ -9887,6 +10087,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_model_thinking_part.yaml",
       "modelVersion": "gemini-2.5-flash-preview-04-17",
       "usageMetadata": {
         "candidatesTokenCount": 1519,
@@ -9921,6 +10122,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_native_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 20,
@@ -9960,6 +10162,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_tool_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -9999,6 +10202,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_tool_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -10038,6 +10242,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_prompted_output_with_tools.yaml",
       "modelVersion": "models/gemini-2.5-pro-preview-05-06",
       "usageMetadata": {
         "candidatesTokenCount": 12,
@@ -10070,6 +10275,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_prompted_output_with_tools.yaml",
       "modelVersion": "models/gemini-2.5-pro-preview-05-06",
       "usageMetadata": {
         "candidatesTokenCount": 13,
@@ -10102,6 +10308,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_additional_properties_is_true.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 19,
@@ -10136,6 +10343,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_additional_properties_is_true.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 29,
@@ -10170,6 +10378,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_prompted_output.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 56,
@@ -10209,6 +10418,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_document_url_input.yaml",
       "modelVersion": "gemini-2.0-flash-thinking-exp-01-21",
       "usageMetadata": {
         "candidatesTokenCount": 16,
@@ -10246,6 +10456,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_youtube_video_url_input.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 72,
@@ -10291,6 +10502,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_prompted_output_multiple.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 27,
@@ -10330,6 +10542,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_video_as_binary_content_input.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 110,
@@ -10373,6 +10586,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_exclusive_minimum_and_maximum.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 7,
@@ -10412,6 +10626,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_exclusive_minimum_and_maximum.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 7,
@@ -10451,6 +10666,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_image_as_binary_content_tool_response.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 10,
@@ -10485,6 +10701,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_image_as_binary_content_tool_response.yaml",
       "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
         "candidatesTokenCount": 171,
@@ -10523,6 +10740,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_model_instructions.yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -10562,6 +10780,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_native_output_multiple.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 46,
@@ -10601,6 +10820,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_drop_exclusive_maximum.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -10640,6 +10860,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_drop_exclusive_maximum.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 7,
@@ -10679,6 +10900,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_drop_exclusive_maximum.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -10718,6 +10940,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_drop_exclusive_maximum.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 31,
@@ -10757,6 +10980,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_gemini_additional_properties_is_false.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 23,
@@ -10796,6 +11020,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_gemini/test_labels_are_ignored_with_gla_provider.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -10835,6 +11060,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_simple_completion.yaml",
       "model": "Qwen/Qwen2.5-72B-Instruct-fast",
       "usage": {
         "completion_tokens": 29,
@@ -10949,6 +11175,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_max_completion_tokens[meta-llama-Llama-3.3-70B-Instruct].yaml",
       "model": "meta-llama/Llama-3.3-70B-Instruct-fast",
       "usage": {
         "completion_tokens": 23,
@@ -11063,6 +11290,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_hf_model_instructions.yaml",
       "model": "Qwen/Qwen2.5-72B-Instruct-fast",
       "usage": {
         "completion_tokens": 2,
@@ -11177,6 +11405,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_image_as_binary_content_input.yaml",
       "model": "Qwen/Qwen2.5-VL-72B-Instruct",
       "usage": {
         "completion_tokens": 49,
@@ -11295,6 +11524,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_max_completion_tokens[Qwen-Qwen2.5-72B-Instruct].yaml",
       "model": "Qwen/Qwen2.5-72B-Instruct-fast",
       "usage": {
         "completion_tokens": 33,
@@ -11409,6 +11639,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_image_url_input.yaml",
       "model": "Qwen/Qwen2.5-VL-72B-Instruct",
       "usage": {
         "completion_tokens": 15,
@@ -11527,6 +11758,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_request_simple_success_with_vcr.yaml",
       "model": "Qwen/Qwen2.5-72B-Instruct-fast",
       "usage": {
         "completion_tokens": 29,
@@ -11641,6 +11873,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_max_completion_tokens[deepseek-ai-DeepSeek-R1-0528].yaml",
       "model": "deepseek-ai/DeepSeek-R1-0528",
       "usage": {
         "completion_tokens": 165,
@@ -11767,6 +12000,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_request_simple_usage.yaml",
       "model": "Qwen/Qwen2.5-72B-Instruct-fast",
       "usage": {
         "completion_tokens": 40,
@@ -11881,6 +12115,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_hf_model_thinking_part.yaml",
       "model": "Qwen/Qwen3-235B-A22B",
       "usage": {
         "completion_tokens": 1090,
@@ -12003,6 +12238,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_huggingface/test_hf_model_thinking_part.yaml",
       "model": "Qwen/Qwen3-235B-A22B",
       "usage": {
         "completion_tokens": 1860,
@@ -12125,6 +12361,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_instructions.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -12255,6 +12492,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_without_system_prompt.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "completion_tokens": 809,
@@ -12385,6 +12623,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_url_input_force_download_response_api.yaml",
       "model": "gpt-4.1-nano-2025-04-14",
       "usage": {
         "input_tokens": 515,
@@ -12442,6 +12681,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_web_search_tool_with_user_location.yaml",
       "model": "gpt-4o-search-preview-2025-03-11",
       "usage": {
         "completion_tokens": 293,
@@ -12568,6 +12808,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_reasoning_model_with_temperature.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "completion_tokens": 238,
@@ -12698,6 +12939,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_instructions_with_responses_logprobs.yaml",
       "model": "gpt-4o-mini-2024-07-18",
       "usage": {
         "input_tokens": 25,
@@ -12751,6 +12993,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_native_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -12881,6 +13124,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_native_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 15,
@@ -13011,6 +13255,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_compatible_api_with_tool_calls_without_id.yaml",
       "model": "gemini-2.5-pro-preview-05-06",
       "usage": {
         "completion_tokens": 12,
@@ -13123,6 +13368,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_compatible_api_with_tool_calls_without_id.yaml",
       "model": "gemini-2.5-pro-preview-05-06",
       "usage": {
         "completion_tokens": 6,
@@ -13235,6 +13481,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_settings_temperature_ignored_on_gpt_5.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "completion_tokens": 11,
@@ -13365,6 +13612,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_audio_url_input.yaml",
       "model": "gpt-4o-audio-preview-2024-12-17",
       "usage": {
         "completion_tokens": 72,
@@ -13503,6 +13751,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_max_completion_tokens[gpt-4.5-preview].yaml",
       "model": "gpt-4.5-preview-2025-02-27",
       "usage": {
         "completion_tokens": 10,
@@ -13629,6 +13878,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_user_id.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -13759,6 +14009,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_text_document_as_binary_content_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 26,
@@ -13889,6 +14140,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_web_search_tool.yaml",
       "model": "gpt-4o-search-preview-2025-03-11",
       "usage": {
         "completion_tokens": 17,
@@ -14015,6 +14267,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_instructions_with_tool_calls_keep_instructions.yaml",
       "model": "gpt-4.1-mini-2025-04-14",
       "usage": {
         "completion_tokens": 15,
@@ -14145,6 +14398,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_instructions_with_tool_calls_keep_instructions.yaml",
       "model": "gpt-4.1-mini-2025-04-14",
       "usage": {
         "completion_tokens": 15,
@@ -14275,6 +14529,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_document_as_binary_content_input_with_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -14405,6 +14660,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_document_as_binary_content_input_with_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -14535,6 +14791,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_url_tool_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -14665,6 +14922,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_url_tool_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -14795,6 +15053,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_cerebras_provider_harmony.yaml",
       "model": "gpt-oss-120b",
       "usage": {
         "completion_tokens": 36,
@@ -14912,6 +15171,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_max_completion_tokens[gpt-4o-mini].yaml",
       "model": "gpt-4o-mini-2024-07-18",
       "usage": {
         "completion_tokens": 10,
@@ -15038,6 +15298,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_tool_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -15168,6 +15429,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_tool_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 36,
@@ -15298,6 +15560,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_thinking_part.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "input_tokens": 13,
@@ -15355,6 +15618,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_thinking_part.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "completion_tokens": 2320,
@@ -15485,6 +15749,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_as_binary_content_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -15615,6 +15880,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_cerebras_provider_qwen_3_coder.yaml",
       "model": "qwen-3-coder-480b",
       "usage": {
         "completion_tokens": 25,
@@ -15730,6 +15996,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_cerebras_provider_qwen_3_coder.yaml",
       "model": "qwen-3-coder-480b",
       "usage": {
         "completion_tokens": 33,
@@ -15845,6 +16112,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_prompted_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -15975,6 +16243,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_prompted_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -16105,6 +16374,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_document_url_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 16,
@@ -16235,6 +16505,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_prompted_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -16365,6 +16636,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_prompted_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 21,
@@ -16495,6 +16767,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_extra_headers.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -16625,6 +16898,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_text_output_function.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -16755,6 +17029,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_text_output_function.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -16885,6 +17160,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_text_document_url_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 25,
@@ -17015,6 +17291,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_message_history_can_start_with_model_response.yaml",
       "model": "gpt-4.1-mini-2025-04-14",
       "usage": {
         "completion_tokens": 8,
@@ -17145,6 +17422,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_model_cerebras_provider.yaml",
       "model": "llama-3.3-70b",
       "usage": {
         "completion_tokens": 8,
@@ -17262,6 +17540,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_url_input_force_download.yaml",
       "model": "gpt-4.1-nano-2025-04-14",
       "usage": {
         "completion_tokens": 6,
@@ -17392,6 +17671,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_as_binary_content_tool_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -17522,6 +17802,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_image_as_binary_content_tool_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 9,
@@ -17652,6 +17933,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_valid_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 7,
@@ -17782,6 +18064,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_document_as_binary_content_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 13,
@@ -17912,6 +18195,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_system_prompt_role_o1_mini.yaml",
       "model": "o1-mini-2024-09-12",
       "usage": {
         "completion_tokens": 212,
@@ -18042,6 +18326,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_multiple_agent_tool_calls.yaml",
       "modelVersion": "gemini-2.0-flash-exp",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -18081,6 +18366,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_multiple_agent_tool_calls.yaml",
       "modelVersion": "gemini-2.0-flash-exp",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -18120,6 +18406,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_multiple_agent_tool_calls.yaml",
       "model": "gpt-4o-mini-2024-07-18",
       "usage": {
         "completion_tokens": 16,
@@ -18246,6 +18533,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_multiple_agent_tool_calls.yaml",
       "model": "gpt-4o-mini-2024-07-18",
       "usage": {
         "completion_tokens": 9,
@@ -18372,6 +18660,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_max_completion_tokens[o3-mini].yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "completion_tokens": 85,
@@ -18502,6 +18791,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_native_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -18632,6 +18922,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_openai_native_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 25,
@@ -18762,6 +19053,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai/test_audio_as_binary_content_input.yaml",
       "model": "gpt-4o-audio-preview-2024-12-17",
       "usage": {
         "completion_tokens": 9,
@@ -18900,6 +19192,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_anthropic_model_without_tools.yaml",
       "usage": {
         "inputTokens": 23,
         "outputTokens": 11,
@@ -18923,6 +19216,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_video_url_input.yaml",
       "usage": {
         "inputTokens": 1837,
         "outputTokens": 82,
@@ -18946,6 +19240,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model.yaml",
       "usage": {
         "inputTokens": 7,
         "outputTokens": 30,
@@ -18969,6 +19264,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_anthropic.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -18996,6 +19292,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_anthropic.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19023,6 +19320,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_deepseek.yaml",
       "usage": {
         "inputTokens": 12,
         "outputTokens": 693,
@@ -19046,6 +19344,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_deepseek.yaml",
       "usage": {
         "inputTokens": 33,
         "outputTokens": 907,
@@ -19069,6 +19368,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_usage_limit_not_exceeded.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19097,6 +19397,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_multiple_documents_in_history.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19124,6 +19425,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_performance_config.yaml",
       "usage": {
         "inputTokens": 13,
         "outputTokens": 5,
@@ -19147,6 +19449,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_guardrail_config.yaml",
       "usage": {
         "inputTokens": 13,
         "outputTokens": 5,
@@ -19170,6 +19473,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_redacted.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19197,6 +19501,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_redacted.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19224,6 +19529,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_from_other_model.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 23,
@@ -19281,6 +19587,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_thinking_part_from_other_model.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19308,6 +19615,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_image_as_binary_content_input.yaml",
       "usage": {
         "inputTokens": 1839,
         "outputTokens": 49,
@@ -19331,6 +19639,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_empty_system_prompt.yaml",
       "usage": {
         "inputTokens": 7,
         "outputTokens": 126,
@@ -19354,6 +19663,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_document_url_input.yaml",
       "usage": {
         "inputTokens": 68,
         "outputTokens": 42,
@@ -19377,6 +19687,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_text_document_url_input.yaml",
       "usage": {
         "inputTokens": 681,
         "outputTokens": 157,
@@ -19400,6 +19711,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_text_as_binary_content_input.yaml",
       "usage": {
         "inputTokens": 21,
         "outputTokens": 175,
@@ -19423,6 +19735,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_top_p.yaml",
       "usage": {
         "inputTokens": 13,
         "outputTokens": 71,
@@ -19446,6 +19759,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_image_url_input.yaml",
       "usage": {
         "inputTokens": 1837,
         "outputTokens": 82,
@@ -19469,6 +19783,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_structured_output.yaml",
       "usage": {
         "inputTokens": 551,
         "outputTokens": 132,
@@ -19492,6 +19807,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_structured_output.yaml",
       "usage": {
         "inputTokens": 685,
         "outputTokens": 166,
@@ -19515,6 +19831,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_video_as_binary_content_input.yaml",
       "usage": {
         "inputTokens": 1839,
         "outputTokens": 49,
@@ -19538,6 +19855,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_retry.yaml",
       "usage": {
         "inputTokens": 417,
         "outputTokens": 69,
@@ -19561,6 +19879,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_retry.yaml",
       "usage": {
         "inputTokens": 509,
         "outputTokens": 108,
@@ -19584,6 +19903,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_instructions.yaml",
       "usage": {
         "inputTokens": 13,
         "outputTokens": 71,
@@ -19607,6 +19927,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_other_parameters.yaml",
       "usage": {
         "inputTokens": 13,
         "outputTokens": 5,
@@ -19630,6 +19951,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_anthropic_tool_with_thinking.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19657,6 +19979,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_anthropic_tool_with_thinking.yaml",
       "usage": {
         "cacheReadInputTokenCount": 0,
         "cacheReadInputTokens": 0,
@@ -19684,6 +20007,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_bedrock/test_bedrock_model_max_tokens.yaml",
       "usage": {
         "inputTokens": 13,
         "outputTokens": 5,
@@ -19707,6 +20031,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_mistral/test_image_as_binary_content_tool_response.yaml",
       "model": "pixtral-12b-latest",
       "usage": {
         "completion_tokens": 16,
@@ -19821,6 +20146,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_mistral/test_image_as_binary_content_tool_response.yaml",
       "model": "pixtral-12b-latest",
       "usage": {
         "completion_tokens": 70,
@@ -19935,6 +20261,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_mistral/test_mistral_model_thinking_part.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "input_tokens": 13,
@@ -19992,6 +20319,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_mistral/test_mistral_model_thinking_part.yaml",
       "model": "magistral-medium-latest",
       "usage": {
         "completion_tokens": 747,
@@ -20106,6 +20434,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_web_search_tool_stream.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 9703,
@@ -20172,6 +20501,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_text_document_url_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 616,
@@ -20229,6 +20559,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_document_as_binary_content_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 51,
@@ -20286,6 +20617,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_document_url_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 54,
@@ -20343,6 +20675,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_system_prompt.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 42,
@@ -20400,6 +20733,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_reasoning_model_with_temperature.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "input_tokens": 13,
@@ -20457,6 +20791,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_with_tool_output.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 2253,
@@ -20514,6 +20849,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_with_tool_output.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 587,
@@ -20571,6 +20907,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_with_code_execution_tool.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 1493,
@@ -20637,6 +20974,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_with_code_execution_tool.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 793,
@@ -20694,6 +21032,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_simple_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 14,
@@ -20751,6 +21090,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_web_search_tool_with_invalid_region.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 9939,
@@ -20817,6 +21157,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_web_search_tool_with_user_location.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 9463,
@@ -20883,6 +21224,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_mcp_server_tool.yaml",
       "model": "o4-mini-2025-04-16",
       "usage": {
         "input_tokens": 1207,
@@ -20940,6 +21282,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_mcp_server_tool.yaml",
       "model": "o4-mini-2025-04-16",
       "usage": {
         "input_tokens": 1109,
@@ -20997,6 +21340,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_with_prompted_output.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 1812,
@@ -21054,6 +21398,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_runs_with_instructions_only.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 23,
@@ -21111,6 +21456,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_gpt5_pro.yaml",
       "model": "gpt-5-pro-2025-10-06",
       "usage": {
         "input_tokens": 13,
@@ -21164,6 +21510,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_mcp_server_tool_with_connector.yaml",
       "model": "o4-mini-2025-04-16",
       "usage": {
         "input_tokens": 1065,
@@ -21221,6 +21568,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_prompted_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 107,
@@ -21278,6 +21626,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_prompted_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 130,
@@ -21335,6 +21684,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_url_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 663,
@@ -21392,6 +21742,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_previous_response_id_auto_mode.yaml",
       "model": "gpt-5",
       "usage": {
         "input_tokens": 10,
@@ -21449,6 +21800,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_tool_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 62,
@@ -21506,6 +21858,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_tool_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 85,
@@ -21563,6 +21916,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_jpeg.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 1889,
@@ -21620,6 +21974,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_code_execution_return_image.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 2973,
@@ -21686,6 +22041,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_code_execution_return_image.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 4614,
@@ -21752,6 +22108,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_web_search_tool.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 9299,
@@ -21818,6 +22175,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_web_search_tool.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 9506,
@@ -21884,6 +22242,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_text_output_function.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 36,
@@ -21941,6 +22300,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_text_output_function.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 59,
@@ -21998,6 +22358,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_builtin_tools.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 320,
@@ -22055,6 +22416,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_part_from_other_model.yaml",
       "model": "claude-sonnet-4-20250514",
       "usage": {
         "cache_creation": {
@@ -22110,6 +22472,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_part_from_other_model.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 306,
@@ -22167,6 +22530,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_requires_function_call_status_none.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 40,
@@ -22224,6 +22588,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_requires_function_call_status_none.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 257,
@@ -22281,6 +22646,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_with_modified_history.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 13,
@@ -22338,6 +22704,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_with_modified_history.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 142,
@@ -22395,6 +22762,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_previous_response_id.yaml",
       "model": "gpt-5",
       "usage": {
         "input_tokens": 10,
@@ -22452,6 +22820,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_previous_response_id.yaml",
       "model": "gpt-5",
       "usage": {
         "input_tokens": 10,
@@ -22509,6 +22878,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_image_as_binary_content_input.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 1349,
@@ -22575,6 +22945,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_with_tool_calls.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 124,
@@ -22632,6 +23003,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_thinking_with_tool_calls.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 2087,
@@ -22698,6 +23070,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_instructions.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 24,
@@ -22755,6 +23128,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_output_type.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 286,
@@ -22812,6 +23186,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_non_reasoning_model_no_item_ids.yaml",
       "model": "gpt-4.1-2025-04-14",
       "usage": {
         "input_tokens": 36,
@@ -22869,6 +23244,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_non_reasoning_model_no_item_ids.yaml",
       "model": "gpt-4.1-2025-04-14",
       "usage": {
         "input_tokens": 61,
@@ -22926,6 +23302,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_builtin_tools_web_search.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 115886,
@@ -22992,6 +23369,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_reasoning_generate_summary.yaml",
       "model": "computer-use-preview-2025-03-11",
       "usage": {
         "input_tokens": 15,
@@ -23045,6 +23423,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_native_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 66,
@@ -23102,6 +23481,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_native_output.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 89,
@@ -23159,6 +23539,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_image_as_binary_content_tool_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 40,
@@ -23216,6 +23597,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_image_as_binary_content_tool_response.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 1185,
@@ -23273,6 +23655,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_reasoning_effort.yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "input_tokens": 88,
@@ -23330,6 +23713,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_with_native_output.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 1789,
@@ -23387,6 +23771,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_native_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 153,
@@ -23444,6 +23829,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_native_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 176,
@@ -23501,6 +23887,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_simple_response_with_tool_call.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 40,
@@ -23558,6 +23945,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_simple_response_with_tool_call.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 67,
@@ -23615,6 +24003,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_verbosity.yaml",
       "model": "gpt-5",
       "usage": {
         "input_tokens": 10,
@@ -23672,6 +24061,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 0,
@@ -23726,6 +24116,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 335,
@@ -23783,6 +24174,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_prompted_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 283,
@@ -23840,6 +24232,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_prompted_output_multiple.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "input_tokens": 306,
@@ -23897,6 +24290,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_thinking_part.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 13,
@@ -23954,6 +24348,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_model_thinking_part.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 314,
@@ -24011,6 +24406,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_with_tools.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 389,
@@ -24068,6 +24464,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_image_generation_with_tools.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 1294,
@@ -24125,6 +24522,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_openai_responses/test_openai_responses_history_with_combined_tool_call_id.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 103,
@@ -24182,6 +24580,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_groq_model_instructions.yaml",
       "model": "llama-3.3-70b-versatile",
       "usage": {
         "completion_time": 0.029090909,
@@ -24300,6 +24699,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_groq_prompted_output.yaml",
       "model": "openai/gpt-oss-120b",
       "usage": {
         "completion_time": 0.173182068,
@@ -24434,6 +24834,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_groq_model_thinking_part.yaml",
       "model": "deepseek-r1-distill-llama-70b",
       "usage": {
         "completion_time": 5.141818182,
@@ -24554,6 +24955,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_groq_model_thinking_part.yaml",
       "model": "deepseek-r1-distill-llama-70b",
       "usage": {
         "completion_time": 5.781818182,
@@ -24674,6 +25076,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_image_as_binary_content_input.yaml",
       "model": "meta-llama/llama-4-scout-17b-16e-instruct",
       "usage": {
         "completion_time": 0.121455039,
@@ -24802,6 +25205,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_extra_headers.yaml",
       "model": "llama-3.3-70b-versatile",
       "usage": {
         "completion_time": 0.029090909,
@@ -24920,6 +25324,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_image_url_input.yaml",
       "model": "meta-llama/llama-4-scout-17b-16e-instruct",
       "usage": {
         "completion_time": 0.231505751,
@@ -25048,6 +25453,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_image_as_binary_content_tool_response.yaml",
       "model": "meta-llama/llama-4-scout-17b-16e-instruct",
       "usage": {
         "completion_time": 0.020780129,
@@ -25176,6 +25582,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_image_as_binary_content_tool_response.yaml",
       "model": "meta-llama/llama-4-scout-17b-16e-instruct",
       "usage": {
         "completion_time": 0.026033622,
@@ -25304,6 +25711,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_groq_native_output.yaml",
       "model": "openai/gpt-oss-120b",
       "usage": {
         "completion_time": 0.186978247,
@@ -25438,6 +25846,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_groq_model_web_search_tool.yaml",
       "model": "groq/compound",
       "usage": {
         "completion_time": 1.047857,
@@ -25554,6 +25963,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_tool_use_failed_error.yaml",
       "model": "openai/gpt-oss-120b",
       "usage": {
         "completion_time": 0.097360195,
@@ -25688,6 +26098,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_groq/test_tool_use_failed_error.yaml",
       "model": "openai/gpt-oss-120b",
       "usage": {
         "completion_time": 0.205303865,
@@ -25822,6 +26233,7 @@
   },
   {
     "body": {
+      "file": "models/cassettes/test_deepseek/test_deepseek_model_thinking_part.yaml",
       "model": "deepseek-reasoner",
       "usage": {
         "completion_tokens": 789,
@@ -25944,6 +26356,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_hitl_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 46,
@@ -26074,6 +26487,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_hitl_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 19,
@@ -26204,6 +26618,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_run_in_workflow_with_toolsets.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -26334,6 +26749,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -26464,6 +26880,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -26594,6 +27011,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -26724,6 +27142,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_unserializable_deps_type.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -26854,6 +27273,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_multiple_agents.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -26984,6 +27404,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_hitl_tool_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 46,
@@ -27114,6 +27535,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_hitl_tool_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 19,
@@ -27244,6 +27666,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_simple_agent_run_in_workflow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -27374,6 +27797,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_override_deps_in_workflow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -27504,6 +27928,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_run_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -27634,6 +28059,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_dataclass_deps_as_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 13,
@@ -27764,6 +28190,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_dataclass_deps_as_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 9,
@@ -27894,6 +28321,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_override_tools_in_workflow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -28024,6 +28452,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_with_non_dict_deps.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 13,
@@ -28154,6 +28583,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_run.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -28284,6 +28714,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_dbos/test_dbos_agent_run_sync_in_workflow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -28414,6 +28845,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_audio_resource.yaml",
       "modelVersion": "models/gemini-2.5-pro-preview-05-06",
       "usageMetadata": {
         "candidatesTokenCount": 12,
@@ -28446,6 +28878,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_audio_resource.yaml",
       "modelVersion": "models/gemini-2.5-pro-preview-05-06",
       "usageMetadata": {
         "candidatesTokenCount": 15,
@@ -28482,6 +28915,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_image_resource_link.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -28612,6 +29046,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_image_resource_link.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 29,
@@ -28742,6 +29177,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_text_resource.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -28872,6 +29308,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_text_resource.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -29002,6 +29439,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_error.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 15,
@@ -29132,6 +29570,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_error.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 15,
@@ -29262,6 +29701,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_error.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 22,
@@ -29392,6 +29832,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_audio_resource_link.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 14,
@@ -29426,6 +29867,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_audio_resource_link.yaml",
       "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 5,
@@ -29464,6 +29906,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_multiple_items.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -29594,6 +30037,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_multiple_items.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 24,
@@ -29724,6 +30168,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_unstructured_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -29854,6 +30299,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_unstructured_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -29984,6 +30430,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_agent_with_server_not_running.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 18,
@@ -30114,6 +30561,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_agent_with_server_not_running.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -30244,6 +30692,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_text_resource_link.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -30374,6 +30823,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_text_resource_link.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -30504,6 +30954,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_agent_with_stdio_server.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 19,
@@ -30634,6 +31085,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_agent_with_stdio_server.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 13,
@@ -30764,6 +31216,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_image_resource.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 12,
@@ -30894,6 +31347,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_image_resource.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 19,
@@ -31024,6 +31478,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -31154,6 +31609,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -31284,6 +31740,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_image.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -31414,6 +31871,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_image.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 15,
@@ -31544,6 +32002,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_str.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 18,
@@ -31674,6 +32133,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_str.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 19,
@@ -31804,6 +32264,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_none.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -31934,6 +32395,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_mcp/test_tool_returning_none.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -32064,6 +32526,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_sync_tool_activity_disabled.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 15,
@@ -32194,6 +32657,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_override_deps_in_workflow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -32324,6 +32788,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_multiple_agents.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -32454,6 +32919,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_simple_agent_run_in_workflow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -32584,6 +33050,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_web_search_agent_run_in_workflow.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 12594,
@@ -32650,6 +33117,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_dataclass_deps_as_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 13,
@@ -32780,6 +33248,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_dataclass_deps_as_dict.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 9,
@@ -32910,6 +33379,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -33040,6 +33510,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -33170,6 +33641,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -33300,6 +33772,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_hitl_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 46,
@@ -33430,6 +33903,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_hitl_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 19,
@@ -33560,6 +34034,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_non_dict_deps.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 13,
@@ -33690,6 +34165,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_run.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -33820,6 +34296,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_with_unserializable_deps_type.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 11,
@@ -33950,6 +34427,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_fastmcp_toolset.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 34,
@@ -34080,6 +34558,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_fastmcp_toolset.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 85,
@@ -34210,6 +34689,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_temporal/test_temporal_agent_run_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -34340,6 +34820,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[gemini].yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "promptTokenCount": 7,
@@ -34371,6 +34852,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[anthropic].yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation_input_tokens": 0,
@@ -34422,6 +34904,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[groq].yaml",
       "model": "llama3-8b-8192",
       "usage": {
         "completion_time": 0.020833333,
@@ -34540,6 +35023,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[cohere].yaml",
       "usage": {
         "billed_units": {
           "input_tokens": 25,
@@ -34568,6 +35052,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[openai].yaml",
       "model": "o3-mini-2025-01-31",
       "usage": {
         "completion_tokens": 467,
@@ -34698,6 +35183,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[google].yaml",
       "modelVersion": "gemini-1.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -34737,6 +35223,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[bedrock].yaml",
       "usage": {
         "inputTokens": 25,
         "outputTokens": 4,
@@ -34760,6 +35247,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_settings/test_stop_settings[mistral].yaml",
       "model": "ministral-8b-latest",
       "usage": {
         "completion_tokens": 6,
@@ -34874,6 +35362,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_run_sync_in_flow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -35004,6 +35493,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_run_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -35134,6 +35624,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_override_toolsets.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -35264,6 +35755,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_simple_agent_run_in_flow.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -35394,6 +35886,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -35524,6 +36017,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 17,
@@ -35654,6 +36148,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_model_retry.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -35784,6 +36279,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_multiple_agents.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -35914,6 +36410,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_unserializable_deps.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -36044,6 +36541,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_unserializable_deps.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 10,
@@ -36174,6 +36672,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_run.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -36304,6 +36803,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_hitl_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 46,
@@ -36434,6 +36934,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_hitl_tool.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 20,
@@ -36564,6 +37065,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_hitl_tool_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 46,
@@ -36694,6 +37196,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_with_hitl_tool_sync.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 22,
@@ -36824,6 +37327,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_override_deps.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -36954,6 +37458,7 @@
   },
   {
     "body": {
+      "file": "cassettes/test_prefect/test_prefect_agent_override_tools.yaml",
       "model": "gpt-4o-2024-08-06",
       "usage": {
         "completion_tokens": 8,
@@ -37084,6 +37589,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_google_vertex/test_vertexai_provider.yaml",
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 9,
@@ -37124,6 +37630,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_azure/test_azure_provider_call.yaml",
       "model": "gpt-4o-2024-11-20",
       "usage": {
         "completion_tokens": 9,
@@ -37254,6 +37761,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_openrouter/test_openrouter_with_google_model.yaml",
       "model": "google/gemini-2.0-flash-exp:free",
       "usage": {
         "completion_tokens": 17,
@@ -37366,6 +37874,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_heroku/test_heroku_model_provider_claude_3_7_sonnet.yaml",
       "model": "claude-3-7-sonnet",
       "usage": {
         "completion_tokens": 51,
@@ -37480,6 +37989,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_gateway/test_gateway_provider_with_google_vertex.yaml",
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -37524,6 +38034,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_gateway/test_gateway_provider_with_openai.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "completion_tokens": 11,
@@ -37657,6 +38168,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_gateway/test_gateway_provider_with_bedrock.yaml",
       "usage": {
         "inputTokens": 7,
         "outputTokens": 78,
@@ -37684,6 +38196,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_gateway/test_gateway_provider_with_groq.yaml",
       "model": "llama-3.3-70b-versatile",
       "usage": {
         "completion_time": 0.010003462,
@@ -37805,6 +38318,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_gateway/test_gateway_provider_with_anthropic.yaml",
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -37863,6 +38377,7 @@
   },
   {
     "body": {
+      "file": "providers/cassettes/test_gateway/test_gateway_provider_with_openai_responses.yaml",
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 13,
