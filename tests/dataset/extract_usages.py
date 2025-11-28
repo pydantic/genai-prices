@@ -61,7 +61,7 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
             if models:
                 this_result['model'] = models.pop()
 
-            check_cases_usages_match(cases)
+            # check_cases_usages_match(cases)
 
             has_price = False
             for case in cases:

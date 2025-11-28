@@ -1,6 +1,1679 @@
 [
   {
     "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 14,
+        "output_tokens": 65,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000042",
+            "output_price": "0.000975",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.000042",
+            "output_price": "0.000975",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 65
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 744,
+        "output_tokens": 53,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 744,
+          "output_tokens": 53
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 824,
+        "output_tokens": 23,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002472",
+            "output_price": "0.000345",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002472",
+            "output_price": "0.000345",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 824,
+          "output_tokens": 23
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 797,
+        "output_tokens": 91,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002391",
+            "output_price": "0.001365",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002391",
+            "output_price": "0.001365",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 797,
+          "output_tokens": 91
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 957,
+        "output_tokens": 23,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002871",
+            "output_price": "0.000345",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002871",
+            "output_price": "0.000345",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 957,
+          "output_tokens": 23
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-20250514",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 458,
+        "output_tokens": 38,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001374",
+            "output_price": "0.00057",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001374",
+            "output_price": "0.00057",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 458,
+          "output_tokens": 38
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-20250514",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 525,
+        "output_tokens": 73,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001575",
+            "output_price": "0.001095",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001575",
+            "output_price": "0.001095",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 525,
+          "output_tokens": 73
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 744,
+        "output_tokens": 53,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 744,
+          "output_tokens": 53
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 811,
+        "output_tokens": 23,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002433",
+            "output_price": "0.000345",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002433",
+            "output_price": "0.000345",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 811,
+          "output_tokens": 23
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 731,
+        "output_tokens": 110,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002193",
+            "output_price": "0.00165",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002193",
+            "output_price": "0.00165",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 731,
+          "output_tokens": 110
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 557,
+        "output_tokens": 55,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001671",
+            "output_price": "0.000825",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001671",
+            "output_price": "0.000825",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 557,
+          "output_tokens": 55
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 636,
+        "output_tokens": 88,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001908",
+            "output_price": "0.00132",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001908",
+            "output_price": "0.00132",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 636,
+          "output_tokens": 88
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 678,
+        "output_tokens": 74,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002034",
+            "output_price": "0.00111",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002034",
+            "output_price": "0.00111",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 678,
+          "output_tokens": 74
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 732,
+        "output_tokens": 39,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002196",
+            "output_price": "0.000585",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002196",
+            "output_price": "0.000585",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 732,
+          "output_tokens": 39
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 801,
+        "output_tokens": 76,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002403",
+            "output_price": "0.00114",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002403",
+            "output_price": "0.00114",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 801,
+          "output_tokens": 76
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 745,
+        "output_tokens": 53,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002235",
+            "output_price": "0.000795",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002235",
+            "output_price": "0.000795",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 745,
+          "output_tokens": 53
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 818,
+        "output_tokens": 24,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002454",
+            "output_price": "0.00036",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002454",
+            "output_price": "0.00036",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 818,
+          "output_tokens": 24
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 561,
+        "output_tokens": 54,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001683",
+            "output_price": "0.00081",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001683",
+            "output_price": "0.00081",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 561,
+          "output_tokens": 54
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 640,
+        "output_tokens": 26,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.00192",
+            "output_price": "0.00039",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.00192",
+            "output_price": "0.00039",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 640,
+          "output_tokens": 26
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 583,
+        "output_tokens": 76,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001749",
+            "output_price": "0.00114",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001749",
+            "output_price": "0.00114",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 583,
+          "output_tokens": 76
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 684,
+        "output_tokens": 24,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002052",
+            "output_price": "0.00036",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002052",
+            "output_price": "0.00036",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 684,
+          "output_tokens": 24
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 196,
+        "output_tokens": 19,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000588",
+            "output_price": "0.000285",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.000588",
+            "output_price": "0.000285",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 196,
+          "output_tokens": 19
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-20250514",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 377,
+        "output_tokens": 64,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001131",
+            "output_price": "0.00096",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001131",
+            "output_price": "0.00096",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 377,
+          "output_tokens": 64
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-20250514",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 464,
+        "output_tokens": 30,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001392",
+            "output_price": "0.00045",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001392",
+            "output_price": "0.00045",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 464,
+          "output_tokens": 30
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 612,
+        "output_tokens": 101,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001836",
+            "output_price": "0.001515",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001836",
+            "output_price": "0.001515",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 612,
+          "output_tokens": 101
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 798,
+        "output_tokens": 50,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002394",
+            "output_price": "0.00075",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002394",
+            "output_price": "0.00075",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 798,
+          "output_tokens": 50
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 781,
+        "output_tokens": 74,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002343",
+            "output_price": "0.00111",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002343",
+            "output_price": "0.00111",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 781,
+          "output_tokens": 74
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 947,
+        "output_tokens": 75,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002841",
+            "output_price": "0.001125",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002841",
+            "output_price": "0.001125",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 947,
+          "output_tokens": 75
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 197,
+        "output_tokens": 18,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000591",
+            "output_price": "0.00027",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.000591",
+            "output_price": "0.00027",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 197,
+          "output_tokens": 18
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 32,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 32
+          }
+        ],
+        "promptTokenCount": 11,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11
+          }
+        ],
+        "totalTokenCount": 43
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000011",
+            "output_price": "0.0000128",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 11,
+          "output_tokens": 32
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 32,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 32
+          }
+        ],
+        "promptTokenCount": 7,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 7
+          }
+        ],
+        "totalTokenCount": 39
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "7E-7",
+            "output_price": "0.0000128",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7,
+          "output_tokens": 32
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
       "model": "gpt-5-2025-08-07",
       "usage": {
         "input_tokens": 45,
@@ -92,23 +1765,24 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash",
+      "modelVersion": "gemini-3-pro-image-preview",
       "usageMetadata": {
-        "candidatesTokenCount": 17,
+        "candidatesTokenCount": 1780,
         "candidatesTokensDetails": [
           {
-            "modality": "TEXT",
-            "tokenCount": 17
+            "modality": "IMAGE",
+            "tokenCount": 1120
           }
         ],
-        "promptTokenCount": 7,
+        "promptTokenCount": 33,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 7
+            "tokenCount": 33
           }
         ],
-        "totalTokenCount": 24
+        "thoughtsTokenCount": 529,
+        "totalTokenCount": 2342
       }
     },
     "extracted": [
@@ -116,18 +1790,50 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "5.25E-7",
-            "output_price": "0.0000051",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 7,
-          "output_tokens": 17
+          "input_tokens": 33,
+          "output_tokens": 2309
         }
       }
     ],
-    "model": "gemini-1.5-flash"
+    "model": "gemini-3-pro-image-preview"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 53,
+        "promptTokenCount": 8,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8
+          }
+        ],
+        "thoughtsTokenCount": 725,
+        "totalTokenCount": 786
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000024",
+            "output_price": "0.001945",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8,
+          "output_tokens": 778
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -252,6 +1958,45 @@
           "input_audio_tokens": 1475,
           "input_tokens": 4605,
           "output_tokens": 459
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 48,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 48
+          }
+        ],
+        "promptTokenCount": 19,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 19
+          }
+        ],
+        "totalTokenCount": 67
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000019",
+            "output_price": "0.0000192",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 19,
+          "output_tokens": 48
         }
       }
     ],
@@ -683,6 +2428,45 @@
     "body": {
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
+        "candidatesTokenCount": 32,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 32
+          }
+        ],
+        "promptTokenCount": 27,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 27
+          }
+        ],
+        "totalTokenCount": 59
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000027",
+            "output_price": "0.0000128",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 27,
+          "output_tokens": 32
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
         "candidatesTokenCount": 131,
         "candidatesTokensDetails": [
           {
@@ -760,6 +2544,74 @@
       }
     ],
     "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 24,
+        "promptTokenCount": 12,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 12
+          }
+        ],
+        "thoughtsTokenCount": 130,
+        "totalTokenCount": 166
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000036",
+            "output_price": "0.000385",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12,
+          "output_tokens": 154
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 6,
+        "promptTokenCount": 8,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8
+          }
+        ],
+        "thoughtsTokenCount": 99,
+        "totalTokenCount": 113
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000024",
+            "output_price": "0.0002625",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8,
+          "output_tokens": 105
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -1105,6 +2957,45 @@
     "body": {
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
+        "candidatesTokenCount": 40,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 40
+          }
+        ],
+        "promptTokenCount": 22,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 22
+          }
+        ],
+        "totalTokenCount": 62
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000022",
+            "output_price": "0.000016",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 22,
+          "output_tokens": 40
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
         "candidatesTokenCount": 19,
         "candidatesTokensDetails": [
           {
@@ -1177,6 +3068,108 @@
       }
     ],
     "model": "models/gemini-2.5-pro"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-3-pro-preview",
+      "usageMetadata": {
+        "candidatesTokenCount": 21,
+        "promptTokenCount": 9,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9
+          }
+        ],
+        "thoughtsTokenCount": 182,
+        "totalTokenCount": 212
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000018",
+            "output_price": "0.002436",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 9,
+          "output_tokens": 203
+        }
+      }
+    ],
+    "model": "gemini-3-pro-preview"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-3-pro-preview",
+      "usageMetadata": {
+        "candidatesTokenCount": 21,
+        "promptTokenCount": 9,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 9
+          }
+        ],
+        "thoughtsTokenCount": 342,
+        "totalTokenCount": 372
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000018",
+            "output_price": "0.004356",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 9,
+          "output_tokens": 363
+        }
+      }
+    ],
+    "model": "gemini-3-pro-preview"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 64,
+        "promptTokenCount": 26,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 26
+          }
+        ],
+        "thoughtsTokenCount": 360,
+        "totalTokenCount": 450
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000078",
+            "output_price": "0.00106",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 26,
+          "output_tokens": 424
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -1305,7 +3298,7 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash",
+      "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 14,
         "candidatesTokensDetails": [
@@ -1314,14 +3307,14 @@
             "tokenCount": 14
           }
         ],
-        "promptTokenCount": 101,
+        "promptTokenCount": 69,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 101
+            "tokenCount": 69
           }
         ],
-        "totalTokenCount": 115
+        "totalTokenCount": 83
       }
     },
     "extracted": [
@@ -1329,22 +3322,22 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.000007575",
-            "output_price": "0.0000042",
+            "input_price": "0.0000069",
+            "output_price": "0.0000056",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 101,
+          "input_tokens": 69,
           "output_tokens": 14
         }
       }
     ],
-    "model": "gemini-1.5-flash"
+    "model": "gemini-2.0-flash"
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash",
+      "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 21,
         "candidatesTokensDetails": [
@@ -1353,14 +3346,14 @@
             "tokenCount": 21
           }
         ],
-        "promptTokenCount": 123,
+        "promptTokenCount": 91,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 123
+            "tokenCount": 91
           }
         ],
-        "totalTokenCount": 144
+        "totalTokenCount": 112
       }
     },
     "extracted": [
@@ -1368,57 +3361,18 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.000009225",
-            "output_price": "0.0000063",
+            "input_price": "0.0000091",
+            "output_price": "0.0000084",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 123,
+          "input_tokens": 91,
           "output_tokens": 21
         }
       }
     ],
-    "model": "gemini-1.5-flash"
-  },
-  {
-    "body": {
-      "modelVersion": "gemini-2.5-flash-image",
-      "usageMetadata": {
-        "candidatesTokenCount": 1335,
-        "candidatesTokensDetails": [
-          {
-            "modality": "IMAGE",
-            "tokenCount": 1290
-          }
-        ],
-        "promptTokenCount": 14,
-        "promptTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 14
-          }
-        ],
-        "totalTokenCount": 1349
-      }
-    },
-    "extracted": [
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "input_price": "0.0000042",
-            "output_price": "0.04005",
-            "provider_id": "google"
-          }
-        ],
-        "usage": {
-          "input_tokens": 14,
-          "output_tokens": 1335
-        }
-      }
-    ],
-    "model": "gemini-2.5-flash-image"
+    "model": "gemini-2.0-flash"
   },
   {
     "body": {
@@ -1543,6 +3497,154 @@
       }
     ],
     "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "model": "gpt-5-2025-08-07",
+      "usage": {
+        "input_tokens": 37,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 272,
+        "output_tokens_details": {
+          "reasoning_tokens": 256
+        },
+        "total_tokens": 309
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00004625",
+            "output_price": "0.00272",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.00004625",
+            "output_price": "0.00272",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00004625",
+            "output_price": "0.00272",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 37,
+          "output_tokens": 272
+        }
+      }
+    ],
+    "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "model": "gpt-5-2025-08-07",
+      "usage": {
+        "input_tokens": 379,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 77,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 456
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00047375",
+            "output_price": "0.00077",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.00047375",
+            "output_price": "0.00077",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00047375",
+            "output_price": "0.00077",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 379,
+          "output_tokens": 77
+        }
+      }
+    ],
+    "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-3-pro-preview",
+      "usageMetadata": {
+        "candidatesTokenCount": 23,
+        "promptTokenCount": 107,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 107
+          }
+        ],
+        "thoughtsTokenCount": 123,
+        "totalTokenCount": 253
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000214",
+            "output_price": "0.001752",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 107,
+          "output_tokens": 146
+        }
+      }
+    ],
+    "model": "gemini-3-pro-preview"
   },
   {
     "body": {
@@ -1706,6 +3808,40 @@
   },
   {
     "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 16,
+        "promptTokenCount": 14,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 14
+          }
+        ],
+        "thoughtsTokenCount": 181,
+        "totalTokenCount": 211
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000042",
+            "output_price": "0.0004925",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 14,
+          "output_tokens": 197
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
         "candidatesTokenCount": 13,
@@ -1786,6 +3922,84 @@
     "body": {
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
+        "candidatesTokenCount": 32,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 32
+          }
+        ],
+        "promptTokenCount": 12,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 12
+          }
+        ],
+        "totalTokenCount": 44
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000012",
+            "output_price": "0.0000128",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12,
+          "output_tokens": 32
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 19,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 19
+          }
+        ],
+        "promptTokenCount": 11,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 11
+          }
+        ],
+        "totalTokenCount": 30
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000011",
+            "output_price": "0.0000076",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 11,
+          "output_tokens": 19
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
         "candidatesTokenCount": 11,
         "candidatesTokensDetails": [
           {
@@ -1824,6 +4038,40 @@
       }
     ],
     "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 93,
+        "promptTokenCount": 219,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 219
+          }
+        ],
+        "thoughtsTokenCount": 323,
+        "totalTokenCount": 635
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000657",
+            "output_price": "0.00104",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 219,
+          "output_tokens": 416
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -1874,15 +4122,15 @@
       "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
         "candidatesTokenCount": 13,
-        "promptTokenCount": 83,
+        "promptTokenCount": 85,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 83
+            "tokenCount": 85
           }
         ],
-        "thoughtsTokenCount": 33,
-        "totalTokenCount": 129
+        "thoughtsTokenCount": 32,
+        "totalTokenCount": 130
       }
     },
     "extracted": [
@@ -1890,14 +4138,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000249",
-            "output_price": "0.000115",
+            "input_price": "0.0000255",
+            "output_price": "0.0001125",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 83,
-          "output_tokens": 46
+          "input_tokens": 85,
+          "output_tokens": 45
         }
       }
     ],
@@ -1979,7 +4227,41 @@
   },
   {
     "body": {
-      "modelVersion": "models/gemini-2.5-pro",
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 25,
+        "promptTokenCount": 23,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 23
+          }
+        ],
+        "thoughtsTokenCount": 158,
+        "totalTokenCount": 206
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000069",
+            "output_price": "0.0004575",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 23,
+          "output_tokens": 183
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
         "candidatesTokenCount": 15,
         "promptTokenCount": 57,
@@ -1989,8 +4271,8 @@
             "tokenCount": 57
           }
         ],
-        "thoughtsTokenCount": 155,
-        "totalTokenCount": 227
+        "thoughtsTokenCount": 124,
+        "totalTokenCount": 196
       }
     },
     "extracted": [
@@ -1998,31 +4280,33 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00007125",
+            "output_price": "0.00139",
             "provider_id": "google"
           }
         ],
         "usage": {
           "input_tokens": 57,
-          "output_tokens": 170
+          "output_tokens": 139
         }
       }
     ],
-    "model": "models/gemini-2.5-pro"
+    "model": "gemini-2.5-pro"
   },
   {
     "body": {
-      "modelVersion": "models/gemini-2.5-pro",
+      "modelVersion": "gemini-2.5-pro",
       "usageMetadata": {
-        "candidatesTokenCount": 22,
-        "promptTokenCount": 104,
+        "candidatesTokenCount": 16,
+        "promptTokenCount": 109,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 104
+            "tokenCount": 109
           }
         ],
-        "thoughtsTokenCount": 178,
-        "totalTokenCount": 304
+        "thoughtsTokenCount": 199,
+        "totalTokenCount": 324
       }
     },
     "extracted": [
@@ -2030,16 +4314,52 @@
         "extractors": [
           {
             "api_flavor": "default",
+            "input_price": "0.00013625",
+            "output_price": "0.00215",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 104,
-          "output_tokens": 200
+          "input_tokens": 109,
+          "output_tokens": 215
         }
       }
     ],
-    "model": "models/gemini-2.5-pro"
+    "model": "gemini-2.5-pro"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-pro",
+      "usageMetadata": {
+        "candidatesTokenCount": 1,
+        "promptTokenCount": 142,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 142
+          }
+        ],
+        "thoughtsTokenCount": 97,
+        "totalTokenCount": 240
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0001775",
+            "output_price": "0.00098",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 142,
+          "output_tokens": 98
+        }
+      }
+    ],
+    "model": "gemini-2.5-pro"
   },
   {
     "body": {
@@ -2092,14 +4412,14 @@
             "tokenCount": 20
           }
         ],
-        "promptTokenCount": 25,
+        "promptTokenCount": 8,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 25
+            "tokenCount": 8
           }
         ],
-        "totalTokenCount": 45
+        "totalTokenCount": 28
       }
     },
     "extracted": [
@@ -2107,13 +4427,13 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000025",
+            "input_price": "8E-7",
             "output_price": "0.000008",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 25,
+          "input_tokens": 8,
           "output_tokens": 20
         }
       }
@@ -2319,6 +4639,40 @@
   },
   {
     "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 13,
+        "promptTokenCount": 12,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 12
+          }
+        ],
+        "thoughtsTokenCount": 448,
+        "totalTokenCount": 473
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000036",
+            "output_price": "0.0011525",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12,
+          "output_tokens": 461
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
       "modelVersion": "gemini-2.5-flash-lite",
       "usageMetadata": {
         "candidatesTokenCount": 8,
@@ -2385,18 +4739,18 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-2.5-pro",
+      "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
-        "candidatesTokenCount": 429,
-        "promptTokenCount": 34,
+        "candidatesTokenCount": 736,
+        "promptTokenCount": 29,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 34
+            "tokenCount": 29
           }
         ],
-        "thoughtsTokenCount": 817,
-        "totalTokenCount": 1280
+        "thoughtsTokenCount": 1001,
+        "totalTokenCount": 1766
       }
     },
     "extracted": [
@@ -2404,33 +4758,33 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000425",
-            "output_price": "0.01246",
+            "input_price": "0.000058",
+            "output_price": "0.020844",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 34,
-          "output_tokens": 1246
+          "input_tokens": 29,
+          "output_tokens": 1737
         }
       }
     ],
-    "model": "gemini-2.5-pro"
+    "model": "gemini-3-pro-preview"
   },
   {
     "body": {
-      "modelVersion": "gemini-2.5-pro",
+      "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
-        "candidatesTokenCount": 941,
-        "promptTokenCount": 978,
+        "candidatesTokenCount": 958,
+        "promptTokenCount": 1280,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 978
+            "tokenCount": 1280
           }
         ],
-        "thoughtsTokenCount": 1476,
-        "totalTokenCount": 3395
+        "thoughtsTokenCount": 1115,
+        "totalTokenCount": 3353
       }
     },
     "extracted": [
@@ -2438,18 +4792,18 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0012225",
-            "output_price": "0.02417",
+            "input_price": "0.00256",
+            "output_price": "0.024876",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 978,
-          "output_tokens": 2417
+          "input_tokens": 1280,
+          "output_tokens": 2073
         }
       }
     ],
-    "model": "gemini-2.5-pro"
+    "model": "gemini-3-pro-preview"
   },
   {
     "body": {
@@ -2600,23 +4954,18 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash",
+      "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
-        "candidatesTokenCount": 19,
-        "candidatesTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 19
-          }
-        ],
-        "promptTokenCount": 3,
+        "candidatesTokenCount": 119,
+        "promptTokenCount": 10,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 3
+            "tokenCount": 10
           }
         ],
-        "totalTokenCount": 22
+        "thoughtsTokenCount": 699,
+        "totalTokenCount": 828
       }
     },
     "extracted": [
@@ -2624,18 +4973,18 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "2.25E-7",
-            "output_price": "0.0000057",
+            "input_price": "0.000003",
+            "output_price": "0.002045",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 3,
-          "output_tokens": 19
+          "input_tokens": 10,
+          "output_tokens": 818
         }
       }
     ],
-    "model": "gemini-1.5-flash"
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -2680,6 +5029,40 @@
       }
     ],
     "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 16,
+        "promptTokenCount": 20,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 20
+          }
+        ],
+        "thoughtsTokenCount": 183,
+        "totalTokenCount": 219
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000006",
+            "output_price": "0.0004975",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 20,
+          "output_tokens": 199
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -2800,6 +5183,1137 @@
   },
   {
     "body": {
+      "modelVersion": "gemini-3-pro-preview",
+      "usageMetadata": {
+        "candidatesTokenCount": 9,
+        "promptTokenCount": 2,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 2
+          }
+        ],
+        "thoughtsTokenCount": 213,
+        "totalTokenCount": 224
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000004",
+            "output_price": "0.002664",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2,
+          "output_tokens": 222
+        }
+      }
+    ],
+    "model": "gemini-3-pro-preview"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 18,
+        "promptTokenCount": 28,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 28
+          }
+        ],
+        "thoughtsTokenCount": 108,
+        "totalTokenCount": 154
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000084",
+            "output_price": "0.000315",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 28,
+          "output_tokens": 126
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
+      "model": "x-ai/grok-4",
+      "usage": {
+        "completion_tokens": 240,
+        "completion_tokens_details": {
+          "reasoning_tokens": 165
+        },
+        "prompt_tokens": 687,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 682
+        },
+        "total_tokens": 927
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          }
+        ],
+        "usage": {
+          "input_tokens": 687,
+          "output_tokens": 240
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 682,
+          "input_tokens": 687,
+          "output_tokens": 240
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 687
+        }
+      }
+    ],
+    "model": "x-ai/grok-4"
+  },
+  {
+    "body": {
+      "model": "openai/gpt-5-mini",
+      "usage": {
+        "completion_tokens": 15,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens": 8,
+        "total_tokens": 23
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8,
+          "output_tokens": 15
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8
+        }
+      }
+    ],
+    "model": "openai/gpt-5-mini"
+  },
+  {
+    "body": {
+      "model": "openai/gpt-5-mini",
+      "usage": {
+        "completion_tokens": 1457,
+        "completion_tokens_details": {
+          "reasoning_tokens": 704
+        },
+        "prompt_tokens": 41,
+        "total_tokens": 1498
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 41,
+          "output_tokens": 1457
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 41
+        }
+      }
+    ],
+    "model": "openai/gpt-5-mini"
+  },
+  {
+    "body": {
+      "model": "anthropic/claude-3.7-sonnet:thinking",
+      "usage": {
+        "completion_tokens": 402,
+        "prompt_tokens": 43,
+        "total_tokens": 445
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 43,
+          "output_tokens": 402
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 43
+        }
+      }
+    ],
+    "model": "anthropic/claude-3.7-sonnet:thinking"
+  },
+  {
+    "body": {
+      "model": "openai/gpt-5-mini",
+      "usage": {
+        "completion_tokens": 1515,
+        "completion_tokens_details": {
+          "reasoning_tokens": 704
+        },
+        "prompt_tokens": 17,
+        "total_tokens": 1532
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17,
+          "output_tokens": 1515
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17
+        }
+      }
+    ],
+    "model": "openai/gpt-5-mini"
+  },
+  {
+    "body": {
+      "model": "openai/gpt-5-mini",
+      "usage": {
+        "completion_tokens": 2177,
+        "completion_tokens_details": {
+          "image_tokens": 0,
+          "reasoning_tokens": 960
+        },
+        "cost": 0.00435825,
+        "cost_details": {
+          "upstream_inference_completions_cost": 0.004354,
+          "upstream_inference_cost": null,
+          "upstream_inference_prompt_cost": 4.25e-06
+        },
+        "is_byok": false,
+        "prompt_tokens": 17,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0,
+          "video_tokens": 0
+        },
+        "total_tokens": 2194
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17,
+          "output_tokens": 2177
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17
+        }
+      }
+    ],
+    "model": "openai/gpt-5-mini"
+  },
+  {
+    "body": {
+      "model": "mistralai/mistral-small",
+      "usage": {
+        "completion_tokens": 43,
+        "prompt_tokens": 134,
+        "total_tokens": 177
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 134,
+          "output_tokens": 43
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 134
+        }
+      }
+    ],
+    "model": "mistralai/mistral-small"
+  },
+  {
+    "body": {
+      "model": "google/gemini-2.5-flash-lite",
+      "usage": {
+        "completion_tokens": 21,
+        "completion_tokens_details": {
+          "image_tokens": 0,
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens": 31,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 52
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31,
+          "output_tokens": 21
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31
+        }
+      }
+    ],
+    "model": "google/gemini-2.5-flash-lite"
+  },
+  {
+    "body": {
+      "model": "z-ai/glm-4.6",
+      "usage": {
+        "completion_tokens": 2801,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens": 24,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 2825
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 24,
+          "output_tokens": 2801
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 24
+        }
+      }
+    ],
+    "model": "z-ai/glm-4.6"
+  },
+  {
+    "body": {
       "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
@@ -2848,6 +6362,300 @@
         "usage": {
           "input_tokens": 265,
           "output_tokens": 31
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 1111
+        },
+        "cache_creation_input_tokens": 1111,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 3,
+        "output_tokens": 391,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.00417525",
+            "output_price": "0.005865",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.00417525",
+            "output_price": "0.005865",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "cache_write_tokens": 1111,
+          "input_tokens": 1114,
+          "output_tokens": 391
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 3,
+          "output_tokens": 391
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 403
+        },
+        "cache_creation_input_tokens": 403,
+        "cache_read_input_tokens": 1111,
+        "input_tokens": 3,
+        "output_tokens": 33,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.00185355",
+            "output_price": "0.000495",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.00185355",
+            "output_price": "0.000495",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1111,
+          "cache_write_tokens": 403,
+          "input_tokens": 1517,
+          "output_tokens": 33
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 3,
+          "output_tokens": 33
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 628,
+        "output_tokens": 50,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.001884",
+            "output_price": "0.00075",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.001884",
+            "output_price": "0.00075",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 628,
+          "output_tokens": 50
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 691,
+        "output_tokens": 53,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002073",
+            "output_price": "0.000795",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002073",
+            "output_price": "0.000795",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 691,
+          "output_tokens": 53
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 757,
+        "output_tokens": 6,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.002271",
+            "output_price": "0.00009",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.002271",
+            "output_price": "0.00009",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 757,
+          "output_tokens": 6
         }
       }
     ],
@@ -3303,11 +7111,8 @@
         },
         "cache_creation_input_tokens": 0,
         "cache_read_input_tokens": 0,
-        "input_tokens": 11432,
-        "output_tokens": 244,
-        "server_tool_use": {
-          "web_search_requests": 1
-        },
+        "input_tokens": 2218,
+        "output_tokens": 13,
         "service_tier": "standard"
       }
     },
@@ -3316,8 +7121,8 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.034296",
-            "output_price": "0.00366",
+            "input_price": "0.006654",
+            "output_price": "0.000195",
             "provider_id": "anthropic"
           },
           {
@@ -3334,8 +7139,8 @@
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.034296",
-            "output_price": "0.00366",
+            "input_price": "0.006654",
+            "output_price": "0.000195",
             "provider_id": "google"
           },
           {
@@ -3344,8 +7149,8 @@
           }
         ],
         "usage": {
-          "input_tokens": 11432,
-          "output_tokens": 244
+          "input_tokens": 2218,
+          "output_tokens": 13
         }
       }
     ],
@@ -3355,15 +7160,15 @@
     "body": {
       "model": "gpt-4.1-2025-04-14",
       "usage": {
-        "input_tokens": 458,
+        "input_tokens": 329,
         "input_tokens_details": {
           "cached_tokens": 0
         },
-        "output_tokens": 17,
+        "output_tokens": 12,
         "output_tokens_details": {
           "reasoning_tokens": 0
         },
-        "total_tokens": 475
+        "total_tokens": 341
       }
     },
     "extracted": [
@@ -3379,14 +7184,14 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000916",
-            "output_price": "0.000136",
+            "input_price": "0.000658",
+            "output_price": "0.000096",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.000916",
-            "output_price": "0.000136",
+            "input_price": "0.000658",
+            "output_price": "0.000096",
             "provider_id": "azure"
           },
           {
@@ -3395,18 +7200,132 @@
           },
           {
             "api_flavor": "responses",
-            "input_price": "0.000916",
-            "output_price": "0.000136",
+            "input_price": "0.000658",
+            "output_price": "0.000096",
             "provider_id": "openai"
           }
         ],
         "usage": {
-          "input_tokens": 458,
-          "output_tokens": 17
+          "input_tokens": 329,
+          "output_tokens": 12
         }
       }
     ],
     "model": "gpt-4.1-2025-04-14"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-20250514",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 7262,
+        "output_tokens": 171,
+        "server_tool_use": {
+          "web_fetch_requests": 1,
+          "web_search_requests": 0
+        },
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.021786",
+            "output_price": "0.002565",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.021786",
+            "output_price": "0.002565",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7262,
+          "output_tokens": 171
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-20250514"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-20250514",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 6346,
+        "output_tokens": 354,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.019038",
+            "output_price": "0.00531",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.019038",
+            "output_price": "0.00531",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 6346,
+          "output_tokens": 354
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-20250514"
   },
   {
     "body": {
@@ -3895,7 +7814,7 @@
   },
   {
     "body": {
-      "model": "claude-sonnet-4-20250514",
+      "model": "claude-sonnet-4-5-20250929",
       "usage": {
         "cache_creation": {
           "ephemeral_1h_input_tokens": 0,
@@ -3903,8 +7822,8 @@
         },
         "cache_creation_input_tokens": 0,
         "cache_read_input_tokens": 0,
-        "input_tokens": 106,
-        "output_tokens": 71,
+        "input_tokens": 187,
+        "output_tokens": 113,
         "service_tier": "standard"
       }
     },
@@ -3913,8 +7832,8 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.000318",
-            "output_price": "0.001065",
+            "input_price": "0.000561",
+            "output_price": "0.001695",
             "provider_id": "anthropic"
           },
           {
@@ -3931,8 +7850,8 @@
           },
           {
             "api_flavor": "anthropic",
-            "input_price": "0.000318",
-            "output_price": "0.001065",
+            "input_price": "0.000561",
+            "output_price": "0.001695",
             "provider_id": "google"
           },
           {
@@ -3941,12 +7860,12 @@
           }
         ],
         "usage": {
-          "input_tokens": 106,
-          "output_tokens": 71
+          "input_tokens": 187,
+          "output_tokens": 113
         }
       }
     ],
-    "model": "claude-sonnet-4-20250514"
+    "model": "claude-sonnet-4-5-20250929"
   },
   {
     "body": {
@@ -4279,6 +8198,61 @@
         "usage": {
           "input_tokens": 168,
           "output_tokens": 232
+        }
+      }
+    ],
+    "model": "claude-sonnet-4-5-20250929"
+  },
+  {
+    "body": {
+      "model": "claude-sonnet-4-5-20250929",
+      "usage": {
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "input_tokens": 19,
+        "output_tokens": 77,
+        "service_tier": "standard"
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000057",
+            "output_price": "0.001155",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.000057",
+            "output_price": "0.001155",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 19,
+          "output_tokens": 77
         }
       }
     ],
@@ -5956,14 +9930,14 @@
             "tokenCount": 20
           }
         ],
-        "promptTokenCount": 17,
+        "promptTokenCount": 8,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 17
+            "tokenCount": 8
           }
         ],
-        "totalTokenCount": 37
+        "totalTokenCount": 28
       }
     },
     "extracted": [
@@ -5971,13 +9945,13 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000017",
+            "input_price": "8E-7",
             "output_price": "0.000008",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 17,
+          "input_tokens": 8,
           "output_tokens": 20
         }
       }
@@ -6128,23 +10102,18 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash",
+      "modelVersion": "gemini-2.5-flash",
       "usageMetadata": {
-        "candidatesTokenCount": 28,
-        "candidatesTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 28
-          }
-        ],
-        "promptTokenCount": 12,
+        "candidatesTokenCount": 19,
+        "promptTokenCount": 40,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 12
+            "tokenCount": 40
           }
         ],
-        "totalTokenCount": 40
+        "thoughtsTokenCount": 65,
+        "totalTokenCount": 124
       }
     },
     "extracted": [
@@ -6152,18 +10121,52 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "9E-7",
-            "output_price": "0.0000084",
+            "input_price": "0.000012",
+            "output_price": "0.00021",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 12,
-          "output_tokens": 28
+          "input_tokens": 40,
+          "output_tokens": 84
         }
       }
     ],
-    "model": "gemini-1.5-flash"
+    "model": "gemini-2.5-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.5-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 29,
+        "promptTokenCount": 164,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 164
+          }
+        ],
+        "thoughtsTokenCount": 563,
+        "totalTokenCount": 756
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000492",
+            "output_price": "0.00148",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 164,
+          "output_tokens": 592
+        }
+      }
+    ],
+    "model": "gemini-2.5-flash"
   },
   {
     "body": {
@@ -6448,18 +10451,18 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-2.5-pro-preview-03-25",
+      "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
-        "candidatesTokenCount": 28,
-        "promptTokenCount": 38,
+        "candidatesTokenCount": 10,
+        "promptTokenCount": 33,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 38
+            "tokenCount": 33
           }
         ],
-        "thoughtsTokenCount": 361,
-        "totalTokenCount": 427
+        "thoughtsTokenCount": 64,
+        "totalTokenCount": 107
       }
     },
     "extracted": [
@@ -6467,37 +10470,37 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000475",
-            "output_price": "0.00389",
+            "input_price": "0.000066",
+            "output_price": "0.000888",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 38,
-          "output_tokens": 389
+          "input_tokens": 33,
+          "output_tokens": 74
         }
       }
     ],
-    "model": "gemini-2.5-pro-preview-03-25"
+    "model": "gemini-3-pro-preview"
   },
   {
     "body": {
-      "modelVersion": "gemini-2.5-pro-preview-03-25",
+      "modelVersion": "gemini-3-pro-preview",
       "usageMetadata": {
-        "candidatesTokenCount": 11,
-        "promptTokenCount": 360,
+        "candidatesTokenCount": 171,
+        "promptTokenCount": 1185,
         "promptTokensDetails": [
           {
-            "modality": "TEXT",
-            "tokenCount": 102
+            "modality": "IMAGE",
+            "tokenCount": 1107
           },
           {
-            "modality": "IMAGE",
-            "tokenCount": 258
+            "modality": "TEXT",
+            "tokenCount": 78
           }
         ],
-        "thoughtsTokenCount": 201,
-        "totalTokenCount": 572
+        "thoughtsTokenCount": 381,
+        "totalTokenCount": 1737
       }
     },
     "extracted": [
@@ -6505,18 +10508,18 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00045",
-            "output_price": "0.00212",
+            "input_price": "0.00237",
+            "output_price": "0.006624",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 360,
-          "output_tokens": 212
+          "input_tokens": 1185,
+          "output_tokens": 552
         }
       }
     ],
-    "model": "gemini-2.5-pro-preview-03-25"
+    "model": "gemini-3-pro-preview"
   },
   {
     "body": {
@@ -6600,138 +10603,21 @@
     "body": {
       "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
-        "candidatesTokenCount": 7,
+        "candidatesTokenCount": 8,
         "candidatesTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 7
+            "tokenCount": 8
           }
         ],
-        "promptTokenCount": 24,
+        "promptTokenCount": 22,
         "promptTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 24
-          }
-        ],
-        "totalTokenCount": 31
-      }
-    },
-    "extracted": [
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "input_price": "0.0000024",
-            "output_price": "0.0000028",
-            "provider_id": "google"
-          }
-        ],
-        "usage": {
-          "input_tokens": 24,
-          "output_tokens": 7
-        }
-      }
-    ],
-    "model": "gemini-2.0-flash"
-  },
-  {
-    "body": {
-      "modelVersion": "gemini-2.0-flash",
-      "usageMetadata": {
-        "candidatesTokenCount": 7,
-        "candidatesTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 7
-          }
-        ],
-        "promptTokenCount": 41,
-        "promptTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 41
-          }
-        ],
-        "totalTokenCount": 48
-      }
-    },
-    "extracted": [
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "input_price": "0.0000041",
-            "output_price": "0.0000028",
-            "provider_id": "google"
-          }
-        ],
-        "usage": {
-          "input_tokens": 41,
-          "output_tokens": 7
-        }
-      }
-    ],
-    "model": "gemini-2.0-flash"
-  },
-  {
-    "body": {
-      "modelVersion": "gemini-2.0-flash",
-      "usageMetadata": {
-        "candidatesTokenCount": 7,
-        "candidatesTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 7
-          }
-        ],
-        "promptTokenCount": 24,
-        "promptTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 24
-          }
-        ],
-        "totalTokenCount": 31
-      }
-    },
-    "extracted": [
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "input_price": "0.0000024",
-            "output_price": "0.0000028",
-            "provider_id": "google"
-          }
-        ],
-        "usage": {
-          "input_tokens": 24,
-          "output_tokens": 7
-        }
-      }
-    ],
-    "model": "gemini-2.0-flash"
-  },
-  {
-    "body": {
-      "modelVersion": "gemini-2.0-flash",
-      "usageMetadata": {
-        "candidatesTokenCount": 22,
-        "candidatesTokensDetails": [
           {
             "modality": "TEXT",
             "tokenCount": 22
           }
         ],
-        "promptTokenCount": 108,
-        "promptTokensDetails": [
-          {
-            "modality": "TEXT",
-            "tokenCount": 108
-          }
-        ],
-        "totalTokenCount": 130
+        "totalTokenCount": 30
       }
     },
     "extracted": [
@@ -6739,14 +10625,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000108",
-            "output_price": "0.0000088",
+            "input_price": "0.0000022",
+            "output_price": "0.0000032",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 108,
-          "output_tokens": 22
+          "input_tokens": 22,
+          "output_tokens": 8
         }
       }
     ],
@@ -6754,23 +10640,23 @@
   },
   {
     "body": {
-      "modelVersion": "gemini-1.5-flash",
+      "modelVersion": "gemini-2.0-flash",
       "usageMetadata": {
-        "candidatesTokenCount": 27,
+        "candidatesTokenCount": 7,
         "candidatesTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 27
+            "tokenCount": 7
           }
         ],
-        "promptTokenCount": 14,
+        "promptTokenCount": 40,
         "promptTokensDetails": [
           {
             "modality": "TEXT",
-            "tokenCount": 14
+            "tokenCount": 40
           }
         ],
-        "totalTokenCount": 41
+        "totalTokenCount": 47
       }
     },
     "extracted": [
@@ -6778,18 +10664,135 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00000105",
-            "output_price": "0.0000081",
+            "input_price": "0.000004",
+            "output_price": "0.0000028",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 14,
-          "output_tokens": 27
+          "input_tokens": 40,
+          "output_tokens": 7
         }
       }
     ],
-    "model": "gemini-1.5-flash"
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 8,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 8
+          }
+        ],
+        "promptTokenCount": 22,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 22
+          }
+        ],
+        "totalTokenCount": 30
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000022",
+            "output_price": "0.0000032",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 22,
+          "output_tokens": 8
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 31,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 31
+          }
+        ],
+        "promptTokenCount": 113,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 113
+          }
+        ],
+        "totalTokenCount": 144
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.0000113",
+            "output_price": "0.0000124",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 113,
+          "output_tokens": 31
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
+  },
+  {
+    "body": {
+      "modelVersion": "gemini-2.0-flash",
+      "usageMetadata": {
+        "candidatesTokenCount": 23,
+        "candidatesTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 23
+          }
+        ],
+        "promptTokenCount": 10,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 10
+          }
+        ],
+        "totalTokenCount": 33
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "input_price": "0.000001",
+            "output_price": "0.0000092",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 10,
+          "output_tokens": 23
+        }
+      }
+    ],
+    "model": "gemini-2.0-flash"
   },
   {
     "body": {
@@ -8692,6 +12695,59 @@
       }
     ],
     "model": "o3-mini-2025-01-31"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-mini-2024-07-18",
+      "usage": {
+        "input_tokens": 25,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 10,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 35
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00000375",
+            "output_price": "0.000006",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 25,
+          "output_tokens": 10
+        }
+      }
+    ],
+    "model": "gpt-4o-mini-2024-07-18"
   },
   {
     "body": {
@@ -12959,6 +17015,136 @@
   },
   {
     "body": {
+      "model": "gpt-4.1-mini-2025-04-14",
+      "usage": {
+        "completion_tokens": 8,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 31,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 39
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000124",
+            "output_price": "0.0000128",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000124",
+            "output_price": "0.0000128",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31,
+          "output_tokens": 8
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000124",
+            "output_price": "0.0",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0000124",
+            "output_price": "0.0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31
+        }
+      }
+    ],
+    "model": "gpt-4.1-mini-2025-04-14"
+  },
+  {
+    "body": {
       "model": "llama-3.3-70b",
       "usage": {
         "completion_tokens": 8,
@@ -14877,6 +19063,34 @@
         "usage": {
           "input_tokens": 33,
           "output_tokens": 907
+        }
+      }
+    ]
+  },
+  {
+    "body": {
+      "usage": {
+        "cacheReadInputTokenCount": 0,
+        "cacheReadInputTokens": 0,
+        "cacheWriteInputTokenCount": 0,
+        "cacheWriteInputTokens": 0,
+        "inputTokens": 19,
+        "outputTokens": 108,
+        "serverToolUsage": {},
+        "totalTokens": 127
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "aws"
+          }
+        ],
+        "usage": {
+          "input_tokens": 19,
+          "output_tokens": 108
         }
       }
     ]
@@ -16837,6 +21051,63 @@
       }
     ],
     "model": "gpt-5-2025-08-07"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "input_tokens": 23,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 88,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 111
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "default",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "aws"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000575",
+            "output_price": "0.00088",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.0000575",
+            "output_price": "0.00088",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "anthropic",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000575",
+            "output_price": "0.00088",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 23,
+          "output_tokens": 88
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
   },
   {
     "body": {
@@ -29681,6 +33952,266 @@
     "body": {
       "model": "gpt-4o-2024-08-06",
       "usage": {
+        "completion_tokens": 34,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 181,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 215
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004525",
+            "output_price": "0.00034",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004525",
+            "output_price": "0.00034",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 181,
+          "output_tokens": 34
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004525",
+            "output_price": "0",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0004525",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 181
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
+        "completion_tokens": 85,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens": 925,
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "total_tokens": 1010
+      }
+    },
+    "extracted": [
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "anthropic"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0023125",
+            "output_price": "0.00085",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_cerebras"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_fireworks-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_hyperbolic"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nebius"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_novita"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_publicai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_sambanova"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_together"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0023125",
+            "output_price": "0.00085",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 925,
+          "output_tokens": 85
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0023125",
+            "output_price": "0",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.0023125",
+            "output_price": "0",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 925
+        }
+      }
+    ],
+    "model": "gpt-4o-2024-08-06"
+  },
+  {
+    "body": {
+      "model": "gpt-4o-2024-08-06",
+      "usage": {
         "completion_tokens": 8,
         "completion_tokens_details": {
           "accepted_prediction_tokens": 0,
@@ -33128,12 +37659,12 @@
     "body": {
       "usage": {
         "inputTokens": 7,
-        "outputTokens": 96,
+        "outputTokens": 78,
         "pydantic_ai_gateway": {
-          "cost_estimate": 1.3685000000000002e-05
+          "cost_estimate": 1.1165000000000002e-05
         },
         "serverToolUsage": {},
-        "totalTokens": 103
+        "totalTokens": 85
       }
     },
     "extracted": [
@@ -33146,7 +37677,7 @@
         ],
         "usage": {
           "input_tokens": 7,
-          "output_tokens": 96
+          "output_tokens": 78
         }
       }
     ]
@@ -33155,15 +37686,15 @@
     "body": {
       "model": "llama-3.3-70b-versatile",
       "usage": {
-        "completion_time": 0.002254941,
+        "completion_time": 0.010003462,
         "completion_tokens": 8,
-        "prompt_time": 0.01168072,
+        "prompt_time": 0.002448683,
         "prompt_tokens": 42,
         "pydantic_ai_gateway": {
           "cost_estimate": 3.11e-05
         },
-        "queue_time": 0.084482342,
-        "total_time": 0.013935661,
+        "queue_time": 0.140973397,
+        "total_time": 0.012452145,
         "total_tokens": 50
       }
     },
@@ -33338,14 +37869,14 @@
         "input_tokens_details": {
           "cached_tokens": 0
         },
-        "output_tokens": 72,
+        "output_tokens": 8,
         "output_tokens_details": {
-          "reasoning_tokens": 64
+          "reasoning_tokens": 0
         },
         "pydantic_ai_gateway": {
-          "cost_estimate": 0.00073625
+          "cost_estimate": 9.625000000000001e-05
         },
-        "total_tokens": 85
+        "total_tokens": 21
       }
     },
     "extracted": [
@@ -33362,13 +37893,13 @@
           {
             "api_flavor": "responses",
             "input_price": "0.00001625",
-            "output_price": "0.00072",
+            "output_price": "0.00008",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
             "input_price": "0.00001625",
-            "output_price": "0.00072",
+            "output_price": "0.00008",
             "provider_id": "azure"
           },
           {
@@ -33378,13 +37909,13 @@
           {
             "api_flavor": "responses",
             "input_price": "0.00001625",
-            "output_price": "0.00072",
+            "output_price": "0.00008",
             "provider_id": "openai"
           }
         ],
         "usage": {
           "input_tokens": 13,
-          "output_tokens": 72
+          "output_tokens": 8
         }
       }
     ],
