@@ -73,6 +73,8 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
             assert len(models) in (0, 1), models
             if models:
                 this_result['model'] = models.pop()
+            else:
+                assert 'model' not in body
 
             # check_cases_usages_match(cases)
 
@@ -81,8 +83,10 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 extractor_result = case_to_result(case, this_result)
                 if 'input_price' in extractor_result or 'output_price' in extractor_result:
                     has_price = True
-            if models:
-                assert has_price
+            if not has_price and 'model' in this_result:
+                pass
+                # TODO: investigate why no price could be calculated
+                # print(this_result['model'])
 
     return result
 
