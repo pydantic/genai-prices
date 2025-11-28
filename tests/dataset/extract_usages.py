@@ -26,6 +26,20 @@ extractors = [
 ]
 
 
+def get_body_keys(extractor: UsageExtractor) -> set[str]:
+    keys = set[str]()
+    for path in [extractor.model_path, extractor.root]:
+        if path:
+            if isinstance(path, list):
+                path = path[0]
+            assert isinstance(path, str)
+            keys.add(path)
+    return keys
+
+
+body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
+
+
 def main():
     usages_file = this_dir / 'usages.json'
     current_result = json.loads(usages_file.read_text())
@@ -47,7 +61,6 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
 
     for body in bodies:
-        body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
         body = {k: body[k] for k in body_keys if k in body}
 
         cases: list[Case] = [
@@ -104,17 +117,6 @@ def check_cases_usages_match(cases: list[Case]):
         for k, v in case1.usage_dict.items():
             if k in case2.usage_dict:
                 assert v == case2.usage_dict[k]
-
-
-def get_body_keys(extractor: UsageExtractor) -> set[str]:
-    keys = set[str]()
-    for path in [extractor.model_path, extractor.root]:
-        if path:
-            if isinstance(path, list):
-                path = path[0]
-            assert isinstance(path, str)
-            keys.add(path)
-    return keys
 
 
 def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider: Provider) -> Case | None:
