@@ -87,9 +87,28 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 if 'input_price' in extractor_result or 'output_price' in extractor_result:
                     has_price = True
             if not has_price and 'model' in this_result:
-                pass
-                # TODO: investigate why no price could be calculated
-                # print(this_result['model'])
+                model = this_result['model']
+                assert (
+                    # TODO fix/investigate
+                    model
+                    in [
+                        # missing price
+                        'gemini-3-pro-image-preview',
+                        # huggingface models sometimes get -fast added at the end
+                        'Qwen/Qwen2.5-72B-Instruct-fast',
+                        'meta-llama/Llama-3.3-70B-Instruct-fast',
+                        # OpenAI client with other providers
+                        'gemini-2.5-pro-preview-05-06',
+                        'qwen-3-coder-480b',
+                        # missing price
+                        # https://console.groq.com/docs/compound/systems/compound
+                        'groq/compound',
+                    ]
+                    # google-gla sometimes adding 'models/' prefix
+                    or model.startswith('models/')
+                    # prices missing
+                    or 'openrouter' in body['file']
+                ), (body['file'], model)
 
     return result
 
