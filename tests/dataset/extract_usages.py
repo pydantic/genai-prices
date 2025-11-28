@@ -63,8 +63,13 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
             check_cases_usages_match(cases)
 
+            has_price = False
             for case in cases:
-                case_to_result(case, this_result)
+                extractor_result = case_to_result(case, this_result)
+                if 'input_price' in extractor_result or 'output_price' in extractor_result:
+                    has_price = True
+            if models:
+                assert has_price
 
     return result
 
@@ -91,6 +96,7 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
             break
     else:
         this_result['extracted'].append({'usage': case.usage_dict, 'extractors': [extractor_dict]})
+    return extractor_dict
 
 
 def check_cases_usages_match(cases: list[Case]):
