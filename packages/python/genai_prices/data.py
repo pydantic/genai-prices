@@ -7305,6 +7305,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='openai/codex-mini',
+                match=ClauseEquals(equals='openai/codex-mini'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6')
+                ),
+            ),
+            ModelInfo(
                 id='openai/gpt-3.5-turbo',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='openai/gpt-3.5-turbo'), ClauseEquals(equals='openai/gpt-3.5-turbo-0125')]
@@ -7393,6 +7400,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='openai/gpt-4o-audio-preview',
+                match=ClauseEquals(equals='openai/gpt-4o-audio-preview'),
+                price_comments='Audio pricing at $0.04/1k audio tokens not represented in standard schema',
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='openai/gpt-4o-mini',
                 match=ClauseOr(
                     or_=[
@@ -7407,6 +7420,111 @@ providers: list[Provider] = [
                 id='openai/gpt-4o:extended',
                 match=ClauseEquals(equals='openai/gpt-4o:extended'),
                 prices=ModelPrice(input_mtok=Decimal('6'), output_mtok=Decimal('18')),
+            ),
+            ModelInfo(
+                id='openai/gpt-5',
+                match=ClauseEquals(equals='openai/gpt-5'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-chat',
+                match=ClauseEquals(equals='openai/gpt-5-chat'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-codex',
+                match=ClauseEquals(equals='openai/gpt-5-codex'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-image',
+                match=ClauseEquals(equals='openai/gpt-5-image'),
+                price_comments='Image pricing at $0.01/1k images not represented in standard schema',
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-image-mini',
+                match=ClauseEquals(equals='openai/gpt-5-image-mini'),
+                price_comments='Image pricing at $0.0025/1k images not represented in standard schema',
+                prices=ModelPrice(input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-mini',
+                match=ClauseEquals(equals='openai/gpt-5-mini'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-nano',
+                match=ClauseEquals(equals='openai/gpt-5-nano'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.4')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-pro',
+                match=ClauseEquals(equals='openai/gpt-5-pro'),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.1',
+                match=ClauseEquals(equals='openai/gpt-5.1'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.1-chat',
+                match=ClauseEquals(equals='openai/gpt-5.1-chat'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.1-codex',
+                match=ClauseEquals(equals='openai/gpt-5.1-codex'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.1-codex-mini',
+                match=ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b',
+                match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b:exacto',
+                match=ClauseEquals(equals='openai/gpt-oss-120b:exacto'),
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-20b',
+                match=ClauseEquals(equals='openai/gpt-oss-20b'),
+                prices=ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.14')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-20b:free', match=ClauseEquals(equals='openai/gpt-oss-20b:free'), prices=ModelPrice()
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-safeguard-20b',
+                match=ClauseEquals(equals='openai/gpt-oss-safeguard-20b'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.037'), output_mtok=Decimal('0.3')
+                ),
             ),
             ModelInfo(
                 id='openai/o1',
@@ -7437,14 +7555,32 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('40')),
             ),
             ModelInfo(
+                id='openai/o3-deep-research',
+                match=ClauseEquals(equals='openai/o3-deep-research'),
+                price_comments='Image pricing at $7.65/1k images not represented in standard schema',
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
+            ),
+            ModelInfo(
                 id='openai/o3-mini',
                 match=ClauseOr(or_=[ClauseEquals(equals='openai/o3-mini'), ClauseEquals(equals='openai/o3-mini-high')]),
                 prices=ModelPrice(input_mtok=Decimal('1.1'), output_mtok=Decimal('4.4')),
             ),
             ModelInfo(
+                id='openai/o3-pro',
+                match=ClauseEquals(equals='openai/o3-pro'),
+                price_comments='Image pricing at $15.30/1k images not represented in standard schema',
+                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('80')),
+            ),
+            ModelInfo(
                 id='openai/o4-mini',
                 match=ClauseOr(or_=[ClauseEquals(equals='openai/o4-mini'), ClauseEquals(equals='openai/o4-mini-high')]),
                 prices=ModelPrice(input_mtok=Decimal('1.1'), output_mtok=Decimal('4.4')),
+            ),
+            ModelInfo(
+                id='openai/o4-mini-deep-research',
+                match=ClauseEquals(equals='openai/o4-mini-deep-research'),
+                price_comments='Image pricing at $1.53/1k images not represented in standard schema',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='openchat/openchat-7b',

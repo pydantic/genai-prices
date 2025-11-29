@@ -12931,6 +12931,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/codex-mini',
+        match: {
+          equals: 'openai/codex-mini',
+        },
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.375,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'openai/gpt-3.5-turbo',
         match: {
           or: [
@@ -13122,6 +13133,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-4o-audio-preview',
+        match: {
+          equals: 'openai/gpt-4o-audio-preview',
+        },
+        price_comments: 'Audio pricing at $0.04/1k audio tokens not represented in standard schema',
+        prices: {
+          input_mtok: 2.5,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'openai/gpt-4o-mini',
         match: {
           or: [
@@ -13149,6 +13171,187 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 6,
           output_mtok: 18,
+        },
+      },
+      {
+        id: 'openai/gpt-5',
+        match: {
+          equals: 'openai/gpt-5',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5-chat',
+        match: {
+          equals: 'openai/gpt-5-chat',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5-codex',
+        match: {
+          equals: 'openai/gpt-5-codex',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5-image',
+        match: {
+          equals: 'openai/gpt-5-image',
+        },
+        price_comments: 'Image pricing at $0.01/1k images not represented in standard schema',
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 1.25,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5-image-mini',
+        match: {
+          equals: 'openai/gpt-5-image-mini',
+        },
+        price_comments: 'Image pricing at $0.0025/1k images not represented in standard schema',
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'openai/gpt-5-mini',
+        match: {
+          equals: 'openai/gpt-5-mini',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'openai/gpt-5-nano',
+        match: {
+          equals: 'openai/gpt-5-nano',
+        },
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.005,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'openai/gpt-5-pro',
+        match: {
+          equals: 'openai/gpt-5-pro',
+        },
+        prices: {
+          input_mtok: 15,
+          output_mtok: 120,
+        },
+      },
+      {
+        id: 'openai/gpt-5.1',
+        match: {
+          equals: 'openai/gpt-5.1',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5.1-chat',
+        match: {
+          equals: 'openai/gpt-5.1-chat',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5.1-codex',
+        match: {
+          equals: 'openai/gpt-5.1-codex',
+        },
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.125,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'openai/gpt-5.1-codex-mini',
+        match: {
+          equals: 'openai/gpt-5.1-codex-mini',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        match: {
+          equals: 'openai/gpt-oss-120b',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b:exacto',
+        match: {
+          equals: 'openai/gpt-oss-120b:exacto',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        prices: {
+          input_mtok: 0.03,
+          output_mtok: 0.14,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b:free',
+        match: {
+          equals: 'openai/gpt-oss-20b:free',
+        },
+        prices: {},
+      },
+      {
+        id: 'openai/gpt-oss-safeguard-20b',
+        match: {
+          equals: 'openai/gpt-oss-safeguard-20b',
+        },
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.037,
+          output_mtok: 0.3,
         },
       },
       {
@@ -13209,6 +13412,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/o3-deep-research',
+        match: {
+          equals: 'openai/o3-deep-research',
+        },
+        price_comments: 'Image pricing at $7.65/1k images not represented in standard schema',
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 2.5,
+          output_mtok: 40,
+        },
+      },
+      {
         id: 'openai/o3-mini',
         match: {
           or: [
@@ -13226,6 +13441,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/o3-pro',
+        match: {
+          equals: 'openai/o3-pro',
+        },
+        price_comments: 'Image pricing at $15.30/1k images not represented in standard schema',
+        prices: {
+          input_mtok: 20,
+          output_mtok: 80,
+        },
+      },
+      {
         id: 'openai/o4-mini',
         match: {
           or: [
@@ -13240,6 +13466,18 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.1,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'openai/o4-mini-deep-research',
+        match: {
+          equals: 'openai/o4-mini-deep-research',
+        },
+        price_comments: 'Image pricing at $1.53/1k images not represented in standard schema',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 8,
         },
       },
       {
