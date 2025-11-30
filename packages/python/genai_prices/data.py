@@ -7390,6 +7390,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='openai/gpt-4o-2024-08-06'),
                         ClauseEquals(equals='openai/gpt-4o-2024-11-20'),
                         ClauseEquals(equals='openai/gpt-4o-search-preview'),
+                        ClauseEquals(equals='openai/gpt-4o-audio-preview'),
                     ]
                 ),
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
@@ -7398,12 +7399,6 @@ providers: list[Provider] = [
                 id='openai/gpt-4o-2024-05-13',
                 match=ClauseEquals(equals='openai/gpt-4o-2024-05-13'),
                 prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
-            ),
-            ModelInfo(
-                id='openai/gpt-4o-audio-preview',
-                match=ClauseEquals(equals='openai/gpt-4o-audio-preview'),
-                price_comments='Audio pricing at $0.04/1k audio tokens not represented in standard schema',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='openai/gpt-4o-mini',
@@ -7423,21 +7418,16 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5',
-                match=ClauseEquals(equals='openai/gpt-5'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-5'),
+                        ClauseEquals(equals='openai/gpt-5-chat'),
+                        ClauseEquals(equals='openai/gpt-5-codex'),
+                        ClauseEquals(equals='openai/gpt-5.1'),
+                        ClauseEquals(equals='openai/gpt-5.1-chat'),
+                        ClauseEquals(equals='openai/gpt-5.1-codex'),
+                    ]
                 ),
-            ),
-            ModelInfo(
-                id='openai/gpt-5-chat',
-                match=ClauseEquals(equals='openai/gpt-5-chat'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
-                ),
-            ),
-            ModelInfo(
-                id='openai/gpt-5-codex',
-                match=ClauseEquals(equals='openai/gpt-5-codex'),
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
                 ),
@@ -7474,27 +7464,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
-                id='openai/gpt-5.1',
-                match=ClauseEquals(equals='openai/gpt-5.1'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
-                ),
-            ),
-            ModelInfo(
-                id='openai/gpt-5.1-chat',
-                match=ClauseEquals(equals='openai/gpt-5.1-chat'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
-                ),
-            ),
-            ModelInfo(
-                id='openai/gpt-5.1-codex',
-                match=ClauseEquals(equals='openai/gpt-5.1-codex'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
-                ),
-            ),
-            ModelInfo(
                 id='openai/gpt-5.1-codex-mini',
                 match=ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
                 prices=ModelPrice(
@@ -7503,12 +7472,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
-                match=ClauseEquals(equals='openai/gpt-oss-120b'),
-                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
-                id='openai/gpt-oss-120b:exacto',
-                match=ClauseEquals(equals='openai/gpt-oss-120b:exacto'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-oss-120b'), ClauseEquals(equals='openai/gpt-oss-120b:exacto')]
+                ),
                 prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(

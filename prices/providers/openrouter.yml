@@ -3164,6 +3164,7 @@ models:
         - equals: openai/gpt-4o-2024-08-06
         - equals: openai/gpt-4o-2024-11-20
         - equals: openai/gpt-4o-search-preview
+        - equals: openai/gpt-4o-audio-preview
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -3174,15 +3175,6 @@ models:
     prices:
       input_mtok: 5
       output_mtok: 15
-
-  - id: openai/gpt-4o-audio-preview
-    match:
-      equals: openai/gpt-4o-audio-preview
-    prices:
-      input_mtok: 2.5
-      output_mtok: 10
-    prices_checked: 2025-11-29
-    price_comments: Audio pricing at $0.04/1k audio tokens not represented in standard schema
 
   - id: openai/gpt-4o-mini
     match:
@@ -3203,25 +3195,13 @@ models:
 
   - id: openai/gpt-5
     match:
-      equals: openai/gpt-5
-    prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.125
-      output_mtok: 10
-    prices_checked: 2025-11-29
-
-  - id: openai/gpt-5-chat
-    match:
-      equals: openai/gpt-5-chat
-    prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.125
-      output_mtok: 10
-    prices_checked: 2025-11-29
-
-  - id: openai/gpt-5-codex
-    match:
-      equals: openai/gpt-5-codex
+      or:
+        - equals: openai/gpt-5
+        - equals: openai/gpt-5-chat
+        - equals: openai/gpt-5-codex
+        - equals: openai/gpt-5.1
+        - equals: openai/gpt-5.1-chat
+        - equals: openai/gpt-5.1-codex
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.125
@@ -3274,33 +3254,6 @@ models:
       output_mtok: 120
     prices_checked: 2025-11-29
 
-  - id: openai/gpt-5.1
-    match:
-      equals: openai/gpt-5.1
-    prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.125
-      output_mtok: 10
-    prices_checked: 2025-11-29
-
-  - id: openai/gpt-5.1-chat
-    match:
-      equals: openai/gpt-5.1-chat
-    prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.125
-      output_mtok: 10
-    prices_checked: 2025-11-29
-
-  - id: openai/gpt-5.1-codex
-    match:
-      equals: openai/gpt-5.1-codex
-    prices:
-      input_mtok: 1.25
-      cache_read_mtok: 0.125
-      output_mtok: 10
-    prices_checked: 2025-11-29
-
   - id: openai/gpt-5.1-codex-mini
     match:
       equals: openai/gpt-5.1-codex-mini
@@ -3312,15 +3265,9 @@ models:
 
   - id: openai/gpt-oss-120b
     match:
-      equals: openai/gpt-oss-120b
-    prices:
-      input_mtok: 0.04
-      output_mtok: 0.2
-    prices_checked: 2025-11-29
-
-  - id: "openai/gpt-oss-120b:exacto"
-    match:
-      equals: "openai/gpt-oss-120b:exacto"
+      or:
+        - equals: openai/gpt-oss-120b
+        - equals: openai/gpt-oss-120b:exacto
     prices:
       input_mtok: 0.04
       output_mtok: 0.2

@@ -13115,6 +13115,9 @@ export const data: Provider[] = [
             {
               equals: 'openai/gpt-4o-search-preview',
             },
+            {
+              equals: 'openai/gpt-4o-audio-preview',
+            },
           ],
         },
         prices: {
@@ -13130,17 +13133,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 5,
           output_mtok: 15,
-        },
-      },
-      {
-        id: 'openai/gpt-4o-audio-preview',
-        match: {
-          equals: 'openai/gpt-4o-audio-preview',
-        },
-        price_comments: 'Audio pricing at $0.04/1k audio tokens not represented in standard schema',
-        prices: {
-          input_mtok: 2.5,
-          output_mtok: 10,
         },
       },
       {
@@ -13176,29 +13168,26 @@ export const data: Provider[] = [
       {
         id: 'openai/gpt-5',
         match: {
-          equals: 'openai/gpt-5',
-        },
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.125,
-          output_mtok: 10,
-        },
-      },
-      {
-        id: 'openai/gpt-5-chat',
-        match: {
-          equals: 'openai/gpt-5-chat',
-        },
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.125,
-          output_mtok: 10,
-        },
-      },
-      {
-        id: 'openai/gpt-5-codex',
-        match: {
-          equals: 'openai/gpt-5-codex',
+          or: [
+            {
+              equals: 'openai/gpt-5',
+            },
+            {
+              equals: 'openai/gpt-5-chat',
+            },
+            {
+              equals: 'openai/gpt-5-codex',
+            },
+            {
+              equals: 'openai/gpt-5.1',
+            },
+            {
+              equals: 'openai/gpt-5.1-chat',
+            },
+            {
+              equals: 'openai/gpt-5.1-codex',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.25,
@@ -13263,39 +13252,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'openai/gpt-5.1',
-        match: {
-          equals: 'openai/gpt-5.1',
-        },
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.125,
-          output_mtok: 10,
-        },
-      },
-      {
-        id: 'openai/gpt-5.1-chat',
-        match: {
-          equals: 'openai/gpt-5.1-chat',
-        },
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.125,
-          output_mtok: 10,
-        },
-      },
-      {
-        id: 'openai/gpt-5.1-codex',
-        match: {
-          equals: 'openai/gpt-5.1-codex',
-        },
-        prices: {
-          input_mtok: 1.25,
-          cache_read_mtok: 0.125,
-          output_mtok: 10,
-        },
-      },
-      {
         id: 'openai/gpt-5.1-codex-mini',
         match: {
           equals: 'openai/gpt-5.1-codex-mini',
@@ -13309,17 +13265,14 @@ export const data: Provider[] = [
       {
         id: 'openai/gpt-oss-120b',
         match: {
-          equals: 'openai/gpt-oss-120b',
-        },
-        prices: {
-          input_mtok: 0.04,
-          output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-120b:exacto',
-        match: {
-          equals: 'openai/gpt-oss-120b:exacto',
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b:exacto',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.04,
