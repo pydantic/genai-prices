@@ -93,7 +93,6 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     model
                     in [
                         # OpenAI client with other providers
-                        'gemini-2.5-pro-preview-05-06',
                         'qwen-3-coder-480b',
                         # https://github.com/pydantic/genai-prices/issues/232
                         'groq/compound',

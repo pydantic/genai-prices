@@ -5431,6 +5431,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_cerebras"
           },
           {
@@ -5537,6 +5541,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -5655,6 +5663,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -5766,6 +5778,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -5882,6 +5898,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -6013,6 +6033,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -6124,6 +6148,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -6246,6 +6274,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -6364,6 +6396,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -11096,6 +11132,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -11215,6 +11255,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -11350,6 +11394,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -11471,6 +11519,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -11588,6 +11640,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -11711,6 +11767,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -11828,6 +11888,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -11949,6 +12013,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -12076,6 +12144,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -12195,6 +12267,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -12318,6 +12394,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -12453,6 +12533,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -12582,6 +12666,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -12771,6 +12859,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -12898,6 +12990,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -13085,6 +13181,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -13216,6 +13316,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -13335,6 +13439,12 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "input_price": "0.00004375",
+            "output_price": "0.00012",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -13446,6 +13556,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000825",
+            "output_price": "0.00006",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -13571,6 +13687,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -13726,6 +13846,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_cerebras"
           },
           {
@@ -13839,6 +13963,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -13968,6 +14096,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -14101,6 +14233,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -14230,6 +14366,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -14357,6 +14497,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -14490,6 +14634,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -14619,6 +14767,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -14752,6 +14904,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -14881,6 +15037,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -15014,6 +15174,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -15138,6 +15302,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -15259,6 +15427,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -15390,6 +15562,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -15519,6 +15695,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -15710,6 +15890,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -15841,6 +16025,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -15963,6 +16151,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -16077,6 +16269,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -16202,6 +16398,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -16335,6 +16535,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -16464,6 +16668,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -16597,6 +16805,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -16726,6 +16938,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -16859,6 +17075,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -16988,6 +17208,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -17121,6 +17345,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -17250,6 +17478,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -17383,6 +17615,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -17505,6 +17741,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -17630,6 +17870,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -17763,6 +18007,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -17892,6 +18140,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -18025,6 +18277,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -18156,6 +18412,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -18285,6 +18545,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -18496,6 +18760,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -18621,6 +18889,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -18750,6 +19022,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -18883,6 +19159,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -19012,6 +19292,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -19164,6 +19448,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "chat",
@@ -20111,6 +20399,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -20224,6 +20516,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -20397,6 +20693,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -24664,6 +24964,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00002832",
             "output_price": "0.00000632",
@@ -24781,6 +25085,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -24922,6 +25230,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00001575",
             "output_price": "0.00139986",
@@ -25043,6 +25355,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.000393",
             "output_price": "0.0015741",
@@ -25160,6 +25476,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -25281,6 +25601,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00002832",
             "output_price": "0.00000632",
@@ -25398,6 +25722,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -25519,6 +25847,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00002112",
             "output_price": "0.00000272",
@@ -25638,6 +25970,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00028072",
             "output_price": "0.00000374",
@@ -25755,6 +26091,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -25894,6 +26234,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -26009,6 +26353,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -26146,6 +26494,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -26291,6 +26643,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -26414,6 +26770,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -26545,6 +26905,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -26678,6 +27042,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -26807,6 +27175,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -26940,6 +27312,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -27069,6 +27445,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -27202,6 +27582,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -27331,6 +27715,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -27464,6 +27852,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -27593,6 +27985,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -27726,6 +28122,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -27855,6 +28255,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -27988,6 +28392,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -28117,6 +28525,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -28250,6 +28662,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -28379,6 +28795,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -28512,6 +28932,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -28643,6 +29067,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -28772,6 +29200,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -28975,6 +29407,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -29104,6 +29540,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -29237,6 +29677,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -29366,6 +29810,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -29499,6 +29947,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -29630,6 +30082,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -29759,6 +30215,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -29966,6 +30426,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -30095,6 +30559,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -30228,6 +30696,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -30357,6 +30829,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -30490,6 +30966,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -30619,6 +31099,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -30752,6 +31236,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -30881,6 +31369,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -31014,6 +31506,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -31143,6 +31639,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -31276,6 +31776,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -31405,6 +31909,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -31538,6 +32046,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -31667,6 +32179,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -31800,6 +32316,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -31929,6 +32449,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -32062,6 +32586,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -32191,6 +32719,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -32324,6 +32856,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -32453,6 +32989,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -32586,6 +33126,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -32715,6 +33259,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -32848,6 +33396,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -32977,6 +33529,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -33177,6 +33733,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -33306,6 +33866,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -33439,6 +34003,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -33568,6 +34136,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -33701,6 +34273,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -33830,6 +34406,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -33963,6 +34543,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -34092,6 +34676,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -34225,6 +34813,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -34354,6 +34946,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -34487,6 +35083,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -34618,6 +35218,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -34747,6 +35351,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -34956,6 +35564,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00000175",
             "output_price": "0.000002",
@@ -35110,6 +35722,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -35295,6 +35911,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -35420,6 +36040,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -35553,6 +36177,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -35682,6 +36310,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -35815,6 +36447,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -35944,6 +36580,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -36077,6 +36717,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -36206,6 +36850,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -36339,6 +36987,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -36468,6 +37120,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -36601,6 +37257,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -36732,6 +37392,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -36861,6 +37525,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -36994,6 +37662,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -37123,6 +37795,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -37256,6 +37932,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -37387,6 +38067,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -37516,6 +38200,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -37690,6 +38378,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -37809,6 +38501,12 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "input_price": "8E-7",
+            "output_price": "0.0000068",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -37922,6 +38620,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000042",
+            "output_price": "0.000765",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
@@ -38097,6 +38801,10 @@
             "provider_id": "fireworks"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "groq"
           },
@@ -38249,6 +38957,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
           },
           {
             "api_flavor": "default",
