@@ -43,7 +43,9 @@ models:
   - id: Qwen/QwQ-32B
     name: QwQ-32B
     match:
-      equals: qwen/qwq-32b
+      or:
+        - equals: qwen/qwq-32b
+        - equals: qwen/qwq-32b-fast
     context_window: 131072
     prices:
       input_mtok: 0.18
@@ -52,7 +54,9 @@ models:
   - id: Qwen/Qwen2.5-Coder-32B-Instruct
     name: Qwen2.5-Coder-32B-Instruct
     match:
-      equals: qwen/qwen2.5-coder-32b-instruct
+      or:
+        - equals: qwen/qwen2.5-coder-32b-instruct
+        - equals: qwen/qwen2.5-coder-32b-instruct-fast
     context_window: 131072
     prices:
       input_mtok: 0.06
@@ -61,7 +65,9 @@ models:
   - id: Qwen/Qwen2.5-Coder-3B-Instruct
     name: Qwen2.5-Coder-3B-Instruct
     match:
-      equals: qwen/qwen2.5-coder-3b-instruct
+      or:
+        - equals: qwen/qwen2.5-coder-3b-instruct
+        - equals: qwen/qwen2.5-coder-3b-instruct-fast
     context_window: 32768
     prices:
       input_mtok: 0.01
@@ -70,7 +76,9 @@ models:
   - id: Qwen/Qwen2.5-Coder-7B-Instruct
     name: Qwen2.5-Coder-7B-Instruct
     match:
-      equals: qwen/qwen2.5-coder-7b-instruct
+      or:
+        - equals: qwen/qwen2.5-coder-7b-instruct
+        - equals: qwen/qwen2.5-coder-7b-instruct-fast
     context_window: 131072
     prices:
       input_mtok: 0.01
@@ -79,7 +87,9 @@ models:
   - id: Qwen/Qwen3-14B
     name: Qwen3-14B
     match:
-      equals: qwen/qwen3-14b
+      or:
+        - equals: qwen/qwen3-14b
+        - equals: qwen/qwen3-14b-fast
     context_window: 40960
     prices:
       input_mtok: 0.07
@@ -90,7 +100,9 @@ models:
     match:
       or:
         - equals: qwen/qwen3-235b-a22b
+        - equals: qwen/qwen3-235b-a22b-fast
         - equals: qwen/qwen3-235b-a22b-instruct-2507
+        - equals: qwen/qwen3-235b-a22b-instruct-2507-fast
     context_window: 32000
     prices:
       input_mtok: 0.2
@@ -99,7 +111,9 @@ models:
   - id: Qwen/Qwen3-32B
     name: Qwen3-32B
     match:
-      equals: qwen/qwen3-32b
+      or:
+        - equals: qwen/qwen3-32b
+        - equals: qwen/qwen3-32b-fast
     context_window: 40960
     prices:
       input_mtok: 0.08
@@ -108,7 +122,9 @@ models:
   - id: Qwen/Qwen3-4B-Instruct-2507
     name: Qwen3-4B-Instruct-2507
     match:
-      equals: qwen/qwen3-4b-instruct-2507
+      or:
+        - equals: qwen/qwen3-4b-instruct-2507
+        - equals: qwen/qwen3-4b-instruct-2507-fast
     context_window: 262144
     prices:
       input_mtok: 0.01
@@ -117,7 +133,9 @@ models:
   - id: Qwen/Qwen3-4B-Thinking-2507
     name: Qwen3-4B-Thinking-2507
     match:
-      equals: qwen/qwen3-4b-thinking-2507
+      or:
+        - equals: qwen/qwen3-4b-thinking-2507
+        - equals: qwen/qwen3-4b-thinking-2507-fast
     context_window: 262144
     prices:
       input_mtok: 0.01
@@ -126,7 +144,9 @@ models:
   - id: Qwen/Qwen3-8B
     name: Qwen3-8B
     match:
-      equals: qwen/qwen3-8b
+      or:
+        - equals: qwen/qwen3-8b
+        - equals: qwen/qwen3-8b-fast
     context_window: 40960
     prices:
       input_mtok: 0.07
@@ -135,7 +155,9 @@ models:
   - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B
     match:
-      equals: deepseek-ai/deepseek-r1-distill-llama-70b
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-llama-70b
+        - equals: deepseek-ai/deepseek-r1-distill-llama-70b-fast
     context_window: 131072
     prices:
       input_mtok: 0.75
@@ -144,7 +166,9 @@ models:
   - id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
     name: DeepSeek-R1-Distill-Llama-8B
     match:
-      equals: deepseek-ai/deepseek-r1-distill-llama-8b
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-llama-8b
+        - equals: deepseek-ai/deepseek-r1-distill-llama-8b-fast
     context_window: 131072
     prices:
       input_mtok: 0.05
@@ -153,7 +177,9 @@ models:
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
     name: DeepSeek-R1-Distill-Qwen-1.5B
     match:
-      equals: deepseek-ai/deepseek-r1-distill-qwen-1.5b
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-1.5b
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-1.5b-fast
     context_window: 131072
     prices:
       input_mtok: 0.1
@@ -162,7 +188,9 @@ models:
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     name: DeepSeek-R1-Distill-Qwen-14B
     match:
-      equals: deepseek-ai/deepseek-r1-distill-qwen-14b
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-14b
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-14b-fast
     context_window: 131072
     prices:
       input_mtok: 0.2
@@ -171,7 +199,9 @@ models:
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
     name: DeepSeek-R1-Distill-Qwen-32B
     match:
-      equals: deepseek-ai/deepseek-r1-distill-qwen-32b
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-32b
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-32b-fast
     context_window: 131072
     prices:
       input_mtok: 0.3
@@ -180,7 +210,9 @@ models:
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
     name: DeepSeek-R1-Distill-Qwen-7B
     match:
-      equals: deepseek-ai/deepseek-r1-distill-qwen-7b
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-7b
+        - equals: deepseek-ai/deepseek-r1-distill-qwen-7b-fast
     context_window: 131072
     prices:
       input_mtok: 0.15
@@ -189,7 +221,9 @@ models:
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
     match:
-      equals: meta-llama/llama-3.1-8b-instruct
+      or:
+        - equals: meta-llama/llama-3.1-8b-instruct
+        - equals: meta-llama/llama-3.1-8b-instruct-fast
     context_window: 131072
     prices:
       input_mtok: 0.06
@@ -198,25 +232,20 @@ models:
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
     match:
-      equals: meta-llama/llama-3.3-70b-instruct
+      or:
+        - equals: meta-llama/llama-3.3-70b-instruct
+        - equals: meta-llama/llama-3.3-70b-instruct-fast
     context_window: 131072
     prices:
       input_mtok: 0.4
       output_mtok: 0.4
 
-  - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
-    name: Llama-4-Scout-17B-16E-Instruct
-    match:
-      equals: meta-llama/llama-4-scout-17b-16e-instruct
-    context_window: 890000
-    prices:
-      input_mtok: 0.09
-      output_mtok: 0.29
-
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
     match:
-      equals: openai/gpt-oss-120b
+      or:
+        - equals: openai/gpt-oss-120b
+        - equals: openai/gpt-oss-120b-fast
     context_window: 131072
     prices:
       input_mtok: 0.1
@@ -225,7 +254,9 @@ models:
   - id: openai/gpt-oss-20b
     name: gpt-oss-20b
     match:
-      equals: openai/gpt-oss-20b
+      or:
+        - equals: openai/gpt-oss-20b
+        - equals: openai/gpt-oss-20b-fast
     context_window: 131072
     prices:
       input_mtok: 0.05

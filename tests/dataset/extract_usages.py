@@ -92,9 +92,6 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     # TODO fix/investigate
                     model
                     in [
-                        # huggingface models sometimes get -fast added at the end
-                        'Qwen/Qwen2.5-72B-Instruct-fast',
-                        'meta-llama/Llama-3.3-70B-Instruct-fast',
                         # OpenAI client with other providers
                         'gemini-2.5-pro-preview-05-06',
                         'qwen-3-coder-480b',

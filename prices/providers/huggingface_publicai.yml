@@ -43,29 +43,47 @@ models:
   - id: aisingapore/Gemma-SEA-LION-v4-27B-IT
     name: Gemma-SEA-LION-v4-27B-IT
     match:
-      equals: aisingapore/gemma-sea-lion-v4-27b-it
+      or:
+        - equals: aisingapore/gemma-sea-lion-v4-27b-it
+        - equals: aisingapore/gemma-sea-lion-v4-27b-it-fast
     prices: {}
 
   - id: aisingapore/Qwen-SEA-LION-v4-32B-IT
     name: Qwen-SEA-LION-v4-32B-IT
     match:
-      equals: aisingapore/qwen-sea-lion-v4-32b-it
+      or:
+        - equals: aisingapore/qwen-sea-lion-v4-32b-it
+        - equals: aisingapore/qwen-sea-lion-v4-32b-it-fast
+    prices: {}
+
+  - id: allenai/Olmo-3-32B-Think
+    name: Olmo-3-32B-Think
+    match:
+      or:
+        - equals: allenai/olmo-3-32b-think
+        - equals: allenai/olmo-3-32b-think-fast
     prices: {}
 
   - id: allenai/Olmo-3-7B-Instruct
     name: Olmo-3-7B-Instruct
     match:
-      equals: allenai/olmo-3-7b-instruct
+      or:
+        - equals: allenai/olmo-3-7b-instruct
+        - equals: allenai/olmo-3-7b-instruct-fast
     prices: {}
 
-  - id: swiss-ai/Apertus-70B-Instruct-2509
-    name: Apertus-70B-Instruct-2509
+  - id: allenai/Olmo-3-7B-Think
+    name: Olmo-3-7B-Think
     match:
-      equals: swiss-ai/apertus-70b-instruct-2509
+      or:
+        - equals: allenai/olmo-3-7b-think
+        - equals: allenai/olmo-3-7b-think-fast
     prices: {}
 
   - id: swiss-ai/Apertus-8B-Instruct-2509
     name: Apertus-8B-Instruct-2509
     match:
-      equals: swiss-ai/apertus-8b-instruct-2509
+      or:
+        - equals: swiss-ai/apertus-8b-instruct-2509
+        - equals: swiss-ai/apertus-8b-instruct-2509-fast
     prices: {}

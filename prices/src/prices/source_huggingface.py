@@ -6,7 +6,7 @@ import httpx
 from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
-from prices.types import ClauseAnd, ClauseContains, ClauseEquals, ModelInfo, ModelPrice, Provider
+from prices.types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
 
 
@@ -30,7 +30,12 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
                 input_mtok=pricing['input'] or None,
                 output_mtok=pricing['output'] or None,
             ),
-            match=ClauseEquals(equals=model_id.lower()),
+            match=ClauseOr(
+                or_=[  # pyright: ignore[reportCallIssue]
+                    ClauseEquals(equals=model_id.lower()),
+                    ClauseEquals(equals=model_id.lower() + '-fast'),
+                ]
+            ),
             context_window=provider_info.get('context_length'),
         )
 
