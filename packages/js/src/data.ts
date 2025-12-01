@@ -3214,7 +3214,14 @@ export const data: Provider[] = [
         name: 'Gemini 3 Pro Preview',
         description: 'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
         match: {
-          starts_with: 'gemini-3-pro-preview',
+          or: [
+            {
+              starts_with: 'gemini-3-pro-preview',
+            },
+            {
+              starts_with: 'gemini-3-pro-image-preview',
+            },
+          ],
         },
         prices: {
           input_mtok: {

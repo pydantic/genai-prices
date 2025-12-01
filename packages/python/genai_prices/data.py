@@ -1849,7 +1849,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',
-                match=ClauseStartsWith(starts_with='gemini-3-pro-preview'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='gemini-3-pro-preview'),
+                        ClauseStartsWith(starts_with='gemini-3-pro-image-preview'),
+                    ]
+                ),
                 name='Gemini 3 Pro Preview',
                 description='The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
                 prices=ModelPrice(

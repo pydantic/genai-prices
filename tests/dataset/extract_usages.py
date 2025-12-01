@@ -92,16 +92,13 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     # TODO fix/investigate
                     model
                     in [
-                        # missing price
-                        'gemini-3-pro-image-preview',
                         # huggingface models sometimes get -fast added at the end
                         'Qwen/Qwen2.5-72B-Instruct-fast',
                         'meta-llama/Llama-3.3-70B-Instruct-fast',
                         # OpenAI client with other providers
                         'gemini-2.5-pro-preview-05-06',
                         'qwen-3-coder-480b',
-                        # missing price
-                        # https://console.groq.com/docs/compound/systems/compound
+                        # https://github.com/pydantic/genai-prices/issues/232
                         'groq/compound',
                     ]
                     # google-gla sometimes adding 'models/' prefix
