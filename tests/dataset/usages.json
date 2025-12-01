@@ -16140,6 +16140,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0",
+            "output_price": "0",
             "provider_id": "cerebras"
           },
           {
@@ -16260,6 +16262,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0",
+            "output_price": "0",
             "provider_id": "cerebras"
           },
           {

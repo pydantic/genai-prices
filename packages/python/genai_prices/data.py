@@ -1322,6 +1322,13 @@ providers: list[Provider] = [
                 price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
                 prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('0.8')),
             ),
+            ModelInfo(
+                id='qwen-3-coder-480b',
+                match=ClauseEquals(equals='qwen-3-coder-480b'),
+                name='qwen-3-coder-480b',
+                price_comments='Seems to be no longer available on cerebras, here to help with tests',
+                prices=ModelPrice(),
+            ),
         ],
     ),
     Provider(

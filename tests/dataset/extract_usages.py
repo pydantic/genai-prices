@@ -92,8 +92,6 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     # TODO fix/investigate
                     model
                     in [
-                        # OpenAI client with other providers
-                        'qwen-3-coder-480b',
                         # https://github.com/pydantic/genai-prices/issues/232
                         'groq/compound',
                     ]

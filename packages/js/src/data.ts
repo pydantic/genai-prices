@@ -2309,6 +2309,15 @@ export const data: Provider[] = [
           output_mtok: 0.8,
         },
       },
+      {
+        id: 'qwen-3-coder-480b',
+        name: 'qwen-3-coder-480b',
+        match: {
+          equals: 'qwen-3-coder-480b',
+        },
+        price_comments: 'Seems to be no longer available on cerebras, here to help with tests',
+        prices: {},
+      },
     ],
   },
   {
