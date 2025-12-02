@@ -96,6 +96,17 @@ def parse_pricing_item(product: dict[str, Any]):
             provider = attributes.get('provider', 'Amazon')
             if provider == 'Mistral':
                 provider = 'Mistral AI'
+            if provider == 'Anthropic':
+                # These are all legacy models.
+                # Anthropic models prices aren't available via the API so aren't automated.
+                assert model in {
+                    'Claude 2.0',
+                    'Claude 2.1',
+                    'Claude 3 Sonnet',
+                    'Claude 3 Haiku',
+                    'Claude Instant',
+                }, model
+                continue
             pricing_entries.append(
                 PricingEntry(model=model, provider=provider, attributes=attributes, price_data=price_data)
             )
@@ -117,10 +128,6 @@ def get_model(price: PricingEntry):
     if not matches:
         # TODO
         assert price['model'] in {
-            'Claude 2.0',
-            'Claude 2.1',
-            'Claude 3 Sonnet',
-            'Claude Instant',
             'Titan Embeddings G1 Image',
             'Titan Text G1 Premier',
             'Titan Text G1 Lite',
@@ -152,7 +159,7 @@ def get_model_infos():
         model['prices'].append(p)
     model_infos: list[ModelInfo] = []
     for model in models:
-        if 'prices' not in model:
+        if not model['prices']:
             continue
         model_price = ModelPrice()
         for price in model['prices']:
