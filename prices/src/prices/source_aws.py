@@ -5,7 +5,7 @@ from typing import Any, TypedDict
 
 import boto3
 
-from prices.types import ClauseContains, ModelInfo, ModelPrice
+from prices.prices_types import ClauseContains, ModelInfo, ModelPrice
 from prices.update import get_providers_yaml
 
 pricing_client = boto3.client('pricing', region_name='us-east-1')  # pyright: ignore[reportUnknownMemberType]
@@ -85,6 +85,11 @@ def parse_pricing_item(product: dict[str, Any]):
                 # TODO investigate more
                 continue
 
+            if model == 'Nova Sonic 2.0':
+                # Currently this is missing the correct model to match against,
+                # which causes it to match against 'Nova Sonic' (v1) incorrectly.
+                continue
+
             provider = attributes.get('provider', 'Amazon')
             if provider == 'Mistral':
                 provider = 'Mistral AI'
@@ -108,17 +113,23 @@ def get_model(price: PricingEntry):
     ]
     if not matches:
         # TODO
-        assert price['model'] in [
+        assert price['model'] in {
             'Claude 2.0',
             'Claude 2.1',
             'Claude 3 Sonnet',
             'Claude Instant',
             'Titan Embeddings G1 Image',
             'Titan Text G1 Premier',
-            'Titan Text G1 Premier',
+            'Titan Text G1 Lite',
+            'Titan Text G1 Express',
             'TitanEmbeddingsV2-Text-input',
-        ]
+            'Nova 2.0 Omni',
+            'Nova 2.0 Pro',
+            'Nova 2.0 Lite',
+        }, (price, provider_models)
         return
+    if price['model'] == 'Mistral Large':
+        matches = [m for m in matches if m['modelId'] == 'mistral.mistral-large-2402-v1:0']
     assert len(matches) == 1, (price, matches, provider_models)
     return matches[0]
 
@@ -218,7 +229,7 @@ def main():
     for model_info in model_infos:
         assert isinstance(model_info.prices, ModelPrice)
         try:
-            provider_yaml.update_model(model_info.id, model_info)
+            provider_yaml.update_model(model_info.id, model_info, set_prices=True)
         except LookupError:
             models_added += provider_yaml.add_model(model_info)
         else:

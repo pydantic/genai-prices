@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from ruamel.yaml import YAML, CommentedMap, CommentedSeq
 from ruamel.yaml.scalarstring import FoldedScalarString
 
-from .types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
+from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider, match_logic_schema
 from .utils import package_dir
 
 yaml = YAML()
@@ -75,7 +75,7 @@ class ProviderYaml:
             assert isinstance(model.prices, ModelPrice)
             if isinstance(prices, CommentedMap):
                 prices.clear()  # pyright: ignore[reportUnknownMemberType]
-                prices.update(model.prices.model_dump(by_alias=True, mode='json'))  # pyright: ignore[reportUnknownMemberType]
+                prices.update(model.prices.model_dump(by_alias=True, mode='json', exclude_none=True))  # pyright: ignore[reportUnknownMemberType]
             else:
                 yaml_model['prices'] = model.prices.model_dump(by_alias=True, mode='json')
 
