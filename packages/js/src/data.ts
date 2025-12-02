@@ -561,7 +561,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          contains: 'nova-lite',
+          contains: 'amazon.nova-lite-v1',
         },
         prices: {
           input_mtok: 0.06,
@@ -575,7 +575,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          contains: 'nova-micro',
+          contains: 'amazon.nova-micro-v1',
         },
         prices: {
           input_mtok: 0.035,
@@ -587,7 +587,7 @@ export const data: Provider[] = [
         id: 'amazon.nova-premier-v1:0',
         name: 'Nova Premier',
         match: {
-          contains: 'nova-premier',
+          contains: 'amazon.nova-premier-v1',
         },
         prices: {
           input_mtok: 2.5,
@@ -601,7 +601,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
         match: {
-          contains: 'nova-pro',
+          contains: 'amazon.nova-pro-v1',
         },
         prices: {
           input_mtok: 0.8,
@@ -613,7 +613,7 @@ export const data: Provider[] = [
         id: 'amazon.nova-sonic-v1:0',
         name: 'Nova Sonic',
         match: {
-          contains: 'nova-sonic',
+          contains: 'amazon.nova-sonic-v1',
         },
         prices: {
           input_mtok: 0.06,
@@ -626,7 +626,7 @@ export const data: Provider[] = [
         id: 'amazon.titan-embed-text-v1',
         name: 'Titan Embeddings G1 - Text',
         match: {
-          contains: 'titan-embed-text',
+          contains: 'amazon.titan-embed-text-v1',
         },
         prices: {
           input_mtok: 0.1,
@@ -658,7 +658,7 @@ export const data: Provider[] = [
         id: 'deepseek.r1-v1:0',
         name: 'DeepSeek-R1',
         match: {
-          contains: 'r1',
+          contains: 'deepseek.r1-v1',
         },
         prices: {
           input_mtok: 1.35,
@@ -705,7 +705,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-1-70b-instruct-v1:0',
         name: 'Llama 3.1 70B Instruct',
         match: {
-          contains: 'llama3-1-70b-instruct',
+          contains: 'meta.llama3-1-70b-instruct-v1',
         },
         prices: {
           input_mtok: 0.72,
@@ -716,7 +716,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-1-8b-instruct-v1:0',
         name: 'Llama 3.1 8B Instruct',
         match: {
-          contains: 'llama3-1-8b-instruct',
+          contains: 'meta.llama3-1-8b-instruct-v1',
         },
         prices: {
           input_mtok: 0.22,
@@ -727,7 +727,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-11b-instruct-v1:0',
         name: 'Llama 3.2 11B Instruct',
         match: {
-          contains: 'llama3-2-11b-instruct',
+          contains: 'meta.llama3-2-11b-instruct-v1',
         },
         prices: {
           input_mtok: 0.16,
@@ -738,7 +738,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-1b-instruct-v1:0',
         name: 'Llama 3.2 1B Instruct',
         match: {
-          contains: 'llama3-2-1b-instruct',
+          contains: 'meta.llama3-2-1b-instruct-v1',
         },
         prices: {
           input_mtok: 0.1,
@@ -749,7 +749,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-3b-instruct-v1:0',
         name: 'Llama 3.2 3B Instruct',
         match: {
-          contains: 'llama3-2-3b-instruct',
+          contains: 'meta.llama3-2-3b-instruct-v1',
         },
         prices: {
           input_mtok: 0.15,
@@ -760,7 +760,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-90b-instruct-v1:0',
         name: 'Llama 3.2 90B Instruct',
         match: {
-          contains: 'llama3-2-90b-instruct',
+          contains: 'meta.llama3-2-90b-instruct-v1',
         },
         prices: {
           input_mtok: 0.72,
@@ -771,7 +771,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-3-70b-instruct-v1:0',
         name: 'Llama 3.3 70B Instruct',
         match: {
-          contains: 'llama3-3-70b-instruct',
+          contains: 'meta.llama3-3-70b-instruct-v1',
         },
         prices: {
           input_mtok: 0.72,
@@ -782,7 +782,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-70b-instruct-v1:0',
         name: 'Llama 3 70B Instruct',
         match: {
-          contains: 'llama3-70b-instruct',
+          contains: 'meta.llama3-70b-instruct-v1',
         },
         prices: {
           input_mtok: 2.65,
@@ -793,7 +793,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-8b-instruct-v1:0',
         name: 'Llama 3 8B Instruct',
         match: {
-          contains: 'llama3-8b-instruct',
+          contains: 'meta.llama3-8b-instruct-v1',
         },
         prices: {
           input_mtok: 0.3,
@@ -804,7 +804,7 @@ export const data: Provider[] = [
         id: 'meta.llama4-maverick-17b-instruct-v1:0',
         name: 'Llama 4 Maverick 17B Instruct',
         match: {
-          contains: 'llama4-maverick-17b-instruct',
+          contains: 'meta.llama4-maverick-17b-instruct-v1',
         },
         prices: {
           input_mtok: 0.24,
@@ -815,7 +815,7 @@ export const data: Provider[] = [
         id: 'meta.llama4-scout-17b-instruct-v1:0',
         name: 'Llama 4 Scout 17B Instruct',
         match: {
-          contains: 'llama4-scout-17b-instruct',
+          contains: 'meta.llama4-scout-17b-instruct-v1',
         },
         prices: {
           input_mtok: 0.17,
@@ -826,7 +826,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-7b-instruct-v0:2',
         name: 'Mistral 7B Instruct',
         match: {
-          contains: 'mistral-7b-instruct',
+          contains: 'mistral.mistral-7b-instruct-v0',
         },
         prices: {
           input_mtok: 0.15,
@@ -837,7 +837,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-large-2402-v1:0',
         name: 'Mistral Large (24.02)',
         match: {
-          contains: 'mistral-large-2402',
+          contains: 'mistral.mistral-large-2402-v1',
         },
         prices: {
           input_mtok: 4,
@@ -848,7 +848,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-small-2402-v1:0',
         name: 'Mistral Small (24.02)',
         match: {
-          contains: 'mistral-small-2402',
+          contains: 'mistral.mistral-small-2402-v1',
         },
         prices: {
           input_mtok: 1,
@@ -859,7 +859,7 @@ export const data: Provider[] = [
         id: 'mistral.mixtral-8x7b-instruct-v0:1',
         name: 'Mixtral 8x7B Instruct',
         match: {
-          contains: 'mixtral-8x7b-instruct',
+          contains: 'mistral.mixtral-8x7b-instruct-v0',
         },
         prices: {
           input_mtok: 0.45,
@@ -870,7 +870,7 @@ export const data: Provider[] = [
         id: 'mistral.pixtral-large-2502-v1:0',
         name: 'Pixtral Large (25.02)',
         match: {
-          contains: 'pixtral-large-2502',
+          contains: 'mistral.pixtral-large-2502-v1',
         },
         prices: {
           input_mtok: 2,
@@ -881,7 +881,7 @@ export const data: Provider[] = [
         id: 'openai.gpt-oss-120b-1:0',
         name: 'gpt-oss-120b',
         match: {
-          contains: 'gpt-oss-120b',
+          contains: 'openai.gpt-oss-120b-1',
         },
         prices: {
           input_mtok: 0.15,
@@ -892,7 +892,7 @@ export const data: Provider[] = [
         id: 'openai.gpt-oss-20b-1:0',
         name: 'gpt-oss-20b',
         match: {
-          contains: 'gpt-oss-20b',
+          contains: 'openai.gpt-oss-20b-1',
         },
         prices: {
           input_mtok: 0.07,
@@ -903,7 +903,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-32b-v1:0',
         name: 'Qwen3 32B (dense)',
         match: {
-          contains: 'qwen3-32b',
+          contains: 'qwen.qwen3-32b-v1',
         },
         prices: {
           input_mtok: 0.15,
@@ -914,7 +914,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-coder-30b-a3b-v1:0',
         name: 'Qwen3-Coder-30B-A3B-Instruct',
         match: {
-          contains: 'qwen3-coder-30b-a3b',
+          contains: 'qwen.qwen3-coder-30b-a3b-v1',
         },
         prices: {
           input_mtok: 0.15,

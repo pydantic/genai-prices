@@ -348,7 +348,7 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='amazon.nova-lite-v1:0',
-                match=ClauseContains(contains='nova-lite'),
+                match=ClauseContains(contains='amazon.nova-lite-v1'),
                 name='Nova Lite',
                 description='Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
                 prices=ModelPrice(
@@ -357,7 +357,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-micro-v1:0',
-                match=ClauseContains(contains='nova-micro'),
+                match=ClauseContains(contains='amazon.nova-micro-v1'),
                 name='Nova Micro',
                 description='Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
                 prices=ModelPrice(
@@ -366,7 +366,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-premier-v1:0',
-                match=ClauseContains(contains='nova-premier'),
+                match=ClauseContains(contains='amazon.nova-premier-v1'),
                 name='Nova Premier',
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.625'), output_mtok=Decimal('12.5')
@@ -374,7 +374,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-pro-v1:0',
-                match=ClauseContains(contains='nova-pro'),
+                match=ClauseContains(contains='amazon.nova-pro-v1'),
                 name='Nova Pro',
                 description='Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
                 prices=ModelPrice(
@@ -383,7 +383,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-sonic-v1:0',
-                match=ClauseContains(contains='nova-sonic'),
+                match=ClauseContains(contains='amazon.nova-sonic-v1'),
                 name='Nova Sonic',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.06'),
@@ -394,7 +394,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.titan-embed-text-v1',
-                match=ClauseContains(contains='titan-embed-text'),
+                match=ClauseContains(contains='amazon.titan-embed-text-v1'),
                 name='Titan Embeddings G1 - Text',
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
@@ -412,7 +412,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek.r1-v1:0',
-                match=ClauseContains(contains='r1'),
+                match=ClauseContains(contains='deepseek.r1-v1'),
                 name='DeepSeek-R1',
                 prices=ModelPrice(input_mtok=Decimal('1.35'), output_mtok=Decimal('5.4')),
             ),
@@ -448,121 +448,121 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='meta.llama3-1-70b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-1-70b-instruct'),
+                match=ClauseContains(contains='meta.llama3-1-70b-instruct-v1'),
                 name='Llama 3.1 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-1-8b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-1-8b-instruct'),
+                match=ClauseContains(contains='meta.llama3-1-8b-instruct-v1'),
                 name='Llama 3.1 8B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('0.22')),
             ),
             ModelInfo(
                 id='meta.llama3-2-11b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-2-11b-instruct'),
+                match=ClauseContains(contains='meta.llama3-2-11b-instruct-v1'),
                 name='Llama 3.2 11B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.16'), output_mtok=Decimal('0.16')),
             ),
             ModelInfo(
                 id='meta.llama3-2-1b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-2-1b-instruct'),
+                match=ClauseContains(contains='meta.llama3-2-1b-instruct-v1'),
                 name='Llama 3.2 1B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='meta.llama3-2-3b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-2-3b-instruct'),
+                match=ClauseContains(contains='meta.llama3-2-3b-instruct-v1'),
                 name='Llama 3.2 3B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
             ),
             ModelInfo(
                 id='meta.llama3-2-90b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-2-90b-instruct'),
+                match=ClauseContains(contains='meta.llama3-2-90b-instruct-v1'),
                 name='Llama 3.2 90B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-3-70b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-3-70b-instruct'),
+                match=ClauseContains(contains='meta.llama3-3-70b-instruct-v1'),
                 name='Llama 3.3 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-70b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-70b-instruct'),
+                match=ClauseContains(contains='meta.llama3-70b-instruct-v1'),
                 name='Llama 3 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('2.65'), output_mtok=Decimal('3.5')),
             ),
             ModelInfo(
                 id='meta.llama3-8b-instruct-v1:0',
-                match=ClauseContains(contains='llama3-8b-instruct'),
+                match=ClauseContains(contains='meta.llama3-8b-instruct-v1'),
                 name='Llama 3 8B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='meta.llama4-maverick-17b-instruct-v1:0',
-                match=ClauseContains(contains='llama4-maverick-17b-instruct'),
+                match=ClauseContains(contains='meta.llama4-maverick-17b-instruct-v1'),
                 name='Llama 4 Maverick 17B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.24'), output_mtok=Decimal('0.97')),
             ),
             ModelInfo(
                 id='meta.llama4-scout-17b-instruct-v1:0',
-                match=ClauseContains(contains='llama4-scout-17b-instruct'),
+                match=ClauseContains(contains='meta.llama4-scout-17b-instruct-v1'),
                 name='Llama 4 Scout 17B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.66')),
             ),
             ModelInfo(
                 id='mistral.mistral-7b-instruct-v0:2',
-                match=ClauseContains(contains='mistral-7b-instruct'),
+                match=ClauseContains(contains='mistral.mistral-7b-instruct-v0'),
                 name='Mistral 7B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
                 id='mistral.mistral-large-2402-v1:0',
-                match=ClauseContains(contains='mistral-large-2402'),
+                match=ClauseContains(contains='mistral.mistral-large-2402-v1'),
                 name='Mistral Large (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='mistral.mistral-small-2402-v1:0',
-                match=ClauseContains(contains='mistral-small-2402'),
+                match=ClauseContains(contains='mistral.mistral-small-2402-v1'),
                 name='Mistral Small (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='mistral.mixtral-8x7b-instruct-v0:1',
-                match=ClauseContains(contains='mixtral-8x7b-instruct'),
+                match=ClauseContains(contains='mistral.mixtral-8x7b-instruct-v0'),
                 name='Mixtral 8x7B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.7')),
             ),
             ModelInfo(
                 id='mistral.pixtral-large-2502-v1:0',
-                match=ClauseContains(contains='pixtral-large-2502'),
+                match=ClauseContains(contains='mistral.pixtral-large-2502-v1'),
                 name='Pixtral Large (25.02)',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='openai.gpt-oss-120b-1:0',
-                match=ClauseContains(contains='gpt-oss-120b'),
+                match=ClauseContains(contains='openai.gpt-oss-120b-1'),
                 name='gpt-oss-120b',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='openai.gpt-oss-20b-1:0',
-                match=ClauseContains(contains='gpt-oss-20b'),
+                match=ClauseContains(contains='openai.gpt-oss-20b-1'),
                 name='gpt-oss-20b',
                 prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='qwen.qwen3-32b-v1:0',
-                match=ClauseContains(contains='qwen3-32b'),
+                match=ClauseContains(contains='qwen.qwen3-32b-v1'),
                 name='Qwen3 32B (dense)',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='qwen.qwen3-coder-30b-a3b-v1:0',
-                match=ClauseContains(contains='qwen3-coder-30b-a3b'),
+                match=ClauseContains(contains='qwen.qwen3-coder-30b-a3b-v1'),
                 name='Qwen3-Coder-30B-A3B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),

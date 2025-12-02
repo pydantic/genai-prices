@@ -177,14 +177,7 @@ def get_model_infos():
             assert getattr(model_price, key) is None, (model_price, model, key, price)
             setattr(model_price, key, price_mtok)
         model_id = model['modelId']
-        simple_model_id = re.sub(r'-v?\d(:\d)?$', '', model_id)
-        assert model_id != simple_model_id, model_id
-        provider_prefix = model['providerName'].lower()
-        if provider_prefix == 'mistral ai':
-            provider_prefix = 'mistral'
-        provider_prefix += '.'
-        assert simple_model_id.startswith(provider_prefix), (simple_model_id, provider_prefix)
-        simple_model_id = simple_model_id.removeprefix(provider_prefix)
+        simple_model_id = re.sub(r'(:\d)?$', '', model_id)
         model_info = ModelInfo(
             id=model_id, name=model['modelName'], prices=model_price, match=ClauseContains(contains=simple_model_id)
         )
