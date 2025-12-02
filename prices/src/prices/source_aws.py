@@ -4,6 +4,7 @@ from decimal import Decimal
 from typing import Any, TypedDict
 
 import boto3
+from mypy_boto3_bedrock.type_defs import FoundationModelSummaryTypeDef
 
 from prices.prices_types import ClauseContains, ModelInfo, ModelPrice
 from prices.update import get_providers_yaml
@@ -15,8 +16,17 @@ target_region = 'us-east-1'
 bedrock_client = boto3.client('bedrock', region_name=target_region)  # pyright: ignore[reportUnknownMemberType]
 
 
-def canonical_model_name(name: str):
-    return re.sub(r'\W+', '-', name).lower().strip('-')
+class PricingEntry(TypedDict):
+    model: str
+    provider: str
+    attributes: dict[str, Any]
+    price_data: dict[str, Any]
+
+
+class ExtendedFoundationModelSummaryTypeDef(FoundationModelSummaryTypeDef):
+    prices: list[PricingEntry]
+    providerName: str  # pyright: ignore[reportGeneralTypeIssues]
+    modelName: str  # pyright: ignore[reportGeneralTypeIssues]
 
 
 def get_available_models():
@@ -29,7 +39,7 @@ def get_available_models():
         # TODO check other inferenceTypesSupported values
         if not {'ON_DEMAND', 'INFERENCE_PROFILE'}.intersection(m.get('inferenceTypesSupported', [])):
             continue
-        yield m
+        yield ExtendedFoundationModelSummaryTypeDef(**m, prices=[])
 
 
 def get_bedrock_pricing_data():
@@ -46,13 +56,6 @@ def get_bedrock_pricing_data():
     for page in page_iterator:
         for product_str in page['PriceList']:
             yield json.loads(product_str)
-
-
-class PricingEntry(TypedDict):
-    model: str
-    provider: str
-    attributes: dict[str, Any]
-    price_data: dict[str, Any]
 
 
 def parse_pricing_item(product: dict[str, Any]):
@@ -146,7 +149,7 @@ def get_model_infos():
         model = get_model(p)
         if not model:
             continue
-        model.setdefault('prices', []).append(p)
+        model['prices'].append(p)
     model_infos: list[ModelInfo] = []
     for model in models:
         if 'prices' not in model:
@@ -216,6 +219,10 @@ def get_usage_attr_from_inference_type(inference_type: str) -> str:
             attr = 'output_mtok'
     assert attr, inference_type
     return attr
+
+
+def canonical_model_name(name: str):
+    return re.sub(r'\W+', '-', name).lower().strip('-')
 
 
 def main():

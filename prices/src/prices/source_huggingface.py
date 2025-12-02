@@ -6,7 +6,7 @@ import httpx
 from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
-from prices.types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
+from prices.prices_types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
 
 

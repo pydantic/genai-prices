@@ -1,6 +1,6 @@
 from pydantic import TypeAdapter
 
-from .types import ModelPrice
+from .prices_types import ModelPrice
 from .utils import package_dir
 
 ProvidePrices = dict[str, ModelPrice]
