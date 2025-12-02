@@ -9,7 +9,7 @@ import httpx
 from pydantic import BaseModel
 
 from . import source_prices
-from .types import ClauseEquals, ModelInfo, ModelPrice
+from .prices_types import ClauseEquals, ModelInfo, ModelPrice
 from .update import get_providers_yaml
 from .utils import mtok
 
