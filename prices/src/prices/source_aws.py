@@ -143,6 +143,29 @@ def get_model(price: PricingEntry) -> ExtendedFoundationModelSummaryTypeDef | No
     if not matches:
         return None
     if price['model'] == 'Mistral Large':
+        # Currently there are two Mistral Large models with different prices,
+        # but the prices of the newer model aren't available via the API yet.
+        assert len(matches) == 2
+        assert price['price_data'] in [
+            {
+                'appliesTo': [],
+                'beginRange': '0',
+                'description': '$0.004 per 1K tokens for Mistral Large input tokens in US East (N.Virginia)',
+                'endRange': 'Inf',
+                'pricePerUnit': {'USD': '0.0040000000'},
+                'rateCode': '4JGB54U6JUKURPCS.JRTCKXETXF.6YS6EN2CT7',
+                'unit': '1K tokens',
+            },
+            {
+                'appliesTo': [],
+                'beginRange': '0',
+                'description': '$0.012 per 1K tokens for Mistral Large output tokens in US East (N.Virginia)',
+                'endRange': 'Inf',
+                'pricePerUnit': {'USD': '0.0120000000'},
+                'rateCode': 'WHNSGG64M5QAAPU7.JRTCKXETXF.6YS6EN2CT7',
+                'unit': '1K tokens',
+            },
+        ]
         matches = [m for m in matches if m['modelId'] == 'mistral.mistral-large-2402-v1:0']
     assert len(matches) == 1, (price, matches, provider_models)
     return matches[0]
