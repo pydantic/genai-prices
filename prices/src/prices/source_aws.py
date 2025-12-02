@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import re
 from decimal import Decimal
@@ -114,7 +116,7 @@ def parse_pricing_item(product: dict[str, Any]):
     return pricing_entries
 
 
-def get_model(price: PricingEntry):
+def get_model(price: PricingEntry) -> ExtendedFoundationModelSummaryTypeDef | None:
     provider_models = [m for m in models if m.get('providerName') == price['provider']]
     matches = [
         m
@@ -125,9 +127,9 @@ def get_model(price: PricingEntry):
             for model_name in [m['modelId'], m['modelName']]
         )
     ]
-    if not matches:
-        # TODO
-        assert price['model'] in {
+    assert (
+        price['model']
+        in {
             'Titan Embeddings G1 Image',
             'Titan Text G1 Premier',
             'Titan Text G1 Lite',
@@ -136,8 +138,10 @@ def get_model(price: PricingEntry):
             'Nova 2.0 Omni',
             'Nova 2.0 Pro',
             'Nova 2.0 Lite',
-        }, (price, provider_models)
-        return
+        }
+    ) == (not matches), (price, matches, provider_models)
+    if not matches:
+        return None
     if price['model'] == 'Mistral Large':
         matches = [m for m in matches if m['modelId'] == 'mistral.mistral-large-2402-v1:0']
     assert len(matches) == 1, (price, matches, provider_models)
@@ -172,7 +176,6 @@ def get_model_infos():
             if 'flex' in inference_type or 'priority' in inference_type or 'batch' in inference_type:
                 # TODO
                 continue
-            # TODO audio tokens
             key = get_usage_attr_from_inference_type(inference_type)
             assert getattr(model_price, key) is None, (model_price, model, key, price)
             setattr(model_price, key, price_mtok)
@@ -229,7 +232,6 @@ def main():
     model_infos = get_model_infos()
     providers_yaml = get_providers_yaml()
 
-    # add all models to the openrouter provider
     provider_yaml = providers_yaml['aws']
     models_added = 0
     models_updated = 0
