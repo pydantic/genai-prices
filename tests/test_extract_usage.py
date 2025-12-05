@@ -275,7 +275,13 @@ def test_google_anthropic():
 def test_accumulate_extracted_usage():
     extracted = extract_usage(gemini_response_data, provider_id='google')
     assert extracted.usage == Usage(input_tokens=75, output_tokens=162)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         _ = extracted + 1
+    with pytest.raises(TypeError):
+        _ = None + extracted
+    with pytest.raises(TypeError):
+        _ = extracted + None
+    with pytest.raises(ValueError):
+        _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(input_tokens=75 * 2, output_tokens=162 * 2)

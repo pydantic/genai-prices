@@ -171,26 +171,21 @@ class ExtractedUsage:
         if not models_match:
             raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
 
-        def _add_option(a: int | None, b: int | None) -> int | None:
-            return None if a is b is None else (a or 0) + (b or 0)
+        providers_match = self.provider and other.provider and other.provider.id == self.provider.id
+        if not providers_match:
+            raise ValueError(
+                f'Cannot add {other} to {self}, providers do not match {other.provider} != {self.provider}'
+            )
 
-        updated_usage = Usage(
-            input_tokens=_add_option(self.usage.input_tokens, other.usage.input_tokens),
-            cache_write_tokens=_add_option(self.usage.cache_write_tokens, other.usage.cache_write_tokens),
-            cache_read_tokens=_add_option(self.usage.cache_read_tokens, other.usage.cache_read_tokens),
-            output_tokens=_add_option(self.usage.output_tokens, other.usage.output_tokens),
-            input_audio_tokens=_add_option(self.usage.input_audio_tokens, other.usage.input_audio_tokens),
-            cache_audio_read_tokens=_add_option(
-                self.usage.cache_audio_read_tokens, other.usage.cache_audio_read_tokens
-            ),
-            output_audio_tokens=_add_option(self.usage.output_audio_tokens, other.usage.output_audio_tokens),
-        )
         return ExtractedUsage(
             model=self.model,
             provider=self.provider,
             auto_update_timestamp=self.auto_update_timestamp,
-            usage=updated_usage,
+            usage=self.usage + other.usage,
         )
+
+    def __radd__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
+        return self + other
 
 
 class AbstractUsage(Protocol):
@@ -252,6 +247,23 @@ class Usage:
     """Number of audio tokens read from the cache."""
     output_audio_tokens: int | None = None
     """Number of output audio tokens."""
+
+    def __add__(self, other: Usage | Any) -> Usage:
+        if not isinstance(other, Usage):
+            raise NotImplementedError
+
+        def _add_option(a: int | None, b: int | None) -> int | None:
+            return None if a is b is None else (a or 0) + (b or 0)
+
+        return Usage(
+            **{
+                field.name: _add_option(getattr(self, field.name), getattr(other, field.name))
+                for field in dataclasses.fields(self)
+            }
+        )
+
+    def __radd__(self, other: Usage) -> Usage:
+        return self + other
 
 
 @dataclass
