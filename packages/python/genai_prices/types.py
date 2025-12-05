@@ -167,7 +167,7 @@ class ExtractedUsage:
         if not isinstance(other, ExtractedUsage):
             return NotImplemented  # will raise a TypeError
 
-        models_match = other.model.id == self.model.id if other.model and self.model else False
+        models_match = self.model and other.model and other.model.id == self.model.id
         if not models_match:
             raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
 
