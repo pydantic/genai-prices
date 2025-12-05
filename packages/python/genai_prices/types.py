@@ -163,9 +163,13 @@ class ExtractedUsage:
         Args:
               other: The usage to accumulate with this usage extraction instance.
         """
+
+        if not isinstance(other, ExtractedUsage):
+            raise ValueError(f'Cannot add {other} to {self}, other is not an ExtractedUsage')
+
         models_match = other.model.id == self.model.id if other.model and self.model else False
-        if not isinstance(other, ExtractedUsage) or not models_match:
-            raise ValueError(f'Cannot add {other} to {self}')
+        if not models_match:
+            raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
 
         def _add_option(a: int | None, b: int | None) -> int | None:
             return None if all(num is None for num in (a, b)) else (a or 0) + (b or 0)
