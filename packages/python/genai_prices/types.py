@@ -165,7 +165,7 @@ class ExtractedUsage:
         """
 
         if not isinstance(other, ExtractedUsage):
-            raise ValueError(f'Cannot add {other} to {self}, other is not an ExtractedUsage')
+            return NotImplemented  # will raise a TypeError
 
         models_match = other.model.id == self.model.id if other.model and self.model else False
         if not models_match:
