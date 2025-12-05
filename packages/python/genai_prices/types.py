@@ -172,7 +172,7 @@ class ExtractedUsage:
             raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
 
         def _add_option(a: int | None, b: int | None) -> int | None:
-            return None if all(num is None for num in (a, b)) else (a or 0) + (b or 0)
+            return None if a is b is None else (a or 0) + (b or 0)
 
         updated_usage = Usage(
             input_tokens=_add_option(self.usage.input_tokens, other.usage.input_tokens),
