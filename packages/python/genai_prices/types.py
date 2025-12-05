@@ -154,6 +154,40 @@ class ExtractedUsage:
             f'auto_update_timestamp={self.auto_update_timestamp!r})'
         )
 
+    def __add__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
+        """Accumulate inner Usage, handling nullable usage fields.
+
+        Accumulating usage is useful for common streaming situations where user wants to save and compute costs for
+        all the response chunks in a stream
+
+        Args:
+              other: The usage to accumulate with this usage extraction instance.
+        """
+        models_match = other.model.id == self.model.id if other.model and self.model else False
+        if not isinstance(other, ExtractedUsage) or not models_match:
+            raise ValueError(f'Cannot add {other} to {self}')
+
+        def _add_option(a: int | None, b: int | None) -> int | None:
+            return None if all(num is None for num in (a, b)) else (a or 0) + (b or 0)
+
+        updated_usage = Usage(
+            input_tokens=_add_option(self.usage.input_tokens, other.usage.input_tokens),
+            cache_write_tokens=_add_option(self.usage.cache_write_tokens, other.usage.cache_write_tokens),
+            cache_read_tokens=_add_option(self.usage.cache_read_tokens, other.usage.cache_read_tokens),
+            output_tokens=_add_option(self.usage.output_tokens, other.usage.output_tokens),
+            input_audio_tokens=_add_option(self.usage.input_audio_tokens, other.usage.input_audio_tokens),
+            cache_audio_read_tokens=_add_option(
+                self.usage.cache_audio_read_tokens, other.usage.cache_audio_read_tokens
+            ),
+            output_audio_tokens=_add_option(self.usage.output_audio_tokens, other.usage.output_audio_tokens),
+        )
+        return ExtractedUsage(
+            model=self.model,
+            provider=self.provider,
+            auto_update_timestamp=self.auto_update_timestamp,
+            usage=updated_usage,
+        )
+
 
 class AbstractUsage(Protocol):
     """Abstract definition of data about token usage for a single LLM call."""
