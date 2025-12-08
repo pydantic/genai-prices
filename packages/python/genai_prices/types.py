@@ -250,7 +250,7 @@ class Usage:
 
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
-            raise NotImplementedError
+            return NotImplemented
 
         def _add_option(a: int | None, b: int | None) -> int | None:
             return None if a is b is None else (a or 0) + (b or 0)
