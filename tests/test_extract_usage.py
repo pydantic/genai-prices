@@ -285,3 +285,6 @@ def test_accumulate_extracted_usage():
         _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(input_tokens=75 * 2, output_tokens=162 * 2)
+    assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
+        input_tokens=10, output_tokens=20
+    )
