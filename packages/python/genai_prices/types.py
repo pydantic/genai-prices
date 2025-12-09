@@ -154,6 +154,39 @@ class ExtractedUsage:
             f'auto_update_timestamp={self.auto_update_timestamp!r})'
         )
 
+    def __add__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
+        """Accumulate inner Usage, handling nullable usage fields.
+
+        Accumulating usage is useful for common streaming situations where user wants to save and compute costs for
+        all the response chunks in a stream
+
+        Args:
+              other: The usage to accumulate with this usage extraction instance.
+        """
+
+        if not isinstance(other, ExtractedUsage):
+            return NotImplemented  # will raise a TypeError
+
+        models_match = self.model and other.model and other.model.id == self.model.id
+        if not models_match:
+            raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
+
+        providers_match = self.provider and other.provider and other.provider.id == self.provider.id
+        if not providers_match:
+            raise ValueError(
+                f'Cannot add {other} to {self}, providers do not match {other.provider} != {self.provider}'
+            )
+
+        return ExtractedUsage(
+            model=self.model,
+            provider=self.provider,
+            auto_update_timestamp=self.auto_update_timestamp,
+            usage=self.usage + other.usage,
+        )
+
+    def __radd__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
+        return self + other
+
 
 class AbstractUsage(Protocol):
     """Abstract definition of data about token usage for a single LLM call."""
@@ -214,6 +247,23 @@ class Usage:
     """Number of audio tokens read from the cache."""
     output_audio_tokens: int | None = None
     """Number of output audio tokens."""
+
+    def __add__(self, other: Usage | Any) -> Usage:
+        if not isinstance(other, Usage):
+            return NotImplemented
+
+        def _add_option(a: int | None, b: int | None) -> int | None:
+            return None if a is b is None else (a or 0) + (b or 0)
+
+        return Usage(
+            **{
+                field.name: _add_option(getattr(self, field.name), getattr(other, field.name))
+                for field in dataclasses.fields(self)
+            }
+        )
+
+    def __radd__(self, other: Usage) -> Usage:
+        return self + other
 
 
 @dataclass
