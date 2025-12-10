@@ -2333,7 +2333,7 @@ export const data: Provider[] = [
     },
     extractors: [
       {
-        api_flavor: 'chat',
+        api_flavor: 'cohere',
         root: ['usage', 'billed_units'],
         model_path: 'model',
         mappings: [
