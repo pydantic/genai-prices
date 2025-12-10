@@ -9228,6 +9228,18 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5.1-chat-latest',
             },
+            {
+              equals: 'gpt-5-1',
+            },
+            {
+              equals: 'gpt-5-1-2025-11-13',
+            },
+            {
+              equals: 'gpt-5-1-codex',
+            },
+            {
+              equals: 'gpt-5-1-chat-latest',
+            },
           ],
         },
         context_window: 400000,
@@ -9247,6 +9259,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5.1-mini',
+            },
+            {
+              equals: 'gpt-5-1-codex-mini',
+            },
+            {
+              equals: 'gpt-5-1-mini',
             },
           ],
         },
