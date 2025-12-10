@@ -2333,7 +2333,7 @@ export const data: Provider[] = [
     },
     extractors: [
       {
-        api_flavor: 'default',
+        api_flavor: 'chat',
         root: ['usage', 'billed_units'],
         model_path: 'model',
         mappings: [
@@ -2345,6 +2345,18 @@ export const data: Provider[] = [
           {
             path: 'output_tokens',
             dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: ['meta', 'billed_units'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
             required: true,
           },
         ],
@@ -2435,6 +2447,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.0375,
           output_mtok: 0.15,
+        },
+      },
+      {
+        id: 'embed-v4.0',
+        name: 'Embed v4.0',
+        description:
+          'Embed v4.0 is a state-of-the-art embedding model designed for precise retrieval across noisy, multilingual, and multimodal data.',
+        match: {
+          equals: 'embed-v4.0',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.12,
         },
       },
     ],

@@ -1345,9 +1345,15 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
-                api_flavor='default',
+                api_flavor='chat',
                 model_path='model',
-            )
+            ),
+            UsageExtractor(
+                root=['meta', 'billed_units'],
+                mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -1386,6 +1392,14 @@ providers: list[Provider] = [
                 name='Command R7B',
                 description='Command R7B (12-2024) is a small, fast update of the Command R+ model, delivered in December 2024. It excels at RAG, tool use, agents, and similar tasks requiring complex reasoning and multiple steps.',
                 prices=ModelPrice(input_mtok=Decimal('0.0375'), output_mtok=Decimal('0.15')),
+            ),
+            ModelInfo(
+                id='embed-v4.0',
+                match=ClauseEquals(equals='embed-v4.0'),
+                name='Embed v4.0',
+                description='Embed v4.0 is a state-of-the-art embedding model designed for precise retrieval across noisy, multilingual, and multimodal data.',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.12')),
             ),
         ],
     ),
