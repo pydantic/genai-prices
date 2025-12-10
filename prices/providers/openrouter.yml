@@ -3049,6 +3049,15 @@ models:
       input_mtok: 5
       output_mtok: 15
 
+  - id: openai/codex-mini
+    match:
+      equals: openai/codex-mini
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.375
+      output_mtok: 6
+    prices_checked: 2025-11-29
+
   - id: openai/gpt-3.5-turbo
     match:
       or:
@@ -3155,6 +3164,7 @@ models:
         - equals: openai/gpt-4o-2024-08-06
         - equals: openai/gpt-4o-2024-11-20
         - equals: openai/gpt-4o-search-preview
+        - equals: openai/gpt-4o-audio-preview
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -3182,6 +3192,109 @@ models:
     prices:
       input_mtok: 6
       output_mtok: 18
+
+  - id: openai/gpt-5
+    match:
+      or:
+        - equals: openai/gpt-5
+        - equals: openai/gpt-5-chat
+        - equals: openai/gpt-5-codex
+        - equals: openai/gpt-5.1
+        - equals: openai/gpt-5.1-chat
+        - equals: openai/gpt-5.1-codex
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.125
+      output_mtok: 10
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-5-image
+    match:
+      equals: openai/gpt-5-image
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.25
+      output_mtok: 10
+    prices_checked: 2025-11-29
+    price_comments: Image pricing at $0.01/1k images not represented in standard schema
+
+  - id: openai/gpt-5-image-mini
+    match:
+      equals: openai/gpt-5-image-mini
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.25
+      output_mtok: 2
+    prices_checked: 2025-11-29
+    price_comments: Image pricing at $0.0025/1k images not represented in standard schema
+
+  - id: openai/gpt-5-mini
+    match:
+      equals: openai/gpt-5-mini
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 2
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-5-nano
+    match:
+      equals: openai/gpt-5-nano
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.005
+      output_mtok: 0.4
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-5-pro
+    match:
+      equals: openai/gpt-5-pro
+    prices:
+      input_mtok: 15
+      output_mtok: 120
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-5.1-codex-mini
+    match:
+      equals: openai/gpt-5.1-codex-mini
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 2
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-oss-120b
+    match:
+      or:
+        - equals: openai/gpt-oss-120b
+        - equals: openai/gpt-oss-120b:exacto
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.2
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-oss-20b
+    match:
+      equals: openai/gpt-oss-20b
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.14
+    prices_checked: 2025-11-29
+
+  - id: "openai/gpt-oss-20b:free"
+    match:
+      equals: "openai/gpt-oss-20b:free"
+    prices: {}
+    prices_checked: 2025-11-29
+
+  - id: openai/gpt-oss-safeguard-20b
+    match:
+      equals: openai/gpt-oss-safeguard-20b
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.037
+      output_mtok: 0.3
+    prices_checked: 2025-11-29
 
   - id: openai/o1
     match:
@@ -3216,6 +3329,16 @@ models:
       input_mtok: 10
       output_mtok: 40
 
+  - id: openai/o3-deep-research
+    match:
+      equals: openai/o3-deep-research
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 2.5
+      output_mtok: 40
+    prices_checked: 2025-11-29
+    price_comments: Image pricing at $7.65/1k images not represented in standard schema
+
   - id: openai/o3-mini
     match:
       or:
@@ -3225,6 +3348,15 @@ models:
       input_mtok: 1.1
       output_mtok: 4.4
 
+  - id: openai/o3-pro
+    match:
+      equals: openai/o3-pro
+    prices:
+      input_mtok: 20
+      output_mtok: 80
+    prices_checked: 2025-11-29
+    price_comments: Image pricing at $15.30/1k images not represented in standard schema
+
   - id: openai/o4-mini
     match:
       or:
@@ -3233,6 +3365,16 @@ models:
     prices:
       input_mtok: 1.1
       output_mtok: 4.4
+
+  - id: openai/o4-mini-deep-research
+    match:
+      equals: openai/o4-mini-deep-research
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+    prices_checked: 2025-11-29
+    price_comments: Image pricing at $1.53/1k images not represented in standard schema
 
   - id: openchat/openchat-7b
     match:
@@ -4099,12 +4241,44 @@ models:
       input_mtok: 0.3
       output_mtok: 0.5
 
+  - id: x-ai/grok-4-fast
+    match:
+      equals: x-ai/grok-4-fast
+    context_window: 2000000
+    prices:
+      input_mtok:
+        base: 0.2
+        tiers:
+          - start: 128000
+            price: 0.4
+      cache_read_mtok: 0.05
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 128000
+            price: 1.0
+
+  - id: "x-ai/grok-4.1-fast:free"
+    match:
+      equals: "x-ai/grok-4.1-fast:free"
+    context_window: 2000000
+    prices: {}
+
   - id: x-ai/grok-beta
     match:
       equals: x-ai/grok-beta
     prices:
       input_mtok: 5
       output_mtok: 15
+
+  - id: x-ai/grok-code-fast-1
+    match:
+      equals: x-ai/grok-code-fast-1
+    context_window: 256000
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.02
+      output_mtok: 1.5
 
   - id: x-ai/grok-vision-beta
     match:

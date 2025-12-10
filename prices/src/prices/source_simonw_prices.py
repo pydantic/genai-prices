@@ -8,7 +8,7 @@ import httpx
 from pydantic import BaseModel, OnErrorOmit, TypeAdapter
 
 from . import source_prices
-from .types import ModelPrice
+from .prices_types import ModelPrice
 from .update import get_providers_yaml
 
 

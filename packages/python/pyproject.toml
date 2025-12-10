@@ -33,7 +33,7 @@ classifiers = [
     "Topic :: Internet",
 ]
 dependencies = [
-    "eval-type-backport>=0.2; python_version < '3.11'",
+    "eval-type-backport>=0.2; python_version < '3.10'",
     "httpx>=0.27",
     "pydantic>=2.10",
 ]

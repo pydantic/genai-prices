@@ -270,3 +270,22 @@ def test_google_anthropic():
             Usage(input_tokens=483, cache_write_tokens=0, cache_read_tokens=0, output_tokens=78),
         )
     )
+
+
+def test_accumulate_extracted_usage():
+    extracted = extract_usage(gemini_response_data, provider_id='google')
+    assert extracted.usage == Usage(input_tokens=75, output_tokens=162)
+    with pytest.raises(TypeError):
+        _ = extracted + 1
+    with pytest.raises(TypeError):
+        _ = None + extracted
+    with pytest.raises(TypeError):
+        _ = extracted + None
+    with pytest.raises(ValueError):
+        _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
+    double_extracted = extracted + extracted
+    assert double_extracted.usage == Usage(input_tokens=75 * 2, output_tokens=162 * 2)
+    assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
+        input_tokens=10, output_tokens=20
+    )
+    assert Usage(input_audio_tokens=10) + Usage(input_tokens=10) == Usage(input_audio_tokens=10, input_tokens=10)

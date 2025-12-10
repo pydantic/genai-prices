@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import date, timedelta
 from typing import Any
 
+from prices.prices_types import ModelPrice, TieredPrices
 from prices.source_prices import load_source_prices
-from prices.types import ModelPrice, TieredPrices
 from prices.update import ProviderYaml, get_providers_yaml
 
 

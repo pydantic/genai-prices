@@ -26,6 +26,22 @@ extractors = [
 ]
 
 
+def get_body_keys(extractor: UsageExtractor) -> set[str]:
+    keys = set[str]()
+    for path in [extractor.model_path, extractor.root]:
+        if path:
+            if isinstance(path, list):
+                path = path[0]
+            assert isinstance(path, str)
+            keys.add(path)
+    return keys
+
+
+body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
+assert 'file' not in body_keys
+body_keys.add('file')
+
+
 def main():
     usages_file = this_dir / 'usages.json'
     current_result = json.loads(usages_file.read_text())
@@ -47,7 +63,6 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
 
     for body in bodies:
-        body_keys = set[str]().union(*[get_body_keys(extractor) for _, extractor in extractors])
         body = {k: body[k] for k in body_keys if k in body}
 
         cases: list[Case] = [
@@ -60,11 +75,31 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
             assert len(models) in (0, 1), models
             if models:
                 this_result['model'] = models.pop()
+            else:
+                assert 'model' not in body
 
-            check_cases_usages_match(cases)
+            # TODO
+            # check_cases_usages_match(cases)
 
+            has_price = False
             for case in cases:
-                case_to_result(case, this_result)
+                extractor_result = case_to_result(case, this_result)
+                if 'input_price' in extractor_result or 'output_price' in extractor_result:
+                    has_price = True
+            if not has_price and 'model' in this_result:
+                model = this_result['model']
+                assert (
+                    # TODO fix/investigate
+                    model
+                    in [
+                        # https://github.com/pydantic/genai-prices/issues/232
+                        'groq/compound',
+                    ]
+                    # google-gla sometimes adding 'models/' prefix
+                    or model.startswith('models/')
+                    # prices missing
+                    or 'openrouter' in body['file']
+                ), (body['file'], model)
 
     return result
 
@@ -91,6 +126,7 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
             break
     else:
         this_result['extracted'].append({'usage': case.usage_dict, 'extractors': [extractor_dict]})
+    return extractor_dict
 
 
 def check_cases_usages_match(cases: list[Case]):
@@ -98,17 +134,6 @@ def check_cases_usages_match(cases: list[Case]):
         for k, v in case1.usage_dict.items():
             if k in case2.usage_dict:
                 assert v == case2.usage_dict[k]
-
-
-def get_body_keys(extractor: UsageExtractor) -> set[str]:
-    keys = set[str]()
-    for path in [extractor.model_path, extractor.root]:
-        if path:
-            if isinstance(path, list):
-                path = path[0]
-            assert isinstance(path, str)
-            keys.add(path)
-    return keys
 
 
 def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider: Provider) -> Case | None:

@@ -12,7 +12,7 @@ import ruamel.yaml
 from pydantic import ValidationError
 from pydantic.main import IncEx
 
-from .types import Provider, providers_schema
+from .prices_types import Provider, providers_schema
 from .utils import package_dir, pretty_size, root_dir, simplify_json_schema
 
 
