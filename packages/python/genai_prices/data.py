@@ -5387,7 +5387,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='text-embedding-3-large'),
                 name='text embedding 3',
                 description='Text Embedding 3 is a model that offers a balance between cost and performance.',
-                context_window=3072,
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.13')),
             ),
             ModelInfo(
@@ -5395,7 +5395,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='text-embedding-3-small'),
                 name='text embedding 3',
                 description='Text Embedding 3 is a model that offers a balance between cost and performance.',
-                context_window=3072,
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
@@ -5409,7 +5409,7 @@ providers: list[Provider] = [
                 ),
                 name='text embedding ada',
                 description='Text Embedding Ada is a model that offers a balance between cost and performance.',
-                context_window=1536,
+                context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
         ],
