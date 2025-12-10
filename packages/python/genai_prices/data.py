@@ -5204,6 +5204,10 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5.1-2025-11-13'),
                         ClauseEquals(equals='gpt-5.1-codex'),
                         ClauseEquals(equals='gpt-5.1-chat-latest'),
+                        ClauseEquals(equals='gpt-5-1'),
+                        ClauseEquals(equals='gpt-5-1-2025-11-13'),
+                        ClauseEquals(equals='gpt-5-1-codex'),
+                        ClauseEquals(equals='gpt-5-1-chat-latest'),
                     ]
                 ),
                 name='GPT-5.1',
@@ -5215,7 +5219,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.1-codex-mini',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.1-codex-mini'), ClauseEquals(equals='gpt-5.1-mini')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.1-codex-mini'),
+                        ClauseEquals(equals='gpt-5.1-mini'),
+                        ClauseEquals(equals='gpt-5-1-codex-mini'),
+                        ClauseEquals(equals='gpt-5-1-mini'),
+                    ]
+                ),
                 name='GPT-5.1 Codex Mini',
                 context_window=400000,
                 prices=ModelPrice(
