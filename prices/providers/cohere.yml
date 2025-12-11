@@ -8,15 +8,23 @@ model_match:
   starts_with: "command-"
 provider_match:
   contains: cohere
-# https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L13
-# and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_billed_units.py
 extractors:
+  # https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L13
+  # and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_billed_units.py
   - root: [usage, billed_units]
     mappings:
       - path: input_tokens
         dest: input_tokens
       - path: output_tokens
         dest: output_tokens
+  # https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/embed_by_type_response.py#L30
+  # and https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/api_meta.py#L15
+  # and https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/api_meta_billed_units.py
+  - api_flavor: embeddings
+    root: [meta, billed_units]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
 
 models:
   - id: command
@@ -87,3 +95,14 @@ models:
     prices:
       input_mtok: 0.0375
       output_mtok: 0.15
+
+  - id: embed-v4.0
+    name: Embed v4.0
+    description: >-
+      Embed v4.0 is a state-of-the-art embedding model designed for precise retrieval across noisy, multilingual, and multimodal data.
+    match:
+      equals: embed-v4.0
+    context_window: 128000
+    prices_checked: 2025-12-10
+    prices:
+      input_mtok: 0.12
