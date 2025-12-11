@@ -1345,7 +1345,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
-                api_flavor='cohere',
+                api_flavor='default',
                 model_path='model',
             ),
             UsageExtractor(

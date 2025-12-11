@@ -11,8 +11,7 @@ provider_match:
 extractors:
   # https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L13
   # and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_billed_units.py
-  - api_flavor: cohere
-    root: [usage, billed_units]
+  - root: [usage, billed_units]
     mappings:
       - path: input_tokens
         dest: input_tokens

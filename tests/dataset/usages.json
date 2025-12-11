@@ -9338,7 +9338,7 @@
       {
         "extractors": [
           {
-            "api_flavor": "cohere",
+            "api_flavor": "default",
             "provider_id": "cohere"
           }
         ],
@@ -9367,7 +9367,7 @@
       {
         "extractors": [
           {
-            "api_flavor": "cohere",
+            "api_flavor": "default",
             "provider_id": "cohere"
           }
         ],
@@ -9396,7 +9396,7 @@
       {
         "extractors": [
           {
-            "api_flavor": "cohere",
+            "api_flavor": "default",
             "provider_id": "cohere"
           }
         ],
@@ -35671,7 +35671,7 @@
       {
         "extractors": [
           {
-            "api_flavor": "cohere",
+            "api_flavor": "default",
             "provider_id": "cohere"
           }
         ],
