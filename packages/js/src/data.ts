@@ -9301,6 +9301,61 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.2',
+        name: 'GPT-5.2',
+        description: 'The best model for coding and agentic tasks across industries',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.2',
+            },
+            {
+              equals: 'gpt-5.2-2025-12-11',
+            },
+            {
+              equals: 'gpt-5-2',
+            },
+            {
+              equals: 'gpt-5-2-2025-12-11',
+            },
+            {
+              equals: 'gpt-5-2-chat-latest',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 1.75,
+          cache_read_mtok: 0.175,
+          output_mtok: 14,
+        },
+      },
+      {
+        id: 'gpt-5.2-pro',
+        description: 'Version of GPT-5.2 that produces smarter and more precise responses.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.2-pro',
+            },
+            {
+              equals: 'gpt-5.2-pro-2025-12-11',
+            },
+            {
+              equals: 'gpt-5-2',
+            },
+            {
+              equals: 'gpt-5-2-pro-2025-12-11',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 21,
+          output_mtok: 168,
+        },
+      },
+      {
         id: 'gpt-realtime',
         match: {
           or: [
