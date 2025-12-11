@@ -9579,7 +9579,7 @@ export const data: Provider[] = [
         match: {
           equals: 'text-embedding-3-large',
         },
-        context_window: 3072,
+        context_window: 8192,
         prices: {
           input_mtok: 0.13,
         },
@@ -9591,7 +9591,7 @@ export const data: Provider[] = [
         match: {
           equals: 'text-embedding-3-small',
         },
-        context_window: 3072,
+        context_window: 8192,
         prices: {
           input_mtok: 0.02,
         },
@@ -9613,7 +9613,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 1536,
+        context_window: 8192,
         prices: {
           input_mtok: 0.1,
         },
