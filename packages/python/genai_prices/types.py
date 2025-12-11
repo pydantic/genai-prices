@@ -658,18 +658,22 @@ class ModelPrice:
 
 
 def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
-    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok)."""
+    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
+
+    For tiered pricing, uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
+    This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
+    """
     if field_mtok is None or token_count is None:
         return Decimal(0)
 
     if isinstance(field_mtok, TieredPrices):
-        price = Decimal(0)
-        remaining = token_count
-        for tier in reversed(field_mtok.tiers):
-            if remaining > tier.start:
-                price += tier.price * (remaining - tier.start)
-                remaining = tier.start
-        price += field_mtok.base * remaining
+        # Threshold-based pricing: if token_count exceeds any tier's start, ALL tokens pay that tier's rate
+        # Find the highest tier that applies (tiers should be sorted by start in ascending order)
+        applicable_price = field_mtok.base
+        for tier in field_mtok.tiers:
+            if token_count > tier.start:
+                applicable_price = tier.price
+        price = applicable_price * token_count
     else:
         price = field_mtok * token_count
     return price / 1_000_000
@@ -677,10 +681,18 @@ def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int 
 
 @dataclass
 class TieredPrices:
-    """Pricing model when the amount paid varies by number of tokens"""
+    """Pricing model when the amount paid varies by number of tokens.
+
+    Uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
+    This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
+
+    Example: For a tier starting at 200K tokens:
+    - Using 199,999 tokens: all tokens pay base rate
+    - Using 200,001 tokens: all tokens pay tier rate (not just the tokens above 200K)
+    """
 
     base: Decimal
-    """Based price in USD per million tokens, e.g. price until the first tier."""
+    """Base price in USD per million tokens, e.g. price until the first tier."""
     tiers: list[Tier]
     """Extra price tiers."""
 

@@ -96,7 +96,7 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
-    it('should handle tiered pricing', () => {
+    it('should handle tiered pricing with threshold model', () => {
       const usage: Usage = {
         input_tokens: 150000, // 150k tokens
         output_tokens: 50000, // 50k tokens
@@ -105,7 +105,7 @@ describe('Core Price Calculation Function', () => {
         input_mtok: {
           base: 1.0,
           tiers: [
-            { price: 0.5, start: 100000 }, // $0.50 per million after 100k
+            { price: 0.5, start: 100000 }, // $0.50 per million after 100k (threshold)
           ],
         },
         output_mtok: 2.0,
@@ -113,12 +113,13 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
-      // Input: 100k at $1.0 + 50k at $0.5 = 0.1 + 0.025 = 0.125
+      // Threshold pricing: 150k tokens crosses 100k threshold, so ALL tokens at $0.5
+      // Input: 150k at $0.5 = 0.075
       // Output: 50k at $2.0 = 0.1
       expect(result).toMatchObject({
-        input_price: 0.125,
+        input_price: 0.075,
         output_price: 0.1,
-        total_price: 0.225,
+        total_price: 0.175,
       })
     })
 

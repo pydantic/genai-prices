@@ -251,10 +251,18 @@ class ModelPrice(_Model):
 
 
 class TieredPrices(_Model):
-    """Pricing model when the amount paid varies by number of tokens"""
+    """Pricing model when the amount paid varies by number of tokens.
+
+    Uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
+    This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
+
+    Example: For a tier starting at 200K tokens:
+    - Using 199,999 tokens: all tokens pay base rate
+    - Using 200,001 tokens: all tokens pay tier rate (not just the tokens above 200K)
+    """
 
     base: DollarPrice
-    """Based price in USD per million tokens, e.g. price until the first tier."""
+    """Base price in USD per million tokens, e.g. price until the first tier."""
     tiers: list[Tier]
     """Extra price tiers."""
 

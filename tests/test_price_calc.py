@@ -57,11 +57,12 @@ def test_sync_success_with_model_regex():
 
 def test_tiered_prices():
     price = calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
-    # from providers/google.yml: (0.075 * 128000 + 0.15 * (500000 - 128000)) / 1_000_000 = 0.0654
+    # Google uses threshold-based pricing: if context > 128K, ALL tokens charged at tier price
+    # (0.15 * 500000) / 1_000_000 = 0.075
 
-    assert price.input_price == snapshot(Decimal('0.0654'))
+    assert price.input_price == snapshot(Decimal('0.075'))
     assert price.output_price == snapshot(Decimal('0'))
-    assert price.total_price == snapshot(Decimal('0.0654'))
+    assert price.total_price == snapshot(Decimal('0.075'))
     assert price.model.name == snapshot('gemini 1.5 flash')
     assert price.provider.id == snapshot('google')
 
