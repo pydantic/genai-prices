@@ -5248,6 +5248,38 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-5.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.2'),
+                        ClauseEquals(equals='gpt-5.2-2025-12-11'),
+                        ClauseEquals(equals='gpt-5-2'),
+                        ClauseEquals(equals='gpt-5-2-2025-12-11'),
+                        ClauseEquals(equals='gpt-5-2-chat-latest'),
+                    ]
+                ),
+                name='GPT-5.2',
+                description='The best model for coding and agentic tasks across industries',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.2-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.2-pro'),
+                        ClauseEquals(equals='gpt-5.2-pro-2025-12-11'),
+                        ClauseEquals(equals='gpt-5-2'),
+                        ClauseEquals(equals='gpt-5-2-pro-2025-12-11'),
+                    ]
+                ),
+                description='Version of GPT-5.2 that produces smarter and more precise responses.',
+                context_window=400000,
+                prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
+            ),
+            ModelInfo(
                 id='gpt-realtime',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-realtime'), ClauseEquals(equals='gpt-realtime-2025-08-28')]
