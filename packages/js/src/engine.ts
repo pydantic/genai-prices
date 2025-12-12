@@ -1,29 +1,28 @@
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
 
+/**
+ * Calculate price using threshold-based (cliff) pricing model.
+ *
+ * When token count crosses a tier threshold, ALL tokens are charged at that tier's rate.
+ * This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
+ *
+ * Example with base=$3/MTok and tier at 200K=$6/MTok:
+ * - 199,999 tokens: all at $3/MTok = $0.599997
+ * - 200,001 tokens: all at $6/MTok = $1.200006 (cliff jump)
+ */
 function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
   if (tokens <= 0) return 0
-  let price = 0
-  // Sort tiers by start ascending
-  const tiers = [...tiered.tiers].sort((a, b) => a.start - b.start)
 
-  // Base price for tokens up to the first tier start
-  const firstTierStart = tiers[0]?.start ?? tokens
-  const baseTokens = Math.min(tokens, firstTierStart)
-  price += (baseTokens * tiered.base) / 1_000_000
-
-  // Price for each tier
-  for (let i = 0; i < tiers.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const tier = tiers[i]!
-    const nextTierStart = tiers[i + 1]?.start ?? Infinity
-    // Tokens in this tier: from tier.start up to nextTierStart or tokens
-    const tierTokenCount = Math.max(0, Math.min(tokens, nextTierStart) - tier.start)
-    if (tierTokenCount > 0) {
-      price += (tierTokenCount * tier.price) / 1_000_000
+  // Threshold-based pricing: find the highest tier that applies
+  let applicablePrice = tiered.base
+  for (const tier of tiered.tiers) {
+    if (tokens > tier.start) {
+      applicablePrice = tier.price
     }
   }
 
-  return price
+  // All tokens pay the applicable rate
+  return (applicablePrice * tokens) / 1_000_000
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
