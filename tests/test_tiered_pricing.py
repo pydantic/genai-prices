@@ -78,6 +78,62 @@ def test_claude_sonnet_4_5_tiered_pricing_just_above_threshold():
     assert price.provider.id == snapshot('anthropic')
 
 
+def test_claude_sonnet_4_5_with_output_below_threshold():
+    """Test Claude Sonnet 4.5 with input below threshold but with output tokens.
+
+    Input: 100,000 tokens (below 200K threshold)
+    Output: 100,000 tokens
+
+    Pricing structure:
+    - Input base: $3/MTok, tier: $6/MTok (threshold at 200K)
+    - Output base: $15/MTok, tier: $22.5/MTok (threshold at 200K)
+
+    Calculation:
+    - Input: 100K < 200K, so base rate applies: (3 * 100,000) / 1,000,000 = $0.30
+    - Output: tier determined by input (100K < 200K), so base rate: (15 * 100,000) / 1,000,000 = $1.50
+    - Total: $0.30 + $1.50 = $1.80
+    """
+    price = calc_price(
+        Usage(input_tokens=100_000, output_tokens=100_000),
+        model_ref='claude-sonnet-4.5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == snapshot(Decimal('0.3'))
+    assert price.output_price == snapshot(Decimal('1.5'))
+    assert price.total_price == snapshot(Decimal('1.8'))
+    assert price.model.name == snapshot('Claude Sonnet 4.5')
+    assert price.provider.id == snapshot('anthropic')
+
+
+def test_claude_sonnet_4_5_with_output_above_threshold():
+    """Test Claude Sonnet 4.5 with input above threshold and output tokens.
+
+    Input: 300,000 tokens (above 200K threshold)
+    Output: 100,000 tokens
+
+    Pricing structure:
+    - Input base: $3/MTok, tier: $6/MTok (threshold at 200K)
+    - Output base: $15/MTok, tier: $22.5/MTok (threshold at 200K)
+
+    Calculation:
+    - Input: 300K > 200K, so tier rate applies to ALL: (6 * 300,000) / 1,000,000 = $1.80
+    - Output: tier determined by input (300K > 200K), so tier rate: (22.5 * 100,000) / 1,000,000 = $2.25
+    - Total: $1.80 + $2.25 = $4.05
+    """
+    price = calc_price(
+        Usage(input_tokens=300_000, output_tokens=100_000),
+        model_ref='claude-sonnet-4.5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == snapshot(Decimal('1.8'))
+    assert price.output_price == snapshot(Decimal('2.25'))
+    assert price.total_price == snapshot(Decimal('4.05'))
+    assert price.model.name == snapshot('Claude Sonnet 4.5')
+    assert price.provider.id == snapshot('anthropic')
+
+
 def test_google_gemini_tiered_pricing_below_threshold():
     """Test Google Gemini 1.5 Flash with 100,000 input tokens (below 128K threshold).
 

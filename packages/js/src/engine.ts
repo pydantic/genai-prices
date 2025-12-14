@@ -9,14 +9,19 @@ import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provide
  * Example with base=$3/MTok and tier at 200K=$6/MTok:
  * - 199,999 tokens: all at $3/MTok = $0.599997
  * - 200,001 tokens: all at $6/MTok = $1.200006 (cliff jump)
+ *
+ * @param tiered - Tiered pricing structure
+ * @param tokens - Number of tokens of this specific type to price
+ * @param totalInputTokens - Total input tokens for tier determination
  */
-function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
+function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens?: number): number {
   if (tokens <= 0) return 0
 
-  // Threshold-based pricing: find the highest tier that applies
+  // Threshold-based pricing: tier is determined by totalInputTokens
+  const tierReference = totalInputTokens ?? tokens
   let applicablePrice = tiered.base
   for (const tier of tiered.tiers) {
-    if (tokens > tier.start) {
+    if (tierReference > tier.start) {
       applicablePrice = tier.price
     }
   }
@@ -26,17 +31,25 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function calcMtokPrice(price: number | TieredPrices | undefined, tokens: number | undefined, _field: string): number {
+function calcMtokPrice(
+  price: number | TieredPrices | undefined,
+  tokens: number | undefined,
+  _field: string,
+  totalInputTokens?: number
+): number {
   if (price === undefined || tokens === undefined) return 0
   if (typeof price === 'number') {
     return (price * tokens) / 1_000_000
   }
-  return calcTieredPrice(price, tokens)
+  return calcTieredPrice(price, tokens, totalInputTokens)
 }
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
   let inputPrice = 0
   let outputPrice = 0
+
+  // Calculate total input tokens for tier determination
+  const totalInputTokens = usage.input_tokens ?? 0
 
   const cacheReadTokens = usage.cache_read_tokens ?? 0
   const cacheWriteTokens = usage.cache_write_tokens ?? 0
@@ -63,19 +76,19 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
     throw new Error('cache_audio_read_tokens cannot be greater than cache_read_tokens')
   }
 
-  inputPrice += calcMtokPrice(modelPrice.input_mtok, uncachedTextInputTokens, 'input_mtok')
-  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, cachedTextInputTokens, 'cache_read_mtok')
-  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, cacheWriteTokens, 'cache_write_mtok')
-  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, uncachedAudioInputTokens, 'input_audio_mtok')
-  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, cacheAudioReadTokens, 'cache_audio_read_mtok')
+  inputPrice += calcMtokPrice(modelPrice.input_mtok, uncachedTextInputTokens, 'input_mtok', totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, cachedTextInputTokens, 'cache_read_mtok', totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, cacheWriteTokens, 'cache_write_mtok', totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, uncachedAudioInputTokens, 'input_audio_mtok', totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, cacheAudioReadTokens, 'cache_audio_read_mtok', totalInputTokens)
 
   let textOutputTokens = usage.output_tokens ?? 0
   textOutputTokens -= outputAudioTokens
   if (textOutputTokens < 0) {
     throw new Error('output_audio_tokens cannot be greater than output_tokens')
   }
-  outputPrice += calcMtokPrice(modelPrice.output_mtok, textOutputTokens, 'output_mtok')
-  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok')
+  outputPrice += calcMtokPrice(modelPrice.output_mtok, textOutputTokens, 'output_mtok', totalInputTokens)
+  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok', totalInputTokens)
 
   let totalPrice = inputPrice + outputPrice
   if (modelPrice.requests_kcount !== undefined) {
