@@ -73,17 +73,6 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
-  - id: Qwen/Qwen2.5-VL-72B-Instruct
-    name: Qwen2.5-VL-72B-Instruct
-    match:
-      or:
-        - equals: qwen/qwen2.5-vl-72b-instruct
-        - equals: qwen/qwen2.5-vl-72b-instruct-fast
-    context_window: 32768
-    prices:
-      input_mtok: 0.6
-      output_mtok: 0.6
-
   - id: Qwen/Qwen2.5-VL-7B-Instruct
     name: Qwen2.5-VL-7B-Instruct
     match:

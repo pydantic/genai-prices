@@ -2347,16 +2347,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
             ),
             ModelInfo(
-                id='SentientAGI/Dobby-Unhinged-Llama-3.3-70B',
+                id='deepseek-ai/DeepSeek-R1-0528',
                 match=ClauseOr(
                     or_=[
-                        ClauseEquals(equals='sentientagi/dobby-unhinged-llama-3.3-70b'),
-                        ClauseEquals(equals='sentientagi/dobby-unhinged-llama-3.3-70b-fast'),
+                        ClauseEquals(equals='deepseek-ai/deepseek-r1-0528'),
+                        ClauseEquals(equals='deepseek-ai/deepseek-r1-0528-fast'),
                     ]
                 ),
-                name='Dobby-Unhinged-Llama-3.3-70B',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
+                name='DeepSeek-R1-0528',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V3-0324',
@@ -2534,18 +2534,6 @@ providers: list[Provider] = [
                 name='Qwen2.5-Coder-32B-Instruct',
                 context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
-                id='Qwen/Qwen2.5-VL-72B-Instruct',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct'),
-                        ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct-fast'),
-                    ]
-                ),
-                name='Qwen2.5-VL-72B-Instruct',
-                context_window=32768,
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='Qwen/Qwen2.5-VL-7B-Instruct',
@@ -3172,7 +3160,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3-Coder-480B-A35B-Instruct',
                 context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('1.2')),
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.3')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3-Next-80B-A3B-Instruct',
@@ -3405,18 +3393,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.048'), output_mtok=Decimal('0.072')),
             ),
             ModelInfo(
-                id='deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='deepseek-ai/deepseek-r1-distill-llama-70b'),
-                        ClauseEquals(equals='deepseek-ai/deepseek-r1-distill-llama-70b-fast'),
-                    ]
-                ),
-                name='DeepSeek-R1-Distill-Llama-70B',
-                context_window=8192,
-                prices=ModelPrice(input_mtok=Decimal('0.64'), output_mtok=Decimal('0.64')),
-            ),
-            ModelInfo(
                 id='deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
                 match=ClauseOr(
                     or_=[
@@ -3479,6 +3455,18 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.216'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V3.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/deepseek-v3.2'),
+                        ClauseEquals(equals='deepseek-ai/deepseek-v3.2-fast'),
+                    ]
+                ),
+                name='DeepSeek-V3.2',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('0.269'), output_mtok=Decimal('0.4')),
+            ),
+            ModelInfo(
                 id='deepseek-ai/DeepSeek-V3.2-Exp',
                 match=ClauseOr(
                     or_=[
@@ -3524,7 +3512,7 @@ providers: list[Provider] = [
                 ),
                 name='Llama-3.3-70B-Instruct',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.104'), output_mtok=Decimal('0.312')),
+                prices=ModelPrice(input_mtok=Decimal('0.108'), output_mtok=Decimal('0.32')),
             ),
             ModelInfo(
                 id='meta-llama/Meta-Llama-3-70B-Instruct',
@@ -3605,16 +3593,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.032'), output_mtok=Decimal('0.12')),
             ),
             ModelInfo(
-                id='zai-org/GLM-4-32B-0414',
+                id='zai-org/AutoGLM-Phone-9B-Multilingual',
                 match=ClauseOr(
                     or_=[
-                        ClauseEquals(equals='zai-org/glm-4-32b-0414'),
-                        ClauseEquals(equals='zai-org/glm-4-32b-0414-fast'),
+                        ClauseEquals(equals='zai-org/autoglm-phone-9b-multilingual'),
+                        ClauseEquals(equals='zai-org/autoglm-phone-9b-multilingual-fast'),
                     ]
                 ),
-                name='GLM-4-32B-0414',
-                context_window=32000,
-                prices=ModelPrice(input_mtok=Decimal('0.55'), output_mtok=Decimal('1.66')),
+                name='AutoGLM-Phone-9B-Multilingual',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.035'), output_mtok=Decimal('0.138')),
             ),
             ModelInfo(
                 id='zai-org/GLM-4.1V-9B-Thinking',
@@ -3663,6 +3651,18 @@ providers: list[Provider] = [
                 name='GLM-4.6',
                 context_window=204800,
                 prices=ModelPrice(input_mtok=Decimal('0.44'), output_mtok=Decimal('1.76')),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-4.6V-Flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='zai-org/glm-4.6v-flash'),
+                        ClauseEquals(equals='zai-org/glm-4.6v-flash-fast'),
+                    ]
+                ),
+                name='GLM-4.6V-Flash',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.9')),
             ),
         ],
     ),
@@ -3912,6 +3912,120 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='huggingface_ovhcloud',
+        name='HuggingFace (ovhcloud)',
+        api_pattern='https://router\\.huggingface\\.co/ovhcloud',
+        pricing_urls=['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+        provider_match=ClauseAnd(and_=[ClauseContains(contains='huggingface'), ClauseContains(contains='ovhcloud')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='Qwen/Qwen2.5-VL-72B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct'),
+                        ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct-fast'),
+                    ]
+                ),
+                name='Qwen2.5-VL-72B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('1.01'), output_mtok=Decimal('1.01')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3-32B',
+                match=ClauseOr(or_=[ClauseEquals(equals='qwen/qwen3-32b'), ClauseEquals(equals='qwen/qwen3-32b-fast')]),
+                name='Qwen3-32B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.25')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3-Coder-30B-A3B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-coder-30b-a3b-instruct'),
+                        ClauseEquals(equals='qwen/qwen3-coder-30b-a3b-instruct-fast'),
+                    ]
+                ),
+                name='Qwen3-Coder-30B-A3B-Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.26')),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/deepseek-r1-distill-llama-70b'),
+                        ClauseEquals(equals='deepseek-ai/deepseek-r1-distill-llama-70b-fast'),
+                    ]
+                ),
+                name='DeepSeek-R1-Distill-Llama-70B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
+            ),
+            ModelInfo(
+                id='meta-llama/Llama-3.1-8B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta-llama/llama-3.1-8b-instruct'),
+                        ClauseEquals(equals='meta-llama/llama-3.1-8b-instruct-fast'),
+                    ]
+                ),
+                name='Llama-3.1-8B-Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.11')),
+            ),
+            ModelInfo(
+                id='meta-llama/Llama-3.3-70B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct'),
+                        ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct-fast'),
+                    ]
+                ),
+                name='Llama-3.3-70B-Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-oss-120b'), ClauseEquals(equals='openai/gpt-oss-120b-fast')]
+                ),
+                name='gpt-oss-120b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.47')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-20b',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-oss-20b'), ClauseEquals(equals='openai/gpt-oss-20b-fast')]
+                ),
+                name='gpt-oss-20b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.18')),
+            ),
+        ],
+    ),
+    Provider(
         id='huggingface_publicai',
         name='HuggingFace (publicai)',
         api_pattern='https://router\\.huggingface\\.co/publicai',
@@ -3994,6 +4108,28 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='dicta-il/DictaLM-3.0-24B-Thinking',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='dicta-il/dictalm-3.0-24b-thinking'),
+                        ClauseEquals(equals='dicta-il/dictalm-3.0-24b-thinking-fast'),
+                    ]
+                ),
+                name='DictaLM-3.0-24B-Thinking',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='swiss-ai/Apertus-70B-Instruct-2509',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='swiss-ai/apertus-70b-instruct-2509'),
+                        ClauseEquals(equals='swiss-ai/apertus-70b-instruct-2509-fast'),
+                    ]
+                ),
+                name='Apertus-70B-Instruct-2509',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
                 id='swiss-ai/Apertus-8B-Instruct-2509',
                 match=ClauseOr(
                     or_=[
@@ -4063,6 +4199,18 @@ providers: list[Provider] = [
                 name='DeepSeek-R1-Distill-Llama-70B',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.7'), output_mtok=Decimal('1.4')),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V3-0324',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek-ai/deepseek-v3-0324'),
+                        ClauseEquals(equals='deepseek-ai/deepseek-v3-0324-fast'),
+                    ]
+                ),
+                name='DeepSeek-V3-0324',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('4.5')),
             ),
             ModelInfo(
                 id='meta-llama/Llama-3.1-8B-Instruct',
@@ -4215,6 +4363,30 @@ providers: list[Provider] = [
                 name='Qwen3-Next-80B-A3B-Thinking',
                 context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3-VL-32B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-vl-32b-instruct'),
+                        ClauseEquals(equals='qwen/qwen3-vl-32b-instruct-fast'),
+                    ]
+                ),
+                name='Qwen3-VL-32B-Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='ServiceNow-AI/Apriel-1.6-15b-Thinker',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='servicenow-ai/apriel-1.6-15b-thinker'),
+                        ClauseEquals(equals='servicenow-ai/apriel-1.6-15b-thinker-fast'),
+                    ]
+                ),
+                name='Apriel-1.6-15b-Thinker',
+                context_window=131072,
+                prices=ModelPrice(),
             ),
             ModelInfo(
                 id='deepcogito/cogito-671b-v2.1',

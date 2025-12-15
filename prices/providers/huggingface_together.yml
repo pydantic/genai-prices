@@ -112,6 +112,26 @@ models:
       input_mtok: 0.15
       output_mtok: 1.5
 
+  - id: Qwen/Qwen3-VL-32B-Instruct
+    name: Qwen3-VL-32B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen3-vl-32b-instruct
+        - equals: qwen/qwen3-vl-32b-instruct-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: ServiceNow-AI/Apriel-1.6-15b-Thinker
+    name: Apriel-1.6-15b-Thinker
+    match:
+      or:
+        - equals: servicenow-ai/apriel-1.6-15b-thinker
+        - equals: servicenow-ai/apriel-1.6-15b-thinker-fast
+    context_window: 131072
+    prices: {}
+
   - id: deepcogito/cogito-671b-v2.1
     name: cogito-671b-v2.1
     match:

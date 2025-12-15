@@ -88,16 +88,16 @@ models:
       input_mtok: 0.45
       output_mtok: 1.8
 
-  - id: SentientAGI/Dobby-Unhinged-Llama-3.3-70B
-    name: Dobby-Unhinged-Llama-3.3-70B
+  - id: deepseek-ai/DeepSeek-R1-0528
+    name: DeepSeek-R1-0528
     match:
       or:
-        - equals: sentientagi/dobby-unhinged-llama-3.3-70b
-        - equals: sentientagi/dobby-unhinged-llama-3.3-70b-fast
-    context_window: 131072
+        - equals: deepseek-ai/deepseek-r1-0528
+        - equals: deepseek-ai/deepseek-r1-0528-fast
+    context_window: 163840
     prices:
-      input_mtok: 0.9
-      output_mtok: 0.9
+      input_mtok: 3
+      output_mtok: 8
 
   - id: deepseek-ai/DeepSeek-V3-0324
     name: DeepSeek-V3-0324

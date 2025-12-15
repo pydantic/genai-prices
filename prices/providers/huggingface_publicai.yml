@@ -80,6 +80,22 @@ models:
         - equals: allenai/olmo-3-7b-think-fast
     prices: {}
 
+  - id: dicta-il/DictaLM-3.0-24B-Thinking
+    name: DictaLM-3.0-24B-Thinking
+    match:
+      or:
+        - equals: dicta-il/dictalm-3.0-24b-thinking
+        - equals: dicta-il/dictalm-3.0-24b-thinking-fast
+    prices: {}
+
+  - id: swiss-ai/Apertus-70B-Instruct-2509
+    name: Apertus-70B-Instruct-2509
+    match:
+      or:
+        - equals: swiss-ai/apertus-70b-instruct-2509
+        - equals: swiss-ai/apertus-70b-instruct-2509-fast
+    prices: {}
+
   - id: swiss-ai/Apertus-8B-Instruct-2509
     name: Apertus-8B-Instruct-2509
     match:

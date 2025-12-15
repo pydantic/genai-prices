@@ -147,8 +147,8 @@ models:
         - equals: qwen/qwen3-coder-480b-a35b-instruct-fast
     context_window: 262144
     prices:
-      input_mtok: 0.29
-      output_mtok: 1.2
+      input_mtok: 0.3
+      output_mtok: 1.3
 
   - id: Qwen/Qwen3-Next-80B-A3B-Instruct
     name: Qwen3-Next-80B-A3B-Instruct
@@ -361,17 +361,6 @@ models:
       input_mtok: 0.048
       output_mtok: 0.072
 
-  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
-    name: DeepSeek-R1-Distill-Llama-70B
-    match:
-      or:
-        - equals: deepseek-ai/deepseek-r1-distill-llama-70b
-        - equals: deepseek-ai/deepseek-r1-distill-llama-70b-fast
-    context_window: 8192
-    prices:
-      input_mtok: 0.64
-      output_mtok: 0.64
-
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     name: DeepSeek-R1-Distill-Qwen-14B
     match:
@@ -429,6 +418,17 @@ models:
       input_mtok: 0.216
       output_mtok: 0.8
 
+  - id: deepseek-ai/DeepSeek-V3.2
+    name: DeepSeek-V3.2
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-v3.2
+        - equals: deepseek-ai/deepseek-v3.2-fast
+    context_window: 163840
+    prices:
+      input_mtok: 0.269
+      output_mtok: 0.4
+
   - id: deepseek-ai/DeepSeek-V3.2-Exp
     name: DeepSeek-V3.2-Exp
     match:
@@ -470,8 +470,8 @@ models:
         - equals: meta-llama/llama-3.3-70b-instruct-fast
     context_window: 131072
     prices:
-      input_mtok: 0.104
-      output_mtok: 0.312
+      input_mtok: 0.108
+      output_mtok: 0.32
 
   - id: meta-llama/Meta-Llama-3-70B-Instruct
     name: Meta-Llama-3-70B-Instruct
@@ -550,16 +550,16 @@ models:
       input_mtok: 0.032
       output_mtok: 0.12
 
-  - id: zai-org/GLM-4-32B-0414
-    name: GLM-4-32B-0414
+  - id: zai-org/AutoGLM-Phone-9B-Multilingual
+    name: AutoGLM-Phone-9B-Multilingual
     match:
       or:
-        - equals: zai-org/glm-4-32b-0414
-        - equals: zai-org/glm-4-32b-0414-fast
-    context_window: 32000
+        - equals: zai-org/autoglm-phone-9b-multilingual
+        - equals: zai-org/autoglm-phone-9b-multilingual-fast
+    context_window: 65536
     prices:
-      input_mtok: 0.55
-      output_mtok: 1.66
+      input_mtok: 0.035
+      output_mtok: 0.138
 
   - id: zai-org/GLM-4.1V-9B-Thinking
     name: GLM-4.1V-9B-Thinking
@@ -615,3 +615,14 @@ models:
     prices:
       input_mtok: 0.44
       output_mtok: 1.76
+
+  - id: zai-org/GLM-4.6V-Flash
+    name: GLM-4.6V-Flash
+    match:
+      or:
+        - equals: zai-org/glm-4.6v-flash
+        - equals: zai-org/glm-4.6v-flash-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.9
