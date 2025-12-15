@@ -5483,6 +5483,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -5605,6 +5609,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -5732,6 +5740,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -5850,6 +5862,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -5974,6 +5990,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -6114,6 +6134,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -6232,6 +6256,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -6363,6 +6391,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -6488,6 +6520,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -11235,6 +11271,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -11378,6 +11418,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -11507,6 +11551,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -11631,6 +11679,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -11763,6 +11815,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -11887,6 +11943,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12016,6 +12076,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12154,6 +12218,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -12280,6 +12348,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12414,6 +12486,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -12542,6 +12618,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12677,6 +12757,10 @@
             "input_price": "0.00006",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12816,6 +12900,10 @@
             "input_price": "0.0000121",
             "output_price": "0.0035596",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -13014,6 +13102,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -13148,6 +13240,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0010472",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -13344,6 +13440,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -13483,6 +13583,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -13610,6 +13714,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -13730,6 +13838,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -13865,6 +13977,10 @@
             "input_price": "0.00001625",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14017,6 +14133,10 @@
             "input_price": "0.0001725",
             "output_price": "0.00072",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14149,6 +14269,10 @@
             "input_price": "0.0006",
             "output_price": "0.0015",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14286,6 +14410,10 @@
             "input_price": "0.00002",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14428,6 +14556,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -14565,6 +14697,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -14699,6 +14835,10 @@
             "input_price": "0.00002",
             "output_price": "0.000024",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14841,6 +14981,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -14977,6 +15121,10 @@
             "input_price": "0.0007025",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15119,6 +15267,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -15255,6 +15407,10 @@
             "input_price": "0.000115",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15397,6 +15553,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -15524,6 +15684,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00000666",
+            "output_price": "0.00001692",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15657,6 +15823,10 @@
             "input_price": "0.0000012",
             "output_price": "0.000006",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15797,6 +15967,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -15933,6 +16107,10 @@
             "input_price": "0.0002225",
             "output_price": "0.00036",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -16133,6 +16311,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -16272,6 +16454,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -16402,6 +16588,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -16525,6 +16715,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -16660,6 +16854,10 @@
             "input_price": "0.0002725",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -16802,6 +17000,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -16938,6 +17140,10 @@
             "input_price": "0.0005875",
             "output_price": "0.00016",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17080,6 +17286,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -17216,6 +17426,10 @@
             "input_price": "0.000735",
             "output_price": "0.00021",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17358,6 +17572,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -17494,6 +17712,10 @@
             "input_price": "0.000105",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17636,6 +17858,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -17772,6 +17998,10 @@
             "input_price": "0.0041975",
             "output_price": "0.00025",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17914,6 +18144,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -18041,6 +18275,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -18176,6 +18414,10 @@
             "input_price": "0.0000515",
             "output_price": "0.0000024",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -18318,6 +18560,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -18454,6 +18700,10 @@
             "input_price": "0.0029625",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -18596,6 +18846,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -18735,6 +18989,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -18871,6 +19129,10 @@
             "input_price": "0.000033",
             "output_price": "0.0009328",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19091,6 +19353,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -19223,6 +19489,10 @@
             "input_price": "0.00001935",
             "output_price": "0.0000054",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19360,6 +19630,10 @@
             "input_price": "0.0000077",
             "output_price": "0.000374",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19502,6 +19776,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -19638,6 +19916,10 @@
             "input_price": "0.0004525",
             "output_price": "0.00025",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19790,6 +20072,10 @@
             "input_price": "0.00011",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20754,6 +21040,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -20874,6 +21164,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -21055,6 +21349,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -25331,6 +25629,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -25478,6 +25780,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -25604,6 +25910,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00001554",
+            "output_price": "0.00104636",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -25736,6 +26048,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00038776",
+            "output_price": "0.0011766",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -25860,6 +26178,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -25990,6 +26312,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -26114,6 +26440,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26244,6 +26574,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -26368,6 +26702,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26518,6 +26856,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -26640,6 +26982,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26790,6 +27136,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -26937,6 +27287,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -27065,6 +27419,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27200,6 +27558,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27339,6 +27701,10 @@
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27481,6 +27847,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -27617,6 +27987,10 @@
             "input_price": "0.0001175",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27759,6 +28133,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -27895,6 +28273,10 @@
             "input_price": "0.00029",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28037,6 +28419,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -28173,6 +28559,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28315,6 +28705,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -28451,6 +28845,10 @@
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28593,6 +28991,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -28729,6 +29131,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28871,6 +29277,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -29007,6 +29417,10 @@
             "input_price": "0.000105",
             "output_price": "0.00013",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -29149,6 +29563,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -29285,6 +29703,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -29427,6 +29849,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -29566,6 +29992,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -29702,6 +30132,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -29914,6 +30348,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -30050,6 +30488,10 @@
             "input_price": "0.00363",
             "output_price": "0.00029",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -30192,6 +30634,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -30328,6 +30774,10 @@
             "input_price": "0.00056",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -30470,6 +30920,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -30609,6 +31063,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -30745,6 +31203,10 @@
             "input_price": "0.0006925",
             "output_price": "0.00022",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -30961,6 +31423,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -31097,6 +31563,10 @@
             "input_price": "0.0033875",
             "output_price": "0.00024",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31239,6 +31709,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -31375,6 +31849,10 @@
             "input_price": "0.000935",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31517,6 +31995,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -31653,6 +32135,10 @@
             "input_price": "0.00075",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31795,6 +32281,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -31931,6 +32421,10 @@
             "input_price": "0.00083",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32073,6 +32567,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -32209,6 +32707,10 @@
             "input_price": "0.0005675",
             "output_price": "0.00013",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32351,6 +32853,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -32487,6 +32993,10 @@
             "input_price": "0.00333",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32629,6 +33139,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -32765,6 +33279,10 @@
             "input_price": "0.000555",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32907,6 +33425,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -33043,6 +33565,10 @@
             "input_price": "0.0033225",
             "output_price": "0.00015",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -33185,6 +33711,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -33321,6 +33851,10 @@
             "input_price": "0.000585",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -33463,6 +33997,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -33599,6 +34137,10 @@
             "input_price": "0.00053",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -33741,6 +34283,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -33877,6 +34423,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34019,6 +34569,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -34155,6 +34709,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34364,6 +34922,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -34500,6 +35062,10 @@
             "input_price": "0.0001675",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34642,6 +35208,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -34778,6 +35348,10 @@
             "input_price": "0.0002175",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34920,6 +35494,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -35056,6 +35634,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -35198,6 +35780,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -35334,6 +35920,10 @@
             "input_price": "0.000105",
             "output_price": "0.00013",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -35476,6 +36066,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -35612,6 +36206,10 @@
             "input_price": "0.000095",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -35754,6 +36352,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -35893,6 +36495,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -36029,6 +36635,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -36247,6 +36857,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -36408,6 +37022,10 @@
             "input_price": "0.0000341",
             "output_price": "0.0020548",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -36602,6 +37220,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -36734,6 +37356,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -36876,6 +37502,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -37012,6 +37642,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37154,6 +37788,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -37290,6 +37928,10 @@
             "input_price": "0.0001175",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37432,6 +38074,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -37568,6 +38214,10 @@
             "input_price": "0.00029",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37710,6 +38360,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -37846,6 +38500,10 @@
             "input_price": "0.00008",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37988,6 +38646,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -38127,6 +38789,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -38263,6 +38929,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -38405,6 +39075,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -38541,6 +39215,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -38683,6 +39361,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -38822,6 +39504,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -38958,6 +39644,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -39141,6 +39831,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -39268,6 +39962,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -39390,6 +40088,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -39576,6 +40278,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "x-ai"
           }
         ],
@@ -39735,6 +40441,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "chat",

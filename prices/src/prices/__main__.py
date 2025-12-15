@@ -9,6 +9,7 @@ from .price_discrepancies import check_for_price_discrepancies, update_price_dis
 from .source_huggingface import get_huggingface_prices
 from .source_litellm import get_litellm_prices
 from .source_openrouter import get_openrouter_prices, update_from_openrouter
+from .source_ovhcloud import get_ovhcloud_prices
 from .source_simonw_prices import get_simonw_prices
 
 
@@ -20,6 +21,7 @@ def main():
         get_huggingface_prices,
         get_litellm_prices,
         get_openrouter_prices,
+        get_ovhcloud_prices,
         get_simonw_prices,
         update_price_discrepancies,
         check_for_price_discrepancies,

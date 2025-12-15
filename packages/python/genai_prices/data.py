@@ -9140,6 +9140,209 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='ovhcloud',
+        name='OVHcloud AI Endpoints',
+        api_pattern='https://oai\\.endpoints\\.kepler\\.ai\\.cloud\\.ovh\\.net',
+        pricing_urls=['https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'],
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='BGE-M3',
+                match=ClauseOr(or_=[ClauseEquals(equals='BGE-M3'), ClauseEquals(equals='bge-m3')]),
+                name='BGE-M3',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='DeepSeek-R1-Distill-Llama-70B',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='DeepSeek-R1-Distill-Llama-70B'),
+                        ClauseEquals(equals='deepseek-r1-distill-llama-70b'),
+                    ]
+                ),
+                name='DeepSeek-R1-Distill-Llama-70B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
+            ),
+            ModelInfo(
+                id='Llama-3.1-8B-Instruct',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='Llama-3.1-8B-Instruct'), ClauseEquals(equals='llama-3.1-8b-instruct')]
+                ),
+                name='Llama-3.1-8B-Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.11')),
+            ),
+            ModelInfo(
+                id='Meta-Llama-3_1-70B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Meta-Llama-3_1-70B-Instruct'),
+                        ClauseEquals(equals='meta-llama-3_1-70b-instruct'),
+                    ]
+                ),
+                name='Meta-Llama-3_1-70B-Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
+            ),
+            ModelInfo(
+                id='Meta-Llama-3_3-70B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Meta-Llama-3_3-70B-Instruct'),
+                        ClauseEquals(equals='meta-llama-3_3-70b-instruct'),
+                    ]
+                ),
+                name='Meta-Llama-3_3-70B-Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
+            ),
+            ModelInfo(
+                id='Mistral-7B-Instruct-v0.3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Mistral-7B-Instruct-v0.3'),
+                        ClauseEquals(equals='mistral-7b-instruct-v0.3'),
+                    ]
+                ),
+                name='Mistral-7B-Instruct-v0.3',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.11')),
+            ),
+            ModelInfo(
+                id='Mistral-Nemo-Instruct-2407',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Mistral-Nemo-Instruct-2407'),
+                        ClauseEquals(equals='mistral-nemo-instruct-2407'),
+                    ]
+                ),
+                name='Mistral-Nemo-Instruct-2407',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('0.14')),
+            ),
+            ModelInfo(
+                id='Mistral-Small-3.2-24B-Instruct-2506',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Mistral-Small-3.2-24B-Instruct-2506'),
+                        ClauseEquals(equals='mistral-small-3.2-24b-instruct-2506'),
+                    ]
+                ),
+                name='Mistral-Small-3.2-24B-Instruct-2506',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.31')),
+            ),
+            ModelInfo(
+                id='Mixtral-8x7B-Instruct-v0.1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Mixtral-8x7B-Instruct-v0.1'),
+                        ClauseEquals(equals='mixtral-8x7b-instruct-v0.1'),
+                    ]
+                ),
+                name='Mixtral-8x7B-Instruct-v0.1',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.7'), output_mtok=Decimal('0.7')),
+            ),
+            ModelInfo(
+                id='Qwen2.5-Coder-32B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Qwen2.5-Coder-32B-Instruct'),
+                        ClauseEquals(equals='qwen2.5-coder-32b-instruct'),
+                    ]
+                ),
+                name='Qwen2.5-Coder-32B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.96'), output_mtok=Decimal('0.96')),
+            ),
+            ModelInfo(
+                id='Qwen2.5-VL-72B-Instruct',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='Qwen2.5-VL-72B-Instruct'), ClauseEquals(equals='qwen2.5-vl-72b-instruct')]
+                ),
+                name='Qwen2.5-VL-72B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('1.01'), output_mtok=Decimal('1.01')),
+            ),
+            ModelInfo(
+                id='Qwen3-32B',
+                match=ClauseOr(or_=[ClauseEquals(equals='Qwen3-32B'), ClauseEquals(equals='qwen3-32b')]),
+                name='Qwen3-32B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.25')),
+            ),
+            ModelInfo(
+                id='Qwen3-Coder-30B-A3B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='Qwen3-Coder-30B-A3B-Instruct'),
+                        ClauseEquals(equals='qwen3-coder-30b-a3b-instruct'),
+                    ]
+                ),
+                name='Qwen3-Coder-30B-A3B-Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.26')),
+            ),
+            ModelInfo(
+                id='bge-base-en-v1.5',
+                match=ClauseEquals(equals='bge-base-en-v1.5'),
+                name='bge-base-en-v1.5',
+                context_window=512,
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='bge-multilingual-gemma2',
+                match=ClauseEquals(equals='bge-multilingual-gemma2'),
+                name='bge-multilingual-gemma2',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='gpt-oss-120b',
+                match=ClauseEquals(equals='gpt-oss-120b'),
+                name='gpt-oss-120b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.47')),
+            ),
+            ModelInfo(
+                id='gpt-oss-20b',
+                match=ClauseEquals(equals='gpt-oss-20b'),
+                name='gpt-oss-20b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.18')),
+            ),
+            ModelInfo(
+                id='llava-next-mistral-7b',
+                match=ClauseEquals(equals='llava-next-mistral-7b'),
+                name='llava-next-mistral-7b',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.32'), output_mtok=Decimal('0.32')),
+            ),
+        ],
+    ),
+    Provider(
         id='perplexity',
         name='Perplexity',
         api_pattern='https://api\\.perplexity\\.ai',
