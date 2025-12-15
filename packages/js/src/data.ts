@@ -4170,22 +4170,22 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'SentientAGI/Dobby-Unhinged-Llama-3.3-70B',
-        name: 'Dobby-Unhinged-Llama-3.3-70B',
+        id: 'deepseek-ai/DeepSeek-R1-0528',
+        name: 'DeepSeek-R1-0528',
         match: {
           or: [
             {
-              equals: 'sentientagi/dobby-unhinged-llama-3.3-70b',
+              equals: 'deepseek-ai/deepseek-r1-0528',
             },
             {
-              equals: 'sentientagi/dobby-unhinged-llama-3.3-70b-fast',
+              equals: 'deepseek-ai/deepseek-r1-0528-fast',
             },
           ],
         },
-        context_window: 131072,
+        context_window: 163840,
         prices: {
-          input_mtok: 0.9,
-          output_mtok: 0.9,
+          input_mtok: 3,
+          output_mtok: 8,
         },
       },
       {
@@ -4518,25 +4518,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'Qwen/Qwen2.5-VL-72B-Instruct',
-        name: 'Qwen2.5-VL-72B-Instruct',
-        match: {
-          or: [
-            {
-              equals: 'qwen/qwen2.5-vl-72b-instruct',
-            },
-            {
-              equals: 'qwen/qwen2.5-vl-72b-instruct-fast',
-            },
-          ],
-        },
-        context_window: 32768,
-        prices: {
-          input_mtok: 0.6,
-          output_mtok: 0.6,
         },
       },
       {
@@ -5608,8 +5589,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 0.29,
-          output_mtok: 1.2,
+          input_mtok: 0.3,
+          output_mtok: 1.3,
         },
       },
       {
@@ -5980,25 +5961,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-        name: 'DeepSeek-R1-Distill-Llama-70B',
-        match: {
-          or: [
-            {
-              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
-            },
-            {
-              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
-            },
-          ],
-        },
-        context_window: 8192,
-        prices: {
-          input_mtok: 0.64,
-          output_mtok: 0.64,
-        },
-      },
-      {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
         name: 'DeepSeek-R1-Distill-Qwen-14B',
         match: {
@@ -6100,6 +6062,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V3.2',
+        name: 'DeepSeek-V3.2',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3.2',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3.2-fast',
+            },
+          ],
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.269,
+          output_mtok: 0.4,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V3.2-Exp',
         name: 'DeepSeek-V3.2-Exp',
         match: {
@@ -6171,8 +6152,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 0.104,
-          output_mtok: 0.312,
+          input_mtok: 0.108,
+          output_mtok: 0.32,
         },
       },
       {
@@ -6309,22 +6290,22 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'zai-org/GLM-4-32B-0414',
-        name: 'GLM-4-32B-0414',
+        id: 'zai-org/AutoGLM-Phone-9B-Multilingual',
+        name: 'AutoGLM-Phone-9B-Multilingual',
         match: {
           or: [
             {
-              equals: 'zai-org/glm-4-32b-0414',
+              equals: 'zai-org/autoglm-phone-9b-multilingual',
             },
             {
-              equals: 'zai-org/glm-4-32b-0414-fast',
+              equals: 'zai-org/autoglm-phone-9b-multilingual-fast',
             },
           ],
         },
-        context_window: 32000,
+        context_window: 65536,
         prices: {
-          input_mtok: 0.55,
-          output_mtok: 1.66,
+          input_mtok: 0.035,
+          output_mtok: 0.138,
         },
       },
       {
@@ -6420,6 +6401,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.44,
           output_mtok: 1.76,
+        },
+      },
+      {
+        id: 'zai-org/GLM-4.6V-Flash',
+        name: 'GLM-4.6V-Flash',
+        match: {
+          or: [
+            {
+              equals: 'zai-org/glm-4.6v-flash',
+            },
+            {
+              equals: 'zai-org/glm-4.6v-flash-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.9,
         },
       },
     ],
@@ -6863,6 +6863,210 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'huggingface_ovhcloud',
+    name: 'HuggingFace (ovhcloud)',
+    pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
+    api_pattern: 'https://router\\.huggingface\\.co/ovhcloud',
+    provider_match: {
+      and: [
+        {
+          contains: 'huggingface',
+        },
+        {
+          contains: 'ovhcloud',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        name: 'Qwen2.5-VL-72B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen2.5-vl-72b-instruct',
+            },
+            {
+              equals: 'qwen/qwen2.5-vl-72b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 1.01,
+          output_mtok: 1.01,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-32b',
+            },
+            {
+              equals: 'qwen/qwen3-32b-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.25,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
+        name: 'Qwen3-Coder-30B-A3B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-coder-30b-a3b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-coder-30b-a3b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.07,
+          output_mtok: 0.26,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.74,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.11,
+          output_mtok: 0.11,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.74,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'gpt-oss-20b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-20b',
+            },
+            {
+              equals: 'openai/gpt-oss-20b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.18,
+        },
+      },
+    ],
+  },
+  {
     id: 'huggingface_publicai',
     name: 'HuggingFace (publicai)',
     pricing_urls: ['https://router.huggingface.co/v1/models', 'https://huggingface.co/inference/models'],
@@ -6982,6 +7186,36 @@ export const data: Provider[] = [
             },
             {
               equals: 'allenai/olmo-3-7b-think-fast',
+            },
+          ],
+        },
+        prices: {},
+      },
+      {
+        id: 'dicta-il/DictaLM-3.0-24B-Thinking',
+        name: 'DictaLM-3.0-24B-Thinking',
+        match: {
+          or: [
+            {
+              equals: 'dicta-il/dictalm-3.0-24b-thinking',
+            },
+            {
+              equals: 'dicta-il/dictalm-3.0-24b-thinking-fast',
+            },
+          ],
+        },
+        prices: {},
+      },
+      {
+        id: 'swiss-ai/Apertus-70B-Instruct-2509',
+        name: 'Apertus-70B-Instruct-2509',
+        match: {
+          or: [
+            {
+              equals: 'swiss-ai/apertus-70b-instruct-2509',
+            },
+            {
+              equals: 'swiss-ai/apertus-70b-instruct-2509-fast',
             },
           ],
         },
@@ -7109,6 +7343,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.7,
           output_mtok: 1.4,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V3-0324',
+        name: 'DeepSeek-V3-0324',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-v3-0324',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-v3-0324-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 3,
+          output_mtok: 4.5,
         },
       },
       {
@@ -7370,6 +7623,41 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           output_mtok: 1.5,
         },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-32B-Instruct',
+        name: 'Qwen3-VL-32B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-vl-32b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-vl-32b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'ServiceNow-AI/Apriel-1.6-15b-Thinker',
+        name: 'Apriel-1.6-15b-Thinker',
+        match: {
+          or: [
+            {
+              equals: 'servicenow-ai/apriel-1.6-15b-thinker',
+            },
+            {
+              equals: 'servicenow-ai/apriel-1.6-15b-thinker-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {},
       },
       {
         id: 'deepcogito/cogito-671b-v2.1',

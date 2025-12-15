@@ -5463,6 +5463,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -5577,6 +5581,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -5700,6 +5708,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -5814,6 +5826,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -5934,6 +5950,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -6070,6 +6090,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -6184,6 +6208,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -6311,6 +6339,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -6432,6 +6464,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -11173,6 +11209,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -11296,8 +11336,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000009568",
-            "output_price": "0.000007176",
+            "input_price": "0.000009936",
+            "output_price": "0.00000736",
             "provider_id": "huggingface_novita"
           },
           {
@@ -11305,6 +11345,12 @@
             "input_price": "0.0000368",
             "output_price": "0.0000092",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00006808",
+            "output_price": "0.00001702",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -11435,6 +11481,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -11540,8 +11590,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.004575",
-            "output_price": "0.0000294",
             "provider_id": "huggingface_hyperbolic"
           },
           {
@@ -11557,6 +11605,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00770125",
+            "output_price": "0.00004949",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -11683,6 +11737,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -11788,8 +11846,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001614",
-            "output_price": "0.000009",
             "provider_id": "huggingface_hyperbolic"
           },
           {
@@ -11805,6 +11861,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00027169",
+            "output_price": "0.00001515",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -11931,6 +11993,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -12028,6 +12094,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000018",
+            "output_price": "0.00132",
             "provider_id": "huggingface_fireworks-ai"
           },
           {
@@ -12055,6 +12123,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12185,6 +12257,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -12312,6 +12388,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -12436,6 +12516,10 @@
             "input_price": "0.0001382",
             "output_price": "0.001116",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12567,6 +12651,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12702,6 +12790,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -12896,6 +12988,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -13026,6 +13122,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -13218,6 +13318,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -13353,6 +13457,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -13478,6 +13586,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -13594,6 +13706,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -13723,6 +13839,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -13878,6 +13998,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -13999,6 +14123,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14132,6 +14260,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14270,6 +14402,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -14403,6 +14539,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -14533,6 +14673,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14671,6 +14815,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -14803,6 +14951,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -14941,6 +15093,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -15073,6 +15229,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15211,6 +15371,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -15339,6 +15503,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -15463,6 +15631,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15599,6 +15771,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -15731,6 +15907,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -15927,6 +16107,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -16062,6 +16246,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -16190,6 +16378,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -16309,6 +16501,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -16438,6 +16634,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -16576,6 +16776,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -16708,6 +16912,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -16846,6 +17054,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -16978,6 +17190,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17116,6 +17332,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -17248,6 +17468,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17386,6 +17610,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -17518,6 +17746,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17656,6 +17888,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -17781,6 +18017,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -17910,6 +18150,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -18048,6 +18292,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -18180,6 +18428,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -18318,6 +18570,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -18453,6 +18709,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -18585,6 +18845,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -18801,6 +19065,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -18929,6 +19197,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19062,6 +19334,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19200,6 +19476,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -19332,6 +19612,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -19484,6 +19768,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -20440,6 +20728,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -20556,6 +20848,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -20733,6 +21029,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -25007,6 +25307,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -25144,6 +25448,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001593",
+            "output_price": "0.00004089",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -25273,6 +25583,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -25395,6 +25709,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -25521,6 +25839,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -25641,6 +25963,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -25767,6 +26093,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -25890,6 +26220,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -26010,6 +26344,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26150,6 +26488,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001602",
+            "output_price": "0.00004418",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -26272,6 +26616,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26409,6 +26757,12 @@
             "input_price": "0.0000283",
             "output_price": "0.0000196",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00002547",
+            "output_price": "0.00002303",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26553,6 +26907,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002871",
+            "output_price": "0.00004512",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -26684,6 +27044,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -26810,6 +27174,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -26945,6 +27313,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27083,6 +27455,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -27215,6 +27591,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27353,6 +27733,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -27485,6 +27869,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27623,6 +28011,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -27755,6 +28147,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -27893,6 +28289,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -28025,6 +28425,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28163,6 +28567,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -28295,6 +28703,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28433,6 +28845,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -28565,6 +28981,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28703,6 +29123,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -28835,6 +29259,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -28973,6 +29401,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -29108,6 +29540,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -29240,6 +29676,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -29448,6 +29888,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -29580,6 +30024,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -29718,6 +30166,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -29850,6 +30302,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -29988,6 +30444,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -30123,6 +30583,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -30255,6 +30719,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -30467,6 +30935,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -30599,6 +31071,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -30737,6 +31213,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -30869,6 +31349,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31007,6 +31491,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -31139,6 +31627,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31277,6 +31769,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -31409,6 +31905,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31547,6 +32047,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -31679,6 +32183,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -31817,6 +32325,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -31949,6 +32461,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32087,6 +32603,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -32219,6 +32739,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32357,6 +32881,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -32489,6 +33017,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32627,6 +33159,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -32759,6 +33295,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -32897,6 +33437,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -33029,6 +33573,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -33167,6 +33715,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -33299,6 +33851,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -33437,6 +33993,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -33569,6 +34129,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -33774,6 +34338,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -33906,6 +34474,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34044,6 +34616,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -34176,6 +34752,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34314,6 +34894,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -34446,6 +35030,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34584,6 +35172,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -34716,6 +35308,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -34854,6 +35450,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -34986,6 +35586,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -35124,6 +35728,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -35259,6 +35867,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -35391,6 +36003,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -35607,6 +36223,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -35762,6 +36382,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -35952,6 +36576,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -36080,6 +36708,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -36218,6 +36850,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -36350,6 +36986,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -36488,6 +37128,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -36620,6 +37264,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -36758,6 +37406,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -36890,6 +37542,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37028,6 +37684,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -37160,6 +37820,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37298,6 +37962,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -37433,6 +38101,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -37565,6 +38237,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37703,6 +38379,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -37835,6 +38515,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -37973,6 +38657,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -38108,6 +38796,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -38240,6 +38932,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -38419,6 +39115,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -38544,6 +39244,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -38662,6 +39366,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
@@ -38842,6 +39550,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "huggingface_publicai"
           },
           {
@@ -38999,6 +39711,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "huggingface_nscale"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "huggingface_ovhcloud"
           },
           {
             "api_flavor": "chat",
