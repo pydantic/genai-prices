@@ -922,6 +922,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen.qwen3-coder-480b-a35b-v1:0',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          contains: 'qwen.qwen3-coder-480b-a35b-v1',
+        },
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 1.8,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
         match: {
           or: [

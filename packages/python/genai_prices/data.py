@@ -567,6 +567,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
+                id='qwen.qwen3-coder-480b-a35b-v1:0',
+                match=ClauseContains(contains='qwen.qwen3-coder-480b-a35b-v1'),
+                name='Qwen3-Coder-480B-A35B-Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
+            ),
+            ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
                 match=ClauseOr(
                     or_=[
