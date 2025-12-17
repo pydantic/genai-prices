@@ -2335,18 +2335,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
-                id='Qwen/Qwen3-Coder-480B-A35B-Instruct',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='qwen/qwen3-coder-480b-a35b-instruct'),
-                        ClauseEquals(equals='qwen/qwen3-coder-480b-a35b-instruct-fast'),
-                    ]
-                ),
-                name='Qwen3-Coder-480B-A35B-Instruct',
-                context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
-            ),
-            ModelInfo(
                 id='deepseek-ai/DeepSeek-R1-0528',
                 match=ClauseOr(
                     or_=[
@@ -2534,6 +2522,18 @@ providers: list[Provider] = [
                 name='Qwen2.5-Coder-32B-Instruct',
                 context_window=32768,
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen2.5-VL-72B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct'),
+                        ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct-fast'),
+                    ]
+                ),
+                name='Qwen2.5-VL-72B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='Qwen/Qwen2.5-VL-7B-Instruct',
@@ -3951,13 +3951,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.01'), output_mtok=Decimal('1.01')),
             ),
             ModelInfo(
-                id='Qwen/Qwen3-32B',
-                match=ClauseOr(or_=[ClauseEquals(equals='qwen/qwen3-32b'), ClauseEquals(equals='qwen/qwen3-32b-fast')]),
-                name='Qwen3-32B',
-                context_window=32768,
-                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.25')),
-            ),
-            ModelInfo(
                 id='Qwen/Qwen3-Coder-30B-A3B-Instruct',
                 match=ClauseOr(
                     or_=[
@@ -3968,60 +3961,6 @@ providers: list[Provider] = [
                 name='Qwen3-Coder-30B-A3B-Instruct',
                 context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.26')),
-            ),
-            ModelInfo(
-                id='deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='deepseek-ai/deepseek-r1-distill-llama-70b'),
-                        ClauseEquals(equals='deepseek-ai/deepseek-r1-distill-llama-70b-fast'),
-                    ]
-                ),
-                name='DeepSeek-R1-Distill-Llama-70B',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
-            ),
-            ModelInfo(
-                id='meta-llama/Llama-3.1-8B-Instruct',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='meta-llama/llama-3.1-8b-instruct'),
-                        ClauseEquals(equals='meta-llama/llama-3.1-8b-instruct-fast'),
-                    ]
-                ),
-                name='Llama-3.1-8B-Instruct',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.11')),
-            ),
-            ModelInfo(
-                id='meta-llama/Llama-3.3-70B-Instruct',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct'),
-                        ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct-fast'),
-                    ]
-                ),
-                name='Llama-3.3-70B-Instruct',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
-            ),
-            ModelInfo(
-                id='openai/gpt-oss-120b',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='openai/gpt-oss-120b'), ClauseEquals(equals='openai/gpt-oss-120b-fast')]
-                ),
-                name='gpt-oss-120b',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.47')),
-            ),
-            ModelInfo(
-                id='openai/gpt-oss-20b',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='openai/gpt-oss-20b'), ClauseEquals(equals='openai/gpt-oss-20b-fast')]
-                ),
-                name='gpt-oss-20b',
-                context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.18')),
             ),
         ],
     ),
@@ -4075,17 +4014,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
-                id='allenai/Olmo-3-32B-Think',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='allenai/olmo-3-32b-think'),
-                        ClauseEquals(equals='allenai/olmo-3-32b-think-fast'),
-                    ]
-                ),
-                name='Olmo-3-32B-Think',
-                prices=ModelPrice(),
-            ),
-            ModelInfo(
                 id='allenai/Olmo-3-7B-Instruct',
                 match=ClauseOr(
                     or_=[
@@ -4105,6 +4033,28 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Olmo-3-7B-Think',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='allenai/Olmo-3.1-32B-Instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='allenai/olmo-3.1-32b-instruct'),
+                        ClauseEquals(equals='allenai/olmo-3.1-32b-instruct-fast'),
+                    ]
+                ),
+                name='Olmo-3.1-32B-Instruct',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='allenai/Olmo-3.1-32B-Think',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='allenai/olmo-3.1-32b-think'),
+                        ClauseEquals(equals='allenai/olmo-3.1-32b-think-fast'),
+                    ]
+                ),
+                name='Olmo-3.1-32B-Think',
                 prices=ModelPrice(),
             ),
             ModelInfo(
@@ -4138,6 +4088,17 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Apertus-8B-Instruct-2509',
+                prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='utter-project/EuroLLM-22B-Instruct-2512',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='utter-project/eurollm-22b-instruct-2512'),
+                        ClauseEquals(equals='utter-project/eurollm-22b-instruct-2512-fast'),
+                    ]
+                ),
+                name='EuroLLM-22B-Instruct-2512',
                 prices=ModelPrice(),
             ),
         ],
@@ -4286,6 +4247,18 @@ providers: list[Provider] = [
             )
         ],
         models=[
+            ModelInfo(
+                id='EssentialAI/rnj-1-instruct',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='essentialai/rnj-1-instruct'),
+                        ClauseEquals(equals='essentialai/rnj-1-instruct-fast'),
+                    ]
+                ),
+                name='rnj-1-instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
+            ),
             ModelInfo(
                 id='Qwen/Qwen2.5-72B-Instruct',
                 match=ClauseOr(

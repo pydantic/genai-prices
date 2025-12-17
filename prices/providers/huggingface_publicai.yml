@@ -56,14 +56,6 @@ models:
         - equals: aisingapore/qwen-sea-lion-v4-32b-it-fast
     prices: {}
 
-  - id: allenai/Olmo-3-32B-Think
-    name: Olmo-3-32B-Think
-    match:
-      or:
-        - equals: allenai/olmo-3-32b-think
-        - equals: allenai/olmo-3-32b-think-fast
-    prices: {}
-
   - id: allenai/Olmo-3-7B-Instruct
     name: Olmo-3-7B-Instruct
     match:
@@ -78,6 +70,22 @@ models:
       or:
         - equals: allenai/olmo-3-7b-think
         - equals: allenai/olmo-3-7b-think-fast
+    prices: {}
+
+  - id: allenai/Olmo-3.1-32B-Instruct
+    name: Olmo-3.1-32B-Instruct
+    match:
+      or:
+        - equals: allenai/olmo-3.1-32b-instruct
+        - equals: allenai/olmo-3.1-32b-instruct-fast
+    prices: {}
+
+  - id: allenai/Olmo-3.1-32B-Think
+    name: Olmo-3.1-32B-Think
+    match:
+      or:
+        - equals: allenai/olmo-3.1-32b-think
+        - equals: allenai/olmo-3.1-32b-think-fast
     prices: {}
 
   - id: dicta-il/DictaLM-3.0-24B-Thinking
@@ -102,4 +110,12 @@ models:
       or:
         - equals: swiss-ai/apertus-8b-instruct-2509
         - equals: swiss-ai/apertus-8b-instruct-2509-fast
+    prices: {}
+
+  - id: utter-project/EuroLLM-22B-Instruct-2512
+    name: EuroLLM-22B-Instruct-2512
+    match:
+      or:
+        - equals: utter-project/eurollm-22b-instruct-2512
+        - equals: utter-project/eurollm-22b-instruct-2512-fast
     prices: {}

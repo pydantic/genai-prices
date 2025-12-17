@@ -77,17 +77,6 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
-  - id: Qwen/Qwen3-Coder-480B-A35B-Instruct
-    name: Qwen3-Coder-480B-A35B-Instruct
-    match:
-      or:
-        - equals: qwen/qwen3-coder-480b-a35b-instruct
-        - equals: qwen/qwen3-coder-480b-a35b-instruct-fast
-    context_window: 262144
-    prices:
-      input_mtok: 0.45
-      output_mtok: 1.8
-
   - id: deepseek-ai/DeepSeek-R1-0528
     name: DeepSeek-R1-0528
     match:

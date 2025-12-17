@@ -40,6 +40,17 @@ extractors:
         dest: output_tokens
         required: true
 models:
+  - id: EssentialAI/rnj-1-instruct
+    name: rnj-1-instruct
+    match:
+      or:
+        - equals: essentialai/rnj-1-instruct
+        - equals: essentialai/rnj-1-instruct-fast
+    context_window: 32768
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+
   - id: Qwen/Qwen2.5-72B-Instruct
     name: Qwen2.5-72B-Instruct
     match:
