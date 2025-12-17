@@ -4151,25 +4151,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-        name: 'Qwen3-Coder-480B-A35B-Instruct',
-        match: {
-          or: [
-            {
-              equals: 'qwen/qwen3-coder-480b-a35b-instruct',
-            },
-            {
-              equals: 'qwen/qwen3-coder-480b-a35b-instruct-fast',
-            },
-          ],
-        },
-        context_window: 262144,
-        prices: {
-          input_mtok: 0.45,
-          output_mtok: 1.8,
-        },
-      },
-      {
         id: 'deepseek-ai/DeepSeek-R1-0528',
         name: 'DeepSeek-R1-0528',
         match: {
@@ -4518,6 +4499,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.2,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen2.5-VL-72B-Instruct',
+        name: 'Qwen2.5-VL-72B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen2.5-vl-72b-instruct',
+            },
+            {
+              equals: 'qwen/qwen2.5-vl-72b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 0.6,
         },
       },
       {
@@ -6932,25 +6932,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'Qwen/Qwen3-32B',
-        name: 'Qwen3-32B',
-        match: {
-          or: [
-            {
-              equals: 'qwen/qwen3-32b',
-            },
-            {
-              equals: 'qwen/qwen3-32b-fast',
-            },
-          ],
-        },
-        context_window: 32768,
-        prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.25,
-        },
-      },
-      {
         id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
         name: 'Qwen3-Coder-30B-A3B-Instruct',
         match: {
@@ -6967,101 +6948,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.26,
-        },
-      },
-      {
-        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-        name: 'DeepSeek-R1-Distill-Llama-70B',
-        match: {
-          or: [
-            {
-              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
-            },
-            {
-              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.74,
-          output_mtok: 0.74,
-        },
-      },
-      {
-        id: 'meta-llama/Llama-3.1-8B-Instruct',
-        name: 'Llama-3.1-8B-Instruct',
-        match: {
-          or: [
-            {
-              equals: 'meta-llama/llama-3.1-8b-instruct',
-            },
-            {
-              equals: 'meta-llama/llama-3.1-8b-instruct-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.11,
-          output_mtok: 0.11,
-        },
-      },
-      {
-        id: 'meta-llama/Llama-3.3-70B-Instruct',
-        name: 'Llama-3.3-70B-Instruct',
-        match: {
-          or: [
-            {
-              equals: 'meta-llama/llama-3.3-70b-instruct',
-            },
-            {
-              equals: 'meta-llama/llama-3.3-70b-instruct-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.74,
-          output_mtok: 0.74,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-120b',
-        name: 'gpt-oss-120b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-120b',
-            },
-            {
-              equals: 'openai/gpt-oss-120b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.47,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.18,
         },
       },
     ],
@@ -7147,21 +7033,6 @@ export const data: Provider[] = [
         prices: {},
       },
       {
-        id: 'allenai/Olmo-3-32B-Think',
-        name: 'Olmo-3-32B-Think',
-        match: {
-          or: [
-            {
-              equals: 'allenai/olmo-3-32b-think',
-            },
-            {
-              equals: 'allenai/olmo-3-32b-think-fast',
-            },
-          ],
-        },
-        prices: {},
-      },
-      {
         id: 'allenai/Olmo-3-7B-Instruct',
         name: 'Olmo-3-7B-Instruct',
         match: {
@@ -7186,6 +7057,36 @@ export const data: Provider[] = [
             },
             {
               equals: 'allenai/olmo-3-7b-think-fast',
+            },
+          ],
+        },
+        prices: {},
+      },
+      {
+        id: 'allenai/Olmo-3.1-32B-Instruct',
+        name: 'Olmo-3.1-32B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'allenai/olmo-3.1-32b-instruct',
+            },
+            {
+              equals: 'allenai/olmo-3.1-32b-instruct-fast',
+            },
+          ],
+        },
+        prices: {},
+      },
+      {
+        id: 'allenai/Olmo-3.1-32B-Think',
+        name: 'Olmo-3.1-32B-Think',
+        match: {
+          or: [
+            {
+              equals: 'allenai/olmo-3.1-32b-think',
+            },
+            {
+              equals: 'allenai/olmo-3.1-32b-think-fast',
             },
           ],
         },
@@ -7231,6 +7132,21 @@ export const data: Provider[] = [
             },
             {
               equals: 'swiss-ai/apertus-8b-instruct-2509-fast',
+            },
+          ],
+        },
+        prices: {},
+      },
+      {
+        id: 'utter-project/EuroLLM-22B-Instruct-2512',
+        name: 'EuroLLM-22B-Instruct-2512',
+        match: {
+          or: [
+            {
+              equals: 'utter-project/eurollm-22b-instruct-2512',
+            },
+            {
+              equals: 'utter-project/eurollm-22b-instruct-2512-fast',
             },
           ],
         },
@@ -7492,6 +7408,25 @@ export const data: Provider[] = [
       },
     ],
     models: [
+      {
+        id: 'EssentialAI/rnj-1-instruct',
+        name: 'rnj-1-instruct',
+        match: {
+          or: [
+            {
+              equals: 'essentialai/rnj-1-instruct',
+            },
+            {
+              equals: 'essentialai/rnj-1-instruct-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.15,
+        },
+      },
       {
         id: 'Qwen/Qwen2.5-72B-Instruct',
         name: 'Qwen2.5-72B-Instruct',

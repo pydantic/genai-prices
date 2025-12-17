@@ -43,16 +43,16 @@ The following providers are currently supported:
 - [Google](prices/providers/google.yml) - 26 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 5 models
-- [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 10 models
+- [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 9 models
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 4 models
-- [HuggingFace (hyperbolic)](prices/providers/huggingface_hyperbolic.yml) - 17 models
+- [HuggingFace (hyperbolic)](prices/providers/huggingface_hyperbolic.yml) - 18 models
 - [HuggingFace (nebius)](prices/providers/huggingface_nebius.yml) - 27 models
 - [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 53 models
 - [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 20 models
-- [HuggingFace (ovhcloud)](prices/providers/huggingface_ovhcloud.yml) - 8 models
-- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 8 models
+- [HuggingFace (ovhcloud)](prices/providers/huggingface_ovhcloud.yml) - 2 models
+- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 10 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
-- [HuggingFace (together)](prices/providers/huggingface_together.yml) - 23 models
+- [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [Mistral](prices/providers/mistral.yml) - 23 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 63 models

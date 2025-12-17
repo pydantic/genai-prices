@@ -51,17 +51,6 @@ models:
       input_mtok: 1.01
       output_mtok: 1.01
 
-  - id: Qwen/Qwen3-32B
-    name: Qwen3-32B
-    match:
-      or:
-        - equals: qwen/qwen3-32b
-        - equals: qwen/qwen3-32b-fast
-    context_window: 32768
-    prices:
-      input_mtok: 0.09
-      output_mtok: 0.25
-
   - id: Qwen/Qwen3-Coder-30B-A3B-Instruct
     name: Qwen3-Coder-30B-A3B-Instruct
     match:
@@ -72,58 +61,3 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.26
-
-  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
-    name: DeepSeek-R1-Distill-Llama-70B
-    match:
-      or:
-        - equals: deepseek-ai/deepseek-r1-distill-llama-70b
-        - equals: deepseek-ai/deepseek-r1-distill-llama-70b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.74
-      output_mtok: 0.74
-
-  - id: meta-llama/Llama-3.1-8B-Instruct
-    name: Llama-3.1-8B-Instruct
-    match:
-      or:
-        - equals: meta-llama/llama-3.1-8b-instruct
-        - equals: meta-llama/llama-3.1-8b-instruct-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.11
-      output_mtok: 0.11
-
-  - id: meta-llama/Llama-3.3-70B-Instruct
-    name: Llama-3.3-70B-Instruct
-    match:
-      or:
-        - equals: meta-llama/llama-3.3-70b-instruct
-        - equals: meta-llama/llama-3.3-70b-instruct-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.74
-      output_mtok: 0.74
-
-  - id: openai/gpt-oss-120b
-    name: gpt-oss-120b
-    match:
-      or:
-        - equals: openai/gpt-oss-120b
-        - equals: openai/gpt-oss-120b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.09
-      output_mtok: 0.47
-
-  - id: openai/gpt-oss-20b
-    name: gpt-oss-20b
-    match:
-      or:
-        - equals: openai/gpt-oss-20b
-        - equals: openai/gpt-oss-20b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.05
-      output_mtok: 0.18
