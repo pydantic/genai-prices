@@ -253,7 +253,7 @@ class ModelPrice(_Model):
 class TieredPrices(_Model):
     """Pricing model when the amount paid varies by number of tokens.
 
-    Uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
+    Uses threshold-based pricing where *input tokens* crossing a tier applies that rate to ALL tokens of this type.
     This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
 
     Example: For a tier starting at 200K tokens:
