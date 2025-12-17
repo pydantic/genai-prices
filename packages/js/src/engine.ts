@@ -18,6 +18,7 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens?
   if (tokens <= 0) return 0
 
   // Threshold-based pricing: tier is determined by totalInputTokens
+  // When totalInputTokens is 0, no tier condition is met, so base rate is used
   const tierReference = totalInputTokens ?? tokens
   let applicablePrice = tiered.base
   for (const tier of tiered.tiers) {

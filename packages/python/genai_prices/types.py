@@ -679,11 +679,12 @@ def calc_mtok_price(
     if isinstance(field_mtok, TieredPrices):
         # Threshold-based pricing: tier is determined by total_input_tokens
         # Find the highest tier that applies based on total input tokens
-        tier_reference = total_input_tokens if total_input_tokens > 0 else token_count
+        # When total_input_tokens is 0, no tier condition is met, so base rate is used
         applicable_price = field_mtok.base
-        for tier in field_mtok.tiers:
-            if tier_reference > tier.start:
+        for tier in reversed(field_mtok.tiers):
+            if total_input_tokens > tier.start:
                 applicable_price = tier.price
+                break
         price = applicable_price * token_count
     else:
         price = field_mtok * token_count
