@@ -35,7 +35,7 @@ function calcMtokPrice(
   price: number | TieredPrices | undefined,
   tokens: number | undefined,
   _field: string,
-  totalInputTokens?: number
+  totalInputTokens: number
 ): number {
   if (price === undefined || tokens === undefined) return 0
   if (typeof price === 'number') {
