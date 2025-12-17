@@ -661,7 +661,7 @@ class ModelPrice:
 
 
 def calc_mtok_price(
-    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int | None = None
+    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
 ) -> Decimal:
     """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
 
