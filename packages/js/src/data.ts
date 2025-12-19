@@ -3287,6 +3287,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3-flash-preview',
+        name: 'Gemini 3 Flash Preview',
+        description: 'Our most intelligent model built for speed, combining frontier intelligence with superior search and grounding.',
+        match: {
+          equals: 'gemini-3-flash-preview',
+        },
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.05,
+          output_mtok: 3,
+          input_audio_mtok: 1,
+          cache_audio_read_mtok: 0.1,
+        },
+      },
+      {
         id: 'gemini-3-pro-preview',
         name: 'Gemini 3 Pro Preview',
         description: 'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',

@@ -1893,6 +1893,19 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-3-flash-preview',
+                match=ClauseEquals(equals='gemini-3-flash-preview'),
+                name='Gemini 3 Flash Preview',
+                description='Our most intelligent model built for speed, combining frontier intelligence with superior search and grounding.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'),
+                    cache_read_mtok=Decimal('0.05'),
+                    output_mtok=Decimal('3'),
+                    input_audio_mtok=Decimal('1'),
+                    cache_audio_read_mtok=Decimal('0.1'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-3-pro-preview',
                 match=ClauseOr(
                     or_=[
