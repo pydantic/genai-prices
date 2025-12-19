@@ -1893,11 +1893,42 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-3-flash',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-3-flash'), ClauseStartsWith(starts_with='gemini-3-flash-')]
+                ),
+                name='Gemini 3 Flash',
+                description="Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art performance while maintaining low latency and cost, with improved reasoning and coding capabilities.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5'),
+                    cache_read_mtok=Decimal('0.05'),
+                    output_mtok=Decimal('3'),
+                    input_audio_mtok=Decimal('1'),
+                    cache_audio_read_mtok=Decimal('0.1'),
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3-pro-image-preview',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='gemini-3-pro-image-preview'),
+                        ClauseEquals(equals='gemini-3-pro-image-preview'),
+                    ]
+                ),
+                name='Gemini 3 Pro Image Preview',
+                description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.',
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('120')),
+            ),
+            ModelInfo(
                 id='gemini-3-pro-preview',
                 match=ClauseOr(
                     or_=[
                         ClauseStartsWith(starts_with='gemini-3-pro-preview'),
-                        ClauseStartsWith(starts_with='gemini-3-pro-image-preview'),
+                        ClauseEquals(equals='gemini-3-pro-text-preview'),
                     ]
                 ),
                 name='Gemini 3 Pro Preview',
