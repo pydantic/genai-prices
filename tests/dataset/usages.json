@@ -1825,7 +1825,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.000066",
-            "output_price": "0.027708",
+            "output_price": "0.27708",
             "provider_id": "google"
           }
         ],
