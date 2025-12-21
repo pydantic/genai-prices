@@ -391,15 +391,15 @@ models:
           - start: 200000
             price: 15
 
-  - id: gemini-3-flash
-    name: Gemini 3 Flash
+  - id: gemini-3-flash-preview
+    name: Gemini 3 Flash Preview
     description: >-
       Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art
       performance while maintaining low latency and cost, with improved reasoning and coding capabilities.
     match:
       or:
-        - equals: gemini-3-flash
-        - starts_with: gemini-3-flash-
+        - equals: gemini-3-flash-preview
+        - starts_with: gemini-3-flash-preview-
     context_window: 1000000
     prices_checked: 2025-12-19
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.

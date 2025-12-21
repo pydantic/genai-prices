@@ -3287,17 +3287,17 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'gemini-3-flash',
-        name: 'Gemini 3 Flash',
+        id: 'gemini-3-flash-preview',
+        name: 'Gemini 3 Flash Preview',
         description:
           "Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art performance while maintaining low latency and cost, with improved reasoning and coding capabilities.",
         match: {
           or: [
             {
-              equals: 'gemini-3-flash',
+              equals: 'gemini-3-flash-preview',
             },
             {
-              starts_with: 'gemini-3-flash-',
+              starts_with: 'gemini-3-flash-preview-',
             },
           ],
         },

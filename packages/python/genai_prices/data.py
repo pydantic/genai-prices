@@ -1893,11 +1893,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='gemini-3-flash',
+                id='gemini-3-flash-preview',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='gemini-3-flash'), ClauseStartsWith(starts_with='gemini-3-flash-')]
+                    or_=[
+                        ClauseEquals(equals='gemini-3-flash-preview'),
+                        ClauseStartsWith(starts_with='gemini-3-flash-preview-'),
+                    ]
                 ),
-                name='Gemini 3 Flash',
+                name='Gemini 3 Flash Preview',
                 description="Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art performance while maintaining low latency and cost, with improved reasoning and coding capabilities.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.',
