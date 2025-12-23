@@ -35,8 +35,9 @@ def test_calc_with_provider(capsys: pytest.CaptureFixture[str]):
     out, err = capsys.readouterr()
     assert out == snapshot("""\
       Provider: Microsoft Azure
-         Model: gpt-3.5-turbo-16k-0613
+         Model: GPT-3.5 Turbo 16k
   Model Prices: $3/input MTok, $4/output MTok
+Context Window: 16,385
    Input Price: $0.003
   Output Price: $0.0004
    Total Price: $0.0034

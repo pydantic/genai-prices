@@ -743,6 +743,14 @@
       "description": "Logic to extract usage information from the provider's API responses.",
       "title": "Extractors"
     },
+    "fallback_model_providers": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "description": "List of provider identifiers to fallback to to get prices if this provider doesn't have a price.\n\nThis is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,\nAzure offers OpenAI models, etc.",
+      "title": "Fallback Model Providers"
+    },
     "models": {
       "description": "List of models supported by this provider",
       "items": {
