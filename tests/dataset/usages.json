@@ -7681,6 +7681,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000008",
+            "output_price": "0.000105",
             "provider_id": "google"
           },
           {
@@ -7903,6 +7905,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000423",
+            "output_price": "0.00101",
             "provider_id": "google"
           },
           {
@@ -7957,6 +7961,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000771",
+            "output_price": "0.000385",
             "provider_id": "google"
           },
           {
@@ -8011,6 +8017,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000335",
+            "output_price": "0.000735",
             "provider_id": "google"
           },
           {
@@ -8065,6 +8073,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000296",
+            "output_price": "0.000455",
             "provider_id": "google"
           },
           {
@@ -13026,6 +13036,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003",
+            "output_price": "0.00293",
             "provider_id": "azure"
           },
           {
@@ -13120,6 +13132,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.00003",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -13308,10 +13322,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00000375",
+            "output_price": "0.000006",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00000375",
+            "output_price": "0.000006",
             "provider_id": "azure"
           },
           {
@@ -14080,6 +14098,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0001725",
+            "output_price": "0.00072",
             "provider_id": "azure"
           },
           {
@@ -14151,6 +14171,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -14196,6 +14218,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006",
+            "output_price": "0.0015",
             "provider_id": "azure"
           },
           {
@@ -14290,6 +14314,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0006",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -14621,6 +14647,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000275",
+            "output_price": "0.00017",
             "provider_id": "azure"
           },
           {
@@ -14715,6 +14743,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0000275",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -15750,6 +15780,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000012",
+            "output_price": "0.000006",
             "provider_id": "azure"
           },
           {
@@ -15844,6 +15876,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0000012",
+            "output_price": "0.0",
             "provider_id": "azure"
           },
           {
@@ -19277,6 +19311,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000156",
+            "output_price": "0.0000096",
             "provider_id": "azure"
           },
           {
@@ -19371,6 +19407,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0000156",
+            "output_price": "0.0",
             "provider_id": "azure"
           },
           {
@@ -19416,6 +19454,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001935",
+            "output_price": "0.0000054",
             "provider_id": "azure"
           },
           {
@@ -19510,6 +19550,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.00001935",
+            "output_price": "0.0",
             "provider_id": "azure"
           },
           {
@@ -20019,6 +20061,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.00011",
+            "output_price": "0.00009",
             "provider_id": "azure"
           },
           {
@@ -20090,6 +20134,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -22435,10 +22481,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000195",
+            "output_price": "0.00924",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000195",
+            "output_price": "0.00924",
             "provider_id": "azure"
           },
           {
@@ -24348,10 +24398,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000045",
+            "output_price": "0.00216",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000045",
+            "output_price": "0.00216",
             "provider_id": "azure"
           },
           {

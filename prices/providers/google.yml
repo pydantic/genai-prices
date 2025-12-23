@@ -101,6 +101,9 @@ extractors:
       - path: completion_tokens
         dest: output_tokens
 
+fallback_model_providers:
+  - anthropic
+
 models:
   - id: claude-3-5-haiku
     match:
