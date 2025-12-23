@@ -288,14 +288,25 @@ class Provider:
     """Logic to find a provider based on the provider identifier."""
     extractors: list[UsageExtractor] | None = None
     """Logic to extract usage information from the provider's API responses."""
+    fallback_model_providers: list[str] | None = None
+    """List of provider identifiers to fallback to to get prices if this provider doesn't have a price.
+
+    This is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,
+    Azure offers OpenAI models, etc.
+    """
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models supported by this provider"""
 
-    def find_model(self, model_ref: str) -> ModelInfo | None:
+    def find_model(self, model_ref: str, *, all_providers: list[Provider] | None = None) -> ModelInfo | None:
         model_ref = model_ref.lower()
         for model in self.models:
             if model.is_match(model_ref):
                 return model
+        if self.fallback_model_providers and all_providers:
+            for provider_id in self.fallback_model_providers:
+                provider = next(p for p in all_providers if p.id == provider_id)
+                if provider:
+                    return provider.find_model(model_ref, all_providers=all_providers)
         return None
 
     def extract_usage(self, response_data: Any, *, api_flavor: str = 'default') -> tuple[str | None, Usage]:

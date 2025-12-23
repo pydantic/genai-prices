@@ -331,7 +331,7 @@ test_cases: list[tuple[str, str, str]] = [
 def test_model_matching(provider_ref: str, model_ref: str, expected: str):
     provider = find_provider_by_id(providers, provider_ref)
     assert provider is not None
-    model = provider.find_model(model_ref)
+    model = provider.find_model(model_ref, all_providers=providers)
     assert model is not None
 
     assert (provider.id, model.id) == expected
