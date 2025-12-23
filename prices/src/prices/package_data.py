@@ -40,7 +40,7 @@ providers: list[Provider] = {providers}
 
     data_content = data_py.read_text()
     data_content = re.sub('^ +[a-z_]+=None,$', '', data_content, flags=re.M)
-    data_content = re.sub(r'TzInfo\(UTC\)', 'datetime.timezone.utc', data_content)
+    data_content = re.sub(r'TzInfo\((?:UTC|0)\)', 'datetime.timezone.utc', data_content)
     data_py.write_text(data_content)
     subprocess.run(
         [
