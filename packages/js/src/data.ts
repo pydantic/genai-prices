@@ -17629,6 +17629,69 @@ export const data: Provider[] = [
           output_mtok: 15,
         },
       },
+      {
+        id: 'grok-4-1-fast-non-reasoning',
+        name: 'Grok 4.1 Fast Non-Reasoning',
+        description: 'A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4-1-fast-non-reasoning',
+            },
+            {
+              equals: 'grok-4-1-fast-non-reasoning-latest',
+            },
+          ],
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4-1-fast-reasoning',
+        name: 'Grok 4.1 Fast Reasoning',
+        description: 'A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4-1-fast-reasoning',
+            },
+            {
+              equals: 'grok-4-1-fast-reasoning-latest',
+            },
+          ],
+        },
+        context_window: 256000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-code-fast-1',
+        name: 'Grok Code Fast 1',
+        description: 'A speedy and economical reasoning model that excels at agentic coding.',
+        match: {
+          or: [
+            {
+              equals: 'grok-code-fast-1',
+            },
+            {
+              equals: 'grok-code-fast-1-latest',
+            },
+          ],
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.5,
+        },
+      },
     ],
   },
 ]
