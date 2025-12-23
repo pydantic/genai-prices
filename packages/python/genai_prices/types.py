@@ -708,6 +708,10 @@ class TieredPrices:
     tiers: list[Tier]
     """Extra price tiers."""
 
+    def __post_init__(self) -> None:
+        """Ensure tiers are sorted in ascending order by start threshold."""
+        self.tiers.sort(key=lambda tier: tier.start)
+
 
 @dataclass
 class Tier:

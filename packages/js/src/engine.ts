@@ -14,15 +14,14 @@ import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provide
  * @param tokens - Number of tokens of this specific type to price
  * @param totalInputTokens - Total input tokens for tier determination
  */
-function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens?: number): number {
+function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens: number): number {
   if (tokens <= 0) return 0
 
   // Threshold-based pricing: tier is determined by totalInputTokens
   // When totalInputTokens is 0, no tier condition is met, so base rate is used
-  const tierReference = totalInputTokens ?? tokens
   let applicablePrice = tiered.base
   for (const tier of tiered.tiers) {
-    if (tierReference > tier.start) {
+    if (totalInputTokens > tier.start) {
       applicablePrice = tier.price
     }
   }
