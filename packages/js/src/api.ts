@@ -9,7 +9,7 @@ import type {
 } from './types'
 
 import { data as embeddedData } from './data'
-import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModel, matchProvider } from './engine'
+import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
@@ -60,7 +60,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     options?.provider ??
     matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
   if (!provider) return null
-  const model = matchModel(provider.models, lowerModelId)
+  const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
