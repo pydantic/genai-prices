@@ -13,9 +13,15 @@ export interface Tier {
   start: number
 }
 
-export interface TieredPrices {
+export class TieredPrices {
   base: number
   tiers: Tier[]
+
+  constructor(data: { base: number; tiers: Tier[] }) {
+    this.base = data.base
+    // Ensure tiers are sorted in ascending order by start threshold
+    this.tiers = [...data.tiers].sort((a, b) => a.start - b.start)
+  }
 }
 
 export interface ModelPrice {

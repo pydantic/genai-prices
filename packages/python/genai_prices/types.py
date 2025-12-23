@@ -598,13 +598,16 @@ class ModelPrice:
         input_price = Decimal(0)
         output_price = Decimal(0)
 
+        # Calculate total input tokens for tier determination
+        total_input_tokens = usage.input_tokens or 0
+
         uncached_audio_input_tokens = usage.input_audio_tokens or 0
         if cache_audio_read_tokens := (usage.cache_audio_read_tokens or 0):
             uncached_audio_input_tokens -= cache_audio_read_tokens
 
         if uncached_audio_input_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
-        input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens)
+        input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
 
         uncached_text_input_tokens = usage.input_tokens or 0
         uncached_text_input_tokens -= uncached_audio_input_tokens
@@ -615,23 +618,23 @@ class ModelPrice:
 
         if uncached_text_input_tokens < 0:
             raise ValueError('Uncached text input tokens cannot be negative')
-        input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens)
-        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens)
+        input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
+        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens, total_input_tokens)
 
         cached_text_input_tokens = usage.cache_read_tokens or 0
         cached_text_input_tokens -= cache_audio_read_tokens
 
         if cached_text_input_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-        input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens)
-        input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens)
+        input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens, total_input_tokens)
+        input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens, total_input_tokens)
 
         text_output_tokens = usage.output_tokens or 0
         text_output_tokens -= usage.output_audio_tokens or 0
         if text_output_tokens < 0:
             raise ValueError('output_audio_tokens cannot be greater than output_tokens')
-        output_price += calc_mtok_price(self.output_mtok, text_output_tokens)
-        output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens)
+        output_price += calc_mtok_price(self.output_mtok, text_output_tokens, total_input_tokens)
+        output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens, total_input_tokens)
 
         total_price = input_price + output_price
 
@@ -657,19 +660,32 @@ class ModelPrice:
         return ', '.join(parts)
 
 
-def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int | None) -> Decimal:
-    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok)."""
+def calc_mtok_price(
+    field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
+) -> Decimal:
+    """Calculate the price for a given number of tokens based on the price in USD per million tokens (mtok).
+
+    For tiered pricing, uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
+    This is the industry standard used by Anthropic, Google, OpenAI, and most other providers.
+
+    Args:
+        field_mtok: Price per million tokens, either flat rate or tiered
+        token_count: Number of tokens of this specific type to price
+        total_input_tokens: Total input tokens for tier determination (used only for tiered pricing)
+    """
     if field_mtok is None or token_count is None:
         return Decimal(0)
 
     if isinstance(field_mtok, TieredPrices):
-        price = Decimal(0)
-        remaining = token_count
+        # Threshold-based pricing: tier is determined by total_input_tokens
+        # Find the highest tier that applies based on total input tokens
+        # When total_input_tokens is 0, no tier condition is met, so base rate is used
+        applicable_price = field_mtok.base
         for tier in reversed(field_mtok.tiers):
-            if remaining > tier.start:
-                price += tier.price * (remaining - tier.start)
-                remaining = tier.start
-        price += field_mtok.base * remaining
+            if total_input_tokens > tier.start:
+                applicable_price = tier.price
+                break
+        price = applicable_price * token_count
     else:
         price = field_mtok * token_count
     return price / 1_000_000
@@ -677,12 +693,24 @@ def calc_mtok_price(field_mtok: Decimal | TieredPrices | None, token_count: int 
 
 @dataclass
 class TieredPrices:
-    """Pricing model when the amount paid varies by number of tokens"""
+    """Pricing model when the amount paid varies by number of tokens.
+
+    Uses threshold-based pricing where crossing a tier applies that rate to ALL tokens.
+    This is the industry standard "cliff" model used by most providers (Anthropic, Google, OpenAI, etc.).
+
+    Example: For a tier starting at 200K tokens:
+    - Using 199,999 tokens: all tokens pay base rate
+    - Using 200,001 tokens: all tokens pay tier rate (not just the tokens above 200K)
+    """
 
     base: Decimal
-    """Based price in USD per million tokens, e.g. price until the first tier."""
+    """Base price in USD per million tokens, e.g. price until the first tier."""
     tiers: list[Tier]
     """Extra price tiers."""
+
+    def __post_init__(self) -> None:
+        """Ensure tiers are sorted in ascending order by start threshold."""
+        self.tiers.sort(key=lambda tier: tier.start)
 
 
 @dataclass
