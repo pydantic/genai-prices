@@ -79,11 +79,11 @@ const customProvider = {
       // The 'match' rule is required for the engine to find the model
       match: { equals: 'my-new-model' },
       prices: {
-        input_mtok: 2.50,  // $2.50 per 1M input tokens
-        output_mtok: 10.00 // $10.00 per 1M output tokens
-      }
-    }
-  ]
+        input_mtok: 2.5, // $2.50 per 1M input tokens
+        output_mtok: 10.0, // $10.00 per 1M output tokens
+      },
+    },
+  ],
 }
 
 const usage = { input_tokens: 1000, output_tokens: 100 }
