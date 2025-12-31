@@ -65,6 +65,34 @@ The library uses intelligent provider matching:
 - Use `provider:model` format in CLI for explicit provider selection
 - The async API with `--auto-update` provides the most up-to-date pricing
 
+### Custom Pricing / New Models
+
+If a model is not yet available in the bundled catalog, you can provide your own pricing definition. By passing a `provider` object in the options, the library will use your custom data instead of the internal catalog.
+
+```ts
+// Define a partial Provider object
+const customProvider = {
+  id: 'custom-provider',
+  models: [
+    {
+      id: 'my-new-model',
+      // The 'match' rule is required for the engine to find the model
+      match: { equals: 'my-new-model' },
+      prices: {
+        input_mtok: 2.50,  // $2.50 per 1M input tokens
+        output_mtok: 10.00 // $10.00 per 1M output tokens
+      }
+    }
+  ]
+}
+
+const usage = { input_tokens: 1000, output_tokens: 100 }
+
+// Pass the custom definition via the 'provider' option
+// (Type assertion may be needed depending on strictness)
+const result = calcPrice(usage, 'my-new-model', { provider: customProvider as any })
+```
+
 ### Error Handling
 
 When a model or provider is not found, the library returns `null`. This makes it easier to handle cases where pricing information might not be available.
