@@ -17706,6 +17706,9 @@ export const data: Provider[] = [
         match: {
           or: [
             {
+              equals: 'grok-4-1-fast',
+            },
+            {
               equals: 'grok-4-1-fast-reasoning',
             },
             {
@@ -17713,7 +17716,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 256000,
+        context_window: 2000000,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.05,
@@ -17727,14 +17730,17 @@ export const data: Provider[] = [
         match: {
           or: [
             {
+              equals: 'grok-code-fast',
+            },
+            {
               equals: 'grok-code-fast-1',
             },
             {
-              equals: 'grok-code-fast-1-latest',
+              equals: 'grok-code-fast-1-0825',
             },
           ],
         },
-        context_window: 2000000,
+        context_window: 256000,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.02,

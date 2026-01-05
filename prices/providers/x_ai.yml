@@ -146,7 +146,7 @@ models:
         - equals: grok-4-1-fast-non-reasoning
         - equals: grok-4-1-fast-non-reasoning-latest
     context_window: 2000000
-    prices_checked: 2025-12-23
+    prices_checked: 2025-01-05
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.05
@@ -158,10 +158,11 @@ models:
       A frontier multimodal model optimized specifically for high-performance agentic tool calling.
     match:
       or:
+        - equals: grok-4-1-fast
         - equals: grok-4-1-fast-reasoning
         - equals: grok-4-1-fast-reasoning-latest
-    context_window: 256000
-    prices_checked: 2025-12-23
+    context_window: 2000000
+    prices_checked: 2025-01-05
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.05
@@ -173,10 +174,11 @@ models:
       A speedy and economical reasoning model that excels at agentic coding.
     match:
       or:
+        - equals: grok-code-fast
         - equals: grok-code-fast-1
-        - equals: grok-code-fast-1-latest
-    context_window: 2000000
-    prices_checked: 2025-12-23
+        - equals: grok-code-fast-1-0825
+    context_window: 256000
+    prices_checked: 2025-01-05
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.02

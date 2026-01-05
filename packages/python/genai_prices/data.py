@@ -9943,13 +9943,14 @@ providers: list[Provider] = [
                 id='grok-4-1-fast-reasoning',
                 match=ClauseOr(
                     or_=[
+                        ClauseEquals(equals='grok-4-1-fast'),
                         ClauseEquals(equals='grok-4-1-fast-reasoning'),
                         ClauseEquals(equals='grok-4-1-fast-reasoning-latest'),
                     ]
                 ),
                 name='Grok 4.1 Fast Reasoning',
                 description='A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
-                context_window=256000,
+                context_window=2000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
                 ),
@@ -9957,11 +9958,15 @@ providers: list[Provider] = [
             ModelInfo(
                 id='grok-code-fast-1',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='grok-code-fast-1'), ClauseEquals(equals='grok-code-fast-1-latest')]
+                    or_=[
+                        ClauseEquals(equals='grok-code-fast'),
+                        ClauseEquals(equals='grok-code-fast-1'),
+                        ClauseEquals(equals='grok-code-fast-1-0825'),
+                    ]
                 ),
                 name='Grok Code Fast 1',
                 description='A speedy and economical reasoning model that excels at agentic coding.',
-                context_window=2000000,
+                context_window=256000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
                 ),
