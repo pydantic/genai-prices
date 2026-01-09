@@ -65,6 +65,44 @@ The library uses intelligent provider matching:
 - Use `provider:model` format in CLI for explicit provider selection
 - The async API with `--auto-update` provides the most up-to-date pricing
 
+### Custom Pricing / New Models
+
+If a model is not yet available in the bundled catalog, you can provide your own pricing definition. By passing a `provider` object in the options, the library will use your custom data instead of the internal catalog.
+
+```ts
+import { calcPrice, Provider } from '@pydantic/genai-prices'
+
+const customProvider: Provider = {
+  id: 'custom-provider',
+  name: 'Custom Provider',
+  api_pattern: '.*',
+  models: [
+    {
+      id: 'my-new-model',
+      match: { equals: 'my-new-model' },
+      prices: {
+        input_mtok: 2.5,
+        output_mtok: 10.0,
+      },
+    },
+  ],
+}
+
+const usage = { input_tokens: 1000, output_tokens: 100 }
+const result = calcPrice(usage, 'my-new-model', { provider: customProvider })
+```
+
+**Required fields:**
+
+- `Provider`: `id`, `name`, `api_pattern`, and `models` array
+- `ModelInfo`: `id`, `match` (determines how the model ID is matched), and `prices`
+
+**Pricing fields** (all in cost per million tokens):
+
+- `input_mtok` / `output_mtok`: Text token pricing
+- `cache_read_mtok` / `cache_write_mtok`: Prompt caching pricing
+- `input_audio_mtok` / `output_audio_mtok`: Audio token pricing
+
 ### Error Handling
 
 When a model or provider is not found, the library returns `null`. This makes it easier to handle cases where pricing information might not be available.
