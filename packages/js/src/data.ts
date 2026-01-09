@@ -3287,6 +3287,55 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3-flash-preview',
+        name: 'Gemini 3 Flash Preview',
+        description:
+          "Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art performance while maintaining low latency and cost, with improved reasoning and coding capabilities.",
+        match: {
+          or: [
+            {
+              equals: 'gemini-3-flash-preview',
+            },
+            {
+              starts_with: 'gemini-3-flash-preview-',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.',
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.05,
+          output_mtok: 3,
+          input_audio_mtok: 1,
+          cache_audio_read_mtok: 0.1,
+        },
+      },
+      {
+        id: 'gemini-3-pro-image-preview',
+        name: 'Gemini 3 Pro Image Preview',
+        description:
+          "Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
+        match: {
+          or: [
+            {
+              starts_with: 'gemini-3-pro-image-preview',
+            },
+            {
+              equals: 'gemini-3-pro-image-preview',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.',
+        prices: {
+          input_mtok: 2,
+          output_mtok: 120,
+        },
+      },
+      {
         id: 'gemini-3-pro-preview',
         name: 'Gemini 3 Pro Preview',
         description: 'The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
@@ -3296,7 +3345,7 @@ export const data: Provider[] = [
               starts_with: 'gemini-3-pro-preview',
             },
             {
-              starts_with: 'gemini-3-pro-image-preview',
+              equals: 'gemini-3-pro-text-preview',
             },
           ],
         },
@@ -17627,6 +17676,75 @@ export const data: Provider[] = [
           input_mtok: 3,
           cache_read_mtok: 0.75,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'grok-4-1-fast-non-reasoning',
+        name: 'Grok 4.1 Fast Non-Reasoning',
+        description: 'A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4-1-fast-non-reasoning',
+            },
+            {
+              equals: 'grok-4-1-fast-non-reasoning-latest',
+            },
+          ],
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4-1-fast-reasoning',
+        name: 'Grok 4.1 Fast Reasoning',
+        description: 'A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4-1-fast',
+            },
+            {
+              equals: 'grok-4-1-fast-reasoning',
+            },
+            {
+              equals: 'grok-4-1-fast-reasoning-latest',
+            },
+          ],
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-code-fast-1',
+        name: 'Grok Code Fast 1',
+        description: 'A speedy and economical reasoning model that excels at agentic coding.',
+        match: {
+          or: [
+            {
+              equals: 'grok-code-fast',
+            },
+            {
+              equals: 'grok-code-fast-1',
+            },
+            {
+              equals: 'grok-code-fast-1-0825',
+            },
+          ],
+        },
+        context_window: 256000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.5,
         },
       },
     ],
