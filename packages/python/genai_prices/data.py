@@ -5859,7 +5859,12 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-haiku-4.5:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('1.25'),
+                    cache_read_mtok=Decimal('0.1'),
+                    output_mtok=Decimal('5'),
+                ),
             ),
             ModelInfo(
                 id='anthropic/claude-opus-4.5',
@@ -5869,7 +5874,12 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-opus-4.5:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('25')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
             ),
             ModelInfo(
                 id='anthropic/claude-sonnet-4.5',
@@ -5879,7 +5889,15 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-sonnet-4.5:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                ),
             ),
             ModelInfo(
                 id='anubis-pro-105b-v1',
