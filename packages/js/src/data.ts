@@ -9615,9 +9615,6 @@ export const data: Provider[] = [
               equals: 'gpt-5.2-pro-2025-12-11',
             },
             {
-              equals: 'gpt-5-2',
-            },
-            {
               equals: 'gpt-5-2-pro-2025-12-11',
             },
           ],

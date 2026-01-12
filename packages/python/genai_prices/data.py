@@ -5450,7 +5450,6 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='gpt-5.2-pro'),
                         ClauseEquals(equals='gpt-5.2-pro-2025-12-11'),
-                        ClauseEquals(equals='gpt-5-2'),
                         ClauseEquals(equals='gpt-5-2-pro-2025-12-11'),
                     ]
                 ),
