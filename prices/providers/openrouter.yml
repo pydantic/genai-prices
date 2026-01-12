@@ -246,6 +246,33 @@ models:
       input_mtok: 3
       output_mtok: 15
 
+  - id: anthropic/claude-haiku-4.5
+    match:
+      or:
+        - equals: anthropic/claude-haiku-4.5
+        - equals: anthropic/claude-haiku-4.5:beta
+    prices:
+      input_mtok: 1
+      output_mtok: 5
+
+  - id: anthropic/claude-opus-4.5
+    match:
+      or:
+        - equals: anthropic/claude-opus-4.5
+        - equals: anthropic/claude-opus-4.5:beta
+    prices:
+      input_mtok: 5
+      output_mtok: 25
+
+  - id: anthropic/claude-sonnet-4.5
+    match:
+      or:
+        - equals: anthropic/claude-sonnet-4.5
+        - equals: anthropic/claude-sonnet-4.5:beta
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
   - id: anubis-pro-105b-v1
     name: Anubis Pro 105B V1
     match:
