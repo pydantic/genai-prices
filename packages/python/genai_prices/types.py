@@ -769,7 +769,7 @@ class ClauseStartsWith:
     starts_with: str
 
     def is_match(self, text: str) -> bool:
-        return text.startswith(self.starts_with)
+        return text.lower().startswith(self.starts_with.lower())
 
 
 @dataclass
@@ -777,7 +777,7 @@ class ClauseEndsWith:
     ends_with: str
 
     def is_match(self, text: str) -> bool:
-        return text.endswith(self.ends_with)
+        return text.lower().endswith(self.ends_with.lower())
 
 
 @dataclass
@@ -785,7 +785,7 @@ class ClauseContains:
     contains: str
 
     def is_match(self, text: str) -> bool:
-        return self.contains in text
+        return self.contains.lower() in text.lower()
 
 
 @dataclass
@@ -801,7 +801,7 @@ class ClauseEquals:
     equals: str
 
     def is_match(self, text: str) -> bool:
-        return text == self.equals
+        return text.lower() == self.equals.lower()
 
 
 @dataclass

@@ -1784,10 +1784,11 @@ providers: list[Provider] = [
                 id='gemini-2.0-flash',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='gemini-2.0-flash'),
-                        ClauseEquals(equals='gemini-2.0-flash-lite-001'),
-                        ClauseEquals(equals='gemini-2.0-flash-001'),
-                        ClauseEquals(equals='gemini-2.0-flash-exp:free'),
+                        ClauseEndsWith(ends_with='gemini-2.0-flash'),
+                        ClauseContains(contains='gemini-2.0-flash-0'),
+                        ClauseContains(contains='gemini-2.0-flash-exp'),
+                        ClauseContains(contains='gemini-2.0-flash-thinking'),
+                        ClauseContains(contains='gemini-2.0-flash-latest'),
                     ]
                 ),
                 name='gemini 2.0 flash',
@@ -4705,13 +4706,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
-                id='mistral-small',
-                match=ClauseStartsWith(starts_with='mistral-small'),
-                name='Mistral Small',
-                description='With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo] and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English, French, German, Italian, and Spanish.',
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
-            ),
-            ModelInfo(
                 id='mistral-small-24b-instruct-2501',
                 match=ClauseEquals(equals='mistral-small-24b-instruct-2501'),
                 name='Mistral Small 3',
@@ -5456,7 +5450,6 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='gpt-5.2-pro'),
                         ClauseEquals(equals='gpt-5.2-pro-2025-12-11'),
-                        ClauseEquals(equals='gpt-5-2'),
                         ClauseEquals(equals='gpt-5-2-pro-2025-12-11'),
                     ]
                 ),

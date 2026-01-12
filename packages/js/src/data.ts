@@ -3101,16 +3101,19 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'gemini-2.0-flash',
+              ends_with: 'gemini-2.0-flash',
             },
             {
-              equals: 'gemini-2.0-flash-lite-001',
+              contains: 'gemini-2.0-flash-0',
             },
             {
-              equals: 'gemini-2.0-flash-001',
+              contains: 'gemini-2.0-flash-exp',
             },
             {
-              equals: 'gemini-2.0-flash-exp:free',
+              contains: 'gemini-2.0-flash-thinking',
+            },
+            {
+              contains: 'gemini-2.0-flash-latest',
             },
           ],
         },
@@ -8200,19 +8203,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'mistral-small',
-        name: 'Mistral Small',
-        description:
-          'With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo] and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English, French, German, Italian, and Spanish.',
-        match: {
-          starts_with: 'mistral-small',
-        },
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.6,
-        },
-      },
-      {
         id: 'mistral-small-24b-instruct-2501',
         name: 'Mistral Small 3',
         description:
@@ -9623,9 +9613,6 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5.2-pro-2025-12-11',
-            },
-            {
-              equals: 'gpt-5-2',
             },
             {
               equals: 'gpt-5-2-pro-2025-12-11',

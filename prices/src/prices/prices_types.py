@@ -77,6 +77,10 @@ class Provider(_Model):
         unique_ids: set[str] = set()
         duplicates: list[str] = []
         for model in models:
+            model_ids = {model.id, *get_model_ids(model.match)}
+            other_matches = [m.id for m in models if m != model and any(m.is_match(model_id) for model_id in model_ids)]
+            if other_matches:
+                raise AssertionError(f'Model `{model.id}` matches other model ids: {other_matches}')
             if model.id in unique_ids:
                 duplicates.append(model.id)
             unique_ids.add(model.id)
@@ -322,21 +326,21 @@ class ClauseStartsWith(_Model):
     starts_with: str
 
     def is_match(self, text: str) -> bool:
-        return text.startswith(self.starts_with)
+        return text.lower().startswith(self.starts_with.lower())
 
 
 class ClauseEndsWith(_Model):
     ends_with: str
 
     def is_match(self, text: str) -> bool:
-        return text.endswith(self.ends_with)
+        return text.lower().endswith(self.ends_with.lower())
 
 
 class ClauseContains(_Model):
     contains: str
 
     def is_match(self, text: str) -> bool:
-        return self.contains in text
+        return self.contains.lower() in text.lower()
 
 
 class ClauseRegex(_Model):
@@ -350,7 +354,7 @@ class ClauseEquals(_Model):
     equals: str
 
     def is_match(self, text: str) -> bool:
-        return text == self.equals
+        return text.lower() == self.equals.lower()
 
 
 class ClauseOr(_Model, populate_by_name=True):
@@ -413,3 +417,21 @@ def doesnt_end_with_find_item(path: str | list[str | ArrayMatch]) -> str | list[
 ExtractPath = Annotated[Union[str, list[Union[str, ArrayMatch]]], AfterValidator(doesnt_end_with_find_item)]
 
 providers_schema = TypeAdapter(list[Provider])
+
+
+def get_model_ids(match: MatchLogic) -> list[str]:
+    """Get a list of strings that would match the given MatchLogic."""
+    if isinstance(match, ClauseEquals):
+        return [match.equals]
+    elif isinstance(match, ClauseStartsWith):
+        return [match.starts_with]
+    elif isinstance(match, ClauseEndsWith):
+        return [match.ends_with]
+    elif isinstance(match, ClauseContains):
+        return [match.contains]
+    elif isinstance(match, ClauseRegex):
+        return [match.regex.pattern]
+    elif isinstance(match, ClauseOr):
+        return [id_ for clause in match.or_ for id_ in get_model_ids(clause)]
+    else:
+        return [id_ for clause in match.and_ for id_ in get_model_ids(clause)]
