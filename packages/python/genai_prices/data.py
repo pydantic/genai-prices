@@ -5852,6 +5852,36 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='anthropic/claude-haiku-4.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-haiku-4.5'),
+                        ClauseEquals(equals='anthropic/claude-haiku-4.5:beta'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5')),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-4.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-opus-4.5'),
+                        ClauseEquals(equals='anthropic/claude-opus-4.5:beta'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('25')),
+            ),
+            ModelInfo(
+                id='anthropic/claude-sonnet-4.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-sonnet-4.5'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-4.5:beta'),
+                    ]
+                ),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
                 id='anubis-pro-105b-v1',
                 match=ClauseEquals(equals='anubis-pro-105b-v1'),
                 name='Anubis Pro 105B V1',
