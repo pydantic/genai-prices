@@ -27,7 +27,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('anthropic', 'claude-3-7-sonnet-20250219', snapshot(('anthropic', 'claude-3-7-sonnet-latest'))),
     ('google-gla', 'gemini-2.5-flash', snapshot(('google', 'gemini-2.5-flash'))),
     ('openai', 'o3', snapshot(('openai', 'o3'))),
-    ('google-gla', 'gemini-2.0-flash-lite', snapshot(('google', 'gemini-2.0-flash'))),
+    ('google-gla', 'gemini-2.0-flash-lite', snapshot(('google', 'gemini-2.0-flash-lite'))),
     ('openai', 'text-embedding-3-small', snapshot(('openai', 'text-embedding-3-small'))),
     ('openai', 'o3-2025-04-16', snapshot(('openai', 'o3'))),
     ('anthropic', 'claude-sonnet-4-20250514', snapshot(('anthropic', 'claude-sonnet-4-0'))),
@@ -44,7 +44,7 @@ test_cases: list[tuple[str, str, str]] = [
         marks=mark_xfail_todo,
     ),
     ('vertex_ai', 'gemini-2.5-pro', snapshot(('google', 'gemini-2.5-pro'))),
-    ('google-vertex', 'gemini-2.0-flash-lite', snapshot(('google', 'gemini-2.0-flash'))),
+    ('google-vertex', 'gemini-2.0-flash-lite', snapshot(('google', 'gemini-2.0-flash-lite'))),
     ('google-vertex', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     pytest.param('bedrock', 'us.meta.llama4-maverick-17b-instruct-v1:0', None, marks=mark_xfail_todo),
     ('openai', 'o3-mini-2025-01-31', snapshot(('openai', 'o3-mini'))),
@@ -64,11 +64,14 @@ test_cases: list[tuple[str, str, str]] = [
     ('google', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('anthropic', 'claude-3-5-haiku-latest', snapshot(('anthropic', 'claude-3-5-haiku-latest'))),
     ('anthropic', 'claude-4-sonnet-20250514', snapshot(('anthropic', 'claude-sonnet-4-0'))),
-    ('google-vertex', 'publishers/google/models/gemini-2.0-flash-lite-001', snapshot(('google', 'gemini-2.0-flash'))),
+    (
+        'google-vertex',
+        'publishers/google/models/gemini-2.0-flash-lite-001',
+        snapshot(('google', 'gemini-2.0-flash-lite')),
+    ),
     ('anthropic.messages', 'claude-sonnet-4-20250514', snapshot(('anthropic', 'claude-sonnet-4-0'))),
-    ('google-vertex', 'publishers/google/models/gemini-2.0-flash-lite', snapshot(('google', 'gemini-2.0-flash'))),
+    ('google-vertex', 'publishers/google/models/gemini-2.0-flash-lite', snapshot(('google', 'gemini-2.0-flash-lite'))),
     ('vertex_ai', 'gemini-2.0-flash', snapshot(('google', 'gemini-2.0-flash'))),
-    ('mistral_ai', 'mistral-small-2506', snapshot(('mistral', 'mistral-small'))),
     ('groq', 'llama-3.3-70b-versatile', snapshot(('groq', 'llama-3.3-70b-versatile'))),
     pytest.param('bedrock', 'us.meta.llama3-3-70b-instruct-v1:0', None, marks=mark_xfail_todo),
     ('anthropic', 'claude-3-7-sonnet-latest', snapshot(('anthropic', 'claude-3-7-sonnet-latest'))),
@@ -80,7 +83,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-3.5-turbo', snapshot(('openai', 'gpt-3.5-turbo'))),
     ('openai', 'o4-mini-deep-research-2025-06-26', snapshot(('openai', 'o4-mini-deep-research'))),
     ('Google', 'gemini-2.5-flash', snapshot(('google', 'gemini-2.5-flash'))),
-    ('google-vertex', 'gemini-2.0-flash-lite-001', snapshot(('google', 'gemini-2.0-flash'))),
+    ('google-vertex', 'gemini-2.0-flash-lite-001', snapshot(('google', 'gemini-2.0-flash-lite'))),
     pytest.param(
         'bedrock',
         'arn:aws:bedrock:us-east-1:203095961504:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0',
@@ -183,10 +186,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('google-gla', 'gemini-2.5-pro-preview-06-05', snapshot(('google', 'gemini-2.5-pro'))),
     ('groq', 'gemma2-9b-it', snapshot(('groq', 'gemma2-9b-it'))),
     ('groq', 'openai/gpt-oss-120b', snapshot(('groq', 'openai/gpt-oss-120b'))),
-    ('google-gla', 'gemini-2.0-flash-lite-preview-02-05', snapshot(('google', 'gemini-2.0-flash'))),
+    ('google-gla', 'gemini-2.0-flash-lite-preview-02-05', snapshot(('google', 'gemini-2.0-flash-lite'))),
     ('google-gla', 'gemini-2.5-pro-preview-05-06', snapshot(('google', 'gemini-2.5-pro'))),
     ('gcp.vertex.agent', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
-    ('google-gla', 'gemini-2.0-flash-lite-001', snapshot(('google', 'gemini-2.0-flash'))),
+    ('google-gla', 'gemini-2.0-flash-lite-001', snapshot(('google', 'gemini-2.0-flash-lite'))),
     ('gemini', 'gemini-2.5-flash-lite-preview-06-17', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('openai', 'gpt-4-1106-preview', snapshot(('openai', 'gpt-4-turbo'))),
     ('azure', 'gpt-4.1-mini', snapshot(('azure', 'gpt-4.1-mini'))),
@@ -301,7 +304,7 @@ test_cases: list[tuple[str, str, str]] = [
     (
         'google-gla',
         'gemini-2.5-progoogle-gla:gemini-2.5-flashgoogle-gla:gemini-2.5-flash-litegoogle-gla:gemini-2.0-flashgoogle-gla:gemini-2.0-flash-litegithub:gpt-4.1github:gpt-4.1-minigithub:gpt-4ogithub:gpt-4o-minigithub:gpt-3.5-turbogithub:gpt-3.5-turbo-instruct',
-        snapshot(('google', 'gemini-2.0-flash')),
+        snapshot(('google', 'gemini-2.0-flash-lite')),
     ),
     ('google-vertex', 'claude-sonnet-4@20250514', snapshot(('google', 'claude-4-sonnet'))),
     pytest.param('google-gla', 'gemini-2.5-flash-nano', None, marks=pytest.mark.xfail(reason='prices not found')),
@@ -309,7 +312,6 @@ test_cases: list[tuple[str, str, str]] = [
         'together_ai',
         'meta-llama/Llama-3.3-70B-Instruct-Turbo',
         snapshot(('together', 'meta-llama/Llama-3.3-70B-Instruct-Turbo')),
-        marks=mark_xfail_todo,
     ),
     ('openai', 'gpt-4o-mini-realtime-preview', snapshot(('openai', 'gpt-4o-mini-realtime-preview'))),
     ('google-vertex', 'gemini-1.5-flash-002', snapshot(('google', 'gemini-1.5-flash'))),
@@ -332,6 +334,6 @@ def test_model_matching(provider_ref: str, model_ref: str, expected: str):
     provider = find_provider_by_id(providers, provider_ref)
     assert provider is not None
     model = provider.find_model(model_ref)
-    assert model is not None
+    assert model is not None, (provider.id, model_ref, expected)
 
     assert (provider.id, model.id) == expected

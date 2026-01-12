@@ -12,8 +12,8 @@ import ruamel.yaml
 from pydantic import ValidationError
 from pydantic.main import IncEx
 
-from .prices_types import Provider, providers_schema
-from .utils import package_dir, pretty_size, root_dir, simplify_json_schema
+from prices.prices_types import Provider, providers_schema
+from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -126,3 +126,7 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:
     return pydantic_core.to_json(pydantic_core.from_json(compact_json), indent=2).decode().splitlines(keepends=True)
+
+
+if __name__ == '__main__':
+    build()

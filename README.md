@@ -53,7 +53,7 @@ The following providers are currently supported:
 - [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 10 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
-- [Mistral](prices/providers/mistral.yml) - 23 models
+- [Mistral](prices/providers/mistral.yml) - 22 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 63 models
 - [OpenRouter](prices/providers/openrouter.yml) - 578 models

@@ -77,6 +77,9 @@ class Provider(_Model):
         unique_ids: set[str] = set()
         duplicates: list[str] = []
         for model in models:
+            other_matches = [m.id for m in models if m != model and m.is_match(model.id)]
+            if other_matches:
+                raise AssertionError(f'Model `{model.id}` matches other model ids: {other_matches}')
             if model.id in unique_ids:
                 duplicates.append(model.id)
             unique_ids.add(model.id)
@@ -322,21 +325,21 @@ class ClauseStartsWith(_Model):
     starts_with: str
 
     def is_match(self, text: str) -> bool:
-        return text.startswith(self.starts_with)
+        return text.lower().startswith(self.starts_with.lower())
 
 
 class ClauseEndsWith(_Model):
     ends_with: str
 
     def is_match(self, text: str) -> bool:
-        return text.endswith(self.ends_with)
+        return text.lower().endswith(self.ends_with.lower())
 
 
 class ClauseContains(_Model):
     contains: str
 
     def is_match(self, text: str) -> bool:
-        return self.contains in text
+        return self.contains.lower() in text.lower()
 
 
 class ClauseRegex(_Model):
@@ -350,7 +353,7 @@ class ClauseEquals(_Model):
     equals: str
 
     def is_match(self, text: str) -> bool:
-        return text == self.equals
+        return text.lower() == self.equals.lower()
 
 
 class ClauseOr(_Model, populate_by_name=True):

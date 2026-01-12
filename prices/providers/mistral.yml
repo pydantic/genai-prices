@@ -199,20 +199,6 @@ models:
       input_mtok: 0.2
       output_mtok: 0.6
 
-  - id: mistral-small
-    name: Mistral Small
-    description: >-
-      With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo]
-      and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective
-      solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities,
-      can produce and reason about code, and is multiligual, supporting English,
-      French, German, Italian, and Spanish.
-    match:
-      starts_with: mistral-small
-    prices:
-      input_mtok: 0.2
-      output_mtok: 0.6
-
   - id: mistral-small-24b-instruct-2501
     name: Mistral Small 3
     description: >-

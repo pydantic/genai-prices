@@ -1784,10 +1784,11 @@ providers: list[Provider] = [
                 id='gemini-2.0-flash',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='gemini-2.0-flash'),
-                        ClauseEquals(equals='gemini-2.0-flash-lite-001'),
-                        ClauseEquals(equals='gemini-2.0-flash-001'),
-                        ClauseEquals(equals='gemini-2.0-flash-exp:free'),
+                        ClauseEndsWith(ends_with='gemini-2.0-flash'),
+                        ClauseContains(contains='gemini-2.0-flash-0'),
+                        ClauseContains(contains='gemini-2.0-flash-exp'),
+                        ClauseContains(contains='gemini-2.0-flash-thinking'),
+                        ClauseContains(contains='gemini-2.0-flash-latest'),
                     ]
                 ),
                 name='gemini 2.0 flash',
@@ -4702,13 +4703,6 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='mistral-saba'), ClauseEquals(equals='mistral-saba-latest')]),
                 name='Mistral Saba',
                 description='Mistral Saba is a 24B-parameter language model specifically designed for the Middle East and South Asia, delivering accurate and contextually relevant responses while maintaining efficient performance. Trained on curated regional datasets, it supports multiple Indian-origin languages—including Tamil and Malayalam—alongside Arabic. This makes it a versatile option for a range of regional and multilingual applications. Read more at the blog post here',
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
-            ),
-            ModelInfo(
-                id='mistral-small',
-                match=ClauseStartsWith(starts_with='mistral-small'),
-                name='Mistral Small',
-                description='With 22 billion parameters, Mistral Small v24.09 offers a convenient mid-point between (Mistral NeMo 12B)[/mistralai/mistral-nemo] and (Mistral Large 2)[/mistralai/mistral-large], providing a cost-effective solution that can be deployed across various platforms and environments. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English, French, German, Italian, and Spanish.',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
