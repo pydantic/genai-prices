@@ -10348,6 +10348,96 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-haiku-4.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-haiku-4.5',
+            },
+            {
+              equals: 'anthropic/claude-haiku-4.5:beta',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 1,
+          cache_write_mtok: 1.25,
+          cache_read_mtok: 0.1,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-4.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-4.5',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.5:beta',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'anthropic/claude-sonnet-4.5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-sonnet-4.5',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-4.5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'anubis-pro-105b-v1',
         name: 'Anubis Pro 105B V1',
         match: {
