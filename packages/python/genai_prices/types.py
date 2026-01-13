@@ -306,7 +306,8 @@ class Provider:
             for provider_id in self.fallback_model_providers:
                 provider = next(p for p in all_providers if p.id == provider_id)
                 if provider:
-                    return provider.find_model(model_ref, all_providers=all_providers)
+                    # don't pass all_providers when falling back, so we can only have one step of fallback
+                    return provider.find_model(model_ref)
         return None
 
     def extract_usage(self, response_data: Any, *, api_flavor: str = 'default') -> tuple[str | None, Usage]:
