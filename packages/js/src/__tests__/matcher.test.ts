@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, it } from 'vitest'
 
 import type { Provider } from '../types'
@@ -52,10 +53,9 @@ describe('Model Matching with Fallback', () => {
     it('should find models directly in provider', () => {
       const azure = matchProvider(actualProviders, { providerId: 'azure' })
       expect(azure).toBeDefined()
-      if (!azure) return
 
-      // Azure has its own gpt-4.1 model
-      const model = matchModelWithFallback(azure, 'gpt-4.1', actualProviders)
+      // Azure has its own gpt-4.1 model accessible via a fallback
+      const model = matchModelWithFallback(azure!, 'gpt-4.1', actualProviders)
       expect(model).toBeDefined()
       expect(model?.id).toBe('gpt-4.1')
     })
@@ -144,9 +144,9 @@ describe('Model Matching with Fallback', () => {
     })
 
     it('should support chained fallbacks', () => {
-      const thirdProvider: Provider = {
-        api_pattern: 'third.example.com',
-        id: 'third-provider',
+      const secondProvider: Provider = {
+        api_pattern: 'second.example.com',
+        id: 'second-provider',
         models: [
           {
             id: 'third-model',
@@ -157,14 +157,6 @@ describe('Model Matching with Fallback', () => {
         name: 'Third Provider',
       }
 
-      const secondProvider: Provider = {
-        api_pattern: 'second.example.com',
-        fallback_model_providers: ['third-provider'],
-        id: 'second-provider',
-        models: [],
-        name: 'Second Provider',
-      }
-
       const firstProvider: Provider = {
         api_pattern: 'first.example.com',
         fallback_model_providers: ['second-provider'],
@@ -173,7 +165,7 @@ describe('Model Matching with Fallback', () => {
         name: 'First Provider',
       }
 
-      const allProviders = [firstProvider, secondProvider, thirdProvider]
+      const allProviders = [firstProvider, secondProvider]
 
       // Should chain through second to find model in third
       const model = matchModelWithFallback(firstProvider, 'third-model', allProviders)
@@ -195,11 +187,11 @@ describe('Model Matching with Fallback', () => {
 
       // If Azure doesn't have it directly, it should fallback to OpenAI
       const directMatch = matchModel(azure.models, 'gpt-4o-mini')
-      if (!directMatch) {
-        const fallbackMatch = matchModelWithFallback(azure, 'gpt-4o-mini', actualProviders)
-        expect(fallbackMatch).toBeDefined()
-        expect(fallbackMatch?.id).toBe(openaiModel?.id)
-      }
+      expect(directMatch).not.toBeDefined()
+
+      const fallbackMatch = matchModelWithFallback(azure, 'gpt-4o-mini', actualProviders)
+      expect(fallbackMatch).toBeDefined()
+      expect(fallbackMatch?.id).toBe(openaiModel?.id)
     })
   })
 })
