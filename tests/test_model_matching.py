@@ -362,7 +362,7 @@ def test_find_model_directly_in_provider():
     azure = find_provider_by_id(providers, 'azure')
     assert azure is not None
 
-    # Azure has its own gpt-4.1 model accessible via a fallback
+    # Azure has its own gpt-4.1 model directly available
     model = azure.find_model('gpt-4.1', all_providers=providers)
     assert model is not None
     assert model.id == 'gpt-4.1'
@@ -484,7 +484,7 @@ def test_chained_fallbacks_one_step():
 
     all_providers = [first_provider, second_provider]
 
-    # Should chain through second to find model in third
+    # Should chain through second provider to find model
     model = first_provider.find_model('third-model', all_providers=all_providers)
     assert model is not None
     assert model.id == 'third-model'
@@ -509,7 +509,7 @@ def test_azure_fallback_to_openai_real_data():
     assert openai_model is not None
 
     # Azure should NOT have it directly (without fallback)
-    # This verifies the test model is not in Azure's direct list
+    # Pass all_providers=None to disable fallback and check only Azure's direct models
     direct_match = azure.find_model('gpt-4o-mini', all_providers=None)
     assert direct_match is None, (
         'gpt-4o-mini was found directly in Azure. '
