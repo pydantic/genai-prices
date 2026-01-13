@@ -1,0 +1,14 @@
+name: Copilot Actions Setup Steps
+description: Setup steps to run before firewall is enabled, allowing access to required resources
+
+steps:
+  - name: Setup UV (Python package manager)
+    uses: astral-sh/setup-uv@v6
+    with:
+      enable-cache: true
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: '22.x'
+      cache: 'npm'
