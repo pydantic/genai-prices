@@ -521,3 +521,45 @@ def test_azure_fallback_to_openai_real_data():
     fallback_match = azure.find_model('gpt-4o-mini', all_providers=providers)
     assert fallback_match is not None
     assert fallback_match.id == openai_model.id
+
+
+def test_fallback_with_nonexistent_provider():
+    """Test that fallback handles gracefully when a fallback provider doesn't exist.
+
+    This test ensures that when a provider has a fallback_model_providers list that
+    includes a provider ID that doesn't exist in all_providers, it doesn't raise
+    a StopIteration error but continues checking other fallback providers.
+    """
+    from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider
+
+    fallback_provider = Provider(
+        id='existing-fallback',
+        name='Existing Fallback Provider',
+        api_pattern='existing.example.com',
+        models=[
+            ModelInfo(
+                id='fallback-model',
+                match=ClauseEquals(equals='fallback-model'),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+            ),
+        ],
+    )
+
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['nonexistent-provider', 'existing-fallback'],
+        models=[],
+    )
+
+    all_providers = [main_provider, fallback_provider]
+
+    # Should skip nonexistent-provider and find model in existing-fallback
+    model = main_provider.find_model('fallback-model', all_providers=all_providers)
+    assert model is not None
+    assert model.id == 'fallback-model'
+
+    # Should return None if no provider (existent or not) has the model
+    non_existent = main_provider.find_model('non-existent-model', all_providers=all_providers)
+    assert non_existent is None
