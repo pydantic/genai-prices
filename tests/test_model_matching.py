@@ -355,3 +355,158 @@ def test_fallback_tries_all_providers():
     model = azure.find_model('claude-sonnet-4-20250514', all_providers=providers)
     assert model is not None, 'Fallback should have found claude-sonnet via anthropic'
     assert model.id == 'claude-sonnet-4-0'
+
+
+def test_find_model_directly_in_provider():
+    """Test that models can be found directly in a provider that has fallback configured."""
+    azure = find_provider_by_id(providers, 'azure')
+    assert azure is not None
+
+    # Azure has its own gpt-4.1 model accessible via a fallback
+    model = azure.find_model('gpt-4.1', all_providers=providers)
+    assert model is not None
+    assert model.id == 'gpt-4.1'
+
+
+def test_fallback_when_model_not_found_directly():
+    """Test that fallback works when model is not found in the main provider."""
+    from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider
+
+    # Create mock providers to test fallback
+    fallback_provider = Provider(
+        id='fallback-provider',
+        name='Fallback Provider',
+        api_pattern='fallback.example.com',
+        models=[
+            ModelInfo(
+                id='fallback-model',
+                match=ClauseEquals(equals='fallback-model'),
+                prices=ModelPrice(input_mtok=1, output_mtok=2),
+            ),
+        ],
+    )
+
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['fallback-provider'],
+        models=[
+            ModelInfo(
+                id='main-model',
+                match=ClauseEquals(equals='main-model'),
+                prices=ModelPrice(input_mtok=1, output_mtok=2),
+            ),
+        ],
+    )
+
+    all_providers = [main_provider, fallback_provider]
+
+    # Should find model in main provider directly
+    main_model = main_provider.find_model('main-model', all_providers=all_providers)
+    assert main_model is not None
+    assert main_model.id == 'main-model'
+
+    # Should fallback to find model in fallback provider
+    fallback_model = main_provider.find_model('fallback-model', all_providers=all_providers)
+    assert fallback_model is not None
+    assert fallback_model.id == 'fallback-model'
+
+    # Should return None for non-existent model
+    non_existent = main_provider.find_model('non-existent', all_providers=all_providers)
+    assert non_existent is None
+
+
+def test_prioritize_direct_match_over_fallback():
+    """Test that direct matches are prioritized over fallback matches."""
+    from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider
+
+    # Both providers have a model with the same match pattern
+    fallback_provider = Provider(
+        id='fallback-provider',
+        name='Fallback Provider',
+        api_pattern='fallback.example.com',
+        models=[
+            ModelInfo(
+                id='shared-model-fallback',
+                match=ClauseEquals(equals='shared-model'),
+                prices=ModelPrice(input_mtok=10, output_mtok=20),
+            ),
+        ],
+    )
+
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['fallback-provider'],
+        models=[
+            ModelInfo(
+                id='shared-model-main',
+                match=ClauseEquals(equals='shared-model'),
+                prices=ModelPrice(input_mtok=1, output_mtok=2),
+            ),
+        ],
+    )
+
+    all_providers = [main_provider, fallback_provider]
+
+    # Should find the main provider's version, not the fallback
+    model = main_provider.find_model('shared-model', all_providers=all_providers)
+    assert model is not None
+    assert model.id == 'shared-model-main'
+
+
+def test_chained_fallbacks_one_step():
+    """Test that chained fallbacks work (one step only)."""
+    from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider
+
+    second_provider = Provider(
+        id='second-provider',
+        name='Second Provider',
+        api_pattern='second.example.com',
+        models=[
+            ModelInfo(
+                id='third-model',
+                match=ClauseEquals(equals='third-model'),
+                prices=ModelPrice(input_mtok=1, output_mtok=2),
+            ),
+        ],
+    )
+
+    first_provider = Provider(
+        id='first-provider',
+        name='First Provider',
+        api_pattern='first.example.com',
+        fallback_model_providers=['second-provider'],
+        models=[],
+    )
+
+    all_providers = [first_provider, second_provider]
+
+    # Should chain through second to find model in third
+    model = first_provider.find_model('third-model', all_providers=all_providers)
+    assert model is not None
+    assert model.id == 'third-model'
+
+
+def test_azure_fallback_to_openai_real_data():
+    """Test real world scenario: Azure falls back to OpenAI."""
+    azure = find_provider_by_id(providers, 'azure')
+    openai = find_provider_by_id(providers, 'openai')
+    assert azure is not None
+    assert openai is not None
+    assert 'openai' in azure.fallback_model_providers
+
+    # Find a model that exists in OpenAI
+    openai_model = openai.find_model('gpt-4o-mini', all_providers=providers)
+    assert openai_model is not None
+
+    # Azure should NOT have it directly
+    direct_match = azure.find_model('gpt-4o-mini', all_providers=None)
+    assert direct_match is None
+
+    # But Azure should find it via fallback to OpenAI
+    fallback_match = azure.find_model('gpt-4o-mini', all_providers=providers)
+    assert fallback_match is not None
+    assert fallback_match.id == openai_model.id
