@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 from inline_snapshot import snapshot
 
@@ -381,7 +383,7 @@ def test_fallback_when_model_not_found_directly():
             ModelInfo(
                 id='fallback-model',
                 match=ClauseEquals(equals='fallback-model'),
-                prices=ModelPrice(input_mtok=1, output_mtok=2),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
         ],
     )
@@ -395,7 +397,7 @@ def test_fallback_when_model_not_found_directly():
             ModelInfo(
                 id='main-model',
                 match=ClauseEquals(equals='main-model'),
-                prices=ModelPrice(input_mtok=1, output_mtok=2),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
         ],
     )
@@ -430,7 +432,7 @@ def test_prioritize_direct_match_over_fallback():
             ModelInfo(
                 id='shared-model-fallback',
                 match=ClauseEquals(equals='shared-model'),
-                prices=ModelPrice(input_mtok=10, output_mtok=20),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('20')),
             ),
         ],
     )
@@ -444,7 +446,7 @@ def test_prioritize_direct_match_over_fallback():
             ModelInfo(
                 id='shared-model-main',
                 match=ClauseEquals(equals='shared-model'),
-                prices=ModelPrice(input_mtok=1, output_mtok=2),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
         ],
     )
@@ -469,7 +471,7 @@ def test_chained_fallbacks_one_step():
             ModelInfo(
                 id='third-model',
                 match=ClauseEquals(equals='third-model'),
-                prices=ModelPrice(input_mtok=1, output_mtok=2),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
         ],
     )
@@ -502,7 +504,7 @@ def test_azure_fallback_to_openai_real_data():
     openai = find_provider_by_id(providers, 'openai')
     assert azure is not None
     assert openai is not None
-    assert 'openai' in azure.fallback_model_providers
+    assert azure.fallback_model_providers is not None and 'openai' in azure.fallback_model_providers
 
     # Find a model that exists in OpenAI
     openai_model = openai.find_model('gpt-4o-mini', all_providers=providers)
