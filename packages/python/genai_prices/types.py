@@ -304,7 +304,7 @@ class Provider:
                 return model
         if self.fallback_model_providers and all_providers:
             for provider_id in self.fallback_model_providers:
-                provider = next(p for p in all_providers if p.id == provider_id)
+                provider = next((p for p in all_providers if p.id == provider_id), None)
                 if provider:
                     # don't pass all_providers when falling back, so we can only have one step of fallback
                     if model := provider.find_model(model_ref):
