@@ -494,7 +494,7 @@ def test_chained_fallbacks_one_step():
 
 def test_azure_fallback_to_openai_real_data():
     """Test real world scenario: Azure falls back to OpenAI.
-    
+
     This test verifies that Azure can find OpenAI models through fallback.
     We use gpt-4o-mini as the test model since it exists in OpenAI but not in Azure's
     direct model list. If this test fails because Azure added gpt-4o-mini directly,
@@ -514,8 +514,7 @@ def test_azure_fallback_to_openai_real_data():
     # Pass all_providers=None to disable fallback and check only Azure's direct models
     direct_match = azure.find_model('gpt-4o-mini', all_providers=None)
     assert direct_match is None, (
-        'gpt-4o-mini was found directly in Azure. '
-        'Please update this test to use a different OpenAI-exclusive model.'
+        'gpt-4o-mini was found directly in Azure. Please update this test to use a different OpenAI-exclusive model.'
     )
 
     # But Azure should find it via fallback to OpenAI
