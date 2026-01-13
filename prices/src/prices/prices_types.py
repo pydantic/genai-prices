@@ -54,6 +54,12 @@ class Provider(_Model):
     """Logic to find a provider based on the provider identifier."""
     extractors: list[UsageExtractor] | None = None
     """Logic to extract usage information from the provider's API responses."""
+    fallback_model_providers: list[str] | None = None
+    """List of provider identifiers to fallback to to get prices if this provider doesn't have a price.
+
+    This is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,
+    Azure offers OpenAI models, etc.
+    """
     models: list[ModelInfo]
     """List of models supported by this provider"""
 

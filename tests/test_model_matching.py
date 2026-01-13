@@ -333,7 +333,25 @@ test_cases: list[tuple[str, str, str]] = [
 def test_model_matching(provider_ref: str, model_ref: str, expected: str):
     provider = find_provider_by_id(providers, provider_ref)
     assert provider is not None
-    model = provider.find_model(model_ref)
+    model = provider.find_model(model_ref, all_providers=providers)
     assert model is not None, (provider.id, model_ref, expected)
 
     assert (provider.id, model.id) == expected
+
+
+def test_fallback_tries_all_providers():
+    """Test that fallback iterates through all providers until finding a match.
+
+    This tests the case where the first fallback provider doesn't have the model,
+    but a subsequent fallback provider does. Azure has fallback_model_providers=['openai', 'anthropic'],
+    so for a Claude model, it should skip openai and find it via anthropic.
+    """
+    azure = find_provider_by_id(providers, 'azure')
+    assert azure is not None
+    assert azure.fallback_model_providers == ['openai', 'anthropic']
+
+    # Azure doesn't have claude-sonnet-4 directly, openai doesn't have it either,
+    # but anthropic does - so fallback should find it
+    model = azure.find_model('claude-sonnet-4-20250514', all_providers=providers)
+    assert model is not None, 'Fallback should have found claude-sonnet via anthropic'
+    assert model.id == 'claude-sonnet-4-0'

@@ -187,3 +187,20 @@ export function matchProvider(providers: Provider[], { modelId, providerApiUrl, 
 export function matchModel(models: ModelInfo[], modelId: string): ModelInfo | undefined {
   return models.find((m) => matchLogic(m.match, modelId))
 }
+
+export function matchModelWithFallback(provider: Provider, modelId: string, allProviders?: Provider[]): ModelInfo | undefined {
+  const model = matchModel(provider.models, modelId)
+  if (model) return model
+
+  if (provider.fallback_model_providers && allProviders) {
+    for (const fallbackProviderId of provider.fallback_model_providers) {
+      const fallbackProvider = allProviders.find((p) => p.id === fallbackProviderId)
+      if (fallbackProvider) {
+        // don't pass allProviders when falling back, so we can only have one step of fallback
+        const fallbackModel = matchModelWithFallback(fallbackProvider, modelId)
+        if (fallbackModel) return fallbackModel
+      }
+    }
+  }
+  return undefined
+}

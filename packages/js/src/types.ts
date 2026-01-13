@@ -101,6 +101,7 @@ export interface Provider {
   api_pattern: string
   description?: string
   extractors?: UsageExtractor[]
+  fallback_model_providers?: string[]
   id: string
   model_match?: MatchLogic
   models: ModelInfo[]

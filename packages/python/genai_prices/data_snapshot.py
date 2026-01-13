@@ -97,7 +97,7 @@ class DataSnapshot:
 
             provider = self.find_provider(model_ref, provider_id, provider_api_url)
 
-        if model := provider.find_model(model_ref):
+        if model := provider.find_model(model_ref, all_providers=self.providers):
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
         else:

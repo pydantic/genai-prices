@@ -30,10 +30,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000042",
+            "output_price": "0.000975",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000042",
+            "output_price": "0.000975",
             "provider_id": "azure"
           },
           {
@@ -86,10 +90,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
@@ -142,10 +150,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002472",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002472",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
@@ -198,10 +210,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002391",
+            "output_price": "0.001365",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002391",
+            "output_price": "0.001365",
             "provider_id": "azure"
           },
           {
@@ -254,10 +270,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002871",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002871",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
@@ -310,10 +330,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001374",
+            "output_price": "0.00057",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001374",
+            "output_price": "0.00057",
             "provider_id": "azure"
           },
           {
@@ -366,10 +390,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001575",
+            "output_price": "0.001095",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001575",
+            "output_price": "0.001095",
             "provider_id": "azure"
           },
           {
@@ -422,10 +450,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002232",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
@@ -478,10 +510,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002433",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002433",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
@@ -534,10 +570,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002193",
+            "output_price": "0.00165",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002193",
+            "output_price": "0.00165",
             "provider_id": "azure"
           },
           {
@@ -590,10 +630,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001671",
+            "output_price": "0.000825",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001671",
+            "output_price": "0.000825",
             "provider_id": "azure"
           },
           {
@@ -646,10 +690,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001908",
+            "output_price": "0.00132",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001908",
+            "output_price": "0.00132",
             "provider_id": "azure"
           },
           {
@@ -702,10 +750,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002034",
+            "output_price": "0.00111",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002034",
+            "output_price": "0.00111",
             "provider_id": "azure"
           },
           {
@@ -758,10 +810,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002196",
+            "output_price": "0.000585",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002196",
+            "output_price": "0.000585",
             "provider_id": "azure"
           },
           {
@@ -814,10 +870,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002403",
+            "output_price": "0.00114",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002403",
+            "output_price": "0.00114",
             "provider_id": "azure"
           },
           {
@@ -870,10 +930,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002235",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002235",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
@@ -926,10 +990,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002454",
+            "output_price": "0.00036",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002454",
+            "output_price": "0.00036",
             "provider_id": "azure"
           },
           {
@@ -982,10 +1050,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001683",
+            "output_price": "0.00081",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001683",
+            "output_price": "0.00081",
             "provider_id": "azure"
           },
           {
@@ -1038,10 +1110,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00192",
+            "output_price": "0.00039",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00192",
+            "output_price": "0.00039",
             "provider_id": "azure"
           },
           {
@@ -1094,10 +1170,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001749",
+            "output_price": "0.00114",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001749",
+            "output_price": "0.00114",
             "provider_id": "azure"
           },
           {
@@ -1150,10 +1230,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002052",
+            "output_price": "0.00036",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002052",
+            "output_price": "0.00036",
             "provider_id": "azure"
           },
           {
@@ -1206,10 +1290,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000588",
+            "output_price": "0.000285",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000588",
+            "output_price": "0.000285",
             "provider_id": "azure"
           },
           {
@@ -1262,10 +1350,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001131",
+            "output_price": "0.00096",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001131",
+            "output_price": "0.00096",
             "provider_id": "azure"
           },
           {
@@ -1318,10 +1410,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001392",
+            "output_price": "0.00045",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001392",
+            "output_price": "0.00045",
             "provider_id": "azure"
           },
           {
@@ -1374,10 +1470,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001836",
+            "output_price": "0.001515",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001836",
+            "output_price": "0.001515",
             "provider_id": "azure"
           },
           {
@@ -1430,10 +1530,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002394",
+            "output_price": "0.00075",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002394",
+            "output_price": "0.00075",
             "provider_id": "azure"
           },
           {
@@ -1486,10 +1590,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002343",
+            "output_price": "0.00111",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002343",
+            "output_price": "0.00111",
             "provider_id": "azure"
           },
           {
@@ -1542,10 +1650,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002841",
+            "output_price": "0.001125",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002841",
+            "output_price": "0.001125",
             "provider_id": "azure"
           },
           {
@@ -1598,10 +1710,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000591",
+            "output_price": "0.00027",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000591",
+            "output_price": "0.00027",
             "provider_id": "azure"
           },
           {
@@ -2147,10 +2263,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00489",
+            "output_price": "0.001635",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00489",
+            "output_price": "0.001635",
             "provider_id": "azure"
           },
           {
@@ -2886,10 +3006,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.032427",
+            "output_price": "0.00966",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.032427",
+            "output_price": "0.00966",
             "provider_id": "azure"
           },
           {
@@ -6584,10 +6708,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000795",
+            "output_price": "0.000465",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000795",
+            "output_price": "0.000465",
             "provider_id": "azure"
           },
           {
@@ -6640,6 +6768,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00417525",
+            "output_price": "0.005865",
             "provider_id": "azure"
           },
           {
@@ -6659,6 +6789,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.000009",
+            "output_price": "0.005865",
             "provider_id": "azure"
           },
           {
@@ -6705,6 +6837,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00185355",
+            "output_price": "0.000495",
             "provider_id": "azure"
           },
           {
@@ -6725,6 +6859,8 @@
         "extractors": [
           {
             "api_flavor": "responses",
+            "input_price": "0.000009",
+            "output_price": "0.000495",
             "provider_id": "azure"
           },
           {
@@ -6771,10 +6907,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001884",
+            "output_price": "0.00075",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001884",
+            "output_price": "0.00075",
             "provider_id": "azure"
           },
           {
@@ -6827,10 +6967,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002073",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002073",
+            "output_price": "0.000795",
             "provider_id": "azure"
           },
           {
@@ -6883,10 +7027,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002271",
+            "output_price": "0.00009",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002271",
+            "output_price": "0.00009",
             "provider_id": "azure"
           },
           {
@@ -6939,10 +7087,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0003",
+            "output_price": "0.00075",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0003",
+            "output_price": "0.00075",
             "provider_id": "azure"
           },
           {
@@ -6995,10 +7147,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001377",
+            "output_price": "0.00057",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001377",
+            "output_price": "0.00057",
             "provider_id": "azure"
           },
           {
@@ -7051,10 +7207,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00153",
+            "output_price": "0.000255",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00153",
+            "output_price": "0.000255",
             "provider_id": "azure"
           },
           {
@@ -7107,10 +7267,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.004731",
+            "output_price": "0.00129",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.004731",
+            "output_price": "0.00129",
             "provider_id": "azure"
           },
           {
@@ -7163,10 +7327,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.005037",
+            "output_price": "0.00024",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005037",
+            "output_price": "0.00024",
             "provider_id": "azure"
           },
           {
@@ -7219,10 +7387,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.004845",
+            "output_price": "0.00042",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.004845",
+            "output_price": "0.00042",
             "provider_id": "azure"
           },
           {
@@ -7275,10 +7447,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001335",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001335",
+            "output_price": "0.000345",
             "provider_id": "azure"
           },
           {
@@ -7331,10 +7507,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001491",
+            "output_price": "0.00084",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001491",
+            "output_price": "0.00084",
             "provider_id": "azure"
           },
           {
@@ -7387,10 +7567,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.006654",
+            "output_price": "0.000195",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.006654",
+            "output_price": "0.000195",
             "provider_id": "azure"
           },
           {
@@ -7505,10 +7689,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.021786",
+            "output_price": "0.002565",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.021786",
+            "output_price": "0.002565",
             "provider_id": "azure"
           },
           {
@@ -7561,10 +7749,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.019038",
+            "output_price": "0.00531",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.019038",
+            "output_price": "0.00531",
             "provider_id": "azure"
           },
           {
@@ -7617,10 +7809,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.008046",
+            "output_price": "0.001515",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.008046",
+            "output_price": "0.001515",
             "provider_id": "azure"
           },
           {
@@ -7673,14 +7869,20 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000008",
+            "output_price": "0.000105",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000008",
+            "output_price": "0.000105",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000008",
+            "output_price": "0.000105",
             "provider_id": "google"
           },
           {
@@ -7727,10 +7929,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001149",
+            "output_price": "0.000975",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001149",
+            "output_price": "0.000975",
             "provider_id": "azure"
           },
           {
@@ -7783,10 +7989,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00138",
+            "output_price": "0.001365",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00138",
+            "output_price": "0.001365",
             "provider_id": "azure"
           },
           {
@@ -7839,10 +8049,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.002139",
+            "output_price": "0.00249",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.002139",
+            "output_price": "0.00249",
             "provider_id": "azure"
           },
           {
@@ -7895,14 +8109,20 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000423",
+            "output_price": "0.00101",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000423",
+            "output_price": "0.00101",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000423",
+            "output_price": "0.00101",
             "provider_id": "google"
           },
           {
@@ -7949,14 +8169,20 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000771",
+            "output_price": "0.000385",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000771",
+            "output_price": "0.000385",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000771",
+            "output_price": "0.000385",
             "provider_id": "google"
           },
           {
@@ -8003,14 +8229,20 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000335",
+            "output_price": "0.000735",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000335",
+            "output_price": "0.000735",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000335",
+            "output_price": "0.000735",
             "provider_id": "google"
           },
           {
@@ -8057,14 +8289,20 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000296",
+            "output_price": "0.000455",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000296",
+            "output_price": "0.000455",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000296",
+            "output_price": "0.000455",
             "provider_id": "google"
           },
           {
@@ -8111,10 +8349,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000561",
+            "output_price": "0.001695",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000561",
+            "output_price": "0.001695",
             "provider_id": "azure"
           },
           {
@@ -8167,10 +8409,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001116",
+            "output_price": "0.000735",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001116",
+            "output_price": "0.000735",
             "provider_id": "azure"
           },
           {
@@ -8223,10 +8469,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.006075",
+            "output_price": "0.001215",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.006075",
+            "output_price": "0.001215",
             "provider_id": "azure"
           },
           {
@@ -8282,10 +8532,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.008022",
+            "output_price": "0.005595",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.008022",
+            "output_price": "0.005595",
             "provider_id": "azure"
           },
           {
@@ -8341,10 +8595,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.015786",
+            "output_price": "0.005535",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.015786",
+            "output_price": "0.005535",
             "provider_id": "azure"
           },
           {
@@ -8397,10 +8655,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000276",
+            "output_price": "0.00294",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000276",
+            "output_price": "0.00294",
             "provider_id": "azure"
           },
           {
@@ -8453,10 +8715,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000504",
+            "output_price": "0.00348",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000504",
+            "output_price": "0.00348",
             "provider_id": "azure"
           },
           {
@@ -8509,10 +8775,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000057",
+            "output_price": "0.001155",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000057",
+            "output_price": "0.001155",
             "provider_id": "azure"
           },
           {
@@ -8623,10 +8893,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.004029",
+            "output_price": "0.00807",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.004029",
+            "output_price": "0.00807",
             "provider_id": "azure"
           },
           {
@@ -8683,10 +8957,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.026952",
+            "output_price": "0.0078",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.026952",
+            "output_price": "0.0078",
             "provider_id": "azure"
           },
           {
@@ -8743,10 +9021,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.059577",
+            "output_price": "0.00816",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.059577",
+            "output_price": "0.00816",
             "provider_id": "azure"
           },
           {
@@ -8799,10 +9081,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000126",
+            "output_price": "0.005445",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000126",
+            "output_price": "0.005445",
             "provider_id": "azure"
           },
           {
@@ -8855,10 +9141,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000873",
+            "output_price": "0.007065",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000873",
+            "output_price": "0.007065",
             "provider_id": "azure"
           },
           {
@@ -8915,10 +9205,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.048249",
+            "output_price": "0.002475",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.048249",
+            "output_price": "0.002475",
             "provider_id": "azure"
           },
           {
@@ -8971,10 +9265,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001191",
+            "output_price": "0.00237",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001191",
+            "output_price": "0.00237",
             "provider_id": "azure"
           },
           {
@@ -9027,10 +9325,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.001704",
+            "output_price": "0.001755",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.001704",
+            "output_price": "0.001755",
             "provider_id": "azure"
           },
           {
@@ -9133,10 +9435,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.005049",
+            "output_price": "0.001695",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005049",
+            "output_price": "0.001695",
             "provider_id": "azure"
           },
           {
@@ -9193,10 +9499,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.005313",
+            "output_price": "0.002565",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005313",
+            "output_price": "0.002565",
             "provider_id": "azure"
           },
           {
@@ -9253,10 +9563,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.005223",
+            "output_price": "0.002145",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.005223",
+            "output_price": "0.002145",
             "provider_id": "azure"
           },
           {
@@ -9309,10 +9623,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000123",
+            "output_price": "0.00132",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000123",
+            "output_price": "0.00132",
             "provider_id": "azure"
           },
           {
@@ -13026,6 +13344,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00003",
+            "output_price": "0.00293",
             "provider_id": "azure"
           },
           {
@@ -13120,6 +13440,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.00003",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -13308,10 +13630,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00000375",
+            "output_price": "0.000006",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.00000375",
+            "output_price": "0.000006",
             "provider_id": "azure"
           },
           {
@@ -14080,6 +14406,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.0001725",
+            "output_price": "0.00072",
             "provider_id": "azure"
           },
           {
@@ -14151,6 +14479,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -14196,6 +14526,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006",
+            "output_price": "0.0015",
             "provider_id": "azure"
           },
           {
@@ -14290,6 +14622,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0006",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -14621,6 +14955,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000275",
+            "output_price": "0.00017",
             "provider_id": "azure"
           },
           {
@@ -14715,6 +15051,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0000275",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -15750,6 +16088,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000012",
+            "output_price": "0.000006",
             "provider_id": "azure"
           },
           {
@@ -15844,6 +16184,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0000012",
+            "output_price": "0.0",
             "provider_id": "azure"
           },
           {
@@ -19277,6 +19619,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000156",
+            "output_price": "0.0000096",
             "provider_id": "azure"
           },
           {
@@ -19371,6 +19715,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0000156",
+            "output_price": "0.0",
             "provider_id": "azure"
           },
           {
@@ -19416,6 +19762,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001935",
+            "output_price": "0.0000054",
             "provider_id": "azure"
           },
           {
@@ -19510,6 +19858,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.00001935",
+            "output_price": "0.0",
             "provider_id": "azure"
           },
           {
@@ -20019,6 +20369,8 @@
         "extractors": [
           {
             "api_flavor": "chat",
+            "input_price": "0.00011",
+            "output_price": "0.00009",
             "provider_id": "azure"
           },
           {
@@ -20090,6 +20442,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.0",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -22435,10 +22789,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000195",
+            "output_price": "0.00924",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000195",
+            "output_price": "0.00924",
             "provider_id": "azure"
           },
           {
@@ -23397,10 +23755,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000126",
+            "output_price": "0.004365",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000126",
+            "output_price": "0.004365",
             "provider_id": "azure"
           },
           {
@@ -24348,10 +24710,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000045",
+            "output_price": "0.00216",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000045",
+            "output_price": "0.00216",
             "provider_id": "azure"
           },
           {
@@ -36725,10 +37091,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000096",
+            "output_price": "0.000075",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000096",
+            "output_price": "0.000075",
             "provider_id": "azure"
           },
           {
@@ -40007,6 +40377,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000042",
+            "output_price": "0.000765",
             "provider_id": "azure"
           },
           {
@@ -40101,6 +40473,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.000042",
+            "output_price": "0",
             "provider_id": "azure"
           },
           {
@@ -40502,10 +40876,14 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.000042",
+            "output_price": "0.00015",
             "provider_id": "azure"
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.000042",
+            "output_price": "0.00015",
             "provider_id": "azure"
           },
           {
