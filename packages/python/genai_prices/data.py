@@ -5203,6 +5203,8 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-2'),
                         ClauseEquals(equals='gpt-5-2-2025-12-11'),
                         ClauseEquals(equals='gpt-5-2-chat-latest'),
+                        ClauseEquals(equals='gpt-5.2-codex'),
+                        ClauseEquals(equals='gpt-5-2-codex'),
                     ]
                 ),
                 name='GPT-5.2',
