@@ -9138,6 +9138,12 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-2-chat-latest',
             },
+            {
+              equals: 'gpt-5.2-codex',
+            },
+            {
+              equals: 'gpt-5-2-codex',
+            },
           ],
         },
         context_window: 400000,

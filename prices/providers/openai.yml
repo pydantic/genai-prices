@@ -613,6 +613,8 @@ models:
         - equals: gpt-5-2
         - equals: gpt-5-2-2025-12-11
         - equals: gpt-5-2-chat-latest
+        - equals: gpt-5.2-codex
+        - equals: gpt-5-2-codex
     context_window: 400000
     prices_checked: 2025-12-11
     prices:
