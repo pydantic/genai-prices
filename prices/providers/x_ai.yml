@@ -152,6 +152,22 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 0.5
 
+  - id: grok-4-1-fast-reasoning
+    name: Grok 4.1 Fast Reasoning
+    description: >-
+      A frontier multimodal model optimized specifically for high-performance agentic tool calling.
+    match:
+      or:
+        - equals: grok-4-1-fast
+        - equals: grok-4-1-fast-reasoning
+        - equals: grok-4-1-fast-reasoning-latest
+    context_window: 2000000
+    prices_checked: 2026-01-19
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.05
+      output_mtok: 0.5
+
   - id: grok-4-fast-reasoning
     name: Grok 4 Fast Reasoning
     description: >-
@@ -176,22 +192,6 @@ models:
       or:
         - equals: grok-4-1-fast-non-reasoning
         - equals: grok-4-1-fast-non-reasoning-latest
-    context_window: 2000000
-    prices_checked: 2026-01-19
-    prices:
-      input_mtok: 0.2
-      cache_read_mtok: 0.05
-      output_mtok: 0.5
-
-  - id: grok-4-1-fast-reasoning
-    name: Grok 4.1 Fast Reasoning
-    description: >-
-      A frontier multimodal model optimized specifically for high-performance agentic tool calling.
-    match:
-      or:
-        - equals: grok-4-1-fast
-        - equals: grok-4-1-fast-reasoning
-        - equals: grok-4-1-fast-reasoning-latest
     context_window: 2000000
     prices_checked: 2026-01-19
     prices:
