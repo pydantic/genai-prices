@@ -222,6 +222,8 @@ test_cases: list[tuple[str, str, str]] = [
     ('openrouter', 'deepseek/deepseek-chat-v3-0324', snapshot(('openrouter', 'deepseek/deepseek-chat-v3-0324'))),
     pytest.param('nebius', 'nebius/deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('nebius', 'llama-3.1-8b-instant', None, marks=mark_xfail_todo),
+    pytest.param('litellm', 'gpt-4o-mini-2024-07-18', None, marks=mark_xfail_todo),
+    pytest.param('litellm', 'gpt-4o-mini', None, marks=mark_xfail_todo),
     ('mistral_ai', 'mistral-embed', snapshot(('mistral', 'mistral-embed'))),
     pytest.param('openrouter', 'anthropic/claude-sonnet-4', None, marks=mark_xfail_todo),
     pytest.param('openrouter', 'google/gemini-2.5-flash', None, marks=mark_xfail_todo),
