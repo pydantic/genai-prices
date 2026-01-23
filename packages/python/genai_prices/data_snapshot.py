@@ -92,7 +92,8 @@ class DataSnapshot:
         # Handle litellm provider_id by extracting actual provider from model name prefix
         if provider_id and provider_id.lower() == 'litellm' and '/' in model_ref:
             actual_provider_id, actual_model_ref = model_ref.split('/', 1)
-            if actual_provider_id:
+            # Only use the extracted provider if it exists
+            if actual_provider_id and find_provider_by_id(self.providers, actual_provider_id):
                 provider_id = actual_provider_id
                 model_ref = actual_model_ref
 
