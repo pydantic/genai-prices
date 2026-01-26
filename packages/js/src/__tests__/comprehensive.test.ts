@@ -516,4 +516,66 @@ describe('Comprehensive API Tests', () => {
       expect(result!.model.name).toEqual('Kimi-K2-Thinking')
     })
   })
+
+  describe('calcPrice - LiteLLM Provider Handling', () => {
+    it('should handle litellm provider_id with prefixed model names', () => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const result = calcPrice(usage, 'openai/gpt-4.1', { providerId: 'litellm' })
+
+      expect(result).not.toBeNull()
+      expect(result).toMatchObject({
+        input_price: expect.any(Number),
+        model: { id: 'gpt-4.1' },
+        output_price: expect.any(Number),
+        provider: { id: 'openai' },
+        total_price: expect.any(Number),
+      })
+      expect(result!.total_price).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should handle litellm provider_id with anthropic prefix', () => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const result = calcPrice(usage, 'anthropic/claude-3-5-sonnet-20241022', { providerId: 'litellm' })
+
+      expect(result).not.toBeNull()
+      expect(result).toMatchObject({
+        input_price: expect.any(Number),
+        model: { id: 'claude-3-5-sonnet' },
+        output_price: expect.any(Number),
+        provider: { id: 'anthropic' },
+        total_price: expect.any(Number),
+      })
+      expect(result!.total_price).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should handle litellm provider_id with non-prefixed model names', () => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const result = calcPrice(usage, 'gpt-4o-mini', { providerId: 'litellm' })
+
+      expect(result).not.toBeNull()
+      expect(result).toMatchObject({
+        input_price: expect.any(Number),
+        model: { id: 'gpt-4o-mini' },
+        output_price: expect.any(Number),
+        provider: { id: 'openai' },
+        total_price: expect.any(Number),
+      })
+      expect(result!.total_price).toBeGreaterThanOrEqual(0)
+    })
+
+    it('should handle litellm provider_id with versioned model names', () => {
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const result = calcPrice(usage, 'gpt-4o-mini-2024-07-18', { providerId: 'litellm' })
+
+      expect(result).not.toBeNull()
+      expect(result).toMatchObject({
+        input_price: expect.any(Number),
+        model: { id: 'gpt-4o-mini' },
+        output_price: expect.any(Number),
+        provider: { id: 'openai' },
+        total_price: expect.any(Number),
+      })
+      expect(result!.total_price).toBeGreaterThanOrEqual(0)
+    })
+  })
 })
