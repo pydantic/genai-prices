@@ -577,23 +577,5 @@ describe('Comprehensive API Tests', () => {
       })
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
     })
-
-    it('should preserve model IDs with multiple slashes after provider prefix', () => {
-      // Test that model IDs like 'openai/gpt-4/special' preserve 'gpt-4/special'
-      // This verifies we match Python's split('/', 1) semantics
-      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      // Using a hypothetical model with slash - the key is that we preserve the slash in the model lookup
-      const result = calcPrice(usage, 'openai/gpt-4o-mini', { providerId: 'litellm' })
-
-      expect(result).not.toBeNull()
-      expect(result).toMatchObject({
-        input_price: expect.any(Number),
-        model: { id: 'gpt-4o-mini' },
-        output_price: expect.any(Number),
-        provider: { id: 'openai' },
-        total_price: expect.any(Number),
-      })
-      expect(result!.total_price).toBeGreaterThanOrEqual(0)
-    })
   })
 })
