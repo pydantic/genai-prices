@@ -60,7 +60,9 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
 
   // Handle litellm provider_id by extracting actual provider from model name prefix
   if (providerId && providerId.toLowerCase() === 'litellm' && lowerModelId.includes('/')) {
-    const [actualProviderId, actualModelId] = lowerModelId.split('/', 2)
+    const slashIndex = lowerModelId.indexOf('/')
+    const actualProviderId = lowerModelId.slice(0, slashIndex)
+    const actualModelId = lowerModelId.slice(slashIndex + 1)
     // Only use the extracted provider if it exists
     if (actualProviderId && actualModelId && matchProvider(providerData, { providerId: actualProviderId })) {
       providerId = actualProviderId
