@@ -13626,6 +13626,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k2.5',
+        name: 'Kimi K2.5',
+        match: {
+          equals: 'moonshotai/kimi-k2.5',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'moonshotai/kimi-vl-a3b-thinking:free',
         match: {
           equals: 'moonshotai/kimi-vl-a3b-thinking:free',
@@ -15050,6 +15061,17 @@ export const data: Provider[] = [
           equals: 'qwen/qwen2.5-vl-72b-instruct:free',
         },
         prices: {},
+      },
+      {
+        id: 'qwen/qwen3-max-thinking',
+        name: 'Qwen 3 Max Thinking',
+        match: {
+          equals: 'qwen/qwen3-max-thinking',
+        },
+        prices: {
+          input_mtok: 1.2,
+          output_mtok: 6,
+        },
       },
       {
         id: 'qwen/qwq-32b',
