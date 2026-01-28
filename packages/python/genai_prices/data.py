@@ -8531,9 +8531,9 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
-                id='qwen/qwen3-max-thinking',
-                match=ClauseEquals(equals='qwen/qwen3-max-thinking'),
-                name='Qwen 3 Max Thinking',
+                id='qwen/qwen3-max',
+                match=ClauseEquals(equals='qwen/qwen3-max'),
+                name='Qwen 3 Max',
                 prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
