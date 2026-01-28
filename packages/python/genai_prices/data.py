@@ -5203,6 +5203,8 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-2'),
                         ClauseEquals(equals='gpt-5-2-2025-12-11'),
                         ClauseEquals(equals='gpt-5-2-chat-latest'),
+                        ClauseEquals(equals='gpt-5.2-codex'),
+                        ClauseEquals(equals='gpt-5-2-codex'),
                     ]
                 ),
                 name='GPT-5.2',
@@ -9758,6 +9760,37 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Grok 4.1 Fast Reasoning',
+                description='A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+                context_window=2000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='grok-4-fast-non-reasoning',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4-fast-non-reasoning'),
+                        ClauseEquals(equals='grok-4-fast-non-reasoning-latest'),
+                    ]
+                ),
+                name='Grok 4 Fast Non-Reasoning',
+                description='A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+                context_window=2000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='grok-4-fast-reasoning',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4-fast'),
+                        ClauseEquals(equals='grok-4-fast-reasoning'),
+                        ClauseEquals(equals='grok-4-fast-reasoning-latest'),
+                    ]
+                ),
+                name='Grok 4 Fast Reasoning',
                 description='A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
                 context_window=2000000,
                 prices=ModelPrice(

@@ -55,10 +55,23 @@ export function waitForUpdate() {
 
 export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
   autoUpdateCb?.()
-  const lowerModelId = modelId.toLowerCase().trim()
+  let lowerModelId = modelId.toLowerCase().trim()
+  let providerId = options?.providerId
+
+  // Handle litellm provider_id by extracting actual provider from model name prefix
+  if (providerId && providerId.toLowerCase() === 'litellm' && lowerModelId.includes('/')) {
+    const slashIndex = lowerModelId.indexOf('/')
+    const actualProviderId = lowerModelId.slice(0, slashIndex)
+    const actualModelId = lowerModelId.slice(slashIndex + 1)
+    // Only use the extracted provider if it exists
+    if (actualProviderId && actualModelId && matchProvider(providerData, { providerId: actualProviderId })) {
+      providerId = actualProviderId
+      lowerModelId = actualModelId
+    }
+  }
+
   const provider =
-    options?.provider ??
-    matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId: options?.providerId })
+    options?.provider ?? matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null

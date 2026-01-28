@@ -60,7 +60,7 @@ The following providers are currently supported:
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 18 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
-- [X AI](prices/providers/x_ai.yml) - 10 models
+- [X AI](prices/providers/x_ai.yml) - 12 models
 
 [comment]: <> (providers-end)
 

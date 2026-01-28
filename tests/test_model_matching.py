@@ -563,3 +563,28 @@ def test_fallback_with_nonexistent_provider():
     # Should return None if no provider (existent or not) has the model
     non_existent = main_provider.find_model('non-existent-model', all_providers=all_providers)
     assert non_existent is None
+
+
+def test_litellm_provider_id():
+    """Test that litellm provider_id works by extracting actual provider from model name prefix."""
+    from genai_prices.data_snapshot import DataSnapshot
+
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    # Test with prefixed model names - should extract provider from prefix
+    provider, model = snapshot.find_provider_model('openai/gpt-4.1', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4.1'
+
+    provider, model = snapshot.find_provider_model('anthropic/claude-3-5-sonnet-20241022', None, 'litellm', None)
+    assert provider.id == 'anthropic'
+    assert model.id == 'claude-3-5-sonnet'
+
+    # Test with non-prefixed model names - should fall back to model matching
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'
+
+    provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'

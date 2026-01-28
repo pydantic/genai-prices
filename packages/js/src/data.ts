@@ -9138,6 +9138,12 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-2-chat-latest',
             },
+            {
+              equals: 'gpt-5.2-codex',
+            },
+            {
+              equals: 'gpt-5-2-codex',
+            },
           ],
         },
         context_window: 400000,
@@ -17334,6 +17340,51 @@ export const data: Provider[] = [
             },
             {
               equals: 'grok-4-1-fast-reasoning-latest',
+            },
+          ],
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4-fast-non-reasoning',
+        name: 'Grok 4 Fast Non-Reasoning',
+        description: 'A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4-fast-non-reasoning',
+            },
+            {
+              equals: 'grok-4-fast-non-reasoning-latest',
+            },
+          ],
+        },
+        context_window: 2000000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.05,
+          output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4-fast-reasoning',
+        name: 'Grok 4 Fast Reasoning',
+        description: 'A frontier multimodal model optimized specifically for high-performance agentic tool calling.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4-fast',
+            },
+            {
+              equals: 'grok-4-fast-reasoning',
+            },
+            {
+              equals: 'grok-4-fast-reasoning-latest',
             },
           ],
         },

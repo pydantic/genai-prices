@@ -176,10 +176,19 @@ function findProviderById(providers: Provider[], providerId: string): Provider |
 
 export function matchProvider(providers: Provider[], { modelId, providerApiUrl, providerId }: ProviderFindOptions): Provider | undefined {
   if (providerId) {
-    return findProviderById(providers, providerId)
-  } else if (providerApiUrl) {
+    const provider = findProviderById(providers, providerId)
+    // Special case for litellm: fall back to model matching if provider not found
+    if (provider || providerId.toLowerCase() !== 'litellm') {
+      return provider
+    }
+    // Fall through to model matching for litellm
+  }
+
+  if (providerApiUrl) {
     return providers.find((p) => new RegExp(p.api_pattern).test(providerApiUrl))
-  } else if (modelId) {
+  }
+
+  if (modelId) {
     return providers.find((p) => p.model_match && matchLogic(p.model_match, modelId))
   }
 }
