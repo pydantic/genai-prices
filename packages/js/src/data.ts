@@ -2207,6 +2207,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v3p2',
+        name: 'Deepseek V3.2',
+        description:
+          'Model from Deepseek that harmonizes high computational efficiency with superior reasoning and agent performance. 675B parameter MoE model.',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v3p2',
+        },
+        context_window: 163840,
+        prices: {
+          input_mtok: 0.56,
+          cache_read_mtok: 0.28,
+          output_mtok: 1.68,
+        },
+      },
+      {
         id: 'gemma-3-27b-it',
         name: 'Gemma 3 27B Instruct',
         match: {
@@ -2217,6 +2232,65 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.1,
           output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'glm-4p7',
+        name: 'GLM-4.7',
+        description:
+          'Next-generation general-purpose model from Z.ai optimized for coding, reasoning, and agentic workflows. 352B parameter MoE model with advanced thinking controls.',
+        match: {
+          equals: 'accounts/fireworks/models/glm-4p7',
+        },
+        context_window: 202752,
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'gpt-oss-120b',
+        name: 'OpenAI gpt-oss-120b',
+        description:
+          "OpenAI's open-weight 117B parameter MoE model designed for production, general purpose, high reasoning use-cases. Features powerful reasoning, agentic tasks, and versatile developer use cases.",
+        match: {
+          equals: 'accounts/fireworks/models/gpt-oss-120b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.07,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'gpt-oss-20b',
+        name: 'OpenAI gpt-oss-20b',
+        description:
+          "OpenAI's open-weight 21.5B parameter model designed for powerful reasoning, agentic tasks, and versatile developer use cases. Optimized for lower latency and local or specialized tasks.",
+        match: {
+          equals: 'accounts/fireworks/models/gpt-oss-20b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.04,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'kimi-k2p5',
+        name: 'Kimi K2.5',
+        description:
+          "Moonshot AI's flagship agentic model. Unifies vision and text, thinking and non-thinking modes, and single-agent and multi-agent execution into one model. 1T parameter MoE model.",
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k2p5',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
         },
       },
       {
@@ -2246,6 +2320,20 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.22,
           output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'minimax-m2p1',
+        name: 'MiniMax-M2.1',
+        description:
+          'Built for strong real-world performance across complex, multi-language, and agent-driven workflows. 228B parameter model with robust support for systems, backend, web, mobile, and office-style tasks.',
+        match: {
+          equals: 'accounts/fireworks/models/minimax-m2p1',
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
         },
       },
       {
