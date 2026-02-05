@@ -521,3 +521,28 @@ def test_azure_fallback_to_openai_real_data():
     fallback_match = azure.find_model('gpt-4o-mini', all_providers=providers)
     assert fallback_match is not None
     assert fallback_match.id == openai_model.id
+
+
+def test_litellm_provider_id():
+    """Test that litellm provider_id works by extracting actual provider from model name prefix."""
+    from genai_prices.data_snapshot import DataSnapshot
+
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    # Test with prefixed model names - should extract provider from prefix
+    provider, model = snapshot.find_provider_model('openai/gpt-4.1', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4.1'
+
+    provider, model = snapshot.find_provider_model('anthropic/claude-3-5-sonnet-20241022', None, 'litellm', None)
+    assert provider.id == 'anthropic'
+    assert model.id == 'claude-3-5-sonnet'
+
+    # Test with non-prefixed model names - should fall back to model matching
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'
+
+    provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'

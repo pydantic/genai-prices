@@ -88,6 +88,15 @@ class DataSnapshot:
     ) -> tuple[types.Provider, types.ModelInfo]:
         """Find the provider and model for the given model reference and optional provider identifier."""
         model_ref = model_ref.lower()
+
+        # Handle litellm provider_id by extracting actual provider from model name prefix
+        if provider_id and provider_id.lower() == 'litellm' and '/' in model_ref:
+            actual_provider_id, actual_model_ref = model_ref.split('/', 1)
+            # Only use the extracted provider if it exists
+            if actual_provider_id and find_provider_by_id(self.providers, actual_provider_id):
+                provider_id = actual_provider_id
+                model_ref = actual_model_ref
+
         if provider:
             if provider_model := self._lookup_cache.get((provider.id, None, model_ref)):
                 return provider_model
@@ -112,7 +121,9 @@ class DataSnapshot:
         if provider_id is not None:
             if provider := find_provider_by_id(self.providers, provider_id):
                 return provider
-            raise LookupError(f'Unable to find provider {provider_id=!r}')
+            # Special case for litellm: fall back to model matching if provider not found
+            if provider_id.lower() != 'litellm':
+                raise LookupError(f'Unable to find provider {provider_id=!r}')
 
         if provider_api_url is not None:
             for provider in self.providers:

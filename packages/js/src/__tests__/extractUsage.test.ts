@@ -6,7 +6,7 @@ import type { Provider } from '../types'
 import { data } from '../data'
 import { extractUsage } from '../index'
 
-const anthropicProvider: Provider = data[0]!
+const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {

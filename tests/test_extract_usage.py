@@ -68,7 +68,7 @@ class MyMapping(Mapping[str, Any]):
     ],
 )
 def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usage: Usage, expected_price: Decimal):
-    provider = providers[0]
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
     assert provider.name == 'Anthropic'
     assert provider.extractors is not None
     model, usage = provider.extract_usage(response_data)
@@ -145,7 +145,7 @@ def test_openai():
     ],
 )
 def test_extract_usage_error(response_data: Any, error: str):
-    provider = providers[0]
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
     assert provider.name == 'Anthropic'
     assert provider.extractors is not None
 

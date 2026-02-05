@@ -1321,12 +1321,58 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
             ),
             ModelInfo(
+                id='deepseek-v3p2',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v3p2'),
+                name='Deepseek V3.2',
+                description='Model from Deepseek that harmonizes high computational efficiency with superior reasoning and agent performance. 675B parameter MoE model.',
+                context_window=163840,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.56'), cache_read_mtok=Decimal('0.28'), output_mtok=Decimal('1.68')
+                ),
+            ),
+            ModelInfo(
                 id='gemma-3-27b-it',
                 match=ClauseEquals(equals='accounts/fireworks/models/gemma-3-27b-it'),
                 name='Gemma 3 27B Instruct',
                 context_window=131000,
                 price_comments='docs give just one price - "Pricing Per 1M Tokens", we assume that\'s input and output',
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='glm-4p7',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-4p7'),
+                name='GLM-4.7',
+                description='Next-generation general-purpose model from Z.ai optimized for coding, reasoning, and agentic workflows. 352B parameter MoE model with advanced thinking controls.',
+                context_window=202752,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('2.2')),
+            ),
+            ModelInfo(
+                id='gpt-oss-120b',
+                match=ClauseEquals(equals='accounts/fireworks/models/gpt-oss-120b'),
+                name='OpenAI gpt-oss-120b',
+                description="OpenAI's open-weight 117B parameter MoE model designed for production, general purpose, high reasoning use-cases. Features powerful reasoning, agentic tasks, and versatile developer use cases.",
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('0.6')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-oss-20b',
+                match=ClauseEquals(equals='accounts/fireworks/models/gpt-oss-20b'),
+                name='OpenAI gpt-oss-20b',
+                description="OpenAI's open-weight 21.5B parameter model designed for powerful reasoning, agentic tasks, and versatile developer use cases. Optimized for lower latency and local or specialized tasks.",
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('0.3')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2p5',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p5'),
+                name='Kimi K2.5',
+                description="Moonshot AI's flagship agentic model. Unifies vision and text, thinking and non-thinking modes, and single-agent and multi-agent execution into one model. 1T parameter MoE model.",
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='llama-v3p1-8b-instruct',
@@ -1344,6 +1390,14 @@ providers: list[Provider] = [
                 description='The Meta Llama 3.1 collection of multilingual large language models (LLMs) is a collection of pretrained and instruction tuned generative models in 8B, 70B and 405B sizes. The Llama 3.1 instruction tuned text only models (8B, 70B, 405B) are optimized for multilingual dialogue use cases and outperform many of the available open source and closed chat models on common industry benchmarks.',
                 context_window=1000000,
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('0.88')),
+            ),
+            ModelInfo(
+                id='minimax-m2p1',
+                match=ClauseEquals(equals='accounts/fireworks/models/minimax-m2p1'),
+                name='MiniMax-M2.1',
+                description='Built for strong real-world performance across complex, multi-language, and agent-driven workflows. 228B parameter model with robust support for systems, backend, web, mobile, and office-style tasks.',
+                context_window=204800,
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
                 id='qwen2p5-vl-72b-instruct',
@@ -7836,6 +7890,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
+                id='moonshotai/kimi-k2.5',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.5'),
+                name='Kimi K2.5',
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
                 id='moonshotai/kimi-vl-a3b-thinking:free',
                 match=ClauseEquals(equals='moonshotai/kimi-vl-a3b-thinking:free'),
                 prices=ModelPrice(),
@@ -8588,6 +8648,12 @@ providers: list[Provider] = [
                 id='qwen/qwen2.5-vl-72b-instruct:free',
                 match=ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct:free'),
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-max',
+                match=ClauseEquals(equals='qwen/qwen3-max'),
+                name='Qwen 3 Max',
+                prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='qwen/qwq-32b',

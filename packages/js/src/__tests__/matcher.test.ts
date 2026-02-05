@@ -48,6 +48,20 @@ describe('Provider Matching', () => {
   })
 })
 
+describe('LiteLLM Provider Handling', () => {
+  it('should allow litellm to fall through to model matching', () => {
+    // When provider_id is 'litellm' and not found, should fall through to model matching
+    const provider = matchProvider(actualProviders, { modelId: 'gpt-4o-mini', providerId: 'litellm' })
+    expect(provider).toBeDefined()
+    expect(provider?.id).toBe('openai')
+  })
+
+  it('should return undefined for litellm with unknown model', () => {
+    const provider = matchProvider(actualProviders, { modelId: 'unknown-model-xyz', providerId: 'litellm' })
+    expect(provider).toBeUndefined()
+  })
+})
+
 describe('Model Matching with Fallback', () => {
   describe('matchModelWithFallback', () => {
     it('should find models directly in provider', () => {
