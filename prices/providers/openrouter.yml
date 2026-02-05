@@ -268,6 +268,33 @@ models:
       cache_write_mtok: 6.25
       output_mtok: 25
 
+  - id: anthropic/claude-opus-4.6
+    match:
+      or:
+        - equals: anthropic/claude-opus-4.6
+        - equals: anthropic/claude-opus-4.6:beta
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 200000
+            price: 10
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 200000
+            price: 1
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 200000
+            price: 12.50
+      output_mtok:
+        base: 25
+        tiers:
+          - start: 200000
+            price: 37.50
+
   - id: anthropic/claude-sonnet-4.5
     match:
       or:

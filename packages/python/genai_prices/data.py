@@ -237,6 +237,28 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-4-6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-4-6'),
+                        ClauseStartsWith(starts_with='claude-opus-4.6'),
+                        ClauseStartsWith(starts_with='claude-4-6-opus'),
+                        ClauseStartsWith(starts_with='claude-4.6-opus'),
+                    ]
+                ),
+                name='Claude Opus 4.6',
+                description='Most intelligent model with adaptive thinking and 1M context beta',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='claude-sonnet-4-0',
                 match=ClauseOr(
                     or_=[
@@ -1491,7 +1513,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='claude-4-opus',
                 match=ClauseOr(
-                    or_=[ClauseContains(contains='claude-4-opus'), ClauseContains(contains='claude-opus-4')]
+                    or_=[
+                        ClauseContains(contains='claude-4-opus'),
+                        ClauseContains(contains='claude-opus-4@'),
+                        ClauseContains(contains='claude-opus-4-0'),
+                        ClauseContains(contains='claude-opus-4-1'),
+                        ClauseEquals(equals='claude-opus-4'),
+                    ]
                 ),
                 context_window=200000,
                 prices=ModelPrice(
@@ -1512,6 +1540,26 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-opus-4-6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-4-6-opus'),
+                        ClauseContains(contains='claude-opus-4-6'),
+                        ClauseContains(contains='claude-4.6-opus'),
+                        ClauseContains(contains='claude-opus-4.6'),
+                    ]
+                ),
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
                 ),
             ),
             ModelInfo(
@@ -5642,6 +5690,23 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-4.6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-opus-4.6'),
+                        ClauseEquals(equals='anthropic/claude-opus-4.6:beta'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
                 ),
             ),
             ModelInfo(

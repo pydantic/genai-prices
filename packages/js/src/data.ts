@@ -345,6 +345,66 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-4-6',
+        name: 'Claude Opus 4.6',
+        description: 'Most intelligent model with adaptive thinking and 1M context beta',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-4-6',
+            },
+            {
+              starts_with: 'claude-opus-4.6',
+            },
+            {
+              starts_with: 'claude-4-6-opus',
+            },
+            {
+              starts_with: 'claude-4.6-opus',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 200000,
+                price: 37.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'claude-sonnet-4-0',
         name: 'Claude Sonnet 4',
         description: 'Optimal balance of intelligence, cost, and speed',
@@ -2521,7 +2581,16 @@ export const data: Provider[] = [
               contains: 'claude-4-opus',
             },
             {
-              contains: 'claude-opus-4',
+              contains: 'claude-opus-4@',
+            },
+            {
+              contains: 'claude-opus-4-0',
+            },
+            {
+              contains: 'claude-opus-4-1',
+            },
+            {
+              equals: 'claude-opus-4',
             },
           ],
         },
@@ -2551,6 +2620,64 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'claude-opus-4-6',
+        match: {
+          or: [
+            {
+              contains: 'claude-4-6-opus',
+            },
+            {
+              contains: 'claude-opus-4-6',
+            },
+            {
+              contains: 'claude-4.6-opus',
+            },
+            {
+              contains: 'claude-opus-4.6',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 200000,
+                price: 37.5,
+              },
+            ],
+          },
         },
       },
       {
@@ -9920,6 +10047,57 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-4.6',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-4.6',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.6:beta',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 200000,
+                price: 37.5,
+              },
+            ],
+          },
         },
       },
       {

@@ -232,6 +232,39 @@ models:
       cache_read_mtok: 0.50
       output_mtok: 25
 
+  - id: claude-opus-4-6
+    name: Claude Opus 4.6
+    description: Most intelligent model with adaptive thinking and 1M context beta
+    match:
+      or:
+        - starts_with: claude-opus-4-6
+        - starts_with: claude-opus-4.6
+        - starts_with: claude-4-6-opus
+        - starts_with: claude-4.6-opus
+    context_window: 200000
+    prices_checked: 2026-02-05
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 200000
+            price: 10
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 200000
+            price: 1
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 200000
+            price: 12.50
+      output_mtok:
+        base: 25
+        tiers:
+          - start: 200000
+            price: 37.50
+
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4
     description: Optimal balance of intelligence, cost, and speed
