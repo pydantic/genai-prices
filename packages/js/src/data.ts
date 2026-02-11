@@ -15332,7 +15332,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-max',
         name: 'Qwen 3 Max',
         match: {
-          equals: 'qwen/qwen3-max',
+          or: [
+            {
+              equals: 'qwen/qwen3-max',
+            },
+            {
+              equals: 'qwen/qwen3-max-thinking',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.2,
