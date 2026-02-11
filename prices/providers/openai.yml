@@ -573,10 +573,14 @@ models:
         - equals: gpt-5.1
         - equals: gpt-5.1-2025-11-13
         - equals: gpt-5.1-codex
+        - equals: gpt-5.1-codex-max
+        - equals: gpt-5.1-chat
         - equals: gpt-5.1-chat-latest
         - equals: gpt-5-1
         - equals: gpt-5-1-2025-11-13
         - equals: gpt-5-1-codex
+        - equals: gpt-5-1-codex-max
+        - equals: gpt-5-1-chat
         - equals: gpt-5-1-chat-latest
     context_window: 400000
     prices_checked: 2025-11-13
@@ -612,6 +616,9 @@ models:
         - equals: gpt-5.2-2025-12-11
         - equals: gpt-5-2
         - equals: gpt-5-2-2025-12-11
+        - equals: gpt-5.2-chat
+        - equals: gpt-5.2-chat-latest
+        - equals: gpt-5-2-chat
         - equals: gpt-5-2-chat-latest
         - equals: gpt-5.2-codex
         - equals: gpt-5-2-codex
