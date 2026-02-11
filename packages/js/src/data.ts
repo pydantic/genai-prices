@@ -9283,6 +9283,12 @@ export const data: Provider[] = [
               equals: 'gpt-5.1-codex',
             },
             {
+              equals: 'gpt-5.1-codex-max',
+            },
+            {
+              equals: 'gpt-5.1-chat',
+            },
+            {
               equals: 'gpt-5.1-chat-latest',
             },
             {
@@ -9293,6 +9299,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5-1-codex',
+            },
+            {
+              equals: 'gpt-5-1-codex-max',
+            },
+            {
+              equals: 'gpt-5-1-chat',
             },
             {
               equals: 'gpt-5-1-chat-latest',
@@ -9349,6 +9361,15 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5-2-2025-12-11',
+            },
+            {
+              equals: 'gpt-5.2-chat',
+            },
+            {
+              equals: 'gpt-5.2-chat-latest',
+            },
+            {
+              equals: 'gpt-5-2-chat',
             },
             {
               equals: 'gpt-5-2-chat-latest',
