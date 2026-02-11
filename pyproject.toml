@@ -54,7 +54,10 @@ quote-style = "single"
 [tool.pytest.ini_options]
 testpaths = "tests"
 xfail_strict = true
-filterwarnings = ["error"]
+filterwarnings = [
+    "error",
+    "ignore:`FieldValidationInfo` is deprecated:DeprecationWarning:pydantic_core",
+]
 markers = [
     "requires_latest_pydantic: marks tests that require Pydantic >2.10 for schema generation",
 ]
