@@ -81,6 +81,10 @@ get-update-price-discrepancies: get-all-prices update-price-discrepancies ## get
 check-for-price-discrepancies: ## check for price discrepancies
 	uv run -m prices check_for_price_discrepancies
 
+.PHONY: auto-update
+auto-update: ## Run non-interactive auto-update of price aliases
+	uv run -m prices auto_update
+
 .PHONY: inject-providers
 inject-providers: ## inject providers into README.md
 	uv run -m prices inject_providers

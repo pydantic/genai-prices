@@ -1,6 +1,7 @@
 import sys
 from inspect import getdoc
 
+from .auto_update import auto_update
 from .build import build
 from .collapse import collapse
 from .inject_providers import inject_providers
@@ -25,6 +26,7 @@ def main():
         get_simonw_prices,
         update_price_discrepancies,
         check_for_price_discrepancies,
+        auto_update,
         package_data,
         inject_providers,
     )
