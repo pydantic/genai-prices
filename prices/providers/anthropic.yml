@@ -173,6 +173,7 @@ models:
     prices:
       input_mtok: 1.63
       output_mtok: 55.1
+    removed: true
 
   - id: claude-instant-1.2
     description: Retired, here to match price sources
@@ -181,6 +182,7 @@ models:
     prices:
       input_mtok: 1.63
       output_mtok: 5.51
+    removed: true
 
   - id: claude-opus-4-0
     name: Claude Opus 4

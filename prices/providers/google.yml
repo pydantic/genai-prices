@@ -395,6 +395,7 @@ models:
         - equals: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview:thinking
     price_comments: from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
+    deprecated: true
     prices_checked: 2025-10-31
     prices:
       input_mtok: 0.15

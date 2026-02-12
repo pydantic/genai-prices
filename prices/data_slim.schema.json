@@ -280,6 +280,11 @@
           ],
           "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.\n\nIf no conditional models match the conditions, the first one is used.",
           "title": "Prices"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "description": "Flag indicating this model is deprecated by the provider but still functional.",
+          "title": "Deprecated"
         }
       },
       "required": [

@@ -245,28 +245,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'claude-instant-1',
-        description: 'Retired, here to match price sources',
-        match: {
-          equals: 'claude-instant-1',
-        },
-        prices: {
-          input_mtok: 1.63,
-          output_mtok: 55.1,
-        },
-      },
-      {
-        id: 'claude-instant-1.2',
-        description: 'Retired, here to match price sources',
-        match: {
-          equals: 'claude-instant-1.2',
-        },
-        prices: {
-          input_mtok: 1.63,
-          output_mtok: 5.51,
-        },
-      },
-      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -3008,6 +2986,7 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           output_mtok: 0.6,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.5-pro',
@@ -3962,6 +3941,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-coder-480b-a35b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-coder-480b-a35b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 1.8,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-R1-0528',
         name: 'DeepSeek-R1-0528',
         match: {
@@ -4035,25 +4033,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
         },
       },
       {
@@ -4182,25 +4161,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.75,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.5,
         },
       },
     ],
@@ -4576,25 +4536,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.3,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
         },
       },
     ],
@@ -5106,25 +5047,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
-      },
-      {
         id: 'zai-org/GLM-4.5',
         name: 'GLM-4.5',
         match: {
@@ -5595,6 +5517,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'XiaomiMiMo/MiMo-V2-Flash',
+        name: 'MiMo-V2-Flash',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2-flash',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2-flash-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.098,
+          output_mtok: 0.293,
+        },
+      },
+      {
         id: 'alpindale/WizardLM-2-8x22B',
         name: 'WizardLM-2-8x22B',
         match: {
@@ -5769,6 +5710,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.048,
           output_mtok: 0.072,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.64,
+          output_mtok: 0.64,
         },
       },
       {
@@ -6025,25 +5985,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'moonshotai/Kimi-K2-Instruct-0905',
-        name: 'Kimi-K2-Instruct-0905',
-        match: {
-          or: [
-            {
-              equals: 'moonshotai/kimi-k2-instruct-0905',
-            },
-            {
-              equals: 'moonshotai/kimi-k2-instruct-0905-fast',
-            },
-          ],
-        },
-        context_window: 262144,
-        prices: {
-          input_mtok: 0.48,
-          output_mtok: 2,
-        },
-      },
-      {
         id: 'moonshotai/Kimi-K2-Thinking',
         name: 'Kimi-K2-Thinking',
         match: {
@@ -6079,25 +6020,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.032,
-          output_mtok: 0.12,
         },
       },
       {
@@ -6652,25 +6574,6 @@ export const data: Provider[] = [
           output_mtok: 0.4,
         },
       },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
-      },
     ],
   },
   {
@@ -6743,6 +6646,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-32b',
+            },
+            {
+              equals: 'qwen/qwen3-32b-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
         name: 'Qwen3-Coder-30B-A3B-Instruct',
         match: {
@@ -6759,6 +6681,82 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.26,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.74,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.11,
+          output_mtok: 0.11,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.74,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.47,
         },
       },
     ],
@@ -7677,25 +7675,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
-      },
-      {
         id: 'zai-org/GLM-4.5-Air-FP8',
         name: 'GLM-4.5-Air-FP8',
         match: {
@@ -8008,6 +7987,7 @@ export const data: Provider[] = [
           input_mtok: 0.25,
           output_mtok: 0.25,
         },
+        deprecated: true,
       },
       {
         id: 'mixtral-8x22b-instruct',
@@ -16184,24 +16164,6 @@ export const data: Provider[] = [
     ],
     models: [
       {
-        id: 'BGE-M3',
-        name: 'BGE-M3',
-        match: {
-          or: [
-            {
-              equals: 'BGE-M3',
-            },
-            {
-              equals: 'bge-m3',
-            },
-          ],
-        },
-        context_window: 8192,
-        prices: {
-          input_mtok: 0.01,
-        },
-      },
-      {
         id: 'DeepSeek-R1-Distill-Llama-70B',
         name: 'DeepSeek-R1-Distill-Llama-70B',
         match: {
@@ -16436,6 +16398,17 @@ export const data: Provider[] = [
           equals: 'bge-base-en-v1.5',
         },
         context_window: 512,
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
+        id: 'bge-m3',
+        name: 'bge-m3',
+        match: {
+          equals: 'bge-m3',
+        },
+        context_window: 8192,
         prices: {
           input_mtok: 0.01,
         },
@@ -17465,6 +17438,7 @@ export const data: Provider[] = [
           input_mtok: 2,
           output_mtok: 10,
         },
+        deprecated: true,
       },
       {
         id: 'grok-2-vision-1212',

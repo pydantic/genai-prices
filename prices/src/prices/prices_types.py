@@ -114,6 +114,9 @@ class Provider(_Model):
                 return model
         return None
 
+    def exclude_removed(self):
+        self.models[:] = [model for model in self.models if not model.removed]
+
     def exclude_free(self):
         self.models[:] = [model for model in self.models if not model.is_free()]
 
@@ -188,6 +191,10 @@ class ModelInfo(_Model):
     """Date indicating when the prices were last checked for discrepancies."""
     collapse: bool = Field(default=True, exclude=True)
     """Flag indicating whether this price should be collapsed into other prices."""
+    deprecated: bool | None = None
+    """Flag indicating this model is deprecated by the provider but still functional."""
+    removed: bool = Field(default=False, exclude=True)
+    """Flag indicating this model has been removed and is no longer available. Excluded from data.json."""
 
     def is_match(self, model_id: str) -> bool:
         return self.match.is_match(model_id)

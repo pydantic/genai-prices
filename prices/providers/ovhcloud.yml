@@ -35,16 +35,6 @@ extractors:
         dest: output_tokens
         required: true
 models:
-  - id: BGE-M3
-    name: BGE-M3
-    match:
-      or:
-        - equals: BGE-M3
-        - equals: bge-m3
-    context_window: 8192
-    prices:
-      input_mtok: 0.01
-
   - id: DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B
     match:
@@ -182,6 +172,14 @@ models:
     match:
       equals: bge-base-en-v1.5
     context_window: 512
+    prices:
+      input_mtok: 0.01
+
+  - id: bge-m3
+    name: bge-m3
+    match:
+      equals: bge-m3
+    context_window: 8192
     prices:
       input_mtok: 0.01
 

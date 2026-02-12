@@ -89,6 +89,7 @@ export interface UsageExtractor {
 
 export interface ModelInfo {
   context_window?: number
+  deprecated?: boolean
   description?: string
   id: string
   match: MatchLogic
