@@ -971,6 +971,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen.qwen3-vl-235b-a22b',
+        name: 'Qwen3-VL-235B-A22B-Instruct',
+        match: {
+          contains: 'qwen.qwen3-vl-235b-a22b',
+        },
+        prices: {
+          input_mtok: 0.53,
+          output_mtok: 2.66,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
         match: {
           or: [

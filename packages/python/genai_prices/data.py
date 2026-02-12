@@ -583,6 +583,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
             ),
             ModelInfo(
+                id='qwen.qwen3-vl-235b-a22b',
+                match=ClauseContains(contains='qwen.qwen3-vl-235b-a22b'),
+                name='Qwen3-VL-235B-A22B-Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.53'), output_mtok=Decimal('2.66')),
+            ),
+            ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
                 match=ClauseOr(
                     or_=[
