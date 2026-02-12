@@ -12,30 +12,36 @@ def detect_deprecated() -> None:
     providers_yml = get_providers_yaml()
     staleness_threshold = date.today() - timedelta(days=90)
 
+    # Build a mapping of provider_id -> set of all model IDs present in any source.
+    source_model_ids: dict[str, set[str]] = {}
+    for source_data in source_prices.values():
+        for provider_id, models in source_data.items():
+            source_model_ids.setdefault(provider_id, set()).update(models.keys())
+
     candidates: list[tuple[str, str, str]] = []
 
     for provider_yml in providers_yml.values():
         provider_id = provider_yml.provider.id
+        known_source_ids = source_model_ids.get(provider_id)
+        if not known_source_ids:
+            continue
+
         for model in provider_yml.provider.models:
             if model.deprecated or model.removed:
                 continue
 
-            if model.prices_checked and model.prices_checked >= staleness_threshold:
+            # Only flag models that have been checked before but are now stale
+            # and absent from sources. Models never checked are not actionable.
+            if not model.prices_checked:
                 continue
 
-            found_in_source = False
-            for source_data in source_prices.values():
-                provider_prices = source_data.get(provider_id, {})
-                for source_model_id in provider_prices:
-                    if model.is_match(source_model_id):
-                        found_in_source = True
-                        break
-                if found_in_source:
-                    break
+            if model.prices_checked >= staleness_threshold:
+                continue
+
+            found_in_source = any(model.is_match(sid) for sid in known_source_ids)
 
             if not found_in_source:
-                checked_str = str(model.prices_checked) if model.prices_checked else 'never'
-                candidates.append((provider_id, model.id, checked_str))
+                candidates.append((provider_id, model.id, str(model.prices_checked)))
 
     if candidates:
         print(f'Found {len(candidates)} candidate(s) for deprecation/removal:\n')
@@ -43,3 +49,8 @@ def detect_deprecated() -> None:
             print(f'  {provider_id}: {model_id} (last checked: {checked})')
     else:
         print('No deprecation/removal candidates found.')
+
+    uncovered = set(providers_yml.keys()) - set(source_model_ids.keys())
+    if uncovered:
+        print(f'\nNote: {len(uncovered)} provider(s) have no external source coverage and were skipped:')
+        print(f'  {", ".join(sorted(uncovered))}')
