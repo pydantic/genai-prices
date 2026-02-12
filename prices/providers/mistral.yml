@@ -239,6 +239,7 @@ models:
       Note: This model is being deprecated. Recommended replacement is the newer Ministral 8B
     match:
       equals: mistral-tiny
+    deprecated: true
     prices:
       input_mtok: 0.25
       output_mtok: 0.25

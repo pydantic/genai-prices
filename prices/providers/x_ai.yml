@@ -36,6 +36,7 @@ models:
         - equals: grok-2
         - equals: grok-2-latest
     context_window: 32768
+    deprecated: true
     prices_checked: 2025-07-12
     prices:
       input_mtok: 2
