@@ -236,7 +236,7 @@ models:
 
   - id: claude-opus-4-6
     name: Claude Opus 4.6
-    description: Most intelligent model with adaptive thinking and 1M context beta
+    description: Our most intelligent model for building agents and coding
     match:
       or:
         - starts_with: claude-opus-4-6
@@ -287,13 +287,44 @@ models:
 
   - id: claude-sonnet-4-5
     name: Claude Sonnet 4.5
-    description: Most intelligent model for building agents and coding
+    description: Our best combination of speed and intelligence
     match:
       or:
         - starts_with: claude-sonnet-4-5
         - starts_with: claude-sonnet-4.5
     context_window: 1000000
     prices_checked: 2025-09-29
+    prices:
+      input_mtok:
+        base: 3
+        tiers:
+          - start: 200000
+            price: 6
+      cache_read_mtok:
+        base: 0.30
+        tiers:
+          - start: 200000
+            price: 0.60
+      cache_write_mtok:
+        base: 3.75
+        tiers:
+          - start: 200000
+            price: 7.50
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 200000
+            price: 22.50
+
+  - id: claude-sonnet-4-6
+    name: Claude Sonnet 4.6
+    description: Our best combination of speed and intelligence
+    match:
+      or:
+        - starts_with: claude-sonnet-4-6
+        - starts_with: claude-sonnet-4.6
+    context_window: 1000000
+    prices_checked: 2026-02-17
     prices:
       input_mtok:
         base: 3

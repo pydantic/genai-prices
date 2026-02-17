@@ -235,7 +235,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Claude Opus 4.6',
-                description='Most intelligent model with adaptive thinking and 1M context beta',
+                description='Our most intelligent model for building agents and coding',
                 context_window=200000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
@@ -276,7 +276,27 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Claude Sonnet 4.5',
-                description='Most intelligent model for building agents and coding',
+                description='Our best combination of speed and intelligence',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-4-6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-sonnet-4-6'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4.6'),
+                    ]
+                ),
+                name='Claude Sonnet 4.6',
+                description='Our best combination of speed and intelligence',
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
