@@ -325,7 +325,7 @@ export const data: Provider[] = [
       {
         id: 'claude-opus-4-6',
         name: 'Claude Opus 4.6',
-        description: 'Most intelligent model with adaptive thinking and 1M context beta',
+        description: 'Our most intelligent model for building agents and coding',
         match: {
           or: [
             {
@@ -416,7 +416,7 @@ export const data: Provider[] = [
       {
         id: 'claude-sonnet-4-5',
         name: 'Claude Sonnet 4.5',
-        description: 'Most intelligent model for building agents and coding',
+        description: 'Our best combination of speed and intelligence',
         match: {
           or: [
             {
@@ -424,6 +424,60 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-sonnet-4.5',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'claude-sonnet-4-6',
+        name: 'Claude Sonnet 4.6',
+        description: 'Our best combination of speed and intelligence',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-sonnet-4-6',
+            },
+            {
+              starts_with: 'claude-sonnet-4.6',
             },
           ],
         },
