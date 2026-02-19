@@ -131,14 +131,7 @@ UsageField = Literal[
     'output_audio_tokens',
 ]
 
-ToolUseUnit = Literal[
-    'audio_minutes',
-    'characters',
-    'file_search',
-    'images',
-    'video_seconds',
-    'web_search',
-]
+USAGE_FIELDS: frozenset[str] = frozenset(UsageField.__args__)
 
 
 class UsageExtractorMapping(_Model):
@@ -146,7 +139,7 @@ class UsageExtractorMapping(_Model):
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField | ToolUseUnit
+    dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -268,7 +261,7 @@ class ModelPrice(_Model):
     requests_kcount: DollarPrice | None = None
     """price in USD per thousand requests"""
 
-    tool_use_kcount: dict[ToolUseUnit, DollarPrice] | None = None
+    tool_use_kcount: dict[str, DollarPrice] | None = None
     """price in USD per thousand tool use requests, keyed by tool use unit"""
 
     def is_free(self) -> bool:

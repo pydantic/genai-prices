@@ -9,7 +9,7 @@ import httpx
 from pydantic import BaseModel
 
 from . import source_prices
-from .prices_types import ClauseEquals, ModelInfo, ModelPrice, ToolUseUnit
+from .prices_types import ClauseEquals, ModelInfo, ModelPrice
 from .update import get_providers_yaml
 from .utils import kcount, mtok
 
@@ -74,7 +74,7 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
     input_cache_read: Decimal | None = None
 
     def model_price(self) -> ModelPrice:
-        tool_use_kcount: dict[ToolUseUnit, Decimal] = {}
+        tool_use_kcount: dict[str, Decimal] = {}
         if ws := kcount(self.web_search):
             tool_use_kcount['web_search'] = ws
         return ModelPrice(

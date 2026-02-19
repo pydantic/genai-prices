@@ -363,16 +363,7 @@ UsageField = Literal[
     'output_audio_tokens',
 ]
 
-ToolUseUnit = Literal[
-    'audio_minutes',
-    'characters',
-    'file_search',
-    'images',
-    'video_seconds',
-    'web_search',
-]
-
-TOOL_USE_UNITS: frozenset[str] = frozenset(ToolUseUnit.__args__)
+USAGE_FIELDS: frozenset[str] = frozenset(UsageField.__args__)
 
 
 @dataclass
@@ -381,7 +372,7 @@ class UsageExtractorMapping:
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField | ToolUseUnit
+    dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -428,7 +419,7 @@ class UsageExtractor:
         for mapping in self.mappings:
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
-                if mapping.dest in TOOL_USE_UNITS:
+                if mapping.dest not in USAGE_FIELDS:
                     if usage.tool_use is None:
                         usage.tool_use = {}
                     usage.tool_use[mapping.dest] = (usage.tool_use.get(mapping.dest, 0)) + value

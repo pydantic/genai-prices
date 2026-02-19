@@ -30,18 +30,26 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   const usage: Usage = {}
 
-  const TOOL_USE_UNITS = new Set(['audio_minutes', 'characters', 'file_search', 'images', 'video_seconds', 'web_search'])
+  const USAGE_FIELDS = new Set([
+    'cache_audio_read_tokens',
+    'cache_read_tokens',
+    'cache_write_tokens',
+    'input_audio_tokens',
+    'input_tokens',
+    'output_audio_tokens',
+    'output_tokens',
+  ])
 
   for (const mapping of extractor.mappings) {
     const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
     if (value !== null) {
-      if (TOOL_USE_UNITS.has(mapping.dest)) {
-        usage.tool_use ??= {}
-        usage.tool_use[mapping.dest] = (usage.tool_use[mapping.dest] ?? 0) + value
-      } else {
+      if (USAGE_FIELDS.has(mapping.dest)) {
         const dest = mapping.dest as keyof Omit<Usage, 'tool_use'>
         const currentValue = usage[dest] ?? 0
         usage[dest] = currentValue + value
+      } else {
+        usage.tool_use ??= {}
+        usage.tool_use[mapping.dest] = (usage.tool_use[mapping.dest] ?? 0) + value
       }
     }
   }
