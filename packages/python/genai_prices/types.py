@@ -17,6 +17,7 @@ __all__ = (
     'AbstractUsage',
     'Usage',
     'Provider',
+    'CountArrayItems',
     'UsageExtractorMapping',
     'UsageExtractor',
     'ModelInfo',
@@ -367,18 +368,35 @@ USAGE_FIELDS: frozenset[str] = frozenset(UsageField.__args__)
 
 
 @dataclass
+class CountArrayItems:
+    """Count items in an array matching a condition.
+
+    The path navigates from the response root (not the usage root) to find an array,
+    then counts items where the given field matches the condition.
+    """
+
+    path: ExtractPath
+    """Path from response root to the array to count items in."""
+    field: str
+    """Field name in each array item to match against."""
+    match: MatchLogic
+
+
+@dataclass
 class UsageExtractorMapping:
     """Mappings from used to build usage."""
 
-    path: ExtractPath
-    """Path to the value to extract"""
     dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
     """
+    path: ExtractPath | None = None
+    """Path to the value to extract from the usage root."""
     required: bool = True
     """Whether the value is required to be present in the response"""
+    count: CountArrayItems | None = None
+    """Count items in a response array matching a condition. Mutually exclusive with path."""
 
 
 @dataclass
@@ -417,7 +435,11 @@ class UsageExtractor:
         usage = Usage()
         values_set = False
         for mapping in self.mappings:
-            value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
+            if mapping.count is not None:
+                value = _count_array_items(mapping.count, response_data, mapping.required)
+            else:
+                assert mapping.path is not None
+                value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
                 if mapping.dest not in USAGE_FIELDS:
                     if usage.tool_use is None:
@@ -528,6 +550,41 @@ def _dot_path(data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | 
 
 def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
+
+
+def _count_array_items(count: CountArrayItems, response_data: Any, required: bool) -> int | None:
+    """Navigate from response root to an array and count items matching a condition."""
+    path = count.path
+    if isinstance(path, str):
+        path = [path]
+
+    data: Any = response_data
+    for step in path:
+        if isinstance(step, str):
+            if _is_mapping(data):
+                try:
+                    data = data[step]
+                except KeyError:
+                    if required:
+                        raise ValueError(f'Missing value at count path `{count.path}`')
+                    return None
+            elif required:
+                raise ValueError(f'Expected mapping at count path `{count.path}`, got {_type_name(data)}')
+            else:
+                return None
+
+    if not _is_sequence(data) or isinstance(data, (str, bytes)):
+        if required:
+            raise ValueError(f'Expected array at count path `{count.path}`, got {_type_name(data)}')
+        return None
+
+    result = 0
+    for item in data:
+        if _is_mapping(item):
+            field_val = item.get(count.field)
+            if isinstance(field_val, str) and count.match.is_match(field_val):
+                result += 1
+    return result
 
 
 @dataclass

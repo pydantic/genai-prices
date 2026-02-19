@@ -118,6 +118,58 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should count web_search and file_search calls from output array', () => {
+      const responseData = {
+        model: 'gpt-4.1',
+        output: [
+          { id: 'ws_1', status: 'completed', type: 'web_search_call' },
+          { content: [{ text: 'hello', type: 'output_text' }], type: 'message' },
+          { id: 'ws_2', status: 'completed', type: 'web_search_call' },
+          { id: 'fs_1', status: 'completed', type: 'file_search_call' },
+        ],
+        usage: { input_tokens: 100, output_tokens: 200 },
+      }
+
+      const { model, usage } = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(model).toBe('gpt-4.1')
+      expect(usage).toEqual({
+        input_tokens: 100,
+        output_tokens: 200,
+        tool_use: { file_search: 1, web_search: 2 },
+      })
+    })
+
+    it('should return zero counts when output has no matching tool calls', () => {
+      const responseData = {
+        model: 'gpt-4.1',
+        output: [{ content: [{ text: 'hello', type: 'output_text' }], type: 'message' }],
+        usage: { input_tokens: 100, output_tokens: 200 },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(usage).toEqual({
+        input_tokens: 100,
+        output_tokens: 200,
+        tool_use: { file_search: 0, web_search: 0 },
+      })
+    })
+
+    it('should skip count when output array is absent', () => {
+      const responseData = {
+        model: 'gpt-4.1',
+        usage: { input_tokens: 100, output_tokens: 200 },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(usage).toEqual({
+        input_tokens: 100,
+        output_tokens: 200,
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',

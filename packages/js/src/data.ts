@@ -19,38 +19,38 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
+            dest: 'input_tokens',
             path: 'input_tokens',
-            dest: 'input_tokens',
             required: true,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'input_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
+            dest: 'input_tokens',
             path: 'cache_read_input_tokens',
-            dest: 'input_tokens',
             required: false,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
-            path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
+            path: 'cache_read_input_tokens',
             required: false,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
           },
           {
-            path: ['server_tool_use', 'web_search_requests'],
             dest: 'web_search',
+            path: ['server_tool_use', 'web_search_requests'],
             required: false,
           },
         ],
@@ -61,18 +61,18 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: 'cached_tokens',
             dest: 'cache_read_tokens',
+            path: 'cached_tokens',
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -644,13 +644,13 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'inputTokens',
             dest: 'input_tokens',
+            path: 'inputTokens',
             required: true,
           },
           {
-            path: 'outputTokens',
             dest: 'output_tokens',
+            path: 'outputTokens',
             required: true,
           },
         ],
@@ -661,33 +661,33 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'input_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
+            dest: 'input_tokens',
             path: 'cache_read_input_tokens',
-            dest: 'input_tokens',
             required: false,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
-            path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
+            path: 'cache_read_input_tokens',
             required: false,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
           },
         ],
@@ -1455,28 +1455,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -1487,18 +1487,18 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
           {
-            path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['input_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
           },
         ],
@@ -1509,8 +1509,8 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
         ],
@@ -1521,33 +1521,33 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'input_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
+            dest: 'input_tokens',
             path: 'cache_read_input_tokens',
-            dest: 'input_tokens',
             required: false,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
-            path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
+            path: 'cache_read_input_tokens',
             required: false,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
           },
         ],
@@ -1889,13 +1889,13 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -2031,13 +2031,13 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
           },
         ],
@@ -2048,8 +2048,8 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
         ],
@@ -2174,23 +2174,23 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -2293,23 +2293,23 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -2533,16 +2533,17 @@ export const data: Provider[] = [
         model_path: 'modelVersion',
         mappings: [
           {
-            path: 'promptTokenCount',
             dest: 'input_tokens',
+            path: 'promptTokenCount',
             required: false,
           },
           {
-            path: 'cachedContentTokenCount',
             dest: 'cache_read_tokens',
+            path: 'cachedContentTokenCount',
             required: false,
           },
           {
+            dest: 'cache_audio_read_tokens',
             path: [
               'cacheTokensDetails',
               {
@@ -2554,10 +2555,10 @@ export const data: Provider[] = [
               },
               'tokenCount',
             ],
-            dest: 'cache_audio_read_tokens',
             required: false,
           },
           {
+            dest: 'input_audio_tokens',
             path: [
               'promptTokensDetails',
               {
@@ -2569,10 +2570,10 @@ export const data: Provider[] = [
               },
               'tokenCount',
             ],
-            dest: 'input_audio_tokens',
             required: false,
           },
           {
+            dest: 'output_audio_tokens',
             path: [
               'candidatesTokensDetails',
               {
@@ -2584,22 +2585,21 @@ export const data: Provider[] = [
               },
               'tokenCount',
             ],
-            dest: 'output_audio_tokens',
             required: false,
           },
           {
+            dest: 'output_tokens',
             path: 'candidatesTokenCount',
-            dest: 'output_tokens',
             required: false,
           },
           {
+            dest: 'output_tokens',
             path: 'thoughtsTokenCount',
-            dest: 'output_tokens',
             required: false,
           },
           {
-            path: 'toolUsePromptTokenCount',
             dest: 'output_tokens',
+            path: 'toolUsePromptTokenCount',
             required: false,
           },
         ],
@@ -2610,33 +2610,33 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'input_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
+            dest: 'input_tokens',
             path: 'cache_read_input_tokens',
-            dest: 'input_tokens',
             required: false,
           },
           {
-            path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            path: 'cache_creation_input_tokens',
             required: false,
           },
           {
-            path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
+            path: 'cache_read_input_tokens',
             required: false,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
           },
         ],
@@ -2647,28 +2647,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -3432,13 +3432,13 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -3802,28 +3802,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -3944,28 +3944,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -4179,28 +4179,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -4288,28 +4288,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -4663,28 +4663,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -5209,28 +5209,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -6280,28 +6280,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -6699,28 +6699,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -6884,28 +6884,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -7086,28 +7086,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -7290,28 +7290,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -7814,13 +7814,13 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -8548,28 +8548,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -8580,19 +8580,41 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'input_tokens',
             dest: 'input_tokens',
+            path: 'input_tokens',
             required: true,
           },
           {
-            path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['input_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: 'output_tokens',
             dest: 'output_tokens',
+            path: 'output_tokens',
             required: true,
+          },
+          {
+            dest: 'web_search',
+            required: false,
+            count: {
+              path: 'output',
+              field: 'type',
+              match: {
+                equals: 'web_search_call',
+              },
+            },
+          },
+          {
+            dest: 'file_search',
+            required: false,
+            count: {
+              path: 'output',
+              field: 'type',
+              match: {
+                equals: 'file_search_call',
+              },
+            },
           },
         ],
       },
@@ -8602,8 +8624,8 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
         ],
@@ -16280,28 +16302,28 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
+            path: ['prompt_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],
@@ -17537,23 +17559,23 @@ export const data: Provider[] = [
         model_path: 'model',
         mappings: [
           {
-            path: 'prompt_tokens',
             dest: 'input_tokens',
+            path: 'prompt_tokens',
             required: true,
           },
           {
-            path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            path: ['prompt_tokens_details', 'cached_tokens'],
             required: false,
           },
           {
-            path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            path: ['completion_tokens_details', 'audio_tokens'],
             required: false,
           },
           {
-            path: 'completion_tokens',
             dest: 'output_tokens',
+            path: 'completion_tokens',
             required: true,
           },
         ],

@@ -1,5 +1,5 @@
 import { matchLogic } from './engine'
-import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
+import { ArrayMatch, CountArrayItems, ExtractPath, Provider, Usage } from './types'
 
 interface ExtractedUsage {
   model: null | string
@@ -41,7 +41,14 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
   ])
 
   for (const mapping of extractor.mappings) {
-    const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
+    let value: null | number
+    if (mapping.count) {
+      value = countArrayItems(mapping.count, responseData, mapping.required)
+    } else if (mapping.path) {
+      value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
+    } else {
+      throw new Error(`Mapping for '${mapping.dest}' must have either 'path' or 'count'`)
+    }
     if (value !== null) {
       if (USAGE_FIELDS.has(mapping.dest)) {
         const dest = mapping.dest as keyof Omit<Usage, 'tool_use'>
@@ -191,6 +198,47 @@ const stringCheck: TypeCheck<string> = {
 const numberCheck: TypeCheck<number> = {
   guard: (value: unknown): value is number => typeof value === 'number',
   name: 'number',
+}
+
+function countArrayItems(count: CountArrayItems, responseData: unknown, required: boolean): null | number {
+  const steps = asArray(count.path)
+  let data: unknown = responseData
+
+  for (const step of steps) {
+    if (typeof step === 'string') {
+      if (mappingCheck.guard(data)) {
+        data = data[step]
+      } else if (required) {
+        throw new Error(`Expected mapping at count path, got ${typeName(data)}`)
+      } else {
+        return null
+      }
+    }
+    if (typeof data === 'undefined') {
+      if (required) {
+        throw new Error(`Missing value at count path \`${JSON.stringify(count.path)}\``)
+      }
+      return null
+    }
+  }
+
+  if (!Array.isArray(data)) {
+    if (required) {
+      throw new Error(`Expected array at count path, got ${typeName(data)}`)
+    }
+    return null
+  }
+
+  let result = 0
+  for (const item of data) {
+    if (mappingCheck.guard(item)) {
+      const fieldVal = item[count.field]
+      if (typeof fieldVal === 'string' && matchLogic(count.match, fieldVal)) {
+        result++
+      }
+    }
+  }
+  return result
 }
 
 const dottedPath = (dataPath: (ArrayMatch | string)[], errorPath: (ArrayMatch | string)[]): string =>
