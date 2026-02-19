@@ -97,6 +97,9 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   if (modelPrice.web_search_kcount && usage.web_search_requests) {
     totalPrice += (modelPrice.web_search_kcount * usage.web_search_requests) / 1000
   }
+  if (modelPrice.file_search_kcount && usage.file_search_requests) {
+    totalPrice += (modelPrice.file_search_kcount * usage.file_search_requests) / 1000
+  }
 
   return {
     input_price: inputPrice,

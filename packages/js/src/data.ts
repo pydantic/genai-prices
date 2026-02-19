@@ -8955,6 +8955,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.5,
           output_mtok: 8,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -8978,6 +8979,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.1,
           output_mtok: 1.6,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9001,6 +9003,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.025,
           output_mtok: 0.4,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9044,6 +9047,7 @@ export const data: Provider[] = [
           cache_read_mtok: 1.25,
           output_mtok: 10,
           web_search_kcount: 25,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9086,6 +9090,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.075,
           output_mtok: 0.6,
           web_search_kcount: 25,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9240,6 +9245,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.125,
           output_mtok: 10,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9286,6 +9292,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.025,
           output_mtok: 2,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9308,6 +9315,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.005,
           output_mtok: 0.4,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9378,6 +9386,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.125,
           output_mtok: 10,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9405,6 +9414,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.025,
           output_mtok: 2,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {
@@ -9451,6 +9461,7 @@ export const data: Provider[] = [
           cache_read_mtok: 0.175,
           output_mtok: 14,
           web_search_kcount: 30,
+          file_search_kcount: 2.5,
         },
       },
       {

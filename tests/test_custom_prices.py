@@ -92,6 +92,8 @@ class CustomUsage:
 
     web_search_requests: int | None = None
 
+    file_search_requests: int | None = None
+
 
 def test_alt_source():
     with AltUpdatePrices() as update_prices:

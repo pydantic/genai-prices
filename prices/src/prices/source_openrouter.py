@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from . import source_prices
 from .prices_types import ClauseEquals, ModelInfo, ModelPrice
 from .update import get_providers_yaml
-from .utils import mtok
+from .utils import kcount, mtok
 
 map_providers = {
     'mistralai': 'mistral',
@@ -79,6 +79,7 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
             cache_write_mtok=mtok(self.input_cache_write),
             cache_read_mtok=mtok(self.input_cache_read),
             output_mtok=mtok(self.completion),
+            web_search_kcount=kcount(self.web_search),
         )
 
 

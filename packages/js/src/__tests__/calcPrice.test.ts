@@ -144,6 +144,48 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should handle file search requests as total cost', () => {
+      const usage: Usage = {
+        file_search_requests: 4,
+        input_tokens: 1000,
+        output_tokens: 500,
+      }
+      const modelPrice: ModelPrice = {
+        file_search_kcount: 2.5, // $2.50 per 1000 file searches
+        input_mtok: 2.5,
+        output_mtok: 10.0,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.0025, // 1000 * 2.5 / 1_000_000
+        output_price: 0.005, // 500 * 10.0 / 1_000_000
+        total_price: 0.0025 + 0.005 + (2.5 * 4) / 1000, // add file search cost to total only
+      })
+    })
+
+    it('should not add file search cost when requests is zero', () => {
+      const usage: Usage = {
+        file_search_requests: 0,
+        input_tokens: 1000,
+        output_tokens: 500,
+      }
+      const modelPrice: ModelPrice = {
+        file_search_kcount: 2.5,
+        input_mtok: 2.5,
+        output_mtok: 10.0,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.0025,
+        output_price: 0.005,
+        total_price: 0.0025 + 0.005,
+      })
+    })
+
     it('should not add web search cost when requests is zero', () => {
       const usage: Usage = {
         input_tokens: 1000,

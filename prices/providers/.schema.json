@@ -434,6 +434,11 @@
           "type": "number",
           "description": "price in USD per thousand web search requests",
           "title": "Web Search Kcount"
+        },
+        "file_search_kcount": {
+          "type": "number",
+          "description": "price in USD per thousand file search requests",
+          "title": "File Search Kcount"
         }
       },
       "title": "ModelPrice",
@@ -634,7 +639,8 @@
             "input_audio_tokens",
             "cache_audio_read_tokens",
             "output_audio_tokens",
-            "web_search_requests"
+            "web_search_requests",
+            "file_search_requests"
           ],
           "title": "Dest",
           "type": "string"

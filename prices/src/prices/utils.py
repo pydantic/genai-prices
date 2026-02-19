@@ -25,6 +25,14 @@ def mtok(v: Decimal | None) -> Decimal | None:
         return v * 1_000_000
 
 
+def kcount(v: Decimal | None) -> Decimal | None:
+    """Convert a per-unit price to per-thousand (kcount)."""
+    if v is None or v == 0:
+        return None
+    else:
+        return v * 1000
+
+
 T = TypeVar('T')
 
 

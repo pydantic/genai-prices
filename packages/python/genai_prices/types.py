@@ -251,6 +251,9 @@ class Usage:
     web_search_requests: int | None = None
     """Number of web search requests."""
 
+    file_search_requests: int | None = None
+    """Number of file search requests."""
+
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
             return NotImplemented
@@ -351,6 +354,7 @@ UsageField = Literal[
     'cache_audio_read_tokens',
     'output_audio_tokens',
     'web_search_requests',
+    'file_search_requests',
 ]
 
 
@@ -615,6 +619,9 @@ class ModelPrice:
     web_search_kcount: Decimal | None = None
     """price in USD per thousand web search requests"""
 
+    file_search_kcount: Decimal | None = None
+    """price in USD per thousand file search requests"""
+
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
         input_price = Decimal(0)
@@ -668,6 +675,11 @@ class ModelPrice:
             if web_search_requests:
                 total_price += self.web_search_kcount * web_search_requests / 1000
 
+        if self.file_search_kcount is not None:
+            file_search_requests = getattr(usage, 'file_search_requests', None)
+            if file_search_requests:
+                total_price += self.file_search_kcount * file_search_requests / 1000
+
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
     def __str__(self) -> str:
@@ -679,6 +691,8 @@ class ModelPrice:
                     parts.append(f'${value} / K requests')
                 elif field.name == 'web_search_kcount':
                     parts.append(f'${value} / K web searches')
+                elif field.name == 'file_search_kcount':
+                    parts.append(f'${value} / K file searches')
                 else:
                     name = field.name.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):
