@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal
+from typing import Any
 
 import pytest
 from inline_snapshot import snapshot
@@ -16,8 +17,8 @@ from genai_prices.update_prices import UpdatePrices
 class CustomModelPrice(types.ModelPrice):
     sausage_price: Decimal | None = None
 
-    def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
-        price = super().calc_price(usage)
+    def calc_price(self, usage: types.AbstractUsage, **kwargs: Any) -> types.CalcPrice:
+        price = super().calc_price(usage, **kwargs)
         if isinstance(usage, CustomUsage) and self.sausage_price is not None:
             price['total_price'] += self.sausage_price * usage.sausages
         return price

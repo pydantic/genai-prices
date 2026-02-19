@@ -308,6 +308,11 @@ class Provider:
     This is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,
     Azure offers OpenAI models, etc.
     """
+    tool_use_kcount: dict[str, Decimal] | None = None
+    """Provider-level price in USD per thousand tool use requests, keyed by tool use unit.
+
+    Model-level tool_use_kcount overrides provider-level for the same unit.
+    """
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models supported by this provider"""
 
@@ -583,7 +588,7 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
-        price = model_price.calc_price(usage)
+        price = model_price.calc_price(usage, provider_tool_use_kcount=provider.tool_use_kcount)
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
@@ -632,7 +637,12 @@ class ModelPrice:
     tool_use_kcount: dict[str, Decimal] | None = None
     """price in USD per thousand tool use requests, keyed by tool use unit"""
 
-    def calc_price(self, usage: AbstractUsage) -> CalcPrice:
+    def calc_price(
+        self,
+        usage: AbstractUsage,
+        *,
+        provider_tool_use_kcount: dict[str, Decimal] | None = None,
+    ) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
         input_price = Decimal(0)
         output_price = Decimal(0)
@@ -680,9 +690,14 @@ class ModelPrice:
         if self.requests_kcount is not None:
             total_price += self.requests_kcount / 1000
 
+        effective_tool_use_kcount: dict[str, Decimal] = {}
+        if provider_tool_use_kcount:
+            effective_tool_use_kcount.update(provider_tool_use_kcount)
         if self.tool_use_kcount:
+            effective_tool_use_kcount.update(self.tool_use_kcount)
+        if effective_tool_use_kcount:
             tool_use: dict[str, int] = getattr(usage, 'tool_use', None) or {}
-            for unit, price in self.tool_use_kcount.items():
+            for unit, price in effective_tool_use_kcount.items():
                 count: int = tool_use.get(unit, 0)
                 if count:
                     total_price += price * count / 1000

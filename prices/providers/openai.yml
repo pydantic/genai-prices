@@ -49,6 +49,8 @@ extractors:
       - path: prompt_tokens
         dest: input_tokens
 
+tool_use_kcount:
+  file_search: 2.5
 models:
   - id: ada
     match:
@@ -297,7 +299,6 @@ models:
       output_mtok: 8
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-4.1-mini
     name: gpt 4.1 mini
@@ -317,7 +318,6 @@ models:
       output_mtok: 1.6
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-4.1-nano
     name: gpt 4.1 nano
@@ -337,7 +337,6 @@ models:
       output_mtok: 0.4
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-4.5-preview
     name: GPT-4.5 (Preview)
@@ -373,7 +372,6 @@ models:
       output_mtok: 10
       tool_use_kcount:
         web_search: 25
-        file_search: 2.5
 
   - id: gpt-4o-audio-preview
     name: gpt 4o audio preview
@@ -407,7 +405,6 @@ models:
       output_mtok: 0.6
       tool_use_kcount:
         web_search: 25
-        file_search: 2.5
 
   - id: gpt-4o-mini-2024-07-18.ft-
     description: GPT-4o Mini fine tuned.
@@ -519,7 +516,6 @@ models:
       output_mtok: 10
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-5-image
     match:
@@ -555,7 +551,6 @@ models:
       output_mtok: 2
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-5-nano
     name: GPT-5 nano
@@ -574,7 +569,6 @@ models:
       output_mtok: 0.4
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-5-pro
     match:
@@ -614,7 +608,6 @@ models:
       output_mtok: 10
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-5.1-codex-mini
     name: GPT-5.1 Codex Mini
@@ -634,7 +627,6 @@ models:
       output_mtok: 2
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-5.2
     name: GPT-5.2
@@ -660,7 +652,6 @@ models:
       output_mtok: 14
       tool_use_kcount:
         web_search: 30
-        file_search: 2.5
 
   - id: gpt-5.2-pro
     description: Version of GPT-5.2 that produces smarter and more precise responses.
