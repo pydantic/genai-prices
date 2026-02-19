@@ -44,7 +44,11 @@ function calcMtokPrice(
   return calcTieredPrice(price, tokens, totalInputTokens)
 }
 
-export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
+export function calcPrice(
+  usage: Usage,
+  modelPrice: ModelPrice,
+  providerToolUseKcount?: Record<string, number>
+): ModelPriceCalculationResult {
   let inputPrice = 0
   let outputPrice = 0
 
@@ -94,8 +98,15 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   if (modelPrice.requests_kcount !== undefined) {
     totalPrice += modelPrice.requests_kcount / 1000
   }
-  if (modelPrice.tool_use_kcount && usage.tool_use) {
-    for (const [unit, price] of Object.entries(modelPrice.tool_use_kcount)) {
+  const effectiveToolUseKcount: Record<string, number> = {}
+  if (providerToolUseKcount) {
+    Object.assign(effectiveToolUseKcount, providerToolUseKcount)
+  }
+  if (modelPrice.tool_use_kcount) {
+    Object.assign(effectiveToolUseKcount, modelPrice.tool_use_kcount)
+  }
+  if (Object.keys(effectiveToolUseKcount).length && usage.tool_use) {
+    for (const [unit, price] of Object.entries(effectiveToolUseKcount)) {
       const count = usage.tool_use[unit] ?? 0
       if (count) {
         totalPrice += (price * count) / 1000

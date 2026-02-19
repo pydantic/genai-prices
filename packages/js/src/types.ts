@@ -105,6 +105,7 @@ export interface Provider {
   price_comments?: string
   pricing_urls?: string[]
   provider_match?: MatchLogic
+  tool_use_kcount?: Record<string, number>
 }
 
 export interface ModelPriceCalculationResult {

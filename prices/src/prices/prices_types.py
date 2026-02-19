@@ -60,6 +60,11 @@ class Provider(_Model):
     This is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,
     Azure offers OpenAI models, etc.
     """
+    tool_use_kcount: dict[str, DollarPrice] | None = None
+    """Provider-level price in USD per thousand tool use requests, keyed by tool use unit.
+
+    Model-level tool_use_kcount overrides provider-level for the same unit.
+    """
     models: list[ModelInfo]
     """List of models supported by this provider"""
 

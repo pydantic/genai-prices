@@ -761,6 +761,14 @@
       "description": "List of provider identifiers to fallback to to get prices if this provider doesn't have a price.\n\nThis is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,\nAzure offers OpenAI models, etc.",
       "title": "Fallback Model Providers"
     },
+    "tool_use_kcount": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "type": "object",
+      "description": "Provider-level price in USD per thousand tool use requests, keyed by tool use unit.\n\nModel-level tool_use_kcount overrides provider-level for the same unit.",
+      "title": "Tool Use Kcount"
+    },
     "models": {
       "description": "List of models supported by this provider",
       "items": {
