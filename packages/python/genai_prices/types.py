@@ -364,8 +364,12 @@ UsageField = Literal[
 ]
 
 ToolUseUnit = Literal[
-    'web_search',
+    'audio_minutes',
+    'characters',
     'file_search',
+    'images',
+    'video_seconds',
+    'web_search',
 ]
 
 TOOL_USE_UNITS: frozenset[str] = frozenset(ToolUseUnit.__args__)

@@ -30,7 +30,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   const usage: Usage = {}
 
-  const TOOL_USE_UNITS = new Set(['file_search', 'web_search'])
+  const TOOL_USE_UNITS = new Set(['audio_minutes', 'characters', 'file_search', 'images', 'video_seconds', 'web_search'])
 
   for (const mapping of extractor.mappings) {
     const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)

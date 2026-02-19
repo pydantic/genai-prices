@@ -72,14 +72,18 @@ export type ExtractPath = (ArrayMatch | string)[] | string
 
 export interface UsageExtractorMapping {
   dest:
+    | 'audio_minutes'
     | 'cache_audio_read_tokens'
     | 'cache_read_tokens'
     | 'cache_write_tokens'
+    | 'characters'
     | 'file_search'
+    | 'images'
     | 'input_audio_tokens'
     | 'input_tokens'
     | 'output_audio_tokens'
     | 'output_tokens'
+    | 'video_seconds'
     | 'web_search'
   path: ExtractPath
   required: boolean

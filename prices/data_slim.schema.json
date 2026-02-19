@@ -394,8 +394,12 @@
           },
           "propertyNames": {
             "enum": [
-              "web_search",
-              "file_search"
+              "audio_minutes",
+              "characters",
+              "file_search",
+              "images",
+              "video_seconds",
+              "web_search"
             ]
           },
           "type": "object",
@@ -717,8 +721,12 @@
             },
             {
               "enum": [
-                "web_search",
-                "file_search"
+                "audio_minutes",
+                "characters",
+                "file_search",
+                "images",
+                "video_seconds",
+                "web_search"
               ],
               "type": "string"
             }
