@@ -123,6 +123,90 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should handle web search requests as total cost', () => {
+      const usage: Usage = {
+        input_tokens: 1000,
+        output_tokens: 500,
+        tool_use: { web_search: 3 },
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 3.0,
+        output_mtok: 15.0,
+        tool_use_kcount: { web_search: 10 }, // $10 per 1000 web searches
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.003, // 1000 * 3.0 / 1_000_000
+        output_price: 0.0075, // 500 * 15.0 / 1_000_000
+        total_price: 0.003 + 0.0075 + (10 * 3) / 1000, // add web search cost to total only
+      })
+    })
+
+    it('should handle file search requests as total cost', () => {
+      const usage: Usage = {
+        input_tokens: 1000,
+        output_tokens: 500,
+        tool_use: { file_search: 4 },
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 2.5,
+        output_mtok: 10.0,
+        tool_use_kcount: { file_search: 2.5 }, // $2.50 per 1000 file searches
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.0025, // 1000 * 2.5 / 1_000_000
+        output_price: 0.005, // 500 * 10.0 / 1_000_000
+        total_price: 0.0025 + 0.005 + (2.5 * 4) / 1000, // add file search cost to total only
+      })
+    })
+
+    it('should not add file search cost when requests is zero', () => {
+      const usage: Usage = {
+        input_tokens: 1000,
+        output_tokens: 500,
+        tool_use: { file_search: 0 },
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 2.5,
+        output_mtok: 10.0,
+        tool_use_kcount: { file_search: 2.5 },
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.0025,
+        output_price: 0.005,
+        total_price: 0.0025 + 0.005,
+      })
+    })
+
+    it('should not add web search cost when requests is zero', () => {
+      const usage: Usage = {
+        input_tokens: 1000,
+        output_tokens: 500,
+        tool_use: { web_search: 0 },
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 3.0,
+        output_mtok: 15.0,
+        tool_use_kcount: { web_search: 10 },
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.003,
+        output_price: 0.0075,
+        total_price: 0.003 + 0.0075,
+      })
+    })
+
     it.each([
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },

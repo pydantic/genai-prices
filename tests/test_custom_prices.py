@@ -90,6 +90,8 @@ class CustomUsage:
     cache_audio_read_tokens: int | None = None
     output_audio_tokens: int | None = None
 
+    tool_use: dict[str, int] | None = None
+
 
 def test_alt_source():
     with AltUpdatePrices() as update_prices:

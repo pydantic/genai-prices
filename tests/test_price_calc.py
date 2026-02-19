@@ -77,6 +77,76 @@ def test_requests_kcount_prices():
     assert price.provider.name == snapshot('Perplexity')
 
 
+def test_web_search_kcount_prices():
+    # Anthropic charges $10/1000 web search requests
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'web_search': 3}),
+        model_ref='claude-sonnet-4-20250514',
+        provider_id='anthropic',
+    )
+    assert price.input_price == snapshot(Decimal('0.003'))
+    assert price.output_price == snapshot(Decimal('0.0015'))
+    # total = input + output + (10 * 3 / 1000) = 0.0045 + 0.03
+    assert price.total_price == snapshot(Decimal('0.0345'))
+    assert price.model.name == snapshot('Claude Sonnet 4')
+    assert price.provider.name == snapshot('Anthropic')
+
+
+def test_web_search_kcount_zero():
+    # web_search=0 should not add any cost
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'web_search': 0}),
+        model_ref='claude-sonnet-4-20250514',
+        provider_id='anthropic',
+    )
+    assert price.total_price == snapshot(Decimal('0.0045'))
+
+
+def test_web_search_kcount_none():
+    # tool_use=None (default) should not add any cost
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        model_ref='claude-sonnet-4-20250514',
+        provider_id='anthropic',
+    )
+    assert price.total_price == snapshot(Decimal('0.0045'))
+
+
+def test_file_search_kcount_prices():
+    # OpenAI charges $2.50/1000 file search requests
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'file_search': 4}),
+        model_ref='gpt-4o',
+        provider_id='openai',
+    )
+    assert price.input_price == snapshot(Decimal('0.0025'))
+    assert price.output_price == snapshot(Decimal('0.001'))
+    # total = input + output + (2.5 * 4 / 1000) = 0.0035 + 0.01
+    assert price.total_price == snapshot(Decimal('0.0135'))
+    assert price.model.name == snapshot('gpt 4o')
+    assert price.provider.name == snapshot('OpenAI')
+
+
+def test_file_search_kcount_zero():
+    # file_search=0 should not add any cost
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'file_search': 0}),
+        model_ref='gpt-4o',
+        provider_id='openai',
+    )
+    assert price.total_price == snapshot(Decimal('0.0035'))
+
+
+def test_file_search_kcount_none():
+    # tool_use=None (default) should not add any cost
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        model_ref='gpt-4o',
+        provider_id='openai',
+    )
+    assert price.total_price == snapshot(Decimal('0.0035'))
+
+
 def test_price_constraint_before():
     price = calc_price(Usage(input_tokens=1000), model_ref='o3', genai_request_timestamp=datetime(2025, 6, 1))
     assert price.input_price == snapshot(Decimal('0.01'))

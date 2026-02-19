@@ -387,6 +387,14 @@
           "type": "number",
           "description": "price in USD per thousand requests",
           "title": "Requests Kcount"
+        },
+        "tool_use_kcount": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "type": "object",
+          "description": "price in USD per thousand tool use requests, keyed by tool use unit",
+          "title": "Tool Use Kcount"
         }
       },
       "title": "ModelPrice",
@@ -689,15 +697,6 @@
         },
         "dest": {
           "description": "Destination field to store the extracted value.\n\nIf multiple mappings point to the same destination, the values are summed.",
-          "enum": [
-            "input_tokens",
-            "cache_write_tokens",
-            "cache_read_tokens",
-            "output_tokens",
-            "input_audio_tokens",
-            "cache_audio_read_tokens",
-            "output_audio_tokens"
-          ],
           "title": "Dest",
           "type": "string"
         },

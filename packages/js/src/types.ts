@@ -6,6 +6,7 @@ export interface Usage {
   input_tokens?: number
   output_audio_tokens?: number
   output_tokens?: number
+  tool_use?: Record<string, number>
 }
 
 export interface Tier {
@@ -33,6 +34,7 @@ export interface ModelPrice {
   output_audio_mtok?: number | TieredPrices
   output_mtok?: number | TieredPrices
   requests_kcount?: number
+  tool_use_kcount?: Record<string, number>
 }
 
 export interface ConditionalPrice {
@@ -69,14 +71,7 @@ export interface ArrayMatch {
 export type ExtractPath = (ArrayMatch | string)[] | string
 
 export interface UsageExtractorMapping {
-  dest:
-    | 'cache_audio_read_tokens'
-    | 'cache_read_tokens'
-    | 'cache_write_tokens'
-    | 'input_audio_tokens'
-    | 'input_tokens'
-    | 'output_audio_tokens'
-    | 'output_tokens'
+  dest: string
   path: ExtractPath
   required: boolean
 }

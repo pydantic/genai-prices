@@ -20,7 +20,7 @@ def test_calc(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: gpt 4o
-  Model Prices: $2.5/input MTok, $1.25/cache read MTok, $10/output MTok
+  Model Prices: $2.5/input MTok, $1.25/cache read MTok, $10/output MTok, $25 / K web search, $2.5 / K file search
 Context Window: 128,000
    Input Price: $0.0025
   Output Price: $0.001

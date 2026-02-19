@@ -94,6 +94,14 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   if (modelPrice.requests_kcount !== undefined) {
     totalPrice += modelPrice.requests_kcount / 1000
   }
+  if (modelPrice.tool_use_kcount && usage.tool_use) {
+    for (const [unit, price] of Object.entries(modelPrice.tool_use_kcount)) {
+      const count = usage.tool_use[unit] ?? 0
+      if (count) {
+        totalPrice += (price * count) / 1000
+      }
+    }
+  }
 
   return {
     input_price: inputPrice,
