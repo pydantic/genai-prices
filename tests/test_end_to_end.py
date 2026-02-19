@@ -90,7 +90,9 @@ def test_anthropic_with_web_search():
 
     extracted_usage = extract_usage(response, provider_id='anthropic')
     assert extracted_usage.usage == snapshot(
-        Usage(input_tokens=10809, cache_write_tokens=0, cache_read_tokens=0, output_tokens=644, web_search_requests=1)
+        Usage(
+            input_tokens=10809, cache_write_tokens=0, cache_read_tokens=0, output_tokens=644, tool_use={'web_search': 1}
+        )
     )
     price = extracted_usage.calc_price()
     # input: 3 * 10809 / 1e6 = 0.032427

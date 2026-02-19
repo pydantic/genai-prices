@@ -17,7 +17,7 @@ def remove_ignored_fields(json_schema: Any):
     if isinstance(json_schema, dict):
         json_schema = cast(dict[str, Any], json_schema)
 
-        for f in 'description', 'maxLength', 'minLength', 'pattern', 'additionalProperties':
+        for f in 'description', 'maxLength', 'minLength', 'pattern', 'additionalProperties', 'propertyNames':
             json_schema.pop(f, None)
 
         for value in json_schema.values():

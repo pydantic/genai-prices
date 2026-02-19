@@ -2,12 +2,11 @@ export interface Usage {
   cache_audio_read_tokens?: number
   cache_read_tokens?: number
   cache_write_tokens?: number
-  file_search_requests?: number
   input_audio_tokens?: number
   input_tokens?: number
   output_audio_tokens?: number
   output_tokens?: number
-  web_search_requests?: number
+  tool_use?: Record<string, number>
 }
 
 export interface Tier {
@@ -30,13 +29,12 @@ export interface ModelPrice {
   cache_audio_read_mtok?: number | TieredPrices
   cache_read_mtok?: number | TieredPrices
   cache_write_mtok?: number | TieredPrices
-  file_search_kcount?: number
   input_audio_mtok?: number | TieredPrices
   input_mtok?: number | TieredPrices
   output_audio_mtok?: number | TieredPrices
   output_mtok?: number | TieredPrices
   requests_kcount?: number
-  web_search_kcount?: number
+  tool_use_kcount?: Record<string, number>
 }
 
 export interface ConditionalPrice {
@@ -77,12 +75,12 @@ export interface UsageExtractorMapping {
     | 'cache_audio_read_tokens'
     | 'cache_read_tokens'
     | 'cache_write_tokens'
-    | 'file_search_requests'
+    | 'file_search'
     | 'input_audio_tokens'
     | 'input_tokens'
     | 'output_audio_tokens'
     | 'output_tokens'
-    | 'web_search_requests'
+    | 'web_search'
   path: ExtractPath
   required: boolean
 }

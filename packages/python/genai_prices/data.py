@@ -28,7 +28,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                     UsageExtractorMapping(
-                        path=['server_tool_use', 'web_search_requests'], dest='web_search_requests', required=False
+                        path=['server_tool_use', 'web_search_requests'], dest='web_search', required=False
                     ),
                 ],
                 api_flavor='default',
@@ -70,7 +70,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
                     output_mtok=Decimal('4'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -89,7 +89,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -110,7 +110,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -124,7 +124,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
                     output_mtok=Decimal('1.25'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -138,7 +138,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -152,7 +152,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -173,7 +173,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('5'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -194,7 +194,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -213,7 +213,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -234,7 +234,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -257,7 +257,7 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
                     output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -279,7 +279,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -300,7 +300,7 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -321,7 +321,7 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
-                    web_search_kcount=Decimal('10'),
+                    tool_use_kcount={'web_search': Decimal('10')},
                 ),
             ),
             ModelInfo(
@@ -5097,8 +5097,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('2'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('8'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5113,8 +5112,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.4'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('1.6'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5129,8 +5127,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.1'),
                     cache_read_mtok=Decimal('0.025'),
                     output_mtok=Decimal('0.4'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5159,8 +5156,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('2.5'),
                     cache_read_mtok=Decimal('1.25'),
                     output_mtok=Decimal('10'),
-                    web_search_kcount=Decimal('25'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('25'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5188,8 +5184,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.15'),
                     cache_read_mtok=Decimal('0.075'),
                     output_mtok=Decimal('0.6'),
-                    web_search_kcount=Decimal('25'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('25'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5283,8 +5278,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.125'),
                     output_mtok=Decimal('10'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5309,8 +5303,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
                     output_mtok=Decimal('2'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5323,8 +5316,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.05'),
                     cache_read_mtok=Decimal('0.005'),
                     output_mtok=Decimal('0.4'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5358,8 +5350,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.125'),
                     output_mtok=Decimal('10'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5378,8 +5369,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
                     output_mtok=Decimal('2'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(
@@ -5405,8 +5395,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('1.75'),
                     cache_read_mtok=Decimal('0.175'),
                     output_mtok=Decimal('14'),
-                    web_search_kcount=Decimal('30'),
-                    file_search_kcount=Decimal('2.5'),
+                    tool_use_kcount={'web_search': Decimal('30'), 'file_search': Decimal('2.5')},
                 ),
             ),
             ModelInfo(

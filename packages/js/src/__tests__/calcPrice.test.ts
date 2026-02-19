@@ -127,12 +127,12 @@ describe('Core Price Calculation Function', () => {
       const usage: Usage = {
         input_tokens: 1000,
         output_tokens: 500,
-        web_search_requests: 3,
+        tool_use: { web_search: 3 },
       }
       const modelPrice: ModelPrice = {
         input_mtok: 3.0,
         output_mtok: 15.0,
-        web_search_kcount: 10, // $10 per 1000 web searches
+        tool_use_kcount: { web_search: 10 }, // $10 per 1000 web searches
       }
 
       const result = calcPrice(usage, modelPrice)
@@ -146,14 +146,14 @@ describe('Core Price Calculation Function', () => {
 
     it('should handle file search requests as total cost', () => {
       const usage: Usage = {
-        file_search_requests: 4,
         input_tokens: 1000,
         output_tokens: 500,
+        tool_use: { file_search: 4 },
       }
       const modelPrice: ModelPrice = {
-        file_search_kcount: 2.5, // $2.50 per 1000 file searches
         input_mtok: 2.5,
         output_mtok: 10.0,
+        tool_use_kcount: { file_search: 2.5 }, // $2.50 per 1000 file searches
       }
 
       const result = calcPrice(usage, modelPrice)
@@ -167,14 +167,14 @@ describe('Core Price Calculation Function', () => {
 
     it('should not add file search cost when requests is zero', () => {
       const usage: Usage = {
-        file_search_requests: 0,
         input_tokens: 1000,
         output_tokens: 500,
+        tool_use: { file_search: 0 },
       }
       const modelPrice: ModelPrice = {
-        file_search_kcount: 2.5,
         input_mtok: 2.5,
         output_mtok: 10.0,
+        tool_use_kcount: { file_search: 2.5 },
       }
 
       const result = calcPrice(usage, modelPrice)
@@ -190,12 +190,12 @@ describe('Core Price Calculation Function', () => {
       const usage: Usage = {
         input_tokens: 1000,
         output_tokens: 500,
-        web_search_requests: 0,
+        tool_use: { web_search: 0 },
       }
       const modelPrice: ModelPrice = {
         input_mtok: 3.0,
         output_mtok: 15.0,
-        web_search_kcount: 10,
+        tool_use_kcount: { web_search: 10 },
       }
 
       const result = calcPrice(usage, modelPrice)

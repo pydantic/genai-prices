@@ -30,11 +30,19 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   const usage: Usage = {}
 
+  const TOOL_USE_UNITS = new Set(['file_search', 'web_search'])
+
   for (const mapping of extractor.mappings) {
     const value = extractPath(mapping.path, usageObj, numberCheck, mapping.required, root)
     if (value !== null) {
-      const currentValue = usage[mapping.dest] ?? 0
-      usage[mapping.dest] = currentValue + value
+      if (TOOL_USE_UNITS.has(mapping.dest)) {
+        usage.tool_use ??= {}
+        usage.tool_use[mapping.dest] = (usage.tool_use[mapping.dest] ?? 0) + value
+      } else {
+        const dest = mapping.dest as keyof Omit<Usage, 'tool_use'>
+        const currentValue = usage[dest] ?? 0
+        usage[dest] = currentValue + value
+      }
     }
   }
 

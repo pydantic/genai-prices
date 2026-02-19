@@ -90,9 +90,7 @@ class CustomUsage:
     cache_audio_read_tokens: int | None = None
     output_audio_tokens: int | None = None
 
-    web_search_requests: int | None = None
-
-    file_search_requests: int | None = None
+    tool_use: dict[str, int] | None = None
 
 
 def test_alt_source():

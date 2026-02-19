@@ -248,11 +248,8 @@ class Usage:
     output_audio_tokens: int | None = None
     """Number of output audio tokens."""
 
-    web_search_requests: int | None = None
-    """Number of web search requests."""
-
-    file_search_requests: int | None = None
-    """Number of file search requests."""
+    tool_use: dict[str, int] | None = None
+    """Counts of tool use requests, keyed by tool use unit (e.g. 'web_search', 'file_search')."""
 
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
@@ -261,12 +258,23 @@ class Usage:
         def _add_option(a: int | None, b: int | None) -> int | None:
             return None if a is b is None else (a or 0) + (b or 0)
 
-        return Usage(
-            **{
-                field.name: _add_option(getattr(self, field.name), getattr(other, field.name))
-                for field in dataclasses.fields(self)
-            }
-        )
+        def _add_dicts(a: dict[str, int] | None, b: dict[str, int] | None) -> dict[str, int] | None:
+            if a is None and b is None:
+                return None
+            result = dict(a or {})
+            for k, v in (b or {}).items():
+                result[k] = result.get(k, 0) + v
+            return result
+
+        kwargs: dict[str, Any] = {}
+        for field in dataclasses.fields(self):
+            a = getattr(self, field.name)
+            b = getattr(other, field.name)
+            if field.name == 'tool_use':
+                kwargs[field.name] = _add_dicts(a, b)
+            else:
+                kwargs[field.name] = _add_option(a, b)
+        return Usage(**kwargs)
 
     def __radd__(self, other: Usage) -> Usage:
         return self + other
@@ -353,9 +361,14 @@ UsageField = Literal[
     'input_audio_tokens',
     'cache_audio_read_tokens',
     'output_audio_tokens',
-    'web_search_requests',
-    'file_search_requests',
 ]
+
+ToolUseUnit = Literal[
+    'web_search',
+    'file_search',
+]
+
+TOOL_USE_UNITS: frozenset[str] = frozenset(ToolUseUnit.__args__)
 
 
 @dataclass
@@ -364,7 +377,7 @@ class UsageExtractorMapping:
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField
+    dest: UsageField | ToolUseUnit
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -411,8 +424,13 @@ class UsageExtractor:
         for mapping in self.mappings:
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
-                current_value = getattr(usage, mapping.dest) or 0
-                setattr(usage, mapping.dest, current_value + value)
+                if mapping.dest in TOOL_USE_UNITS:
+                    if usage.tool_use is None:
+                        usage.tool_use = {}
+                    usage.tool_use[mapping.dest] = (usage.tool_use.get(mapping.dest, 0)) + value
+                else:
+                    current_value = getattr(usage, mapping.dest) or 0
+                    setattr(usage, mapping.dest, current_value + value)
                 values_set = True
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
@@ -616,11 +634,8 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
 
-    web_search_kcount: Decimal | None = None
-    """price in USD per thousand web search requests"""
-
-    file_search_kcount: Decimal | None = None
-    """price in USD per thousand file search requests"""
+    tool_use_kcount: dict[str, Decimal] | None = None
+    """price in USD per thousand tool use requests, keyed by tool use unit"""
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
@@ -670,15 +685,12 @@ class ModelPrice:
         if self.requests_kcount is not None:
             total_price += self.requests_kcount / 1000
 
-        if self.web_search_kcount is not None:
-            web_search_requests = getattr(usage, 'web_search_requests', None)
-            if web_search_requests:
-                total_price += self.web_search_kcount * web_search_requests / 1000
-
-        if self.file_search_kcount is not None:
-            file_search_requests = getattr(usage, 'file_search_requests', None)
-            if file_search_requests:
-                total_price += self.file_search_kcount * file_search_requests / 1000
+        if self.tool_use_kcount:
+            tool_use: dict[str, int] = getattr(usage, 'tool_use', None) or {}
+            for unit, price in self.tool_use_kcount.items():
+                count: int = tool_use.get(unit, 0)
+                if count:
+                    total_price += price * count / 1000
 
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
@@ -689,10 +701,10 @@ class ModelPrice:
             if value is not None:
                 if field.name == 'requests_kcount':
                     parts.append(f'${value} / K requests')
-                elif field.name == 'web_search_kcount':
-                    parts.append(f'${value} / K web searches')
-                elif field.name == 'file_search_kcount':
-                    parts.append(f'${value} / K file searches')
+                elif field.name == 'tool_use_kcount':
+                    for unit, price in value.items():
+                        label = unit.replace('_', ' ')
+                        parts.append(f'${price} / K {label}')
                 else:
                     name = field.name.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):

@@ -80,7 +80,7 @@ def test_requests_kcount_prices():
 def test_web_search_kcount_prices():
     # Anthropic charges $10/1000 web search requests
     price = calc_price(
-        Usage(input_tokens=1000, output_tokens=100, web_search_requests=3),
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'web_search': 3}),
         model_ref='claude-sonnet-4-20250514',
         provider_id='anthropic',
     )
@@ -93,9 +93,9 @@ def test_web_search_kcount_prices():
 
 
 def test_web_search_kcount_zero():
-    # web_search_requests=0 should not add any cost
+    # web_search=0 should not add any cost
     price = calc_price(
-        Usage(input_tokens=1000, output_tokens=100, web_search_requests=0),
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'web_search': 0}),
         model_ref='claude-sonnet-4-20250514',
         provider_id='anthropic',
     )
@@ -103,7 +103,7 @@ def test_web_search_kcount_zero():
 
 
 def test_web_search_kcount_none():
-    # web_search_requests=None (default) should not add any cost
+    # tool_use=None (default) should not add any cost
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100),
         model_ref='claude-sonnet-4-20250514',
@@ -115,7 +115,7 @@ def test_web_search_kcount_none():
 def test_file_search_kcount_prices():
     # OpenAI charges $2.50/1000 file search requests
     price = calc_price(
-        Usage(input_tokens=1000, output_tokens=100, file_search_requests=4),
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'file_search': 4}),
         model_ref='gpt-4o',
         provider_id='openai',
     )
@@ -128,9 +128,9 @@ def test_file_search_kcount_prices():
 
 
 def test_file_search_kcount_zero():
-    # file_search_requests=0 should not add any cost
+    # file_search=0 should not add any cost
     price = calc_price(
-        Usage(input_tokens=1000, output_tokens=100, file_search_requests=0),
+        Usage(input_tokens=1000, output_tokens=100, tool_use={'file_search': 0}),
         model_ref='gpt-4o',
         provider_id='openai',
     )
@@ -138,7 +138,7 @@ def test_file_search_kcount_zero():
 
 
 def test_file_search_kcount_none():
-    # file_search_requests=None (default) should not add any cost
+    # tool_use=None (default) should not add any cost
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100),
         model_ref='gpt-4o',

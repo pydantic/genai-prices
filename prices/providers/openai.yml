@@ -295,8 +295,9 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 8
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-4.1-mini
     name: gpt 4.1 mini
@@ -314,8 +315,9 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.1
       output_mtok: 1.6
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-4.1-nano
     name: gpt 4.1 nano
@@ -333,8 +335,9 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.025
       output_mtok: 0.4
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-4.5-preview
     name: GPT-4.5 (Preview)
@@ -368,8 +371,9 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 1.25
       output_mtok: 10
-      web_search_kcount: 25
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 25
+        file_search: 2.5
 
   - id: gpt-4o-audio-preview
     name: gpt 4o audio preview
@@ -401,8 +405,9 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.075
       output_mtok: 0.6
-      web_search_kcount: 25
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 25
+        file_search: 2.5
 
   - id: gpt-4o-mini-2024-07-18.ft-
     description: GPT-4o Mini fine tuned.
@@ -512,8 +517,9 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-5-image
     match:
@@ -547,8 +553,9 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-5-nano
     name: GPT-5 nano
@@ -565,8 +572,9 @@ models:
       input_mtok: 0.05
       cache_read_mtok: 0.005
       output_mtok: 0.4
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-5-pro
     match:
@@ -604,8 +612,9 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.125
       output_mtok: 10
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-5.1-codex-mini
     name: GPT-5.1 Codex Mini
@@ -623,8 +632,9 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-5.2
     name: GPT-5.2
@@ -648,8 +658,9 @@ models:
       input_mtok: 1.75
       cache_read_mtok: 0.175
       output_mtok: 14
-      web_search_kcount: 30
-      file_search_kcount: 2.5
+      tool_use_kcount:
+        web_search: 30
+        file_search: 2.5
 
   - id: gpt-5.2-pro
     description: Version of GPT-5.2 that produces smarter and more precise responses.

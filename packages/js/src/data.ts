@@ -50,7 +50,7 @@ export const data: Provider[] = [
           },
           {
             path: ['server_tool_use', 'web_search_requests'],
-            dest: 'web_search_requests',
+            dest: 'web_search',
             required: false,
           },
         ],
@@ -120,7 +120,9 @@ export const data: Provider[] = [
           cache_write_mtok: 1,
           cache_read_mtok: 0.08,
           output_mtok: 4,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -144,7 +146,9 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -174,7 +178,9 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -190,7 +196,9 @@ export const data: Provider[] = [
           cache_write_mtok: 0.3,
           cache_read_mtok: 0.03,
           output_mtok: 1.25,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -207,7 +215,9 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -224,7 +234,9 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -253,7 +265,9 @@ export const data: Provider[] = [
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -282,7 +296,9 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -305,7 +321,9 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -334,7 +352,9 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -395,7 +415,9 @@ export const data: Provider[] = [
               },
             ],
           },
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -427,7 +449,9 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -482,7 +506,9 @@ export const data: Provider[] = [
               },
             ],
           },
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -537,7 +563,9 @@ export const data: Provider[] = [
               },
             ],
           },
-          web_search_kcount: 10,
+          tool_use_kcount: {
+            web_search: 10,
+          },
         },
       },
       {
@@ -8954,8 +8982,10 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.5,
           output_mtok: 8,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -8978,8 +9008,10 @@ export const data: Provider[] = [
           input_mtok: 0.4,
           cache_read_mtok: 0.1,
           output_mtok: 1.6,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9002,8 +9034,10 @@ export const data: Provider[] = [
           input_mtok: 0.1,
           cache_read_mtok: 0.025,
           output_mtok: 0.4,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9046,8 +9080,10 @@ export const data: Provider[] = [
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
           output_mtok: 10,
-          web_search_kcount: 25,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 25,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9089,8 +9125,10 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           cache_read_mtok: 0.075,
           output_mtok: 0.6,
-          web_search_kcount: 25,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 25,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9244,8 +9282,10 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
           output_mtok: 10,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9291,8 +9331,10 @@ export const data: Provider[] = [
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
           output_mtok: 2,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9314,8 +9356,10 @@ export const data: Provider[] = [
           input_mtok: 0.05,
           cache_read_mtok: 0.005,
           output_mtok: 0.4,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9385,8 +9429,10 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
           output_mtok: 10,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9413,8 +9459,10 @@ export const data: Provider[] = [
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
           output_mtok: 2,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {
@@ -9460,8 +9508,10 @@ export const data: Provider[] = [
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
           output_mtok: 14,
-          web_search_kcount: 30,
-          file_search_kcount: 2.5,
+          tool_use_kcount: {
+            web_search: 30,
+            file_search: 2.5,
+          },
         },
       },
       {

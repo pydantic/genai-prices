@@ -99,11 +99,11 @@ def test_extract_web_search_requests():
     model, usage = provider.extract_usage(response_data)
     assert model == snapshot('claude-sonnet-4-20250514')
     assert usage == snapshot(
-        Usage(input_tokens=504, cache_write_tokens=0, cache_read_tokens=0, output_tokens=97, web_search_requests=2)
+        Usage(input_tokens=504, cache_write_tokens=0, cache_read_tokens=0, output_tokens=97, tool_use={'web_search': 2})
     )
 
     extracted_usage = extract_usage(response_data, provider_id='anthropic')
-    assert extracted_usage.usage.web_search_requests == 2
+    assert extracted_usage.usage.tool_use == {'web_search': 2}
     price = extracted_usage.calc_price()
     # total = input + output + web_search = (3 * 504 / 1e6) + (15 * 97 / 1e6) + (10 * 2 / 1000)
     assert price.total_price == snapshot(Decimal('0.02296700'))
@@ -121,7 +121,7 @@ def test_extract_web_search_requests_zero():
     }
     model, usage = provider.extract_usage(response_data)
     assert model == snapshot('claude-sonnet-4-20250514')
-    assert usage == snapshot(Usage(input_tokens=504, output_tokens=97, web_search_requests=0))
+    assert usage == snapshot(Usage(input_tokens=504, output_tokens=97, tool_use={'web_search': 0}))
 
 
 def test_extract_web_search_requests_absent():
@@ -136,7 +136,7 @@ def test_extract_web_search_requests_absent():
     model, usage = provider.extract_usage(response_data)
     assert model == snapshot('claude-sonnet-4-20250514')
     assert usage == snapshot(Usage(input_tokens=504, output_tokens=97))
-    assert usage.web_search_requests is None
+    assert usage.tool_use is None
 
 
 def test_openai():
@@ -345,3 +345,5 @@ def test_accumulate_extracted_usage():
         input_tokens=10, output_tokens=20
     )
     assert Usage(input_audio_tokens=10) + Usage(input_tokens=10) == Usage(input_audio_tokens=10, input_tokens=10)
+    assert Usage(tool_use={'web_search': 2}) + Usage(tool_use={'web_search': 3}) == Usage(tool_use={'web_search': 5})
+    assert Usage(tool_use={'web_search': 1}) + Usage() == Usage(tool_use={'web_search': 1})
