@@ -182,6 +182,54 @@ def test_openai():
         provider.extract_usage(response_data)
 
 
+def test_openai_responses_count_web_search():
+    provider = next(provider for provider in providers if provider.id == 'openai')
+    response_data = {
+        'model': 'gpt-4.1',
+        'output': [
+            {'type': 'web_search_call', 'id': 'ws_1', 'status': 'completed'},
+            {'type': 'message', 'content': [{'type': 'output_text', 'text': 'hello'}]},
+            {'type': 'web_search_call', 'id': 'ws_2', 'status': 'completed'},
+            {'type': 'file_search_call', 'id': 'fs_1', 'status': 'completed'},
+        ],
+        'usage': {'input_tokens': 100, 'output_tokens': 200},
+    }
+    model, usage = provider.extract_usage(response_data, api_flavor='responses')
+    assert model == snapshot('gpt-4.1')
+    assert usage == snapshot(Usage(input_tokens=100, output_tokens=200, tool_use={'web_search': 2, 'file_search': 1}))
+
+    extracted = extract_usage(response_data, provider_id='openai', api_flavor='responses')
+    # total = input + output + web_search + file_search
+    # = (2 * 100 / 1e6) + (8 * 200 / 1e6) + (30 * 2 / 1000) + (2.5 * 1 / 1000)
+    assert extracted.calc_price().total_price == snapshot(Decimal('0.0643'))
+
+
+def test_openai_responses_count_no_tool_calls():
+    provider = next(provider for provider in providers if provider.id == 'openai')
+    response_data = {
+        'model': 'gpt-4.1',
+        'output': [
+            {'type': 'message', 'content': [{'type': 'output_text', 'text': 'hello'}]},
+        ],
+        'usage': {'input_tokens': 100, 'output_tokens': 200},
+    }
+    model, usage = provider.extract_usage(response_data, api_flavor='responses')
+    assert model == snapshot('gpt-4.1')
+    assert usage == snapshot(Usage(input_tokens=100, output_tokens=200, tool_use={'web_search': 0, 'file_search': 0}))
+
+
+def test_openai_responses_count_no_output():
+    provider = next(provider for provider in providers if provider.id == 'openai')
+    response_data = {
+        'model': 'gpt-4.1',
+        'usage': {'input_tokens': 100, 'output_tokens': 200},
+    }
+    model, usage = provider.extract_usage(response_data, api_flavor='responses')
+    assert model == snapshot('gpt-4.1')
+    assert usage == snapshot(Usage(input_tokens=100, output_tokens=200))
+    assert usage.tool_use is None
+
+
 @pytest.mark.parametrize(
     'response_data,error',
     [

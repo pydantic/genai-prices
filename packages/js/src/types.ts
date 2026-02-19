@@ -70,9 +70,16 @@ export interface ArrayMatch {
 
 export type ExtractPath = (ArrayMatch | string)[] | string
 
-export interface UsageExtractorMapping {
-  dest: string
+export interface CountArrayItems {
+  field: string
+  match: MatchLogic
   path: ExtractPath
+}
+
+export interface UsageExtractorMapping {
+  count?: CountArrayItems
+  dest: string
+  path?: ExtractPath
   required: boolean
 }
 export interface UsageExtractor {

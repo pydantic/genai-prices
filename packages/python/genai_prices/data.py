@@ -19,16 +19,22 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
+                        dest='input_tokens', path='cache_creation_input_tokens', required=False, count=None
                     ),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                     UsageExtractorMapping(
-                        path=['server_tool_use', 'web_search_requests'], dest='web_search', required=False
+                        dest='input_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_write_tokens', path='cache_creation_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_read_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
+                    UsageExtractorMapping(
+                        dest='web_search', path=['server_tool_use', 'web_search_requests'], required=False, count=None
                     ),
                 ],
                 api_flavor='default',
@@ -37,9 +43,9 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cached_tokens', dest='cache_read_tokens', required=False),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
+                    UsageExtractorMapping(dest='cache_read_tokens', path='cached_tokens', required=False, count=None),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -370,8 +376,8 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='inputTokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='inputTokens', required=True, count=None),
+                    UsageExtractorMapping(dest='output_tokens', path='outputTokens', required=True, count=None),
                 ],
                 api_flavor='default',
                 model_path='model',
@@ -379,14 +385,20 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
+                        dest='input_tokens', path='cache_creation_input_tokens', required=False, count=None
                     ),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(
+                        dest='input_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_write_tokens', path='cache_creation_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_read_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
                 ],
                 api_flavor='anthropic',
                 model_path='model',
@@ -849,17 +861,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -867,32 +879,38 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['input_tokens_details', 'cached_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
                 ],
                 api_flavor='responses',
                 model_path='model',
             ),
             UsageExtractor(
                 root='usage',
-                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                mappings=[UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None)],
                 api_flavor='embeddings',
                 model_path='model',
             ),
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
+                        dest='input_tokens', path='cache_creation_input_tokens', required=False, count=None
                     ),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(
+                        dest='input_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_write_tokens', path='cache_creation_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_read_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
                 ],
                 api_flavor='anthropic',
                 model_path='model',
@@ -1074,8 +1092,8 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -1162,15 +1180,15 @@ providers: list[Provider] = [
             UsageExtractor(
                 root=['usage', 'billed_units'],
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
                 ],
                 api_flavor='default',
                 model_path='model',
             ),
             UsageExtractor(
                 root=['meta', 'billed_units'],
-                mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True)],
+                mappings=[UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None)],
                 api_flavor='embeddings',
                 model_path='model',
             ),
@@ -1234,14 +1252,14 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -1314,14 +1332,14 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -1463,38 +1481,44 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usageMetadata',
                 mappings=[
-                    UsageExtractorMapping(path='promptTokenCount', dest='input_tokens', required=False),
-                    UsageExtractorMapping(path='cachedContentTokenCount', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(dest='input_tokens', path='promptTokenCount', required=False, count=None),
                     UsageExtractorMapping(
+                        dest='cache_read_tokens', path='cachedContentTokenCount', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_audio_read_tokens',
                         path=[
                             'cacheTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
                             'tokenCount',
                         ],
-                        dest='cache_audio_read_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
+                        dest='input_audio_tokens',
                         path=[
                             'promptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
                             'tokenCount',
                         ],
-                        dest='input_audio_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
+                        dest='output_audio_tokens',
                         path=[
                             'candidatesTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
                             'tokenCount',
                         ],
-                        dest='output_audio_tokens',
                         required=False,
                     ),
-                    UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
-                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
-                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(
+                        dest='output_tokens', path='candidatesTokenCount', required=False, count=None
+                    ),
+                    UsageExtractorMapping(dest='output_tokens', path='thoughtsTokenCount', required=False, count=None),
+                    UsageExtractorMapping(
+                        dest='output_tokens', path='toolUsePromptTokenCount', required=False, count=None
+                    ),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',
@@ -1502,14 +1526,20 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cache_creation_input_tokens', dest='input_tokens', required=False),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
+                        dest='input_tokens', path='cache_creation_input_tokens', required=False, count=None
                     ),
-                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(
+                        dest='input_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_write_tokens', path='cache_creation_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(
+                        dest='cache_read_tokens', path='cache_read_input_tokens', required=False, count=None
+                    ),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
                 ],
                 api_flavor='anthropic',
                 model_path='model',
@@ -1517,17 +1547,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -1937,8 +1967,8 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='default',
                 model_path='model',
@@ -2133,17 +2163,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -2211,17 +2241,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -2343,17 +2373,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -2400,17 +2430,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -2625,17 +2655,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -2946,17 +2976,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -3586,17 +3616,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -3822,17 +3852,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -3927,17 +3957,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -4066,17 +4096,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -4183,17 +4213,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -4504,8 +4534,8 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='default',
                 model_path='model',
@@ -4876,17 +4906,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -4894,18 +4924,32 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='input_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['input_tokens_details', 'cached_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='output_tokens', required=True, count=None),
+                    UsageExtractorMapping(
+                        dest='web_search',
+                        required=False,
+                        count=CountArrayItems(
+                            path='output', field='type', match=ClauseEquals(equals='web_search_call')
+                        ),
+                    ),
+                    UsageExtractorMapping(
+                        dest='file_search',
+                        required=False,
+                        count=CountArrayItems(
+                            path='output', field='type', match=ClauseEquals(equals='file_search_call')
+                        ),
+                    ),
                 ],
                 api_flavor='responses',
                 model_path='model',
             ),
             UsageExtractor(
                 root='usage',
-                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                mappings=[UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None)],
                 api_flavor='embeddings',
                 model_path='model',
             ),
@@ -9179,17 +9223,17 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                        dest='input_audio_tokens', path=['prompt_tokens_details', 'audio_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',
@@ -9834,14 +9878,14 @@ providers: list[Provider] = [
             UsageExtractor(
                 root='usage',
                 mappings=[
-                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(dest='input_tokens', path='prompt_tokens', required=True, count=None),
                     UsageExtractorMapping(
-                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                        dest='cache_read_tokens', path=['prompt_tokens_details', 'cached_tokens'], required=False
                     ),
                     UsageExtractorMapping(
-                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                        dest='output_audio_tokens', path=['completion_tokens_details', 'audio_tokens'], required=False
                     ),
-                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(dest='output_tokens', path='completion_tokens', required=True, count=None),
                 ],
                 api_flavor='chat',
                 model_path='model',

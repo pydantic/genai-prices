@@ -17,6 +17,7 @@ from pydantic import (
     TypeAdapter,
     WithJsonSchema,
     field_validator,
+    model_validator,
 )
 from pydantic_core.core_schema import FieldValidationInfo
 from typing_extensions import Literal
@@ -134,18 +135,43 @@ UsageField = Literal[
 USAGE_FIELDS: frozenset[str] = frozenset(UsageField.__args__)
 
 
+class CountArrayItems(_Model):
+    """Count items in an array matching a condition.
+
+    The path navigates from the response root (not the usage root) to find an array,
+    then counts items where the given field matches the condition.
+    """
+
+    path: ExtractPath
+    """Path from response root to the array to count items in."""
+    field: str
+    """Field name in each array item to match against."""
+    match: MatchLogic
+    """Condition to match against the field value."""
+
+
 class UsageExtractorMapping(_Model):
     """Mappings from used to build usage."""
 
-    path: ExtractPath
-    """Path to the value to extract"""
     dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
     """
+    path: ExtractPath | None = None
+    """Path to the value to extract from the usage root."""
     required: bool = True
     """Whether the value is required to be present in the response"""
+    count: CountArrayItems | None = None
+    """Count items in a response array matching a condition. Mutually exclusive with path."""
+
+    @model_validator(mode='after')
+    def _validate_path_or_count(self) -> UsageExtractorMapping:
+        if self.path is None and self.count is None:
+            raise ValueError('Either `path` or `count` must be set')
+        if self.path is not None and self.count is not None:
+            raise ValueError('Cannot set both `path` and `count`')
+        return self
 
 
 class UsageExtractor(_Model):

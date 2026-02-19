@@ -42,6 +42,20 @@ extractors:
         required: false
       - path: output_tokens
         dest: output_tokens
+      - dest: web_search
+        required: false
+        count:
+          path: output
+          field: type
+          match:
+            equals: web_search_call
+      - dest: file_search
+        required: false
+        count:
+          path: output
+          field: type
+          match:
+            equals: file_search_call
   # https://github.com/openai/openai-python/blob/v2.3.0/src/openai/types/create_embedding_response.py
   - api_flavor: embeddings
     root: usage
