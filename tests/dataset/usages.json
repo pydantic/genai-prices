@@ -2999,7 +2999,16 @@
             "input_price": "0.032427",
             "output_price": "0.00966",
             "provider_id": "anthropic"
-          },
+          }
+        ],
+        "usage": {
+          "input_tokens": 10809,
+          "output_tokens": 644,
+          "web_search_requests": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "provider_id": "aws"
@@ -8950,7 +8959,16 @@
             "input_price": "0.026952",
             "output_price": "0.0078",
             "provider_id": "anthropic"
-          },
+          }
+        ],
+        "usage": {
+          "input_tokens": 8984,
+          "output_tokens": 520,
+          "web_search_requests": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "provider_id": "aws"
@@ -9014,7 +9032,16 @@
             "input_price": "0.059577",
             "output_price": "0.00816",
             "provider_id": "anthropic"
-          },
+          }
+        ],
+        "usage": {
+          "input_tokens": 19859,
+          "output_tokens": 544,
+          "web_search_requests": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "provider_id": "aws"
@@ -9198,7 +9225,16 @@
             "input_price": "0.048249",
             "output_price": "0.002475",
             "provider_id": "anthropic"
-          },
+          }
+        ],
+        "usage": {
+          "input_tokens": 16083,
+          "output_tokens": 165,
+          "web_search_requests": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "provider_id": "aws"

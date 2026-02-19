@@ -123,6 +123,48 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should handle web search requests as total cost', () => {
+      const usage: Usage = {
+        input_tokens: 1000,
+        output_tokens: 500,
+        web_search_requests: 3,
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 3.0,
+        output_mtok: 15.0,
+        web_search_kcount: 10, // $10 per 1000 web searches
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.003, // 1000 * 3.0 / 1_000_000
+        output_price: 0.0075, // 500 * 15.0 / 1_000_000
+        total_price: 0.003 + 0.0075 + (10 * 3) / 1000, // add web search cost to total only
+      })
+    })
+
+    it('should not add web search cost when requests is zero', () => {
+      const usage: Usage = {
+        input_tokens: 1000,
+        output_tokens: 500,
+        web_search_requests: 0,
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 3.0,
+        output_mtok: 15.0,
+        web_search_kcount: 10,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.003,
+        output_price: 0.0075,
+        total_price: 0.003 + 0.0075,
+      })
+    })
+
     it.each([
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },

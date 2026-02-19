@@ -30,6 +30,9 @@ extractors:
         required: false
       - path: output_tokens
         dest: output_tokens
+      - path: [server_tool_use, web_search_requests]
+        dest: web_search_requests
+        required: false
   # https://platform.claude.com/docs/en/api/openai-sdk#response-fields
   - api_flavor: chat
     root: usage
@@ -73,6 +76,7 @@ models:
       cache_write_mtok: 1
       cache_read_mtok: 0.08
       output_mtok: 4
+      web_search_kcount: 10
 
   - id: claude-3-5-sonnet
     name: Claude Sonnet 3.5
@@ -89,6 +93,7 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+      web_search_kcount: 10
 
   - id: claude-3-7-sonnet-latest
     name: Claude Sonnet 3.7
@@ -107,6 +112,7 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+      web_search_kcount: 10
 
   - id: claude-3-haiku
     name: Claude Haiku 3
@@ -120,6 +126,7 @@ models:
       cache_write_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 1.25
+      web_search_kcount: 10
 
   - id: claude-3-opus-latest
     name: Claude Opus 3
@@ -134,6 +141,7 @@ models:
       cache_write_mtok: 18.75
       cache_read_mtok: 1.5
       output_mtok: 75
+      web_search_kcount: 10
 
   - id: claude-3-sonnet
     name: Claude 3 Sonnet
@@ -148,6 +156,7 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+      web_search_kcount: 10
 
   - id: claude-haiku-4-5
     name: Claude Haiku 4.5
@@ -165,6 +174,7 @@ models:
       cache_write_mtok: 1.25
       cache_read_mtok: 0.10
       output_mtok: 5
+      web_search_kcount: 10
 
   - id: claude-instant-1
     description: Retired, here to match price sources
@@ -200,6 +210,7 @@ models:
       cache_write_mtok: 18.75
       cache_read_mtok: 1.5
       output_mtok: 75
+      web_search_kcount: 10
 
   - id: claude-opus-4-1
     name: Claude Opus 4.1
@@ -216,6 +227,7 @@ models:
       cache_write_mtok: 18.75
       cache_read_mtok: 1.5
       output_mtok: 75
+      web_search_kcount: 10
 
   - id: claude-opus-4-5
     name: Claude Opus 4.5
@@ -233,6 +245,7 @@ models:
       cache_write_mtok: 6.25
       cache_read_mtok: 0.50
       output_mtok: 25
+      web_search_kcount: 10
 
   - id: claude-opus-4-6
     name: Claude Opus 4.6
@@ -266,6 +279,7 @@ models:
         tiers:
           - start: 200000
             price: 37.50
+      web_search_kcount: 10
 
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4
@@ -284,6 +298,7 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+      web_search_kcount: 10
 
   - id: claude-sonnet-4-5
     name: Claude Sonnet 4.5
@@ -315,6 +330,7 @@ models:
         tiers:
           - start: 200000
             price: 22.50
+      web_search_kcount: 10
 
   - id: claude-sonnet-4-6
     name: Claude Sonnet 4.6
@@ -346,6 +362,7 @@ models:
         tiers:
           - start: 200000
             price: 22.50
+      web_search_kcount: 10
 
   - id: claude-v1
     description: Retired, here to match price sources

@@ -129,6 +129,7 @@ UsageField = Literal[
     'input_audio_tokens',
     'cache_audio_read_tokens',
     'output_audio_tokens',
+    'web_search_requests',
 ]
 
 
@@ -258,6 +259,9 @@ class ModelPrice(_Model):
 
     requests_kcount: DollarPrice | None = None
     """price in USD per thousand requests"""
+
+    web_search_kcount: DollarPrice | None = None
+    """price in USD per thousand web search requests"""
 
     def is_free(self) -> bool:
         """Whether all values are zero or unset"""

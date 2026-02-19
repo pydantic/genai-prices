@@ -6,6 +6,7 @@ export interface Usage {
   input_tokens?: number
   output_audio_tokens?: number
   output_tokens?: number
+  web_search_requests?: number
 }
 
 export interface Tier {
@@ -33,6 +34,7 @@ export interface ModelPrice {
   output_audio_mtok?: number | TieredPrices
   output_mtok?: number | TieredPrices
   requests_kcount?: number
+  web_search_kcount?: number
 }
 
 export interface ConditionalPrice {
@@ -77,6 +79,7 @@ export interface UsageExtractorMapping {
     | 'input_tokens'
     | 'output_audio_tokens'
     | 'output_tokens'
+    | 'web_search_requests'
   path: ExtractPath
   required: boolean
 }

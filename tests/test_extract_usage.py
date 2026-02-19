@@ -83,6 +83,62 @@ def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usag
     assert extracted_usage.calc_price().total_price == expected_price
 
 
+def test_extract_web_search_requests():
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
+    response_data = {
+        'model': 'claude-sonnet-4-20250514',
+        'usage': {
+            'input_tokens': 504,
+            'cache_creation_input_tokens': 0,
+            'cache_read_input_tokens': 0,
+            'output_tokens': 97,
+            'server_tool_use': {'web_search_requests': 2},
+            'service_tier': 'standard',
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == snapshot('claude-sonnet-4-20250514')
+    assert usage == snapshot(
+        Usage(input_tokens=504, cache_write_tokens=0, cache_read_tokens=0, output_tokens=97, web_search_requests=2)
+    )
+
+    extracted_usage = extract_usage(response_data, provider_id='anthropic')
+    assert extracted_usage.usage.web_search_requests == 2
+    price = extracted_usage.calc_price()
+    # total = input + output + web_search = (3 * 504 / 1e6) + (15 * 97 / 1e6) + (10 * 2 / 1000)
+    assert price.total_price == snapshot(Decimal('0.02296700'))
+
+
+def test_extract_web_search_requests_zero():
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
+    response_data = {
+        'model': 'claude-sonnet-4-20250514',
+        'usage': {
+            'input_tokens': 504,
+            'output_tokens': 97,
+            'server_tool_use': {'web_search_requests': 0},
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == snapshot('claude-sonnet-4-20250514')
+    assert usage == snapshot(Usage(input_tokens=504, output_tokens=97, web_search_requests=0))
+
+
+def test_extract_web_search_requests_absent():
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
+    response_data = {
+        'model': 'claude-sonnet-4-20250514',
+        'usage': {
+            'input_tokens': 504,
+            'output_tokens': 97,
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == snapshot('claude-sonnet-4-20250514')
+    assert usage == snapshot(Usage(input_tokens=504, output_tokens=97))
+    assert usage.web_search_requests is None
+
+
 def test_openai():
     provider = next(provider for provider in providers if provider.id == 'openai')
     assert provider.name == 'OpenAI'
