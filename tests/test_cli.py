@@ -67,6 +67,36 @@ def test_parse_cli_none(monkeypatch: pytest.MonkeyPatch):
     assert cli.version is True
 
 
+def test_cli_logic_missing_optional_cli_deps(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    def missing_impl() -> None:
+        raise RuntimeError(
+            'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"'
+        )
+
+    monkeypatch.setattr(cli_module, '_load_impl', missing_impl)
+
+    assert cli_module.cli_logic(['--version']) == 1
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert 'Install CLI extras with: pip install "genai-prices[cli]"' in err
+
+
+def test_cli_entrypoint_missing_optional_cli_deps(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
+    def missing_impl() -> None:
+        raise RuntimeError(
+            'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"'
+        )
+
+    monkeypatch.setattr(cli_module, '_load_impl', missing_impl)
+
+    with pytest.raises(SystemExit, match='1'):
+        cli_module.cli()
+
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert 'Install CLI extras with: pip install "genai-prices[cli]"' in err
+
+
 def test_calc(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', '--output-tokens', '100', 'gpt-4o']) == 0
     out, err = capsys.readouterr()
