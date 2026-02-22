@@ -237,7 +237,7 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
     try:
         cli = _parse_cli(args_list)
     except SystemExit as exc:
-        return int(exc.code or 1)
+        return int(exc.code) if exc.code is not None else 1
 
     if cli.version:
         if cli.plain:
