@@ -291,14 +291,13 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
     summary_results: list[PriceCalculation] = []
     seen_models: set[tuple[str, str]] = set()
     had_error = False
+    if args.update_prices:
+        price_update = update_prices.UpdatePrices()
+        price_update.start(wait=True)
     for model in args.model:
         provider_id = None
         if ':' in model:
             provider_id, model = model.split(':', 1)
-
-        if args.update_prices:
-            price_update = update_prices.UpdatePrices()
-            price_update.start(wait=True)
 
         try:
             price_calc = calc_price(

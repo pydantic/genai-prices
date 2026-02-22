@@ -388,12 +388,16 @@ def test_suggest_models_missing_provider():
 
 
 def test_calc_update_prices(monkeypatch: pytest.MonkeyPatch):
-    calls: dict[str, bool] = {}
+    calls: dict[str, int | bool] = {'instances': 0, 'starts': 0}
 
     class DummyUpdatePrices:
+        def __init__(self) -> None:
+            calls['instances'] += 1
+
         def start(self, *, wait: bool = False) -> None:
+            calls['starts'] += 1
             calls['wait'] = wait
 
     monkeypatch.setattr(cli_module.update_prices, 'UpdatePrices', DummyUpdatePrices)
-    assert cli_logic(['--plain', 'calc', '--update-prices', '--input-tokens', '1000', 'gpt-4o']) == 0
-    assert calls == {'wait': True}
+    assert cli_logic(['--plain', 'calc', '--update-prices', '--input-tokens', '1000', 'gpt-4o', 'gpt-4o']) == 0
+    assert calls == {'instances': 1, 'starts': 1, 'wait': True}
