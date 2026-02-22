@@ -38,6 +38,13 @@ dependencies = [
     "pydantic>=2.10",
 ]
 
+[project.optional-dependencies]
+cli = [
+    "pydantic-settings>=2.11",
+    "rich>=14.3.2",
+    "rich-argparse>=1.7.2",
+]
+
 [project.scripts]
 genai-prices = "genai_prices._cli:cli"
 
