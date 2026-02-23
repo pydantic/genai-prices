@@ -3177,7 +3177,8 @@ export const data: Provider[] = [
       {
         id: 'gemini-3.1-pro-preview',
         name: 'Gemini 3.1 Pro Preview',
-        description: "Google's most capable model with advanced reasoning, multimodal understanding, and agentic capabilities.",
+        description:
+          'The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
         match: {
           starts_with: 'gemini-3.1-pro-preview',
         },
