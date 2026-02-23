@@ -770,6 +770,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-opus-4-5-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-5',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-4-6-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-6',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
           contains: 'global.anthropic.claude-sonnet-4-20250514-v1',
@@ -785,6 +809,18 @@ export const data: Provider[] = [
         id: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
         match: {
           contains: 'global.anthropic.claude-sonnet-4-5-20250929-v1',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-sonnet-4-6-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-sonnet-4-6',
         },
         prices: {
           input_mtok: 3,
@@ -1331,6 +1367,68 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'regional.anthropic.claude-opus-4-5-v1:0',
+        match: {
+          or: [
+            {
+              contains: 'us.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-4-6-v1:0',
+        match: {
+          or: [
+            {
+              contains: 'us.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-6',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
           or: [
@@ -1382,6 +1480,37 @@ export const data: Provider[] = [
             },
             {
               contains: 'jp.anthropic.claude-sonnet-4-5-20250929-v1',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 3.3,
+          cache_write_mtok: 4.125,
+          cache_read_mtok: 0.33,
+          output_mtok: 16.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-sonnet-4-6-v1:0',
+        match: {
+          or: [
+            {
+              contains: 'us.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-4-6',
             },
           ],
         },

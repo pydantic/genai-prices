@@ -457,6 +457,26 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.anthropic.claude-opus-4-5-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-opus-4-6-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
                 id='global.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-20250514-v1'),
                 prices=ModelPrice(
@@ -469,6 +489,16 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929-v1'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-sonnet-4-6-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-6'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -783,6 +813,44 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='regional.anthropic.claude-opus-4-5-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='us.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-5'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.5'),
+                    cache_write_mtok=Decimal('6.875'),
+                    cache_read_mtok=Decimal('0.55'),
+                    output_mtok=Decimal('27.5'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-opus-4-6-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='us.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-6'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.5'),
+                    cache_write_mtok=Decimal('6.875'),
+                    cache_read_mtok=Decimal('0.55'),
+                    output_mtok=Decimal('27.5'),
+                ),
+            ),
+            ModelInfo(
                 id='regional.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseOr(
                     or_=[
@@ -811,6 +879,25 @@ providers: list[Provider] = [
                         ClauseContains(contains='eu.anthropic.claude-sonnet-4-5-20250929-v1'),
                         ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-5-20250929-v1'),
                         ClauseContains(contains='jp.anthropic.claude-sonnet-4-5-20250929-v1'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.3'),
+                    cache_write_mtok=Decimal('4.125'),
+                    cache_read_mtok=Decimal('0.33'),
+                    output_mtok=Decimal('16.5'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-sonnet-4-6-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='us.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-6'),
                     ]
                 ),
                 prices=ModelPrice(
