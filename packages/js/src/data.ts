@@ -787,10 +787,42 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-6',
         },
         prices: {
-          input_mtok: 5,
-          cache_write_mtok: 6.25,
-          cache_read_mtok: 0.5,
-          output_mtok: 25,
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 200000,
+                price: 37.5,
+              },
+            ],
+          },
         },
       },
       {
@@ -823,10 +855,42 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-6',
         },
         prices: {
-          input_mtok: 3,
-          cache_write_mtok: 3.75,
-          cache_read_mtok: 0.3,
-          output_mtok: 15,
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
         },
       },
       {
@@ -1422,10 +1486,42 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 5.5,
-          cache_write_mtok: 6.875,
-          cache_read_mtok: 0.55,
-          output_mtok: 27.5,
+          input_mtok: {
+            base: 5.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 11,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.875,
+            tiers: [
+              {
+                start: 200000,
+                price: 13.75,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 27.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 41.25,
+              },
+            ],
+          },
         },
       },
       {
@@ -1515,10 +1611,42 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.3,
-          cache_write_mtok: 4.125,
-          cache_read_mtok: 0.33,
-          output_mtok: 16.5,
+          input_mtok: {
+            base: 3.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6.6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 4.125,
+            tiers: [
+              {
+                start: 200000,
+                price: 8.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.33,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.66,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 16.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 24.75,
+              },
+            ],
+          },
         },
       },
     ],

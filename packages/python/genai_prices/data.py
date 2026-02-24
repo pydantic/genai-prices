@@ -470,10 +470,12 @@ providers: list[Provider] = [
                 id='global.anthropic.claude-opus-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5'),
-                    cache_write_mtok=Decimal('6.25'),
-                    cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25'),
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
                 ),
             ),
             ModelInfo(
@@ -500,10 +502,12 @@ providers: list[Provider] = [
                 id='global.anthropic.claude-sonnet-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-6'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3'),
-                    cache_write_mtok=Decimal('3.75'),
-                    cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15'),
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -844,10 +848,14 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.5'),
-                    cache_write_mtok=Decimal('6.875'),
-                    cache_read_mtok=Decimal('0.55'),
-                    output_mtok=Decimal('27.5'),
+                    input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=200000, price=Decimal('11'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.875'), tiers=[Tier(start=200000, price=Decimal('13.75'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.55'), tiers=[Tier(start=200000, price=Decimal('1.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('27.5'), tiers=[Tier(start=200000, price=Decimal('41.25'))]),
                 ),
             ),
             ModelInfo(
@@ -901,10 +909,14 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.3'),
-                    cache_write_mtok=Decimal('4.125'),
-                    cache_read_mtok=Decimal('0.33'),
-                    output_mtok=Decimal('16.5'),
+                    input_mtok=TieredPrices(base=Decimal('3.3'), tiers=[Tier(start=200000, price=Decimal('6.6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('4.125'), tiers=[Tier(start=200000, price=Decimal('8.25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.33'), tiers=[Tier(start=200000, price=Decimal('0.66'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('16.5'), tiers=[Tier(start=200000, price=Decimal('24.75'))]),
                 ),
             ),
         ],
