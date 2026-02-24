@@ -145,14 +145,30 @@ models:
       output_mtok: 25
 
   - id: global.anthropic.claude-opus-4-6-v1:0
-    prices_checked: 2026-02-23
+    prices_checked: 2026-02-24
     match:
       contains: global.anthropic.claude-opus-4-6
     prices:
-      input_mtok: 5
-      cache_write_mtok: 6.25
-      cache_read_mtok: 0.50
-      output_mtok: 25
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 200000
+            price: 10
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 200000
+            price: 12.50
+      cache_read_mtok:
+        base: 0.50
+        tiers:
+          - start: 200000
+            price: 1
+      output_mtok:
+        base: 25
+        tiers:
+          - start: 200000
+            price: 37.50
 
   - id: global.anthropic.claude-sonnet-4-20250514-v1:0
     match:
@@ -173,14 +189,30 @@ models:
       output_mtok: 15
 
   - id: global.anthropic.claude-sonnet-4-6-v1:0
-    prices_checked: 2026-02-23
+    prices_checked: 2026-02-24
     match:
       contains: global.anthropic.claude-sonnet-4-6
     prices:
-      input_mtok: 3
-      cache_write_mtok: 3.75
-      cache_read_mtok: 0.3
-      output_mtok: 15
+      input_mtok:
+        base: 3
+        tiers:
+          - start: 200000
+            price: 6
+      cache_write_mtok:
+        base: 3.75
+        tiers:
+          - start: 200000
+            price: 7.50
+      cache_read_mtok:
+        base: 0.30
+        tiers:
+          - start: 200000
+            price: 0.60
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 200000
+            price: 22.50
 
   - id: meta.llama3-1-70b-instruct-v1:0
     name: Llama 3.1 70B Instruct
@@ -513,7 +545,7 @@ models:
       output_mtok: 27.5
 
   - id: regional.anthropic.claude-opus-4-6-v1:0
-    prices_checked: 2026-02-23
+    prices_checked: 2026-02-24
     match:
       or:
         - contains: us.anthropic.claude-opus-4-6
@@ -523,10 +555,26 @@ models:
         - contains: us-gov.anthropic.claude-opus-4-6
         - contains: jp.anthropic.claude-opus-4-6
     prices:
-      input_mtok: 5.5
-      cache_write_mtok: 6.875
-      cache_read_mtok: 0.55
-      output_mtok: 27.5
+      input_mtok:
+        base: 5.5
+        tiers:
+          - start: 200000
+            price: 11
+      cache_write_mtok:
+        base: 6.875
+        tiers:
+          - start: 200000
+            price: 13.75
+      cache_read_mtok:
+        base: 0.55
+        tiers:
+          - start: 200000
+            price: 1.10
+      output_mtok:
+        base: 27.5
+        tiers:
+          - start: 200000
+            price: 41.25
 
   - id: regional.anthropic.claude-sonnet-4-20250514-v1:0
     match:
@@ -559,7 +607,7 @@ models:
       output_mtok: 16.5
 
   - id: regional.anthropic.claude-sonnet-4-6-v1:0
-    prices_checked: 2026-02-23
+    prices_checked: 2026-02-24
     match:
       or:
         - contains: us.anthropic.claude-sonnet-4-6
@@ -569,7 +617,23 @@ models:
         - contains: us-gov.anthropic.claude-sonnet-4-6
         - contains: jp.anthropic.claude-sonnet-4-6
     prices:
-      input_mtok: 3.3
-      cache_write_mtok: 4.125
-      cache_read_mtok: 0.33
-      output_mtok: 16.5
+      input_mtok:
+        base: 3.3
+        tiers:
+          - start: 200000
+            price: 6.60
+      cache_write_mtok:
+        base: 4.125
+        tiers:
+          - start: 200000
+            price: 8.25
+      cache_read_mtok:
+        base: 0.33
+        tiers:
+          - start: 200000
+            price: 0.66
+      output_mtok:
+        base: 16.5
+        tiers:
+          - start: 200000
+            price: 24.75
