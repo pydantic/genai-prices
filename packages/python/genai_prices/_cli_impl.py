@@ -637,7 +637,7 @@ def _render_calc_error(
         if use_color:
             console.print(f'[red]Error:[/] {escape(message)}', highlight=False)
         else:
-            console.print(f'Error: {message}', highlight=False)
+            console.print(f'Error: {escape(message)}', highlight=False)
 
     provider_ids = {provider.id for provider in providers}
     if provider_id and provider_id not in provider_ids:
