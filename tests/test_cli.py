@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
+import io
 from collections.abc import Callable
 from datetime import datetime, timezone
 
@@ -95,6 +96,23 @@ def test_cli_entrypoint_missing_optional_cli_deps(monkeypatch: pytest.MonkeyPatc
     out, err = capsys.readouterr()
     assert out == ''
     assert 'Install CLI extras with: pip install "genai-prices[cli]"' in err
+
+
+def test_render_calc_error_escapes_rich_markup_in_message():
+    stream = io.StringIO()
+    console = Console(file=stream, force_terminal=False, color_system=None)
+
+    cli_module._render_calc_error(
+        console,
+        message='bad [red]oops[/] message',
+        model_ref='gpt-4o',
+        provider_id=None,
+        providers=[],
+        plain=False,
+        use_color=True,
+    )
+
+    assert '[red]oops[/]' in stream.getvalue()
 
 
 def test_calc(capsys: pytest.CaptureFixture[str]):
