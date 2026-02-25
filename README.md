@@ -34,13 +34,13 @@ The following providers are currently supported:
 
 - [Anthropic](prices/providers/anthropic.yml) - 18 models
 - [Avian](prices/providers/avian.yml) - 4 models
-- [AWS Bedrock](prices/providers/aws.yml) - 45 models
+- [AWS Bedrock](prices/providers/aws.yml) - 51 models
 - [Microsoft Azure](prices/providers/azure.yml) - 21 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 13 models
-- [Google](prices/providers/google.yml) - 29 models
+- [Google](prices/providers/google.yml) - 30 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 5 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 9 models
