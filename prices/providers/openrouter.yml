@@ -323,6 +323,17 @@ models:
           - start: 200000
             price: 22.5
 
+  - id: anthropic/claude-sonnet-4.6
+    match:
+      or:
+        - equals: anthropic/claude-sonnet-4.6
+        - equals: anthropic/claude-sonnet-4.6:beta
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.3
+      cache_write_mtok: 3.75
+      output_mtok: 15
+
   - id: anubis-pro-105b-v1
     name: Anubis Pro 105B V1
     match:
