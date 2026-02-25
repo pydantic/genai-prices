@@ -770,6 +770,62 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-opus-4-5-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-5',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-4-6-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-6',
+        },
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 200000,
+                price: 37.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
           contains: 'global.anthropic.claude-sonnet-4-20250514-v1',
@@ -791,6 +847,50 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-sonnet-4-6-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-sonnet-4-6',
+        },
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
         },
       },
       {
@@ -1331,6 +1431,100 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'regional.anthropic.claude-opus-4-5-v1:0',
+        match: {
+          or: [
+            {
+              contains: 'us.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-4-6-v1:0',
+        match: {
+          or: [
+            {
+              contains: 'us.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-6',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: {
+            base: 5.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 11,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.875,
+            tiers: [
+              {
+                start: 200000,
+                price: 13.75,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 27.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 41.25,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'regional.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
           or: [
@@ -1390,6 +1584,69 @@ export const data: Provider[] = [
           cache_write_mtok: 4.125,
           cache_read_mtok: 0.33,
           output_mtok: 16.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-sonnet-4-6-v1:0',
+        match: {
+          or: [
+            {
+              contains: 'us.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-4-6',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: {
+            base: 3.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6.6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 4.125,
+            tiers: [
+              {
+                start: 200000,
+                price: 8.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.33,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.66,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 16.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 24.75,
+              },
+            ],
+          },
         },
       },
     ],
