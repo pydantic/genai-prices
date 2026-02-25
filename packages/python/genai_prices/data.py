@@ -1922,6 +1922,17 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-3.1-pro-preview',
+                match=ClauseStartsWith(starts_with='gemini-3.1-pro-preview'),
+                name='Gemini 3.1 Pro Preview',
+                description='The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-embedding-001',
                 match=ClauseEquals(equals='gemini-embedding-001'),
                 prices=ModelPrice(input_mtok=Decimal('0.15')),

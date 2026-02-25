@@ -3432,6 +3432,44 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3.1-pro-preview',
+        name: 'Gemini 3.1 Pro Preview',
+        description:
+          'The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
+        match: {
+          starts_with: 'gemini-3.1-pro-preview',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 200000,
+                price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gemini-embedding-001',
         match: {
           equals: 'gemini-embedding-001',
