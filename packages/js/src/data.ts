@@ -9741,6 +9741,27 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.3-codex',
+        name: 'GPT-5.3-Codex',
+        description: 'The most capable agentic coding model',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.3-codex',
+            },
+            {
+              equals: 'gpt-5-3-codex',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 1.75,
+          cache_read_mtok: 0.175,
+          output_mtok: 14,
+        },
+      },
+      {
         id: 'gpt-realtime',
         match: {
           or: [
