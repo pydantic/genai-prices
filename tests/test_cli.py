@@ -12,7 +12,9 @@ from rich.console import Console
 
 import genai_prices._cli as cli_module
 from genai_prices._cli import cli_logic
+from genai_prices._cli_impl import _parse_cli, _render_calc_error, _should_split_model_price_columns, _suggest_models
 from genai_prices.data import providers
+from genai_prices import update_prices
 from genai_prices.types import ModelPrice, TieredPrices
 
 
@@ -64,7 +66,7 @@ def test_cli_no_subcommand_help(capsys: pytest.CaptureFixture[str]):
 
 def test_parse_cli_none(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(cli_module.sys, 'argv', [cli_module.PROGRAM_NAME, '--version'])
-    cli = cli_module._parse_cli(None)
+    cli = _parse_cli(None)
     assert cli.version is True
 
 
@@ -102,7 +104,7 @@ def test_render_calc_error_escapes_rich_markup_in_message():
     stream = io.StringIO()
     console = Console(file=stream, force_terminal=False, color_system=None)
 
-    cli_module._render_calc_error(
+    _render_calc_error(
         console,
         message='bad [red]oops[/] message',
         model_ref='gpt-4o',
@@ -398,11 +400,11 @@ def test_calc_table_split_columns_rich_prices(monkeypatch: pytest.MonkeyPatch, c
 
 def test_split_model_price_columns_no_fields():
     console = Console(width=60)
-    assert cli_module._should_split_model_price_columns(console, []) is False
+    assert _should_split_model_price_columns(console, []) is False
 
 
 def test_suggest_models_missing_provider():
-    assert cli_module._suggest_models('gpt-4o', 'missing', providers) == []
+    assert _suggest_models('gpt-4o', 'missing', providers) == []
 
 
 def test_calc_update_prices(monkeypatch: pytest.MonkeyPatch):
@@ -416,6 +418,6 @@ def test_calc_update_prices(monkeypatch: pytest.MonkeyPatch):
             calls['starts'] += 1
             calls['wait'] = wait
 
-    monkeypatch.setattr(cli_module.update_prices, 'UpdatePrices', DummyUpdatePrices)
+    monkeypatch.setattr(update_prices, 'UpdatePrices', DummyUpdatePrices)
     assert cli_logic(['--plain', 'calc', '--update-prices', '--input-tokens', '1000', 'gpt-4o', 'gpt-4o']) == 0
     assert calls == {'instances': 1, 'starts': 1, 'wait': True}

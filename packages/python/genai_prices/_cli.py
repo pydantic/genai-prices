@@ -5,7 +5,6 @@ from collections.abc import Sequence
 from functools import lru_cache
 from importlib import import_module
 from types import ModuleType
-from typing import Any
 
 PROGRAM_NAME = 'genai-prices'
 _OPTIONAL_CLI_PACKAGES = {'pydantic_settings', 'rich', 'rich_argparse'}
@@ -44,9 +43,3 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
-
-
-def __getattr__(name: str) -> Any:
-    if name.startswith('__'):
-        raise AttributeError(name)
-    return getattr(_load_impl(), name)
