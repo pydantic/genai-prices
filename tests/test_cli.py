@@ -11,10 +11,10 @@ from inline_snapshot import snapshot
 from rich.console import Console
 
 import genai_prices._cli as cli_module
+from genai_prices import update_prices
 from genai_prices._cli import cli_logic
 from genai_prices._cli_impl import _parse_cli, _render_calc_error, _should_split_model_price_columns, _suggest_models
 from genai_prices.data import providers
-from genai_prices import update_prices
 from genai_prices.types import ModelPrice, TieredPrices
 
 
