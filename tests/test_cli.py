@@ -4,7 +4,6 @@ import dataclasses
 import io
 from collections.abc import Callable
 from datetime import datetime, timezone
-from types import SimpleNamespace
 
 import pytest
 from dirty_equals import IsStr
@@ -16,7 +15,7 @@ from genai_prices import update_prices
 from genai_prices._cli import cli_logic
 from genai_prices._cli_impl import _parse_cli, _render_calc_error, _should_split_model_price_columns, _suggest_models
 from genai_prices.data import providers
-from genai_prices.types import ModelPrice, TieredPrices
+from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
 
 
 def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str] | None = None) -> str:
@@ -412,13 +411,27 @@ def test_suggest_models_missing_provider():
 
 def test_suggest_models_case_insensitive_provider_path():
     model_id = 'AaAaAaAaAaAaAaAaAaAa'
-    fake_providers = [SimpleNamespace(id='provider', models=[SimpleNamespace(id=model_id)])]
+    fake_providers = [
+        Provider(
+            id='provider',
+            name='Provider',
+            api_pattern='https://example.com',
+            models=[ModelInfo(id=model_id, match=ClauseEquals(model_id))],
+        )
+    ]
     assert _suggest_models(model_id.lower(), 'provider', fake_providers) == [f'provider:{model_id}']
 
 
 def test_suggest_models_case_insensitive_global_path():
     model_id = 'AaAaAaAaAaAaAaAaAaAa'
-    fake_providers = [SimpleNamespace(id='provider', models=[SimpleNamespace(id=model_id)])]
+    fake_providers = [
+        Provider(
+            id='provider',
+            name='Provider',
+            api_pattern='https://example.com',
+            models=[ModelInfo(id=model_id, match=ClauseEquals(model_id))],
+        )
+    ]
     assert _suggest_models(f'provider:{model_id.lower()}', None, fake_providers) == [f'provider:{model_id}']
 
 
