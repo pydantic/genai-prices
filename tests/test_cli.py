@@ -4,6 +4,7 @@ import dataclasses
 import io
 from collections.abc import Callable
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
 import pytest
 from dirty_equals import IsStr
@@ -61,6 +62,8 @@ def test_cli_no_subcommand_help(capsys: pytest.CaptureFixture[str]):
     assert cli_logic([]) == 1
     out, err = capsys.readouterr()
     assert 'usage:' in out.lower()
+    assert 'calc' in out
+    assert 'list' in out
     assert err == ''
 
 
@@ -405,6 +408,18 @@ def test_split_model_price_columns_no_fields():
 
 def test_suggest_models_missing_provider():
     assert _suggest_models('gpt-4o', 'missing', providers) == []
+
+
+def test_suggest_models_case_insensitive_provider_path():
+    model_id = 'AaAaAaAaAaAaAaAaAaAa'
+    fake_providers = [SimpleNamespace(id='provider', models=[SimpleNamespace(id=model_id)])]
+    assert _suggest_models(model_id.lower(), 'provider', fake_providers) == [f'provider:{model_id}']
+
+
+def test_suggest_models_case_insensitive_global_path():
+    model_id = 'AaAaAaAaAaAaAaAaAaAa'
+    fake_providers = [SimpleNamespace(id='provider', models=[SimpleNamespace(id=model_id)])]
+    assert _suggest_models(f'provider:{model_id.lower()}', None, fake_providers) == [f'provider:{model_id}']
 
 
 def test_calc_update_prices(monkeypatch: pytest.MonkeyPatch):

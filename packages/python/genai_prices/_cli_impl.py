@@ -249,7 +249,10 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
 
     sub = get_subcommand(cli, is_required=False)
     if sub is None:
-        _build_root_parser().print_help()
+        try:
+            _parse_cli(['--help'])
+        except SystemExit:
+            pass
         return 1
 
     if isinstance(sub, CalcCLI):
@@ -670,21 +673,26 @@ def _render_calc_error(
 
 
 def _suggest_models(model_ref: str, provider_id: str | None, providers: list[Provider]) -> list[str]:
-    model_ref = model_ref.lower()
     if provider_id:
         provider = next((p for p in providers if p.id == provider_id), None)
         if provider is None:
             return []
         candidates = [model.id for model in provider.models]
-        matches = _suggest_values(model_ref, candidates)
+        matches = _suggest_values_case_insensitive(model_ref, candidates)
         return [f'{provider.id}:{model_id}' for model_id in matches]
 
     candidates = [f'{provider.id}:{model.id}' for provider in providers for model in provider.models]
-    return _suggest_values(model_ref, candidates)
+    return _suggest_values_case_insensitive(model_ref, candidates)
 
 
 def _suggest_values(value: str, candidates: list[str]) -> list[str]:
     return difflib.get_close_matches(value, candidates, n=5, cutoff=0.6)
+
+
+def _suggest_values_case_insensitive(value: str, candidates: list[str]) -> list[str]:
+    lowered_candidates = [(candidate.lower(), candidate) for candidate in candidates]
+    matches = _suggest_values(value.lower(), [lowered for lowered, _ in lowered_candidates])
+    return [candidate for match in matches for lowered, candidate in lowered_candidates if lowered == match]
 
 
 def _format_provider_suggestions(suggestions: list[str]) -> Text:
