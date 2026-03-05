@@ -94,14 +94,14 @@ models:
       input_audio_mtok: 3.4
       output_audio_mtok: 13.6
 
-  - id: amazon.titan-embed-text
+  - id: amazon.titan-embed-text-v1
     name: Titan Embeddings G1 - Text
     match:
       contains: amazon.titan-embed-text
     prices:
       input_mtok: 0.1
 
-  - id: amazon.titan-text-express
+  - id: amazon.titan-text-express-v1
     name: Titan Text G1 - Express
     match:
       contains: titan-text-express
@@ -109,7 +109,7 @@ models:
       input_mtok: 0.2
       output_mtok: 0.6
 
-  - id: amazon.titan-text-lite
+  - id: amazon.titan-text-lite-v1
     name: Titan Text G1 - Lite
     match:
       contains: titan-text-lite

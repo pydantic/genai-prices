@@ -715,7 +715,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'amazon.titan-embed-text',
+        id: 'amazon.titan-embed-text-v1',
         name: 'Titan Embeddings G1 - Text',
         match: {
           contains: 'amazon.titan-embed-text',
@@ -725,7 +725,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'amazon.titan-text-express',
+        id: 'amazon.titan-text-express-v1',
         name: 'Titan Text G1 - Express',
         match: {
           contains: 'titan-text-express',
@@ -736,7 +736,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'amazon.titan-text-lite',
+        id: 'amazon.titan-text-lite-v1',
         name: 'Titan Text G1 - Lite',
         match: {
           contains: 'titan-text-lite',

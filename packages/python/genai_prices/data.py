@@ -423,19 +423,19 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='amazon.titan-embed-text',
+                id='amazon.titan-embed-text-v1',
                 match=ClauseContains(contains='amazon.titan-embed-text'),
                 name='Titan Embeddings G1 - Text',
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
-                id='amazon.titan-text-express',
+                id='amazon.titan-text-express-v1',
                 match=ClauseContains(contains='titan-text-express'),
                 name='Titan Text G1 - Express',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
-                id='amazon.titan-text-lite',
+                id='amazon.titan-text-lite-v1',
                 match=ClauseContains(contains='titan-text-lite'),
                 name='Titan Text G1 - Lite',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.2')),
