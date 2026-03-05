@@ -444,6 +444,8 @@ models:
   - id: regional.anthropic.claude-haiku-4-5-20251001-v1:0
     match:
       or:
+        - starts_with: anthropic.claude-haiku-4-5-20251001
+        - starts_with: claude-haiku-4-5-20251001
         - contains: us.anthropic.claude-haiku-4-5-20251001
         - contains: au.anthropic.claude-haiku-4-5-20251001
         - contains: apac.anthropic.claude-haiku-4-5-20251001
@@ -459,6 +461,8 @@ models:
   - id: regional.anthropic.claude-opus-4-1-20250805-v1:0
     match:
       or:
+        - starts_with: anthropic.claude-opus-4-1-20250805
+        - starts_with: claude-opus-4-1-20250805
         - contains: us.anthropic.claude-opus-4-1-20250805
         - contains: au.anthropic.claude-opus-4-1-20250805
         - contains: apac.anthropic.claude-opus-4-1-20250805
@@ -474,6 +478,8 @@ models:
   - id: regional.anthropic.claude-opus-4-20250514-v1:0
     match:
       or:
+        - starts_with: anthropic.claude-opus-4-20250514
+        - starts_with: claude-opus-4-20250514
         - contains: us.anthropic.claude-opus-4-20250514
         - contains: au.anthropic.claude-opus-4-20250514
         - contains: apac.anthropic.claude-opus-4-20250514
@@ -490,6 +496,8 @@ models:
     prices_checked: 2026-02-23
     match:
       or:
+        - starts_with: anthropic.claude-opus-4-5
+        - starts_with: claude-opus-4-5
         - contains: us.anthropic.claude-opus-4-5
         - contains: au.anthropic.claude-opus-4-5
         - contains: apac.anthropic.claude-opus-4-5
@@ -506,6 +514,8 @@ models:
     prices_checked: 2026-02-24
     match:
       or:
+        - starts_with: anthropic.claude-opus-4-6
+        - starts_with: claude-opus-4-6
         - contains: us.anthropic.claude-opus-4-6
         - contains: au.anthropic.claude-opus-4-6
         - contains: apac.anthropic.claude-opus-4-6
@@ -538,6 +548,7 @@ models:
     match:
       or:
         - starts_with: anthropic.claude-sonnet-4-20250514
+        - starts_with: claude-sonnet-4-20250514
         - contains: us.anthropic.claude-sonnet-4-20250514
         - contains: au.anthropic.claude-sonnet-4-20250514
         - contains: apac.anthropic.claude-sonnet-4-20250514
@@ -553,6 +564,8 @@ models:
   - id: regional.anthropic.claude-sonnet-4-5-20250929-v1:0
     match:
       or:
+        - starts_with: anthropic.claude-sonnet-4-5-20250929
+        - starts_with: claude-sonnet-4-5-20250929
         - contains: us.anthropic.claude-sonnet-4-5-20250929
         - contains: au.anthropic.claude-sonnet-4-5-20250929
         - contains: apac.anthropic.claude-sonnet-4-5-20250929
@@ -569,6 +582,8 @@ models:
     prices_checked: 2026-02-24
     match:
       or:
+        - starts_with: anthropic.claude-sonnet-4-6
+        - starts_with: claude-sonnet-4-6
         - contains: us.anthropic.claude-sonnet-4-6
         - contains: au.anthropic.claude-sonnet-4-6
         - contains: apac.anthropic.claude-sonnet-4-6
