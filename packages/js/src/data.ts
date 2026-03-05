@@ -653,7 +653,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          contains: 'amazon.nova-lite-v1',
+          contains: 'amazon.nova-lite',
         },
         prices: {
           input_mtok: 0.06,
@@ -667,7 +667,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          contains: 'amazon.nova-micro-v1',
+          contains: 'amazon.nova-micro',
         },
         prices: {
           input_mtok: 0.035,
@@ -679,7 +679,7 @@ export const data: Provider[] = [
         id: 'amazon.nova-premier-v1:0',
         name: 'Nova Premier',
         match: {
-          contains: 'amazon.nova-premier-v1',
+          contains: 'amazon.nova-premier',
         },
         prices: {
           input_mtok: 2.5,
@@ -693,7 +693,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
         match: {
-          contains: 'amazon.nova-pro-v1',
+          contains: 'amazon.nova-pro',
         },
         prices: {
           input_mtok: 0.8,
@@ -705,7 +705,7 @@ export const data: Provider[] = [
         id: 'amazon.nova-sonic-v1:0',
         name: 'Nova Sonic',
         match: {
-          contains: 'amazon.nova-sonic-v1',
+          contains: 'amazon.nova-sonic',
         },
         prices: {
           input_mtok: 0.06,
@@ -715,17 +715,17 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'amazon.titan-embed-text-v1',
+        id: 'amazon.titan-embed-text',
         name: 'Titan Embeddings G1 - Text',
         match: {
-          contains: 'amazon.titan-embed-text-v1',
+          contains: 'amazon.titan-embed-text',
         },
         prices: {
           input_mtok: 0.1,
         },
       },
       {
-        id: 'amazon.titan-text-express-v1',
+        id: 'amazon.titan-text-express',
         name: 'Titan Text G1 - Express',
         match: {
           contains: 'titan-text-express',
@@ -736,7 +736,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'amazon.titan-text-lite-v1',
+        id: 'amazon.titan-text-lite',
         name: 'Titan Text G1 - Lite',
         match: {
           contains: 'titan-text-lite',
@@ -750,7 +750,7 @@ export const data: Provider[] = [
         id: 'deepseek.r1-v1:0',
         name: 'DeepSeek-R1',
         match: {
-          contains: 'deepseek.r1-v1',
+          contains: 'deepseek.r1',
         },
         prices: {
           input_mtok: 1.35,
@@ -760,7 +760,7 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-haiku-4-5-20251001-v1:0',
         match: {
-          contains: 'global.anthropic.claude-haiku-4-5-20251001-v1',
+          contains: 'global.anthropic.claude-haiku-4-5-20251001',
         },
         prices: {
           input_mtok: 1,
@@ -828,7 +828,7 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
-          contains: 'global.anthropic.claude-sonnet-4-20250514-v1',
+          contains: 'global.anthropic.claude-sonnet-4-20250514',
         },
         prices: {
           input_mtok: 3,
@@ -840,7 +840,7 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
         match: {
-          contains: 'global.anthropic.claude-sonnet-4-5-20250929-v1',
+          contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
         prices: {
           input_mtok: 3,
@@ -897,7 +897,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-1-70b-instruct-v1:0',
         name: 'Llama 3.1 70B Instruct',
         match: {
-          contains: 'meta.llama3-1-70b-instruct-v1',
+          contains: 'meta.llama3-1-70b-instruct',
         },
         prices: {
           input_mtok: 0.72,
@@ -908,7 +908,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-1-8b-instruct-v1:0',
         name: 'Llama 3.1 8B Instruct',
         match: {
-          contains: 'meta.llama3-1-8b-instruct-v1',
+          contains: 'meta.llama3-1-8b-instruct',
         },
         prices: {
           input_mtok: 0.22,
@@ -919,7 +919,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-11b-instruct-v1:0',
         name: 'Llama 3.2 11B Instruct',
         match: {
-          contains: 'meta.llama3-2-11b-instruct-v1',
+          contains: 'meta.llama3-2-11b-instruct',
         },
         prices: {
           input_mtok: 0.16,
@@ -930,7 +930,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-1b-instruct-v1:0',
         name: 'Llama 3.2 1B Instruct',
         match: {
-          contains: 'meta.llama3-2-1b-instruct-v1',
+          contains: 'meta.llama3-2-1b-instruct',
         },
         prices: {
           input_mtok: 0.1,
@@ -941,7 +941,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-3b-instruct-v1:0',
         name: 'Llama 3.2 3B Instruct',
         match: {
-          contains: 'meta.llama3-2-3b-instruct-v1',
+          contains: 'meta.llama3-2-3b-instruct',
         },
         prices: {
           input_mtok: 0.15,
@@ -952,7 +952,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-90b-instruct-v1:0',
         name: 'Llama 3.2 90B Instruct',
         match: {
-          contains: 'meta.llama3-2-90b-instruct-v1',
+          contains: 'meta.llama3-2-90b-instruct',
         },
         prices: {
           input_mtok: 0.72,
@@ -963,7 +963,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-3-70b-instruct-v1:0',
         name: 'Llama 3.3 70B Instruct',
         match: {
-          contains: 'meta.llama3-3-70b-instruct-v1',
+          contains: 'meta.llama3-3-70b-instruct',
         },
         prices: {
           input_mtok: 0.72,
@@ -974,7 +974,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-70b-instruct-v1:0',
         name: 'Llama 3 70B Instruct',
         match: {
-          contains: 'meta.llama3-70b-instruct-v1',
+          contains: 'meta.llama3-70b-instruct',
         },
         prices: {
           input_mtok: 2.65,
@@ -985,7 +985,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-8b-instruct-v1:0',
         name: 'Llama 3 8B Instruct',
         match: {
-          contains: 'meta.llama3-8b-instruct-v1',
+          contains: 'meta.llama3-8b-instruct',
         },
         prices: {
           input_mtok: 0.3,
@@ -996,7 +996,7 @@ export const data: Provider[] = [
         id: 'meta.llama4-maverick-17b-instruct-v1:0',
         name: 'Llama 4 Maverick 17B Instruct',
         match: {
-          contains: 'meta.llama4-maverick-17b-instruct-v1',
+          contains: 'meta.llama4-maverick-17b-instruct',
         },
         prices: {
           input_mtok: 0.24,
@@ -1007,7 +1007,7 @@ export const data: Provider[] = [
         id: 'meta.llama4-scout-17b-instruct-v1:0',
         name: 'Llama 4 Scout 17B Instruct',
         match: {
-          contains: 'meta.llama4-scout-17b-instruct-v1',
+          contains: 'meta.llama4-scout-17b-instruct',
         },
         prices: {
           input_mtok: 0.17,
@@ -1029,7 +1029,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-large-2402-v1:0',
         name: 'Mistral Large (24.02)',
         match: {
-          contains: 'mistral.mistral-large-2402-v1',
+          contains: 'mistral.mistral-large-2402',
         },
         prices: {
           input_mtok: 4,
@@ -1040,7 +1040,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-small-2402-v1:0',
         name: 'Mistral Small (24.02)',
         match: {
-          contains: 'mistral.mistral-small-2402-v1',
+          contains: 'mistral.mistral-small-2402',
         },
         prices: {
           input_mtok: 1,
@@ -1062,7 +1062,7 @@ export const data: Provider[] = [
         id: 'mistral.pixtral-large-2502-v1:0',
         name: 'Pixtral Large (25.02)',
         match: {
-          contains: 'mistral.pixtral-large-2502-v1',
+          contains: 'mistral.pixtral-large-2502',
         },
         prices: {
           input_mtok: 2,
@@ -1095,7 +1095,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-32b-v1:0',
         name: 'Qwen3 32B (dense)',
         match: {
-          contains: 'qwen.qwen3-32b-v1',
+          contains: 'qwen.qwen3-32b',
         },
         prices: {
           input_mtok: 0.15,
@@ -1106,7 +1106,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-coder-30b-a3b-v1:0',
         name: 'Qwen3-Coder-30B-A3B-Instruct',
         match: {
-          contains: 'qwen.qwen3-coder-30b-a3b-v1',
+          contains: 'qwen.qwen3-coder-30b-a3b',
         },
         prices: {
           input_mtok: 0.15,
@@ -1117,7 +1117,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-coder-480b-a35b-v1:0',
         name: 'Qwen3-Coder-480B-A35B-Instruct',
         match: {
-          contains: 'qwen.qwen3-coder-480b-a35b-v1',
+          contains: 'qwen.qwen3-coder-480b-a35b',
         },
         prices: {
           input_mtok: 0.45,
@@ -1127,7 +1127,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
         match: {
-          contains: 'claude-3-5-haiku-20241022-v1',
+          contains: 'claude-3-5-haiku-20241022',
         },
         prices: {
           input_mtok: 0.8,
@@ -1139,7 +1139,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
         match: {
-          contains: 'claude-3-5-sonnet-20240620-v1',
+          contains: 'claude-3-5-sonnet-20240620',
         },
         prices: {
           input_mtok: 3,
@@ -1151,7 +1151,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
         match: {
-          contains: 'claude-3-5-sonnet-20241022-v2',
+          contains: 'claude-3-5-sonnet-20241022',
         },
         prices: {
           input_mtok: 3,
@@ -1163,7 +1163,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
         match: {
-          contains: 'claude-3-7-sonnet-20250219-v1',
+          contains: 'claude-3-7-sonnet-20250219',
         },
         prices: {
           input_mtok: 3,
@@ -1175,7 +1175,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-haiku-20240307-v1:0',
         match: {
-          contains: 'claude-3-haiku-20240307-v1',
+          contains: 'claude-3-haiku-20240307',
         },
         prices: {
           input_mtok: 0.25,
@@ -1185,7 +1185,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-opus-20240229-v1:0',
         match: {
-          contains: 'claude-3-opus-20240229-v1',
+          contains: 'claude-3-opus-20240229',
         },
         prices: {
           input_mtok: 15,
@@ -1195,7 +1195,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-sonnet-20240229-v1:0',
         match: {
-          contains: 'claude-3-sonnet-20240229-v1',
+          contains: 'claude-3-sonnet-20240229',
         },
         prices: {
           input_mtok: 3,
@@ -1209,22 +1209,22 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'us.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'us.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              contains: 'au.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'au.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              contains: 'apac.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'apac.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              contains: 'eu.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'eu.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              contains: 'us-gov.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'us-gov.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              contains: 'jp.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'jp.anthropic.claude-haiku-4-5-20251001',
             },
           ],
         },
@@ -1240,22 +1240,22 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'us.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'us.anthropic.claude-opus-4-1-20250805',
             },
             {
-              contains: 'au.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'au.anthropic.claude-opus-4-1-20250805',
             },
             {
-              contains: 'apac.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'apac.anthropic.claude-opus-4-1-20250805',
             },
             {
-              contains: 'eu.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'eu.anthropic.claude-opus-4-1-20250805',
             },
             {
-              contains: 'us-gov.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'us-gov.anthropic.claude-opus-4-1-20250805',
             },
             {
-              contains: 'jp.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'jp.anthropic.claude-opus-4-1-20250805',
             },
           ],
         },
@@ -1271,22 +1271,22 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'us.anthropic.claude-opus-4-20250514-v1',
+              contains: 'us.anthropic.claude-opus-4-20250514',
             },
             {
-              contains: 'au.anthropic.claude-opus-4-20250514-v1',
+              contains: 'au.anthropic.claude-opus-4-20250514',
             },
             {
-              contains: 'apac.anthropic.claude-opus-4-20250514-v1',
+              contains: 'apac.anthropic.claude-opus-4-20250514',
             },
             {
-              contains: 'eu.anthropic.claude-opus-4-20250514-v1',
+              contains: 'eu.anthropic.claude-opus-4-20250514',
             },
             {
-              contains: 'us-gov.anthropic.claude-opus-4-20250514-v1',
+              contains: 'us-gov.anthropic.claude-opus-4-20250514',
             },
             {
-              contains: 'jp.anthropic.claude-opus-4-20250514-v1',
+              contains: 'jp.anthropic.claude-opus-4-20250514',
             },
           ],
         },
@@ -1396,22 +1396,22 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'us.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'us.anthropic.claude-sonnet-4-20250514',
             },
             {
-              contains: 'au.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'au.anthropic.claude-sonnet-4-20250514',
             },
             {
-              contains: 'apac.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'apac.anthropic.claude-sonnet-4-20250514',
             },
             {
-              contains: 'eu.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'eu.anthropic.claude-sonnet-4-20250514',
             },
             {
-              contains: 'us-gov.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'us-gov.anthropic.claude-sonnet-4-20250514',
             },
             {
-              contains: 'jp.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'jp.anthropic.claude-sonnet-4-20250514',
             },
           ],
         },
@@ -1427,22 +1427,22 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              contains: 'us.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'us.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              contains: 'au.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'au.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              contains: 'apac.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'apac.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              contains: 'eu.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'eu.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              contains: 'us-gov.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'us-gov.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              contains: 'jp.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'jp.anthropic.claude-sonnet-4-5-20250929',
             },
           ],
         },

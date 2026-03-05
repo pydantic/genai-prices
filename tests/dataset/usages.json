@@ -7083,6 +7083,8 @@
           },
           {
             "api_flavor": "anthropic",
+            "input_price": "0.0003",
+            "output_price": "0.00075",
             "provider_id": "aws"
           },
           {
