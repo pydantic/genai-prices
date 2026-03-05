@@ -93,7 +93,11 @@ test_cases: list[tuple[str, str, str]] = [
     ('google-gla', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('Google', 'gemini-2.5-pro', snapshot(('google', 'gemini-2.5-pro'))),
     ('openai', 'gpt-4o-mini-search-preview', snapshot(('openai', 'gpt-4o-mini'))),
-    pytest.param('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0', None, marks=mark_xfail_todo),
+    pytest.param(
+        'bedrock',
+        'anthropic.claude-3-5-haiku-20241022-v1:0',
+        snapshot(('aws', 'regional.anthropic.claude-3-5-haiku-20241022-v1:0')),
+    ),
     ('openai', 'gpt-3.5-turbo', snapshot(('openai', 'gpt-3.5-turbo'))),
     ('openai', 'o4-mini-deep-research-2025-06-26', snapshot(('openai', 'o4-mini-deep-research'))),
     ('Google', 'gemini-2.5-flash', snapshot(('google', 'gemini-2.5-flash'))),
@@ -135,7 +139,11 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-4', snapshot(('openai', 'gpt-4'))),
     ('gemini', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     pytest.param('bedrock', 'amazon.nova-micro-v1:0', snapshot(('aws', 'amazon.nova-micro-v1:0'))),
-    pytest.param('bedrock', 'anthropic.claude-3-5-sonnet-20241022-v2:0', None, marks=mark_xfail_todo),
+    pytest.param(
+        'bedrock',
+        'anthropic.claude-3-5-sonnet-20241022-v2:0',
+        snapshot(('aws', 'regional.anthropic.claude-3-5-sonnet-20241022-v2:0')),
+    ),
     pytest.param(
         'bedrock',
         'arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0',
@@ -161,7 +169,11 @@ test_cases: list[tuple[str, str, str]] = [
     ('azure', 'gpt-4.1-2025-04-14', snapshot(('azure', 'gpt-4.1'))),
     ('openai', 'gpt-4-turbo', snapshot(('openai', 'gpt-4-turbo'))),
     pytest.param('cartesia', 'sonic-2', None, marks=mark_xfail_todo),
-    pytest.param('bedrock', 'anthropic.claude-3-5-sonnet-20240620-v1:0', None, marks=mark_xfail_todo),
+    pytest.param(
+        'bedrock',
+        'anthropic.claude-3-5-sonnet-20240620-v1:0',
+        snapshot(('aws', 'regional.anthropic.claude-3-5-sonnet-20240620-v1:0')),
+    ),
     ('google-gla', 'gemini-2.0-flash-latest', snapshot(('google', 'gemini-2.0-flash'))),
     ('openai', 'o1', snapshot(('openai', 'o1'))),
     (
@@ -315,7 +327,11 @@ test_cases: list[tuple[str, str, str]] = [
     ('gcp.vertex.agent', 'gemini-2.0-flash', snapshot(('google', 'gemini-2.0-flash'))),
     ('google-gla', 'gemma-3n-e4b-it', snapshot(('google', 'gemma-3n'))),
     ('google-gla', 'gemini-2.5-flash-latest', snapshot(('google', 'gemini-2.5-flash'))),
-    pytest.param('bedrock', 'anthropic.claude-3-sonnet-20240229-v1:0', None, marks=mark_xfail_todo),
+    pytest.param(
+        'bedrock',
+        'anthropic.claude-3-sonnet-20240229-v1:0',
+        snapshot(('aws', 'regional.anthropic.claude-3-sonnet-20240229-v1:0')),
+    ),
     ('anthropic', 'Claude-Sonnet-4', snapshot(('anthropic', 'claude-sonnet-4-0'))),
     ('anthropic', 'claude-sonnet-4', snapshot(('anthropic', 'claude-sonnet-4-0'))),
     ('xai', 'grok-4-0709', snapshot(('x-ai', 'grok-4-0709'))),
