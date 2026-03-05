@@ -384,13 +384,7 @@ models:
 
   - id: regional.anthropic.claude-3-5-haiku-20241022-v1:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-5-haiku-20241022-v1
-        - contains: au.anthropic.claude-3-5-haiku-20241022-v1
-        - contains: apac.anthropic.claude-3-5-haiku-20241022-v1
-        - contains: eu.anthropic.claude-3-5-haiku-20241022-v1
-        - contains: us-gov.anthropic.claude-3-5-haiku-20241022-v1
-        - contains: jp.anthropic.claude-3-5-haiku-20241022-v1
+      contains: claude-3-5-haiku-20241022-v1
     prices:
       input_mtok: 0.8
       cache_write_mtok: 1
@@ -399,13 +393,7 @@ models:
 
   - id: regional.anthropic.claude-3-5-sonnet-20240620-v1:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-5-sonnet-20240620-v1
-        - contains: au.anthropic.claude-3-5-sonnet-20240620-v1
-        - contains: apac.anthropic.claude-3-5-sonnet-20240620-v1
-        - contains: eu.anthropic.claude-3-5-sonnet-20240620-v1
-        - contains: us-gov.anthropic.claude-3-5-sonnet-20240620-v1
-        - contains: jp.anthropic.claude-3-5-sonnet-20240620-v1
+      contains: claude-3-5-sonnet-20240620-v1
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
@@ -414,13 +402,7 @@ models:
 
   - id: regional.anthropic.claude-3-5-sonnet-20241022-v2:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-5-sonnet-20241022-v2
-        - contains: au.anthropic.claude-3-5-sonnet-20241022-v2
-        - contains: apac.anthropic.claude-3-5-sonnet-20241022-v2
-        - contains: eu.anthropic.claude-3-5-sonnet-20241022-v2
-        - contains: us-gov.anthropic.claude-3-5-sonnet-20241022-v2
-        - contains: jp.anthropic.claude-3-5-sonnet-20241022-v2
+      contains: claude-3-5-sonnet-20241022-v2
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
@@ -429,13 +411,7 @@ models:
 
   - id: regional.anthropic.claude-3-7-sonnet-20250219-v1:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-7-sonnet-20250219-v1
-        - contains: au.anthropic.claude-3-7-sonnet-20250219-v1
-        - contains: apac.anthropic.claude-3-7-sonnet-20250219-v1
-        - contains: eu.anthropic.claude-3-7-sonnet-20250219-v1
-        - contains: us-gov.anthropic.claude-3-7-sonnet-20250219-v1
-        - contains: jp.anthropic.claude-3-7-sonnet-20250219-v1
+      contains: claude-3-7-sonnet-20250219-v1
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
@@ -444,39 +420,21 @@ models:
 
   - id: regional.anthropic.claude-3-haiku-20240307-v1:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-haiku-20240307-v1
-        - contains: au.anthropic.claude-3-haiku-20240307-v1
-        - contains: apac.anthropic.claude-3-haiku-20240307-v1
-        - contains: eu.anthropic.claude-3-haiku-20240307-v1
-        - contains: us-gov.anthropic.claude-3-haiku-20240307-v1
-        - contains: jp.anthropic.claude-3-haiku-20240307-v1
+      contains: claude-3-haiku-20240307-v1
     prices:
       input_mtok: 0.25
       output_mtok: 1.25
 
   - id: regional.anthropic.claude-3-opus-20240229-v1:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-opus-20240229-v1
-        - contains: au.anthropic.claude-3-opus-20240229-v1
-        - contains: apac.anthropic.claude-3-opus-20240229-v1
-        - contains: eu.anthropic.claude-3-opus-20240229-v1
-        - contains: us-gov.anthropic.claude-3-opus-20240229-v1
-        - contains: jp.anthropic.claude-3-opus-20240229-v1
+      contains: claude-3-opus-20240229-v1
     prices:
       input_mtok: 15
       output_mtok: 75
 
   - id: regional.anthropic.claude-3-sonnet-20240229-v1:0
     match:
-      or:
-        - contains: us.anthropic.claude-3-sonnet-20240229-v1
-        - contains: au.anthropic.claude-3-sonnet-20240229-v1
-        - contains: apac.anthropic.claude-3-sonnet-20240229-v1
-        - contains: eu.anthropic.claude-3-sonnet-20240229-v1
-        - contains: us-gov.anthropic.claude-3-sonnet-20240229-v1
-        - contains: jp.anthropic.claude-3-sonnet-20240229-v1
+      contains: claude-3-sonnet-20240229-v1
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
