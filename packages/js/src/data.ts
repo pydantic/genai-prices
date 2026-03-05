@@ -1127,26 +1127,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              contains: 'au.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-          ],
+          contains: 'claude-3-5-haiku-20241022-v1',
         },
         prices: {
           input_mtok: 0.8,
@@ -1158,26 +1139,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              contains: 'au.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-          ],
+          contains: 'claude-3-5-sonnet-20240620-v1',
         },
         prices: {
           input_mtok: 3,
@@ -1189,26 +1151,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              contains: 'au.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-          ],
+          contains: 'claude-3-5-sonnet-20241022-v2',
         },
         prices: {
           input_mtok: 3,
@@ -1220,26 +1163,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              contains: 'au.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-          ],
+          contains: 'claude-3-7-sonnet-20250219-v1',
         },
         prices: {
           input_mtok: 3,
@@ -1251,26 +1175,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-haiku-20240307-v1:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              contains: 'au.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-haiku-20240307-v1',
-            },
-          ],
+          contains: 'claude-3-haiku-20240307-v1',
         },
         prices: {
           input_mtok: 0.25,
@@ -1280,26 +1185,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-opus-20240229-v1:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              contains: 'au.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-opus-20240229-v1',
-            },
-          ],
+          contains: 'claude-3-opus-20240229-v1',
         },
         prices: {
           input_mtok: 15,
@@ -1309,26 +1195,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-sonnet-20240229-v1:0',
         match: {
-          or: [
-            {
-              contains: 'us.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              contains: 'au.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              contains: 'apac.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              contains: 'eu.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              contains: 'jp.anthropic.claude-3-sonnet-20240229-v1',
-            },
-          ],
+          contains: 'claude-3-sonnet-20240229-v1',
         },
         prices: {
           input_mtok: 3,

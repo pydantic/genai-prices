@@ -638,16 +638,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseContains(contains='au.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-3-5-haiku-20241022-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-5-haiku-20241022-v1'),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
                     cache_write_mtok=Decimal('1'),
@@ -657,16 +648,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseContains(contains='au.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-3-5-sonnet-20240620-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-5-sonnet-20240620-v1'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -676,16 +658,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseContains(contains='au.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseContains(contains='apac.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseContains(contains='eu.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseContains(contains='jp.anthropic.claude-3-5-sonnet-20241022-v2'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-5-sonnet-20241022-v2'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -695,16 +668,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseContains(contains='au.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-3-7-sonnet-20250219-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-7-sonnet-20250219-v1'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -714,44 +678,17 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-haiku-20240307-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseContains(contains='au.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-3-haiku-20240307-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-haiku-20240307-v1'),
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-opus-20240229-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseContains(contains='au.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-3-opus-20240229-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-opus-20240229-v1'),
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-sonnet-20240229-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseContains(contains='us.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseContains(contains='au.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-3-sonnet-20240229-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-sonnet-20240229-v1'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
