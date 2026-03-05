@@ -799,6 +799,7 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseOr(
                     or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-20250514'),
                         ClauseContains(contains='us.anthropic.claude-sonnet-4-20250514'),
                         ClauseContains(contains='au.anthropic.claude-sonnet-4-20250514'),
                         ClauseContains(contains='apac.anthropic.claude-sonnet-4-20250514'),

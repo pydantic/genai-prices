@@ -537,6 +537,7 @@ models:
   - id: regional.anthropic.claude-sonnet-4-20250514-v1:0
     match:
       or:
+        - starts_with: anthropic.claude-sonnet-4-20250514
         - contains: us.anthropic.claude-sonnet-4-20250514
         - contains: au.anthropic.claude-sonnet-4-20250514
         - contains: apac.anthropic.claude-sonnet-4-20250514

@@ -1396,6 +1396,9 @@ export const data: Provider[] = [
         match: {
           or: [
             {
+              starts_with: 'anthropic.claude-sonnet-4-20250514',
+            },
+            {
               contains: 'us.anthropic.claude-sonnet-4-20250514',
             },
             {
