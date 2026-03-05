@@ -378,7 +378,7 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='amazon.nova-lite-v1:0',
-                match=ClauseContains(contains='amazon.nova-lite-v1'),
+                match=ClauseContains(contains='amazon.nova-lite'),
                 name='Nova Lite',
                 description='Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
                 prices=ModelPrice(
@@ -387,7 +387,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-micro-v1:0',
-                match=ClauseContains(contains='amazon.nova-micro-v1'),
+                match=ClauseContains(contains='amazon.nova-micro'),
                 name='Nova Micro',
                 description='Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
                 prices=ModelPrice(
@@ -396,7 +396,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-premier-v1:0',
-                match=ClauseContains(contains='amazon.nova-premier-v1'),
+                match=ClauseContains(contains='amazon.nova-premier'),
                 name='Nova Premier',
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.625'), output_mtok=Decimal('12.5')
@@ -404,7 +404,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-pro-v1:0',
-                match=ClauseContains(contains='amazon.nova-pro-v1'),
+                match=ClauseContains(contains='amazon.nova-pro'),
                 name='Nova Pro',
                 description='Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
                 prices=ModelPrice(
@@ -413,7 +413,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-sonic-v1:0',
-                match=ClauseContains(contains='amazon.nova-sonic-v1'),
+                match=ClauseContains(contains='amazon.nova-sonic'),
                 name='Nova Sonic',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.06'),
@@ -424,7 +424,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.titan-embed-text-v1',
-                match=ClauseContains(contains='amazon.titan-embed-text-v1'),
+                match=ClauseContains(contains='amazon.titan-embed-text'),
                 name='Titan Embeddings G1 - Text',
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
@@ -442,13 +442,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek.r1-v1:0',
-                match=ClauseContains(contains='deepseek.r1-v1'),
+                match=ClauseContains(contains='deepseek.r1'),
                 name='DeepSeek-R1',
                 prices=ModelPrice(input_mtok=Decimal('1.35'), output_mtok=Decimal('5.4')),
             ),
             ModelInfo(
                 id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
-                match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001-v1'),
+                match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
@@ -480,7 +480,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-20250514-v1:0',
-                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-20250514-v1'),
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-20250514'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -490,7 +490,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
-                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929-v1'),
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -512,67 +512,67 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='meta.llama3-1-70b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-1-70b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-1-70b-instruct'),
                 name='Llama 3.1 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-1-8b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-1-8b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-1-8b-instruct'),
                 name='Llama 3.1 8B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('0.22')),
             ),
             ModelInfo(
                 id='meta.llama3-2-11b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-11b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-11b-instruct'),
                 name='Llama 3.2 11B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.16'), output_mtok=Decimal('0.16')),
             ),
             ModelInfo(
                 id='meta.llama3-2-1b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-1b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-1b-instruct'),
                 name='Llama 3.2 1B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='meta.llama3-2-3b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-3b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-3b-instruct'),
                 name='Llama 3.2 3B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
             ),
             ModelInfo(
                 id='meta.llama3-2-90b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-90b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-90b-instruct'),
                 name='Llama 3.2 90B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-3-70b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-3-70b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-3-70b-instruct'),
                 name='Llama 3.3 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-70b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-70b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-70b-instruct'),
                 name='Llama 3 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('2.65'), output_mtok=Decimal('3.5')),
             ),
             ModelInfo(
                 id='meta.llama3-8b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-8b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-8b-instruct'),
                 name='Llama 3 8B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='meta.llama4-maverick-17b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama4-maverick-17b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama4-maverick-17b-instruct'),
                 name='Llama 4 Maverick 17B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.24'), output_mtok=Decimal('0.97')),
             ),
             ModelInfo(
                 id='meta.llama4-scout-17b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama4-scout-17b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama4-scout-17b-instruct'),
                 name='Llama 4 Scout 17B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.66')),
             ),
@@ -584,13 +584,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral.mistral-large-2402-v1:0',
-                match=ClauseContains(contains='mistral.mistral-large-2402-v1'),
+                match=ClauseContains(contains='mistral.mistral-large-2402'),
                 name='Mistral Large (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='mistral.mistral-small-2402-v1:0',
-                match=ClauseContains(contains='mistral.mistral-small-2402-v1'),
+                match=ClauseContains(contains='mistral.mistral-small-2402'),
                 name='Mistral Small (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
@@ -602,7 +602,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral.pixtral-large-2502-v1:0',
-                match=ClauseContains(contains='mistral.pixtral-large-2502-v1'),
+                match=ClauseContains(contains='mistral.pixtral-large-2502'),
                 name='Pixtral Large (25.02)',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
@@ -620,25 +620,25 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen.qwen3-32b-v1:0',
-                match=ClauseContains(contains='qwen.qwen3-32b-v1'),
+                match=ClauseContains(contains='qwen.qwen3-32b'),
                 name='Qwen3 32B (dense)',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='qwen.qwen3-coder-30b-a3b-v1:0',
-                match=ClauseContains(contains='qwen.qwen3-coder-30b-a3b-v1'),
+                match=ClauseContains(contains='qwen.qwen3-coder-30b-a3b'),
                 name='Qwen3-Coder-30B-A3B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='qwen.qwen3-coder-480b-a35b-v1:0',
-                match=ClauseContains(contains='qwen.qwen3-coder-480b-a35b-v1'),
+                match=ClauseContains(contains='qwen.qwen3-coder-480b-a35b'),
                 name='Qwen3-Coder-480B-A35B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
-                match=ClauseContains(contains='claude-3-5-haiku-20241022-v1'),
+                match=ClauseContains(contains='claude-3-5-haiku-20241022'),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
                     cache_write_mtok=Decimal('1'),
@@ -648,7 +648,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
-                match=ClauseContains(contains='claude-3-5-sonnet-20240620-v1'),
+                match=ClauseContains(contains='claude-3-5-sonnet-20240620'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -658,7 +658,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
-                match=ClauseContains(contains='claude-3-5-sonnet-20241022-v2'),
+                match=ClauseContains(contains='claude-3-5-sonnet-20241022'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -668,7 +668,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
-                match=ClauseContains(contains='claude-3-7-sonnet-20250219-v1'),
+                match=ClauseContains(contains='claude-3-7-sonnet-20250219'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -678,17 +678,17 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-haiku-20240307-v1:0',
-                match=ClauseContains(contains='claude-3-haiku-20240307-v1'),
+                match=ClauseContains(contains='claude-3-haiku-20240307'),
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-opus-20240229-v1:0',
-                match=ClauseContains(contains='claude-3-opus-20240229-v1'),
+                match=ClauseContains(contains='claude-3-opus-20240229'),
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-sonnet-20240229-v1:0',
-                match=ClauseContains(contains='claude-3-sonnet-20240229-v1'),
+                match=ClauseContains(contains='claude-3-sonnet-20240229'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -700,12 +700,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-haiku-4-5-20251001-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='us.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseContains(contains='au.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-haiku-4-5-20251001-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-haiku-4-5-20251001'),
+                        ClauseStartsWith(starts_with='claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='us.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='au.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='apac.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='eu.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='us-gov.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='jp.anthropic.claude-haiku-4-5-20251001'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -719,12 +721,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-opus-4-1-20250805-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='us.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseContains(contains='au.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-opus-4-1-20250805-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-1-20250805'),
+                        ClauseStartsWith(starts_with='claude-opus-4-1-20250805'),
+                        ClauseContains(contains='us.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-1-20250805'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -738,12 +742,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-opus-4-20250514-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='us.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseContains(contains='au.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-opus-4-20250514-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-20250514'),
+                        ClauseStartsWith(starts_with='claude-opus-4-20250514'),
+                        ClauseContains(contains='us.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-20250514'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -757,6 +763,8 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-opus-4-5-v1:0',
                 match=ClauseOr(
                     or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-5'),
+                        ClauseStartsWith(starts_with='claude-opus-4-5'),
                         ClauseContains(contains='us.anthropic.claude-opus-4-5'),
                         ClauseContains(contains='au.anthropic.claude-opus-4-5'),
                         ClauseContains(contains='apac.anthropic.claude-opus-4-5'),
@@ -776,6 +784,8 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-opus-4-6-v1:0',
                 match=ClauseOr(
                     or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-6'),
+                        ClauseStartsWith(starts_with='claude-opus-4-6'),
                         ClauseContains(contains='us.anthropic.claude-opus-4-6'),
                         ClauseContains(contains='au.anthropic.claude-opus-4-6'),
                         ClauseContains(contains='apac.anthropic.claude-opus-4-6'),
@@ -799,12 +809,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='us.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseContains(contains='au.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-20250514-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-20250514'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-20250514'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-20250514'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -818,12 +830,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseContains(contains='us.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseContains(contains='au.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-5-20250929-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-5-20250929'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -837,6 +851,8 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-sonnet-4-6-v1:0',
                 match=ClauseOr(
                     or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-6'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-6'),
                         ClauseContains(contains='us.anthropic.claude-sonnet-4-6'),
                         ClauseContains(contains='au.anthropic.claude-sonnet-4-6'),
                         ClauseContains(contains='apac.anthropic.claude-sonnet-4-6'),
