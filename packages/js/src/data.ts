@@ -9704,7 +9704,13 @@ export const data: Provider[] = [
               equals: 'gpt-5.4',
             },
             {
+              equals: 'gpt-5.4-2026-03-05',
+            },
+            {
               equals: 'gpt-5-4',
+            },
+            {
+              equals: 'gpt-5-4-2026-03-05',
             },
           ],
         },
@@ -9749,7 +9755,13 @@ export const data: Provider[] = [
               equals: 'gpt-5.4-pro',
             },
             {
+              equals: 'gpt-5.4-pro-2026-03-05',
+            },
+            {
               equals: 'gpt-5-4-pro',
+            },
+            {
+              equals: 'gpt-5-4-pro-2026-03-05',
             },
           ],
         },

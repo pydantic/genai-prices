@@ -664,7 +664,9 @@ models:
     match:
       or:
         - equals: gpt-5.4
+        - equals: gpt-5.4-2026-03-05
         - equals: gpt-5-4
+        - equals: gpt-5-4-2026-03-05
     context_window: 1050000
     prices_checked: 2026-03-06
     prices:
@@ -690,7 +692,9 @@ models:
     match:
       or:
         - equals: gpt-5.4-pro
+        - equals: gpt-5.4-pro-2026-03-05
         - equals: gpt-5-4-pro
+        - equals: gpt-5-4-pro-2026-03-05
     context_window: 1050000
     prices_checked: 2026-03-06
     prices:
