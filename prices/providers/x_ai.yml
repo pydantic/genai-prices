@@ -9,7 +9,18 @@ model_match:
 provider_match:
   equals: xai
 extractors:
-  # assuming this API matches OpenAI
+  # xAI native SDK format (xai-sdk) — flat usage keys
+  - api_flavor: default
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: cache_read_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+  # OpenAI-compatible chat completions format
   - api_flavor: chat
     root: usage
     mappings:
