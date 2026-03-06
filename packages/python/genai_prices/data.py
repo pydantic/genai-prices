@@ -9871,7 +9871,7 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
-                    UsageExtractorMapping(path='cache_read_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='cached_prompt_text_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',

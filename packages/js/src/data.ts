@@ -17700,7 +17700,7 @@ export const data: Provider[] = [
             required: true,
           },
           {
-            path: 'cache_read_tokens',
+            path: 'cached_prompt_text_tokens',
             dest: 'cache_read_tokens',
             required: false,
           },

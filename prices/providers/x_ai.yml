@@ -9,13 +9,14 @@ model_match:
 provider_match:
   equals: xai
 extractors:
-  # xAI native SDK format (xai-sdk) — flat usage keys
+  # xAI native SDK format (xai-sdk) — protobuf SamplingUsage fields
+  # https://github.com/xai-org/xai-sdk-python/blob/main/src/xai_sdk/proto/v6/usage_pb2.pyi
   - api_flavor: default
     root: usage
     mappings:
       - path: prompt_tokens
         dest: input_tokens
-      - path: cache_read_tokens
+      - path: cached_prompt_text_tokens
         dest: cache_read_tokens
         required: false
       - path: completion_tokens
