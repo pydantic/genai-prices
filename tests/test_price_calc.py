@@ -189,6 +189,8 @@ EXAMPLES: list[tuple[str, str]] = [
     ('openai', 'gpt-4o-mini'),
     ('openai', 'gpt-4o'),
     ('openai', 'o3-mini-2025-01-31'),
+    ('openai', 'gpt-5.4'),
+    ('openai', 'gpt-5.4-pro'),
     ('openai', 'text-embedding-3-small'),
 ]
 
