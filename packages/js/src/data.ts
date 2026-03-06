@@ -9695,6 +9695,87 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.4',
+        name: 'GPT-5.4',
+        description: "OpenAI's most capable model with a 1.05M token context window.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4',
+            },
+            {
+              equals: 'gpt-5-4',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-5.4-pro',
+        name: 'GPT-5.4 Pro',
+        description: 'Version of GPT-5.4 that produces smarter and more precise responses.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-pro',
+            },
+            {
+              equals: 'gpt-5-4-pro',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 180,
+            tiers: [
+              {
+                start: 272000,
+                price: 270,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-realtime',
         match: {
           or: [

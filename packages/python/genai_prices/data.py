@@ -5448,6 +5448,31 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-5.4',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.4'), ClauseEquals(equals='gpt-5-4')]),
+                name='GPT-5.4',
+                description="OpenAI's most capable model with a 1.05M token context window.",
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.4-pro',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.4-pro'), ClauseEquals(equals='gpt-5-4-pro')]),
+                name='GPT-5.4 Pro',
+                description='Version of GPT-5.4 that produces smarter and more precise responses.',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-realtime',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-realtime'), ClauseEquals(equals='gpt-realtime-2025-08-28')]
