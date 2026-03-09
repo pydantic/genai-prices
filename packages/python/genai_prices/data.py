@@ -5449,7 +5449,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.4',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.4'), ClauseEquals(equals='gpt-5-4')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.4'),
+                        ClauseEquals(equals='gpt-5.4-2026-03-05'),
+                        ClauseEquals(equals='gpt-5-4'),
+                        ClauseEquals(equals='gpt-5-4-2026-03-05'),
+                    ]
+                ),
                 name='GPT-5.4',
                 description="OpenAI's most capable model with a 1.05M token context window.",
                 context_window=1050000,
@@ -5463,7 +5470,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.4-pro',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.4-pro'), ClauseEquals(equals='gpt-5-4-pro')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.4-pro'),
+                        ClauseEquals(equals='gpt-5.4-pro-2026-03-05'),
+                        ClauseEquals(equals='gpt-5-4-pro'),
+                        ClauseEquals(equals='gpt-5-4-pro-2026-03-05'),
+                    ]
+                ),
                 name='GPT-5.4 Pro',
                 description='Version of GPT-5.4 that produces smarter and more precise responses.',
                 context_window=1050000,
