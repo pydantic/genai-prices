@@ -17783,6 +17783,28 @@ export const data: Provider[] = [
     },
     extractors: [
       {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cached_prompt_text_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
