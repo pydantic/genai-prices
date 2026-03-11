@@ -8345,6 +8345,197 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'moonshotai',
+    name: 'MoonshotAi',
+    pricing_urls: ['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+    api_pattern: 'https://api\\.moonshot\\.',
+    model_match: {
+      or: [
+        {
+          starts_with: 'kimi',
+        },
+        {
+          starts_with: 'moonshot',
+        },
+      ],
+    },
+    provider_match: {
+      contains: 'moonshot',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'kimi-k2-0711-preview',
+        name: 'Kimi K2 0711 Preview',
+        description:
+          'MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
+        match: {
+          equals: 'kimi-k2-0711-preview',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'kimi-k2-0905-preview',
+        name: 'Kimi K2 0905 Preview',
+        description:
+          'Based on kimi-k2-0711-preview, with enhanced agentic coding abilities, improved frontend code quality and practicality, and better context understanding. MoE foundation model with 1 trillion total parameters and 32 billion activated parameters.',
+        match: {
+          equals: 'kimi-k2-0905-preview',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'kimi-k2-thinking',
+        name: 'Kimi K2 Thinking',
+        description: 'A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
+        match: {
+          equals: 'kimi-k2-thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'kimi-k2-thinking-turbo',
+        name: 'Kimi K2 Thinking Turbo',
+        description:
+          'High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
+        match: {
+          equals: 'kimi-k2-thinking-turbo',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.15,
+          cache_read_mtok: 0.15,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'kimi-k2-turbo-preview',
+        name: 'Kimi K2 Turbo Preview',
+        description:
+          'High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
+        match: {
+          starts_with: 'kimi-k2-turbo',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.15,
+          cache_read_mtok: 0.15,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'kimi-k2.5',
+        name: 'Kimi K2.5',
+        description:
+          "Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
+        match: {
+          starts_with: 'kimi-k2.5',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'moonshot-v1-128k',
+        name: 'Moonshot V1 128K',
+        match: {
+          or: [
+            {
+              equals: 'moonshot-v1-128k',
+            },
+            {
+              equals: 'moonshot-v1-128k-vision-preview',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'moonshot-v1-32k',
+        name: 'Moonshot V1 32K',
+        match: {
+          or: [
+            {
+              equals: 'moonshot-v1-32k',
+            },
+            {
+              equals: 'moonshot-v1-32k-vision-preview',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'moonshot-v1-8k',
+        name: 'Moonshot V1 8K',
+        match: {
+          or: [
+            {
+              equals: 'moonshot-v1-8k',
+            },
+            {
+              equals: 'moonshot-v1-8k-vision-preview',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 2,
+        },
+      },
+    ],
+  },
+  {
     id: 'novita',
     name: 'Novita',
     pricing_urls: ['https://novita.ai/pricing'],

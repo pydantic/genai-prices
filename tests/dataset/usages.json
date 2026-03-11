@@ -5665,6 +5665,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -5791,6 +5795,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -5922,6 +5930,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -6044,6 +6056,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -6172,6 +6188,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -6316,6 +6336,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -6438,6 +6462,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -6573,6 +6601,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -6702,6 +6734,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -11739,6 +11775,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -11886,6 +11926,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -12016,6 +12060,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -12152,6 +12200,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -12282,6 +12334,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -12418,6 +12474,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -12548,6 +12608,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -12690,6 +12754,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -12820,6 +12888,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -12958,6 +13030,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -13090,6 +13166,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -13227,6 +13307,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -13370,6 +13454,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -13574,6 +13662,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00003",
             "output_price": "0.00293",
             "provider_id": "openai"
@@ -13714,6 +13806,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -13918,6 +14014,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001775",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -14061,6 +14161,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00023",
             "output_price": "0.00015",
             "provider_id": "openai"
@@ -14194,6 +14298,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -14318,6 +14426,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -14458,6 +14570,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00001625",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -14547,6 +14663,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -14756,6 +14876,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0006",
             "output_price": "0.0015",
             "provider_id": "openai"
@@ -14896,6 +15020,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -15042,6 +15170,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001125",
             "output_price": "0.00026",
             "provider_id": "openai"
@@ -15182,6 +15314,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -15328,6 +15464,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00002",
             "output_price": "0.000024",
             "provider_id": "openai"
@@ -15468,6 +15608,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -15614,6 +15758,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0007025",
             "output_price": "0.00017",
             "provider_id": "openai"
@@ -15754,6 +15902,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -15900,6 +16052,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000115",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -16043,6 +16199,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0012575",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -16176,6 +16336,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -16315,6 +16479,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -16461,6 +16629,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00017",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -16601,6 +16773,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -16805,6 +16981,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0006347",
             "output_price": "0.010208",
             "provider_id": "openai"
@@ -16948,6 +17128,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0027975",
             "output_price": "0.0001",
             "provider_id": "openai"
@@ -17084,6 +17268,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -17211,6 +17399,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -17348,6 +17540,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -17494,6 +17690,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000325",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -17634,6 +17834,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -17780,6 +17984,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0006825",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -17920,6 +18128,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -18066,6 +18278,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00002",
             "output_price": "0.0001",
             "provider_id": "openai"
@@ -18206,6 +18422,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -18352,6 +18572,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001575",
             "output_price": "0.0001",
             "provider_id": "openai"
@@ -18492,6 +18716,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -18638,6 +18866,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000124",
             "output_price": "0.0000128",
             "provider_id": "openai"
@@ -18771,6 +19003,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -18908,6 +19144,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -19054,6 +19294,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000115",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -19194,6 +19438,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -19340,6 +19588,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00007",
             "provider_id": "openai"
@@ -19483,6 +19735,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0005875",
             "output_price": "0.00013",
             "provider_id": "openai"
@@ -19623,6 +19879,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -19849,6 +20109,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000156",
             "output_price": "0.0000096",
             "provider_id": "openai"
@@ -19989,6 +20253,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -20135,6 +20403,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000077",
             "output_price": "0.000374",
             "provider_id": "openai"
@@ -20275,6 +20547,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -20421,6 +20697,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004525",
             "output_price": "0.00025",
             "provider_id": "openai"
@@ -20510,6 +20790,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -21548,6 +21832,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -21672,6 +21960,10 @@
             "input_price": "0.00043965",
             "output_price": "0.0000105",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -21857,6 +22149,10 @@
             "input_price": "0.001328",
             "output_price": "0.003735",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -26151,6 +26447,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -26302,6 +26602,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -26432,6 +26736,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -26570,6 +26878,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -26700,6 +27012,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -26834,6 +27150,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -26962,6 +27282,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -27096,6 +27420,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -27224,6 +27552,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -27378,6 +27710,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -27504,6 +27840,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -27658,6 +27998,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -27809,6 +28153,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -27941,6 +28289,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -28078,6 +28430,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -28221,6 +28577,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -28367,6 +28727,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -28507,6 +28871,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -28653,6 +29021,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0002175",
             "output_price": "0.00017",
             "provider_id": "openai"
@@ -28793,6 +29165,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -28939,6 +29315,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000095",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -29079,6 +29459,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -29225,6 +29609,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
@@ -29365,6 +29753,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -29511,6 +29903,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -29651,6 +30047,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -29797,6 +30197,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -29937,6 +30341,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -30083,6 +30491,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001675",
             "output_price": "0.00009",
             "provider_id": "openai"
@@ -30223,6 +30635,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -30369,6 +30785,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000105",
             "output_price": "0.00013",
             "provider_id": "openai"
@@ -30512,6 +30932,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -30652,6 +31076,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -30868,6 +31296,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0007625",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -31008,6 +31440,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -31154,6 +31590,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0005",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -31294,6 +31734,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -31440,6 +31884,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0005075",
             "output_price": "0.00015",
             "provider_id": "openai"
@@ -31583,6 +32031,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000625",
             "output_price": "0.00015",
             "provider_id": "openai"
@@ -31723,6 +32175,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -31943,6 +32399,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004875",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -32083,6 +32543,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -32229,6 +32693,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0008575",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -32369,6 +32837,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -32515,6 +32987,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00067",
             "output_price": "0.00018",
             "provider_id": "openai"
@@ -32655,6 +33131,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -32801,6 +33281,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0007625",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -32941,6 +33425,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -33087,6 +33575,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004875",
             "output_price": "0.00019",
             "provider_id": "openai"
@@ -33227,6 +33719,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -33373,6 +33869,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004775",
             "output_price": "0.00012",
             "provider_id": "openai"
@@ -33513,6 +34013,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -33659,6 +34163,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004875",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -33799,6 +34307,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -33945,6 +34457,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000475",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -34085,6 +34601,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -34231,6 +34751,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000485",
             "output_price": "0.00018",
             "provider_id": "openai"
@@ -34371,6 +34895,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -34517,6 +35045,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004825",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -34657,6 +35189,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -34803,6 +35339,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001125",
             "output_price": "0.00015",
             "provider_id": "openai"
@@ -34943,6 +35483,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -35089,6 +35633,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -35229,6 +35777,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -35442,6 +35994,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000105",
             "output_price": "0.00013",
             "provider_id": "openai"
@@ -35582,6 +36138,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -35728,6 +36288,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001175",
             "output_price": "0.00017",
             "provider_id": "openai"
@@ -35868,6 +36432,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -36014,6 +36582,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00029",
             "output_price": "0.0001",
             "provider_id": "openai"
@@ -36154,6 +36726,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -36300,6 +36876,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "openai"
@@ -36440,6 +37020,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -36586,6 +37170,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -36726,6 +37314,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -36872,6 +37464,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0004525",
             "output_price": "0.00034",
             "provider_id": "openai"
@@ -37015,6 +37611,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0023125",
             "output_price": "0.00085",
             "provider_id": "openai"
@@ -37155,6 +37755,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -37385,6 +37989,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -37548,6 +38156,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -37748,6 +38360,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -37882,6 +38498,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -38028,6 +38648,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -38168,6 +38792,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -38314,6 +38942,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -38454,6 +39086,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -38600,6 +39236,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0002175",
             "output_price": "0.00017",
             "provider_id": "openai"
@@ -38740,6 +39380,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -38886,6 +39530,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -39026,6 +39674,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -39172,6 +39824,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0001275",
             "output_price": "0.0001",
             "provider_id": "openai"
@@ -39315,6 +39971,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -39455,6 +40115,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -39601,6 +40265,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0003325",
             "output_price": "0.0002",
             "provider_id": "openai"
@@ -39741,6 +40409,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -39887,6 +40559,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0003325",
             "output_price": "0.00022",
             "provider_id": "openai"
@@ -40030,6 +40706,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
@@ -40170,6 +40850,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -40357,6 +41041,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000035",
             "output_price": "0.00009",
             "provider_id": "openai"
@@ -40490,6 +41178,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -40618,6 +41310,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
@@ -40808,6 +41504,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.00001625",
             "output_price": "0.00011",
             "provider_id": "openai"
@@ -40973,6 +41673,10 @@
           {
             "api_flavor": "default",
             "provider_id": "mistral"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "moonshotai"
           },
           {
             "api_flavor": "chat",
