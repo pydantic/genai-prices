@@ -343,44 +343,60 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
-        prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 10,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+        ],
       },
       {
         id: 'claude-sonnet-4-0',
@@ -482,44 +498,60 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: {
-            base: 3,
-            tiers: [
-              {
-                start: 200000,
-                price: 6,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 6,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 3.75,
-            tiers: [
-              {
-                start: 200000,
-                price: 7.5,
+              cache_write_mtok: {
+                base: 3.75,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.3,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.6,
+              cache_read_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.6,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 200000,
-                price: 22.5,
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 22.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'claude-v1',

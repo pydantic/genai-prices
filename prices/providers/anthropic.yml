@@ -244,28 +244,37 @@ models:
         - starts_with: claude-4-6-opus
         - starts_with: claude-4.6-opus
     context_window: 200000
-    prices_checked: 2026-02-05
+    prices_checked: 2026-03-16
     prices:
-      input_mtok:
-        base: 5
-        tiers:
-          - start: 200000
-            price: 10
-      cache_read_mtok:
-        base: 0.50
-        tiers:
-          - start: 200000
-            price: 1
-      cache_write_mtok:
-        base: 6.25
-        tiers:
-          - start: 200000
-            price: 12.50
-      output_mtok:
-        base: 25
-        tiers:
-          - start: 200000
-            price: 37.50
+      - prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 10
+          cache_read_mtok:
+            base: 0.50
+            tiers:
+              - start: 200000
+                price: 1
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 200000
+                price: 12.50
+          output_mtok:
+            base: 25
+            tiers:
+              - start: 200000
+                price: 37.50
+      - constraint:
+          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 5
+          cache_read_mtok: 0.50
+          cache_write_mtok: 6.25
+          output_mtok: 25
 
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4
@@ -324,28 +333,37 @@ models:
         - starts_with: claude-sonnet-4-6
         - starts_with: claude-sonnet-4.6
     context_window: 1000000
-    prices_checked: 2026-02-17
+    prices_checked: 2026-03-16
     prices:
-      input_mtok:
-        base: 3
-        tiers:
-          - start: 200000
-            price: 6
-      cache_read_mtok:
-        base: 0.30
-        tiers:
-          - start: 200000
-            price: 0.60
-      cache_write_mtok:
-        base: 3.75
-        tiers:
-          - start: 200000
-            price: 7.50
-      output_mtok:
-        base: 15
-        tiers:
-          - start: 200000
-            price: 22.50
+      - prices:
+          input_mtok:
+            base: 3
+            tiers:
+              - start: 200000
+                price: 6
+          cache_read_mtok:
+            base: 0.30
+            tiers:
+              - start: 200000
+                price: 0.60
+          cache_write_mtok:
+            base: 3.75
+            tiers:
+              - start: 200000
+                price: 7.50
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 200000
+                price: 22.50
+      - constraint:
+          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 3
+          cache_read_mtok: 0.30
+          cache_write_mtok: 3.75
+          output_mtok: 15
 
   - id: claude-v1
     description: Retired, here to match price sources
