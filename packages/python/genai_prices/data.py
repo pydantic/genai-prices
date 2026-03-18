@@ -5503,6 +5503,26 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-5.4-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.4-mini'), ClauseEquals(equals='gpt-5-4-mini')]),
+                name='GPT-5.4 mini',
+                description='Our strongest mini model yet for coding, computer use, and subagents.',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.4-nano',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.4-nano'), ClauseEquals(equals='gpt-5-4-nano')]),
+                name='GPT-5.4 nano',
+                description='Our cheapest GPT-5.4-class model for simple high-volume tasks.',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.25')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-5.4-pro',
                 match=ClauseOr(
                     or_=[
