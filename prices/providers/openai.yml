@@ -694,7 +694,7 @@ models:
       or:
         - equals: gpt-5.4-mini
         - equals: gpt-5-4-mini
-    context_window: 1050000
+    context_window: 400000
     prices_checked: 2026-03-18
     prices:
       input_mtok: 0.75
@@ -709,7 +709,7 @@ models:
       or:
         - equals: gpt-5.4-nano
         - equals: gpt-5-4-nano
-    context_window: 1050000
+    context_window: 400000
     prices_checked: 2026-03-18
     prices:
       input_mtok: 0.2

@@ -9791,7 +9791,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 1050000,
+        context_window: 400000,
         prices: {
           input_mtok: 0.75,
           cache_read_mtok: 0.075,
@@ -9812,7 +9812,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        context_window: 1050000,
+        context_window: 400000,
         prices: {
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
