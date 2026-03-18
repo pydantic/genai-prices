@@ -686,6 +686,36 @@ models:
           - start: 272000
             price: 22.5
 
+  - id: gpt-5.4-mini
+    name: GPT-5.4 mini
+    description: Our strongest mini model yet for coding, computer use, and subagents.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4-mini
+        - equals: gpt-5-4-mini
+    context_window: 400000
+    prices_checked: 2026-03-18
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 4.5
+
+  - id: gpt-5.4-nano
+    name: GPT-5.4 nano
+    description: Our cheapest GPT-5.4-class model for simple high-volume tasks.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4-nano
+        - equals: gpt-5-4-nano
+    context_window: 400000
+    prices_checked: 2026-03-18
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.02
+      output_mtok: 1.25
+
   - id: gpt-5.4-pro
     name: GPT-5.4 Pro
     description: Version of GPT-5.4 that produces smarter and more precise responses.
