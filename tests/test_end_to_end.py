@@ -52,6 +52,40 @@ def test_anthropic_caching_write():
     assert price.total_price == snapshot(Decimal('0.54377925'))
 
 
+def test_anthropic_caching_write_mixed_ttls():
+    response = dict(
+        model='claude-sonnet-4-6',
+        usage=dict(
+            cache_creation_input_tokens=300,
+            cache_creation=dict(
+                ephemeral_5m_input_tokens=100,
+                ephemeral_1h_input_tokens=200,
+            ),
+            cache_read_input_tokens=0,
+            input_tokens=11,
+            output_tokens=197,
+            server_tool_use=None,
+            service_tier='standard',
+        ),
+    )
+
+    extracted_usage = extract_usage(response, provider_id='anthropic')
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=311,
+            cache_write_tokens=300,
+            cache_write_5m_tokens=100,
+            cache_write_1h_tokens=200,
+            cache_read_tokens=0,
+            output_tokens=197,
+        )
+    )
+    price = extracted_usage.calc_price()
+    assert price.input_price == snapshot(Decimal('0.001608'))
+    assert price.output_price == snapshot(Decimal('0.002955'))
+    assert price.total_price == snapshot(Decimal('0.004563'))
+
+
 def test_anthropic_caching_read():
     response = dict(
         model='claude-3-7-sonnet-20250219',

@@ -38,6 +38,34 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract Anthropic cache write breakdown by ttl', () => {
+      const responseData = {
+        model: 'claude-3-7-sonnet-20250219',
+        usage: {
+          cache_creation: {
+            ephemeral_1h_input_tokens: 200,
+            ephemeral_5m_input_tokens: 100,
+          },
+          cache_creation_input_tokens: 300,
+          cache_read_input_tokens: 0,
+          input_tokens: 11,
+          output_tokens: 197,
+        },
+      }
+
+      const { model, usage } = extractUsage(anthropicProvider, responseData)
+
+      expect(model).toBe('claude-3-7-sonnet-20250219')
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_1h_tokens: 200,
+        cache_write_5m_tokens: 100,
+        cache_write_tokens: 300,
+        input_tokens: 311,
+        output_tokens: 197,
+      })
+    })
+
     it('should extract basic usage without cache tokens', () => {
       const responseData = {
         model: 'x',

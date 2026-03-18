@@ -83,6 +83,39 @@ def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usag
     assert extracted_usage.calc_price().total_price == expected_price
 
 
+def test_extract_usage_ok_anthropic_ttl_breakdown():
+    response_data = {
+        'model': 'claude-sonnet-4-6',
+        'usage': {
+            'input_tokens': 11,
+            'cache_creation_input_tokens': 300,
+            'cache_creation': {
+                'ephemeral_5m_input_tokens': 100,
+                'ephemeral_1h_input_tokens': 200,
+            },
+            'cache_read_input_tokens': 0,
+            'output_tokens': 197,
+        },
+    }
+    expected_usage = Usage(
+        input_tokens=311,
+        cache_write_tokens=300,
+        cache_write_5m_tokens=100,
+        cache_write_1h_tokens=200,
+        cache_read_tokens=0,
+        output_tokens=197,
+    )
+
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
+    model, usage = provider.extract_usage(response_data)
+    assert model == 'claude-sonnet-4-6'
+    assert usage == expected_usage
+
+    extracted_usage = extract_usage(response_data, provider_id='anthropic')
+    assert extracted_usage.usage == expected_usage
+    assert extracted_usage.calc_price().total_price == Decimal('0.004563')
+
+
 def test_openai():
     provider = next(provider for provider in providers if provider.id == 'openai')
     assert provider.name == 'OpenAI'
@@ -269,6 +302,33 @@ def test_google_anthropic():
             'claude-sonnet-4-20250514',
             Usage(input_tokens=483, cache_write_tokens=0, cache_read_tokens=0, output_tokens=78),
         )
+    )
+
+
+def test_google_anthropic_ttl_breakdown():
+    response_data = {
+        'model': 'claude-sonnet-4-20250514',
+        'usage': {
+            'input_tokens': 11,
+            'cache_creation_input_tokens': 300,
+            'cache_creation': {
+                'ephemeral_5m_input_tokens': 100,
+                'ephemeral_1h_input_tokens': 200,
+            },
+            'cache_read_input_tokens': 0,
+            'output_tokens': 78,
+        },
+    }
+    assert google_provider.extract_usage(response_data, api_flavor='anthropic') == (
+        'claude-sonnet-4-20250514',
+        Usage(
+            input_tokens=311,
+            cache_write_tokens=300,
+            cache_write_5m_tokens=100,
+            cache_write_1h_tokens=200,
+            cache_read_tokens=0,
+            output_tokens=78,
+        ),
     )
 
 

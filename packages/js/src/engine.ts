@@ -52,7 +52,10 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   const totalInputTokens = usage.input_tokens ?? 0
 
   const cacheReadTokens = usage.cache_read_tokens ?? 0
-  const cacheWriteTokens = usage.cache_write_tokens ?? 0
+  const cacheWrite5mTokens = usage.cache_write_5m_tokens ?? 0
+  const cacheWrite1hTokens = usage.cache_write_1h_tokens ?? 0
+  const specificCacheWriteTokens = cacheWrite5mTokens + cacheWrite1hTokens
+  const legacyCacheWriteTokens = specificCacheWriteTokens === 0 ? (usage.cache_write_tokens ?? 0) : 0
   const cacheAudioReadTokens = usage.cache_audio_read_tokens ?? 0
   const outputAudioTokens = usage.output_audio_tokens ?? 0
 
@@ -64,7 +67,8 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
   let uncachedTextInputTokens = usage.input_tokens ?? 0
   uncachedTextInputTokens -= cacheReadTokens
-  uncachedTextInputTokens -= cacheWriteTokens
+  uncachedTextInputTokens -= specificCacheWriteTokens
+  uncachedTextInputTokens -= legacyCacheWriteTokens
   uncachedTextInputTokens -= uncachedAudioInputTokens
   if (uncachedTextInputTokens < 0) {
     throw new Error('Uncached text input tokens cannot be negative')
@@ -78,7 +82,19 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
   inputPrice += calcMtokPrice(modelPrice.input_mtok, uncachedTextInputTokens, 'input_mtok', totalInputTokens)
   inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, cachedTextInputTokens, 'cache_read_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, cacheWriteTokens, 'cache_write_mtok', totalInputTokens)
+  inputPrice += calcMtokPrice(
+    modelPrice.cache_write_5m_mtok ?? modelPrice.cache_write_mtok,
+    usage.cache_write_5m_tokens,
+    'cache_write_5m_mtok',
+    totalInputTokens,
+  )
+  inputPrice += calcMtokPrice(
+    modelPrice.cache_write_1h_mtok ?? modelPrice.cache_write_mtok,
+    usage.cache_write_1h_tokens,
+    'cache_write_1h_mtok',
+    totalInputTokens,
+  )
+  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, legacyCacheWriteTokens, 'cache_write_mtok', totalInputTokens)
   inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, uncachedAudioInputTokens, 'input_audio_mtok', totalInputTokens)
   inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, cacheAudioReadTokens, 'cache_audio_read_mtok', totalInputTokens)
 

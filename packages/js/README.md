@@ -101,7 +101,15 @@ const result = calcPrice(usage, 'my-new-model', { provider: customProvider })
 
 - `input_mtok` / `output_mtok`: Text token pricing
 - `cache_read_mtok` / `cache_write_mtok`: Prompt caching pricing
+- `cache_write_5m_mtok` / `cache_write_1h_mtok`: Anthropic prompt cache write pricing by TTL for models where those prices are explicitly cataloged, with `cache_write_mtok` kept as a legacy fallback
 - `input_audio_mtok` / `output_audio_mtok`: Audio token pricing
+
+**Usage fields**:
+
+- `cache_write_tokens`: Legacy aggregate prompt cache writes
+- `cache_write_5m_tokens` / `cache_write_1h_tokens`: Anthropic prompt cache writes split by TTL
+
+All Anthropic models listed on the [pricing page](https://docs.anthropic.com/en/docs/about-claude/pricing) have explicit `5m` / `1h` cache write prices. Older unlisted models fall back to the legacy `cache_write_mtok`.
 
 ### Error Handling
 

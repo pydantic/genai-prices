@@ -28,6 +28,12 @@ extractors:
       - path: cache_creation_input_tokens
         dest: cache_write_tokens
         required: false
+      - path: [cache_creation, ephemeral_5m_input_tokens]
+        dest: cache_write_5m_tokens
+        required: false
+      - path: [cache_creation, ephemeral_1h_input_tokens]
+        dest: cache_write_1h_tokens
+        required: false
       - path: cache_read_input_tokens
         dest: cache_read_tokens
         required: false

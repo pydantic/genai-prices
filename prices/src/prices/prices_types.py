@@ -124,6 +124,8 @@ class Provider(_Model):
 UsageField = Literal[
     'input_tokens',
     'cache_write_tokens',
+    'cache_write_5m_tokens',
+    'cache_write_1h_tokens',
     'cache_read_tokens',
     'output_tokens',
     'input_audio_tokens',
@@ -242,7 +244,11 @@ class ModelPrice(_Model):
     """price in USD per million uncached text input/prompt token"""
 
     cache_write_mtok: DollarPrice | TieredPrices | None = None
-    """price in USD per million tokens written to the cache"""
+    """price in USD per million tokens written to the cache when no TTL-specific rate is available"""
+    cache_write_5m_mtok: DollarPrice | TieredPrices | None = None
+    """price in USD per million tokens written to a 5-minute cache"""
+    cache_write_1h_mtok: DollarPrice | TieredPrices | None = None
+    """price in USD per million tokens written to a 1-hour cache"""
     cache_read_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million tokens read from the cache"""
 

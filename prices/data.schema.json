@@ -338,8 +338,32 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ],
-          "description": "price in USD per million tokens written to the cache",
+          "description": "price in USD per million tokens written to the cache when no TTL-specific rate is available",
           "title": "Cache Write Mtok"
+        },
+        "cache_write_5m_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million tokens written to a 5-minute cache",
+          "title": "Cache Write 5M Mtok"
+        },
+        "cache_write_1h_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "description": "price in USD per million tokens written to a 1-hour cache",
+          "title": "Cache Write 1H Mtok"
         },
         "cache_read_mtok": {
           "anyOf": [
@@ -733,6 +757,8 @@
           "enum": [
             "input_tokens",
             "cache_write_tokens",
+            "cache_write_5m_tokens",
+            "cache_write_1h_tokens",
             "cache_read_tokens",
             "output_tokens",
             "input_audio_tokens",

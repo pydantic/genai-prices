@@ -39,6 +39,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
             required: false,
@@ -113,6 +123,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.8,
           cache_write_mtok: 1,
+          cache_write_5m_mtok: 1,
+          cache_write_1h_mtok: 1.6,
           cache_read_mtok: 0.08,
           output_mtok: 4,
         },
@@ -165,6 +177,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
+          cache_write_5m_mtok: 3.75,
+          cache_write_1h_mtok: 6,
           cache_read_mtok: 0.3,
           output_mtok: 15,
         },
@@ -180,6 +194,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           cache_write_mtok: 0.3,
+          cache_write_5m_mtok: 0.3,
+          cache_write_1h_mtok: 0.5,
           cache_read_mtok: 0.03,
           output_mtok: 1.25,
         },
@@ -196,6 +212,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
+          cache_write_5m_mtok: 18.75,
+          cache_write_1h_mtok: 30,
           cache_read_mtok: 1.5,
           output_mtok: 75,
         },
@@ -240,6 +258,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
+          cache_write_5m_mtok: 1.25,
+          cache_write_1h_mtok: 2,
           cache_read_mtok: 0.1,
           output_mtok: 5,
         },
@@ -268,6 +288,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
+          cache_write_5m_mtok: 18.75,
+          cache_write_1h_mtok: 30,
           cache_read_mtok: 1.5,
           output_mtok: 75,
         },
@@ -290,6 +312,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
+          cache_write_5m_mtok: 18.75,
+          cache_write_1h_mtok: 30,
           cache_read_mtok: 1.5,
           output_mtok: 75,
         },
@@ -318,6 +342,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
+          cache_write_5m_mtok: 6.25,
+          cache_write_1h_mtok: 10,
           cache_read_mtok: 0.5,
           output_mtok: 25,
         },
@@ -364,6 +390,24 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              cache_write_5m_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
+              },
+              cache_write_1h_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 20,
+                  },
+                ],
+              },
               cache_read_mtok: {
                 base: 0.5,
                 tiers: [
@@ -392,6 +436,8 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 5,
               cache_write_mtok: 6.25,
+              cache_write_5m_mtok: 6.25,
+              cache_write_1h_mtok: 10,
               cache_read_mtok: 0.5,
               output_mtok: 25,
             },
@@ -425,6 +471,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
+          cache_write_5m_mtok: 3.75,
+          cache_write_1h_mtok: 6,
           cache_read_mtok: 0.3,
           output_mtok: 15,
         },
@@ -460,6 +508,24 @@ export const data: Provider[] = [
               {
                 start: 200000,
                 price: 7.5,
+              },
+            ],
+          },
+          cache_write_5m_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_write_1h_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
               },
             ],
           },
@@ -519,6 +585,24 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              cache_write_5m_mtok: {
+                base: 3.75,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
+              },
+              cache_write_1h_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12,
+                  },
+                ],
+              },
               cache_read_mtok: {
                 base: 0.3,
                 tiers: [
@@ -547,6 +631,8 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 3,
               cache_write_mtok: 3.75,
+              cache_write_5m_mtok: 3.75,
+              cache_write_1h_mtok: 6,
               cache_read_mtok: 0.3,
               output_mtok: 15,
             },
@@ -663,6 +749,16 @@ export const data: Provider[] = [
           {
             path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
             required: false,
           },
           {
@@ -1695,6 +1791,16 @@ export const data: Provider[] = [
           {
             path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
             required: false,
           },
           {
@@ -2784,6 +2890,16 @@ export const data: Provider[] = [
           {
             path: 'cache_creation_input_tokens',
             dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
             required: false,
           },
           {

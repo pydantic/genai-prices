@@ -82,6 +82,8 @@ class CustomUsage:
     input_tokens: int | None = None
 
     cache_write_tokens: int | None = None
+    cache_write_5m_tokens: int | None = None
+    cache_write_1h_tokens: int | None = None
     cache_read_tokens: int | None = None
 
     output_tokens: int | None = None
@@ -162,3 +164,18 @@ def test_extra_source_sausage():
         assert price.model.name == snapshot('gpt-4o Custom')
         assert price.provider.id == snapshot('openai')
         assert price.auto_update_timestamp is None
+
+
+def test_legacy_cache_write_price_fallback_for_ttl_specific_usage():
+    price = types.ModelPrice(input_mtok=Decimal('3'), cache_write_mtok=Decimal('3.75'), output_mtok=Decimal('15')).calc_price(
+        Usage(
+            input_tokens=311,
+            cache_write_5m_tokens=100,
+            cache_write_1h_tokens=200,
+            output_tokens=20,
+        )
+    )
+
+    assert price['input_price'] == snapshot(Decimal('0.001158'))
+    assert price['output_price'] == snapshot(Decimal('0.0003'))
+    assert price['total_price'] == snapshot(Decimal('0.001458'))

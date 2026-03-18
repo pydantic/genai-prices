@@ -203,6 +203,14 @@ class AbstractUsage(Protocol):
         """Number of tokens written to the cache."""
 
     @property
+    def cache_write_5m_tokens(self) -> int | None:
+        """Number of tokens written to a 5-minute cache."""
+
+    @property
+    def cache_write_1h_tokens(self) -> int | None:
+        """Number of tokens written to a 1-hour cache."""
+
+    @property
     def cache_read_tokens(self) -> int | None:
         """Number of tokens read from the cache.
 
@@ -235,6 +243,10 @@ class Usage:
 
     cache_write_tokens: int | None = None
     """Number of tokens written to the cache."""
+    cache_write_5m_tokens: int | None = None
+    """Number of tokens written to a 5-minute cache."""
+    cache_write_1h_tokens: int | None = None
+    """Number of tokens written to a 1-hour cache."""
     cache_read_tokens: int | None = None
     """Number of tokens read from the cache."""
 
@@ -342,6 +354,8 @@ class Provider:
 UsageField = Literal[
     'input_tokens',
     'cache_write_tokens',
+    'cache_write_5m_tokens',
+    'cache_write_1h_tokens',
     'cache_read_tokens',
     'output_tokens',
     'input_audio_tokens',
@@ -591,7 +605,11 @@ class ModelPrice:
     """price in USD per million uncached text input/prompt token"""
 
     cache_write_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million tokens written to the cache"""
+    """price in USD per million tokens written to the cache when no TTL-specific rate is available"""
+    cache_write_5m_mtok: Decimal | TieredPrices | None = None
+    """price in USD per million tokens written to a 5-minute cache"""
+    cache_write_1h_mtok: Decimal | TieredPrices | None = None
+    """price in USD per million tokens written to a 1-hour cache"""
     cache_read_mtok: Decimal | TieredPrices | None = None
     """price in USD per million tokens read from the cache"""
 
@@ -624,17 +642,28 @@ class ModelPrice:
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
         input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
 
+        cache_write_5m_tokens = usage.cache_write_5m_tokens or 0
+        cache_write_1h_tokens = usage.cache_write_1h_tokens or 0
+        specific_cache_write_tokens = cache_write_5m_tokens + cache_write_1h_tokens
+        legacy_cache_write_tokens = 0 if specific_cache_write_tokens else (usage.cache_write_tokens or 0)
+
         uncached_text_input_tokens = usage.input_tokens or 0
         uncached_text_input_tokens -= uncached_audio_input_tokens
-        if cache_write_tokens := usage.cache_write_tokens:
-            uncached_text_input_tokens -= cache_write_tokens
+        uncached_text_input_tokens -= specific_cache_write_tokens
+        uncached_text_input_tokens -= legacy_cache_write_tokens
         if cache_read_tokens := usage.cache_read_tokens:
             uncached_text_input_tokens -= cache_read_tokens
 
         if uncached_text_input_tokens < 0:
             raise ValueError('Uncached text input tokens cannot be negative')
         input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens, total_input_tokens)
+        input_price += calc_mtok_price(
+            self.cache_write_5m_mtok or self.cache_write_mtok, usage.cache_write_5m_tokens, total_input_tokens
+        )
+        input_price += calc_mtok_price(
+            self.cache_write_1h_mtok or self.cache_write_mtok, usage.cache_write_1h_tokens, total_input_tokens
+        )
+        input_price += calc_mtok_price(self.cache_write_mtok, legacy_cache_write_tokens, total_input_tokens)
 
         cached_text_input_tokens = usage.cache_read_tokens or 0
         cached_text_input_tokens -= cache_audio_read_tokens

@@ -55,6 +55,53 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should prefer ttl-specific cache write fields over the legacy aggregate field', () => {
+      const usage: Usage = {
+        cache_read_tokens: 100,
+        cache_write_1h_tokens: 200,
+        cache_write_5m_tokens: 100,
+        cache_write_tokens: 900,
+        input_tokens: 1000,
+        output_tokens: 500,
+      }
+      const modelPrice: ModelPrice = {
+        cache_read_mtok: 0.1,
+        cache_write_1h_mtok: 0.8,
+        cache_write_5m_mtok: 0.5,
+        cache_write_mtok: 9.0,
+        input_mtok: 1.0,
+        output_mtok: 2.0,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.00082,
+        output_price: 0.001,
+        total_price: 0.00182,
+      })
+    })
+
+    it('should fall back to legacy cache_write_mtok for ttl-specific usage', () => {
+      const usage: Usage = {
+        cache_write_1h_tokens: 200,
+        cache_write_5m_tokens: 100,
+        input_tokens: 311,
+        output_tokens: 20,
+      }
+      const modelPrice: ModelPrice = {
+        cache_write_mtok: 3.75,
+        input_mtok: 3.0,
+        output_mtok: 15.0,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result.input_price).toBe(0.001158)
+      expect(result.output_price).toBe(0.0003)
+      expect(result.total_price).toBeCloseTo(0.001458, 12)
+    })
+
     it('should handle audio tokens correctly', () => {
       const usage: Usage = {
         input_audio_tokens: 100,

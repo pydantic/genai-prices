@@ -64,6 +64,10 @@ response_data = {
     'usage': {
         'input_tokens': 504,
         'cache_creation_input_tokens': 123,
+        'cache_creation': {
+            'ephemeral_5m_input_tokens': 0,
+            'ephemeral_1h_input_tokens': 123,
+        },
         'cache_read_input_tokens': 0,
         'output_tokens': 97,
     },
@@ -72,6 +76,8 @@ extracted_usage = extract_usage(response_data, provider_id='anthropic')
 price = extracted_usage.calc_price()
 print(price.total_price)
 ```
+
+When Anthropic returns `usage.cache_creation`, `extract_usage` will preserve the 5-minute and 1-hour cache write buckets separately so the correct write price can be applied. If only `cache_creation_input_tokens` is present, the library falls back to the legacy aggregate cache write price. All Anthropic models listed on the [pricing page](https://docs.anthropic.com/en/docs/about-claude/pricing) have explicit `5m` / `1h` write prices; older unlisted models fall back to the legacy `cache_write_mtok`.
 
 or with OpenAI where there are two API flavors:
 
