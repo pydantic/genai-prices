@@ -57,17 +57,6 @@ models:
       input_mtok: 0.11
       output_mtok: 0.11
 
-  - id: Meta-Llama-3_1-70B-Instruct
-    name: Meta-Llama-3_1-70B-Instruct
-    match:
-      or:
-        - equals: Meta-Llama-3_1-70B-Instruct
-        - equals: meta-llama-3_1-70b-instruct
-    context_window: 131072
-    prices:
-      input_mtok: 0.74
-      output_mtok: 0.74
-
   - id: Meta-Llama-3_3-70B-Instruct
     name: Meta-Llama-3_3-70B-Instruct
     match:
@@ -122,17 +111,6 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 0.7
-
-  - id: Qwen2.5-Coder-32B-Instruct
-    name: Qwen2.5-Coder-32B-Instruct
-    match:
-      or:
-        - equals: Qwen2.5-Coder-32B-Instruct
-        - equals: qwen2.5-coder-32b-instruct
-    context_window: 32768
-    prices:
-      input_mtok: 0.96
-      output_mtok: 0.96
 
   - id: Qwen2.5-VL-72B-Instruct
     name: Qwen2.5-VL-72B-Instruct
@@ -208,12 +186,3 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.18
-
-  - id: llava-next-mistral-7b
-    name: llava-next-mistral-7b
-    match:
-      equals: llava-next-mistral-7b
-    context_window: 32768
-    prices:
-      input_mtok: 0.32
-      output_mtok: 0.32

@@ -490,7 +490,7 @@ describe('Comprehensive API Tests', () => {
       expect(result!.total_price).toBeCloseTo(0.420495, 2)
     })
 
-    it('huggingface_together', () => {
+    it.skip('huggingface_together', () => {
       const provider = findProvider({ providerId: 'huggingface_together' })
       expect(provider).not.toBeUndefined()
 

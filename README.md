@@ -42,23 +42,23 @@ The following providers are currently supported:
 - [Fireworks](prices/providers/fireworks.yml) - 13 models
 - [Google](prices/providers/google.yml) - 32 models
 - [Groq](prices/providers/groq.yml) - 29 models
-- [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 5 models
-- [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 9 models
-- [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 3 models
-- [HuggingFace (hyperbolic)](prices/providers/huggingface_hyperbolic.yml) - 17 models
+- [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
+- [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
+- [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 5 models
+- [HuggingFace (hyperbolic)](prices/providers/huggingface_hyperbolic.yml) - 12 models
 - [HuggingFace (nebius)](prices/providers/huggingface_nebius.yml) - 26 models
-- [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 53 models
-- [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 19 models
+- [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 61 models
+- [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 20 models
 - [HuggingFace (ovhcloud)](prices/providers/huggingface_ovhcloud.yml) - 7 models
-- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 10 models
+- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 8 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
-- [HuggingFace (together)](prices/providers/huggingface_together.yml) - 23 models
+- [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [Mistral](prices/providers/mistral.yml) - 22 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 9 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 68 models
 - [OpenRouter](prices/providers/openrouter.yml) - 583 models
-- [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 18 models
+- [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [X AI](prices/providers/x_ai.yml) - 12 models

@@ -73,17 +73,6 @@ models:
       input_mtok: 0.07
       output_mtok: 0.26
 
-  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
-    name: DeepSeek-R1-Distill-Llama-70B
-    match:
-      or:
-        - equals: deepseek-ai/deepseek-r1-distill-llama-70b
-        - equals: deepseek-ai/deepseek-r1-distill-llama-70b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.74
-      output_mtok: 0.74
-
   - id: meta-llama/Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
     match:
@@ -116,3 +105,14 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 0.47
+
+  - id: openai/gpt-oss-20b
+    name: gpt-oss-20b
+    match:
+      or:
+        - equals: openai/gpt-oss-20b
+        - equals: openai/gpt-oss-20b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.18

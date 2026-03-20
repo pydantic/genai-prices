@@ -51,17 +51,6 @@ models:
       input_mtok: 0.15
       output_mtok: 0.15
 
-  - id: Qwen/Qwen2.5-72B-Instruct
-    name: Qwen2.5-72B-Instruct
-    match:
-      or:
-        - equals: qwen/qwen2.5-72b-instruct
-        - equals: qwen/qwen2.5-72b-instruct-fast
-    context_window: 131072
-    prices:
-      input_mtok: 1.2
-      output_mtok: 1.2
-
   - id: Qwen/Qwen2.5-7B-Instruct
     name: Qwen2.5-7B-Instruct
     match:
@@ -73,17 +62,13 @@ models:
       input_mtok: 0.3
       output_mtok: 0.3
 
-  - id: Qwen/Qwen3-235B-A22B
-    name: Qwen3-235B-A22B
+  - id: Qwen/Qwen3-235B-A22B-Instruct-2507
+    name: Qwen3-235B-A22B-Instruct-2507
     match:
       or:
-        - equals: qwen/qwen3-235b-a22b
-        - equals: qwen/qwen3-235b-a22b-fast
-        - equals: qwen/qwen3-235b-a22b-fp8
-        - equals: qwen/qwen3-235b-a22b-fp8-fast
         - equals: qwen/qwen3-235b-a22b-instruct-2507
         - equals: qwen/qwen3-235b-a22b-instruct-2507-fast
-    context_window: 40960
+    context_window: 262144
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
@@ -101,6 +86,17 @@ models:
       input_mtok: 2
       output_mtok: 2
 
+  - id: Qwen/Qwen3-Coder-Next-FP8
+    name: Qwen3-Coder-Next-FP8
+    match:
+      or:
+        - equals: qwen/qwen3-coder-next-fp8
+        - equals: qwen/qwen3-coder-next-fp8-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.2
+
   - id: Qwen/Qwen3-Next-80B-A3B-Instruct
     name: Qwen3-Next-80B-A3B-Instruct
     match:
@@ -112,27 +108,38 @@ models:
       input_mtok: 0.15
       output_mtok: 1.5
 
-  - id: Qwen/Qwen3-Next-80B-A3B-Thinking
-    name: Qwen3-Next-80B-A3B-Thinking
+  - id: Qwen/Qwen3-VL-8B-Instruct
+    name: Qwen3-VL-8B-Instruct
     match:
       or:
-        - equals: qwen/qwen3-next-80b-a3b-thinking
-        - equals: qwen/qwen3-next-80b-a3b-thinking-fast
+        - equals: qwen/qwen3-vl-8b-instruct
+        - equals: qwen/qwen3-vl-8b-instruct-fast
     context_window: 262144
     prices:
-      input_mtok: 0.15
-      output_mtok: 1.5
+      input_mtok: 0.18000000000000002
+      output_mtok: 0.68
 
-  - id: Qwen/Qwen3-VL-32B-Instruct
-    name: Qwen3-VL-32B-Instruct
+  - id: Qwen/Qwen3.5-397B-A17B
+    name: Qwen3.5-397B-A17B
     match:
       or:
-        - equals: qwen/qwen3-vl-32b-instruct
-        - equals: qwen/qwen3-vl-32b-instruct-fast
+        - equals: qwen/qwen3.5-397b-a17b
+        - equals: qwen/qwen3.5-397b-a17b-fast
     context_window: 262144
     prices:
-      input_mtok: 0.5
-      output_mtok: 1.5
+      input_mtok: 0.6
+      output_mtok: 3.6
+
+  - id: Qwen/Qwen3.5-9B
+    name: Qwen3.5-9B
+    match:
+      or:
+        - equals: qwen/qwen3.5-9b
+        - equals: qwen/qwen3.5-9b-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.15
 
   - id: ServiceNow-AI/Apriel-1.6-15b-Thinker
     name: Apriel-1.6-15b-Thinker
@@ -155,28 +162,6 @@ models:
     prices:
       input_mtok: 1.25
       output_mtok: 1.25
-
-  - id: deepcogito/cogito-v2-preview-llama-405B
-    name: cogito-v2-preview-llama-405B
-    match:
-      or:
-        - equals: deepcogito/cogito-v2-preview-llama-405b
-        - equals: deepcogito/cogito-v2-preview-llama-405b-fast
-    context_window: 32768
-    prices:
-      input_mtok: 3.5
-      output_mtok: 3.5
-
-  - id: deepcogito/cogito-v2-preview-llama-70B
-    name: cogito-v2-preview-llama-70B
-    match:
-      or:
-        - equals: deepcogito/cogito-v2-preview-llama-70b
-        - equals: deepcogito/cogito-v2-preview-llama-70b-fast
-    context_window: 32768
-    prices:
-      input_mtok: 0.88
-      output_mtok: 0.88
 
   - id: deepseek-ai/DeepSeek-R1
     name: DeepSeek-R1
@@ -215,27 +200,16 @@ models:
       input_mtok: 0.6
       output_mtok: 1.7
 
-  - id: marin-community/marin-8b-instruct
-    name: marin-8b-instruct
+  - id: google/gemma-3n-E4B-it
+    name: gemma-3n-E4B-it
     match:
       or:
-        - equals: marin-community/marin-8b-instruct
-        - equals: marin-community/marin-8b-instruct-fast
-    context_window: 4096
+        - equals: google/gemma-3n-e4b-it
+        - equals: google/gemma-3n-e4b-it-fast
+    context_window: 32768
     prices:
-      input_mtok: 0.18000000000000002
-      output_mtok: 0.18000000000000002
-
-  - id: meta-llama/Llama-3.2-3B-Instruct
-    name: Llama-3.2-3B-Instruct
-    match:
-      or:
-        - equals: meta-llama/llama-3.2-3b-instruct
-        - equals: meta-llama/llama-3.2-3b-instruct-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.060000000000000005
-      output_mtok: 0.060000000000000005
+      input_mtok: 0.02
+      output_mtok: 0.04
 
   - id: meta-llama/Llama-3.3-70B-Instruct
     name: Llama-3.3-70B-Instruct
@@ -248,40 +222,27 @@ models:
       input_mtok: 0.88
       output_mtok: 0.88
 
-  - id: meta-llama/Meta-Llama-3-70B-Instruct
-    name: Meta-Llama-3-70B-Instruct
+  - id: meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+    name: Llama-4-Maverick-17B-128E-Instruct-FP8
     match:
       or:
-        - equals: meta-llama/meta-llama-3-70b-instruct
-        - equals: meta-llama/meta-llama-3-70b-instruct-fast
-    context_window: 8192
+        - equals: meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+        - equals: meta-llama/llama-4-maverick-17b-128e-instruct-fp8-fast
+    context_window: 1048576
     prices:
-      input_mtok: 0.88
-      output_mtok: 0.88
+      input_mtok: 0.27
+      output_mtok: 0.85
 
-  - id: moonshotai/Kimi-K2-Instruct
-    name: Kimi-K2-Instruct
+  - id: moonshotai/Kimi-K2.5
+    name: Kimi-K2.5
     match:
       or:
-        - equals: moonshotai/kimi-k2-instruct
-        - equals: moonshotai/kimi-k2-instruct-fast
-        - equals: moonshotai/kimi-k2-instruct-0905
-        - equals: moonshotai/kimi-k2-instruct-0905-fast
-    context_window: 131072
-    prices:
-      input_mtok: 1
-      output_mtok: 3
-
-  - id: moonshotai/Kimi-K2-Thinking
-    name: Kimi-K2-Thinking
-    match:
-      or:
-        - equals: moonshotai/kimi-k2-thinking
-        - equals: moonshotai/kimi-k2-thinking-fast
+        - equals: moonshotai/kimi-k2.5
+        - equals: moonshotai/kimi-k2.5-fast
     context_window: 262144
     prices:
-      input_mtok: 1.2
-      output_mtok: 4
+      input_mtok: 0.5
+      output_mtok: 2.8
 
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
@@ -294,6 +255,17 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
+  - id: openai/gpt-oss-20b
+    name: gpt-oss-20b
+    match:
+      or:
+        - equals: openai/gpt-oss-20b
+        - equals: openai/gpt-oss-20b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.2
+
   - id: zai-org/GLM-4.5-Air-FP8
     name: GLM-4.5-Air-FP8
     match:
@@ -304,3 +276,36 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 1.1
+
+  - id: zai-org/GLM-4.6
+    name: GLM-4.6
+    match:
+      or:
+        - equals: zai-org/glm-4.6
+        - equals: zai-org/glm-4.6-fast
+    context_window: 202752
+    prices:
+      input_mtok: 0.6
+      output_mtok: 2.2
+
+  - id: zai-org/GLM-4.7-FP8
+    name: GLM-4.7-FP8
+    match:
+      or:
+        - equals: zai-org/glm-4.7-fp8
+        - equals: zai-org/glm-4.7-fp8-fast
+    context_window: 202752
+    prices:
+      input_mtok: 0.45
+      output_mtok: 2
+
+  - id: zai-org/GLM-5
+    name: GLM-5
+    match:
+      or:
+        - equals: zai-org/glm-5
+        - equals: zai-org/glm-5-fast
+    context_window: 202752
+    prices:
+      input_mtok: 1
+      output_mtok: 3.2
