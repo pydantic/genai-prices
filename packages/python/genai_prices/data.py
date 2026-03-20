@@ -4782,6 +4782,118 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='moonshotai',
+        name='MoonshotAi',
+        api_pattern='https://api\\.moonshot\\.',
+        pricing_urls=['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='kimi'), ClauseStartsWith(starts_with='moonshot')]),
+        provider_match=ClauseContains(contains='moonshot'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='kimi-k2-0711-preview',
+                match=ClauseEquals(equals='kimi-k2-0711-preview'),
+                name='Kimi K2 0711 Preview',
+                description='MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-0905-preview',
+                match=ClauseEquals(equals='kimi-k2-0905-preview'),
+                name='Kimi K2 0905 Preview',
+                description='Based on kimi-k2-0711-preview, with enhanced agentic coding abilities, improved frontend code quality and practicality, and better context understanding. MoE foundation model with 1 trillion total parameters and 32 billion activated parameters.',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-thinking',
+                match=ClauseEquals(equals='kimi-k2-thinking'),
+                name='Kimi K2 Thinking',
+                description='A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-thinking-turbo',
+                match=ClauseEquals(equals='kimi-k2-thinking-turbo'),
+                name='Kimi K2 Thinking Turbo',
+                description='High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-turbo-preview',
+                match=ClauseStartsWith(starts_with='kimi-k2-turbo'),
+                name='Kimi K2 Turbo Preview',
+                description='High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2.5',
+                match=ClauseStartsWith(starts_with='kimi-k2.5'),
+                name='Kimi K2.5',
+                description="Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='moonshot-v1-128k',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='moonshot-v1-128k'),
+                        ClauseEquals(equals='moonshot-v1-128k-vision-preview'),
+                    ]
+                ),
+                name='Moonshot V1 128K',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
+            ),
+            ModelInfo(
+                id='moonshot-v1-32k',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='moonshot-v1-32k'), ClauseEquals(equals='moonshot-v1-32k-vision-preview')]
+                ),
+                name='Moonshot V1 32K',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='moonshot-v1-8k',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='moonshot-v1-8k'), ClauseEquals(equals='moonshot-v1-8k-vision-preview')]
+                ),
+                name='Moonshot V1 8K',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
+            ),
+        ],
+    ),
+    Provider(
         id='novita',
         name='Novita',
         api_pattern='https://api\\.novita\\.ai',
