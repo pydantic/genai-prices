@@ -235,16 +235,33 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Claude Opus 4.6',
-                description='Most intelligent model with adaptive thinking and 1M context beta',
+                description='Our most intelligent model for building agents and coding',
                 context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
+                            ),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('5'),
+                            cache_write_mtok=Decimal('6.25'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('25'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='claude-sonnet-4-0',
@@ -276,7 +293,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Claude Sonnet 4.5',
-                description='Most intelligent model for building agents and coding',
+                description='Our best combination of speed and intelligence',
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
@@ -286,6 +303,43 @@ providers: list[Provider] = [
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
                 ),
+            ),
+            ModelInfo(
+                id='claude-sonnet-4-6',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-sonnet-4-6'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4.6'),
+                    ]
+                ),
+                name='Claude Sonnet 4.6',
+                description='Our best combination of speed and intelligence',
+                context_window=1000000,
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
+                            ),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='claude-v1',
@@ -358,7 +412,7 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='amazon.nova-lite-v1:0',
-                match=ClauseContains(contains='amazon.nova-lite-v1'),
+                match=ClauseContains(contains='amazon.nova-lite'),
                 name='Nova Lite',
                 description='Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
                 prices=ModelPrice(
@@ -367,7 +421,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-micro-v1:0',
-                match=ClauseContains(contains='amazon.nova-micro-v1'),
+                match=ClauseContains(contains='amazon.nova-micro'),
                 name='Nova Micro',
                 description='Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
                 prices=ModelPrice(
@@ -376,7 +430,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-premier-v1:0',
-                match=ClauseContains(contains='amazon.nova-premier-v1'),
+                match=ClauseContains(contains='amazon.nova-premier'),
                 name='Nova Premier',
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.625'), output_mtok=Decimal('12.5')
@@ -384,7 +438,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-pro-v1:0',
-                match=ClauseContains(contains='amazon.nova-pro-v1'),
+                match=ClauseContains(contains='amazon.nova-pro'),
                 name='Nova Pro',
                 description='Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
                 prices=ModelPrice(
@@ -393,7 +447,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.nova-sonic-v1:0',
-                match=ClauseContains(contains='amazon.nova-sonic-v1'),
+                match=ClauseContains(contains='amazon.nova-sonic'),
                 name='Nova Sonic',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.06'),
@@ -404,7 +458,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='amazon.titan-embed-text-v1',
-                match=ClauseContains(contains='amazon.titan-embed-text-v1'),
+                match=ClauseContains(contains='amazon.titan-embed-text'),
                 name='Titan Embeddings G1 - Text',
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
@@ -422,13 +476,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='deepseek.r1-v1:0',
-                match=ClauseContains(contains='deepseek.r1-v1'),
+                match=ClauseContains(contains='deepseek.r1'),
                 name='DeepSeek-R1',
                 prices=ModelPrice(input_mtok=Decimal('1.35'), output_mtok=Decimal('5.4')),
             ),
             ModelInfo(
                 id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
-                match=ClauseStartsWith(starts_with='global.anthropic.claude-haiku-4-5-20251001-v1'),
+                match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
@@ -437,8 +491,30 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.anthropic.claude-opus-4-5-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-opus-4-6-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='global.anthropic.claude-sonnet-4-20250514-v1:0',
-                match=ClauseStartsWith(starts_with='global.anthropic.claude-sonnet-4-20250514-v1'),
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-20250514'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -448,7 +524,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
-                match=ClauseStartsWith(starts_with='global.anthropic.claude-sonnet-4-5-20250929-v1'),
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -457,68 +533,80 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.anthropic.claude-sonnet-4-6-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-4-6'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='meta.llama3-1-70b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-1-70b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-1-70b-instruct'),
                 name='Llama 3.1 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-1-8b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-1-8b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-1-8b-instruct'),
                 name='Llama 3.1 8B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('0.22')),
             ),
             ModelInfo(
                 id='meta.llama3-2-11b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-11b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-11b-instruct'),
                 name='Llama 3.2 11B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.16'), output_mtok=Decimal('0.16')),
             ),
             ModelInfo(
                 id='meta.llama3-2-1b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-1b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-1b-instruct'),
                 name='Llama 3.2 1B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='meta.llama3-2-3b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-3b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-3b-instruct'),
                 name='Llama 3.2 3B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
             ),
             ModelInfo(
                 id='meta.llama3-2-90b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-2-90b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-2-90b-instruct'),
                 name='Llama 3.2 90B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-3-70b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-3-70b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-3-70b-instruct'),
                 name='Llama 3.3 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.72'), output_mtok=Decimal('0.72')),
             ),
             ModelInfo(
                 id='meta.llama3-70b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-70b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-70b-instruct'),
                 name='Llama 3 70B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('2.65'), output_mtok=Decimal('3.5')),
             ),
             ModelInfo(
                 id='meta.llama3-8b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama3-8b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama3-8b-instruct'),
                 name='Llama 3 8B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='meta.llama4-maverick-17b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama4-maverick-17b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama4-maverick-17b-instruct'),
                 name='Llama 4 Maverick 17B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.24'), output_mtok=Decimal('0.97')),
             ),
             ModelInfo(
                 id='meta.llama4-scout-17b-instruct-v1:0',
-                match=ClauseContains(contains='meta.llama4-scout-17b-instruct-v1'),
+                match=ClauseContains(contains='meta.llama4-scout-17b-instruct'),
                 name='Llama 4 Scout 17B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.66')),
             ),
@@ -530,13 +618,13 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral.mistral-large-2402-v1:0',
-                match=ClauseContains(contains='mistral.mistral-large-2402-v1'),
+                match=ClauseContains(contains='mistral.mistral-large-2402'),
                 name='Mistral Large (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='mistral.mistral-small-2402-v1:0',
-                match=ClauseContains(contains='mistral.mistral-small-2402-v1'),
+                match=ClauseContains(contains='mistral.mistral-small-2402'),
                 name='Mistral Small (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
@@ -548,7 +636,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral.pixtral-large-2502-v1:0',
-                match=ClauseContains(contains='mistral.pixtral-large-2502-v1'),
+                match=ClauseContains(contains='mistral.pixtral-large-2502'),
                 name='Pixtral Large (25.02)',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
@@ -566,19 +654,19 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen.qwen3-32b-v1:0',
-                match=ClauseContains(contains='qwen.qwen3-32b-v1'),
+                match=ClauseContains(contains='qwen.qwen3-32b'),
                 name='Qwen3 32B (dense)',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='qwen.qwen3-coder-30b-a3b-v1:0',
-                match=ClauseContains(contains='qwen.qwen3-coder-30b-a3b-v1'),
+                match=ClauseContains(contains='qwen.qwen3-coder-30b-a3b'),
                 name='Qwen3-Coder-30B-A3B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='qwen.qwen3-coder-480b-a35b-v1:0',
-                match=ClauseContains(contains='qwen.qwen3-coder-480b-a35b-v1'),
+                match=ClauseContains(contains='qwen.qwen3-coder-480b-a35b'),
                 name='Qwen3-Coder-480B-A35B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
             ),
@@ -590,16 +678,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-5-haiku-20241022-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-5-haiku-20241022-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-5-haiku-20241022'),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
                     cache_write_mtok=Decimal('1'),
@@ -609,16 +688,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-5-sonnet-20240620-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-5-sonnet-20240620-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-5-sonnet-20240620'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -628,16 +698,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-5-sonnet-20241022-v2'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-5-sonnet-20241022-v2'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-5-sonnet-20241022'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -647,16 +708,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-7-sonnet-20250219-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-7-sonnet-20250219-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-7-sonnet-20250219'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -666,44 +718,17 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-haiku-20240307-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-haiku-20240307-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-haiku-20240307-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-haiku-20240307'),
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-opus-20240229-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-opus-20240229-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-opus-20240229-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-opus-20240229'),
                 prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-sonnet-20240229-v1:0',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-3-sonnet-20240229-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-3-sonnet-20240229-v1'),
-                    ]
-                ),
+                match=ClauseContains(contains='claude-3-sonnet-20240229'),
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -715,12 +740,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-haiku-4-5-20251001-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-haiku-4-5-20251001-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-haiku-4-5-20251001-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-haiku-4-5-20251001'),
+                        ClauseStartsWith(starts_with='claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='us.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='au.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='apac.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='eu.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='us-gov.anthropic.claude-haiku-4-5-20251001'),
+                        ClauseContains(contains='jp.anthropic.claude-haiku-4-5-20251001'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -734,12 +761,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-opus-4-1-20250805-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-opus-4-1-20250805-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-opus-4-1-20250805-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-1-20250805'),
+                        ClauseStartsWith(starts_with='claude-opus-4-1-20250805'),
+                        ClauseContains(contains='us.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-1-20250805'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-1-20250805'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -753,12 +782,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-opus-4-20250514-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-opus-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-opus-4-20250514-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-20250514'),
+                        ClauseStartsWith(starts_with='claude-opus-4-20250514'),
+                        ClauseContains(contains='us.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-20250514'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-20250514'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -769,15 +800,63 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='regional.anthropic.claude-opus-4-5-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-5'),
+                        ClauseStartsWith(starts_with='claude-opus-4-5'),
+                        ClauseContains(contains='us.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-5'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-5'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.5'),
+                    cache_write_mtok=Decimal('6.875'),
+                    cache_read_mtok=Decimal('0.55'),
+                    output_mtok=Decimal('27.5'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-opus-4-6-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-4-6'),
+                        ClauseStartsWith(starts_with='claude-opus-4-6'),
+                        ClauseContains(contains='us.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='au.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='apac.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-6'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-4-6'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=200000, price=Decimal('11'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.875'), tiers=[Tier(start=200000, price=Decimal('13.75'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.55'), tiers=[Tier(start=200000, price=Decimal('1.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('27.5'), tiers=[Tier(start=200000, price=Decimal('41.25'))]),
+                ),
+            ),
+            ModelInfo(
                 id='regional.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-sonnet-4-20250514-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-sonnet-4-20250514-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-20250514'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-20250514'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-20250514'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-20250514'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -791,12 +870,14 @@ providers: list[Provider] = [
                 id='regional.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='us.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseStartsWith(starts_with='au.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseStartsWith(starts_with='apac.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseStartsWith(starts_with='eu.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseStartsWith(starts_with='us-gov.anthropic.claude-sonnet-4-5-20250929-v1'),
-                        ClauseStartsWith(starts_with='jp.anthropic.claude-sonnet-4-5-20250929-v1'),
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-5-20250929'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-5-20250929'),
                     ]
                 ),
                 prices=ModelPrice(
@@ -804,6 +885,31 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('4.125'),
                     cache_read_mtok=Decimal('0.33'),
                     output_mtok=Decimal('16.5'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-sonnet-4-6-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-4-6'),
+                        ClauseStartsWith(starts_with='claude-sonnet-4-6'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-4-6'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-4-6'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('3.3'), tiers=[Tier(start=200000, price=Decimal('6.6'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('4.125'), tiers=[Tier(start=200000, price=Decimal('8.25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.33'), tiers=[Tier(start=200000, price=Decimal('0.66'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('16.5'), tiers=[Tier(start=200000, price=Decimal('24.75'))]),
                 ),
             ),
         ],
@@ -1802,6 +1908,41 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 3 Pro Preview',
                 description='The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3.1-flash-image-preview',
+                match=ClauseStartsWith(starts_with='gemini-3.1-flash-image-preview'),
+                name='Gemini 3.1 Flash Image Preview',
+                description="Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60')),
+            ),
+            ModelInfo(
+                id='gemini-3.1-flash-lite-preview',
+                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite-preview'),
+                name='Gemini 3.1 Flash Lite Preview',
+                description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'),
+                    cache_read_mtok=Decimal('0.025'),
+                    output_mtok=Decimal('1.5'),
+                    input_audio_mtok=Decimal('0.5'),
+                    cache_audio_read_mtok=Decimal('0.05'),
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3.1-pro-preview',
+                match=ClauseStartsWith(starts_with='gemini-3.1-pro-preview'),
+                name='Gemini 3.1 Pro Preview',
+                description='The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
@@ -4647,6 +4788,118 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='moonshotai',
+        name='MoonshotAi',
+        api_pattern='https://api\\.moonshot\\.',
+        pricing_urls=['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='kimi'), ClauseStartsWith(starts_with='moonshot')]),
+        provider_match=ClauseContains(contains='moonshot'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='kimi-k2-0711-preview',
+                match=ClauseEquals(equals='kimi-k2-0711-preview'),
+                name='Kimi K2 0711 Preview',
+                description='MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-0905-preview',
+                match=ClauseEquals(equals='kimi-k2-0905-preview'),
+                name='Kimi K2 0905 Preview',
+                description='Based on kimi-k2-0711-preview, with enhanced agentic coding abilities, improved frontend code quality and practicality, and better context understanding. MoE foundation model with 1 trillion total parameters and 32 billion activated parameters.',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-thinking',
+                match=ClauseEquals(equals='kimi-k2-thinking'),
+                name='Kimi K2 Thinking',
+                description='A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-thinking-turbo',
+                match=ClauseEquals(equals='kimi-k2-thinking-turbo'),
+                name='Kimi K2 Thinking Turbo',
+                description='High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2-turbo-preview',
+                match=ClauseStartsWith(starts_with='kimi-k2-turbo'),
+                name='Kimi K2 Turbo Preview',
+                description='High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k2.5',
+                match=ClauseStartsWith(starts_with='kimi-k2.5'),
+                name='Kimi K2.5',
+                description="Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='moonshot-v1-128k',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='moonshot-v1-128k'),
+                        ClauseEquals(equals='moonshot-v1-128k-vision-preview'),
+                    ]
+                ),
+                name='Moonshot V1 128K',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
+            ),
+            ModelInfo(
+                id='moonshot-v1-32k',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='moonshot-v1-32k'), ClauseEquals(equals='moonshot-v1-32k-vision-preview')]
+                ),
+                name='Moonshot V1 32K',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='moonshot-v1-8k',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='moonshot-v1-8k'), ClauseEquals(equals='moonshot-v1-8k-vision-preview')]
+                ),
+                name='Moonshot V1 8K',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
+            ),
+        ],
+    ),
+    Provider(
         id='novita',
         name='Novita',
         api_pattern='https://api\\.novita\\.ai',
@@ -5344,6 +5597,89 @@ providers: list[Provider] = [
                 description='Version of GPT-5.2 that produces smarter and more precise responses.',
                 context_window=400000,
                 prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
+            ),
+            ModelInfo(
+                id='gpt-5.3-codex',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.3-codex'), ClauseEquals(equals='gpt-5-3-codex')]),
+                name='GPT-5.3-Codex',
+                description='The most capable agentic coding model',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.4',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.4'),
+                        ClauseEquals(equals='gpt-5.4-2026-03-05'),
+                        ClauseEquals(equals='gpt-5-4'),
+                        ClauseEquals(equals='gpt-5-4-2026-03-05'),
+                    ]
+                ),
+                name='GPT-5.4',
+                description="OpenAI's most capable model with a 1.05M token context window.",
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.4-mini',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.4-mini'),
+                        ClauseEquals(equals='gpt-5.4-mini-2026-03-17'),
+                        ClauseEquals(equals='gpt-5-4-mini'),
+                        ClauseEquals(equals='gpt-5-4-mini-2026-03-17'),
+                    ]
+                ),
+                name='GPT-5.4 mini',
+                description='Our strongest mini model yet for coding, computer use, and subagents.',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.4-nano',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.4-nano'),
+                        ClauseEquals(equals='gpt-5.4-nano-2026-03-17'),
+                        ClauseEquals(equals='gpt-5-4-nano'),
+                        ClauseEquals(equals='gpt-5-4-nano-2026-03-17'),
+                    ]
+                ),
+                name='GPT-5.4 nano',
+                description='Our cheapest GPT-5.4-class model for simple high-volume tasks.',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.25')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.4-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.4-pro'),
+                        ClauseEquals(equals='gpt-5.4-pro-2026-03-05'),
+                        ClauseEquals(equals='gpt-5-4-pro'),
+                        ClauseEquals(equals='gpt-5-4-pro-2026-03-05'),
+                    ]
+                ),
+                name='GPT-5.4 Pro',
+                description='Version of GPT-5.4 that produces smarter and more precise responses.',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-realtime',
@@ -8772,6 +9108,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='qwen3.5-plus-02-15',
+                match=ClauseEquals(equals='qwen3.5-plus-02-15'),
+                name='Qwen3.5 plus-02-15',
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.4')),
+            ),
+            ModelInfo(
                 id='qwerky-72b:free',
                 match=ClauseEquals(equals='qwerky-72b:free'),
                 name='Qwerky 72B (free)',
@@ -9769,6 +10111,16 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cached_prompt_text_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
@@ -9779,7 +10131,7 @@ providers: list[Provider] = [
                 ],
                 api_flavor='chat',
                 model_path='model',
-            )
+            ),
         ],
         models=[
             ModelInfo(

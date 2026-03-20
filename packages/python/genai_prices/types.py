@@ -668,7 +668,7 @@ class ModelPrice:
                 else:
                     name = field.name.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):
-                        parts.append(f'{value.base}/{name} MTok (+tiers)')
+                        parts.append(f'${value.base}/{name} MTok (+tiers)')
                     else:
                         parts.append(f'${value}/{name} MTok')
 
