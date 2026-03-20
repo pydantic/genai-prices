@@ -62,6 +62,17 @@ models:
       input_mtok: 0.59
       output_mtok: 0.79
 
+  - id: meta-llama/Llama-4-Scout-17B-16E-Instruct
+    name: Llama-4-Scout-17B-16E-Instruct
+    match:
+      or:
+        - equals: meta-llama/llama-4-scout-17b-16e-instruct
+        - equals: meta-llama/llama-4-scout-17b-16e-instruct-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.11
+      output_mtok: 0.34
+
   - id: openai/gpt-oss-120b
     name: gpt-oss-120b
     match:
@@ -72,3 +83,14 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.75
+
+  - id: openai/gpt-oss-20b
+    name: gpt-oss-20b
+    match:
+      or:
+        - equals: openai/gpt-oss-20b
+        - equals: openai/gpt-oss-20b-fast
+    context_window: 131072
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.5
