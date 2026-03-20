@@ -16197,6 +16197,17 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'qwen3.5-plus-02-15',
+        name: 'Qwen3.5 plus-02-15',
+        match: {
+          equals: 'qwen3.5-plus-02-15',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'qwerky-72b:free',
         name: 'Qwerky 72B (free)',
         match: {

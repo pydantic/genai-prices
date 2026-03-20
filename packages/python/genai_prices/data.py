@@ -9102,6 +9102,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='qwen3.5-plus-02-15',
+                match=ClauseEquals(equals='qwen3.5-plus-02-15'),
+                name='Qwen3.5 plus-02-15',
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.4')),
+            ),
+            ModelInfo(
                 id='qwerky-72b:free',
                 match=ClauseEquals(equals='qwerky-72b:free'),
                 name='Qwerky 72B (free)',
