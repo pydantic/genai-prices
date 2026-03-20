@@ -1157,7 +1157,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'qwen.qwen3-vl-235b-a22b',
+        id: 'qwen.qwen3-vl-235b-a22b-v1:0',
         name: 'Qwen3-VL-235B-A22B-Instruct',
         match: {
           contains: 'qwen.qwen3-vl-235b-a22b',

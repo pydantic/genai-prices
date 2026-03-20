@@ -671,7 +671,7 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('1.8')),
             ),
             ModelInfo(
-                id='qwen.qwen3-vl-235b-a22b',
+                id='qwen.qwen3-vl-235b-a22b-v1:0',
                 match=ClauseContains(contains='qwen.qwen3-vl-235b-a22b'),
                 name='Qwen3-VL-235B-A22B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.53'), output_mtok=Decimal('2.66')),
