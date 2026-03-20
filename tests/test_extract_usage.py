@@ -289,3 +289,20 @@ def test_accumulate_extracted_usage():
         input_tokens=10, output_tokens=20
     )
     assert Usage(input_audio_tokens=10) + Usage(input_tokens=10) == Usage(input_audio_tokens=10, input_tokens=10)
+
+
+def test_xai_native():
+    provider = next(provider for provider in providers if provider.id == 'x-ai')
+    response_data = {
+        'model': 'grok-4-fast-non-reasoning',
+        'usage': {
+            'prompt_tokens': 181,
+            'cached_prompt_text_tokens': 162,
+            'completion_tokens': 27,
+            'prompt_text_tokens': 181,
+            'total_tokens': 208,
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == 'grok-4-fast-non-reasoning'
+    assert usage == Usage(input_tokens=181, cache_read_tokens=162, output_tokens=27)
