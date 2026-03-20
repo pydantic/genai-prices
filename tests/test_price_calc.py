@@ -5,6 +5,7 @@ import pytest
 from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
+from genai_prices.types import ModelPrice, TieredPrices
 
 pytestmark = pytest.mark.anyio
 
@@ -65,6 +66,11 @@ def test_tiered_prices():
     assert price.total_price == snapshot(Decimal('0.075'))
     assert price.model.name == snapshot('gemini 1.5 flash')
     assert price.provider.id == snapshot('google')
+
+
+def test_model_price_str_tiered_prices_include_dollar_prefix():
+    model_price = ModelPrice(input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[]))
+    assert str(model_price) == '$2.5/input MTok (+tiers)'
 
 
 def test_requests_kcount_prices():
@@ -183,6 +189,8 @@ EXAMPLES: list[tuple[str, str]] = [
     ('openai', 'gpt-4o-mini'),
     ('openai', 'gpt-4o'),
     ('openai', 'o3-mini-2025-01-31'),
+    ('openai', 'gpt-5.4'),
+    ('openai', 'gpt-5.4-pro'),
     ('openai', 'text-embedding-3-small'),
 ]
 

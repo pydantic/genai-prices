@@ -191,6 +191,95 @@ def test_claude_sonnet_4_5_with_output_above_threshold():
     assert price.provider.id == snapshot('anthropic')
 
 
+def test_openai_gpt_5_4_tiered_pricing_below_threshold():
+    """Test GPT-5.4 with 200,000 input tokens (below 272K threshold).
+
+    Pricing structure (threshold-based):
+    - Base: $2.5/MTok for requests with <= 272K tokens
+    - Tier: $5/MTok for requests with > 272K tokens (applies to ALL tokens)
+
+    Calculation for 200,000 tokens:
+    - All tokens at base price: (2.5 * 200,000) / 1,000,000 = $0.50
+    """
+    price = calc_price(Usage(input_tokens=200_000), model_ref='gpt-5.4', provider_id='openai')
+
+    assert price.input_price == snapshot(Decimal('0.5'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('0.5'))
+    assert price.model.name == snapshot('GPT-5.4')
+    assert price.provider.id == snapshot('openai')
+
+
+def test_openai_gpt_5_4_tiered_pricing_above_threshold():
+    """Test GPT-5.4 with 500,000 input tokens (above 272K threshold).
+
+    Pricing structure (threshold-based):
+    - Base: $2.5/MTok for requests with <= 272K tokens
+    - Tier: $5/MTok for requests with > 272K tokens (applies to ALL tokens)
+
+    Calculation for 500,000 tokens:
+    - ALL tokens at tier price: (5 * 500,000) / 1,000,000 = $2.50
+    """
+    price = calc_price(Usage(input_tokens=500_000), model_ref='gpt-5.4', provider_id='openai')
+
+    assert price.input_price == snapshot(Decimal('2.5'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('2.5'))
+    assert price.model.name == snapshot('GPT-5.4')
+    assert price.provider.id == snapshot('openai')
+
+
+def test_openai_gpt_5_4_tiered_pricing_with_output():
+    """Test GPT-5.4 with input above threshold and output tokens.
+
+    Input: 300,000 tokens (above 272K threshold)
+    Output: 100,000 tokens
+
+    Pricing structure:
+    - Input base: $2.5/MTok, tier: $5/MTok (threshold at 272K)
+    - Output base: $15/MTok, tier: $22.5/MTok (threshold at 272K)
+
+    Calculation:
+    - Input: 300K > 272K, so tier rate applies to ALL: (5 * 300,000) / 1,000,000 = $1.50
+    - Output: tier determined by input (300K > 272K), so tier rate: (22.5 * 100,000) / 1,000,000 = $2.25
+    - Total: $1.50 + $2.25 = $3.75
+    """
+    price = calc_price(
+        Usage(input_tokens=300_000, output_tokens=100_000),
+        model_ref='gpt-5.4',
+        provider_id='openai',
+    )
+
+    assert price.input_price == snapshot(Decimal('1.5'))
+    assert price.output_price == snapshot(Decimal('2.25'))
+    assert price.total_price == snapshot(Decimal('3.75'))
+    assert price.model.name == snapshot('GPT-5.4')
+    assert price.provider.id == snapshot('openai')
+
+
+def test_openai_gpt_5_4_tiered_pricing_with_cache():
+    """Test GPT-5.4 with cached tokens below threshold.
+
+    Input: 100,000 tokens total, all cached (below 272K threshold)
+
+    Pricing structure:
+    - Cache read base: $0.25/MTok
+    - Cache read tier: $0.50/MTok (threshold at 272K)
+
+    Calculation:
+    - All cached at base: (0.25 * 100,000) / 1,000,000 = $0.025
+    """
+    price = calc_price(
+        Usage(input_tokens=100_000, cache_read_tokens=100_000),
+        model_ref='gpt-5.4',
+        provider_id='openai',
+    )
+
+    assert price.input_price == snapshot(Decimal('0.025'))
+    assert price.output_price == snapshot(Decimal('0'))
+    assert price.total_price == snapshot(Decimal('0.025'))
+
+
 def test_google_gemini_tiered_pricing_below_threshold():
     """Test Google Gemini 1.5 Flash with 100,000 input tokens (below 128K threshold).
 
