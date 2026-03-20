@@ -10,14 +10,17 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-echo "setting Python package version to $1"
-uvx --from=toml-cli toml set --toml-path=packages/python/pyproject.toml project.version $1
+# Strip leading "v" prefix if present
+VERSION="${1#v}"
+
+echo "setting Python package version to $VERSION"
+uvx --from=toml-cli toml set --toml-path=packages/python/pyproject.toml project.version $VERSION
 make sync
 
-echo "setting JS package version to $1"
-npm version --workspace=packages/js $1
+echo "setting JS package version to $VERSION"
+npm version --workspace=packages/js $VERSION
 
-git checkout -b "release/$1"
-echo "Switched to branch 'release/$1', next run:"
+git checkout -b "release/$VERSION"
+echo "Switched to branch 'release/$VERSION', next run:"
 echo ""
-echo "git commit -am 'Prep $1 release' && gh pr create -f"
+echo "git commit -am 'Prep $VERSION release' && gh pr create -f"

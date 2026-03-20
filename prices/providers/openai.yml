@@ -573,10 +573,14 @@ models:
         - equals: gpt-5.1
         - equals: gpt-5.1-2025-11-13
         - equals: gpt-5.1-codex
+        - equals: gpt-5.1-codex-max
+        - equals: gpt-5.1-chat
         - equals: gpt-5.1-chat-latest
         - equals: gpt-5-1
         - equals: gpt-5-1-2025-11-13
         - equals: gpt-5-1-codex
+        - equals: gpt-5-1-codex-max
+        - equals: gpt-5-1-chat
         - equals: gpt-5-1-chat-latest
     context_window: 400000
     prices_checked: 2025-11-13
@@ -612,6 +616,9 @@ models:
         - equals: gpt-5.2-2025-12-11
         - equals: gpt-5-2
         - equals: gpt-5-2-2025-12-11
+        - equals: gpt-5.2-chat
+        - equals: gpt-5.2-chat-latest
+        - equals: gpt-5-2-chat
         - equals: gpt-5-2-chat-latest
         - equals: gpt-5.2-codex
         - equals: gpt-5-2-codex
@@ -634,6 +641,107 @@ models:
     prices:
       input_mtok: 21
       output_mtok: 168
+
+  - id: gpt-5.3-codex
+    name: GPT-5.3-Codex
+    description: The most capable agentic coding model
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.3-codex
+        - equals: gpt-5-3-codex
+    context_window: 400000
+    prices_checked: 2026-02-05
+    prices:
+      input_mtok: 1.75
+      cache_read_mtok: 0.175
+      output_mtok: 14
+
+  - id: gpt-5.4
+    name: GPT-5.4
+    description: OpenAI's most capable model with a 1.05M token context window.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4
+        - equals: gpt-5.4-2026-03-05
+        - equals: gpt-5-4
+        - equals: gpt-5-4-2026-03-05
+    context_window: 1050000
+    prices_checked: 2026-03-06
+    prices:
+      input_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.5
+
+  - id: gpt-5.4-mini
+    name: GPT-5.4 mini
+    description: Our strongest mini model yet for coding, computer use, and subagents.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4-mini
+        - equals: gpt-5.4-mini-2026-03-17
+        - equals: gpt-5-4-mini
+        - equals: gpt-5-4-mini-2026-03-17
+    context_window: 400000
+    prices_checked: 2026-03-18
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 4.5
+
+  - id: gpt-5.4-nano
+    name: GPT-5.4 nano
+    description: Our cheapest GPT-5.4-class model for simple high-volume tasks.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4-nano
+        - equals: gpt-5.4-nano-2026-03-17
+        - equals: gpt-5-4-nano
+        - equals: gpt-5-4-nano-2026-03-17
+    context_window: 400000
+    prices_checked: 2026-03-18
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.02
+      output_mtok: 1.25
+
+  - id: gpt-5.4-pro
+    name: GPT-5.4 Pro
+    description: Version of GPT-5.4 that produces smarter and more precise responses.
+    match:
+      or:
+        - equals: gpt-5.4-pro
+        - equals: gpt-5.4-pro-2026-03-05
+        - equals: gpt-5-4-pro
+        - equals: gpt-5-4-pro-2026-03-05
+    context_window: 1050000
+    prices_checked: 2026-03-06
+    prices:
+      input_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 60
+      output_mtok:
+        base: 180
+        tiers:
+          - start: 272000
+            price: 270
 
   - id: gpt-realtime
     match:

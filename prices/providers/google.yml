@@ -395,6 +395,7 @@ models:
         - equals: gemini-2.5-flash-preview
         - equals: gemini-2.5-flash-preview:thinking
     price_comments: from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
+    deprecated: true
     prices_checked: 2025-10-31
     prices:
       input_mtok: 0.15
@@ -473,6 +474,62 @@ models:
         - starts_with: gemini-3-pro-preview
         - equals: gemini-3-pro-text-preview
     prices_checked: 2025-11-18
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 200000
+            price: 0.4
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 200000
+            price: 18
+
+  - id: gemini-3.1-flash-image-preview
+    name: Gemini 3.1 Flash Image Preview
+    description: >-
+      Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation.
+      Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately
+      from image output tokens.
+    match:
+      starts_with: gemini-3.1-flash-image-preview
+    context_window: 1000000
+    prices_checked: 2026-03-04
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at
+      $60 per 1M tokens. Preview model - pricing may change.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 60
+
+  - id: gemini-3.1-flash-lite-preview
+    name: Gemini 3.1 Flash Lite Preview
+    description: >-
+      Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale.
+      Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.
+    match:
+      starts_with: gemini-3.1-flash-lite-preview
+    context_window: 1000000
+    prices_checked: 2026-03-03
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.
+    prices:
+      input_mtok: 0.25
+      input_audio_mtok: 0.5
+      cache_read_mtok: 0.025
+      cache_audio_read_mtok: 0.05
+      output_mtok: 1.5
+
+  - id: gemini-3.1-pro-preview
+    name: Gemini 3.1 Pro Preview
+    description: The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.
+    match:
+      starts_with: gemini-3.1-pro-preview
+    prices_checked: 2026-02-23
     prices:
       input_mtok:
         base: 2

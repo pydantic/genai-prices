@@ -81,6 +81,10 @@ get-update-price-discrepancies: get-all-prices update-price-discrepancies ## get
 check-for-price-discrepancies: ## check for price discrepancies
 	uv run -m prices check_for_price_discrepancies
 
+.PHONY: detect-deprecated
+detect-deprecated: ## Detect models that may be deprecated or removed
+	uv run -m prices detect_deprecated
+
 .PHONY: inject-providers
 inject-providers: ## inject providers into README.md
 	uv run -m prices inject_providers

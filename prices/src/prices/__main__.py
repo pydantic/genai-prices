@@ -3,6 +3,7 @@ from inspect import getdoc
 
 from .build import build
 from .collapse import collapse
+from .detect_deprecated import detect_deprecated
 from .inject_providers import inject_providers
 from .package_data import package_data
 from .price_discrepancies import check_for_price_discrepancies, update_price_discrepancies
@@ -18,6 +19,7 @@ def main():
         build,
         update_from_openrouter,
         collapse,
+        detect_deprecated,
         get_huggingface_prices,
         get_litellm_prices,
         get_openrouter_prices,

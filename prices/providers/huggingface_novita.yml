@@ -260,6 +260,17 @@ models:
       input_mtok: 0.05
       output_mtok: 0.05
 
+  - id: XiaomiMiMo/MiMo-V2-Flash
+    name: MiMo-V2-Flash
+    match:
+      or:
+        - equals: xiaomimimo/mimo-v2-flash
+        - equals: xiaomimimo/mimo-v2-flash-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.098
+      output_mtok: 0.293
+
   - id: alpindale/WizardLM-2-8x22B
     name: WizardLM-2-8x22B
     match:
@@ -360,6 +371,17 @@ models:
     prices:
       input_mtok: 0.048
       output_mtok: 0.072
+
+  - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+    name: DeepSeek-R1-Distill-Llama-70B
+    match:
+      or:
+        - equals: deepseek-ai/deepseek-r1-distill-llama-70b
+        - equals: deepseek-ai/deepseek-r1-distill-llama-70b-fast
+    context_window: 8192
+    prices:
+      input_mtok: 0.64
+      output_mtok: 0.64
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     name: DeepSeek-R1-Distill-Qwen-14B
@@ -506,17 +528,6 @@ models:
       input_mtok: 0.456
       output_mtok: 1.84
 
-  - id: moonshotai/Kimi-K2-Instruct-0905
-    name: Kimi-K2-Instruct-0905
-    match:
-      or:
-        - equals: moonshotai/kimi-k2-instruct-0905
-        - equals: moonshotai/kimi-k2-instruct-0905-fast
-    context_window: 262144
-    prices:
-      input_mtok: 0.48
-      output_mtok: 2
-
   - id: moonshotai/Kimi-K2-Thinking
     name: Kimi-K2-Thinking
     match:
@@ -538,17 +549,6 @@ models:
     prices:
       input_mtok: 0.04
       output_mtok: 0.2
-
-  - id: openai/gpt-oss-20b
-    name: gpt-oss-20b
-    match:
-      or:
-        - equals: openai/gpt-oss-20b
-        - equals: openai/gpt-oss-20b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.032
-      output_mtok: 0.12
 
   - id: zai-org/AutoGLM-Phone-9B-Multilingual
     name: AutoGLM-Phone-9B-Multilingual

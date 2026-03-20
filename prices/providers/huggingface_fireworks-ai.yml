@@ -77,6 +77,17 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
+  - id: Qwen/Qwen3-Coder-480B-A35B-Instruct
+    name: Qwen3-Coder-480B-A35B-Instruct
+    match:
+      or:
+        - equals: qwen/qwen3-coder-480b-a35b-instruct
+        - equals: qwen/qwen3-coder-480b-a35b-instruct-fast
+    context_window: 262144
+    prices:
+      input_mtok: 0.45
+      output_mtok: 1.8
+
   - id: deepseek-ai/DeepSeek-R1-0528
     name: DeepSeek-R1-0528
     match:
@@ -120,17 +131,6 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
-
-  - id: openai/gpt-oss-20b
-    name: gpt-oss-20b
-    match:
-      or:
-        - equals: openai/gpt-oss-20b
-        - equals: openai/gpt-oss-20b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.05
-      output_mtok: 0.2
 
   - id: zai-org/GLM-4.5
     name: GLM-4.5

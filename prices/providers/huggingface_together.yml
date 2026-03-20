@@ -294,17 +294,6 @@ models:
       input_mtok: 0.15
       output_mtok: 0.6
 
-  - id: openai/gpt-oss-20b
-    name: gpt-oss-20b
-    match:
-      or:
-        - equals: openai/gpt-oss-20b
-        - equals: openai/gpt-oss-20b-fast
-    context_window: 131072
-    prices:
-      input_mtok: 0.05
-      output_mtok: 0.2
-
   - id: zai-org/GLM-4.5-Air-FP8
     name: GLM-4.5-Air-FP8
     match:

@@ -52,6 +52,8 @@ def build():
             providers.append(provider)
 
     providers.sort(key=attrgetter('id'))
+    for provider in providers:
+        provider.exclude_removed()
     write_prices(providers, 'data.json')
     for provider in providers:
         provider.exclude_free()

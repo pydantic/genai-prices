@@ -316,6 +316,17 @@
           "description": "Flag indicating whether this price should be collapsed into other prices.",
           "title": "Collapse",
           "type": "boolean"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "description": "Flag indicating this model is deprecated by the provider but still functional.",
+          "title": "Deprecated"
+        },
+        "removed": {
+          "default": false,
+          "description": "Flag indicating this model has been removed and is no longer available. Excluded from data.json.",
+          "title": "Removed",
+          "type": "boolean"
         }
       },
       "required": [

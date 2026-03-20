@@ -245,28 +245,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'claude-instant-1',
-        description: 'Retired, here to match price sources',
-        match: {
-          equals: 'claude-instant-1',
-        },
-        prices: {
-          input_mtok: 1.63,
-          output_mtok: 55.1,
-        },
-      },
-      {
-        id: 'claude-instant-1.2',
-        description: 'Retired, here to match price sources',
-        match: {
-          equals: 'claude-instant-1.2',
-        },
-        prices: {
-          input_mtok: 1.63,
-          output_mtok: 5.51,
-        },
-      },
-      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -347,7 +325,7 @@ export const data: Provider[] = [
       {
         id: 'claude-opus-4-6',
         name: 'Claude Opus 4.6',
-        description: 'Most intelligent model with adaptive thinking and 1M context beta',
+        description: 'Our most intelligent model for building agents and coding',
         match: {
           or: [
             {
@@ -365,44 +343,60 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
-        prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 10,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+        ],
       },
       {
         id: 'claude-sonnet-4-0',
@@ -438,7 +432,7 @@ export const data: Provider[] = [
       {
         id: 'claude-sonnet-4-5',
         name: 'Claude Sonnet 4.5',
-        description: 'Most intelligent model for building agents and coding',
+        description: 'Our best combination of speed and intelligence',
         match: {
           or: [
             {
@@ -488,6 +482,76 @@ export const data: Provider[] = [
             ],
           },
         },
+      },
+      {
+        id: 'claude-sonnet-4-6',
+        name: 'Claude Sonnet 4.6',
+        description: 'Our best combination of speed and intelligence',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-sonnet-4-6',
+            },
+            {
+              starts_with: 'claude-sonnet-4.6',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 6,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 3.75,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 22.5,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'claude-v1',
@@ -621,7 +685,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video, and text inputs to generate text output. Amazon Nova Lite can handle real-time customer interactions, document analysis, and visual question-answering tasks with high accuracy.',
         match: {
-          contains: 'amazon.nova-lite-v1',
+          contains: 'amazon.nova-lite',
         },
         prices: {
           input_mtok: 0.06,
@@ -635,7 +699,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models at a very low cost. With a context length of 128K tokens and optimized for speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive chat, and brainstorming. It has  simple mathematical reasoning and coding abilities.',
         match: {
-          contains: 'amazon.nova-micro-v1',
+          contains: 'amazon.nova-micro',
         },
         prices: {
           input_mtok: 0.035,
@@ -647,7 +711,7 @@ export const data: Provider[] = [
         id: 'amazon.nova-premier-v1:0',
         name: 'Nova Premier',
         match: {
-          contains: 'amazon.nova-premier-v1',
+          contains: 'amazon.nova-premier',
         },
         prices: {
           input_mtok: 2.5,
@@ -661,7 +725,7 @@ export const data: Provider[] = [
         description:
           'Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed, and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).',
         match: {
-          contains: 'amazon.nova-pro-v1',
+          contains: 'amazon.nova-pro',
         },
         prices: {
           input_mtok: 0.8,
@@ -673,7 +737,7 @@ export const data: Provider[] = [
         id: 'amazon.nova-sonic-v1:0',
         name: 'Nova Sonic',
         match: {
-          contains: 'amazon.nova-sonic-v1',
+          contains: 'amazon.nova-sonic',
         },
         prices: {
           input_mtok: 0.06,
@@ -686,7 +750,7 @@ export const data: Provider[] = [
         id: 'amazon.titan-embed-text-v1',
         name: 'Titan Embeddings G1 - Text',
         match: {
-          contains: 'amazon.titan-embed-text-v1',
+          contains: 'amazon.titan-embed-text',
         },
         prices: {
           input_mtok: 0.1,
@@ -718,7 +782,7 @@ export const data: Provider[] = [
         id: 'deepseek.r1-v1:0',
         name: 'DeepSeek-R1',
         match: {
-          contains: 'deepseek.r1-v1',
+          contains: 'deepseek.r1',
         },
         prices: {
           input_mtok: 1.35,
@@ -728,7 +792,7 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-haiku-4-5-20251001-v1:0',
         match: {
-          starts_with: 'global.anthropic.claude-haiku-4-5-20251001-v1',
+          contains: 'global.anthropic.claude-haiku-4-5-20251001',
         },
         prices: {
           input_mtok: 1,
@@ -738,9 +802,65 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-opus-4-5-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-5',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-4-6-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-6',
+        },
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 200000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 25,
+            tiers: [
+              {
+                start: 200000,
+                price: 37.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
-          starts_with: 'global.anthropic.claude-sonnet-4-20250514-v1',
+          contains: 'global.anthropic.claude-sonnet-4-20250514',
         },
         prices: {
           input_mtok: 3,
@@ -752,7 +872,7 @@ export const data: Provider[] = [
       {
         id: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
         match: {
-          starts_with: 'global.anthropic.claude-sonnet-4-5-20250929-v1',
+          contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
         prices: {
           input_mtok: 3,
@@ -762,10 +882,54 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-sonnet-4-6-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-sonnet-4-6',
+        },
+        prices: {
+          input_mtok: {
+            base: 3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.75,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.6,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 200000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'meta.llama3-1-70b-instruct-v1:0',
         name: 'Llama 3.1 70B Instruct',
         match: {
-          contains: 'meta.llama3-1-70b-instruct-v1',
+          contains: 'meta.llama3-1-70b-instruct',
         },
         prices: {
           input_mtok: 0.72,
@@ -776,7 +940,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-1-8b-instruct-v1:0',
         name: 'Llama 3.1 8B Instruct',
         match: {
-          contains: 'meta.llama3-1-8b-instruct-v1',
+          contains: 'meta.llama3-1-8b-instruct',
         },
         prices: {
           input_mtok: 0.22,
@@ -787,7 +951,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-11b-instruct-v1:0',
         name: 'Llama 3.2 11B Instruct',
         match: {
-          contains: 'meta.llama3-2-11b-instruct-v1',
+          contains: 'meta.llama3-2-11b-instruct',
         },
         prices: {
           input_mtok: 0.16,
@@ -798,7 +962,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-1b-instruct-v1:0',
         name: 'Llama 3.2 1B Instruct',
         match: {
-          contains: 'meta.llama3-2-1b-instruct-v1',
+          contains: 'meta.llama3-2-1b-instruct',
         },
         prices: {
           input_mtok: 0.1,
@@ -809,7 +973,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-3b-instruct-v1:0',
         name: 'Llama 3.2 3B Instruct',
         match: {
-          contains: 'meta.llama3-2-3b-instruct-v1',
+          contains: 'meta.llama3-2-3b-instruct',
         },
         prices: {
           input_mtok: 0.15,
@@ -820,7 +984,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-2-90b-instruct-v1:0',
         name: 'Llama 3.2 90B Instruct',
         match: {
-          contains: 'meta.llama3-2-90b-instruct-v1',
+          contains: 'meta.llama3-2-90b-instruct',
         },
         prices: {
           input_mtok: 0.72,
@@ -831,7 +995,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-3-70b-instruct-v1:0',
         name: 'Llama 3.3 70B Instruct',
         match: {
-          contains: 'meta.llama3-3-70b-instruct-v1',
+          contains: 'meta.llama3-3-70b-instruct',
         },
         prices: {
           input_mtok: 0.72,
@@ -842,7 +1006,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-70b-instruct-v1:0',
         name: 'Llama 3 70B Instruct',
         match: {
-          contains: 'meta.llama3-70b-instruct-v1',
+          contains: 'meta.llama3-70b-instruct',
         },
         prices: {
           input_mtok: 2.65,
@@ -853,7 +1017,7 @@ export const data: Provider[] = [
         id: 'meta.llama3-8b-instruct-v1:0',
         name: 'Llama 3 8B Instruct',
         match: {
-          contains: 'meta.llama3-8b-instruct-v1',
+          contains: 'meta.llama3-8b-instruct',
         },
         prices: {
           input_mtok: 0.3,
@@ -864,7 +1028,7 @@ export const data: Provider[] = [
         id: 'meta.llama4-maverick-17b-instruct-v1:0',
         name: 'Llama 4 Maverick 17B Instruct',
         match: {
-          contains: 'meta.llama4-maverick-17b-instruct-v1',
+          contains: 'meta.llama4-maverick-17b-instruct',
         },
         prices: {
           input_mtok: 0.24,
@@ -875,7 +1039,7 @@ export const data: Provider[] = [
         id: 'meta.llama4-scout-17b-instruct-v1:0',
         name: 'Llama 4 Scout 17B Instruct',
         match: {
-          contains: 'meta.llama4-scout-17b-instruct-v1',
+          contains: 'meta.llama4-scout-17b-instruct',
         },
         prices: {
           input_mtok: 0.17,
@@ -897,7 +1061,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-large-2402-v1:0',
         name: 'Mistral Large (24.02)',
         match: {
-          contains: 'mistral.mistral-large-2402-v1',
+          contains: 'mistral.mistral-large-2402',
         },
         prices: {
           input_mtok: 4,
@@ -908,7 +1072,7 @@ export const data: Provider[] = [
         id: 'mistral.mistral-small-2402-v1:0',
         name: 'Mistral Small (24.02)',
         match: {
-          contains: 'mistral.mistral-small-2402-v1',
+          contains: 'mistral.mistral-small-2402',
         },
         prices: {
           input_mtok: 1,
@@ -930,7 +1094,7 @@ export const data: Provider[] = [
         id: 'mistral.pixtral-large-2502-v1:0',
         name: 'Pixtral Large (25.02)',
         match: {
-          contains: 'mistral.pixtral-large-2502-v1',
+          contains: 'mistral.pixtral-large-2502',
         },
         prices: {
           input_mtok: 2,
@@ -963,7 +1127,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-32b-v1:0',
         name: 'Qwen3 32B (dense)',
         match: {
-          contains: 'qwen.qwen3-32b-v1',
+          contains: 'qwen.qwen3-32b',
         },
         prices: {
           input_mtok: 0.15,
@@ -974,7 +1138,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-coder-30b-a3b-v1:0',
         name: 'Qwen3-Coder-30B-A3B-Instruct',
         match: {
-          contains: 'qwen.qwen3-coder-30b-a3b-v1',
+          contains: 'qwen.qwen3-coder-30b-a3b',
         },
         prices: {
           input_mtok: 0.15,
@@ -985,7 +1149,7 @@ export const data: Provider[] = [
         id: 'qwen.qwen3-coder-480b-a35b-v1:0',
         name: 'Qwen3-Coder-480B-A35B-Instruct',
         match: {
-          contains: 'qwen.qwen3-coder-480b-a35b-v1',
+          contains: 'qwen.qwen3-coder-480b-a35b',
         },
         prices: {
           input_mtok: 0.45,
@@ -993,28 +1157,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen.qwen3-vl-235b-a22b-v1:0',
+        name: 'Qwen3-VL-235B-A22B-Instruct',
+        match: {
+          contains: 'qwen.qwen3-vl-235b-a22b',
+        },
+        prices: {
+          input_mtok: 0.53,
+          output_mtok: 2.66,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-5-haiku-20241022-v1',
-            },
-          ],
+          contains: 'claude-3-5-haiku-20241022',
         },
         prices: {
           input_mtok: 0.8,
@@ -1026,26 +1182,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-5-sonnet-20240620-v1',
-            },
-          ],
+          contains: 'claude-3-5-sonnet-20240620',
         },
         prices: {
           input_mtok: 3,
@@ -1057,26 +1194,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-5-sonnet-20241022-v2',
-            },
-          ],
+          contains: 'claude-3-5-sonnet-20241022',
         },
         prices: {
           input_mtok: 3,
@@ -1088,26 +1206,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-7-sonnet-20250219-v1',
-            },
-          ],
+          contains: 'claude-3-7-sonnet-20250219',
         },
         prices: {
           input_mtok: 3,
@@ -1119,26 +1218,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-haiku-20240307-v1:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-haiku-20240307-v1',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-haiku-20240307-v1',
-            },
-          ],
+          contains: 'claude-3-haiku-20240307',
         },
         prices: {
           input_mtok: 0.25,
@@ -1148,26 +1228,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-opus-20240229-v1:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-opus-20240229-v1',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-opus-20240229-v1',
-            },
-          ],
+          contains: 'claude-3-opus-20240229',
         },
         prices: {
           input_mtok: 15,
@@ -1177,26 +1238,7 @@ export const data: Provider[] = [
       {
         id: 'regional.anthropic.claude-3-sonnet-20240229-v1:0',
         match: {
-          or: [
-            {
-              starts_with: 'us.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              starts_with: 'au.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              starts_with: 'apac.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              starts_with: 'eu.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              starts_with: 'us-gov.anthropic.claude-3-sonnet-20240229-v1',
-            },
-            {
-              starts_with: 'jp.anthropic.claude-3-sonnet-20240229-v1',
-            },
-          ],
+          contains: 'claude-3-sonnet-20240229',
         },
         prices: {
           input_mtok: 3,
@@ -1210,22 +1252,28 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'us.anthropic.claude-haiku-4-5-20251001-v1',
+              starts_with: 'anthropic.claude-haiku-4-5-20251001',
             },
             {
-              starts_with: 'au.anthropic.claude-haiku-4-5-20251001-v1',
+              starts_with: 'claude-haiku-4-5-20251001',
             },
             {
-              starts_with: 'apac.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'us.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              starts_with: 'eu.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'au.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              starts_with: 'us-gov.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'apac.anthropic.claude-haiku-4-5-20251001',
             },
             {
-              starts_with: 'jp.anthropic.claude-haiku-4-5-20251001-v1',
+              contains: 'eu.anthropic.claude-haiku-4-5-20251001',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-haiku-4-5-20251001',
+            },
+            {
+              contains: 'jp.anthropic.claude-haiku-4-5-20251001',
             },
           ],
         },
@@ -1241,22 +1289,28 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'us.anthropic.claude-opus-4-1-20250805-v1',
+              starts_with: 'anthropic.claude-opus-4-1-20250805',
             },
             {
-              starts_with: 'au.anthropic.claude-opus-4-1-20250805-v1',
+              starts_with: 'claude-opus-4-1-20250805',
             },
             {
-              starts_with: 'apac.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'us.anthropic.claude-opus-4-1-20250805',
             },
             {
-              starts_with: 'eu.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'au.anthropic.claude-opus-4-1-20250805',
             },
             {
-              starts_with: 'us-gov.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'apac.anthropic.claude-opus-4-1-20250805',
             },
             {
-              starts_with: 'jp.anthropic.claude-opus-4-1-20250805-v1',
+              contains: 'eu.anthropic.claude-opus-4-1-20250805',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-1-20250805',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-1-20250805',
             },
           ],
         },
@@ -1272,22 +1326,28 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'us.anthropic.claude-opus-4-20250514-v1',
+              starts_with: 'anthropic.claude-opus-4-20250514',
             },
             {
-              starts_with: 'au.anthropic.claude-opus-4-20250514-v1',
+              starts_with: 'claude-opus-4-20250514',
             },
             {
-              starts_with: 'apac.anthropic.claude-opus-4-20250514-v1',
+              contains: 'us.anthropic.claude-opus-4-20250514',
             },
             {
-              starts_with: 'eu.anthropic.claude-opus-4-20250514-v1',
+              contains: 'au.anthropic.claude-opus-4-20250514',
             },
             {
-              starts_with: 'us-gov.anthropic.claude-opus-4-20250514-v1',
+              contains: 'apac.anthropic.claude-opus-4-20250514',
             },
             {
-              starts_with: 'jp.anthropic.claude-opus-4-20250514-v1',
+              contains: 'eu.anthropic.claude-opus-4-20250514',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-20250514',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-20250514',
             },
           ],
         },
@@ -1299,26 +1359,138 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'regional.anthropic.claude-opus-4-5-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-opus-4-5',
+            },
+            {
+              starts_with: 'claude-opus-4-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-5',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-4-6-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-opus-4-6',
+            },
+            {
+              starts_with: 'claude-opus-4-6',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-6',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-6',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: {
+            base: 5.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 11,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.875,
+            tiers: [
+              {
+                start: 200000,
+                price: 13.75,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.55,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 27.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 41.25,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'regional.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
           or: [
             {
-              starts_with: 'us.anthropic.claude-sonnet-4-20250514-v1',
+              starts_with: 'anthropic.claude-sonnet-4-20250514',
             },
             {
-              starts_with: 'au.anthropic.claude-sonnet-4-20250514-v1',
+              starts_with: 'claude-sonnet-4-20250514',
             },
             {
-              starts_with: 'apac.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'us.anthropic.claude-sonnet-4-20250514',
             },
             {
-              starts_with: 'eu.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'au.anthropic.claude-sonnet-4-20250514',
             },
             {
-              starts_with: 'us-gov.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'apac.anthropic.claude-sonnet-4-20250514',
             },
             {
-              starts_with: 'jp.anthropic.claude-sonnet-4-20250514-v1',
+              contains: 'eu.anthropic.claude-sonnet-4-20250514',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-4-20250514',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-4-20250514',
             },
           ],
         },
@@ -1334,22 +1506,28 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'us.anthropic.claude-sonnet-4-5-20250929-v1',
+              starts_with: 'anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              starts_with: 'au.anthropic.claude-sonnet-4-5-20250929-v1',
+              starts_with: 'claude-sonnet-4-5-20250929',
             },
             {
-              starts_with: 'apac.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'us.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              starts_with: 'eu.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'au.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              starts_with: 'us-gov.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'apac.anthropic.claude-sonnet-4-5-20250929',
             },
             {
-              starts_with: 'jp.anthropic.claude-sonnet-4-5-20250929-v1',
+              contains: 'eu.anthropic.claude-sonnet-4-5-20250929',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-4-5-20250929',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-4-5-20250929',
             },
           ],
         },
@@ -1358,6 +1536,75 @@ export const data: Provider[] = [
           cache_write_mtok: 4.125,
           cache_read_mtok: 0.33,
           output_mtok: 16.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-sonnet-4-6-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-sonnet-4-6',
+            },
+            {
+              starts_with: 'claude-sonnet-4-6',
+            },
+            {
+              contains: 'us.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'au.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'apac.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'eu.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-sonnet-4-6',
+            },
+            {
+              contains: 'jp.anthropic.claude-sonnet-4-6',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: {
+            base: 3.3,
+            tiers: [
+              {
+                start: 200000,
+                price: 6.6,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 4.125,
+            tiers: [
+              {
+                start: 200000,
+                price: 8.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.33,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.66,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 16.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 24.75,
+              },
+            ],
+          },
         },
       },
     ],
@@ -3008,6 +3255,7 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           output_mtok: 0.6,
         },
+        deprecated: true,
       },
       {
         id: 'gemini-2.5-pro',
@@ -3110,6 +3358,78 @@ export const data: Provider[] = [
               equals: 'gemini-3-pro-text-preview',
             },
           ],
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.2,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.4,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 12,
+            tiers: [
+              {
+                start: 200000,
+                price: 18,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gemini-3.1-flash-image-preview',
+        name: 'Gemini 3.1 Flash Image Preview',
+        description:
+          "Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
+        match: {
+          starts_with: 'gemini-3.1-flash-image-preview',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 60,
+        },
+      },
+      {
+        id: 'gemini-3.1-flash-lite-preview',
+        name: 'Gemini 3.1 Flash Lite Preview',
+        description:
+          "Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
+        match: {
+          starts_with: 'gemini-3.1-flash-lite-preview',
+        },
+        context_window: 1000000,
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.025,
+          output_mtok: 1.5,
+          input_audio_mtok: 0.5,
+          cache_audio_read_mtok: 0.05,
+        },
+      },
+      {
+        id: 'gemini-3.1-pro-preview',
+        name: 'Gemini 3.1 Pro Preview',
+        description:
+          'The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
+        match: {
+          starts_with: 'gemini-3.1-pro-preview',
         },
         prices: {
           input_mtok: {
@@ -3962,6 +4282,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3-Coder-480B-A35B-Instruct',
+        name: 'Qwen3-Coder-480B-A35B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-coder-480b-a35b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-coder-480b-a35b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.45,
+          output_mtok: 1.8,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-R1-0528',
         name: 'DeepSeek-R1-0528',
         match: {
@@ -4035,25 +4374,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
         },
       },
       {
@@ -4182,25 +4502,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.75,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.5,
         },
       },
     ],
@@ -4576,25 +4877,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.3,
           output_mtok: 0.3,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
         },
       },
     ],
@@ -5106,25 +5388,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
-      },
-      {
         id: 'zai-org/GLM-4.5',
         name: 'GLM-4.5',
         match: {
@@ -5595,6 +5858,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'XiaomiMiMo/MiMo-V2-Flash',
+        name: 'MiMo-V2-Flash',
+        match: {
+          or: [
+            {
+              equals: 'xiaomimimo/mimo-v2-flash',
+            },
+            {
+              equals: 'xiaomimimo/mimo-v2-flash-fast',
+            },
+          ],
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.098,
+          output_mtok: 0.293,
+        },
+      },
+      {
         id: 'alpindale/WizardLM-2-8x22B',
         name: 'WizardLM-2-8x22B',
         match: {
@@ -5769,6 +6051,25 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.048,
           output_mtok: 0.072,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.64,
+          output_mtok: 0.64,
         },
       },
       {
@@ -6025,25 +6326,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'moonshotai/Kimi-K2-Instruct-0905',
-        name: 'Kimi-K2-Instruct-0905',
-        match: {
-          or: [
-            {
-              equals: 'moonshotai/kimi-k2-instruct-0905',
-            },
-            {
-              equals: 'moonshotai/kimi-k2-instruct-0905-fast',
-            },
-          ],
-        },
-        context_window: 262144,
-        prices: {
-          input_mtok: 0.48,
-          output_mtok: 2,
-        },
-      },
-      {
         id: 'moonshotai/Kimi-K2-Thinking',
         name: 'Kimi-K2-Thinking',
         match: {
@@ -6079,25 +6361,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.2,
-        },
-      },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.032,
-          output_mtok: 0.12,
         },
       },
       {
@@ -6652,25 +6915,6 @@ export const data: Provider[] = [
           output_mtok: 0.4,
         },
       },
-      {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
-      },
     ],
   },
   {
@@ -6743,6 +6987,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3-32B',
+        name: 'Qwen3-32B',
+        match: {
+          or: [
+            {
+              equals: 'qwen/qwen3-32b',
+            },
+            {
+              equals: 'qwen/qwen3-32b-fast',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: 'Qwen/Qwen3-Coder-30B-A3B-Instruct',
         name: 'Qwen3-Coder-30B-A3B-Instruct',
         match: {
@@ -6759,6 +7022,82 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.26,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+        name: 'DeepSeek-R1-Distill-Llama-70B',
+        match: {
+          or: [
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b',
+            },
+            {
+              equals: 'deepseek-ai/deepseek-r1-distill-llama-70b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.74,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.1-8B-Instruct',
+        name: 'Llama-3.1-8B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.1-8b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.11,
+          output_mtok: 0.11,
+        },
+      },
+      {
+        id: 'meta-llama/Llama-3.3-70B-Instruct',
+        name: 'Llama-3.3-70B-Instruct',
+        match: {
+          or: [
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct',
+            },
+            {
+              equals: 'meta-llama/llama-3.3-70b-instruct-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.74,
+          output_mtok: 0.74,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-120b',
+        name: 'gpt-oss-120b',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-oss-120b',
+            },
+            {
+              equals: 'openai/gpt-oss-120b-fast',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.47,
         },
       },
     ],
@@ -7677,25 +8016,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'openai/gpt-oss-20b',
-        name: 'gpt-oss-20b',
-        match: {
-          or: [
-            {
-              equals: 'openai/gpt-oss-20b',
-            },
-            {
-              equals: 'openai/gpt-oss-20b-fast',
-            },
-          ],
-        },
-        context_window: 131072,
-        prices: {
-          input_mtok: 0.05,
-          output_mtok: 0.2,
-        },
-      },
-      {
         id: 'zai-org/GLM-4.5-Air-FP8',
         name: 'GLM-4.5-Air-FP8',
         match: {
@@ -8008,6 +8328,7 @@ export const data: Provider[] = [
           input_mtok: 0.25,
           output_mtok: 0.25,
         },
+        deprecated: true,
       },
       {
         id: 'mixtral-8x22b-instruct',
@@ -8078,6 +8399,197 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 6,
+        },
+      },
+    ],
+  },
+  {
+    id: 'moonshotai',
+    name: 'MoonshotAi',
+    pricing_urls: ['https://platform.moonshot.ai/docs/pricing/chat#product-pricing'],
+    api_pattern: 'https://api\\.moonshot\\.',
+    model_match: {
+      or: [
+        {
+          starts_with: 'kimi',
+        },
+        {
+          starts_with: 'moonshot',
+        },
+      ],
+    },
+    provider_match: {
+      contains: 'moonshot',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'kimi-k2-0711-preview',
+        name: 'Kimi K2 0711 Preview',
+        description:
+          'MoE foundation model with exceptional coding and agent capabilities, featuring 1 trillion total parameters and 32 billion activated parameters.',
+        match: {
+          equals: 'kimi-k2-0711-preview',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'kimi-k2-0905-preview',
+        name: 'Kimi K2 0905 Preview',
+        description:
+          'Based on kimi-k2-0711-preview, with enhanced agentic coding abilities, improved frontend code quality and practicality, and better context understanding. MoE foundation model with 1 trillion total parameters and 32 billion activated parameters.',
+        match: {
+          equals: 'kimi-k2-0905-preview',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'kimi-k2-thinking',
+        name: 'Kimi K2 Thinking',
+        description: 'A thinking model with general agentic and reasoning capabilities, specializing in deep reasoning tasks.',
+        match: {
+          equals: 'kimi-k2-thinking',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.15,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'kimi-k2-thinking-turbo',
+        name: 'Kimi K2 Thinking Turbo',
+        description:
+          'High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
+        match: {
+          equals: 'kimi-k2-thinking-turbo',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.15,
+          cache_read_mtok: 0.15,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'kimi-k2-turbo-preview',
+        name: 'Kimi K2 Turbo Preview',
+        description:
+          'High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
+        match: {
+          starts_with: 'kimi-k2-turbo',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.15,
+          cache_read_mtok: 0.15,
+          output_mtok: 8,
+        },
+      },
+      {
+        id: 'kimi-k2.5',
+        name: 'Kimi K2.5',
+        description:
+          "Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
+        match: {
+          starts_with: 'kimi-k2.5',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'moonshot-v1-128k',
+        name: 'Moonshot V1 128K',
+        match: {
+          or: [
+            {
+              equals: 'moonshot-v1-128k',
+            },
+            {
+              equals: 'moonshot-v1-128k-vision-preview',
+            },
+          ],
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 2,
+          output_mtok: 5,
+        },
+      },
+      {
+        id: 'moonshot-v1-32k',
+        name: 'Moonshot V1 32K',
+        match: {
+          or: [
+            {
+              equals: 'moonshot-v1-32k',
+            },
+            {
+              equals: 'moonshot-v1-32k-vision-preview',
+            },
+          ],
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 1,
+          output_mtok: 3,
+        },
+      },
+      {
+        id: 'moonshot-v1-8k',
+        name: 'Moonshot V1 8K',
+        match: {
+          or: [
+            {
+              equals: 'moonshot-v1-8k',
+            },
+            {
+              equals: 'moonshot-v1-8k-vision-preview',
+            },
+          ],
+        },
+        context_window: 8192,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 2,
         },
       },
     ],
@@ -9283,6 +9795,12 @@ export const data: Provider[] = [
               equals: 'gpt-5.1-codex',
             },
             {
+              equals: 'gpt-5.1-codex-max',
+            },
+            {
+              equals: 'gpt-5.1-chat',
+            },
+            {
               equals: 'gpt-5.1-chat-latest',
             },
             {
@@ -9293,6 +9811,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5-1-codex',
+            },
+            {
+              equals: 'gpt-5-1-codex-max',
+            },
+            {
+              equals: 'gpt-5-1-chat',
             },
             {
               equals: 'gpt-5-1-chat-latest',
@@ -9351,6 +9875,15 @@ export const data: Provider[] = [
               equals: 'gpt-5-2-2025-12-11',
             },
             {
+              equals: 'gpt-5.2-chat',
+            },
+            {
+              equals: 'gpt-5.2-chat-latest',
+            },
+            {
+              equals: 'gpt-5-2-chat',
+            },
+            {
               equals: 'gpt-5-2-chat-latest',
             },
             {
@@ -9388,6 +9921,174 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 21,
           output_mtok: 168,
+        },
+      },
+      {
+        id: 'gpt-5.3-codex',
+        name: 'GPT-5.3-Codex',
+        description: 'The most capable agentic coding model',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.3-codex',
+            },
+            {
+              equals: 'gpt-5-3-codex',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 1.75,
+          cache_read_mtok: 0.175,
+          output_mtok: 14,
+        },
+      },
+      {
+        id: 'gpt-5.4',
+        name: 'GPT-5.4',
+        description: "OpenAI's most capable model with a 1.05M token context window.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4',
+            },
+            {
+              equals: 'gpt-5.4-2026-03-05',
+            },
+            {
+              equals: 'gpt-5-4',
+            },
+            {
+              equals: 'gpt-5-4-2026-03-05',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-5.4-mini',
+        name: 'GPT-5.4 mini',
+        description: 'Our strongest mini model yet for coding, computer use, and subagents.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-mini',
+            },
+            {
+              equals: 'gpt-5.4-mini-2026-03-17',
+            },
+            {
+              equals: 'gpt-5-4-mini',
+            },
+            {
+              equals: 'gpt-5-4-mini-2026-03-17',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.75,
+          cache_read_mtok: 0.075,
+          output_mtok: 4.5,
+        },
+      },
+      {
+        id: 'gpt-5.4-nano',
+        name: 'GPT-5.4 nano',
+        description: 'Our cheapest GPT-5.4-class model for simple high-volume tasks.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-nano',
+            },
+            {
+              equals: 'gpt-5.4-nano-2026-03-17',
+            },
+            {
+              equals: 'gpt-5-4-nano',
+            },
+            {
+              equals: 'gpt-5-4-nano-2026-03-17',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.25,
+        },
+      },
+      {
+        id: 'gpt-5.4-pro',
+        name: 'GPT-5.4 Pro',
+        description: 'Version of GPT-5.4 that produces smarter and more precise responses.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-pro',
+            },
+            {
+              equals: 'gpt-5.4-pro-2026-03-05',
+            },
+            {
+              equals: 'gpt-5-4-pro',
+            },
+            {
+              equals: 'gpt-5-4-pro-2026-03-05',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 180,
+            tiers: [
+              {
+                start: 272000,
+                price: 270,
+              },
+            ],
+          },
         },
       },
       {
@@ -15514,6 +16215,17 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'qwen3.5-plus-02-15',
+        name: 'Qwen3.5 plus-02-15',
+        match: {
+          equals: 'qwen3.5-plus-02-15',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'qwerky-72b:free',
         name: 'Qwerky 72B (free)',
         match: {
@@ -16170,24 +16882,6 @@ export const data: Provider[] = [
     ],
     models: [
       {
-        id: 'BGE-M3',
-        name: 'BGE-M3',
-        match: {
-          or: [
-            {
-              equals: 'BGE-M3',
-            },
-            {
-              equals: 'bge-m3',
-            },
-          ],
-        },
-        context_window: 8192,
-        prices: {
-          input_mtok: 0.01,
-        },
-      },
-      {
         id: 'DeepSeek-R1-Distill-Llama-70B',
         name: 'DeepSeek-R1-Distill-Llama-70B',
         match: {
@@ -16422,6 +17116,17 @@ export const data: Provider[] = [
           equals: 'bge-base-en-v1.5',
         },
         context_window: 512,
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
+        id: 'bge-m3',
+        name: 'bge-m3',
+        match: {
+          equals: 'bge-m3',
+        },
+        context_window: 8192,
         prices: {
           input_mtok: 0.01,
         },
@@ -17400,6 +18105,28 @@ export const data: Provider[] = [
     },
     extractors: [
       {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cached_prompt_text_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
@@ -17451,6 +18178,7 @@ export const data: Provider[] = [
           input_mtok: 2,
           output_mtok: 10,
         },
+        deprecated: true,
       },
       {
         id: 'grok-2-vision-1212',

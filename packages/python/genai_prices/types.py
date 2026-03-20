@@ -525,6 +525,8 @@ class ModelInfo:
     """Maximum number of input tokens allowed for this model"""
     price_comments: str | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
+    deprecated: bool | None = None
+    """Flag indicating this model is deprecated by the provider but still functional."""
 
     prices: ModelPrice | list[ConditionalPrice] = dataclasses.field(default_factory=list)
     """Set of prices for using this model.
@@ -666,7 +668,7 @@ class ModelPrice:
                 else:
                     name = field.name.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):
-                        parts.append(f'{value.base}/{name} MTok (+tiers)')
+                        parts.append(f'${value.base}/{name} MTok (+tiers)')
                     else:
                         parts.append(f'${value}/{name} MTok')
 
