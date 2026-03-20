@@ -343,44 +343,60 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
-        prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 10,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
+              cache_write_mtok: {
+                base: 6.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
+              cache_read_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
+              output_mtok: {
+                base: 25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+        ],
       },
       {
         id: 'claude-sonnet-4-0',
@@ -482,44 +498,60 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: {
-            base: 3,
-            tiers: [
-              {
-                start: 200000,
-                price: 6,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 6,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 3.75,
-            tiers: [
-              {
-                start: 200000,
-                price: 7.5,
+              cache_write_mtok: {
+                base: 3.75,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.3,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.6,
+              cache_read_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.6,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 200000,
-                price: 22.5,
+              output_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 22.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+        ],
       },
       {
         id: 'claude-v1',
@@ -3344,6 +3376,22 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-3.1-flash-image-preview',
+        name: 'Gemini 3.1 Flash Image Preview',
+        description:
+          "Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
+        match: {
+          starts_with: 'gemini-3.1-flash-image-preview',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 60,
         },
       },
       {
@@ -9934,6 +9982,60 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gpt-5.4-mini',
+        name: 'GPT-5.4 mini',
+        description: 'Our strongest mini model yet for coding, computer use, and subagents.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-mini',
+            },
+            {
+              equals: 'gpt-5.4-mini-2026-03-17',
+            },
+            {
+              equals: 'gpt-5-4-mini',
+            },
+            {
+              equals: 'gpt-5-4-mini-2026-03-17',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.75,
+          cache_read_mtok: 0.075,
+          output_mtok: 4.5,
+        },
+      },
+      {
+        id: 'gpt-5.4-nano',
+        name: 'GPT-5.4 nano',
+        description: 'Our cheapest GPT-5.4-class model for simple high-volume tasks.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.4-nano',
+            },
+            {
+              equals: 'gpt-5.4-nano-2026-03-17',
+            },
+            {
+              equals: 'gpt-5-4-nano',
+            },
+            {
+              equals: 'gpt-5-4-nano-2026-03-17',
+            },
+          ],
+        },
+        context_window: 400000,
+        prices: {
+          input_mtok: 0.2,
+          cache_read_mtok: 0.02,
+          output_mtok: 1.25,
         },
       },
       {
@@ -17973,6 +18075,28 @@ export const data: Provider[] = [
       equals: 'xai',
     },
     extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cached_prompt_text_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
       {
         api_flavor: 'chat',
         root: 'usage',
