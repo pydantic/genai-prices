@@ -9787,7 +9787,13 @@ export const data: Provider[] = [
               equals: 'gpt-5.4-mini',
             },
             {
+              equals: 'gpt-5.4-mini-2026-03-17',
+            },
+            {
               equals: 'gpt-5-4-mini',
+            },
+            {
+              equals: 'gpt-5-4-mini-2026-03-17',
             },
           ],
         },
@@ -9808,7 +9814,13 @@ export const data: Provider[] = [
               equals: 'gpt-5.4-nano',
             },
             {
+              equals: 'gpt-5.4-nano-2026-03-17',
+            },
+            {
               equals: 'gpt-5-4-nano',
+            },
+            {
+              equals: 'gpt-5-4-nano-2026-03-17',
             },
           ],
         },
