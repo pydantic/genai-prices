@@ -3379,6 +3379,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-3.1-flash-image-preview',
+        name: 'Gemini 3.1 Flash Image Preview',
+        description:
+          "Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
+        match: {
+          starts_with: 'gemini-3.1-flash-image-preview',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 60,
+        },
+      },
+      {
         id: 'gemini-3.1-flash-lite-preview',
         name: 'Gemini 3.1 Flash Lite Preview',
         description:
