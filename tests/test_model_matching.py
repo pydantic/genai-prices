@@ -394,6 +394,14 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-pro-2026-03-05', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5-4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5-4-pro-2026-03-05', snapshot(('openai', 'gpt-5.4-pro'))),
+    ('openai', 'gpt-5.4-mini', snapshot(('openai', 'gpt-5.4-mini'))),
+    ('openai', 'gpt-5.4-mini-2026-03-17', snapshot(('openai', 'gpt-5.4-mini'))),
+    ('openai', 'gpt-5-4-mini', snapshot(('openai', 'gpt-5.4-mini'))),
+    ('openai', 'gpt-5-4-mini-2026-03-17', snapshot(('openai', 'gpt-5.4-mini'))),
+    ('openai', 'gpt-5.4-nano', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openai', 'gpt-5.4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openai', 'gpt-5-4-nano', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openai', 'gpt-5-4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
 ]
 
