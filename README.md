@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 13 models
-- [Google](prices/providers/google.yml) - 30 models
+- [Google](prices/providers/google.yml) - 32 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 5 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 9 models
@@ -54,8 +54,9 @@ The following providers are currently supported:
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 23 models
 - [Mistral](prices/providers/mistral.yml) - 22 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 9 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 63 models
+- [OpenAI](prices/providers/openai.yml) - 68 models
 - [OpenRouter](prices/providers/openrouter.yml) - 581 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 18 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models

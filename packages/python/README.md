@@ -24,6 +24,14 @@ uv add genai-prices
 
 (or `pip install genai-prices` if you're old school)
 
+To use the CLI with Rich output/help, install the optional CLI dependencies:
+
+```bash
+uv add "genai-prices[cli]"
+```
+
+(or `pip install "genai-prices[cli]"`)
+
 ## Warning: these prices will not be 100% accurate
 
 See [the project README](https://github.com/pydantic/genai-prices?tab=readme-ov-file#warning) for more information.
@@ -137,6 +145,15 @@ Run the CLI with:
 uvx genai-prices --help
 ```
 
+Or, if installed locally, make sure CLI extras are present:
+
+```bash
+pip install "genai-prices[cli]"
+genai-prices --help
+```
+
+If local CLI extras are not installed, the command will print an install hint for `genai-prices[cli]`.
+
 To list providers and models, run:
 
 ```bash
@@ -148,6 +165,13 @@ To calculate the price of models, run for example:
 ```bash
 uvx genai-prices calc --input-tokens 100000 --output-tokens 3000 o1 o3 claude-opus-4
 ```
+
+CLI output notes:
+
+- Rich output is the default.
+- Use `--plain` (`-p`) for legacy/plain output.
+- Use `--no-color` to keep rich formatting without colors.
+- Use `-T` / `--table` for wide table output.
 
 ## Further Documentation
 
