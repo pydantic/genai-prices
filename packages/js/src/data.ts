@@ -10810,6 +10810,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -10906,6 +10908,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,

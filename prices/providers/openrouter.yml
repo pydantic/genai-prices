@@ -291,6 +291,10 @@ models:
       cache_read_mtok: 0.5
       cache_write_mtok: 6.25
       output_mtok: 25
+    prices_checked: 2026-03-22
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anthropic/claude-sonnet-4.5
     match:
@@ -339,6 +343,10 @@ models:
       cache_read_mtok: 0.3
       cache_write_mtok: 3.75
       output_mtok: 15
+    prices_checked: 2026-03-22
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anubis-pro-105b-v1
     name: Anubis Pro 105B V1
