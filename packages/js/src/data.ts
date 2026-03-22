@@ -10811,42 +10811,10 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
-              },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
-              },
-            ],
-          },
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
         },
       },
       {
