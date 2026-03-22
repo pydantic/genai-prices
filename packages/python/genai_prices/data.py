@@ -5976,6 +5976,10 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='anthropic/claude-haiku-4.5'),
+                        ClauseEquals(equals='anthropic/claude-4.5-haiku-20251001'),
+                        ClauseEquals(equals='anthropic/claude-4.5-haiku-20251001:beta'),
+                        ClauseEquals(equals='anthropic/claude-haiku-4.5-20251001'),
+                        ClauseEquals(equals='anthropic/claude-haiku-4.5-20251001:beta'),
                         ClauseEquals(equals='anthropic/claude-haiku-4.5:beta'),
                     ]
                 ),
@@ -5991,6 +5995,10 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='anthropic/claude-opus-4.5'),
+                        ClauseEquals(equals='anthropic/claude-4.5-opus-20251124'),
+                        ClauseEquals(equals='anthropic/claude-4.5-opus-20251124:beta'),
+                        ClauseEquals(equals='anthropic/claude-opus-4.5-20251124'),
+                        ClauseEquals(equals='anthropic/claude-opus-4.5-20251124:beta'),
                         ClauseEquals(equals='anthropic/claude-opus-4.5:beta'),
                     ]
                 ),
@@ -6023,6 +6031,10 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='anthropic/claude-sonnet-4.5'),
+                        ClauseEquals(equals='anthropic/claude-4.5-sonnet-20250929'),
+                        ClauseEquals(equals='anthropic/claude-4.5-sonnet-20250929:beta'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-4.5-20250929'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-4.5-20250929:beta'),
                         ClauseEquals(equals='anthropic/claude-sonnet-4.5:beta'),
                     ]
                 ),
