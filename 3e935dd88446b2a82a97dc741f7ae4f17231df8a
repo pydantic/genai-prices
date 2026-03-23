@@ -1,0 +1,23 @@
+prices/src/prices/package_data.py
+  bdd46081fb5d57bd 12,17-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "3e935dd88446b2a82a97dc741f7ae4f17231df8a",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 53,
+      "total_deletions": 85,
+      "accepted_lines": 53,
+      "overriden_lines": 0
+    }
+  }
+}
