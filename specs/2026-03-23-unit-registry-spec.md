@@ -305,21 +305,46 @@ Audio in (audio tokens), text out (output tokens). `input_mtok` and `input_audio
 
 ---
 
-## 7. Compatibility
+## 7. Data-Driven ModelPrice
 
-### 7.1 Phase 1 (No Breaking Changes)
+### 7.1 Principle
 
-Unit registry infrastructure and data-driven decomposition can be implemented while keeping the current 7 unit IDs. `AbstractUsage` becomes a type alias (`= object`) to preserve imports; all usage access is dynamic.
+The YAML registry is the single source of truth for valid unit IDs. **No unit IDs are hardcoded as field names in Python or JavaScript code.** Adding a new unit to `prices/units.yml` requires zero code changes — the new unit is immediately available for pricing.
 
-### 7.2 Phase 2 (New Capabilities)
+### 7.2 Representation
 
-Adding new units (image, video, tool calls) requires no Protocol changes. New usage values are accessed dynamically via `getattr`/dict access. Existing consumers continue to work unchanged.
+`ModelPrice` is a dict from unit IDs to prices:
+
+```python
+# Python — dict-based, validated against registry
+prices: dict[str, Decimal | TieredPrices]
+
+# JavaScript — plain object
+prices: Record<string, number | TieredPrices>
+```
+
+`requests_kcount` remains a separate field outside the registry until the Non-Token Units spec adds a `requests` family.
+
+### 7.3 Data Pipeline
+
+The Pydantic `ModelPrice` in the build pipeline (`prices/src/prices/prices_types.py`) validates price keys against the registry at build time. The `UsageField` literal is replaced with dynamic validation against the registry's `usage_key` values. This ensures YAML files can only reference registered unit IDs.
+
+### 7.4 Public API
+
+The published Python and JS packages load the compiled registry (`units_data.json`) and accept any registered unit ID as a price key. The engine iterates the registry to discover which units are priced, then runs decomposition. No code enumerates specific unit names.
+
+### 7.5 Backward Compatibility
+
+- `AbstractUsage` is a type alias (`= object`) preserving imports. Usage access is dynamic via `getattr`/Mapping.
+- `ModelPrice` changes from fixed fields to dict-based. This is a breaking change to the construction API (`ModelPrice(input_mtok=...)` → `ModelPrice({'input_mtok': ...})`), but `calc_price` behavior is unchanged.
+- Adding new units (image, video, tool calls) requires only a YAML edit — no Protocol, dataclass, or interface changes.
 
 ---
 
 ## 8. Validation Rules
 
-- Every key in a model's `prices` must be a registered unit ID.
+- Every key in a model's `prices` must be a registered unit ID (or `requests_kcount`).
 - Unit dimension keys must be registered for the unit's family.
 - Unit dimension values must be in the dimension's declared value set.
 - **Ancestor coverage:** If a model prices a unit, it must also price all ancestors of that unit within the same family. For example, pricing `output_image_mtok` requires also pricing `output_mtok`. Without the ancestor, usage reported at the catch-all level (e.g., `output_tokens` with no modality breakdown) would have no price.
+- **Join coverage:** If a model prices two units whose join (union of dimensions) exists in the registry, it must also price the join. Without this, the Möbius inversion double-counts tokens in the intersection — each token must be in exactly one pricing bucket.
