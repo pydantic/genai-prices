@@ -579,11 +579,11 @@ class ModelPrice:
 
     def __post_init__(self) -> None:
         from .decompose import validate_ancestor_coverage
-        from .units import FIELD_TO_UNIT, TOKENS_FAMILY
+        from .units import TOKENS_FAMILY
 
         priced_unit_ids: set[str] = set()
-        for field_name, unit_id in FIELD_TO_UNIT.items():
-            if getattr(self, field_name, None) is not None:
+        for unit_id in TOKENS_FAMILY.units:
+            if getattr(self, unit_id, None) is not None:
                 priced_unit_ids.add(unit_id)
 
         if priced_unit_ids:
@@ -596,12 +596,12 @@ class ModelPrice:
         fixed fields, computes leaf values via Mobius inversion, then prices each leaf.
         """
         from .decompose import compute_leaf_values
-        from .units import FIELD_TO_UNIT, TOKENS_FAMILY, get_unit
+        from .units import TOKENS_FAMILY, get_unit
 
         # Build priced units dict from fixed fields
         priced: dict[str, Decimal | TieredPrices] = {}
-        for field_name, unit_id in FIELD_TO_UNIT.items():
-            price = getattr(self, field_name)
+        for unit_id in TOKENS_FAMILY.units:
+            price = getattr(self, unit_id, None)
             if price is not None:
                 priced[unit_id] = price
 

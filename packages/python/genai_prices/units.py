@@ -90,18 +90,6 @@ _FAMILIES = _load_families()
 TOKENS_FAMILY = _FAMILIES['tokens']
 _ALL_UNITS: dict[str, UnitDef] = {uid: unit for fam in _FAMILIES.values() for uid, unit in fam.units.items()}
 
-# Mapping from current ModelPrice field names to registry unit IDs.
-# Only needed during Phase 1 while ModelPrice uses fixed fields.
-FIELD_TO_UNIT: dict[str, str] = {
-    'input_mtok': 'input_mtok',
-    'output_mtok': 'output_mtok',
-    'cache_read_mtok': 'cache_read_mtok',
-    'cache_write_mtok': 'cache_write_mtok',
-    'input_audio_mtok': 'input_audio_mtok',
-    'cache_audio_read_mtok': 'cache_audio_read_mtok',
-    'output_audio_mtok': 'output_audio_mtok',
-}
-
 
 def get_family(family_id: str) -> UnitFamily:
     """Look up a unit family by ID. Raises KeyError if not found."""

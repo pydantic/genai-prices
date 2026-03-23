@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { FIELD_TO_UNIT, getFamily, getUnit, TOKENS_FAMILY } from '../units'
+import { getFamily, getUnit, TOKENS_FAMILY } from '../units'
 
 describe('Unit Registry', () => {
   it('should load the tokens family', () => {
@@ -41,10 +41,6 @@ describe('Unit Registry', () => {
     ]) {
       expect(TOKENS_FAMILY.units[unitId]).toBeDefined()
     }
-  })
-
-  it('should map cache_audio_read_mtok field to cache_audio_read_mtok unit', () => {
-    expect(FIELD_TO_UNIT.cache_audio_read_mtok).toBe('cache_audio_read_mtok')
   })
 
   it('should have correct usage_key for cache_audio_read_mtok', () => {

@@ -67,17 +67,6 @@ for (const family of Object.values(FAMILIES)) {
   }
 }
 
-/** Mapping from current ModelPrice field names to registry unit IDs. */
-export const FIELD_TO_UNIT: Record<string, string> = {
-  cache_audio_read_mtok: 'cache_audio_read_mtok',
-  cache_read_mtok: 'cache_read_mtok',
-  cache_write_mtok: 'cache_write_mtok',
-  input_audio_mtok: 'input_audio_mtok',
-  input_mtok: 'input_mtok',
-  output_audio_mtok: 'output_audio_mtok',
-  output_mtok: 'output_mtok',
-}
-
 export function getFamily(familyId: string): UnitFamily {
   const family = FAMILIES[familyId]
   if (!family) throw new Error(`Unknown family: ${familyId}`)

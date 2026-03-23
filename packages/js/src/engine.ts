@@ -1,6 +1,6 @@
 import { computeLeafValues, validateAncestorCoverage } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
-import { FIELD_TO_UNIT, getUnit, TOKENS_FAMILY } from './units'
+import { getUnit, TOKENS_FAMILY } from './units'
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
@@ -48,8 +48,8 @@ function calcMtokPrice(
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
   // Build the set of priced unit IDs from ModelPrice fields
   const priced = new Map<string, number | TieredPrices>()
-  for (const [fieldName, unitId] of Object.entries(FIELD_TO_UNIT)) {
-    const price = modelPrice[fieldName as keyof ModelPrice]
+  for (const unitId of Object.keys(TOKENS_FAMILY.units)) {
+    const price = modelPrice[unitId as keyof ModelPrice]
     if (price !== undefined) {
       priced.set(unitId, price)
     }
