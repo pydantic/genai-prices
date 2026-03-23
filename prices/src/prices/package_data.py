@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -15,30 +16,46 @@ def package_data():
 
 
 def package_units():
-    """Generate units JSON from YAML source of truth for Python and JS packages."""
+    """Generate units JSON from YAML source of truth for Python and JS packages.
+
+    Writes the canonical JSON to the Python package and symlinks the JS copy to it.
+    Runs prettier so the file is stable through pre-commit hooks (json.dumps expands
+    short arrays onto multiple lines, but prettier collapses them).
+    """
     import yaml
+
+    from genai_prices.units import RawUnitsData
 
     units_yml = root_dir / 'prices' / 'units.yml'
     units_data = yaml.safe_load(units_yml.read_text())
 
-    # Resolve YAML int tags (1_000_000 comes through as int already with safe_load)
+    # Write JSON schema for YAML editor support
+    schema_path = root_dir / 'prices' / 'units.schema.json'
+    schema_path.write_text(json.dumps(RawUnitsData.model_json_schema(), indent=2) + '\n')
+    print(f'Units schema written to {schema_path.relative_to(root_dir)}')
+
     units_json = json.dumps(units_data, indent=2)
 
     py_units_json = root_dir / 'packages' / 'python' / 'genai_prices' / 'units_data.json'
     py_units_json.write_text(units_json + '\n')
 
-    js_units_json = root_dir / 'packages' / 'js' / 'src' / 'units-data.json'
-    js_units_json.write_text(units_json + '\n')
-
-    # Run prettier so the files are stable through pre-commit hooks
+    # Run prettier so the file is stable through pre-commit hooks
     subprocess.run(
-        ['npx', 'prettier', '--write', str(py_units_json), str(js_units_json)],
+        ['npx', 'prettier', '--write', str(py_units_json)],
         cwd=str(root_dir),
         check=True,
         stdout=subprocess.PIPE,
     )
+
+    # JS package symlinks to the Python copy to avoid duplication
+    js_units_json = root_dir / 'packages' / 'js' / 'src' / 'units-data.json'
+    target = os.path.relpath(py_units_json, js_units_json.parent)
+    if js_units_json.is_symlink() or js_units_json.exists():
+        js_units_json.unlink()
+    js_units_json.symlink_to(target)
+
     print(f'Units data written to {py_units_json.relative_to(root_dir)}')
-    print(f'Units data written to {js_units_json.relative_to(root_dir)}')
+    print(f'Units symlinked at {js_units_json.relative_to(root_dir)} -> {target}')
 
 
 def package_python_data(data_path: Path):

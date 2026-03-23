@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=units.schema.json
 families:
   tokens:
     per: 1_000_000

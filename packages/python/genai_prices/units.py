@@ -21,7 +21,7 @@ class UnitDef(BaseModel):
     dimensions: dict[str, str]
 
 
-class _RawUnitDef(BaseModel):
+class RawUnitDef(BaseModel):
     """JSON shape for a unit definition (no id/family_id — those come from dict keys)."""
 
     usage_key: str
@@ -40,18 +40,18 @@ class UnitFamily(BaseModel):
     units: dict[str, UnitDef]
 
 
-class _RawUnitFamily(BaseModel):
+class RawUnitFamily(BaseModel):
     per: int
     description: str
     dimensions: dict[str, list[str]]
-    units: dict[str, _RawUnitDef]
+    units: dict[str, RawUnitDef]
 
 
-class _RawUnitsData(BaseModel):
-    families: dict[str, _RawUnitFamily]
+class RawUnitsData(BaseModel):
+    families: dict[str, RawUnitFamily]
 
     @model_validator(mode='after')
-    def _validate_dimensions(self) -> _RawUnitsData:
+    def _validate_dimensions(self) -> RawUnitsData:
         for family_id, fam in self.families.items():
             for unit_id, unit in fam.units.items():
                 for dim_key, dim_val in unit.dimensions.items():
@@ -65,7 +65,7 @@ class _RawUnitsData(BaseModel):
 def _load_families() -> dict[str, UnitFamily]:
     """Load and validate unit families from the generated JSON data file."""
     data_path = Path(__file__).parent / 'units_data.json'
-    raw = _RawUnitsData.model_validate_json(data_path.read_bytes())
+    raw = RawUnitsData.model_validate_json(data_path.read_bytes())
     families: dict[str, UnitFamily] = {}
     for family_id, fam_data in raw.families.items():
         units: dict[str, UnitDef] = {}
