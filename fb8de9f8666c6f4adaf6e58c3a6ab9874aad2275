@@ -1,0 +1,23 @@
+specs/2026-03-23-unit-registry-spec.md
+  bdd46081fb5d57bd 308,310,312,314,316,318-340,346,350
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "fb8de9f8666c6f4adaf6e58c3a6ab9874aad2275",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 31,
+      "total_deletions": 6,
+      "accepted_lines": 31,
+      "overriden_lines": 0
+    }
+  }
+}
