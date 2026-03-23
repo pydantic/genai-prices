@@ -5,14 +5,15 @@ Unit data is loaded from units_data.json, generated from prices/units.yml via `m
 
 from __future__ import annotations as _annotations
 
-import json
-from dataclasses import dataclass
 from pathlib import Path
 
+from pydantic import BaseModel, ConfigDict, model_validator
 
-@dataclass(frozen=True)
-class UnitDef:
+
+class UnitDef(BaseModel):
     """Definition of a single pricing unit."""
+
+    model_config = ConfigDict(frozen=True)
 
     id: str
     family_id: str
@@ -20,9 +21,17 @@ class UnitDef:
     dimensions: dict[str, str]
 
 
-@dataclass(frozen=True)
-class UnitFamily:
+class _RawUnitDef(BaseModel):
+    """JSON shape for a unit definition (no id/family_id — those come from dict keys)."""
+
+    usage_key: str
+    dimensions: dict[str, str]
+
+
+class UnitFamily(BaseModel):
     """A family of pricing units that share a normalization factor."""
+
+    model_config = ConfigDict(frozen=True)
 
     id: str
     per: int
@@ -31,25 +40,47 @@ class UnitFamily:
     units: dict[str, UnitDef]
 
 
+class _RawUnitFamily(BaseModel):
+    per: int
+    description: str
+    dimensions: dict[str, list[str]]
+    units: dict[str, _RawUnitDef]
+
+
+class _RawUnitsData(BaseModel):
+    families: dict[str, _RawUnitFamily]
+
+    @model_validator(mode='after')
+    def _validate_dimensions(self) -> _RawUnitsData:
+        for family_id, fam in self.families.items():
+            for unit_id, unit in fam.units.items():
+                for dim_key, dim_val in unit.dimensions.items():
+                    if dim_key not in fam.dimensions:
+                        raise ValueError(f'{family_id}/{unit_id}: unknown dimension key {dim_key!r}')
+                    if dim_val not in fam.dimensions[dim_key]:
+                        raise ValueError(f'{family_id}/{unit_id}: invalid value {dim_val!r} for dimension {dim_key!r}')
+        return self
+
+
 def _load_families() -> dict[str, UnitFamily]:
-    """Load unit families from the generated JSON data file."""
+    """Load and validate unit families from the generated JSON data file."""
     data_path = Path(__file__).parent / 'units_data.json'
-    raw = json.loads(data_path.read_bytes())
+    raw = _RawUnitsData.model_validate_json(data_path.read_bytes())
     families: dict[str, UnitFamily] = {}
-    for family_id, fam_data in raw['families'].items():
+    for family_id, fam_data in raw.families.items():
         units: dict[str, UnitDef] = {}
-        for unit_id, unit_data in fam_data['units'].items():
+        for unit_id, unit_data in fam_data.units.items():
             units[unit_id] = UnitDef(
                 id=unit_id,
                 family_id=family_id,
-                usage_key=unit_data['usage_key'],
-                dimensions=unit_data['dimensions'],
+                usage_key=unit_data.usage_key,
+                dimensions=unit_data.dimensions,
             )
         families[family_id] = UnitFamily(
             id=family_id,
-            per=fam_data['per'],
-            description=fam_data['description'],
-            dimensions=fam_data['dimensions'],
+            per=fam_data.per,
+            description=fam_data.description,
+            dimensions=fam_data.dimensions,
             units=units,
         )
     return families
