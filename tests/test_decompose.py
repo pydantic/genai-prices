@@ -1,7 +1,10 @@
+from decimal import Decimal
+
 import pytest
 
 from genai_prices import Usage
 from genai_prices.decompose import compute_leaf_values, get_priced_descendants, is_descendant_or_self
+from genai_prices.types import ModelPrice, Tier, TieredPrices
 from genai_prices.units import TOKENS_FAMILY, get_unit
 
 
@@ -181,3 +184,97 @@ class TestLeafValues:
         usage = {'output_tokens': 800, 'output_audio_tokens': 200}
         leaves = compute_leaf_values(priced, usage, TOKENS_FAMILY)
         assert leaves == {'output_mtok': 600, 'output_audio_mtok': 200}
+
+
+class TestCalcPriceEquivalence:
+    """Verify the rewired calc_price produces the same results as the hardcoded chain."""
+
+    def test_simple_text(self):
+        mp = ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'))
+        result = mp.calc_price(Usage(input_tokens=1_000_000, output_tokens=500_000))
+        assert result['input_price'] == Decimal('3')
+        assert result['output_price'] == Decimal('7.5')
+        assert result['total_price'] == Decimal('10.5')
+
+    def test_with_cache(self):
+        mp = ModelPrice(
+            input_mtok=Decimal('3'),
+            output_mtok=Decimal('15'),
+            cache_read_mtok=Decimal('0.3'),
+            cache_write_mtok=Decimal('3.75'),
+        )
+        usage = Usage(input_tokens=1000, cache_read_tokens=200, cache_write_tokens=100, output_tokens=500)
+        result = mp.calc_price(usage)
+        # input leaf: 1000 - 200 - 100 = 700
+        expected_input = (Decimal('3') * 700 + Decimal('0.3') * 200 + Decimal('3.75') * 100) / 1_000_000
+        assert result['input_price'] == expected_input
+
+    def test_with_audio_and_cache(self):
+        """All 7 current units priced, with audio and cache."""
+        mp = ModelPrice(
+            input_mtok=Decimal('5'),
+            output_mtok=Decimal('20'),
+            cache_read_mtok=Decimal('0.5'),
+            cache_write_mtok=Decimal('6.25'),
+            input_audio_mtok=Decimal('100'),
+            output_audio_mtok=Decimal('200'),
+            cache_audio_read_mtok=Decimal('2.5'),
+        )
+        usage = Usage(
+            input_tokens=1000,
+            cache_read_tokens=200,
+            cache_write_tokens=100,
+            input_audio_tokens=300,
+            cache_audio_read_tokens=50,
+            output_tokens=800,
+            output_audio_tokens=150,
+        )
+        result = mp.calc_price(usage)
+        # Leaf values (see test_full_current_model in TestLeafValues):
+        # input_mtok: 450, cache_read: 150, cache_write: 100
+        # input_audio: 250, cache_read_audio: 50
+        # output: 650, output_audio: 150
+        expected_input = (
+            Decimal('5') * 450
+            + Decimal('0.5') * 150
+            + Decimal('6.25') * 100
+            + Decimal('100') * 250
+            + Decimal('2.5') * 50
+        ) / 1_000_000
+        expected_output = (Decimal('20') * 650 + Decimal('200') * 150) / 1_000_000
+        assert result['input_price'] == expected_input
+        assert result['output_price'] == expected_output
+
+    def test_with_tiered_prices(self):
+        """TieredPrices still works through the decomposition path."""
+        mp = ModelPrice(
+            input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200_000, price=Decimal('6'))]),
+            output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200_000, price=Decimal('30'))]),
+            cache_read_mtok=Decimal('0.3'),
+        )
+        # Below threshold
+        usage_low = Usage(input_tokens=100_000, cache_read_tokens=20_000, output_tokens=50_000)
+        result_low = mp.calc_price(usage_low)
+        expected_input_low = (Decimal('3') * 80_000 + Decimal('0.3') * 20_000) / 1_000_000
+        expected_output_low = Decimal('15') * 50_000 / 1_000_000
+        assert result_low['input_price'] == expected_input_low
+        assert result_low['output_price'] == expected_output_low
+
+        # Above threshold — tier applies to ALL tokens of that type
+        usage_high = Usage(input_tokens=300_000, cache_read_tokens=50_000, output_tokens=100_000)
+        result_high = mp.calc_price(usage_high)
+        expected_input_high = (Decimal('6') * 250_000 + Decimal('0.3') * 50_000) / 1_000_000
+        expected_output_high = Decimal('30') * 100_000 / 1_000_000
+        assert result_high['input_price'] == expected_input_high
+        assert result_high['output_price'] == expected_output_high
+
+    def test_with_requests(self):
+        mp = ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'), requests_kcount=Decimal('1'))
+        result = mp.calc_price(Usage(input_tokens=1000, output_tokens=500))
+        expected = Decimal('3') * 1000 / 1_000_000 + Decimal('15') * 500 / 1_000_000 + Decimal('1') / 1000
+        assert result['total_price'] == expected
+
+    def test_none_usage(self):
+        mp = ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'))
+        result = mp.calc_price(Usage())
+        assert result['total_price'] == Decimal('0')
