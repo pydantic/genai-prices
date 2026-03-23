@@ -41,8 +41,7 @@ families:
       output_audio_mtok:
         usage_key: output_audio_tokens
         dimensions: { direction: output, modality: audio }
-      cache_read_audio_mtok:
-        # NOTE: usage_key uses current field name, not the spec's future 'cache_read_audio_tokens'
+      cache_audio_read_mtok:
         usage_key: cache_audio_read_tokens
         dimensions: { direction: input, modality: audio, cache: read }
       cache_write_audio_mtok:

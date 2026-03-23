@@ -69,7 +69,7 @@ for (const family of Object.values(FAMILIES)) {
 
 /** Mapping from current ModelPrice field names to registry unit IDs. */
 export const FIELD_TO_UNIT: Record<string, string> = {
-  cache_audio_read_mtok: 'cache_read_audio_mtok',
+  cache_audio_read_mtok: 'cache_audio_read_mtok',
   cache_read_mtok: 'cache_read_mtok',
   cache_write_mtok: 'cache_write_mtok',
   input_audio_mtok: 'input_audio_mtok',

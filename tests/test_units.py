@@ -48,7 +48,7 @@ def test_tokens_family_has_all_current_units():
         'cache_read_mtok',
         'cache_write_mtok',
         'input_audio_mtok',
-        'cache_read_audio_mtok',
+        'cache_audio_read_mtok',
         'output_audio_mtok',
     ]:
         assert unit_id in family.units, f'Missing unit: {unit_id}'
@@ -89,7 +89,7 @@ def test_catch_all_units_have_one_dimension():
     assert get_unit('output_mtok').dimensions == {'direction': 'output'}
 
 
-def test_cache_read_audio_usage_key():
-    """cache_read_audio_mtok maps to current usage field name (not spec future name)."""
-    unit = get_unit('cache_read_audio_mtok')
+def test_cache_audio_read_usage_key():
+    """cache_audio_read_mtok unit maps to cache_audio_read_tokens usage key."""
+    unit = get_unit('cache_audio_read_mtok')
     assert unit.usage_key == 'cache_audio_read_tokens'

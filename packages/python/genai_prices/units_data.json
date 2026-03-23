@@ -79,7 +79,7 @@
             "modality": "audio"
           }
         },
-        "cache_read_audio_mtok": {
+        "cache_audio_read_mtok": {
           "usage_key": "cache_audio_read_tokens",
           "dimensions": {
             "direction": "input",

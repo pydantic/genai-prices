@@ -25,11 +25,11 @@ class TestContainment:
         assert not is_descendant_or_self(get_unit('cache_read_mtok'), get_unit('input_mtok'))
 
     def test_grandchild_is_descendant(self):
-        assert is_descendant_or_self(get_unit('input_mtok'), get_unit('cache_read_audio_mtok'))
+        assert is_descendant_or_self(get_unit('input_mtok'), get_unit('cache_audio_read_mtok'))
 
     def test_lattice_both_parents(self):
         """cache_read_audio is a descendant of both cache_read and input_audio."""
-        cra = get_unit('cache_read_audio_mtok')
+        cra = get_unit('cache_audio_read_mtok')
         assert is_descendant_or_self(get_unit('cache_read_mtok'), cra)
         assert is_descendant_or_self(get_unit('input_audio_mtok'), cra)
 
@@ -48,9 +48,9 @@ class TestContainment:
 
 class TestPricedDescendants:
     def test_all_priced(self):
-        priced = {'input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_read_audio_mtok'}
+        priced = {'input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_audio_read_mtok'}
         descs = get_priced_descendants('input_mtok', priced, TOKENS_FAMILY)
-        assert descs == {'cache_read_mtok', 'input_audio_mtok', 'cache_read_audio_mtok'}
+        assert descs == {'cache_read_mtok', 'input_audio_mtok', 'cache_audio_read_mtok'}
 
     def test_excludes_unpriced(self):
         priced = {'input_mtok', 'cache_read_mtok'}
@@ -58,8 +58,8 @@ class TestPricedDescendants:
         assert descs == {'cache_read_mtok'}
 
     def test_leaf_has_no_descendants(self):
-        priced = {'input_mtok', 'cache_read_audio_mtok'}
-        descs = get_priced_descendants('cache_read_audio_mtok', priced, TOKENS_FAMILY)
+        priced = {'input_mtok', 'cache_audio_read_mtok'}
+        descs = get_priced_descendants('cache_audio_read_mtok', priced, TOKENS_FAMILY)
         assert descs == set()
 
     def test_excludes_self(self):
@@ -103,7 +103,7 @@ class TestLeafValues:
 
     def test_lattice_cache_read_audio(self):
         """cache_read_audio carved from both cache_read and input_audio (lattice structure)."""
-        priced = {'input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_read_audio_mtok'}
+        priced = {'input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_audio_read_mtok'}
         usage = {
             'input_tokens': 1000,
             'cache_read_tokens': 200,
@@ -115,7 +115,7 @@ class TestLeafValues:
             'input_mtok': 550,  # 1000 - 200 - 300 + 50
             'cache_read_mtok': 150,  # 200 - 50
             'input_audio_mtok': 250,  # 300 - 50
-            'cache_read_audio_mtok': 50,  # leaf
+            'cache_audio_read_mtok': 50,  # leaf
         }
 
     def test_unpriced_audio_stays_in_catchall(self):
@@ -159,7 +159,7 @@ class TestLeafValues:
             'cache_read_mtok',
             'cache_write_mtok',
             'input_audio_mtok',
-            'cache_read_audio_mtok',
+            'cache_audio_read_mtok',
             'output_audio_mtok',
         }
         usage = {
@@ -178,7 +178,7 @@ class TestLeafValues:
             'cache_read_mtok': 150,  # 200 - 50
             'cache_write_mtok': 100,  # leaf
             'input_audio_mtok': 250,  # 300 - 50
-            'cache_read_audio_mtok': 50,  # leaf
+            'cache_audio_read_mtok': 50,  # leaf
             'output_mtok': 650,  # 800 - 150
             'output_audio_mtok': 150,  # leaf
         }
@@ -299,7 +299,7 @@ class TestAncestorCoverage:
     def test_missing_intermediate_ancestor(self):
         with pytest.raises(ValueError, match=r'ancestor'):
             validate_ancestor_coverage(
-                {'input_mtok', 'cache_read_audio_mtok', 'output_mtok'},
+                {'input_mtok', 'cache_audio_read_mtok', 'output_mtok'},
                 TOKENS_FAMILY,
             )
 

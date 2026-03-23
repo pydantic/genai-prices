@@ -36,19 +36,19 @@ describe('Unit Registry', () => {
       'cache_read_mtok',
       'cache_write_mtok',
       'input_audio_mtok',
-      'cache_read_audio_mtok',
+      'cache_audio_read_mtok',
       'output_audio_mtok',
     ]) {
       expect(TOKENS_FAMILY.units[unitId]).toBeDefined()
     }
   })
 
-  it('should map cache_audio_read_mtok field to cache_read_audio_mtok unit', () => {
-    expect(FIELD_TO_UNIT.cache_audio_read_mtok).toBe('cache_read_audio_mtok')
+  it('should map cache_audio_read_mtok field to cache_audio_read_mtok unit', () => {
+    expect(FIELD_TO_UNIT.cache_audio_read_mtok).toBe('cache_audio_read_mtok')
   })
 
-  it('should have correct usage_key for cache_read_audio_mtok', () => {
-    const unit = getUnit('cache_read_audio_mtok')
+  it('should have correct usage_key for cache_audio_read_mtok', () => {
+    const unit = getUnit('cache_audio_read_mtok')
     expect(unit.usageKey).toBe('cache_audio_read_tokens')
   })
 

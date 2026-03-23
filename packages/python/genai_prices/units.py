@@ -98,7 +98,7 @@ FIELD_TO_UNIT: dict[str, str] = {
     'cache_read_mtok': 'cache_read_mtok',
     'cache_write_mtok': 'cache_write_mtok',
     'input_audio_mtok': 'input_audio_mtok',
-    'cache_audio_read_mtok': 'cache_read_audio_mtok',  # field name differs from unit ID
+    'cache_audio_read_mtok': 'cache_audio_read_mtok',
     'output_audio_mtok': 'output_audio_mtok',
 }
 

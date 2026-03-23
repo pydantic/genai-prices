@@ -20,7 +20,7 @@ describe('Containment', () => {
   })
 
   it('grandchild is descendant', () => {
-    expect(isDescendantOrSelf(getUnit('input_mtok'), getUnit('cache_read_audio_mtok'))).toBe(true)
+    expect(isDescendantOrSelf(getUnit('input_mtok'), getUnit('cache_audio_read_mtok'))).toBe(true)
   })
 
   it('sibling not descendant', () => {
@@ -63,7 +63,7 @@ describe('Leaf Values', () => {
   })
 
   it('lattice: cache_read_audio carved from both', () => {
-    const priced = new Set(['cache_read_audio_mtok', 'cache_read_mtok', 'input_audio_mtok', 'input_mtok'])
+    const priced = new Set(['cache_audio_read_mtok', 'cache_read_mtok', 'input_audio_mtok', 'input_mtok'])
     const usage = {
       cache_audio_read_tokens: 50,
       cache_read_tokens: 200,
@@ -71,7 +71,7 @@ describe('Leaf Values', () => {
       input_tokens: 1000,
     }
     expect(computeLeafValues(priced, usage, family)).toEqual({
-      cache_read_audio_mtok: 50,
+      cache_audio_read_mtok: 50,
       cache_read_mtok: 150,
       input_audio_mtok: 250,
       input_mtok: 550,
@@ -110,7 +110,7 @@ describe('Leaf Values', () => {
 
   it('full 7-unit model', () => {
     const priced = new Set([
-      'cache_read_audio_mtok',
+      'cache_audio_read_mtok',
       'cache_read_mtok',
       'cache_write_mtok',
       'input_audio_mtok',
@@ -128,7 +128,7 @@ describe('Leaf Values', () => {
       output_tokens: 800,
     }
     expect(computeLeafValues(priced, usage, family)).toEqual({
-      cache_read_audio_mtok: 50,
+      cache_audio_read_mtok: 50,
       cache_read_mtok: 150,
       cache_write_mtok: 100,
       input_audio_mtok: 250,
@@ -170,7 +170,7 @@ describe('Ancestor Coverage', () => {
 
   it('missing intermediate ancestor', () => {
     expect(() => {
-      validateAncestorCoverage(new Set(['cache_read_audio_mtok', 'input_mtok', 'output_mtok']), TOKENS_FAMILY)
+      validateAncestorCoverage(new Set(['cache_audio_read_mtok', 'input_mtok', 'output_mtok']), TOKENS_FAMILY)
     }).toThrow(/ancestor/)
   })
 })
