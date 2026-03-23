@@ -41,12 +41,18 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
-      // input leaf: 1000 - 200 - 100 = 700 uncached text, 100 cache_read, 200 cache_write
-      // input: (700*1.0 + 100*0.1 + 200*0.5) / 1_000_000 = 0.00081
-      // output: (500*2.0) / 1_000_000 = 0.001
-      expect(result.input_price).toBeCloseTo(0.00081, 10)
-      expect(result.output_price).toBeCloseTo(0.001, 10)
-      expect(result.total_price).toBeCloseTo(0.00181, 10)
+      const uncachedInputTokens = 1000 - 200 - 100
+      const uncachedInputPrice = (uncachedInputTokens * 1.0) / 1_000_000
+      const cacheWritePrice = (200 * 0.5) / 1_000_000
+      const cacheReadPrice = (100 * 0.1) / 1_000_000
+      const inputPrice = uncachedInputPrice + cacheWritePrice + cacheReadPrice
+      const outputPrice = (500 * 2.0) / 1_000_000
+      const totalPrice = inputPrice + outputPrice
+      expect(result).toMatchObject({
+        input_price: inputPrice,
+        output_price: outputPrice,
+        total_price: totalPrice,
+      })
     })
 
     it('should handle audio tokens correctly', () => {
