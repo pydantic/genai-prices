@@ -9,8 +9,28 @@ from .utils import package_dir as this_package_dir, root_dir
 
 def package_data():
     data_path = this_package_dir / 'data.json'
+    package_units()
     package_python_data(data_path)
     package_ts_data(data_path)
+
+
+def package_units():
+    """Generate units JSON from YAML source of truth for Python and JS packages."""
+    import yaml
+
+    units_yml = root_dir / 'prices' / 'units.yml'
+    units_data = yaml.safe_load(units_yml.read_text())
+
+    # Resolve YAML int tags (1_000_000 comes through as int already with safe_load)
+    units_json = json.dumps(units_data, indent=2)
+
+    py_units_json = root_dir / 'packages' / 'python' / 'genai_prices' / 'units_data.json'
+    py_units_json.write_text(units_json + '\n')
+    print(f'Units data written to {py_units_json.relative_to(root_dir)}')
+
+    js_units_json = root_dir / 'packages' / 'js' / 'src' / 'units-data.json'
+    js_units_json.write_text(units_json + '\n')
+    print(f'Units data written to {js_units_json.relative_to(root_dir)}')
 
 
 def package_python_data(data_path: Path):
