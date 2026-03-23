@@ -6,7 +6,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
+from typing import Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
 from typing_extensions import TypedDict, TypeGuard
@@ -188,47 +188,16 @@ class ExtractedUsage:
         return self + other
 
 
-class AbstractUsage(Protocol):
-    """Abstract definition of data about token usage for a single LLM call."""
+AbstractUsage = object
+"""Usage can be any object with numeric token-count attributes, or any Mapping.
 
-    @property
-    def input_tokens(self) -> int | None:
-        """Total number of input/prompt tokens.
-
-        Note this should INCLUDE both uncached and cached tokens.
-        """
-
-    @property
-    def cache_write_tokens(self) -> int | None:
-        """Number of tokens written to the cache."""
-
-    @property
-    def cache_read_tokens(self) -> int | None:
-        """Number of tokens read from the cache.
-
-        For many models this is described as just "cached tokens".
-        """
-
-    @property
-    def output_tokens(self) -> int | None:
-        """Number of output/completion tokens."""
-
-    @property
-    def input_audio_tokens(self) -> int | None:
-        """Number of audio input tokens."""
-
-    @property
-    def cache_audio_read_tokens(self) -> int | None:
-        """Number of audio tokens read from the cache."""
-
-    @property
-    def output_audio_tokens(self) -> int | None:
-        """Number of output audio tokens."""
+Values are accessed dynamically via getattr/Mapping.get — no typed Protocol needed.
+"""
 
 
 @dataclass
 class Usage:
-    """Simple implementation of `AbstractUsage` as a dataclass."""
+    """Dataclass holding token usage counts for a single LLM call."""
 
     input_tokens: int | None = None
     """Number of input/prompt tokens."""
