@@ -14770,7 +14770,7 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.0001725",
+            "input_price": "0.0002025",
             "output_price": "0.00072",
             "provider_id": "azure"
           },
@@ -14824,7 +14824,7 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001725",
+            "input_price": "0.0002025",
             "output_price": "0.00072",
             "provider_id": "openai"
           },
@@ -14843,13 +14843,13 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "azure"
           },
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "openai"
           }
@@ -21061,7 +21061,7 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00011",
+            "input_price": "0.00016",
             "output_price": "0.00009",
             "provider_id": "azure"
           },
@@ -21115,7 +21115,7 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00011",
+            "input_price": "0.00016",
             "output_price": "0.00009",
             "provider_id": "openai"
           },
@@ -21134,13 +21134,13 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "azure"
           },
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "openai"
           }
