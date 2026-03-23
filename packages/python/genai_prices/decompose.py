@@ -36,7 +36,7 @@ def validate_ancestor_coverage(priced_unit_ids: set[str], family: UnitFamily) ->
                 )
 
 
-def _get_usage_value(usage: object, key: str) -> int:
+def get_usage_value(usage: object, key: str) -> int:
     """Get a usage value by key. Supports both Mapping and attribute access. Returns 0 for missing/None."""
     if isinstance(usage, Mapping):
         val: int | None = usage.get(key)  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType]
@@ -79,14 +79,14 @@ def compute_leaf_values(
                 continue
             depth_diff = len(other.dimensions) - target_depth
             coefficient = (-1) ** depth_diff
-            leaf_value += coefficient * _get_usage_value(usage, other.usage_key)
+            leaf_value += coefficient * get_usage_value(usage, other.usage_key)
 
         if leaf_value < 0:
             involved = [
-                f'{family.units[oid].usage_key}={_get_usage_value(usage, family.units[oid].usage_key)}'
+                f'{family.units[oid].usage_key}={get_usage_value(usage, family.units[oid].usage_key)}'
                 for oid in priced_unit_ids
                 if is_descendant_or_self(unit, family.units[oid])
-                and _get_usage_value(usage, family.units[oid].usage_key) != 0
+                and get_usage_value(usage, family.units[oid].usage_key) != 0
             ]
             raise ValueError(
                 f'Negative leaf value ({leaf_value}) for {unit_id}: inconsistent usage values: {", ".join(involved)}'

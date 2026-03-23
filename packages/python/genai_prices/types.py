@@ -595,7 +595,7 @@ class ModelPrice:
         Uses registry-driven decomposition: builds a dict of priced units from
         fixed fields, computes leaf values via Mobius inversion, then prices each leaf.
         """
-        from .decompose import compute_leaf_values
+        from .decompose import compute_leaf_values, get_usage_value
         from .units import TOKENS_FAMILY, get_unit
 
         # Build priced units dict from fixed fields
@@ -606,7 +606,7 @@ class ModelPrice:
                 priced[unit_id] = price
 
         # Total input tokens for tier determination (before decomposition)
-        total_input_tokens = getattr(usage, 'input_tokens', None) or 0
+        total_input_tokens = get_usage_value(usage, 'input_tokens')
 
         # Compute leaf values via decomposition
         leaf_values = compute_leaf_values(set(priced.keys()), usage, TOKENS_FAMILY)
