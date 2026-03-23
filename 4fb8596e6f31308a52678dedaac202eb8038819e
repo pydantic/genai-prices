@@ -1,0 +1,35 @@
+prices/units.yml
+  bdd46081fb5d57bd 44
+packages/python/genai_prices/units.py
+  bdd46081fb5d57bd 101
+packages/js/src/__tests__/decompose.test.ts
+  bdd46081fb5d57bd 23,66,74,113,131,173
+tests/test_units.py
+  bdd46081fb5d57bd 51,92-94
+packages/js/src/units.ts
+  bdd46081fb5d57bd 72
+packages/js/src/__tests__/units.test.ts
+  bdd46081fb5d57bd 39,46-47,50-51
+tests/test_decompose.py
+  bdd46081fb5d57bd 28,32,51,53,61-62,106,118,162,181,302
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "4fb8596e6f31308a52678dedaac202eb8038819e",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 31,
+      "accepted_lines": 29,
+      "overriden_lines": 0
+    }
+  }
+}
