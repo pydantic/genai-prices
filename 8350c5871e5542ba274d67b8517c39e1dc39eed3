@@ -1,0 +1,25 @@
+tests/test_units.py
+  bdd46081fb5d57bd 1-2,4-95
+packages/python/genai_prices/units.py
+  bdd46081fb5d57bd 1-134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "8350c5871e5542ba274d67b8517c39e1dc39eed3",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 236,
+      "total_deletions": 1,
+      "accepted_lines": 228,
+      "overriden_lines": 1
+    }
+  }
+}
