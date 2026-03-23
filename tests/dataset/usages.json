@@ -32722,7 +32722,7 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00082125",
+            "input_price": "0.00100125",
             "output_price": "0.00005",
             "provider_id": "google"
           }
