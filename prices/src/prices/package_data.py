@@ -26,10 +26,18 @@ def package_units():
 
     py_units_json = root_dir / 'packages' / 'python' / 'genai_prices' / 'units_data.json'
     py_units_json.write_text(units_json + '\n')
-    print(f'Units data written to {py_units_json.relative_to(root_dir)}')
 
     js_units_json = root_dir / 'packages' / 'js' / 'src' / 'units-data.json'
     js_units_json.write_text(units_json + '\n')
+
+    # Run prettier so the files are stable through pre-commit hooks
+    subprocess.run(
+        ['npx', 'prettier', '--write', str(py_units_json), str(js_units_json)],
+        cwd=str(root_dir),
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    print(f'Units data written to {py_units_json.relative_to(root_dir)}')
     print(f'Units data written to {js_units_json.relative_to(root_dir)}')
 
 
