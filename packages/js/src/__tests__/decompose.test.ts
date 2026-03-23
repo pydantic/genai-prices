@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Usage } from '../types'
 
-import { computeLeafValues, isDescendantOrSelf } from '../decompose'
+import { computeLeafValues, isDescendantOrSelf, validateAncestorCoverage } from '../decompose'
 import { getUnit, TOKENS_FAMILY } from '../units'
 
 describe('Containment', () => {
@@ -146,5 +146,31 @@ describe('Leaf Values', () => {
       input_mtok: 800,
       output_mtok: 500,
     })
+  })
+})
+
+describe('Ancestor Coverage', () => {
+  it('valid: input + output', () => {
+    expect(() => {
+      validateAncestorCoverage(new Set(['input_mtok', 'output_mtok']), TOKENS_FAMILY)
+    }).not.toThrow()
+  })
+
+  it('valid: with cache', () => {
+    expect(() => {
+      validateAncestorCoverage(new Set(['cache_read_mtok', 'input_mtok', 'output_mtok']), TOKENS_FAMILY)
+    }).not.toThrow()
+  })
+
+  it('missing ancestor: cache_read without input', () => {
+    expect(() => {
+      validateAncestorCoverage(new Set(['cache_read_mtok', 'output_mtok']), TOKENS_FAMILY)
+    }).toThrow(/ancestor.*input_mtok/)
+  })
+
+  it('missing intermediate ancestor', () => {
+    expect(() => {
+      validateAncestorCoverage(new Set(['cache_read_audio_mtok', 'input_mtok', 'output_mtok']), TOKENS_FAMILY)
+    }).toThrow(/ancestor/)
   })
 })

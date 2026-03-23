@@ -1,4 +1,4 @@
-import { computeLeafValues } from './decompose'
+import { computeLeafValues, validateAncestorCoverage } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
 import { FIELD_TO_UNIT, getUnit, TOKENS_FAMILY } from './units'
 
@@ -55,8 +55,11 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
     }
   }
 
+  const pricedUnitIds = new Set(priced.keys())
+  validateAncestorCoverage(pricedUnitIds, TOKENS_FAMILY)
+
   const totalInputTokens = usage.input_tokens ?? 0
-  const leafValues = computeLeafValues(new Set(priced.keys()), usage as unknown as Record<string, unknown>, TOKENS_FAMILY)
+  const leafValues = computeLeafValues(pricedUnitIds, usage as unknown as Record<string, unknown>, TOKENS_FAMILY)
 
   let inputPrice = 0
   let outputPrice = 0

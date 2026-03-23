@@ -17,6 +17,24 @@ function getUsageValue(usage: Record<string, unknown>, key: string): number {
 }
 
 /**
+ * Validate that every priced unit has all its ancestors also priced.
+ * Throws if any ancestor is missing.
+ */
+export function validateAncestorCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void {
+  for (const unitId of pricedUnitIds) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const unit = family.units[unitId]!
+    for (const [otherId, other] of Object.entries(family.units)) {
+      if (otherId !== unitId && isDescendantOrSelf(other, unit) && !pricedUnitIds.has(otherId)) {
+        throw new Error(
+          `Unit '${unitId}' is priced but its ancestor '${otherId}' is not. ` + `All ancestors of a priced unit must also be priced.`
+        )
+      }
+    }
+  }
+}
+
+/**
  * Compute leaf values for each priced unit via Mobius inversion on the containment poset.
  *
  * Only priced units participate. Unpriced units' tokens stay in the nearest
