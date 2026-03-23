@@ -327,6 +327,10 @@ models:
         tiers:
           - start: 200000
             price: 22.5
+    prices_checked: 2026-03-23
+    price_comments: >-
+      Tiered pricing: 2x above 200k tokens. Unlike 4.6 models, Sonnet 4.5 has long-context surcharge.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anthropic/claude-sonnet-4.6
     match:
