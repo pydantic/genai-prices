@@ -1,5 +1,4 @@
 import json
-import os
 import re
 import subprocess
 from pathlib import Path
@@ -18,7 +17,7 @@ def package_data():
 def package_units():
     """Generate units JSON from YAML source of truth for Python and JS packages.
 
-    Writes the canonical JSON to the Python package and symlinks the JS copy to it.
+    Writes the canonical JSON to the Python package and copies it to the JS package.
     Runs prettier so the file is stable through pre-commit hooks (json.dumps expands
     short arrays onto multiple lines, but prettier collapses them).
     """
@@ -47,15 +46,12 @@ def package_units():
         stdout=subprocess.PIPE,
     )
 
-    # JS package symlinks to the Python copy to avoid duplication
+    # Copy to JS package (not symlink, to avoid packaging issues)
     js_units_json = root_dir / 'packages' / 'js' / 'src' / 'units-data.json'
-    target = os.path.relpath(py_units_json, js_units_json.parent)
-    if js_units_json.is_symlink() or js_units_json.exists():
-        js_units_json.unlink()
-    js_units_json.symlink_to(target)
+    js_units_json.write_text(py_units_json.read_text())
 
     print(f'Units data written to {py_units_json.relative_to(root_dir)}')
-    print(f'Units symlinked at {js_units_json.relative_to(root_dir)} -> {target}')
+    print(f'Units data copied to {js_units_json.relative_to(root_dir)}')
 
 
 def package_python_data(data_path: Path):
