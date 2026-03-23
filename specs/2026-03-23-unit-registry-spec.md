@@ -64,8 +64,8 @@ families:
       output_audio_mtok:
         usage_key: output_audio_tokens
         dimensions: { direction: output, modality: audio }
-      cache_read_audio_mtok:
-        usage_key: cache_read_audio_tokens
+      cache_audio_read_mtok:
+        usage_key: cache_audio_read_tokens
         dimensions: { direction: input, modality: audio, cache: read }
       cache_write_audio_mtok:
         usage_key: cache_write_audio_tokens
@@ -152,10 +152,10 @@ Usage values retain their current overlapping meaning. More specific values are 
 ```
 input_tokens  {direction: input}
   cache_read_tokens    {direction: input, cache: read}
-    cache_read_audio_tokens  {direction: input, modality: audio, cache: read}
+    cache_audio_read_tokens  {direction: input, modality: audio, cache: read}
   cache_write_tokens   {direction: input, cache: write}
   input_audio_tokens   {direction: input, modality: audio}
-    cache_read_audio_tokens  {direction: input, modality: audio, cache: read}
+    cache_audio_read_tokens  {direction: input, modality: audio, cache: read}
 ```
 
 ### 3.4 Partial Data
@@ -196,7 +196,7 @@ Leaf values (each unit gets only its exclusive portion):
 
 Cost: `(500/1M)×3 + (200/1M)×0.30 + (300/1M)×100 = $0.03156`
 
-If the model also priced `cache_read_audio_mtok` at $0.10/M, it would be carved out of both `cache_read_mtok` and `input_audio_mtok`. The engine uses dimension relationships to determine which units overlap and applies inclusion-exclusion to avoid double-counting in the lattice structure (see reference doc for algorithm details).
+If the model also priced `cache_audio_read_mtok` at $0.10/M, it would be carved out of both `cache_read_mtok` and `input_audio_mtok`. The engine uses dimension relationships to determine which units overlap and applies inclusion-exclusion to avoid double-counting in the lattice structure (see reference doc for algorithm details).
 
 ---
 
@@ -240,10 +240,10 @@ These examples use approximate prices to show how the unit system handles real p
     cache_read_mtok: 2.5
     input_audio_mtok: 100
     output_audio_mtok: 200
-    cache_read_audio_mtok: 2.5
+    cache_audio_read_mtok: 2.5
 ```
 
-Audio tokens are much more expensive than text. The catch-all `input_mtok` is the text price. Decomposition: `input_mtok` leaf = input_tokens − cache_read_tokens − input_audio_tokens + cache_read_audio_tokens.
+Audio tokens are much more expensive than text. The catch-all `input_mtok` is the text price. Decomposition: `input_mtok` leaf = input_tokens − cache_read_tokens − input_audio_tokens + cache_audio_read_tokens.
 
 ### 6.2 Image Generation — OpenAI gpt-image-1.5
 
@@ -267,7 +267,7 @@ Catch-all convention: `input_mtok` is text since there's no `input_text_mtok`. `
     output_mtok: 10
     cache_read_mtok: 0.13
     input_audio_mtok: 0.30
-    cache_read_audio_mtok: 0.03
+    cache_audio_read_mtok: 0.03
     input_video_mtok: 0.30
     cache_read_video_mtok: 0.03
     input_image_mtok: 0.30

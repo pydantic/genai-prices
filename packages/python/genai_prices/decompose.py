@@ -60,10 +60,9 @@ def compute_leaf_values(
     which holds because our dimensions are independent categorical axes. Each step
     in the poset adds exactly one dimension.
 
-    Precondition: if a unit is priced, all its ancestors must also be priced
-    (ancestor coverage rule). Violating this produces silently incorrect results.
-    Phase 1 satisfies this implicitly via ModelPrice's fixed fields; Phase 2 will
-    add explicit validation when ModelPrice becomes dict-based.
+    Precondition: ancestor coverage — if a unit is priced, all its ancestors must
+    also be priced. Validated by ModelPrice.__post_init__ (Python) and
+    validateAncestorCoverage (JS) at construction/calc time.
     """
     result: dict[str, int] = {}
 

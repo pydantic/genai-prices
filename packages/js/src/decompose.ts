@@ -40,8 +40,8 @@ export function validateAncestorCoverage(pricedUnitIds: Set<string>, family: Uni
  * Only priced units participate. Unpriced units' tokens stay in the nearest
  * priced ancestor's catch-all. Throws on negative leaf values.
  *
- * Precondition: if a unit is priced, all its ancestors must also be priced
- * (ancestor coverage rule). Violating this produces silently incorrect results.
+ * Precondition: ancestor coverage — if a unit is priced, all its ancestors must
+ * also be priced. Validated by validateAncestorCoverage() called from calcPrice.
  */
 export function computeLeafValues(pricedUnitIds: Set<string>, usage: Record<string, unknown>, family: UnitFamily): Record<string, number> {
   const result: Record<string, number> = {}
