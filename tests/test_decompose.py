@@ -3,7 +3,12 @@ from decimal import Decimal
 import pytest
 
 from genai_prices import Usage
-from genai_prices.decompose import compute_leaf_values, get_priced_descendants, is_descendant_or_self
+from genai_prices.decompose import (
+    compute_leaf_values,
+    get_priced_descendants,
+    is_descendant_or_self,
+    validate_ancestor_coverage,
+)
 from genai_prices.types import ModelPrice, Tier, TieredPrices
 from genai_prices.units import TOKENS_FAMILY, get_unit
 
@@ -278,3 +283,26 @@ class TestCalcPriceEquivalence:
         mp = ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'))
         result = mp.calc_price(Usage())
         assert result['total_price'] == Decimal('0')
+
+
+class TestAncestorCoverage:
+    def test_valid_simple(self):
+        validate_ancestor_coverage({'input_mtok', 'output_mtok'}, TOKENS_FAMILY)
+
+    def test_valid_with_cache(self):
+        validate_ancestor_coverage({'input_mtok', 'output_mtok', 'cache_read_mtok'}, TOKENS_FAMILY)
+
+    def test_missing_ancestor(self):
+        with pytest.raises(ValueError, match=r"ancestor 'input_mtok'.*not"):
+            validate_ancestor_coverage({'cache_read_mtok', 'output_mtok'}, TOKENS_FAMILY)
+
+    def test_missing_intermediate_ancestor(self):
+        with pytest.raises(ValueError, match=r'ancestor'):
+            validate_ancestor_coverage(
+                {'input_mtok', 'cache_read_audio_mtok', 'output_mtok'},
+                TOKENS_FAMILY,
+            )
+
+    def test_model_price_validates(self):
+        with pytest.raises(ValueError, match=r'ancestor'):
+            ModelPrice(cache_read_mtok=Decimal('0.3'))

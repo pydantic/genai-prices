@@ -577,6 +577,18 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
 
+    def __post_init__(self) -> None:
+        from .decompose import validate_ancestor_coverage
+        from .units import FIELD_TO_UNIT, TOKENS_FAMILY
+
+        priced_unit_ids: set[str] = set()
+        for field_name, unit_id in FIELD_TO_UNIT.items():
+            if getattr(self, field_name, None) is not None:
+                priced_unit_ids.add(unit_id)
+
+        if priced_unit_ids:
+            validate_ancestor_coverage(priced_unit_ids, TOKENS_FAMILY)
+
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price.
 

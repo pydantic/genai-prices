@@ -20,6 +20,22 @@ def get_priced_descendants(unit_id: str, priced_ids: set[str], family: UnitFamil
     return {uid for uid in priced_ids if uid != unit_id and is_descendant_or_self(unit, family.units[uid])}
 
 
+def validate_ancestor_coverage(priced_unit_ids: set[str], family: UnitFamily) -> None:
+    """Raise ValueError if any priced unit is missing a priced ancestor.
+
+    Spec Section 8, rule 4: if a model prices a unit, it must also price all ancestors
+    of that unit within the same family.
+    """
+    for unit_id in priced_unit_ids:
+        unit = family.units[unit_id]
+        for other_id, other in family.units.items():
+            if other_id != unit_id and is_descendant_or_self(other, unit) and other_id not in priced_unit_ids:
+                raise ValueError(
+                    f'Unit {unit_id!r} is priced but its ancestor {other_id!r} is not. '
+                    f'All ancestors of a priced unit must also be priced.'
+                )
+
+
 def _get_usage_value(usage: object, key: str) -> int:
     """Get a usage value by key. Supports both Mapping and attribute access. Returns 0 for missing/None."""
     if isinstance(usage, Mapping):
