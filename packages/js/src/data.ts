@@ -10731,6 +10731,18 @@ export const data: Provider[] = [
               equals: 'anthropic/claude-haiku-4.5',
             },
             {
+              equals: 'anthropic/claude-4.5-haiku-20251001',
+            },
+            {
+              equals: 'anthropic/claude-4.5-haiku-20251001:beta',
+            },
+            {
+              equals: 'anthropic/claude-haiku-4.5-20251001',
+            },
+            {
+              equals: 'anthropic/claude-haiku-4.5-20251001:beta',
+            },
+            {
               equals: 'anthropic/claude-haiku-4.5:beta',
             },
           ],
@@ -10748,6 +10760,18 @@ export const data: Provider[] = [
           or: [
             {
               equals: 'anthropic/claude-opus-4.5',
+            },
+            {
+              equals: 'anthropic/claude-4.5-opus-20251124',
+            },
+            {
+              equals: 'anthropic/claude-4.5-opus-20251124:beta',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.5-20251124',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.5-20251124:beta',
             },
             {
               equals: 'anthropic/claude-opus-4.5:beta',
@@ -10818,6 +10842,18 @@ export const data: Provider[] = [
           or: [
             {
               equals: 'anthropic/claude-sonnet-4.5',
+            },
+            {
+              equals: 'anthropic/claude-4.5-sonnet-20250929',
+            },
+            {
+              equals: 'anthropic/claude-4.5-sonnet-20250929:beta',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-4.5-20250929',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-4.5-20250929:beta',
             },
             {
               equals: 'anthropic/claude-sonnet-4.5:beta',
