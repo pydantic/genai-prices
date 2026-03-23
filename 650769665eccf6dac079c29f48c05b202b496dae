@@ -1,0 +1,29 @@
+packages/js/src/__tests__/calcPrice.test.ts
+  bdd46081fb5d57bd 68-69,71-72
+packages/js/src/decompose.ts
+  bdd46081fb5d57bd 20-29,31-36
+packages/js/src/engine.ts
+  bdd46081fb5d57bd 1,58-60,62
+packages/js/src/__tests__/decompose.test.ts
+  bdd46081fb5d57bd 5,151-153,155,157-159,161,163-165,167,169-171,173,175-176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "650769665eccf6dac079c29f48c05b202b496dae",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 55,
+      "total_deletions": 5,
+      "accepted_lines": 45,
+      "overriden_lines": 9
+    }
+  }
+}
