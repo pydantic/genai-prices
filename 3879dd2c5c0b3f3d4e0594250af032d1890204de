@@ -1,0 +1,27 @@
+packages/js/src/decompose.ts
+  bdd46081fb5d57bd 43-44
+specs/2026-03-23-unit-registry-spec.md
+  bdd46081fb5d57bd 67-68,155,158,199,243,246,270
+packages/python/genai_prices/decompose.py
+  bdd46081fb5d57bd 63-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "3879dd2c5c0b3f3d4e0594250af032d1890204de",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 14,
+      "accepted_lines": 13,
+      "overriden_lines": 0
+    }
+  }
+}
