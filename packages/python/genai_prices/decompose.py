@@ -43,6 +43,11 @@ def compute_leaf_values(
     The coefficient (-1)^depth_diff is the Mobius function for a product of chains,
     which holds because our dimensions are independent categorical axes. Each step
     in the poset adds exactly one dimension.
+
+    Precondition: if a unit is priced, all its ancestors must also be priced
+    (ancestor coverage rule). Violating this produces silently incorrect results.
+    Phase 1 satisfies this implicitly via ModelPrice's fixed fields; Phase 2 will
+    add explicit validation when ModelPrice becomes dict-based.
     """
     result: dict[str, int] = {}
 
