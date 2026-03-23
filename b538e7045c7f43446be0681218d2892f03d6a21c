@@ -1,0 +1,25 @@
+packages/python/genai_prices/decompose.py
+  bdd46081fb5d57bd 1-71,73-77
+tests/test_decompose.py
+  bdd46081fb5d57bd 1-183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "b538e7045c7f43446be0681218d2892f03d6a21c",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 277,
+      "total_deletions": 16,
+      "accepted_lines": 259,
+      "overriden_lines": 1
+    }
+  }
+}
