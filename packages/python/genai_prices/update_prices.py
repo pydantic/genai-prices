@@ -99,8 +99,8 @@ class UpdatePrices:
             timeout: The maximum time to wait for the prices to be updated in seconds.
         """
         prices_updated = self._prices_updated.wait(timeout=timeout)
-        if self._background_exc:
-            exc = self._background_exc
+        exc = self._background_exc
+        if exc:
             self._background_exc = None
             raise exc
         return prices_updated
