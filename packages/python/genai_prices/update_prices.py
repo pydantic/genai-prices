@@ -5,6 +5,7 @@ import logging
 import threading
 from dataclasses import dataclass, field
 from time import time
+from typing import final
 
 import httpx
 
@@ -131,15 +132,17 @@ class UpdatePrices:
         logger.info('Starting genai-prices background task')
         try:
             while True:
-                self._update_prices()
-                self._prices_updated.set()
-                if self._stop_event.wait(self.update_interval):
+                try:
+                    self._update_prices()
+                    self._prices_updated.set()
+                except Exception as e:
+                    self._background_exc = e
+                    self._prices_updated.set()
+                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                if self._stop_event.wait(self.update_interval):  # Wait for an hour before retrying
                     break
-        except Exception as e:
-            self._background_exc = e
-            self._prices_updated.set()
-            logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-        else:
+
+        finally:
             logger.info('genai-prices background task stopped')
 
     def _update_prices(self):
