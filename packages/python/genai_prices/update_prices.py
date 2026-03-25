@@ -134,11 +134,12 @@ class UpdatePrices:
                 try:
                     self._update_prices()
                     self._prices_updated.set()
+                    self._background_exc = None
                 except Exception as e:
                     self._background_exc = e
                     self._prices_updated.set()
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-                if self._stop_event.wait(self.update_interval):  # Wait for an hour before retrying
+                if self._stop_event.wait(self.update_interval):
                     break
 
         finally:
