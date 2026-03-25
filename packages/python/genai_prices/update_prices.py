@@ -99,8 +99,8 @@ class UpdatePrices:
             timeout: The maximum time to wait for the prices to be updated in seconds.
         """
         prices_updated = self._prices_updated.wait(timeout=timeout)
-        if self._background_exc:
-            exc = self._background_exc
+        exc = self._background_exc
+        if exc:
             self._background_exc = None
             raise exc
         return prices_updated
@@ -131,15 +131,18 @@ class UpdatePrices:
         logger.info('Starting genai-prices background task')
         try:
             while True:
-                self._update_prices()
-                self._prices_updated.set()
+                try:
+                    self._update_prices()
+                    self._prices_updated.set()
+                    self._background_exc = None
+                except Exception as e:
+                    self._background_exc = e
+                    self._prices_updated.set()
+                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
                 if self._stop_event.wait(self.update_interval):
                     break
-        except Exception as e:
-            self._background_exc = e
-            self._prices_updated.set()
-            logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-        else:
+
+        finally:
             logger.info('genai-prices background task stopped')
 
     def _update_prices(self):
