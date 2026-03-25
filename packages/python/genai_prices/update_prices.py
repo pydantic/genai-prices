@@ -5,7 +5,6 @@ import logging
 import threading
 from dataclasses import dataclass, field
 from time import time
-from typing import final
 
 import httpx
 
