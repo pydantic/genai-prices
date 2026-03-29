@@ -3246,10 +3246,14 @@ models:
 
   - id: openai/gpt-4.1-mini
     match:
-      equals: openai/gpt-4.1-mini
+      or:
+        - equals: openai/gpt-4.1-mini
+        - equals: openai/gpt-4.1-mini-2025-04-14
     prices:
       input_mtok: 0.4
       output_mtok: 1.6
+      cache_read_mtok: 0.1
+    prices_checked: 2026-03-29
 
   - id: openai/gpt-4.1-nano
     match:
@@ -3310,6 +3314,7 @@ models:
         - equals: openai/gpt-5.1
         - equals: openai/gpt-5.1-chat
         - equals: openai/gpt-5.1-codex
+        - equals: openai/gpt-5-2025-08-07
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.125
@@ -3338,7 +3343,9 @@ models:
 
   - id: openai/gpt-5-mini
     match:
-      equals: openai/gpt-5-mini
+      or:
+        - equals: openai/gpt-5-mini
+        - equals: openai/gpt-5-mini-2025-08-07
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.025
@@ -3364,12 +3371,49 @@ models:
 
   - id: openai/gpt-5.1-codex-mini
     match:
-      equals: openai/gpt-5.1-codex-mini
+      or:
+        - equals: openai/gpt-5.1-codex-mini
+        - equals: openai/gpt-5.1-codex-mini-20251113
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.025
       output_mtok: 2
     prices_checked: 2025-11-29
+
+  # note: date suffix format (YYYYMMDD vs YYYY-MM-DD) varies per model and matches actual OpenRouter model IDs
+  - id: openai/gpt-5.3-codex
+    match:
+      or:
+        - equals: openai/gpt-5.3-codex
+        - equals: openai/gpt-5.3-codex-20260224
+    prices:
+      input_mtok: 1.75
+      cache_read_mtok: 0.175
+      output_mtok: 14
+    prices_checked: 2026-03-29
+
+  - id: openai/gpt-5.4
+    match:
+      or:
+        - equals: openai/gpt-5.4
+        - equals: openai/gpt-5.4-20260305
+    prices:
+      input_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.5
+    prices_checked: 2026-03-29
 
   - id: openai/gpt-oss-120b
     match:
