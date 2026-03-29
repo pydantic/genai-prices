@@ -3380,6 +3380,7 @@ models:
       output_mtok: 2
     prices_checked: 2025-11-29
 
+  # note: date suffix format (YYYYMMDD vs YYYY-MM-DD) varies per model and matches actual OpenRouter model IDs
   - id: openai/gpt-5.3-codex
     match:
       or:
