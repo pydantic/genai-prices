@@ -10845,7 +10845,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Tiered pricing: 2x above 200k tokens. Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+          'Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
           input_mtok: {
             base: 3,
