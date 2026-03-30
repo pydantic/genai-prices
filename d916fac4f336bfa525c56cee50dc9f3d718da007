@@ -1,0 +1,27 @@
+specs/data-driven-unit-registry/examples.md
+  bdd46081fb5d57bd 31,78,80,84,86,91-114,116,118
+specs/data-driven-unit-registry/spec.md
+  bdd46081fb5d57bd 16,25,33-34,40,52,69-74
+specs/data-driven-unit-registry/algorithm.md
+  bdd46081fb5d57bd 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "d916fac4f336bfa525c56cee50dc9f3d718da007",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>",
+      "messages": [],
+      "total_additions": 93,
+      "total_deletions": 23,
+      "accepted_lines": 91,
+      "overriden_lines": 0
+    }
+  }
+}
