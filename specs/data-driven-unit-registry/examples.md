@@ -28,7 +28,7 @@ Audio tokens are much more expensive than text. The catch-all `input_mtok` is th
     output_image_mtok: 32
 ```
 
-Catch-all convention: `input_mtok` is text since there's no `input_text_mtok`. `output_mtok` and `output_image_mtok` are the same price (image is the default output modality). If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, they pay text input ($5) and image output ($32).
+Catch-all convention: `input_mtok` is text since there's no `input_text_mtok`. `output_mtok` and `output_image_mtok` are the same price because image is the default output modality. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_mtok` catch-all at $32/M — the image-rate catch-all. The `output_image_mtok` leaf is 0 (no `output_image_tokens` reported).
 
 ## Multimodal Input — Google Gemini 2.5 Pro
 
@@ -75,22 +75,44 @@ Image is the default modality. Someone sending `input_tokens: 1000` with no brea
 
 Audio in (audio tokens), text out (output tokens). `input_mtok` and `input_audio_mtok` are the same price — this model only takes audio input, but the catch-all ancestor is required.
 
-## Decomposition Walkthrough
+## Simple Decomposition Walkthrough
 
-A model prices three token units:
+A model prices two input units (no overlap — join coverage is not triggered):
 
 - `input_mtok` at $3/M (catch-all input)
 - `cache_read_mtok` at $0.30/M (cached input)
-- `input_audio_mtok` at $100/M (audio input)
+- `output_mtok` at $15/M
 
-Usage: `{input_tokens: 1000, cache_read_tokens: 200, input_audio_tokens: 300}`
+Usage: `{input_tokens: 1000, cache_read_tokens: 200, output_tokens: 500}`
 
-Leaf values (each unit gets only its exclusive portion):
+Leaf values:
 
-- `input_audio_mtok`: 300 (no more-specific priced unit)
 - `cache_read_mtok`: 200 (no more-specific priced unit)
-- `input_mtok`: 1000 - 200 - 300 = 500 (remainder)
+- `input_mtok`: 1000 - 200 = 800 (remainder)
+- `output_mtok`: 500
 
-Cost: `(500/1M) x 3 + (200/1M) x 0.30 + (300/1M) x 100 = $0.03156`
+Cost: `(800/1M) x 3 + (200/1M) x 0.30 + (500/1M) x 15 = $0.01006`
 
-If the model also priced `cache_audio_read_mtok` at $0.10/M, it would be carved out of both `cache_read_mtok` and `input_audio_mtok`. The engine uses dimension relationships to determine which units overlap and applies inclusion-exclusion (Mobius inversion) to avoid double-counting.
+## Decomposition With Overlap (Join Coverage)
+
+A model prices four input units — including the join required by join coverage:
+
+- `input_mtok` at $5/M (catch-all input)
+- `cache_read_mtok` at $0.50/M (cached input)
+- `input_audio_mtok` at $100/M (audio input)
+- `cache_audio_read_mtok` at $2.50/M (cached audio input — the join of cache_read and input_audio)
+- `output_mtok` at $20/M
+
+Usage: `{input_tokens: 1000, cache_read_tokens: 200, input_audio_tokens: 300, cache_audio_read_tokens: 50, output_tokens: 500}`
+
+Leaf values (inclusion-exclusion via Mobius inversion):
+
+- `cache_audio_read_mtok`: 50 (leaf — no descendants)
+- `cache_read_mtok`: 200 - 50 = 150 (subtract cached-audio)
+- `input_audio_mtok`: 300 - 50 = 250 (subtract cached-audio)
+- `input_mtok`: 1000 - 200 - 300 + 50 = 550 (the +50 corrects for double-subtraction)
+- `output_mtok`: 500
+
+Sum: 50 + 150 + 250 + 550 + 500 = 1500 = 1000 + 500. Every token in exactly one bucket.
+
+See [algorithm](algorithm.md) for the general formula.
