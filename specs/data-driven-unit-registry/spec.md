@@ -96,6 +96,9 @@ Incomplete and inconsistent are different. Missing `cache_read_tokens` means we 
 **Validation replaces what hardcoded fields gave us implicitly, and adds more.** _(from "Units are data, not code", "Derive, don't duplicate")_
 Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mtok` would fail because the field doesn't exist. Moving to data-driven units means explicit validation must replace that safety net and go further. Validation is comprehensive — it's cheaper to reject bad data at build/construction time than to debug wrong prices at runtime.
 
+**Expensive validation happens once at definition time, not on every load.** _(from "Validation replaces what hardcoded fields gave us", "Unit definitions travel with prices")_
+The repo contains thousands of model prices. Structural validation — ancestor coverage, join coverage, dimension consistency — is expensive (O(n^2) for join coverage over priced units). This validation runs in the build pipeline when prices are defined. By the time prices reach `data.json`, they are pre-validated. Clients loading pre-built price data at runtime skip structural validation entirely — the build pipeline has already guaranteed correctness. Expensive validation only runs for prices defined at runtime by users (custom units, programmatic ModelPrice construction). This is the tradeoff: comprehensive validation without penalizing startup time.
+
 **Price key validation: every key in a model's prices must be a registered unit ID.** _(from "Validation replaces what hardcoded fields gave us")_
 If a provider YAML file has `prices: { inptu_mtok: 3 }`, the build fails. This replaces the implicit validation that hardcoded Pydantic/dataclass fields provided. Checked at build time (data pipeline) and at construction time (ModelPrice).
 
@@ -111,11 +114,11 @@ Dimensions uniquely identify a unit's position in the containment poset. Two uni
 **Usage key uniqueness: no two units may share the same usage key.** _(from "Validation replaces what hardcoded fields gave us", "Usage is accessed dynamically")_
 A usage key maps one-to-one to a unit. If two units read from the same usage field, decomposition can't distinguish their contributions.
 
-**Ancestor coverage is validated.** _(from "Ancestor coverage: pricing a unit requires pricing all its ancestors", "Validation replaces what hardcoded fields gave us")_
-At ModelPrice construction time, checked against the registry's dimension structure. Not deferred to calc_price.
+**Ancestor coverage is validated.** _(from "Ancestor coverage: pricing a unit requires pricing all its ancestors", "Expensive validation happens once at definition time")_
+Checked in the build pipeline for repo-defined prices, and at construction time for runtime-defined prices. Not deferred to calc_price.
 
-**Join coverage is validated.** _(from "Join coverage: pricing two overlapping units requires pricing their intersection", "Validation replaces what hardcoded fields gave us")_
-At ModelPrice construction time. For every pair of priced units, if their dimension-union corresponds to a unit in the registry, that unit must also be priced.
+**Join coverage is validated.** _(from "Join coverage: pricing two overlapping units requires pricing their intersection", "Expensive validation happens once at definition time")_
+For every pair of priced units, if their dimension-union corresponds to a unit in the registry, that unit must also be priced. Checked in the build pipeline for repo-defined prices, and at construction time for runtime-defined prices.
 
 **Price sanity checks warn on violations of common economic inequalities.** _(from "The goal is to calculate prices as accurately as possible", "Validation replaces what hardcoded fields gave us")_
 Some pricing relationships hold across nearly all models: cache reads are cheaper than uncached input, cache writes are more expensive, text is the cheapest modality. These aren't hard constraints — a model might legitimately break them — but violations are worth flagging as warnings during the build pipeline. They catch data entry mistakes ("did you swap cache_read and cache_write prices?") without blocking unusual-but-correct pricing. The inequalities should be expressible in terms of dimensions (e.g., "within the same direction and modality, cache=read ≤ uncached ≤ cache=write") rather than listing specific unit pairs.
