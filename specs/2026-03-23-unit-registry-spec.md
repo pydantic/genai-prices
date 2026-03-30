@@ -51,11 +51,11 @@ families:
       output_text_mtok:
         usage_key: output_text_tokens
         dimensions: { direction: output, modality: text }
-      cache_read_text_mtok:
-        usage_key: cache_read_text_tokens
+      cache_text_read_mtok:
+        usage_key: cache_text_read_tokens
         dimensions: { direction: input, modality: text, cache: read }
-      cache_write_text_mtok:
-        usage_key: cache_write_text_tokens
+      cache_text_write_mtok:
+        usage_key: cache_text_write_tokens
         dimensions: { direction: input, modality: text, cache: write }
 
       input_audio_mtok:
@@ -67,8 +67,8 @@ families:
       cache_audio_read_mtok:
         usage_key: cache_audio_read_tokens
         dimensions: { direction: input, modality: audio, cache: read }
-      cache_write_audio_mtok:
-        usage_key: cache_write_audio_tokens
+      cache_audio_write_mtok:
+        usage_key: cache_audio_write_tokens
         dimensions: { direction: input, modality: audio, cache: write }
 
       input_image_mtok:
@@ -77,11 +77,11 @@ families:
       output_image_mtok:
         usage_key: output_image_tokens
         dimensions: { direction: output, modality: image }
-      cache_read_image_mtok:
-        usage_key: cache_read_image_tokens
+      cache_image_read_mtok:
+        usage_key: cache_image_read_tokens
         dimensions: { direction: input, modality: image, cache: read }
-      cache_write_image_mtok:
-        usage_key: cache_write_image_tokens
+      cache_image_write_mtok:
+        usage_key: cache_image_write_tokens
         dimensions: { direction: input, modality: image, cache: write }
 
       input_video_mtok:
@@ -90,11 +90,11 @@ families:
       output_video_mtok:
         usage_key: output_video_tokens
         dimensions: { direction: output, modality: video }
-      cache_read_video_mtok:
-        usage_key: cache_read_video_tokens
+      cache_video_read_mtok:
+        usage_key: cache_video_read_tokens
         dimensions: { direction: input, modality: video, cache: read }
-      cache_write_video_mtok:
-        usage_key: cache_write_video_tokens
+      cache_video_write_mtok:
+        usage_key: cache_video_write_tokens
         dimensions: { direction: input, modality: video, cache: write }
 ```
 
@@ -269,9 +269,9 @@ Catch-all convention: `input_mtok` is text since there's no `input_text_mtok`. `
     input_audio_mtok: 0.30
     cache_audio_read_mtok: 0.03
     input_video_mtok: 0.30
-    cache_read_video_mtok: 0.03
+    cache_video_read_mtok: 0.03
     input_image_mtok: 0.30
-    cache_read_image_mtok: 0.03
+    cache_image_read_mtok: 0.03
 ```
 
 Separate rates per modality. The catch-all `input_mtok` ($1.25) is the text rate; other modalities are cheaper. Cached variants defined for each. This model also has long-context tiers handled by the existing `TieredPrices` mechanism.

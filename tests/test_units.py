@@ -60,16 +60,16 @@ def test_tokens_family_has_new_modality_units():
     for unit_id in [
         'input_text_mtok',
         'output_text_mtok',
-        'cache_read_text_mtok',
-        'cache_write_text_mtok',
+        'cache_text_read_mtok',
+        'cache_text_write_mtok',
         'input_image_mtok',
         'output_image_mtok',
-        'cache_read_image_mtok',
-        'cache_write_image_mtok',
+        'cache_image_read_mtok',
+        'cache_image_write_mtok',
         'input_video_mtok',
         'output_video_mtok',
-        'cache_read_video_mtok',
-        'cache_write_video_mtok',
+        'cache_video_read_mtok',
+        'cache_video_write_mtok',
     ]:
         assert unit_id in family.units, f'Missing unit: {unit_id}'
 

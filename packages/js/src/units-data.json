@@ -49,16 +49,16 @@
             "modality": "text"
           }
         },
-        "cache_read_text_mtok": {
-          "usage_key": "cache_read_text_tokens",
+        "cache_text_read_mtok": {
+          "usage_key": "cache_text_read_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "text",
             "cache": "read"
           }
         },
-        "cache_write_text_mtok": {
-          "usage_key": "cache_write_text_tokens",
+        "cache_text_write_mtok": {
+          "usage_key": "cache_text_write_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "text",
@@ -87,8 +87,8 @@
             "cache": "read"
           }
         },
-        "cache_write_audio_mtok": {
-          "usage_key": "cache_write_audio_tokens",
+        "cache_audio_write_mtok": {
+          "usage_key": "cache_audio_write_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "audio",
@@ -109,16 +109,16 @@
             "modality": "image"
           }
         },
-        "cache_read_image_mtok": {
-          "usage_key": "cache_read_image_tokens",
+        "cache_image_read_mtok": {
+          "usage_key": "cache_image_read_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "image",
             "cache": "read"
           }
         },
-        "cache_write_image_mtok": {
-          "usage_key": "cache_write_image_tokens",
+        "cache_image_write_mtok": {
+          "usage_key": "cache_image_write_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "image",
@@ -139,16 +139,16 @@
             "modality": "video"
           }
         },
-        "cache_read_video_mtok": {
-          "usage_key": "cache_read_video_tokens",
+        "cache_video_read_mtok": {
+          "usage_key": "cache_video_read_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "video",
             "cache": "read"
           }
         },
-        "cache_write_video_mtok": {
-          "usage_key": "cache_write_video_tokens",
+        "cache_video_write_mtok": {
+          "usage_key": "cache_video_write_tokens",
           "dimensions": {
             "direction": "input",
             "modality": "video",

@@ -40,10 +40,10 @@ class TestContainment:
         assert not is_descendant_or_self(get_unit('input_mtok'), get_unit('output_mtok'))
 
     def test_wrong_modality_not_descendant(self):
-        assert not is_descendant_or_self(get_unit('input_audio_mtok'), get_unit('cache_read_image_mtok'))
+        assert not is_descendant_or_self(get_unit('input_audio_mtok'), get_unit('cache_image_read_mtok'))
 
     def test_cache_write_not_descendant_of_cache_read(self):
-        assert not is_descendant_or_self(get_unit('cache_read_mtok'), get_unit('cache_write_audio_mtok'))
+        assert not is_descendant_or_self(get_unit('cache_read_mtok'), get_unit('cache_audio_write_mtok'))
 
 
 class TestPricedDescendants:
