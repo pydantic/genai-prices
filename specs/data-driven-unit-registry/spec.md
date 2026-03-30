@@ -45,11 +45,20 @@ The unit registry generates a JSON schema that provider YAML files reference (vi
 **Decomposition uses dimensions, not hardcoded subtraction chains.** _(from "Dimensions define unit specificity", "Every usage value must land in exactly one pricing bucket")_
 The current code subtracts specific unit values from general ones in a manually maintained order. The replacement: Mobius inversion on the containment poset defined by dimensions. The algorithm takes the set of priced units, computes each one's "leaf value" (exclusive portion of usage), and guarantees no double-counting. No code names specific units — the algorithm works from the dimension structure alone.
 
+**Only priced units participate in decomposition.** _(from "Decomposition uses dimensions", "Incomplete usage is handled gracefully")_
+If a model doesn't price `input_audio_mtok`, audio tokens remain part of the `input_mtok` catch-all — they are not carved out. The decomposition is determined by the set of units that have prices for the current model, not the full registry. This is what makes partial pricing work: a model that only prices `input_mtok` and `output_mtok` still produces correct results.
+
+**Decomposition operates within a family.** _(from "Decomposition uses dimensions", "A unit family groups units")_
+Token decomposition does not affect request pricing. Each family's decomposition is independent — there is no cross-family overlap to resolve.
+
 **Aggregate counts and costs are queryable by dimension filter.** _(from "Decomposition uses dimensions", "Dimensions define unit specificity")_
 After decomposition, it must be possible to ask "how many tokens match this set of dimensions?" and get a correct answer — by summing the leaf values of all priced units whose dimensions are a superset of the filter. The same applies to costs: "what is the total cost for {direction: input}?" sums the leaf costs of all input-side units. Examples: all input tokens ({direction: input}), all cache read tokens ({cache: read}), all audio tokens ({modality: audio}) regardless of direction, all tokens (empty filter). This is the general mechanism behind things like TieredPrices, where the tier threshold is currently hardcoded to `input_tokens` but should be expressible as a dimension filter ({direction: input}).
 
 **`input_price` and `output_price` are backward-compat accessors over dimension-filtered costs.** _(from "Aggregate counts and costs are queryable", "Backward compatibility")_
 `calc_price` currently returns `{input_price, output_price, total_price}`. The input/output grouping is not hardcoded — it's a cost aggregate filtered by `{direction: input}` and `{direction: output}` respectively. These names are kept for backward compatibility as accessors over the general mechanism.
+
+**Unspecified dimensions mean catch-all: the unit prices whatever isn't claimed by a more specific unit.** _(from "Dimensions define unit specificity", "Only priced units participate")_
+`input_mtok` has no `modality` dimension — it's the catch-all for all input tokens not claimed by a modality-specific unit. For text-primary models (most models), this means `input_mtok` IS the text price. For image-primary models, set `input_mtok` and `input_image_mtok` to the same value (the image price), and define `input_text_mtok` as the exception. There is no explicit "default modality" field — the catch-all convention handles it. See [examples](examples.md) for concrete pricing patterns.
 
 **Ancestor coverage: pricing a unit requires pricing all its ancestors.** _(from "Price data must be complete", "Decomposition uses dimensions")_
 If a model prices `cache_read_mtok` ({direction: input, cache: read}), it must also price `input_mtok` ({direction: input}). Without the ancestor, usage reported at the general level (just `input_tokens`, no breakdown) would have no price. This is a price data completeness requirement — validated, not assumed.
@@ -68,6 +77,9 @@ ModelPrice is not a plain dict — that would break `model_price.input_mtok`. It
 
 **Usage is accessed dynamically by key.** _(from "The registry is a YAML file", "Derive, don't duplicate")_
 Each unit defines a `usage_key` — the attribute name to look up on the usage object (e.g., `input_tokens` for unit `input_mtok`). The engine uses `getattr`/Mapping access. No typed Protocol enumerates usage fields. Callers provide whatever they have; missing values are zero.
+
+**Usage key defaults to unit ID if not specified.** _(from "Usage is accessed dynamically")_
+Unit IDs like `input_mtok` encode normalization (per-million). Usage values like `input_tokens` are raw counts. The `usage_key` field bridges the two — the system looks up `input_tokens` on the usage object and applies the `input_mtok` price with the family's `per: 1_000_000`. For the tokens family, every unit has an explicit `usage_key` because of this naming split. For families where the unit ID and usage key are the same (e.g., a future `tool_calls` family), the default avoids redundancy.
 
 **Incomplete usage is handled gracefully, not rejected.** _(from "Price data must be complete; usage data may be incomplete", "Usage is accessed dynamically")_
 A caller with only `{input_tokens: 1000, output_tokens: 500}` gets a valid price at catch-all rates. A caller with detailed breakdowns gets a more precise price. The system handles both — missing usage values default to zero (no carve-out), and the decomposition adapts to whatever units are priced. The accuracy limitation is accepted because it comes from the caller's data, not from ours.
