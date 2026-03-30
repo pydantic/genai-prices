@@ -6014,16 +6014,20 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='anthropic/claude-opus-4.6'),
+                        ClauseEquals(equals='anthropic/claude-4.6-opus-20260205'),
+                        ClauseEquals(equals='anthropic/claude-4.6-opus-20260205:beta'),
+                        ClauseEquals(equals='anthropic/claude-opus-4.6-20260205'),
+                        ClauseEquals(equals='anthropic/claude-opus-4.6-20260205:beta'),
                         ClauseEquals(equals='anthropic/claude-opus-4.6:beta'),
                     ]
                 ),
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
-                    ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
-                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -6039,6 +6043,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 context_window=1000000,
+                price_comments='Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -6053,9 +6058,15 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='anthropic/claude-sonnet-4.6'),
+                        ClauseEquals(equals='anthropic/claude-4.6-sonnet-20260217'),
+                        ClauseEquals(equals='anthropic/claude-4.6-sonnet-20260217:beta'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-4.6-20260217'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-4.6-20260217:beta'),
                         ClauseEquals(equals='anthropic/claude-sonnet-4.6:beta'),
                     ]
                 ),
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),

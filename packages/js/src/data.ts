@@ -10793,47 +10793,30 @@ export const data: Provider[] = [
               equals: 'anthropic/claude-opus-4.6',
             },
             {
+              equals: 'anthropic/claude-4.6-opus-20260205',
+            },
+            {
+              equals: 'anthropic/claude-4.6-opus-20260205:beta',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.6-20260205',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.6-20260205:beta',
+            },
+            {
               equals: 'anthropic/claude-opus-4.6:beta',
             },
           ],
         },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
-              },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
-              },
-            ],
-          },
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
         },
       },
       {
@@ -10861,6 +10844,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
           input_mtok: {
             base: 3,
@@ -10908,10 +10893,25 @@ export const data: Provider[] = [
               equals: 'anthropic/claude-sonnet-4.6',
             },
             {
+              equals: 'anthropic/claude-4.6-sonnet-20260217',
+            },
+            {
+              equals: 'anthropic/claude-4.6-sonnet-20260217:beta',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-4.6-20260217',
+            },
+            {
+              equals: 'anthropic/claude-sonnet-4.6-20260217:beta',
+            },
+            {
               equals: 'anthropic/claude-sonnet-4.6:beta',
             },
           ],
         },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,

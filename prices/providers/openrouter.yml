@@ -280,28 +280,21 @@ models:
     match:
       or:
         - equals: anthropic/claude-opus-4.6
+        - equals: anthropic/claude-4.6-opus-20260205
+        - equals: anthropic/claude-4.6-opus-20260205:beta
+        - equals: anthropic/claude-opus-4.6-20260205
+        - equals: anthropic/claude-opus-4.6-20260205:beta
         - equals: anthropic/claude-opus-4.6:beta
+    context_window: 1000000
     prices:
-      input_mtok:
-        base: 5
-        tiers:
-          - start: 200000
-            price: 10
-      cache_read_mtok:
-        base: 0.50
-        tiers:
-          - start: 200000
-            price: 1
-      cache_write_mtok:
-        base: 6.25
-        tiers:
-          - start: 200000
-            price: 12.50
-      output_mtok:
-        base: 25
-        tiers:
-          - start: 200000
-            price: 37.50
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      cache_write_mtok: 6.25
+      output_mtok: 25
+    prices_checked: 2026-03-22
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anthropic/claude-sonnet-4.5
     match:
@@ -334,17 +327,30 @@ models:
         tiers:
           - start: 200000
             price: 22.5
+    prices_checked: 2026-03-23
+    price_comments: >-
+      Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anthropic/claude-sonnet-4.6
     match:
       or:
         - equals: anthropic/claude-sonnet-4.6
+        - equals: anthropic/claude-4.6-sonnet-20260217
+        - equals: anthropic/claude-4.6-sonnet-20260217:beta
+        - equals: anthropic/claude-sonnet-4.6-20260217
+        - equals: anthropic/claude-sonnet-4.6-20260217:beta
         - equals: anthropic/claude-sonnet-4.6:beta
+    context_window: 1000000
     prices:
       input_mtok: 3
       cache_read_mtok: 0.3
       cache_write_mtok: 3.75
       output_mtok: 15
+    prices_checked: 2026-03-22
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
   - id: anubis-pro-105b-v1
     name: Anubis Pro 105B V1
