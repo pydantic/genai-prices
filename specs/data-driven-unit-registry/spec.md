@@ -22,13 +22,16 @@ Existing consumer code must continue to work. `model_price.input_mtok`, `usage.i
 Changes are justified only by genuine data gaps — e.g., a model that prices cached tokens and audio tokens but not cached-audio tokens fails a validation rule we're adding for good reason. No mass field renames, no restructuring for its own sake. This goes against "Price data must be complete" only in appearance — adding a missing cached-audio price IS making the data complete; it's not churn.
 
 **Users can define custom units at runtime.** _(from "Units are data, not code")_
-Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units.
+Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units. Users can add units to existing families or create entirely new families. Runtime-defined units are merged with built-in units and subject to the same validation (including uniqueness — a runtime unit cannot reuse an existing unit ID).
 
 **The system is general across unit families.** _(from "Units are data, not code")_
 Any unit with the structure `usage_value x price / normalization_factor` is expressible: tokens (per million), requests (per thousand), characters, duration, etc. Tokens are the first and most complex family (because of overlapping usage), but nothing in the system is token-specific. Future families require only a data file edit.
 
 **A unit family groups units whose usage values can overlap.** _(from "The system is general")_
 Each family has a normalization factor (`per: 1_000_000` for tokens). Within a family, a more-specific unit's usage is a subset of a less-specific one's (`cache_read_tokens` is a subset of `input_tokens`). Between families, there is no overlap — request counts don't interact with token counts.
+
+**`requests_kcount` becomes a unit in a `requests` family.** _(from "The system is general", "Units are data, not code")_
+The existing `requests_kcount` field is a hardcoded special case — a price per thousand requests. It belongs in the registry as a unit in a `requests` family with `per: 1_000`. This eliminates the last hardcoded pricing field from ModelPrice and makes request pricing subject to the same mechanisms as token pricing.
 
 **Dimensions define unit specificity and overlap.** _(from "A unit family groups units")_
 Each unit carries zero or more categorical dimension assignments: `{direction: input}`, `{direction: input, cache: read}`, `{direction: input, modality: audio, cache: read}`. More dimensions = more specific. The containment relationship — which units are ancestors/descendants of which — is determined by set inclusion on dimensions: if A's dimensions are a subset of B's, A is an ancestor of B. This structure is the basis for decomposition and for all validation rules.
@@ -42,8 +45,11 @@ The unit registry generates a JSON schema that provider YAML files reference (vi
 **Decomposition uses dimensions, not hardcoded subtraction chains.** _(from "Dimensions define unit specificity", "Every usage value must land in exactly one pricing bucket")_
 The current code subtracts specific unit values from general ones in a manually maintained order. The replacement: Mobius inversion on the containment poset defined by dimensions. The algorithm takes the set of priced units, computes each one's "leaf value" (exclusive portion of usage), and guarantees no double-counting. No code names specific units — the algorithm works from the dimension structure alone.
 
-**Aggregate counts are queryable by dimension filter.** _(from "Decomposition uses dimensions", "Dimensions define unit specificity")_
-After decomposition, it must be possible to ask "how many tokens match this set of dimensions?" and get a correct answer — by summing the leaf values of all priced units whose dimensions are a superset of the filter. Examples: all input tokens ({direction: input}), all cache read tokens ({cache: read}), all audio tokens ({modality: audio}) regardless of direction, all tokens (empty filter). This is the general mechanism behind things like TieredPrices, where the tier threshold is currently hardcoded to `input_tokens` but should be expressible as a dimension filter ({direction: input}).
+**Aggregate counts and costs are queryable by dimension filter.** _(from "Decomposition uses dimensions", "Dimensions define unit specificity")_
+After decomposition, it must be possible to ask "how many tokens match this set of dimensions?" and get a correct answer — by summing the leaf values of all priced units whose dimensions are a superset of the filter. The same applies to costs: "what is the total cost for {direction: input}?" sums the leaf costs of all input-side units. Examples: all input tokens ({direction: input}), all cache read tokens ({cache: read}), all audio tokens ({modality: audio}) regardless of direction, all tokens (empty filter). This is the general mechanism behind things like TieredPrices, where the tier threshold is currently hardcoded to `input_tokens` but should be expressible as a dimension filter ({direction: input}).
+
+**`input_price` and `output_price` are backward-compat accessors over dimension-filtered costs.** _(from "Aggregate counts and costs are queryable", "Backward compatibility")_
+`calc_price` currently returns `{input_price, output_price, total_price}`. The input/output grouping is not hardcoded — it's a cost aggregate filtered by `{direction: input}` and `{direction: output}` respectively. These names are kept for backward compatibility as accessors over the general mechanism.
 
 **Ancestor coverage: pricing a unit requires pricing all its ancestors.** _(from "Price data must be complete", "Decomposition uses dimensions")_
 If a model prices `cache_read_mtok` ({direction: input, cache: read}), it must also price `input_mtok` ({direction: input}). Without the ancestor, usage reported at the general level (just `input_tokens`, no breakdown) would have no price. This is a price data completeness requirement — validated, not assumed.
@@ -77,6 +83,9 @@ If a provider YAML file has `prices: { inptu_mtok: 3 }`, the build fails. This r
 
 **Dimension validation: unit dimension keys and values must match their family's declarations.** _(from "Validation replaces what hardcoded fields gave us", "Dimensions define unit specificity")_
 A unit in the `tokens` family can only use dimension keys declared for that family (`direction`, `modality`, `cache`), and only with declared values (`direction: input` is valid; `direction: sideways` is not). Checked when the registry is loaded.
+
+**Unit IDs are globally unique across all families.** _(from "Validation replaces what hardcoded fields gave us", "ModelPrice supports attribute access")_
+A unit ID identifies a single unit in the entire registry, not just within its family. ModelPrice uses unit IDs as attribute names — if two families could share a unit ID, attribute access would be ambiguous.
 
 **Unit uniqueness: no two units in a family may have identical dimension sets.** _(from "Validation replaces what hardcoded fields gave us", "Dimensions define unit specificity")_
 Dimensions uniquely identify a unit's position in the containment poset. Two units with the same dimensions would be the same slot — that's a data error, not an edge case.
