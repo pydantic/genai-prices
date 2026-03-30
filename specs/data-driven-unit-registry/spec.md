@@ -33,6 +33,12 @@ Each family has a normalization factor (`per: 1_000_000` for tokens). Within a f
 **Dimensions define unit specificity and overlap.** _(from "A unit family groups units")_
 Each unit carries zero or more categorical dimension assignments: `{direction: input}`, `{direction: input, cache: read}`, `{direction: input, modality: audio, cache: read}`. More dimensions = more specific. The containment relationship — which units are ancestors/descendants of which — is determined by set inclusion on dimensions: if A's dimensions are a subset of B's, A is an ancestor of B. This structure is the basis for decomposition and for all validation rules.
 
+**Unit IDs follow a naming convention: `{cache_op}_{modality}_{suffix}` or `{direction}_{modality}_{suffix}`.** _(from "Dimensions define unit specificity", "Derive, don't duplicate")_
+The convention orders components so that the most distinguishing dimension comes first. For cached units: `cache_read_audio_mtok`, `cache_write_image_mtok`. For non-cached: `input_audio_mtok`, `output_video_mtok`. The suffix (`_mtok`) comes from the family. Usage keys follow the same ordering with their own suffix (`_tokens`). Code never parses unit IDs to extract semantics — the dimensions carry that — but consistent naming makes the data files readable.
+
+**`cache_audio_read` is a historical naming inconsistency that is not renamed.** _(from "Unit IDs follow a naming convention", "Backward compatibility")_
+The unit `cache_audio_read_mtok` (and its usage key `cache_audio_read_tokens`) breaks the convention — it should be `cache_read_audio_mtok`. This name exists in provider YAML files, consumer code, and external API responses. It is kept as-is for backward compatibility. No alias mechanism is added for one unit. New units follow the convention; this one does not infect them because the convention generates names independently of existing ones.
+
 **Decomposition uses dimensions, not hardcoded subtraction chains.** _(from "Dimensions define unit specificity", "Every usage value must land in exactly one pricing bucket")_
 The current code subtracts specific unit values from general ones in a manually maintained order. The replacement: Mobius inversion on the containment poset defined by dimensions. The algorithm takes the set of priced units, computes each one's "leaf value" (exclusive portion of usage), and guarantees no double-counting. No code names specific units — the algorithm works from the dimension structure alone.
 
