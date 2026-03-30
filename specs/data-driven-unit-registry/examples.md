@@ -77,7 +77,7 @@ Audio in (audio tokens), text out (output tokens). `input_mtok` and `input_audio
 
 ## Simple Decomposition Walkthrough
 
-A model prices two input units (no overlap — join coverage is not triggered):
+A model prices two input units in a parent-child chain (no sibling overlap, so join coverage is not triggered):
 
 - `input_mtok` at $3/M (catch-all input)
 - `cache_read_mtok` at $0.30/M (cached input)

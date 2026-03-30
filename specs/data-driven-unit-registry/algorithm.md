@@ -11,7 +11,7 @@ leaf(U) = sum over all priced descendants V of U (including U itself):
             (-1)^(depth(V) - depth(U)) * usage(V)
 ```
 
-where `depth(V)` = number of dimension assignments on V (e.g., `input_mtok` has 1: `{direction: input}`, `cache_audio_read_mtok` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage_key. There is no zero-dimension root unit — the least-specific units have one dimension (direction).
+where `depth(V)` = number of dimension assignments on V (e.g., `input_mtok` has 1: `{direction: input}`, `cache_audio_read_mtok` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage_key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. Families with no dimensions (e.g., `requests`) have a single unit and no decomposition to perform.
 
 This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
 
