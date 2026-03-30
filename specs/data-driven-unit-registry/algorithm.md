@@ -11,13 +11,13 @@ leaf(U) = sum over all priced descendants V of U (including U itself):
             (-1)^(depth(V) - depth(U)) * usage(V)
 ```
 
-where `depth(V)` = number of dimensions on V, and `usage(V)` = the usage value looked up by V's usage_key.
+where `depth(V)` = number of dimension assignments on V (e.g., `input_mtok` has 1: `{direction: input}`, `cache_audio_read_mtok` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage_key. There is no zero-dimension root unit — the least-specific units have one dimension (direction).
 
 This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
 
 ## Two-way example
 
-Priced: `input_mtok` (depth 1), `cache_read_mtok` (depth 2).
+Priced: `input_mtok` (1 dimension), `cache_read_mtok` (2 dimensions).
 
 ```
 leaf(input_mtok)      = usage(input_tokens) - usage(cache_read_tokens)
@@ -26,7 +26,7 @@ leaf(cache_read_mtok)  = usage(cache_read_tokens)
 
 ## Three-way overlap
 
-Priced: `input_mtok` (depth 1), `cache_read_mtok` (depth 2), `input_audio_mtok` (depth 2), `cache_audio_read_mtok` (depth 3).
+Priced: `input_mtok` (1 dim), `cache_read_mtok` (2 dims), `input_audio_mtok` (2 dims), `cache_audio_read_mtok` (3 dims).
 
 ```
 leaf(input_mtok)            = input_tokens - cache_read_tokens - input_audio_tokens + cache_audio_read_tokens
