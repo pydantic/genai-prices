@@ -24,8 +24,8 @@ Changes are justified only by genuine data gaps — e.g., a model that prices ca
 **Users can define custom units at runtime.** _(from "Units are data, not code")_
 Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units. Users can add units to existing families or create entirely new families. Runtime-defined units are merged with built-in units and subject to the same validation — including ID uniqueness and dimension-set uniqueness within a family.
 
-**Custom units arrive via DataSnapshot, the same path as custom prices.** _(from "Users can define custom units at runtime", "Unit definitions travel with prices")_
-`DataSnapshot` already carries prices (as providers/models). Unit definitions belong there too — they travel together. The bundled snapshot gets its units from generated code; a custom snapshot includes additional or overridden families alongside its custom providers. Users construct `UnitFamily`/`UnitDef` objects (public classes) and include them in the snapshot. No separate registry API is needed — the entry point is the one that already exists for custom prices.
+**Unit families live in the data snapshot alongside prices.** _(from "Users can define custom units at runtime", "Unit definitions travel with prices")_
+`DataSnapshot` carries unit families as data, just as it carries providers and models. The bundled snapshot includes built-in families from generated code; `data.json` auto-updates include them too. There is no separate registry API — adding a custom unit means adding to or extending the families already present in the snapshot the user is working with. `UnitFamily` and `UnitDef` are public classes.
 
 **The system is general across unit families.** _(from "Units are data, not code")_
 Any unit with the structure `usage_value x price / normalization_factor` is expressible: tokens (per million), requests (per thousand), characters, duration, etc. Tokens are the first and most complex family (because of overlapping usage), but nothing in the system is token-specific. Future families require only a data file edit.
