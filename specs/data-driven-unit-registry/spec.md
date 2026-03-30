@@ -66,6 +66,9 @@ Each unit defines a `usage_key` — the attribute name to look up on the usage o
 **Incomplete usage is handled gracefully, not rejected.** _(from "Price data must be complete; usage data may be incomplete", "Usage is accessed dynamically")_
 A caller with only `{input_tokens: 1000, output_tokens: 500}` gets a valid price at catch-all rates. A caller with detailed breakdowns gets a more precise price. The system handles both — missing usage values default to zero (no carve-out), and the decomposition adapts to whatever units are priced. The accuracy limitation is accepted because it comes from the caller's data, not from ours.
 
+**Inconsistent usage is rejected.** _(from "Every usage value must land in exactly one pricing bucket", "Incomplete usage is handled gracefully")_
+Incomplete and inconsistent are different. Missing `cache_read_tokens` means we assume zero cached tokens — that's fine. But `cache_read_tokens > input_tokens` is contradictory: a subset can't exceed its superset. Decomposition detects this as a negative leaf value and raises an error. This is the right behavior — silently producing a wrong price is worse than failing loudly.
+
 **Validation replaces what hardcoded fields gave us implicitly, and adds more.** _(from "Units are data, not code", "Derive, don't duplicate")_
 Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mtok` would fail because the field doesn't exist. Moving to data-driven units means explicit validation must replace that safety net and go further. Validation is comprehensive — it's cheaper to reject bad data at build/construction time than to debug wrong prices at runtime.
 
@@ -86,6 +89,9 @@ At ModelPrice construction time, checked against the registry's dimension struct
 
 **Join coverage is validated.** _(from "Join coverage: pricing two overlapping units requires pricing their intersection", "Validation replaces what hardcoded fields gave us")_
 At ModelPrice construction time. For every pair of priced units, if their dimension-union corresponds to a unit in the registry, that unit must also be priced.
+
+**Price sanity checks warn on violations of common economic inequalities.** _(from "The goal is to calculate prices as accurately as possible", "Validation replaces what hardcoded fields gave us")_
+Some pricing relationships hold across nearly all models: cache reads are cheaper than uncached input, cache writes are more expensive, text is the cheapest modality. These aren't hard constraints — a model might legitimately break them — but violations are worth flagging as warnings during the build pipeline. They catch data entry mistakes ("did you swap cache_read and cache_write prices?") without blocking unusual-but-correct pricing. The inequalities should be expressible in terms of dimensions (e.g., "within the same direction and modality, cache=read ≤ uncached ≤ cache=write") rather than listing specific unit pairs.
 
 **Validation rules are expressed in terms of dimensions, not unit names.** _(from "Derive, don't duplicate", "Dimensions define unit specificity")_
 All validation logic — ancestor coverage, join coverage, dimension validity, key matching — operates on the dimension structure from the registry. No validation code references `input_mtok` or any other specific unit by name.
