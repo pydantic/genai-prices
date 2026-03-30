@@ -36,8 +36,11 @@ If a model prices `cache_read_mtok` ({direction: input, cache: read}), it must a
 **Join coverage: pricing two overlapping units requires pricing their intersection.** _(from "Decomposition uses dimensions", "Every usage value must land")_
 If a model prices both `cache_read_mtok` and `input_audio_mtok`, their join — the unit with the union of both dimension sets, `{direction: input, cache: read, modality: audio}` — must also be priced, if it exists in the registry. Without this, Mobius inversion double-counts tokens that belong to both parents. Each token in one bucket, not two.
 
+**Unit definitions travel with prices, not just with the package.** _(from "Units are data, not code", "Users can define custom units at runtime")_
+Currently, prices are in `data.json` which clients can auto-update at runtime (pulled on merge, before a package release). Unit definitions are in `units.json`, bundled into the Python/JS packages — only updated on package release. This means a new unit's prices could arrive before the client knows the unit exists. Unit definitions must be included in `data.json` (and `data_slim.json`) so they travel together with the prices that depend on them. When a client pulls fresh price data, it gets the units too.
+
 **The registry is a YAML file that defines all built-in units.** _(from "Units are data, not code", "Derive, don't duplicate")_
-One file, checked into the repo. It defines families, their normalization factors, their dimension axes, and their units (each with an ID, a usage key, and dimension assignments). This file is compiled into a language-neutral JSON format that Python and JS load at startup. The YAML is human-authored; the JSON is machine-consumed.
+One file, checked into the repo. It defines families, their normalization factors, their dimension axes, and their units (each with an ID, a usage key, and dimension assignments). At build time, this file is compiled into `data.json` alongside prices. At runtime, the registry is loaded from the same data the client already has — no separate file needed.
 
 **ModelPrice supports attribute access backed by registry data.** _(from "The registry is a YAML file", "Backward compatibility")_
 ModelPrice is not a plain dict — that would break `model_price.input_mtok`. It's an object that supports attribute access, but the set of valid attributes comes from the registry. New units added to the registry are immediately accessible as attributes. Legacy names like `input_mtok` continue to work. Keeping typed property definitions for existing names is acceptable as a backward-compat shim — but it's a convenience for type checkers, not the source of truth. Future names need no code changes.
@@ -48,5 +51,26 @@ Each unit defines a `usage_key` — the attribute name to look up on the usage o
 **Partial data is normal, not an error.** _(from "Usage is accessed dynamically")_
 A caller with only `{input_tokens: 1000, output_tokens: 500}` gets a valid price at catch-all rates. A caller with detailed breakdowns gets a more precise price. The system handles both — missing usage values default to zero (no carve-out), and the decomposition adapts to whatever units are priced.
 
+**Validation replaces what hardcoded fields gave us implicitly, and adds more.** _(from "Units are data, not code", "Derive, don't duplicate")_
+Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mtok` would fail because the field doesn't exist. Moving to data-driven units means explicit validation must replace that safety net and go further. Validation is comprehensive — it's cheaper to reject bad data at build/construction time than to debug wrong prices at runtime.
+
+**Price key validation: every key in a model's prices must be a registered unit ID.** _(from "Validation replaces what hardcoded fields gave us")_
+If a provider YAML file has `prices: { inptu_mtok: 3 }`, the build fails. This replaces the implicit validation that hardcoded Pydantic/dataclass fields provided. Checked at build time (data pipeline) and at construction time (ModelPrice).
+
+**Dimension validation: unit dimension keys and values must match their family's declarations.** _(from "Validation replaces what hardcoded fields gave us", "Dimensions define unit specificity")_
+A unit in the `tokens` family can only use dimension keys declared for that family (`direction`, `modality`, `cache`), and only with declared values (`direction: input` is valid; `direction: sideways` is not). Checked when the registry is loaded.
+
+**Unit uniqueness: no two units in a family may have identical dimension sets.** _(from "Validation replaces what hardcoded fields gave us", "Dimensions define unit specificity")_
+Dimensions uniquely identify a unit's position in the containment poset. Two units with the same dimensions would be the same slot — that's a data error, not an edge case.
+
+**Usage key uniqueness: no two units may share the same usage key.** _(from "Validation replaces what hardcoded fields gave us", "Usage is accessed dynamically")_
+A usage key maps one-to-one to a unit. If two units read from the same usage field, decomposition can't distinguish their contributions.
+
+**Ancestor coverage is validated.** _(from "Ancestor coverage: pricing a unit requires pricing all its ancestors", "Validation replaces what hardcoded fields gave us")_
+At ModelPrice construction time, checked against the registry's dimension structure. Not deferred to calc_price.
+
+**Join coverage is validated.** _(from "Join coverage: pricing two overlapping units requires pricing their intersection", "Validation replaces what hardcoded fields gave us")_
+At ModelPrice construction time. For every pair of priced units, if their dimension-union corresponds to a unit in the registry, that unit must also be priced.
+
 **Validation rules are expressed in terms of dimensions, not unit names.** _(from "Derive, don't duplicate", "Dimensions define unit specificity")_
-Ancestor coverage, join coverage, dimension key/value validity — all validation logic operates on the dimension structure from the registry. No validation code references `input_mtok` or any other specific unit by name.
+All validation logic — ancestor coverage, join coverage, dimension validity, key matching — operates on the dimension structure from the registry. No validation code references `input_mtok` or any other specific unit by name.
