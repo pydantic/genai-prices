@@ -4,6 +4,8 @@
 
 The containment poset is defined by dimension set inclusion: unit A is an ancestor of unit B if A's dimensions are a subset of B's. Only priced units participate — unpriced units are invisible to the algorithm.
 
+Descendant/ancestor relationships are determined by the full registry poset (dimension set inclusion), not just the priced subset. Only priced units participate in the sum, but the depth of each unit is its total number of dimensions regardless of what else is priced.
+
 For each priced unit U, the leaf value (exclusive token count) is:
 
 ```
