@@ -24,8 +24,8 @@ Changes are justified only by genuine data gaps — e.g., a model that prices ca
 **Users can define custom units at runtime.** _(from "Units are data, not code")_
 Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units. Users can add units to existing families or create entirely new families. Runtime-defined units are merged with built-in units and subject to the same validation — including ID uniqueness and dimension-set uniqueness within a family.
 
-**Open question: what is the API surface for registering custom units?** _(from "Users can define custom units at runtime")_
-Options include: additional data passed when loading/constructing the registry, a method on a registry object, a parameter alongside price data. The format should be the same structure as the YAML/JSON registry, but the specific entry point needs design.
+**Custom units arrive via DataSnapshot, the same path as custom prices.** _(from "Users can define custom units at runtime", "Unit definitions travel with prices")_
+`DataSnapshot` already carries prices (as providers/models). Unit definitions belong there too — they travel together. The bundled snapshot gets its units from generated code; a custom snapshot includes additional or overridden families alongside its custom providers. Users construct `UnitFamily`/`UnitDef` objects (public classes) and include them in the snapshot. No separate registry API is needed — the entry point is the one that already exists for custom prices.
 
 **The system is general across unit families.** _(from "Units are data, not code")_
 Any unit with the structure `usage_value x price / normalization_factor` is expressible: tokens (per million), requests (per thousand), characters, duration, etc. Tokens are the first and most complex family (because of overlapping usage), but nothing in the system is token-specific. Future families require only a data file edit.
