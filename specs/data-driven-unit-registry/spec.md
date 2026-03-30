@@ -42,6 +42,9 @@ The unit registry generates a JSON schema that provider YAML files reference (vi
 **Decomposition uses dimensions, not hardcoded subtraction chains.** _(from "Dimensions define unit specificity", "Every usage value must land in exactly one pricing bucket")_
 The current code subtracts specific unit values from general ones in a manually maintained order. The replacement: Mobius inversion on the containment poset defined by dimensions. The algorithm takes the set of priced units, computes each one's "leaf value" (exclusive portion of usage), and guarantees no double-counting. No code names specific units — the algorithm works from the dimension structure alone.
 
+**Aggregate counts are queryable by dimension filter.** _(from "Decomposition uses dimensions", "Dimensions define unit specificity")_
+After decomposition, it must be possible to ask "how many tokens match this set of dimensions?" and get a correct answer — by summing the leaf values of all priced units whose dimensions are a superset of the filter. Examples: all input tokens ({direction: input}), all cache read tokens ({cache: read}), all audio tokens ({modality: audio}) regardless of direction, all tokens (empty filter). This is the general mechanism behind things like TieredPrices, where the tier threshold is currently hardcoded to `input_tokens` but should be expressible as a dimension filter ({direction: input}).
+
 **Ancestor coverage: pricing a unit requires pricing all its ancestors.** _(from "Price data must be complete", "Decomposition uses dimensions")_
 If a model prices `cache_read_mtok` ({direction: input, cache: read}), it must also price `input_mtok` ({direction: input}). Without the ancestor, usage reported at the general level (just `input_tokens`, no breakdown) would have no price. This is a price data completeness requirement — validated, not assumed.
 
