@@ -21,8 +21,14 @@ Existing consumer code must continue to work. `model_price.input_mtok`, `usage.i
 **Existing provider YAML files are mostly unchanged.** _(from "Backward compatibility", "Price data must be complete")_
 Changes are justified only by genuine data gaps — e.g., a model that prices cached tokens and audio tokens but not cached-audio tokens fails a validation rule we're adding for good reason. No mass field renames, no restructuring for its own sake. This goes against "Price data must be complete" only in appearance — adding a missing cached-audio price IS making the data complete; it's not churn.
 
+**Validation replaces what hardcoded fields gave us implicitly, and adds more.** _(from "Units are data, not code", "Derive, don't duplicate")_
+Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mtok` would fail because the field doesn't exist. Moving to data-driven units means explicit validation must replace that safety net and go further. Validation is comprehensive — it's cheaper to reject bad data at build/activation time than to debug wrong prices at runtime.
+
 **Users can define custom units at runtime.** _(from "Units are data, not code")_
 Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units. Users can add units to existing families or create entirely new families. Runtime-defined units are merged with built-in units and subject to the same validation — including ID uniqueness and dimension-set uniqueness within a family.
+
+**Unit definitions travel with prices, not just with the package.** _(from "Units are data, not code", "Users can define custom units at runtime")_
+Currently, prices are in `data.json` which clients can auto-update at runtime (pulled on merge, before a package release). Unit definitions are in `units.json`, bundled into the Python/JS packages — only updated on package release. This means a new unit's prices could arrive before the client knows the unit exists. Unit definitions must be included in `data.json` (and `data_slim.json`) so they travel together with the prices that depend on them. When a client pulls fresh price data, it gets the units too.
 
 **Unit families live in the data snapshot alongside prices.** _(from "Users can define custom units at runtime", "Unit definitions travel with prices")_
 `DataSnapshot` carries unit families as data, just as it carries providers and models. The bundled snapshot includes built-in families from generated code; `data.json` auto-updates include them too. There is no separate registry API — adding a custom unit means adding to or extending the families already present in the snapshot the user is working with. `UnitFamily` and `UnitDef` are public classes.
@@ -84,9 +90,6 @@ Every modality defines all four token slots (input, output, cache read, cache wr
 **Symmetric definitions ensure join coverage can always fire.** _(from "The registry defines all dimension combinations symmetrically", "Join coverage")_
 Because all combinations exist, the join of any two priced units is guaranteed to exist in the registry. Join coverage validation never encounters a "join doesn't exist" gap.
 
-**Unit definitions travel with prices, not just with the package.** _(from "Units are data, not code", "Users can define custom units at runtime")_
-Currently, prices are in `data.json` which clients can auto-update at runtime (pulled on merge, before a package release). Unit definitions are in `units.json`, bundled into the Python/JS packages — only updated on package release. This means a new unit's prices could arrive before the client knows the unit exists. Unit definitions must be included in `data.json` (and `data_slim.json`) so they travel together with the prices that depend on them. When a client pulls fresh price data, it gets the units too.
-
 **`data.json` becomes a top-level dict, not a bare list.** _(from "Unit definitions travel with prices")_
 Currently `data.json` is a bare JSON array of providers. Adding unit families requires a top-level wrapper: `{"families": {...}, "providers": [...]}`. This is a one-time schema break — old clients that validate the fetched JSON as a list of providers will fail. The top-level should have been a dict from the start; this change enables future extensibility without further breaks. After this, adding new top-level fields (e.g., metadata) won't require another schema change.
 
@@ -120,13 +123,10 @@ Attribute-bearing usage objects (dataclass, namedtuple, etc.) cannot be validate
 **Inconsistent usage is rejected.** _(from "Every usage value must land in exactly one pricing bucket", "Incomplete usage is handled gracefully")_
 Incomplete and inconsistent are different. Missing `cache_read_tokens` means we assume zero cached tokens — that's fine. But `cache_read_tokens > input_tokens` is contradictory: a subset can't exceed its superset. Decomposition detects this as a negative leaf value and raises an error. This is the right behavior — silently producing a wrong price is worse than failing loudly.
 
-**Validation replaces what hardcoded fields gave us implicitly, and adds more.** _(from "Units are data, not code", "Derive, don't duplicate")_
-Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mtok` would fail because the field doesn't exist. Moving to data-driven units means explicit validation must replace that safety net and go further. Validation is comprehensive — it's cheaper to reject bad data at build/construction time than to debug wrong prices at runtime.
-
 **Expensive validation happens once at activation time, not on every calc_price call.** _(from "Validation replaces what hardcoded fields gave us", "Unit definitions travel with prices", "`set_custom_snapshot` validates the snapshot")_
 The repo contains thousands of model prices. Structural validation — ancestor coverage, join coverage, dimension consistency — is expensive (O(n^2) for join coverage over priced units). For repo-defined prices, this runs in the build pipeline. The build pipeline produces multiple outputs — `data.json`/`data_slim.json` for runtime updates, and generated code like `data.py` (Python) that embeds the same data as language-native structures. All of these outputs are pre-validated. For runtime-defined prices, validation runs at `set_custom_snapshot` time — the moment the snapshot is activated as global. The distinction is provenance: data that came through the build pipeline is trusted; data constructed at runtime is validated when activated.
 
-**Unit definitions are generated into language-native code alongside prices.** _(from "Unit definitions travel with prices", "Expensive validation happens once at definition time")_
+**Unit definitions are generated into language-native code alongside prices.** _(from "Unit definitions travel with prices", "Expensive validation happens once at activation time")_
 Each language package has a generated file that embeds all price data as language-native structures — `data.py` for Python, the equivalent for JavaScript. This is what loads at startup, not `data.json`. The `data.json` file exists for runtime auto-updates (refreshing prices in a long-running process). All of these must contain unit definitions. The build pipeline generates unit definitions into the language-native files as code, and into `data.json` as data. When `data.json` is fetched at runtime to update prices, the unit definitions it carries are also loaded — but since they too came through the build pipeline, they're trusted.
 
 **Price key validation: every key in a model's prices must be a registered unit ID.** _(from "Validation replaces what hardcoded fields gave us")_
@@ -144,10 +144,10 @@ Dimensions uniquely identify a unit's position in the containment poset. Two uni
 **Usage key uniqueness: no two units may share the same usage key.** _(from "Validation replaces what hardcoded fields gave us", "Usage is accessed dynamically")_
 A usage key maps one-to-one to a unit. If two units read from the same usage field, decomposition can't distinguish their contributions.
 
-**Ancestor coverage is validated.** _(from "Ancestor coverage: pricing a unit requires pricing all its ancestors", "Expensive validation happens once at definition time")_
+**Ancestor coverage is validated.** _(from "Ancestor coverage: pricing a unit requires pricing all its ancestors", "Expensive validation happens once at activation time")_
 Checked in the build pipeline for repo-defined prices, and at `set_custom_snapshot` time for runtime-defined prices. Not deferred to calc_price.
 
-**Join coverage is validated.** _(from "Join coverage: pricing two overlapping units requires pricing their intersection", "Expensive validation happens once at definition time")_
+**Join coverage is validated.** _(from "Join coverage: pricing two overlapping units requires pricing their intersection", "Expensive validation happens once at activation time")_
 For every pair of priced units, if their dimension-union corresponds to a unit in the registry, that unit must also be priced. Checked in the build pipeline for repo-defined prices, and at `set_custom_snapshot` time for runtime-defined prices.
 
 **Price sanity checks warn on violations of common economic inequalities.** _(from "The goal is to calculate prices as accurately as possible", "Validation replaces what hardcoded fields gave us")_
