@@ -18,6 +18,9 @@ If information exists in one place, compute it elsewhere rather than copying it.
 **Backward compatibility is preserved unless clearly impractical.** _(from "Units are data, not code")_
 Existing consumer code must continue to work. `model_price.input_mtok`, `usage.input_tokens`, `calc_price(usage)` — these patterns are the public API. This constrains how we implement data-driven units, not whether.
 
+**All public API signatures are preserved.** _(from "Backward compatibility")_
+`set_custom_snapshot(DataSnapshot | None)`, `UpdatePrices.fetch() -> DataSnapshot | None`, `DataSnapshot` construction, `calc_price()`, `ModelInfo.calc_price()` — all unchanged. New behavior (validation at activation, global enforcement) is added without changing how these functions are called.
+
 **Existing provider YAML files are mostly unchanged.** _(from "Backward compatibility", "Price data must be complete")_
 Changes are justified only by genuine data gaps — e.g., a model that prices cached tokens and audio tokens but not cached-audio tokens fails a validation rule we're adding for good reason. No mass field renames, no restructuring for its own sake. This goes against "Price data must be complete" only in appearance — adding a missing cached-audio price IS making the data complete; it's not churn.
 
@@ -42,8 +45,11 @@ When `set_custom_snapshot` is called, the snapshot's prices are validated agains
 **ModelPrice construction does not validate against the registry.** _(from "`set_custom_snapshot` validates the snapshot", "Users can define custom units at runtime")_
 No unit ID lookup, no ancestor/join coverage checks at ModelPrice `__init__` time. This allows constructing ModelPrice objects with custom unit IDs before the snapshot containing those unit definitions is assembled and activated. Validation happens later, at `set_custom_snapshot` time, when the full context is available. For standalone ModelPrice objects never placed in a snapshot, validation falls back to calc_price time against the global registry.
 
+**`calc` and `extract_usage` on DataSnapshot require it to be the current global.** _(from "There is one global DataSnapshot")_
+These methods raise an error if called on a non-global snapshot. This prevents price calculations and usage extraction against a snapshot whose registry isn't the active one — the unit registry for decomposition and validation always comes from the global snapshot.
+
 **`find_provider_model` works on any snapshot, global or not.** _(from "There is one global DataSnapshot", "Backward compatibility")_
-`find_provider_model` and `find_provider` are pure lookups — name/pattern matching that does not need the unit registry. They must work on non-global snapshots because the `UpdatePrices.fetch()` customization pattern requires it: construct a snapshot from fetched data, query it to find existing models, copy/modify to add custom models, return the snapshot for the framework to activate. Price calculation and usage extraction require the global snapshot; model lookup does not.
+`find_provider_model` and `find_provider` are pure lookups — name/pattern matching that does not need the unit registry. They must work on non-global snapshots because the `UpdatePrices.fetch()` customization pattern requires it: construct a snapshot from fetched data, query it to find existing models, copy/modify to add custom models, return the snapshot for the framework to activate.
 
 **The system is general across unit families.** _(from "Units are data, not code")_
 Any unit with the structure `usage_value x price / normalization_factor` is expressible: tokens (per million), requests (per thousand), characters, duration, etc. Tokens are the first and most complex family (because of overlapping usage), but nothing in the system is token-specific. Future families require only a data file edit.
