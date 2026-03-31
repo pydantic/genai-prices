@@ -75,6 +75,12 @@ Because all combinations exist, the join of any two priced units is guaranteed t
 **Unit definitions travel with prices, not just with the package.** _(from "Units are data, not code", "Users can define custom units at runtime")_
 Currently, prices are in `data.json` which clients can auto-update at runtime (pulled on merge, before a package release). Unit definitions are in `units.json`, bundled into the Python/JS packages — only updated on package release. This means a new unit's prices could arrive before the client knows the unit exists. Unit definitions must be included in `data.json` (and `data_slim.json`) so they travel together with the prices that depend on them. When a client pulls fresh price data, it gets the units too.
 
+**`data.json` becomes a top-level dict, not a bare list.** _(from "Unit definitions travel with prices")_
+Currently `data.json` is a bare JSON array of providers. Adding unit families requires a top-level wrapper: `{"families": {...}, "providers": [...]}`. This is a one-time schema break — old clients that validate the fetched JSON as a list of providers will fail. The top-level should have been a dict from the start; this change enables future extensibility without further breaks. After this, adding new top-level fields (e.g., metadata) won't require another schema change.
+
+**Auto-update validation failures are not retried.** _(from "`data.json` becomes a top-level dict")_
+When the auto-update fetcher pulls `data.json` and validation fails (e.g., old client encountering the new schema), that's a permanent error — retrying on the next interval will produce the same result. The updater should distinguish transient errors (network failures, HTTP 5xx) from permanent ones (validation/schema errors) and stop retrying on the latter, or at minimum avoid logging the same validation error repeatedly.
+
 **The registry is a YAML file that defines all built-in units.** _(from "Units are data, not code", "Derive, don't duplicate")_
 One file, checked into the repo (`prices/units.yml`). It defines families, their normalization factors, their dimension axes, and their units (each with an ID, a usage key, and dimension assignments). The `tokens` family declares three dimension axes: `direction` (input, output), `modality` (text, audio, image, video), and `cache` (read, write). At build time, this file is compiled into `data.json` alongside prices. At runtime, the registry is loaded from the same data the client already has — no separate file needed.
 
