@@ -69,9 +69,6 @@ The current code subtracts specific unit values from general ones in a manually 
 **Only priced units participate in decomposition.** _(from "Decomposition uses dimensions")_
 If a model doesn't price `input_audio_mtok`, audio tokens remain part of the `input_mtok` catch-all — they are not carved out. The decomposition is determined by the set of units that have prices for the current model, not the full registry. This is what makes partial pricing work: a model that only prices `input_mtok` and `output_mtok` still produces correct results.
 
-**Decomposition correctness depends on ancestor and join coverage.** _(from "Only priced units participate", "Ancestor coverage", "Join coverage")_
-The Mobius inversion formula sums only over priced units, using sign `(-1)^(depth(V) - depth(U))` from the full poset. This gives correct leaf values only when the set of priced units has no structural gaps — every ancestor of a priced unit is priced (ancestor coverage), and the intersection of any two priced siblings is priced (join coverage). Without these guarantees, skipping intermediate unpriced units produces wrong signs in the inclusion-exclusion. The validation rules are not just data quality checks — they are preconditions for the algorithm's correctness.
-
 **Decomposition operates within a family.** _(from "Decomposition uses dimensions", "A unit family groups units")_
 Token decomposition does not affect request pricing. Each family's decomposition is independent — there is no cross-family overlap to resolve.
 
@@ -95,6 +92,9 @@ If a model prices `cache_read_mtok` ({direction: input, cache: read}), it must a
 
 **Join coverage: pricing two overlapping units requires pricing their intersection.** _(from "Price data must be complete", "Decomposition uses dimensions")_
 If a model prices both `cache_read_mtok` and `input_audio_mtok`, their join — the unit with the union of both dimension sets, `{direction: input, cache: read, modality: audio}` — must also be priced, if it exists in the registry. Without this, Mobius inversion double-counts tokens that belong to both parents. This is not a nice-to-have — it's a direct consequence of requiring accurate prices. Each token in one bucket, not two.
+
+**Decomposition correctness depends on ancestor and join coverage.** _(from "Only priced units participate", "Ancestor coverage", "Join coverage")_
+The Mobius inversion formula sums only over priced units, using sign `(-1)^(depth(V) - depth(U))` from the full poset. This gives correct leaf values only when the set of priced units has no structural gaps — every ancestor of a priced unit is priced (ancestor coverage), and the join of any two priced units that share a common descendant is also priced (join coverage). Without these guarantees, skipping intermediate unpriced units produces wrong signs in the inclusion-exclusion. The validation rules are not just data quality checks — they are preconditions for the algorithm's correctness.
 
 **The registry defines units symmetrically across modalities.** _(from "Join coverage")_
 Each modality gets the same four unit patterns: input, output, cache read, and cache write — even where no provider currently uses them. This is not the full Cartesian product of all dimension values (nonsensical combinations like `{direction: output, cache: read}` are excluded since caching is input-side). The symmetry is across modalities: if `cache_audio_read_mtok` exists, so do `cache_text_read_mtok`, `cache_image_read_mtok`, and `cache_video_read_mtok`. Models simply don't define prices for unused units.
