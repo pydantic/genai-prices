@@ -194,9 +194,11 @@ class ModelPrice(pydantic.BaseModel):
         Costs from families without a 'direction' dimension go only to total_price.
         Uses get_snapshot().unit_registry for unit lookups.
 
-        total_input_tokens for TieredPrices tier determination is obtained via
-        get_usage_value(usage, 'input_tokens') — the raw provided value, same as
-        current behavior. This is computed once before the per-family loop.
+        total_input_tokens for TieredPrices tier determination is the sum of all
+        leaf values for units with dimension {direction: input}, computed after
+        decomposition across all families. This correctly handles inference (e.g.,
+        only input_audio_tokens provided → inferred total is the sum of input leaves,
+        not zero). Two-pass: decompose all families first, then price with tier info.
 
         Mapping key validation: if usage is a Mapping, every key is checked against
         registry.all_usage_keys before decomposition. Unrecognized keys raise ValueError.
@@ -640,15 +642,17 @@ export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFam
 ```
 ModelPrice.calc_price(usage)
   -> get_snapshot().unit_registry            # get registry from global snapshot
+  -> if Mapping usage: validate keys against registry.all_usage_keys
   -> for each price key: registry.get_unit() # O(1) flat index lookup
   -> group by unit.family_id
-  -> for each family:
-       family = registry.get_family()
-       compute_leaf_values(priced_ids, usage, family, default_usage)
-         -> for each priced unit: Mobius sum over priced descendants
-         -> _has_usage_value / get_usage_value for inference
-       for each leaf: calc_unit_price(price, leaf_count, total_input, family.per)
-       bucket cost by unit.dimensions['direction']
+  -> pass 1 — decompose:
+       for each family:
+         compute_leaf_values(priced_ids, usage, family, default_usage)
+  -> total_input_tokens = sum of leaf values where unit.dimensions has direction=input
+  -> pass 2 — price:
+       for each family, each leaf:
+         calc_unit_price(price, leaf_count, total_input_tokens, family.per)
+         bucket cost by unit.dimensions['direction']
   -> return {input_price, output_price, total_price}
 ```
 
