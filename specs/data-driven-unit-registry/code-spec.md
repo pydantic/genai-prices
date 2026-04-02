@@ -184,7 +184,7 @@ class ModelPrice(pydantic.BaseModel):
         not hardcoded string patterns."""
 
     def is_free(self) -> bool:
-        """True if __pydantic_extra__ is empty."""
+        """True if there are no prices, or all price values are zero/None."""
 
     # Attribute access: model_price.input_mtok returns
     # self.__pydantic_extra__.get('input_mtok') — Pydantic provides this.
