@@ -56,14 +56,13 @@ Currently contains Pydantic models (`UnitDef`, `RawUnitDef`, `UnitFamily`, `RawU
 - `_FAMILIES`, `TOKENS_FAMILY`, `_ALL_UNITS` module-level state
 - `units_data.json` file dependency (file deleted)
 
-#### `UnitDef` — plain `__slots__` class _(implements "UnitDef and UnitFamily are plain classes")_
+#### `UnitDef` — dataclass _(implements "UnitDef and UnitFamily are plain classes")_
 
 Replaces the current Pydantic `UnitDef`. Constructed only by `UnitRegistry` — all fields are populated at construction, including back-references.
 
 ```python
+@dataclass
 class UnitDef:
-    __slots__ = ('id', 'family_id', 'family', 'usage_key', 'dimensions')
-
     id: str                        # e.g. 'input_mtok'
     family_id: str                 # e.g. 'tokens'
     family: UnitFamily             # direct reference to the family object
@@ -71,12 +70,11 @@ class UnitDef:
     dimensions: dict[str, str]     # e.g. {'direction': 'input'}
 ```
 
-#### `UnitFamily` — plain `__slots__` class _(implements "UnitDef and UnitFamily are plain classes")_
+#### `UnitFamily` — dataclass _(implements "UnitDef and UnitFamily are plain classes")_
 
 ```python
+@dataclass
 class UnitFamily:
-    __slots__ = ('id', 'per', 'description', 'dimensions', 'units')
-
     id: str                            # e.g. 'tokens'
     per: int                           # e.g. 1_000_000
     description: str                   # e.g. 'Token counts'
@@ -90,8 +88,6 @@ Replaces `_FAMILIES`, `_ALL_UNITS`, `_load_families`, `RawFamiliesDict`, and all
 
 ```python
 class UnitRegistry:
-    __slots__ = ('_families', '_unit_index', '_usage_keys')
-
     _families: dict[str, UnitFamily]
     _unit_index: dict[str, UnitDef]       # flat: unit_id -> UnitDef across all families
     _usage_keys: dict[str, str]           # usage_key -> unit_id across all families
@@ -243,8 +239,6 @@ Currently a `@dataclass` with 7 explicit fields. Becomes a plain class accepting
 
 ```python
 class Usage:
-    __slots__ = ('_values',)
-
     def __init__(self, **kwargs: int | None) -> None:
         """Store non-None values in an internal dict."""
 
