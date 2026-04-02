@@ -1,0 +1,23 @@
+specs/data-driven-unit-registry/code-spec.md
+  bdd46081fb5d57bd 50,54,89,104-105,156-158,196-203,317-319,339,396-398,476-479,516,520,535,538,547,550,559-561,577-578,581-582,605,608,614-620
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "cb6037b59b68210e1372d6bda549be85119c5c13",
+  "prompts": {
+    "bdd46081fb5d57bd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46a48b56-2b57-4953-9ec9-a2658fb1f2b6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 50,
+      "total_deletions": 22,
+      "accepted_lines": 50,
+      "overriden_lines": 0
+    }
+  }
+}
