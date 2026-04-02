@@ -160,7 +160,7 @@ class ModelPrice(pydantic.BaseModel):
 
     __pydantic_extra__: dict[str, Decimal | TieredPrices]
 
-    def calc_price(self, usage: Usage | Mapping[str, int]) -> CalcPrice:
+    def calc_price(self, usage: object) -> CalcPrice:
         """Multi-family decomposition: groups price keys by family via registry,
         decomposes each family independently, sums costs bucketed by direction.
 
