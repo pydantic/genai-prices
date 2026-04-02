@@ -59,7 +59,7 @@ The `+cache_audio_read_tokens` in `leaf(input_mtok)` is the inclusion-exclusion 
 
 ## Why this works
 
-The dimensions form a product of chains (direction x modality x cache). Each step in the poset adds exactly one dimension. The Mobius function for a product of chains is `mu(U, V) = (-1)^(depth(V) - depth(U))` when V is a descendant of U, and 0 otherwise. This is a standard result in combinatorics.
+The containment poset is a product of flat lattices — one per dimension axis. Each axis contributes a flat lattice: "unspecified" at the bottom, with the axis's values (e.g., `text`, `audio`, `image`, `video` for modality) incomparable above it. The product of these lattices gives the full poset. The Mobius function for a product of flat lattices is `mu(U, V) = (-1)^(depth(V) - depth(U))` when V is a descendant of U (i.e., U's dimensions are a subset of V's), and 0 otherwise. Each step from U toward V adds exactly one dimension assignment, and the signs alternate. This is a standard result in combinatorics — the product formula for Mobius functions.
 
 The key property: the sum of all leaf values equals the root usage value. Every token is in exactly one leaf bucket.
 
