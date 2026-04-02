@@ -322,11 +322,12 @@ def validate_price_keys(price_keys: set[str], all_unit_ids: set[str]) -> None:
 def validate_price_sanity(
     prices: dict[str, Decimal | TieredPrices],
     family: UnitFamily,
-) -> list[str]:
-    """Return warning messages for violations of economic inequalities.
+) -> None:
+    """Raise ValueError on violations of economic inequalities.
     Rules expressed in terms of dimensions, not unit names:
     - Within same direction+modality: cache=read <= uncached <= cache=write
     - Text (catch-all without modality) is the cheapest modality
+    Starts as errors — investigate and downgrade individual rules if needed.
     Build-pipeline only — not run at set_custom_snapshot time."""
 ```
 
@@ -668,7 +669,7 @@ build()
   -> registry = UnitRegistry(unit_families_data)           # structural validation
   -> for each provider, model:
        validate_price_keys / validate_ancestor_coverage / validate_join_coverage
-       validate_price_sanity (warnings)
+       validate_price_sanity (errors — investigate and downgrade if needed)
   -> write_prices: {"unit_families": ..., "providers": [...]}  # dict format
 
 package_data()
