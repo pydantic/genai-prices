@@ -310,7 +310,8 @@ def compute_leaf_values(
        returns False), leaf is set to 0 (ancestor inferred from descendants).
        If own usage WAS provided, it's a contradiction — raise ValueError.
     3. Human-readable errors: "cache_read_tokens (200) exceeds input_tokens (100) —
-       a more specific count cannot exceed its parent total." No algorithm jargon.
+       a more specific count cannot exceed its parent total." No error may mention
+       leaves, Mobius inversion, posets, depth, coefficients, or dimensions.
     """
 ```
 
@@ -327,6 +328,8 @@ Note: Mapping key validation _(implements "Mapping usage keys are validated")_ l
 ### `validation.py` — new file _(implements "Validation is split between the registry and set_custom_snapshot")_
 
 Price-level validation functions. Used by `set_custom_snapshot` (runtime) and the build pipeline (build time). Structural validation lives in `UnitRegistry`, not here.
+
+**Constraint:** All validation logic operates on dimensions and registry structure. No validation code references `input_mtok` or any other specific unit by name. _(implements "Validation rules are expressed in terms of dimensions, not unit names")_
 
 ```python
 def validate_ancestor_coverage(priced_unit_ids: set[str], family: UnitFamily) -> None:
