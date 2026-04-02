@@ -17,6 +17,24 @@ where `depth(V)` = number of dimension assignments on V (e.g., `input_mtok` has 
 
 This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
 
+## Inference of missing ancestor usage
+
+Before applying the Mobius formula, missing usage values are resolved:
+
+1. **Leaf-level priced units** (no more-specific priced descendants): missing usage defaults to 0.
+2. **Non-leaf priced units**: missing usage is inferred such that the unit's leaf value is 0 — meaning no remainder beyond what its descendants account for.
+
+Concretely, if `usage(U)` is missing for a non-leaf unit U, it is set to the inclusion-exclusion sum of its priced descendants' usage values. This is the inverse of the Mobius formula with `leaf(U) = 0`.
+
+Example: usage is `{input_audio_tokens: 300}`, priced units are `input_mtok` and `input_audio_mtok`.
+
+- `input_audio_mtok` is a leaf: usage = 300 (provided).
+- `input_mtok` is not a leaf: `input_tokens` is missing. Inferred as 300 (sum of descendants).
+- `leaf(input_mtok) = 300 - 300 = 0`. `leaf(input_audio_mtok) = 300`.
+- Total: 300 tokens priced, all at the audio rate.
+
+If `input_tokens` were explicitly provided as 1000: `leaf(input_mtok) = 1000 - 300 = 700`. No inference needed — both values are known.
+
 ## Two-way example
 
 Priced: `input_mtok` (1 dimension), `cache_read_mtok` (2 dimensions).
@@ -47,4 +65,4 @@ The key property: the sum of all leaf values equals the root usage value. Every 
 
 ## Negative leaf values
 
-If `leaf(U) < 0`, the usage data is inconsistent — a subset's count exceeds its superset's. The algorithm detects this and raises an error with the specific units and values involved.
+If `leaf(U) < 0`, the explicitly provided usage data is contradictory — a subset's count exceeds its superset's. The algorithm detects this and raises an error with the specific units and values involved. Negative leaves can only arise when both a parent and child usage value are explicitly provided and the child exceeds the parent. Missing ancestor usage is inferred from descendants (the ancestor's leaf value defaults to zero), so incomplete usage never produces negative leaves.
