@@ -58,7 +58,7 @@ Currently contains Pydantic models (`UnitDef`, `RawUnitDef`, `UnitFamily`, `RawU
 
 #### `UnitDef` — dataclass _(implements "UnitDef and UnitFamily are plain classes")_
 
-Replaces the current Pydantic `UnitDef`. Constructed only by `UnitRegistry` — all fields are populated at construction, including back-references.
+Replaces the current Pydantic `UnitDef`. Constructed by `UnitRegistry` — all fields are populated at construction, including back-references. Not intended to be constructed directly by users; use `UnitRegistry.add_unit` or construct via the raw families dict.
 
 ```python
 @dataclass
@@ -71,6 +71,8 @@ class UnitDef:
 ```
 
 #### `UnitFamily` — dataclass _(implements "UnitDef and UnitFamily are plain classes")_
+
+Constructed by `UnitRegistry`. Not intended to be constructed directly; use `UnitRegistry.add_family` or construct via the raw families dict.
 
 ```python
 @dataclass
@@ -88,9 +90,9 @@ Replaces `_FAMILIES`, `_ALL_UNITS`, `_load_families`, `RawFamiliesDict`, and all
 
 ```python
 class UnitRegistry:
-    _families: dict[str, UnitFamily]
-    _unit_index: dict[str, UnitDef]       # flat: unit_id -> UnitDef across all families
-    _usage_keys: dict[str, str]           # usage_key -> unit_id across all families
+    families: dict[str, UnitFamily]
+    units: dict[str, UnitDef]             # flat: unit_id -> UnitDef across all families
+    usage_keys: dict[str, str]            # usage_key -> unit_id across all families
 
     def __init__(self, raw_families: dict[str, dict] | None = None) -> None:
         """Parse raw families dict, validate, build index, fill back-references.
@@ -105,7 +107,8 @@ class UnitRegistry:
         self, family_id: str, *, per: int, description: str,
         dimensions: dict[str, list[str]], units: dict[str, dict],
     ) -> None:
-        """Add a new family. Validates incrementally and updates the index.
+        """Add a new family. Validates, creates UnitFamily/UnitDef objects,
+        updates families/units/usage_keys.
         Raises ValueError if family_id already exists or if any validation fails.
         """
 
@@ -117,36 +120,12 @@ class UnitRegistry:
         usage key uniqueness, dimension validity, dimension-set uniqueness,
         and re-checks join-closedness for the modified family.
         usage_key defaults to unit_id if not provided.
-        Raises KeyError if family doesn't exist, ValueError if validation fails.
+        Raises KeyError if family doesn't exist.
+        Raises ValueError if unit_id or usage_key already exists, or validation fails.
         """
-
-    def get_family(self, family_id: str) -> UnitFamily:
-        """O(1) lookup. Raises KeyError."""
-
-    def get_unit(self, unit_id: str) -> UnitDef:
-        """O(1) flat index lookup. Raises KeyError."""
-
-    @property
-    def families(self) -> dict[str, UnitFamily]: ...
-
-    @property
-    def all_unit_ids(self) -> set[str]: ...
-
-    @property
-    def all_usage_keys(self) -> set[str]: ...
 
     def copy(self) -> UnitRegistry:
         """Return an independent copy. Re-serializes to raw dict and re-parses."""
-
-    # --- internal ---
-
-    def _add_family_internal(self, family_id: str, raw: dict) -> UnitFamily:
-        """Parse one family from raw dict, validate, create UnitDef objects with
-        back-references, update _unit_index and _usage_keys, validate join-closedness."""
-
-    def _validate_join_closedness(self, family: UnitFamily) -> None:
-        """For every compatible pair of units in the family, their join
-        (union of dimension sets) must exist in the family."""
 
     @staticmethod
     def are_compatible(a: UnitDef, b: UnitDef) -> bool:
@@ -154,19 +133,18 @@ class UnitRegistry:
         Public — also used by validate_join_coverage in validation.py."""
 ```
 
-#### Module-level convenience functions _(implements "convenience functions delegate to get_snapshot().unit_registry")_
+The `families`, `units`, and `usage_keys` dicts are public attributes. They are not frozen — users _can_ mutate them directly, but doing so bypasses validation and may leave the registry in an inconsistent state (e.g., a unit in `families` that isn't in `units`). The `add_family` and `add_unit` methods are the validated path.
 
-These replace the old `_FAMILIES[family_id]` / `_ALL_UNITS[unit_id]` lookups. They use a lazy import of `data_snapshot.get_snapshot()` to avoid circular imports.
+#### Module-level convenience _(implements "convenience functions delegate to get_snapshot().unit_registry")_
+
+One helper to get the registry from the global snapshot. Replaces the old `_FAMILIES` / `_ALL_UNITS` module-level dicts. Uses a lazy import of `data_snapshot.get_snapshot()` to avoid circular imports.
 
 ```python
 def _get_registry() -> UnitRegistry:
     """Get the UnitRegistry from the current global snapshot."""
-
-def get_family(family_id: str) -> UnitFamily: ...
-def get_unit(unit_id: str) -> UnitDef: ...
-def get_all_unit_ids() -> set[str]: ...
-def get_all_usage_keys() -> set[str]: ...
 ```
+
+Callers use `_get_registry().units[unit_id]`, `_get_registry().families[family_id]`, etc. directly — no wrapper functions.
 
 ---
 
@@ -197,7 +175,7 @@ class ModelPrice(pydantic.BaseModel):
         not zero). Two-pass: decompose all families first, then price with tier info.
 
         Mapping key validation: if usage is a Mapping, every key is checked against
-        registry.all_usage_keys before decomposition. Unrecognized keys raise ValueError.
+        registry.usage_keys before decomposition. Unrecognized keys raise ValueError.
         This check runs once (not per-family).
         """
 
@@ -393,7 +371,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
        - validate_ancestor_coverage: per family, per model
        - validate_join_coverage: per family, per model
     3. Validate extractor dest values: every dest in every extractor mapping must be
-       a recognized usage key in the registry (registry.all_usage_keys).
+       a recognized usage key in the registry (registry.usage_keys).
     4. If validation fails, raise ValueError — previous snapshot remains active.
     """
 ```
@@ -636,8 +614,8 @@ export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFam
 ```
 ModelPrice.calc_price(usage)
   -> get_snapshot().unit_registry            # get registry from global snapshot
-  -> if Mapping usage: validate keys against registry.all_usage_keys
-  -> for each price key: registry.get_unit() # O(1) flat index lookup
+  -> if Mapping usage: validate keys against registry.usage_keys
+  -> for each price key: registry.units[key]  # O(1) flat index lookup
   -> group by unit.family_id
   -> pass 1 — decompose:
        for each family:
@@ -657,7 +635,7 @@ set_custom_snapshot(snapshot)
   -> if snapshot.unit_registry is None: fill from get_snapshot().unit_registry
   -> for each provider, model, model_price:
        price_keys = set(model_price.__pydantic_extra__)
-       validate_price_keys(price_keys, registry.all_unit_ids)
+       validate_price_keys(price_keys, set(registry.units))
        for each family with priced units:
          validate_ancestor_coverage(family_priced_ids, family)
          validate_join_coverage(family_priced_ids, family)
@@ -670,16 +648,16 @@ set_custom_snapshot(snapshot)
 ```
 UnitRegistry(raw_families_dict)
   -> for each family_id, raw_family:
-       _add_family_internal(family_id, raw_family)
-         -> create UnitFamily with empty units dict
-         -> for each unit_id, raw_unit:
-              validate dimension keys/values against family.dimensions
-              validate unit ID uniqueness (across all families)
-              validate usage key uniqueness (across all families)
-              validate dimension-set uniqueness (within family)
-              create UnitDef with back-reference to family
-              add to family.units, _unit_index, _usage_keys
-         -> _validate_join_closedness(family)
+       create UnitFamily with empty units dict
+       for each unit_id, raw_unit:
+         validate dimension keys/values against family.dimensions
+         validate unit ID uniqueness (across all families)
+         validate usage key uniqueness (across all families)
+         validate dimension-set uniqueness (within family)
+         create UnitDef with back-reference to family
+         add to family.units, registry.units, registry.usage_keys
+       validate join-closedness for family
+       add to registry.families
 ```
 
 ### Build pipeline
