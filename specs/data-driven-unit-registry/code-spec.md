@@ -47,11 +47,11 @@ export const data: Provider[] = [ ... ]
 
 ### `units.py` — rewritten
 
-Currently contains Pydantic models (`UnitDef`, `RawUnitDef`, `UnitFamily`, `RawUnitFamily`, `RawUnitsData`), `_load_families()` reading from `units_data.json`, and module-level dicts (`_FAMILIES`, `TOKENS_FAMILY`, `_ALL_UNITS`). All of these are replaced.
+Currently contains Pydantic models (`UnitDef`, `RawUnitDef`, `UnitFamily`, `RawUnitFamily`, `RawFamiliesDict`), `_load_families()` reading from `units_data.json`, and module-level dicts (`_FAMILIES`, `TOKENS_FAMILY`, `_ALL_UNITS`). All of these are replaced.
 
 **Removals:**
 
-- `RawUnitDef`, `RawUnitFamily`, `RawUnitsData` classes and `_validate_dimensions` validator
+- `RawUnitDef`, `RawUnitFamily`, `RawFamiliesDict` classes and `_validate_dimensions` validator
 - `_load_families()` function
 - `_FAMILIES`, `TOKENS_FAMILY`, `_ALL_UNITS` module-level state
 - `units_data.json` file dependency (file deleted)
@@ -86,7 +86,7 @@ class UnitFamily:
 
 #### `UnitRegistry` — single class owning all unit state _(implements "UnitRegistry is the runtime representation")_
 
-Replaces `_FAMILIES`, `_ALL_UNITS`, `_load_families`, `RawUnitsData`, and all structural validation. Constructed from a raw dict (the `unit_families` section of `data.json` or `units.yml`). Parses, validates structural integrity, builds a flat index, fills back-references. Public class — users interact with it for custom unit flows.
+Replaces `_FAMILIES`, `_ALL_UNITS`, `_load_families`, `RawFamiliesDict`, and all structural validation. Constructed from a raw dict (the `unit_families` section of `data.json` or `units.yml`). Parses, validates structural integrity, builds a flat index, fills back-references. Public class — users interact with it for custom unit flows.
 
 ```python
 class UnitRegistry:
@@ -101,7 +101,8 @@ class UnitRegistry:
 
         Validates on construction: dimension key/value validity, ID uniqueness across
         families, usage key uniqueness, dimension-set uniqueness within family,
-        join-closedness per family.
+        join-closedness per family. usage_key defaults to unit_id if not specified
+        in the raw dict.
         """
 
     def add_family(
@@ -152,8 +153,9 @@ class UnitRegistry:
         (union of dimension sets) must exist in the family."""
 
     @staticmethod
-    def _are_compatible(a: UnitDef, b: UnitDef) -> bool:
-        """True if a and b share no dimension axis with conflicting values."""
+    def are_compatible(a: UnitDef, b: UnitDef) -> bool:
+        """True if a and b share no dimension axis with conflicting values.
+        Public — also used by validate_join_coverage in validation.py."""
 ```
 
 #### Module-level convenience functions _(implements "convenience functions delegate to get_snapshot().unit_registry")_
@@ -191,6 +193,14 @@ class ModelPrice(pydantic.BaseModel):
         For the requests family, passes default_usage=1.
         Costs from families without a 'direction' dimension go only to total_price.
         Uses get_snapshot().unit_registry for unit lookups.
+
+        total_input_tokens for TieredPrices tier determination is obtained via
+        get_usage_value(usage, 'input_tokens') — the raw provided value, same as
+        current behavior. This is computed once before the per-family loop.
+
+        Mapping key validation: if usage is a Mapping, every key is checked against
+        registry.all_usage_keys before decomposition. Unrecognized keys raise ValueError.
+        This check runs once (not per-family).
         """
 
     def __str__(self) -> str:
@@ -301,12 +311,12 @@ def compute_leaf_values(
        If own usage WAS provided, it's a contradiction — raise ValueError.
     3. Human-readable errors: "cache_read_tokens (200) exceeds input_tokens (100) —
        a more specific count cannot exceed its parent total." No algorithm jargon.
-    4. Mapping key validation: if usage is a Mapping, every key is checked against
-       get_all_usage_keys(). Unrecognized keys raise ValueError.
     """
 ```
 
-_(implements "Incomplete usage is handled gracefully", "Inconsistent usage is rejected", "Error messages describe the data problem", "Mapping usage keys are validated")_
+_(implements "Incomplete usage is handled gracefully", "Inconsistent usage is rejected", "Error messages describe the data problem")_
+
+Note: Mapping key validation _(implements "Mapping usage keys are validated")_ lives in `ModelPrice.calc_price`, not here — it's a cross-family concern that should run once before the per-family decomposition loop.
 
 **Unchanged:** `is_descendant_or_self` signature and behavior.
 
@@ -326,7 +336,7 @@ def validate_ancestor_coverage(priced_unit_ids: set[str], family: UnitFamily) ->
 
 def validate_join_coverage(priced_unit_ids: set[str], family: UnitFamily) -> None:
     """Raise ValueError if two priced, compatible units have a join in the registry
-    that is not priced. Uses UnitRegistry._are_compatible for compatibility check."""
+    that is not priced. Uses UnitRegistry.are_compatible for compatibility check."""
 
 def validate_price_keys(price_keys: set[str], all_unit_ids: set[str]) -> None:
     """Raise ValueError if any price key is not a registered unit ID.
@@ -383,7 +393,9 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
        - validate_price_keys: every price key is a registered unit ID
        - validate_ancestor_coverage: per family, per model
        - validate_join_coverage: per family, per model
-    3. If validation fails, raise ValueError — previous snapshot remains active.
+    3. Validate extractor dest values: every dest in every extractor mapping must be
+       a recognized usage key in the registry (registry.all_usage_keys).
+    4. If validation fails, raise ValueError — previous snapshot remains active.
     """
 ```
 
@@ -461,7 +473,10 @@ def build():
 ```
 
 **Dict-format output** _(implements "data.json becomes a top-level dict")_:
-`write_prices` wraps providers in `{"unit_families": ..., "providers": [...]}`.
+`write_prices` wraps providers in `{"unit_families": ..., "providers": [...]}`. The `unit_families` value is the inner dict of family_id -> family_data (not wrapped in a `{"families": ...}` key — that `families` key is a YAML-level artifact stripped at build time).
+
+**JSON schema generation** _(implements "Generated JSON schemas provide editor autocomplete")_:
+The provider YAML JSON schema (`.schema.json`) is updated so that `ModelPrice` fields and extractor `dest` values are derived from the registry. Price keys: all unit IDs from all families. Extractor dest: all usage keys from all families. This replaces the implicit enumeration from hardcoded Pydantic fields.
 
 ### `package_data.py` — modified
 
@@ -498,11 +513,11 @@ export interface StorageFactoryParams {
   onCalc: (cb: () => void) => void
   remoteDataUrl: string
   setProviderData: (data: ProviderDataPayload) => void
-  setUnitFamilies: (data: RawUnitsData | null) => void // new
+  setUnitFamilies: (data: RawFamiliesDict | null) => void // new
 }
 ```
 
-`RawUnitsData` is a type for the raw families dict shape:
+`RawFamiliesDict` is the type for what `data.json` carries in `unit_families` — a flat dict of family_id to family data, no wrapper:
 
 ```typescript
 interface RawUnitData {
@@ -517,10 +532,10 @@ interface RawFamilyData {
   units: Record<string, RawUnitData>
 }
 
-export interface RawUnitsData {
-  families: Record<string, RawFamilyData>
-}
+export type RawFamiliesDict = Record<string, RawFamilyData>
 ```
+
+This matches the Python `UnitRegistry(raw_families: dict[str, dict])` — both receive the flat dict, not the YAML-level `{"families": {...}}` wrapper.
 
 ### `units.ts` — rewritten
 
@@ -529,10 +544,10 @@ export interface RawUnitsData {
 The module manages unit family state: bootstrap from generated `data.ts`, allow override via `setUnitFamilies` (auto-update path).
 
 ```typescript
-export function parseFamilies(raw: RawUnitsData): Record<string, UnitFamily>
+export function parseFamilies(raw: RawFamiliesDict): Record<string, UnitFamily>
 // Parses raw dict into UnitFamily/UnitDef objects. Fills in id, familyId, usageKey.
 
-export function setUnitFamilies(raw: RawUnitsData | null): void
+export function setUnitFamilies(raw: RawFamiliesDict | null): void
 // Validate (structure + join-closedness), then set as active. null resets to bootstrap.
 
 export function getFamily(familyId: string): UnitFamily
@@ -541,7 +556,9 @@ export function getAllUsageKeys(): Set<string>
 export function getAllUnitIds(): Set<string>
 ```
 
-`UnitDef` and `UnitFamily` interfaces are unchanged in shape (already have `id`, `familyId`, `usageKey`, `dimensions`, `per`, `units`).
+`UnitDef` interface is unchanged: `id`, `familyId`, `usageKey`, `dimensions`. Note: JS `UnitDef` has `familyId` (string) but no `family` object back-reference (unlike Python). JS code resolves family data via `getFamily(unit.familyId)`.
+
+`UnitFamily` interface is unchanged: `id`, `per`, `description`, `dimensions`, `units`.
 
 ### `engine.ts` — modified _(implements "calc_price is a hot path")_
 
@@ -557,9 +574,12 @@ function calcUnitPrice(
 // Generic over normalization factor. Replaces calcMtokPrice.
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult
-// Multi-family: groups price keys by family (via getUnit), decomposes each family
+// Multi-family: groups price keys by family (via getUnit(unitId).familyId), gets
+// family object via getFamily(familyId) for family.per. Decomposes each family
 // independently. For 'requests' family, defaultUsage = 1. Costs without 'direction'
 // dimension go only to total_price.
+// Validates ancestor coverage and join coverage per family (JS has no set_custom_snapshot,
+// so price-level validation runs at calc time — O(k²) where k is priced units per model).
 ```
 
 ### `decompose.ts` — modified _(mirrors Python decompose.py changes)_
@@ -582,14 +602,22 @@ export function computeLeafValues(
 
 ### `validation.ts` — new file
 
-JS ports of structural validation (used by `setUnitFamilies`):
+Structural validation (used by `setUnitFamilies`) and price-level validation (used by `calcPrice`):
 
 ```typescript
+// Structural — called from setUnitFamilies
 export function validateRegistryStructure(families: Record<string, UnitFamily>): void
 // ID uniqueness, usage key uniqueness, dimension-set uniqueness.
 
 export function validateRegistryJoinClosedness(family: UnitFamily): void
 // Compatible pairs must have their join in the family.
+
+// Price-level — called from calcPrice per family
+export function validateAncestorCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void
+// Moved from decompose.ts. Every priced unit's ancestors must also be priced.
+
+export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void
+// Two priced compatible units must have their join priced if it exists in the registry.
 ```
 
 ### `api.ts` — modified
