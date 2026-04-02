@@ -1,5 +1,7 @@
 # Data-Driven Unit Registry
 
+**Code-level architecture is in [code-spec](code-spec.md).**
+
 **The goal is to calculate prices as accurately as possible for a given request.**
 This is the reason the system exists. Every design decision traces back to this: maximize pricing accuracy given the information available.
 
