@@ -537,7 +537,9 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 // so price-level validation runs at calc time — O(k²) where k is priced units per model).
 ```
 
-### `decompose.ts` — modified _(mirrors Python decompose.py changes)_
+### `decompose.ts` — modified _(JS equivalent of Python's Usage.leaf_value logic)_
+
+JS has no smart `Usage` class — it uses plain `Record<string, unknown>`. The decomposition logic (inference, Mobius inversion, error messages) lives in `computeLeafValues` as a standalone function, called by `calcPrice` in `engine.ts`.
 
 ```typescript
 function getUsageValue(usage: Record<string, unknown>, key: string, defaultValue?: number): number
@@ -550,7 +552,9 @@ export function computeLeafValues(
   family: UnitFamily,
   defaultUsage?: number, // defaults to 0
 ): Record<string, number>
-// Same changes as Python: inference, default_usage, human-readable errors.
+// Inference: if leaf < 0 and own usage was NOT provided (hasUsageValue returns false),
+// set leaf to 0. If own usage WAS provided, raise error.
+// Human-readable error messages. defaultUsage for requests family.
 ```
 
 **Removal:** `TOKENS_FAMILY` usage in tests.
