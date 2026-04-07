@@ -162,18 +162,14 @@ class ModelPrice(pydantic.BaseModel):
 
     def calc_price(self, usage: object) -> CalcPrice:
         """Wraps usage in Usage.from_raw(usage) if not already a Usage.
-        Then for each price key: gets leaf value from usage.leaf_value(unit_id, priced_set),
-        multiplies by price via calc_unit_price, buckets by direction dimension.
+        Groups price keys by family, decomposes each family via compute_leaf_values,
+        prices each leaf, buckets costs by direction dimension.
 
-        calc_price does not think about dimensions, ancestors, or decomposition —
-        that logic lives in Usage. It only does: look up unit, get leaf, apply price, sum.
-
-        For the requests family, usage defaults to 1 (Usage handles this via default_usage
-        or the registry's family-level default).
+        For the requests family, default_usage=1 (one API call).
         Costs from families without a 'direction' dimension go only to total_price.
 
-        total_input_tokens for TieredPrices: simply usage.input_tokens — always correct
-        because Usage infers ancestor values from descendants.
+        total_input_tokens for TieredPrices: simply smart_usage.input_tokens — always
+        correct because Usage infers ancestor values from descendants.
         """
 
     def __str__(self) -> str:
@@ -234,13 +230,6 @@ class Usage:
     def __setattr__(self, name: str, value: object) -> None:
         """Raises AttributeError — Usage is immutable."""
 
-    def leaf_value(self, unit_id: str, priced_unit_ids: set[str]) -> int:
-        """Compute the Mobius-inverted leaf value for a unit given the priced set.
-        This is the exclusive portion of usage for this unit — the value that
-        calc_price multiplies by the unit's price.
-        Raises ValueError if negative (inconsistent usage: a subset exceeds
-        its superset). Error message describes the data problem, not the algorithm."""
-
     def __add__(self, other: Usage) -> Usage:
         """Sum all stored values, then re-infer ancestors on the result.
         Correct because inferred ancestors are always derivable from descendants."""
@@ -262,17 +251,30 @@ Currently builds `Usage()` then uses `setattr` to populate fields. Changed to co
 
 ---
 
-### `decompose.py` — simplified
+### `decompose.py` — modified
 
-The Mobius inversion algorithm and the `is_descendant_or_self` function stay here as utility code. But the public interface moves to `Usage.leaf_value` — `calc_price` and other callers go through `Usage`, not through `decompose.py` directly.
+The Mobius inversion algorithm stays here. `calc_price` wraps raw usage in `Usage` (which infers ancestors), then passes the smart `Usage` to `compute_leaf_values`. Since `Usage` always has correct ancestor values, the decomposition no longer needs inference logic — negative leaves are always genuine errors.
+
+#### `compute_leaf_values`
+
+```python
+def compute_leaf_values(
+    priced_unit_ids: set[str],
+    usage: Usage,
+    family: UnitFamily,
+) -> dict[str, int]:
+    """Compute leaf values via Mobius inversion. Usage is a smart Usage object
+    with correct (provided + inferred) values — no inference logic here.
+    Negative leaf values are always contradictions: raise ValueError with
+    human-readable message. No error may mention leaves, Mobius inversion,
+    posets, depth, coefficients, or dimensions."""
+```
+
+Note: `usage` is now typed as `Usage`, not `object` — `calc_price` wraps raw objects before calling.
 
 **Unchanged:** `is_descendant_or_self` signature and behavior.
 
-**Removal:** `get_usage_value`, `_has_usage_value` (no longer needed — `Usage` serves correct values directly). `validate_ancestor_coverage` moves to `validation.py`. `get_priced_descendants` removed (unused).
-
-**Moved to `Usage`:** `compute_leaf_values` logic. The Mobius inversion may remain as a private helper function in `decompose.py` that `Usage.leaf_value` calls, or it may move into `Usage` entirely. Either way, the public entry point is `Usage.leaf_value(unit_id, priced_unit_ids)`.
-
-**Error messages** _(implements "Error messages describe the data problem")_: Human-readable errors raised by `Usage.leaf_value` on negative leaf values. No error may mention leaves, Mobius inversion, posets, depth, coefficients, or dimensions.
+**Removal:** `get_usage_value` (use `getattr(usage, key)` directly — smart `Usage` returns `int`, never `None`). `_has_usage_value` (no longer needed). `default_usage` parameter (the requests default-to-1 is handled by `Usage` construction or by `calc_price` before decomposition). `validate_ancestor_coverage` moves to `validation.py`. `get_priced_descendants` removed (unused).
 
 ---
 
@@ -595,14 +597,15 @@ export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFam
 
 ```
 ModelPrice.calc_price(usage)
-  -> smart_usage = Usage.from_raw(usage)     # wrap if not already Usage; infers ancestors
+  -> smart_usage = Usage.from_raw(usage)        # wrap if not already Usage; infers ancestors
   -> registry = get_snapshot().unit_registry
+  -> if Mapping usage: validate keys against registry.usage_keys (in from_raw)
   -> total_input_tokens = smart_usage.input_tokens  # always correct (provided or inferred)
-  -> priced_unit_ids = set(self.__pydantic_extra__)
-  -> for each unit_id, price in __pydantic_extra__:
-       unit = registry.units[unit_id]             # O(1)
-       leaf = smart_usage.leaf_value(unit_id, priced_unit_ids)  # Mobius, raises on negative
-       cost = calc_unit_price(price, leaf, total_input_tokens, unit.family.per)
+  -> group price keys by unit.family_id
+  -> for each family:
+       compute_leaf_values(priced_ids, smart_usage, family)  # Mobius, raises on negative
+  -> for each unit_id, leaf_count:
+       cost = calc_unit_price(price, leaf_count, total_input_tokens, unit.family.per)
        bucket cost by unit.dimensions.get('direction')
   -> return {input_price, output_price, total_price}
 ```
