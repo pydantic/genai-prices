@@ -1271,6 +1271,14 @@ models:
       equals: gemma-3n-e4b-it:free
     prices: {}
 
+  - id: gemma-4-31b-it
+    name: Gemma 4 31B
+    match:
+      equals: gemma-4-31b-it
+    prices:
+      input_mtok: 0.14
+      output_mtok: 0.4
+
   - id: glm-4-32b
     name: GLM 4 32B
     match:
@@ -1502,6 +1510,13 @@ models:
     match:
       equals: "google/gemma-3-4b-it:free"
     prices: {}
+
+  - id: google/gemma-4-31b-it
+    match:
+      equals: google/gemma-4-31b-it
+    prices:
+      input_mtok: 0.14
+      output_mtok: 0.4
 
   - id: "google/learnlm-1.5-pro-experimental:free"
     match:
