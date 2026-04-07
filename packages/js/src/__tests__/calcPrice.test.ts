@@ -64,14 +64,18 @@ describe('Core Price Calculation Function', () => {
       }
       const modelPrice: ModelPrice = {
         input_audio_mtok: 10.0,
+        input_mtok: 5.0,
         output_audio_mtok: 20.0,
+        output_mtok: 10.0,
       }
 
       const result = calcPrice(usage, modelPrice)
 
+      // input leaf: 100 - 100 = 0 non-audio text, 100 audio
+      // output leaf: 50 - 50 = 0 non-audio text, 50 audio
       expect(result).toMatchObject({
-        input_price: 0.001, // 100 * 10.0 / 1_000_000
-        output_price: 0.001, // 50 * 20.0 / 1_000_000
+        input_price: 0.001, // (0 * 5.0 + 100 * 10.0) / 1_000_000
+        output_price: 0.001, // (0 * 10.0 + 50 * 20.0) / 1_000_000
         total_price: 0.002,
       })
     })

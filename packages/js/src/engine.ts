@@ -1,4 +1,6 @@
+import { computeLeafValues, validateAncestorCoverage } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import { getUnit, TOKENS_FAMILY } from './units'
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
@@ -30,7 +32,6 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens:
   return (applicablePrice * tokens) / 1_000_000
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function calcMtokPrice(
   price: number | TieredPrices | undefined,
   tokens: number | undefined,
@@ -45,50 +46,36 @@ function calcMtokPrice(
 }
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
+  // Build the set of priced unit IDs from ModelPrice fields
+  const priced = new Map<string, number | TieredPrices>()
+  for (const unitId of Object.keys(TOKENS_FAMILY.units)) {
+    const price = modelPrice[unitId as keyof ModelPrice]
+    if (price !== undefined) {
+      priced.set(unitId, price)
+    }
+  }
+
+  const pricedUnitIds = new Set(priced.keys())
+  validateAncestorCoverage(pricedUnitIds, TOKENS_FAMILY)
+
+  const totalInputTokens = usage.input_tokens ?? 0
+  const leafValues = computeLeafValues(pricedUnitIds, usage as unknown as Record<string, unknown>, TOKENS_FAMILY)
+
   let inputPrice = 0
   let outputPrice = 0
 
-  // Calculate total input tokens for tier determination
-  const totalInputTokens = usage.input_tokens ?? 0
+  for (const [unitId, leafCount] of Object.entries(leafValues)) {
+    const unit = getUnit(unitId)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const price = priced.get(unitId)!
+    const cost = calcMtokPrice(price, leafCount, '', totalInputTokens)
 
-  const cacheReadTokens = usage.cache_read_tokens ?? 0
-  const cacheWriteTokens = usage.cache_write_tokens ?? 0
-  const cacheAudioReadTokens = usage.cache_audio_read_tokens ?? 0
-  const outputAudioTokens = usage.output_audio_tokens ?? 0
-
-  let uncachedAudioInputTokens = usage.input_audio_tokens ?? 0
-  uncachedAudioInputTokens -= cacheAudioReadTokens
-  if (uncachedAudioInputTokens < 0) {
-    throw new Error('cache_audio_read_tokens cannot be greater than input_audio_tokens')
+    if (unit.dimensions.direction === 'input') {
+      inputPrice += cost
+    } else {
+      outputPrice += cost
+    }
   }
-
-  let uncachedTextInputTokens = usage.input_tokens ?? 0
-  uncachedTextInputTokens -= cacheReadTokens
-  uncachedTextInputTokens -= cacheWriteTokens
-  uncachedTextInputTokens -= uncachedAudioInputTokens
-  if (uncachedTextInputTokens < 0) {
-    throw new Error('Uncached text input tokens cannot be negative')
-  }
-
-  let cachedTextInputTokens = cacheReadTokens
-  cachedTextInputTokens -= cacheAudioReadTokens
-  if (cachedTextInputTokens < 0) {
-    throw new Error('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-  }
-
-  inputPrice += calcMtokPrice(modelPrice.input_mtok, uncachedTextInputTokens, 'input_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, cachedTextInputTokens, 'cache_read_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, cacheWriteTokens, 'cache_write_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, uncachedAudioInputTokens, 'input_audio_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, cacheAudioReadTokens, 'cache_audio_read_mtok', totalInputTokens)
-
-  let textOutputTokens = usage.output_tokens ?? 0
-  textOutputTokens -= outputAudioTokens
-  if (textOutputTokens < 0) {
-    throw new Error('output_audio_tokens cannot be greater than output_tokens')
-  }
-  outputPrice += calcMtokPrice(modelPrice.output_mtok, textOutputTokens, 'output_mtok', totalInputTokens)
-  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok', totalInputTokens)
 
   let totalPrice = inputPrice + outputPrice
   if (modelPrice.requests_kcount !== undefined) {

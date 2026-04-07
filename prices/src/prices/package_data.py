@@ -9,8 +9,49 @@ from .utils import package_dir as this_package_dir, root_dir
 
 def package_data():
     data_path = this_package_dir / 'data.json'
+    package_units()
     package_python_data(data_path)
     package_ts_data(data_path)
+
+
+def package_units():
+    """Generate units JSON from YAML source of truth for Python and JS packages.
+
+    Writes the canonical JSON to the Python package and copies it to the JS package.
+    Runs prettier so the file is stable through pre-commit hooks (json.dumps expands
+    short arrays onto multiple lines, but prettier collapses them).
+    """
+    import yaml
+
+    from genai_prices.units import RawUnitsData
+
+    units_yml = root_dir / 'prices' / 'units.yml'
+    units_data = yaml.safe_load(units_yml.read_text())
+
+    # Write JSON schema for YAML editor support
+    schema_path = root_dir / 'prices' / 'units.schema.json'
+    schema_path.write_text(json.dumps(RawUnitsData.model_json_schema(), indent=2) + '\n')
+    print(f'Units schema written to {schema_path.relative_to(root_dir)}')
+
+    units_json = json.dumps(units_data, indent=2)
+
+    py_units_json = root_dir / 'packages' / 'python' / 'genai_prices' / 'units_data.json'
+    py_units_json.write_text(units_json + '\n')
+
+    # Run prettier so the file is stable through pre-commit hooks
+    subprocess.run(
+        ['npx', 'prettier', '--write', str(py_units_json)],
+        cwd=str(root_dir),
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+
+    # Copy to JS package (not symlink, to avoid packaging issues)
+    js_units_json = root_dir / 'packages' / 'js' / 'src' / 'units-data.json'
+    js_units_json.write_text(py_units_json.read_text())
+
+    print(f'Units data written to {py_units_json.relative_to(root_dir)}')
+    print(f'Units data copied to {js_units_json.relative_to(root_dir)}')
 
 
 def package_python_data(data_path: Path):

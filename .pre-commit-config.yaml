@@ -20,6 +20,7 @@ repos:
     rev: v2.3.0
     hooks:
       - id: codespell
+        exclude: "^tests/cassettes/"
         additional_dependencies:
           - tomli
 

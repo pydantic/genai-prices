@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=units.schema.json
+families:
+  tokens:
+    per: 1_000_000
+    description: Token counts
+    dimensions:
+      direction: [input, output]
+      modality: [text, audio, image, video]
+      cache: [read, write]
+    units:
+      input_mtok:
+        usage_key: input_tokens
+        dimensions: { direction: input }
+      output_mtok:
+        usage_key: output_tokens
+        dimensions: { direction: output }
+
+      cache_read_mtok:
+        usage_key: cache_read_tokens
+        dimensions: { direction: input, cache: read }
+      cache_write_mtok:
+        usage_key: cache_write_tokens
+        dimensions: { direction: input, cache: write }
+
+      input_text_mtok:
+        usage_key: input_text_tokens
+        dimensions: { direction: input, modality: text }
+      output_text_mtok:
+        usage_key: output_text_tokens
+        dimensions: { direction: output, modality: text }
+      cache_text_read_mtok:
+        usage_key: cache_text_read_tokens
+        dimensions: { direction: input, modality: text, cache: read }
+      cache_text_write_mtok:
+        usage_key: cache_text_write_tokens
+        dimensions: { direction: input, modality: text, cache: write }
+
+      input_audio_mtok:
+        usage_key: input_audio_tokens
+        dimensions: { direction: input, modality: audio }
+      output_audio_mtok:
+        usage_key: output_audio_tokens
+        dimensions: { direction: output, modality: audio }
+      cache_audio_read_mtok:
+        usage_key: cache_audio_read_tokens
+        dimensions: { direction: input, modality: audio, cache: read }
+      cache_audio_write_mtok:
+        usage_key: cache_audio_write_tokens
+        dimensions: { direction: input, modality: audio, cache: write }
+
+      input_image_mtok:
+        usage_key: input_image_tokens
+        dimensions: { direction: input, modality: image }
+      output_image_mtok:
+        usage_key: output_image_tokens
+        dimensions: { direction: output, modality: image }
+      cache_image_read_mtok:
+        usage_key: cache_image_read_tokens
+        dimensions: { direction: input, modality: image, cache: read }
+      cache_image_write_mtok:
+        usage_key: cache_image_write_tokens
+        dimensions: { direction: input, modality: image, cache: write }
+
+      input_video_mtok:
+        usage_key: input_video_tokens
+        dimensions: { direction: input, modality: video }
+      output_video_mtok:
+        usage_key: output_video_tokens
+        dimensions: { direction: output, modality: video }
+      cache_video_read_mtok:
+        usage_key: cache_video_read_tokens
+        dimensions: { direction: input, modality: video, cache: read }
+      cache_video_write_mtok:
+        usage_key: cache_video_write_tokens
+        dimensions: { direction: input, modality: video, cache: write }

@@ -371,8 +371,10 @@ models:
     context_window: 128000
     prices_checked: 2025-07-22
     prices:
+      input_mtok: 2.5
       input_audio_mtok: 2.5
       output_mtok: 10
+    price_comments: input_mtok set equal to input_audio_mtok (audio-only input model, catch-all required by ancestor coverage rule)
 
   - id: gpt-4o-mini
     name: gpt 4o mini
@@ -409,8 +411,10 @@ models:
       starts_with: gpt-4o-mini-audio
     prices_checked: 2025-07-22
     prices:
+      input_mtok: 0.15
       input_audio_mtok: 0.15
       output_mtok: 0.6
+    price_comments: input_mtok set equal to input_audio_mtok (audio-only input model, catch-all required by ancestor coverage rule)
 
   - id: gpt-4o-mini-realtime-preview
     match:
@@ -437,7 +441,9 @@ models:
       equals: gpt-4o-mini-tts
     prices:
       input_mtok: 0.6
+      output_mtok: 12
       output_audio_mtok: 12
+    price_comments: output_mtok set equal to output_audio_mtok (audio-only output model, catch-all required by ancestor coverage rule)
 
   - id: gpt-4o-realtime-preview
     match:

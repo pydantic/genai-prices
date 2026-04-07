@@ -6,7 +6,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
+from typing import Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
 from typing_extensions import TypedDict, TypeGuard
@@ -188,47 +188,16 @@ class ExtractedUsage:
         return self + other
 
 
-class AbstractUsage(Protocol):
-    """Abstract definition of data about token usage for a single LLM call."""
+AbstractUsage = object
+"""Usage can be any object with numeric token-count attributes, or any Mapping.
 
-    @property
-    def input_tokens(self) -> int | None:
-        """Total number of input/prompt tokens.
-
-        Note this should INCLUDE both uncached and cached tokens.
-        """
-
-    @property
-    def cache_write_tokens(self) -> int | None:
-        """Number of tokens written to the cache."""
-
-    @property
-    def cache_read_tokens(self) -> int | None:
-        """Number of tokens read from the cache.
-
-        For many models this is described as just "cached tokens".
-        """
-
-    @property
-    def output_tokens(self) -> int | None:
-        """Number of output/completion tokens."""
-
-    @property
-    def input_audio_tokens(self) -> int | None:
-        """Number of audio input tokens."""
-
-    @property
-    def cache_audio_read_tokens(self) -> int | None:
-        """Number of audio tokens read from the cache."""
-
-    @property
-    def output_audio_tokens(self) -> int | None:
-        """Number of output audio tokens."""
+Values are accessed dynamically via getattr/Mapping.get — no typed Protocol needed.
+"""
 
 
 @dataclass
 class Usage:
-    """Simple implementation of `AbstractUsage` as a dataclass."""
+    """Dataclass holding token usage counts for a single LLM call."""
 
     input_tokens: int | None = None
     """Number of input/prompt tokens."""
@@ -608,48 +577,50 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
 
+    def __post_init__(self) -> None:
+        from .decompose import validate_ancestor_coverage
+        from .units import TOKENS_FAMILY
+
+        priced_unit_ids: set[str] = set()
+        for unit_id in TOKENS_FAMILY.units:
+            if getattr(self, unit_id, None) is not None:
+                priced_unit_ids.add(unit_id)
+
+        if priced_unit_ids:
+            validate_ancestor_coverage(priced_unit_ids, TOKENS_FAMILY)
+
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
-        """Calculate the price of usage in USD with this model price."""
+        """Calculate the price of usage in USD with this model price.
+
+        Uses registry-driven decomposition: builds a dict of priced units from
+        fixed fields, computes leaf values via Mobius inversion, then prices each leaf.
+        """
+        from .decompose import compute_leaf_values, get_usage_value
+        from .units import TOKENS_FAMILY, get_unit
+
+        # Build priced units dict from fixed fields
+        priced: dict[str, Decimal | TieredPrices] = {}
+        for unit_id in TOKENS_FAMILY.units:
+            price = getattr(self, unit_id, None)
+            if price is not None:
+                priced[unit_id] = price
+
+        # Total input tokens for tier determination (before decomposition)
+        total_input_tokens = get_usage_value(usage, 'input_tokens')
+
+        # Compute leaf values via decomposition
+        leaf_values = compute_leaf_values(set(priced.keys()), usage, TOKENS_FAMILY)
+
+        # Price each unit and bucket by direction
         input_price = Decimal(0)
         output_price = Decimal(0)
-
-        # Calculate total input tokens for tier determination
-        total_input_tokens = usage.input_tokens or 0
-
-        uncached_audio_input_tokens = usage.input_audio_tokens or 0
-        if cache_audio_read_tokens := (usage.cache_audio_read_tokens or 0):
-            uncached_audio_input_tokens -= cache_audio_read_tokens
-
-        if uncached_audio_input_tokens < 0:
-            raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
-        input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
-
-        uncached_text_input_tokens = usage.input_tokens or 0
-        uncached_text_input_tokens -= uncached_audio_input_tokens
-        if cache_write_tokens := usage.cache_write_tokens:
-            uncached_text_input_tokens -= cache_write_tokens
-        if cache_read_tokens := usage.cache_read_tokens:
-            uncached_text_input_tokens -= cache_read_tokens
-
-        if uncached_text_input_tokens < 0:
-            raise ValueError('Uncached text input tokens cannot be negative')
-        input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens, total_input_tokens)
-
-        cached_text_input_tokens = usage.cache_read_tokens or 0
-        cached_text_input_tokens -= cache_audio_read_tokens
-
-        if cached_text_input_tokens < 0:
-            raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-        input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens, total_input_tokens)
-
-        text_output_tokens = usage.output_tokens or 0
-        text_output_tokens -= usage.output_audio_tokens or 0
-        if text_output_tokens < 0:
-            raise ValueError('output_audio_tokens cannot be greater than output_tokens')
-        output_price += calc_mtok_price(self.output_mtok, text_output_tokens, total_input_tokens)
-        output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens, total_input_tokens)
+        for unit_id, leaf_count in leaf_values.items():
+            unit = get_unit(unit_id)
+            cost = calc_mtok_price(priced[unit_id], leaf_count, total_input_tokens)
+            if unit.dimensions.get('direction') == 'input':
+                input_price += cost
+            else:
+                output_price += cost
 
         total_price = input_price + output_price
 

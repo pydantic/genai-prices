@@ -1,0 +1,77 @@
+{
+  "$defs": {
+    "RawUnitDef": {
+      "description": "JSON shape for a unit definition (no id/family_id \u2014 those come from dict keys).",
+      "properties": {
+        "usage_key": {
+          "title": "Usage Key",
+          "type": "string"
+        },
+        "dimensions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Dimensions",
+          "type": "object"
+        }
+      },
+      "required": [
+        "usage_key",
+        "dimensions"
+      ],
+      "title": "RawUnitDef",
+      "type": "object"
+    },
+    "RawUnitFamily": {
+      "properties": {
+        "per": {
+          "title": "Per",
+          "type": "integer"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "dimensions": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Dimensions",
+          "type": "object"
+        },
+        "units": {
+          "additionalProperties": {
+            "$ref": "#/$defs/RawUnitDef"
+          },
+          "title": "Units",
+          "type": "object"
+        }
+      },
+      "required": [
+        "per",
+        "description",
+        "dimensions",
+        "units"
+      ],
+      "title": "RawUnitFamily",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "families": {
+      "additionalProperties": {
+        "$ref": "#/$defs/RawUnitFamily"
+      },
+      "title": "Families",
+      "type": "object"
+    }
+  },
+  "required": [
+    "families"
+  ],
+  "title": "RawUnitsData",
+  "type": "object"
+}

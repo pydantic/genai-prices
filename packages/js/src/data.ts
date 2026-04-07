@@ -9432,7 +9432,9 @@ export const data: Provider[] = [
           starts_with: 'gpt-4o-audio-preview',
         },
         context_window: 128000,
+        price_comments: 'input_mtok set equal to input_audio_mtok (audio-only input model, catch-all required by ancestor coverage rule)',
         prices: {
+          input_mtok: 2.5,
           output_mtok: 10,
           input_audio_mtok: 2.5,
         },
@@ -9483,7 +9485,9 @@ export const data: Provider[] = [
         match: {
           starts_with: 'gpt-4o-mini-audio',
         },
+        price_comments: 'input_mtok set equal to input_audio_mtok (audio-only input model, catch-all required by ancestor coverage rule)',
         prices: {
+          input_mtok: 0.15,
           output_mtok: 0.6,
           input_audio_mtok: 0.15,
         },
@@ -9518,8 +9522,11 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-4o-mini-tts',
         },
+        price_comments:
+          'output_mtok set equal to output_audio_mtok (audio-only output model, catch-all required by ancestor coverage rule)',
         prices: {
           input_mtok: 0.6,
+          output_mtok: 12,
           output_audio_mtok: 12,
         },
       },

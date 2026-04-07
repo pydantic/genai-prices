@@ -5276,7 +5276,10 @@ providers: list[Provider] = [
                 name='gpt 4o audio preview',
                 description='Audio model for gpt-4o',
                 context_window=128000,
-                prices=ModelPrice(output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')),
+                price_comments='input_mtok set equal to input_audio_mtok (audio-only input model, catch-all required by ancestor coverage rule)',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini',
@@ -5306,7 +5309,10 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
                 name='gpt 4o mini audio preview',
                 description='Audio model for gpt-4o mini',
-                prices=ModelPrice(output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')),
+                price_comments='input_mtok set equal to input_audio_mtok (audio-only input model, catch-all required by ancestor coverage rule)',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini-realtime-preview',
@@ -5328,7 +5334,10 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-mini-tts',
                 match=ClauseEquals(equals='gpt-4o-mini-tts'),
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_audio_mtok=Decimal('12')),
+                price_comments='output_mtok set equal to output_audio_mtok (audio-only output model, catch-all required by ancestor coverage rule)',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), output_mtok=Decimal('12'), output_audio_mtok=Decimal('12')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-realtime-preview',
