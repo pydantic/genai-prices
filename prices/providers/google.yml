@@ -682,3 +682,15 @@ models:
       or:
         - starts_with: gemma-3n
     prices: {}
+
+  - id: gemma-4
+    name: Gemma 4 (free)
+    description: Our lightweight, state-of the art, open model built from the same technology that powers our Gemini
+      models.
+    prices_checked: 2026-04-07
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Free of charge on Google's Gemini API.
+    match:
+      or:
+        - starts_with: gemma-4-
+        - equals: gemma-4
+    prices: {}
