@@ -161,22 +161,19 @@ class ModelPrice(pydantic.BaseModel):
     __pydantic_extra__: dict[str, Decimal | TieredPrices]
 
     def calc_price(self, usage: object) -> CalcPrice:
-        """Multi-family decomposition: groups price keys by family via registry,
-        decomposes each family independently, sums costs bucketed by direction.
+        """Wraps usage in Usage.from_raw(usage) if not already a Usage.
+        Then for each price key: gets leaf value from usage.leaf_value(unit_id, priced_set),
+        multiplies by price via calc_unit_price, buckets by direction dimension.
 
-        For the requests family, passes default_usage=1.
+        calc_price does not think about dimensions, ancestors, or decomposition —
+        that logic lives in Usage. It only does: look up unit, get leaf, apply price, sum.
+
+        For the requests family, usage defaults to 1 (Usage handles this via default_usage
+        or the registry's family-level default).
         Costs from families without a 'direction' dimension go only to total_price.
-        Uses get_snapshot().unit_registry for unit lookups.
 
-        total_input_tokens for TieredPrices tier determination is the sum of all
-        leaf values for units with dimension {direction: input}, computed after
-        decomposition across all families. This correctly handles inference (e.g.,
-        only input_audio_tokens provided → inferred total is the sum of input leaves,
-        not zero). Two-pass: decompose all families first, then price with tier info.
-
-        Mapping key validation: if usage is a Mapping, every key is checked against
-        registry.usage_keys before decomposition. Unrecognized keys raise ValueError.
-        This check runs once (not per-family).
+        total_input_tokens for TieredPrices: simply usage.input_tokens — always correct
+        because Usage infers ancestor values from descendants.
         """
 
     def __str__(self) -> str:
@@ -211,23 +208,42 @@ def calc_unit_price(
 
 **Removal:** `calc_mtok_price` function (subsumed by `calc_unit_price`).
 
-#### `Usage` — rewritten as plain class _(implements "Usage is accessed dynamically by key")_
+#### `Usage` — registry-aware class _(implements "Usage is a registry-aware class that infers, decomposes, and serves correct values")_
 
-Currently a `@dataclass` with 7 explicit fields. Becomes a plain class accepting any keyword argument. Immutable after construction.
+Currently a `@dataclass` with 7 explicit fields. Becomes a registry-aware class that infers ancestor values, provides leaf value decomposition, and serves correct totals for any usage key. Immutable after construction. Uses the global unit registry (`get_snapshot().unit_registry`).
 
 ```python
 class Usage:
-    def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None values in an internal dict."""
+    _values: dict[str, int]  # flat dict: provided + inferred, no distinction
 
-    def __getattr__(self, name: str) -> int | None:
-        """Returns the stored value, or None if the key is absent."""
+    def __init__(self, **kwargs: int | None) -> None:
+        """Store non-None values, then infer ancestor values from descendants
+        using the global unit registry. Provided values are never overridden.
+        Inference uses inclusion-exclusion over the dimension structure."""
+
+    @classmethod
+    def from_raw(cls, obj: object) -> Usage:
+        """Construct from an arbitrary object. If obj is already a Usage, return it.
+        If Mapping: validate keys against registry.usage_keys, then construct.
+        Otherwise: extract known usage keys via getattr, then construct."""
+
+    def __getattr__(self, name: str) -> int:
+        """Returns stored value (provided or inferred), or 0 for keys not present.
+        Does NOT return None — zero means 'no data for this key'."""
 
     def __setattr__(self, name: str, value: object) -> None:
         """Raises AttributeError — Usage is immutable."""
 
+    def leaf_value(self, unit_id: str, priced_unit_ids: set[str]) -> int:
+        """Compute the Mobius-inverted leaf value for a unit given the priced set.
+        This is the exclusive portion of usage for this unit — the value that
+        calc_price multiplies by the unit's price.
+        Raises ValueError if negative (inconsistent usage: a subset exceeds
+        its superset). Error message describes the data problem, not the algorithm."""
+
     def __add__(self, other: Usage) -> Usage:
-        """Merge keys from both operands. For shared keys, sums values."""
+        """Sum all stored values, then re-infer ancestors on the result.
+        Correct because inferred ancestors are always derivable from descendants."""
 
     def __radd__(self, other: Usage) -> Usage: ...
     def __eq__(self, other: object) -> bool: ...
@@ -246,56 +262,17 @@ Currently builds `Usage()` then uses `setattr` to populate fields. Changed to co
 
 ---
 
-### `decompose.py` — modified
+### `decompose.py` — simplified
 
-The module stays focused on the decomposition algorithm. Validation functions move to `validation.py`.
-
-#### `get_usage_value` — gains `default` parameter
-
-```python
-def get_usage_value(usage: object, key: str, default: int = 0) -> int:
-    """Get a usage value by key. Supports Mapping and attribute access.
-    Returns default for missing/None values (was hardcoded to 0)."""
-```
-
-#### `_has_usage_value` — new _(implements "Incomplete usage is handled gracefully")_
-
-```python
-def _has_usage_value(usage: object, key: str) -> bool:
-    """True if usage was explicitly provided (not missing/None).
-    For Mapping: key in usage.
-    For attributes: getattr(usage, key, None) is not None.
-    Distinguishes Usage(input_tokens=0, ...) from Usage(...) without input_tokens."""
-```
-
-#### `compute_leaf_values` — gains `default_usage`, usage inference, human-readable errors
-
-```python
-def compute_leaf_values(
-    priced_unit_ids: set[str],
-    usage: object,
-    family: UnitFamily,
-    default_usage: int = 0,
-) -> dict[str, int]:
-    """Compute leaf values via Mobius inversion. Changes from current:
-
-    1. default_usage: passed to get_usage_value as default. Used for requests (default=1).
-    2. Usage inference: if leaf < 0 and own usage was NOT provided (_has_usage_value
-       returns False), leaf is set to 0 (ancestor inferred from descendants).
-       If own usage WAS provided, it's a contradiction — raise ValueError.
-    3. Human-readable errors: "cache_read_tokens (200) exceeds input_tokens (100) —
-       a more specific count cannot exceed its parent total." No error may mention
-       leaves, Mobius inversion, posets, depth, coefficients, or dimensions.
-    """
-```
-
-_(implements "Incomplete usage is handled gracefully", "Inconsistent usage is rejected", "Error messages describe the data problem")_
-
-Note: Mapping key validation _(implements "Mapping usage keys are validated")_ lives in `ModelPrice.calc_price`, not here — it's a cross-family concern that should run once before the per-family decomposition loop.
+The Mobius inversion algorithm and the `is_descendant_or_self` function stay here as utility code. But the public interface moves to `Usage.leaf_value` — `calc_price` and other callers go through `Usage`, not through `decompose.py` directly.
 
 **Unchanged:** `is_descendant_or_self` signature and behavior.
 
-**Removal:** `validate_ancestor_coverage` moves to `validation.py`. `get_priced_descendants` removed (unused).
+**Removal:** `get_usage_value`, `_has_usage_value` (no longer needed — `Usage` serves correct values directly). `validate_ancestor_coverage` moves to `validation.py`. `get_priced_descendants` removed (unused).
+
+**Moved to `Usage`:** `compute_leaf_values` logic. The Mobius inversion may remain as a private helper function in `decompose.py` that `Usage.leaf_value` calls, or it may move into `Usage` entirely. Either way, the public entry point is `Usage.leaf_value(unit_id, priced_unit_ids)`.
+
+**Error messages** _(implements "Error messages describe the data problem")_: Human-readable errors raised by `Usage.leaf_value` on negative leaf values. No error may mention leaves, Mobius inversion, posets, depth, coefficients, or dimensions.
 
 ---
 
@@ -614,18 +591,15 @@ export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFam
 
 ```
 ModelPrice.calc_price(usage)
-  -> get_snapshot().unit_registry            # get registry from global snapshot
-  -> if Mapping usage: validate keys against registry.usage_keys
-  -> for each price key: registry.units[key]  # O(1) flat index lookup
-  -> group by unit.family_id
-  -> pass 1 — decompose:
-       for each family:
-         compute_leaf_values(priced_ids, usage, family, default_usage)
-  -> total_input_tokens = sum of leaf values where unit.dimensions has direction=input
-  -> pass 2 — price:
-       for each family, each leaf:
-         calc_unit_price(price, leaf_count, total_input_tokens, family.per)
-         bucket cost by unit.dimensions['direction']
+  -> smart_usage = Usage.from_raw(usage)     # wrap if not already Usage; infers ancestors
+  -> registry = get_snapshot().unit_registry
+  -> total_input_tokens = smart_usage.input_tokens  # always correct (provided or inferred)
+  -> priced_unit_ids = set(self.__pydantic_extra__)
+  -> for each unit_id, price in __pydantic_extra__:
+       unit = registry.units[unit_id]             # O(1)
+       leaf = smart_usage.leaf_value(unit_id, priced_unit_ids)  # Mobius, raises on negative
+       cost = calc_unit_price(price, leaf, total_input_tokens, unit.family.per)
+       bucket cost by unit.dimensions.get('direction')
   -> return {input_price, output_price, total_price}
 ```
 
