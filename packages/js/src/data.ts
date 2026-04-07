@@ -1102,6 +1102,39 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nvidia.nemotron-nano-3-30b',
+        name: 'Nemotron 3 Nano 30B',
+        match: {
+          contains: 'nvidia.nemotron-nano-3-30b',
+        },
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.24,
+        },
+      },
+      {
+        id: 'nvidia.nemotron-nano-9b-v2',
+        name: 'Nemotron Nano 2 9B',
+        match: {
+          contains: 'nvidia.nemotron-nano-9b-v2',
+        },
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.23,
+        },
+      },
+      {
+        id: 'nvidia.nemotron-super-3-120b',
+        name: 'Nemotron 3 Super 120B',
+        match: {
+          contains: 'nvidia.nemotron-super-3-120b',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.65,
+        },
+      },
+      {
         id: 'openai.gpt-oss-120b-1:0',
         name: 'gpt-oss-120b',
         match: {

@@ -641,6 +641,24 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='nvidia.nemotron-nano-3-30b',
+                match=ClauseContains(contains='nvidia.nemotron-nano-3-30b'),
+                name='Nemotron 3 Nano 30B',
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.24')),
+            ),
+            ModelInfo(
+                id='nvidia.nemotron-nano-9b-v2',
+                match=ClauseContains(contains='nvidia.nemotron-nano-9b-v2'),
+                name='Nemotron Nano 2 9B',
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.23')),
+            ),
+            ModelInfo(
+                id='nvidia.nemotron-super-3-120b',
+                match=ClauseContains(contains='nvidia.nemotron-super-3-120b'),
+                name='Nemotron 3 Super 120B',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.65')),
+            ),
+            ModelInfo(
                 id='openai.gpt-oss-120b-1:0',
                 match=ClauseContains(contains='openai.gpt-oss-120b-1'),
                 name='gpt-oss-120b',
