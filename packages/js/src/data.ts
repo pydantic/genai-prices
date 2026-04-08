@@ -1102,7 +1102,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'nvidia.nemotron-nano-3-30b',
+        id: 'nvidia.nemotron-nano-3-30b:0',
         name: 'Nemotron 3 Nano 30B',
         match: {
           contains: 'nvidia.nemotron-nano-3-30b',
@@ -1113,8 +1113,8 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'nvidia.nemotron-nano-9b-v2',
-        name: 'Nemotron Nano 2 9B',
+        id: 'nvidia.nemotron-nano-9b-v2:0',
+        name: 'Nemotron 2 Nano 9B',
         match: {
           contains: 'nvidia.nemotron-nano-9b-v2',
         },
@@ -1124,7 +1124,7 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'nvidia.nemotron-super-3-120b',
+        id: 'nvidia.nemotron-super-3-120b:0',
         name: 'Nemotron 3 Super 120B',
         match: {
           contains: 'nvidia.nemotron-super-3-120b',
