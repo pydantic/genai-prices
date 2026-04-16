@@ -170,6 +170,16 @@ models:
           - start: 200000
             price: 37.50
 
+  - id: global.anthropic.claude-opus-4-7-v1:0
+    prices_checked: 2026-04-16
+    match:
+      contains: global.anthropic.claude-opus-4-7
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
   - id: global.anthropic.claude-sonnet-4-20250514-v1:0
     match:
       contains: global.anthropic.claude-sonnet-4-20250514
@@ -578,6 +588,24 @@ models:
         tiers:
           - start: 200000
             price: 41.25
+
+  - id: regional.anthropic.claude-opus-4-7-v1:0
+    prices_checked: 2026-04-16
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-7
+        - starts_with: claude-opus-4-7
+        - contains: us.anthropic.claude-opus-4-7
+        - contains: au.anthropic.claude-opus-4-7
+        - contains: apac.anthropic.claude-opus-4-7
+        - contains: eu.anthropic.claude-opus-4-7
+        - contains: us-gov.anthropic.claude-opus-4-7
+        - contains: jp.anthropic.claude-opus-4-7
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
 
   - id: regional.anthropic.claude-sonnet-4-20250514-v1:0
     match:

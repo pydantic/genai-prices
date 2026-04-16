@@ -220,6 +220,24 @@ models:
           - start: 200000
             price: 37.50
 
+  - id: claude-opus-4-7
+    match:
+      or:
+        - contains: claude-4-7-opus
+        - contains: claude-opus-4-7
+        - contains: claude-4.7-opus
+        - contains: claude-opus-4.7
+    context_window: 1000000
+    prices_checked: 2026-04-16
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
   - id: gemini-1.0-pro-vision-001
     name: gemini 1.0 pro vision
     description: >-

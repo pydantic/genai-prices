@@ -276,6 +276,26 @@ models:
           cache_write_mtok: 6.25
           output_mtok: 25
 
+  - id: claude-opus-4-7
+    name: Claude Opus 4.7
+    description: Our most capable model for complex reasoning and agentic coding
+    match:
+      or:
+        - starts_with: claude-opus-4-7
+        - starts_with: claude-opus-4.7
+        - starts_with: claude-4-7-opus
+        - starts_with: claude-4.7-opus
+    context_window: 1000000
+    prices_checked: 2026-04-16
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4
     description: Optimal balance of intelligence, cost, and speed
