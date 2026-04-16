@@ -1,0 +1,25 @@
+specs/data-driven-unit-registry/colleague-feedback-deck.html
+  66b32ddc3d68b727 1-4458
+specs/data-driven-unit-registry/colleague-feedback-deck.md
+  66b32ddc3d68b727 1-296
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "9d632154a205c91cdee408ff84963392c6483192",
+  "prompts": {
+    "66b32ddc3d68b727": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d9674-0602-7370-9abf-9b80bb9af0e3",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 9606,
+      "total_deletions": 4693,
+      "accepted_lines": 4913,
+      "overriden_lines": 0
+    }
+  }
+}
