@@ -75,6 +75,7 @@ test_cases: list[tuple[str, str, str]] = [
         snapshot(('aws', 'regional.anthropic.claude-3-7-sonnet-20250219-v1:0')),
     ),
     ('anthropic', 'claude-opus-4-1-20250805', snapshot(('anthropic', 'claude-opus-4-1'))),
+    ('anthropic', 'claude-opus-4-7', snapshot(('anthropic', 'claude-opus-4-7'))),
     ('google', 'gemini-2.5-flash-lite', snapshot(('google', 'gemini-2.5-flash-lite'))),
     ('anthropic', 'claude-3-5-haiku-latest', snapshot(('anthropic', 'claude-3-5-haiku-latest'))),
     ('anthropic', 'claude-4-sonnet-20250514', snapshot(('anthropic', 'claude-sonnet-4-0'))),

@@ -399,6 +399,36 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'claude-opus-4-7',
+        name: 'Claude Opus 4.7',
+        description: 'Our most capable generally available model for complex reasoning and agentic coding',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-4-7',
+            },
+            {
+              starts_with: 'claude-opus-4.7',
+            },
+            {
+              starts_with: 'claude-4-7-opus',
+            },
+            {
+              starts_with: 'claude-4.7-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Anthropic's pricing docs also list a separate $10 / MTok rate for 1-hour cache writes. This schema only carries one cache-write field, so this entry records the standard $6.25 / MTok cache-write rate.",
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'claude-sonnet-4-0',
         name: 'Claude Sonnet 4',
         description: 'Optimal balance of intelligence, cost, and speed',

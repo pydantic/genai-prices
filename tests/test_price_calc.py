@@ -56,6 +56,18 @@ def test_sync_success_with_model_regex():
     assert price.provider.id == snapshot('openai')
 
 
+def test_claude_opus_4_7_price():
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100), model_ref='claude-opus-4-7', provider_id='anthropic'
+    )
+
+    assert price.input_price == snapshot(Decimal('0.005'))
+    assert price.output_price == snapshot(Decimal('0.0025'))
+    assert price.total_price == snapshot(Decimal('0.0075'))
+    assert price.model.name == snapshot('Claude Opus 4.7')
+    assert price.provider.id == snapshot('anthropic')
+
+
 def test_tiered_prices():
     price = calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
     # Google uses threshold-based pricing: if context > 128K, ALL tokens charged at tier price
@@ -159,6 +171,7 @@ EXAMPLES: list[tuple[str, str]] = [
     ('anthropic', 'claude-opus-4-20250514'),
     ('anthropic', 'claude-opus-4-20250514'),
     ('anthropic', 'claude-opus-4-0'),
+    ('anthropic', 'claude-opus-4-7'),
     ('cohere', 'command-r7b-12-2024'),
     ('deepseek', 'deepseek-r1-distill-llama-70b'),
     ('google', 'gemini-1.5-flash-002'),
