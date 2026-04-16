@@ -517,6 +517,8 @@ export function getAllUnitIds(): Set<string>
 
 `UnitFamily` interface is unchanged: `id`, `per`, `description`, `dimensions`, `units`.
 
+> **Note:** JS `decompose.ts` retains `hasUsageValue` and inference logic because JS has no smart `Usage` class — it uses plain `Record<string, unknown>`. The inference that Python's `Usage.__init__` handles at construction time is instead handled inline in `computeLeafValues` on the JS side. The `defaultUsage` parameter also stays in JS's `computeLeafValues` for the requests family.
+
 ### `engine.ts` — modified _(implements "calc_price is a hot path")_
 
 **Removals:** `import { TOKENS_FAMILY } from './units'`, `calcMtokPrice` function, hardcoded `requests_kcount` special case.
@@ -677,3 +679,28 @@ snapshot = DataSnapshot(providers=get_snapshot().providers, from_auto_update=Fal
 # Activate — validates prices against the expanded registry
 set_custom_snapshot(snapshot)
 ```
+
+---
+
+## Open Items
+
+These are unresolved code-level questions. See also spec.md's Open Items for design-level gaps.
+
+**1. `requests` default-to-1: where in the code?**
+The `calc_price` docstring above says "For the requests family, default_usage=1", but `compute_leaf_values` no longer has a `default_usage` parameter (removed per the smart Usage design). `decompose.py`'s removal list says "handled by `Usage` construction or by `calc_price` before decomposition" — undecided. Two concrete options:
+
+- In `Usage.from_raw`: if the wrapped object has no `requests` key, inject `requests=1`. Pro: all downstream code (including `usage.requests`) sees 1. Con: `Usage.from_raw` needs to know which keys get defaults — registry coupling.
+- In `calc_price`: before calling `compute_leaf_values` for the requests family, check `smart_usage.requests` and if 0 (meaning no data), set it to 1 on a copy or pass it differently. Con: `Usage` is immutable, so this is awkward without a mechanism to override.
+
+This needs resolution before implementing Tasks 6–7. **Note:** JS keeps `defaultUsage` in `computeLeafValues` (see JS section above), which is a simpler approach — consider whether Python should do the same instead of removing the parameter.
+
+**2. Plan tasks 6 and 8 need rewriting.**
+Task 6 adds `_has_usage_value`, `default_usage`, and inference in `compute_leaf_values`. Task 8 describes Usage with `__getattr__` returning `None`. Both are stale. The current code-spec design:
+
+- **Usage.**init\*\*\*\*: infers ancestors via inclusion-exclusion, stores provided + inferred in one flat dict
+- **Usage.**getattr\*\*\*\*: returns `int` (0 for missing), never `None`
+- **Usage.from_raw**: wraps arbitrary objects, validates Mapping keys
+- **compute_leaf_values**: takes `Usage` (not `object`), no `_has_usage_value`, no `default_usage`, negative leaves always errors
+
+**3. Plan test code uses `get_family()`/`get_unit()` wrappers.**
+The code spec says: `_get_registry()` is the only convenience function; callers do `_get_registry().units[unit_id]` directly. The plan's test code blocks use `get_family('tokens')` and `get_unit(unit_id)` in ~40 places. These are mechanical fixes but they need to be done before the plan is executable.
