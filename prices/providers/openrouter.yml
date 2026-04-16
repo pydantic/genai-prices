@@ -296,6 +296,22 @@ models:
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
 
+  - id: anthropic/claude-opus-4.7
+    match:
+      or:
+        - equals: anthropic/claude-opus-4.7
+        - equals: anthropic/claude-opus-4.7:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      cache_write_mtok: 6.25
+      output_mtok: 25
+    prices_checked: 2026-04-16
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+
   - id: anthropic/claude-sonnet-4.5
     match:
       or:
