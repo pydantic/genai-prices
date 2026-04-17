@@ -409,6 +409,10 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='inputTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cacheReadInputTokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cacheWriteInputTokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cacheReadInputTokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='cacheWriteInputTokens', dest='cache_write_tokens', required=False),
                     UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
