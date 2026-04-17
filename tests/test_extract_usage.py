@@ -264,6 +264,7 @@ def test_bedrock_caching():
     }
     model, usage = provider.extract_usage(response_data)
     assert model == snapshot('amazon.nova-lite-v1:0')
+    assert model is not None
     assert usage == snapshot(Usage(input_tokens=1517, cache_read_tokens=1504, cache_write_tokens=0, output_tokens=5))
     assert calc_price(usage, model, provider_id='aws').total_price == snapshot(Decimal('0.00002454'))
 
