@@ -251,6 +251,32 @@ def test_bedrock():
     assert extracted_usage.model == snapshot(None)
 
 
+def test_bedrock_caching():
+    provider = next(provider for provider in providers if provider.id == 'aws')
+    response_data = {
+        'model': 'amazon.nova-lite-v1:0',
+        'usage': {
+            'inputTokens': 13,
+            'outputTokens': 5,
+            'cacheReadInputTokens': 1504,
+            'cacheWriteInputTokens': 0,
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == snapshot('amazon.nova-lite-v1:0')
+    assert model is not None
+    assert usage == snapshot(Usage(input_tokens=1517, cache_read_tokens=1504, cache_write_tokens=0, output_tokens=5))
+    assert calc_price(usage, model, provider_id='aws').total_price == snapshot(Decimal('0.00002454'))
+
+    extracted_usage = extract_usage(response_data, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=1517, cache_read_tokens=1504, cache_write_tokens=0, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('amazon.nova-lite-v1:0')
+
+
 anthropic_response_data = {
     'model': 'claude-sonnet-4-20250514',
     'usage': {
