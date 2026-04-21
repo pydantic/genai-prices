@@ -49,120 +49,68 @@ section.part-feedback {
 }
 </style>
 
-<!-- _class: lead title-slide -->
-
-# Data-driven unit registry
-
-## High-level sense check
-
-**Audience**: Fellow engineers
-**Goal**: Feedback on the direction
-**Date**: April 2026
-
----
-
-# Questions this deck should answer
-
-1. **What problem am I actually trying to solve**
-2. **What changes if units become data-driven**
-3. **Why has this become a much larger change than expected**
-4. **What stays compatible for users of the library**
-5. **Should we keep pushing on this approach or solve it differently**
-
----
-
-<!-- _class: lead title-slide -->
-
-# Agenda
-
-### Part 1: Context
-
-What is hard today and what is new here
-
-### Part 2: Proposal
-
-What the unit registry is and how it changes the source of truth
-
-### Part 3: Feedback
-
-Why this is hard to split up and what I want reactions to
-
----
-
-<!-- _header: "" -->
-<!-- _class: lead part-context -->
-
-# Part 1: Context
-
-**What problem exists already, and what this proposal adds**
-
----
-
-<!-- header: "**Context** > Proposal > Feedback" -->
-
-# The pricing problem already has real complexity
-
-- We already need to price overlapping buckets correctly
-- We already need to handle incomplete usage data
-- We already need to preserve familiar APIs like `calc_price(usage)`
-- None of that depends on whether units are configurable
-
-> The overlap and inference problems are inherent to accurate pricing, not created by the registry idea
-
----
-
-# What is new in this proposal
-
-- A **unit registry** becomes a higher-level source of truth
-- That source of truth feeds prices, usage, extractors, validation, and schemas
-- New units should be added by editing data, not by editing Python and TypeScript types
-- The goal is to remove repeated hardcoded assumptions from the system
-
----
-
 # What the current hardcoded shape looks like
 
 ```python
-AbstractUsage = object
+class AbstractUsage(Protocol):
+    @property
+    def input_tokens(self) -> int | None: ...
+    @property
+    def cache_write_tokens(self) -> int | None: ...
+    @property
+    def cache_read_tokens(self) -> int | None: ...
+    @property
+    def output_tokens(self) -> int | None: ...
+    @property
+    def input_audio_tokens(self) -> int | None: ...
+    @property
+    def cache_audio_read_tokens(self) -> int | None: ...
+    @property
+    def output_audio_tokens(self) -> int | None: ...
 
+# Implementation of AbstractUsage
 @dataclass
 class Usage:
     input_tokens: int | None = None
     cache_write_tokens: int | None = None
     cache_read_tokens: int | None = None
-    output_tokens: int | None = None
-    input_audio_tokens: int | None = None
-    cache_audio_read_tokens: int | None = None
-    output_audio_tokens: int | None = None
+    ...
 
+# Used by extractors
 UsageField = Literal[
-    "input_tokens",
-    "cache_write_tokens",
-    "cache_read_tokens",
-    "output_tokens",
-    "input_audio_tokens",
-    "cache_audio_read_tokens",
-    "output_audio_tokens",
+    'input_tokens',
+    'cache_write_tokens',
+    'cache_read_tokens',
+    'output_tokens',
+    'input_audio_tokens',
+    'cache_audio_read_tokens',
+    'output_audio_tokens',
 ]
+
+@dataclass
+class ModelPrice:
+    input_mtok: Decimal | TieredPrices | None = None
+    cache_write_mtok: Decimal | TieredPrices | None = None
+    cache_read_mtok: Decimal | TieredPrices | None = None
+    output_mtok: Decimal | TieredPrices | None = None
+    input_audio_mtok: Decimal | TieredPrices | None = None
+    cache_audio_read_mtok: Decimal | TieredPrices | None = None
+    output_audio_mtok: Decimal | TieredPrices | None = None
+    requests_kcount: Decimal | None = None
 ```
 
-- Today the set of valid usage fields is still effectively baked into code
-- Extractors and pricing logic inherit that same fixed shape
+---
+
+# Problem
+
+- Many kinds of tokens missing, e.g. image tokens
+- Other kinds of usage missing, e.g. tool calls
+- `AbstractUsage` is a `Protocol` so we can't simply add fields to it without breaking type checking
+- Field names appear in several places, in both Python and JS and any future languages
 
 ---
 
-<!-- _header: "" -->
-<!-- _class: lead part-proposal -->
-
-# Part 2: Proposal
-
-**Make the units explicit in data, then derive the rest from that**
-
----
-
-<!-- header: "Context > **Proposal** > Feedback" -->
-
-# What the unit registry looks like
+# Unit registry proposal: a new source of truth
 
 ```yaml
 families:
@@ -173,22 +121,38 @@ families:
       modality: [text, audio, image, video]
       cache: [read, write]
     units:
-      input_mtok:
+      input_mtok: # catch-all input token unit
         usage_key: input_tokens
         dimensions: { direction: input }
-      cache_read_mtok:
+      cache_read_mtok: # (no modality specified)
         usage_key: cache_read_tokens
         dimensions: { direction: input, cache: read }
-      input_audio_mtok:
+      input_audio_mtok: # (no caching specified)
         usage_key: input_audio_tokens
         dimensions: { direction: input, modality: audio }
-      cache_audio_read_mtok:
+      cache_audio_read_mtok: # combination of both
         usage_key: cache_audio_read_tokens
         dimensions: { direction: input, modality: audio, cache: read }
+      # And so on for:
+      # - Cache write tokens
+      # - Output tokens
+      # - Other modalities: image, video, text
+
+  requests:
+    per: 1_000
+    dimensions: {}
+    units:
+      requests_kcount: {}
 ```
 
-- This is the core abstraction
-- It describes the units, their names, and how they relate
+---
+
+# Unit families other than tokens:
+
+- Builtin tool calls (e.g., web search, file search)
+- Images
+- Duration-based billing (e.g., audio/video seconds)
+- Character counts (alternative to tokens)
 
 ---
 
@@ -201,51 +165,7 @@ families:
 | Extractor `dest` is tied to a fixed literal type | Extractor `dest` is validated against the registry |
 | Schemas mirror hardcoded fields                  | Schemas are derived from the registry              |
 
-> The point is not just configurability - it is replacing duplicated hardcoded knowledge with one shared model
-
 ---
-
-# Compatibility goal
-
-```python
-price = calc_price(usage, model_ref="gpt-5")
-model_price.input_mtok
-usage.input_tokens
-```
-
-- The public API shape should stay familiar
-- Internally the implementation becomes more dynamic
-- Externally existing calling patterns should continue to work
-- This is also why the design is awkward in places: new abstraction, old API
-
----
-
-# One practical example of the cross-cutting effect
-
-```python
-@dataclass
-class UsageExtractorMapping:
-    path: ExtractPath
-    dest: UsageField
-    required: bool = True
-```
-
-- Today `dest` is constrained by a hardcoded `UsageField` literal
-- With a registry, `dest` should become any registry-backed usage key
-- That change ripples into provider YAML, schema generation, runtime validation, and the `Usage` object itself
-
----
-
-<!-- _header: "" -->
-<!-- _class: lead part-feedback -->
-
-# Part 3: Feedback
-
-**Why this has been hard to split into small steps, and what I want input on**
-
----
-
-<!-- header: "Context > Proposal > **Feedback**" -->
 
 # Why this has taken longer than expected
 
@@ -277,20 +197,3 @@ class UsageExtractorMapping:
 - **Is the problem important enough to justify this level of system change**
 - **Does this feel like a solid long-term direction or like over-generalization**
 - **Is there a narrower approach that gets most of the value with less cross-cutting change**
-
----
-
-# My current framing
-
-- The hard part is **not** that overlap and incomplete usage exist
-- Those are already real problems in the current system
-- The hard part is introducing a new source of truth above the current code structures
-- That is why the change is broad, slow to split up, and hard to reason about incrementally
-
----
-
-# Discussion prompt
-
-1. **Would you keep pushing on this architecture**
-2. **Would you solve the immediate pricing problems in a narrower way first**
-3. **What is the simplest shape of this idea that would still be worth doing**
