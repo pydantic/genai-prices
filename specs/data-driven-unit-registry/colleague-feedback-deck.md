@@ -101,12 +101,47 @@ class ModelPrice:
 
 ---
 
+# Price calculation has to handle overlapping tokens
+
+```python
+uncached_audio_input_tokens = usage.input_audio_tokens or 0
+if cache_audio_read_tokens := (usage.cache_audio_read_tokens or 0):
+    uncached_audio_input_tokens -= cache_audio_read_tokens
+
+if uncached_audio_input_tokens < 0:
+    raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
+input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
+
+uncached_text_input_tokens = usage.input_tokens or 0
+uncached_text_input_tokens -= uncached_audio_input_tokens
+if cache_write_tokens := usage.cache_write_tokens:
+    uncached_text_input_tokens -= cache_write_tokens
+if cache_read_tokens := usage.cache_read_tokens:
+    uncached_text_input_tokens -= cache_read_tokens
+
+if uncached_text_input_tokens < 0:
+    raise ValueError('Uncached text input tokens cannot be negative')
+input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
+input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens, total_input_tokens)
+
+cached_text_input_tokens = usage.cache_read_tokens or 0
+cached_text_input_tokens -= cache_audio_read_tokens
+
+if cached_text_input_tokens < 0:
+    raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
+input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens, total_input_tokens)
+input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens, total_input_tokens)
+```
+
+---
+
 # Problem
 
 - Many kinds of tokens missing, e.g. image tokens
 - Other kinds of usage missing, e.g. tool calls
 - `AbstractUsage` is a `Protocol` so we can't simply add fields to it without breaking type checking
 - Field names appear in several places, in both Python and JS and any future languages
+- Complex pricing logic to handle overlapping token types is hardcoded
 - Each time a new field is added it would break auto-updates via `data.json`
 
 ---
