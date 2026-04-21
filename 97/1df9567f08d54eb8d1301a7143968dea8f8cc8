@@ -1,0 +1,14 @@
+specs/data-driven-unit-registry/colleague-feedback-deck.md
+  h_bc896295f46a8b 104-137,144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "971df9567f08d54eb8d1301a7143968dea8f8cc8",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    }
+  }
+}
