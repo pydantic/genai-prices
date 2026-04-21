@@ -107,6 +107,7 @@ class ModelPrice:
 - Other kinds of usage missing, e.g. tool calls
 - `AbstractUsage` is a `Protocol` so we can't simply add fields to it without breaking type checking
 - Field names appear in several places, in both Python and JS and any future languages
+- Each time a new field is added it would break auto-updates via `data.json`
 
 ---
 
