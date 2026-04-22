@@ -18,65 +18,21 @@ blockquote {
 pre {
   font-size: 15px;
 }
-header {
-  font-size: 14px;
-  color: #999;
-}
-header strong {
-  color: #2563eb;
-}
-section.title-slide {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-}
-section.part-context,
-section.part-proposal,
-section.part-feedback,
-section.title-slide {
-  --h1-color: #fff;
-  --heading-strong-color: #fff;
-  --fgColor-default: rgba(255, 255, 255, 0.95);
-  --fgColor-muted: rgba(255, 255, 255, 0.7);
-  color: white;
-}
-section.part-context {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 100%);
-}
-section.part-proposal {
-  background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
-}
-section.part-feedback {
-  background: linear-gradient(135deg, #7a4a1a 0%, #a66b2e 100%);
-}
 </style>
 
 # What the current hardcoded shape looks like
 
 ```python
-class AbstractUsage(Protocol):
-    @property
-    def input_tokens(self) -> int | None: ...
-    @property
-    def cache_write_tokens(self) -> int | None: ...
-    @property
-    def cache_read_tokens(self) -> int | None: ...
-    @property
-    def output_tokens(self) -> int | None: ...
-    @property
-    def input_audio_tokens(self) -> int | None: ...
-    @property
-    def cache_audio_read_tokens(self) -> int | None: ...
-    @property
-    def output_audio_tokens(self) -> int | None: ...
-
-# Implementation of AbstractUsage
 @dataclass
 class Usage:
     input_tokens: int | None = None
     cache_write_tokens: int | None = None
     cache_read_tokens: int | None = None
-    ...
+    output_tokens: int | None = None
+    input_audio_tokens: int | None = None
+    cache_audio_read_tokens: int | None = None
+    output_audio_tokens: int | None = None
 
-# Used by extractors
 UsageField = Literal[
     'input_tokens',
     'cache_write_tokens',
@@ -108,10 +64,6 @@ uncached_audio_input_tokens = usage.input_audio_tokens or 0
 if cache_audio_read_tokens := (usage.cache_audio_read_tokens or 0):
     uncached_audio_input_tokens -= cache_audio_read_tokens
 
-if uncached_audio_input_tokens < 0:
-    raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
-input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
-
 uncached_text_input_tokens = usage.input_tokens or 0
 uncached_text_input_tokens -= uncached_audio_input_tokens
 if cache_write_tokens := usage.cache_write_tokens:
@@ -119,34 +71,27 @@ if cache_write_tokens := usage.cache_write_tokens:
 if cache_read_tokens := usage.cache_read_tokens:
     uncached_text_input_tokens -= cache_read_tokens
 
-if uncached_text_input_tokens < 0:
-    raise ValueError('Uncached text input tokens cannot be negative')
-input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
-input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens, total_input_tokens)
-
 cached_text_input_tokens = usage.cache_read_tokens or 0
 cached_text_input_tokens -= cache_audio_read_tokens
-
-if cached_text_input_tokens < 0:
-    raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens, total_input_tokens)
-input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens, total_input_tokens)
 ```
+
+- This works for the current small set of fields
+- It gets ugly if we add image, video, text-specific, or more cache variants
 
 ---
 
 # Problem
 
-- Many kinds of tokens missing, e.g. image tokens
-- Other kinds of usage missing, e.g. tool calls
-- `AbstractUsage` is a `Protocol` so we can't simply add fields to it without breaking type checking
-- Field names appear in several places, in both Python and JS and any future languages
-- Complex pricing logic to handle overlapping token types is hardcoded
-- Each time a new field is added it would break auto-updates via `data.json`
+- We need more token shapes than the current code has room for
+- We also want other kinds of units such as web search or tool calls
+- The full runtime-registry proposal tried to solve all of this with one abstraction
+- That starts to make runtime behavior look like a schema engine
+
+> The token overlap problem is real, but it may not justify making the whole runtime registry-driven
 
 ---
 
-# Unit registry proposal: a new source of truth
+# The old proposal
 
 ```yaml
 families:
@@ -157,79 +102,177 @@ families:
       modality: [text, audio, image, video]
       cache: [read, write]
     units:
-      input_mtok: # catch-all input token unit
+      input_mtok:
         usage_key: input_tokens
         dimensions: { direction: input }
-      cache_read_mtok: # (no modality specified)
+      cache_read_mtok:
         usage_key: cache_read_tokens
         dimensions: { direction: input, cache: read }
-      input_audio_mtok: # (no caching specified)
+      input_audio_mtok:
         usage_key: input_audio_tokens
         dimensions: { direction: input, modality: audio }
-      cache_audio_read_mtok: # combination of both
+      cache_audio_read_mtok:
         usage_key: cache_audio_read_tokens
         dimensions: { direction: input, modality: audio, cache: read }
-      # And so on for:
-      # - Cache write tokens
-      # - Output tokens
-      # - Other modalities: image, video, text
+```
 
-  requests:
-    per: 1_000
-    dimensions: {}
-    units:
-      requests_kcount: {}
+- Runtime `Usage`, `ModelPrice`, extractors, and validation all consult the registry
+- Unit definitions have to travel with runtime data and custom snapshots
+
+---
+
+# What the old proposal buys us
+
+- One declared contract for prices, usage, extractors, and validation
+- Strong validation for repo-defined and runtime-defined units
+- Unit metadata is self-describing
+- Custom units are first-class at runtime
+- The token decomposition algorithm can be generic
+
+This is a coherent design
+
+The question is whether the runtime complexity is worth it
+
+---
+
+# Why I am backing away from it
+
+- The runtime starts depending on a mutable unit schema
+- `Usage` and `ModelPrice` stop feeling like normal objects
+- Debugging goes through another layer of metadata lookups
+- Auto-updated data and custom snapshots now change more than just prices
+- The abstraction is solving too many problems at once
+
+> It feels like the runtime is learning its own schema from data, and that feels iffy
+
+---
+
+# Narrower proposal
+
+- Tokens stay special and built in
+- Token overlap logic can still be dynamic internally
+- Other units are scalar and simple
+- Runtime behavior for scalar units is just exact-name matching and multiplication
+- Repo-defined unit metadata can still exist, but only at build time
+
+```python
+input_total, output_total = calc_token_price(usage, model_price, TOKEN_UNITS)
+
+for key, price in scalar_prices.items():
+    total += price * scalar_usage.get(key, 0)
 ```
 
 ---
 
-# Unit families other than tokens:
+# What this actually simplifies
 
-- Builtin tool calls (e.g., web search, file search)
-- Images
-- Duration-based billing (e.g., audio/video seconds)
-- Character counts (alternative to tokens)
+| Area                        | Full runtime-registry proposal | Narrower proposal                          |
+| --------------------------- | ------------------------------ | ------------------------------------------ |
+| Token overlap               | Dynamic                        | Dynamic                                    |
+| Runtime schema              | Mutable and snapshot-driven    | Fixed token logic plus simple scalar names |
+| `Usage` / `ModelPrice`      | Registry-aware                 | Mostly normal objects                      |
+| Auto-updated data           | Prices and unit definitions    | Just compiled price data                   |
+| Repo validation             | Strong                         | Still strong for repo-defined units        |
+| Runtime custom scalar units | First-class and structured     | First-class but intentionally weak         |
 
----
-
-# The source of truth moves up a level
-
-| Today                                            | Direction                                          |
-| ------------------------------------------------ | -------------------------------------------------- |
-| `Usage` fields define what usage exists          | Registry defines units and usage keys              |
-| `ModelPrice` fields define what prices exist     | Registry defines unit IDs                          |
-| Extractor `dest` is tied to a fixed literal type | Extractor `dest` is validated against the registry |
-| Schemas mirror hardcoded fields                  | Schemas are derived from the registry              |
+The simplification is real, but it is mainly a runtime architecture simplification
 
 ---
 
-# Why this has taken longer than expected
+# What I am still unsure about
 
-- This is not just a refactor inside pricing math
-- It introduces a new meta-schema that feeds multiple layers of the system
-- The abstraction only really pays off if several pieces move together
-- That makes it harder to carve into very small, isolated changes
+- How many token fields do we really want to hardcode publicly
+- Whether repo-defined scalar units should look first-class at the API surface
+- Whether runtime custom scalar units should use top-level keys or some explicit extra map
+- How much validation we want for scalar units at runtime
+
+The hard part that does **not** go away:
+
+- token overlap still needs a real algorithm
 
 ---
 
-# The change cuts across the whole pipeline
+# Build-time registry might still be useful
 
-- provider YAML prices
-- extractor destinations
-- `Usage`
-- `ModelPrice`
-- validation rules
-- generated schemas
-- runtime-updated `data.json`
-- compatibility shims for the existing API
+- Repo-defined scalar units can still have:
+  - a canonical name
+  - a description
+  - schema validation for provider YAML files
+  - optional normalization metadata such as `per`
+- The build step can compile authored prices into a simple runtime representation
 
-> This feels less like adding a feature and more like changing where the system's truth lives
+```yaml
+scalar_units:
+  web_search:
+    description: Web search request
+    per: 1000
+```
+
+The runtime library does not need this metadata to do `web_search * price`
+
+---
+
+# Open question 1 - normalization
+
+Suppose provider YAML authors write:
+
+```yaml
+prices:
+  web_search: 10
+```
+
+and that means "$10 per 1000"
+
+But runtime custom prices are expected to be per 1:
+
+```python
+ModelPrice(web_search=0.01)
+```
+
+This is convenient for repo authoring, but it is also an easy place to make a 1000x mistake
+
+---
+
+# Open question 2 - should the authored key encode the normalization
+
+Option A:
+
+- Keep one key, e.g. `web_search`
+- Put `per: 1000` only in metadata
+
+Option B:
+
+- Use an authored key like `web_search_kcount`
+- Compile it to a runtime key like `web_search`
+
+Tradeoff:
+
+- Option A hides normalization
+- Option B makes normalization visible, but introduces two names for one concept
+
+---
+
+# Open question 3 - what should happen to unpriced scalar usage
+
+If usage includes `web_search=3` but the current model has no `web_search` price:
+
+- Ignore it
+- Warn
+- Error
+
+Related question:
+
+- What is the set of valid scalar names at runtime
+- Repo-defined names only
+- All price keys currently present in the active snapshot
+- Something else
 
 ---
 
 # What I want feedback on
 
-- **Is the unit-registry abstraction the right one**
-- **Is the problem important enough to justify this level of system change**
-- **Does this feel like a solid long-term direction or like over-generalization**
-- **Is there a narrower approach that gets most of the value with less cross-cutting change**
+- Is "built-in token subsystem plus simple scalar units" the right direction
+- Is the old runtime-registry proposal worth its extra runtime complexity
+- Is normalization now the main remaining design risk
+- Would you keep repo-defined scalar units first-class at the public API surface
+- Is there a better narrow design that keeps the token algorithm generic without making the runtime schema dynamic
