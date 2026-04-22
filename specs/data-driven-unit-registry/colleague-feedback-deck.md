@@ -104,7 +104,8 @@ cached_text_input_tokens -= cache_audio_read_tokens
 - `AbstractUsage` is a `Protocol`, so adding fields is not a small local change
 - Field names appear in several places, in both Python and JS
 - Complex pricing logic for overlapping token types is hardcoded
-- Adding new fields also affects runtime-updated `data.json`
+- New hardcoded fields have to be added both to package code and to generated data outputs
+- That creates an auto-update problem: runtime `data.json` can deliver prices for a new field before the installed package knows that field exists
 
 > So there is a real extensibility problem, not just an aesthetic dislike of hardcoded fields
 
