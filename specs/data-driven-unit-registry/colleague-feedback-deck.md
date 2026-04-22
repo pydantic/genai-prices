@@ -23,6 +23,23 @@ pre {
 # What the current hardcoded shape looks like
 
 ```python
+class AbstractUsage(Protocol):
+    @property
+    def input_tokens(self) -> int | None: ...
+    @property
+    def cache_write_tokens(self) -> int | None: ...
+    @property
+    def cache_read_tokens(self) -> int | None: ...
+    @property
+    def output_tokens(self) -> int | None: ...
+    @property
+    def input_audio_tokens(self) -> int | None: ...
+    @property
+    def cache_audio_read_tokens(self) -> int | None: ...
+    @property
+    def output_audio_tokens(self) -> int | None: ...
+
+# Implementation of AbstractUsage
 @dataclass
 class Usage:
     input_tokens: int | None = None
@@ -82,16 +99,25 @@ cached_text_input_tokens -= cache_audio_read_tokens
 
 # Problem
 
-- We need more token shapes than the current code has room for
-- We also want other kinds of units such as web search or tool calls
-- The full runtime-registry proposal tried to solve all of this with one abstraction
-- That starts to make runtime behavior look like a schema engine
+- Many kinds of tokens are missing, e.g. image and video tokens
+- Other kinds of usage are missing, e.g. tool calls or web search
+- `AbstractUsage` is a `Protocol`, so adding fields is not a small local change
+- Field names appear in several places, in both Python and JS
+- Complex pricing logic for overlapping token types is hardcoded
+- Adding new fields also affects runtime-updated `data.json`
 
-> The token overlap problem is real, but it may not justify making the whole runtime registry-driven
+> So there is a real extensibility problem, not just an aesthetic dislike of hardcoded fields
 
 ---
 
-# The old proposal
+# One broad way to solve this is a unit registry
+
+A unit registry means:
+
+- there is a data file that declares the allowed units
+- each unit says which usage key it reads from
+- token units also describe how they overlap
+- prices, usage extraction, and validation all derive from that registry
 
 ```yaml
 families:
@@ -116,12 +142,12 @@ families:
         dimensions: { direction: input, modality: audio, cache: read }
 ```
 
-- Runtime `Usage`, `ModelPrice`, extractors, and validation all consult the registry
-- Unit definitions have to travel with runtime data and custom snapshots
+- In the full version of this idea, runtime `Usage`, `ModelPrice`, extractors, and validation all consult the registry
+- Unit definitions also have to travel with runtime data and custom snapshots
 
 ---
 
-# What the old proposal buys us
+# What that broader design buys us
 
 - One declared contract for prices, usage, extractors, and validation
 - Strong validation for repo-defined and runtime-defined units
@@ -135,7 +161,7 @@ The question is whether the runtime complexity is worth it
 
 ---
 
-# Why I am backing away from it
+# Why I am backing away from making the runtime registry-driven
 
 - The runtime starts depending on a mutable unit schema
 - `Usage` and `ModelPrice` stop feeling like normal objects
@@ -166,14 +192,14 @@ for key, price in scalar_prices.items():
 
 # What this actually simplifies
 
-| Area                        | Full runtime-registry proposal | Narrower proposal                          |
-| --------------------------- | ------------------------------ | ------------------------------------------ |
-| Token overlap               | Dynamic                        | Dynamic                                    |
-| Runtime schema              | Mutable and snapshot-driven    | Fixed token logic plus simple scalar names |
-| `Usage` / `ModelPrice`      | Registry-aware                 | Mostly normal objects                      |
-| Auto-updated data           | Prices and unit definitions    | Just compiled price data                   |
-| Repo validation             | Strong                         | Still strong for repo-defined units        |
-| Runtime custom scalar units | First-class and structured     | First-class but intentionally weak         |
+| Area                        | Registry-driven runtime     | Narrower proposal                          |
+| --------------------------- | --------------------------- | ------------------------------------------ |
+| Token overlap               | Dynamic                     | Dynamic                                    |
+| Runtime schema              | Mutable and snapshot-driven | Fixed token logic plus simple scalar names |
+| `Usage` / `ModelPrice`      | Registry-aware              | Mostly normal objects                      |
+| Auto-updated data           | Prices and unit definitions | Just compiled price data                   |
+| Repo validation             | Strong                      | Still strong for repo-defined units        |
+| Runtime custom scalar units | First-class and structured  | First-class but intentionally weak         |
 
 The simplification is real, but it is mainly a runtime architecture simplification
 
