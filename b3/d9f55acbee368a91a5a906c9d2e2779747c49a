@@ -1,0 +1,36 @@
+AGENTS.md
+  19ed82a163d98f53 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "b3d9f55acbee368a91a5a906c9d2e2779747c49a",
+  "prompts": {
+    "19ed82a163d98f53": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019dbb5c-5ca9-7cf3-9647-0ae7c10c14ed",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 99,
+      "total_deletions": 2,
+      "accepted_lines": 99,
+      "overriden_lines": 0
+    },
+    "d586b518ff8a2dec": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019dbb55-4461-79c3-90b3-5ef0ebe6f044",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  }
+}
