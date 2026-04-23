@@ -15,6 +15,7 @@ The final diff adds these hand-written files:
 - `packages/python/genai_prices/decompose.py`
 - `packages/python/genai_prices/validation.py`
 - `packages/js/src/units.ts`
+- `packages/js/src/usage.ts`
 - `packages/js/src/decompose.ts`
 - `packages/js/src/validation.ts`
 
@@ -588,6 +589,8 @@ export interface StorageFactoryParams {
 }
 ```
 
+Public JS callers still pass plain usage objects. The "smart" behavior lives in an internal normalization layer, not in a requirement that callers instantiate a class.
+
 ---
 
 ### `units.ts` — new file
@@ -635,26 +638,41 @@ The module bootstraps itself from generated `unitFamiliesData` and allows the ac
 ```typescript
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean
 
-function getUsageValue(usage: Record<string, unknown>, key: string, defaultValue?: number): number
-
-function hasUsageValue(usage: Record<string, unknown>, key: string): boolean
-
 export function computeLeafValues(
   pricedUnitIds: Set<string>,
-  usage: Record<string, unknown>,
+  usage: NormalizedUsage,
   family: UnitFamily,
   defaultUsage?: number,
 ): Record<string, number>
 ```
 
-JS has no smart `Usage` class. `computeLeafValues()` therefore retains the inference that Python does at `Usage` construction time:
-
-- `getUsageValue()` reads raw usage values with an optional default
-- `hasUsageValue()` distinguishes "missing value" from an explicitly supplied contradictory value
-- if Möbius inversion yields a negative leaf for a unit whose own usage value was not supplied, treat that leaf as `0`
-- if the unit's own usage value was supplied and the leaf is negative, raise a user-facing contradiction error
+`computeLeafValues()` consumes normalized usage data, not raw caller input. By the time decomposition runs, JS behavior matches Python behavior: ancestor totals have already been inferred, missing keys read as zero, and negative leaves indicate a genuine contradiction rather than an inference gap.
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
+
+---
+
+### `usage.ts` — new file
+
+**JS gets an internal normalized-usage helper parallel to Python's `Usage`.** _(implements "`Usage` infers ancestor values from descendants", "Incomplete usage is handled gracefully, not rejected")_
+
+```typescript
+export class NormalizedUsage {
+  static fromRaw(obj: unknown): NormalizedUsage
+
+  hasValue(usageKey: string): boolean
+  get(usageKey: string, defaultValue?: number): number
+  toObject(): Usage
+}
+```
+
+`NormalizedUsage.fromRaw(...)` accepts a plain JS usage object, validates mapping keys against the active registry, infers ancestor totals from descendants, and stores provided plus inferred values in one flat map. This is an internal execution type used by `calcPrice()` and `extractUsage()`. JS callers are not required to construct it directly.
+
+The public JS API stays ergonomic:
+
+- `calcPrice(...)` still accepts a plain `Usage` object
+- `extractUsage(...)` still returns a plain `Usage` object
+- the object returned by `extractUsage(...)` is normalized first, so inferred ancestor totals are already present just as they would be in Python
 
 ---
 
@@ -693,11 +711,12 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 `calcPrice()` now:
 
-1. groups stored price keys by family via `getUnit(unitId).familyId`
-2. computes leaf values per family
-3. passes `defaultUsage=1` for the requests family
-4. prices each leaf using `family.per`
-5. aggregates by `direction` into the existing result shape
+1. wraps raw input with `NormalizedUsage.fromRaw(...)`
+2. groups stored price keys by family via `getUnit(unitId).familyId`
+3. computes leaf values per family
+4. passes `defaultUsage=1` for the requests family
+5. prices each leaf using `family.per`
+6. aggregates by `direction` into the existing result shape
 
 It no longer contains hardcoded logic for cache/audio/request arithmetic, and it does not run price-payload validation on the hot path.
 
@@ -725,7 +744,11 @@ The checked-in JS examples must be updated to cache and restore the wrapped payl
 ### `extractUsage.ts` — modified
 
 **Extractor output keys are no longer a fixed union.** _(implements "The extraction pipeline is data-driven end-to-end")_
-The existing extraction logic already builds a plain object of counts. The change here is structural: `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined usage key.
+The existing extraction logic still builds a plain object of counts. The change here is both structural and semantic:
+
+- `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined usage key
+- after extraction, the raw count object is normalized through `NormalizedUsage.fromRaw(...)`
+- `extractUsage(...)` returns `normalized.toObject()`, so JS callers get the same inferred-ancestor behavior that Python callers get from `Usage`
 
 ---
 
