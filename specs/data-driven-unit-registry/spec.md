@@ -190,15 +190,3 @@ Some pricing relationships hold across nearly all models: cache reads are cheape
 
 **Validation rules are expressed in terms of dimensions, not unit names.** _(from "Derive, don't duplicate", "Dimensions define unit specificity")_
 All validation logic — ancestor coverage, join coverage, dimension validity, key matching — operates on the dimension structure from the registry. No validation code references `input_mtok` or any other specific unit by name.
-
----
-
-## Open Items
-
-These are unresolved design questions or known inconsistencies that need attention before implementation.
-
-**1. Plan tasks 6 and 8 describe the old Usage design.**
-Task 6 ("decompose.py: usage inference + default_usage parameter") adds `_has_usage_value`, `default_usage`, and inference logic to `compute_leaf_values`. Task 8 ("Dynamic Usage") describes Usage as a dumb class where `__getattr__` returns `None`. Both are stale — the spec/code-spec now say: inference moves to `Usage.__init__` (smart Usage), `__getattr__` returns `int` (0 for missing, never None), `compute_leaf_values` is simplified (no `_has_usage_value`, no `default_usage`, negative leaves always errors). These tasks need a complete rewrite to match the current design.
-
-**2. Plan test code uses removed API.**
-~40 test code references in the plan use `get_family('tokens')` and `get_unit(unit_id)` — module-level convenience wrappers that were removed from the code spec. The code spec says callers use `_get_registry().families[family_id]` and `_get_registry().units[unit_id]` directly. The plan's design decisions and core task descriptions were updated, but test code blocks throughout tasks were not.
