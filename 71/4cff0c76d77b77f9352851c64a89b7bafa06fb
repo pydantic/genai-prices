@@ -1,0 +1,23 @@
+specs/data-driven-unit-registry/spec.md
+  517716a3a8d54a2b 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "714cff0c76d77b77f9352851c64a89b7bafa06fb",
+  "prompts": {
+    "517716a3a8d54a2b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019dbb67-42b4-78a2-916d-7ef8bd73a817",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
