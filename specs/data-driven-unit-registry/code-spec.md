@@ -30,6 +30,8 @@ The final diff modifies these existing files from `main`:
 - `packages/js/src/engine.ts`
 - `packages/js/src/api.ts`
 - `packages/js/src/extractUsage.ts`
+- `packages/js/src/examples/browser/main.ts`
+- `packages/js/src/examples/node-script.ts`
 - `packages/js/src/data.ts` (generated)
 - `prices/src/prices/prices_types.py`
 - `prices/src/prices/build.py`
@@ -713,6 +715,8 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic, and it
 If parsing or validation fails, both the active registry and active provider data remain unchanged.
 
 The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code.
+
+The checked-in JS examples must be updated to cache and restore the wrapped payload shape, not a bare provider array, and to call both `setUnitFamilies(...)` and `setProviderData(...)` after parsing it.
 
 ---
 
