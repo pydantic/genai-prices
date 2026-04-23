@@ -607,7 +607,13 @@ export interface UnitFamily {
 }
 
 export function parseFamilies(raw: RawFamiliesDict): Record<string, UnitFamily>
+// Parses raw family data into UnitFamily/UnitDef objects and validates structure
+// and join-closedness without mutating active runtime state.
+
 export function setUnitFamilies(raw: RawFamiliesDict | null): void
+// Replaces the active registry. For non-null input, delegates to parseFamilies()
+// before activation.
+
 export function getFamily(familyId: string): UnitFamily
 export function getUnit(unitId: string): UnitDef
 export function getAllUsageKeys(): Set<string>
@@ -625,6 +631,10 @@ The module bootstraps itself from generated `unitFamiliesData` and allows the ac
 ```typescript
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean
 
+function getUsageValue(usage: Record<string, unknown>, key: string, defaultValue?: number): number
+
+function hasUsageValue(usage: Record<string, unknown>, key: string): boolean
+
 export function computeLeafValues(
   pricedUnitIds: Set<string>,
   usage: Record<string, unknown>,
@@ -632,6 +642,13 @@ export function computeLeafValues(
   defaultUsage?: number,
 ): Record<string, number>
 ```
+
+JS has no smart `Usage` class. `computeLeafValues()` therefore retains the inference that Python does at `Usage` construction time:
+
+- `getUsageValue()` reads raw usage values with an optional default
+- `hasUsageValue()` distinguishes "missing value" from an explicitly supplied contradictory value
+- if Möbius inversion yields a negative leaf for a unit whose own usage value was not supplied, treat that leaf as `0`
+- if the unit's own usage value was supplied and the leaf is negative, raise a user-facing contradiction error
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
 
@@ -648,10 +665,10 @@ export function validatePriceKeys(priceKeys: Set<string>, allUnitIds: Set<string
 export function validateAncestorCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void
 export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void
 export function validateExtractorDestinations(destKeys: Set<string>, usageKeys: Set<string>): void
-export function validateProviderData(providers: Provider[]): void
+export function validateProviderData(providers: Provider[], families: Record<string, UnitFamily>): void
 ```
 
-`setUnitFamilies()` runs structural validation. `validateProviderData()` uses the active registry from `units.ts` to validate provider prices and extractor destinations before runtime data is replaced.
+`setUnitFamilies()` is the activation step for the active registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes.
 
 ---
 
@@ -678,7 +695,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 4. prices each leaf using `family.per`
 5. aggregates by `direction` into the existing result shape
 
-It no longer contains hardcoded logic for cache/audio/request arithmetic.
+It no longer contains hardcoded logic for cache/audio/request arithmetic, and it does not run price-payload validation on the hot path.
 
 ---
 
@@ -686,7 +703,14 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic.
 
 **Runtime data activation now handles wrapped JSON plus unit families.** _(implements "Unit definitions travel with prices, not just with the package")_
 
-`updatePrices()` passes both `setProviderData` and `setUnitFamilies` to the storage factory. The runtime update path parses the wrapped JSON payload, applies `setUnitFamilies(parsed.unit_families)`, validates provider data against the active registry, and only then replaces `providerData`.
+`updatePrices()` passes both `setProviderData` and `setUnitFamilies` to the storage factory. The runtime update path stages the new payload in this order:
+
+1. parse wrapped JSON
+2. `stagedFamilies = parseFamilies(parsed.unit_families)`
+3. `validateProviderData(parsed.providers, stagedFamilies)`
+4. on success only: `setUnitFamilies(parsed.unit_families)` and `setProviderData(parsed.providers)`
+
+If parsing or validation fails, both the active registry and active provider data remain unchanged.
 
 The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code.
 
@@ -751,6 +775,22 @@ set_custom_snapshot(snapshot)
   -> on failure: raise and keep previous snapshot
 ```
 
+### Python custom unit flow
+
+```text
+get_snapshot()
+  -> registry = current_snapshot.unit_registry.copy()
+  -> registry.add_family(...) and/or registry.add_unit(...)
+  -> snapshot = DataSnapshot(
+       providers=current_snapshot.providers,
+       from_auto_update=False,
+       unit_registry=registry,
+     )
+  -> set_custom_snapshot(snapshot)
+       -> validate prices against expanded registry
+       -> activate on success
+```
+
 ### Python hot path
 
 ```text
@@ -777,7 +817,11 @@ generated data.ts
 
 runtime update
   -> parse wrapped JSON
-  -> setUnitFamilies(parsed.unit_families)
-  -> validate provider payload against active registry
-  -> setProviderData(parsed.providers)
+  -> stagedFamilies = parseFamilies(parsed.unit_families)
+  -> validateProviderData(parsed.providers, stagedFamilies)
+  -> on success only:
+       setUnitFamilies(parsed.unit_families)
+       setProviderData(parsed.providers)
+  -> on failure:
+       keep both active registry and providerData unchanged
 ```
