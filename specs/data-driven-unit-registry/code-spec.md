@@ -280,22 +280,22 @@ AbstractUsage = object
 
 This keeps the exported name from `main` while removing the false implication that callers must satisfy a fixed protocol.
 
-**`Usage` becomes a registry-aware class with no hardcoded fields.** _(implements "`Usage` is a registry-aware class that infers, decomposes, and serves correct values", "`Usage` infers ancestor values from descendants", "Mapping usage keys are validated against the registry")_
+**`Usage` becomes a registry-aware class with no hardcoded fields.** _(implements "`Usage` is a registry-aware class that infers, decomposes, and serves correct values", "`Usage` infers ancestor values from descendants")_
 
 ```python
 class Usage:
     _values: dict[str, int]
 
     def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None values, validate keyword names, infer ancestor totals."""
+        """Store non-None values for registered usage keys and infer ancestor totals."""
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
         """Wrap arbitrary usage input.
 
         - Usage: return as-is
-        - Mapping: validate keys against registry usage keys, then construct
-        - Other object: read known usage keys via getattr and construct
+        - Mapping: read known usage keys and construct, ignoring extras
+        - Other object: read known usage keys via getattr and construct, ignoring extras
         """
 
     def __getattr__(self, name: str) -> int:
@@ -313,7 +313,7 @@ class Usage:
     def __repr__(self) -> str: ...
 ```
 
-Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `Usage` does not know the requests default-to-1 rule; that stays in pricing code.
+Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior.
 
 **`ModelPrice` becomes a registry-backed Pydantic model.** _(implements "ModelPrice supports attribute access backed by registry data", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs")_
 
@@ -586,7 +586,7 @@ export interface StorageFactoryParams {
 }
 ```
 
-Public JS callers still pass plain usage objects. The "smart" behavior lives in an internal normalization layer, not in a requirement that callers instantiate a class.
+Public JS callers still pass plain usage objects. The only extra behavior is an internal normalization step that returns another plain usage object.
 
 ---
 
@@ -637,13 +637,13 @@ export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): bool
 
 export function computeLeafValues(
   pricedUnitIds: Set<string>,
-  usage: NormalizedUsage,
+  usage: Usage,
   family: UnitFamily,
   defaultUsage?: number,
 ): Record<string, number>
 ```
 
-`computeLeafValues()` consumes normalized usage data, not raw caller input. By the time decomposition runs, JS behavior matches Python behavior: ancestor totals have already been inferred, missing keys read as zero, and negative leaves indicate a genuine contradiction rather than an inference gap.
+`computeLeafValues()` consumes normalized plain usage data, not raw caller input. By the time decomposition runs, JS behavior matches Python behavior: ancestor totals have already been inferred, missing keys read as zero, and negative leaves indicate a genuine contradiction rather than an inference gap.
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
 
@@ -651,24 +651,13 @@ Like Python, the JS requests default is passed in by pricing code via `defaultUs
 
 ### `usage.ts` — new file
 
-**JS gets an internal normalized-usage helper parallel to Python's `Usage`.** _(implements "`Usage` infers ancestor values from descendants", "Incomplete usage is handled gracefully, not rejected")_
+**JS gets a plain-object normalization helper.** _(implements "`Usage` infers ancestor values from descendants", "Incomplete usage is handled gracefully, not rejected")_
 
 ```typescript
-export class NormalizedUsage {
-  static fromRaw(obj: unknown): NormalizedUsage
-
-  get(usageKey: string, defaultValue?: number): number
-  toObject(): Usage
-}
+export function normalizeUsage(obj: unknown): Usage
 ```
 
-`NormalizedUsage.fromRaw(...)` accepts a plain JS usage object, validates mapping keys against the active registry, infers ancestor totals from descendants, and stores provided plus inferred values in one flat map. This is an internal execution type used by `calcPrice()` and `extractUsage()`. JS callers are not required to construct it directly.
-
-The public JS API stays ergonomic:
-
-- `calcPrice(...)` still accepts a plain `Usage` object
-- `extractUsage(...)` still returns a plain `Usage` object
-- the object returned by `extractUsage(...)` is normalized first, so inferred ancestor totals are already present just as they would be in Python
+`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, infers ancestor totals from descendants, and returns a plain `Usage` object containing the provided plus inferred values. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
 ---
 
@@ -707,7 +696,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 `calcPrice()` now:
 
-1. wraps raw input with `NormalizedUsage.fromRaw(...)`
+1. normalizes raw input with `normalizeUsage(...)`
 2. groups stored price keys by family via `getUnit(unitId).familyId`
 3. computes leaf values per family
 4. passes `defaultUsage=1` for the requests family
@@ -743,8 +732,8 @@ The checked-in JS examples must be updated to cache and restore the wrapped payl
 The existing extraction logic still builds a plain object of counts. The change here is both structural and semantic:
 
 - `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined usage key
-- after extraction, the raw count object is normalized through `NormalizedUsage.fromRaw(...)`
-- `extractUsage(...)` returns `normalized.toObject()`, so JS callers get the same inferred-ancestor behavior that Python callers get from `Usage`
+- after extraction, the raw count object is normalized through `normalizeUsage(...)`
+- `extractUsage(...)` returns that normalized plain object, so JS callers get the same inferred-ancestor behavior that Python callers get from `Usage`
 
 ---
 
