@@ -697,11 +697,14 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 `calcPrice()` now:
 
 1. normalizes raw input with `normalizeUsage(...)`
-2. groups stored price keys by family via `getUnit(unitId).familyId`
-3. computes leaf values per family
-4. passes `defaultUsage=1` for the requests family
-5. prices each leaf using `family.per`
-6. aggregates by `direction` into the existing result shape
+2. reads `totalInputTokens` from normalized `usage.input_tokens`
+3. groups stored price keys by family via `getUnit(unitId).familyId`
+4. computes leaf values per family
+5. passes `defaultUsage=1` for the requests family
+6. prices each leaf using `family.per`
+7. aggregates by `direction` into the existing result shape
+
+For tiered prices, the threshold input is this normalized `usage.input_tokens` total, preserving Python's behavior: tier selection is based on the full inferred-or-provided input-token count, not on any one decomposed leaf.
 
 It no longer contains hardcoded logic for cache/audio/request arithmetic, and it does not run price-payload validation on the hot path.
 
