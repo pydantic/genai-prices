@@ -1,0 +1,36 @@
+specs/data-driven-unit-registry/spec.md
+  d586b518ff8a2dec 72,150,200,203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "1e30ef78cdd5770c350bf31107823a7f2f8ac365",
+  "prompts": {
+    "a416a04ca33b5b59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019db088-7bdd-71b0-a56c-9ccb2897f5a8",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 97,
+      "total_deletions": 0,
+      "accepted_lines": 97,
+      "overriden_lines": 0
+    },
+    "d586b518ff8a2dec": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019dbb55-4461-79c3-90b3-5ef0ebe6f044",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 7,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
