@@ -298,9 +298,6 @@ class Usage:
         - Other object: read known usage keys via getattr and construct
         """
 
-    def has_value(self, usage_key: str) -> bool:
-        """Return True when the key exists in stored provided-or-inferred values."""
-
     def __getattr__(self, name: str) -> int:
         """For registered usage keys, return the stored value or 0 if absent.
 
@@ -660,7 +657,6 @@ Like Python, the JS requests default is passed in by pricing code via `defaultUs
 export class NormalizedUsage {
   static fromRaw(obj: unknown): NormalizedUsage
 
-  hasValue(usageKey: string): boolean
   get(usageKey: string, defaultValue?: number): number
   toObject(): Usage
 }
