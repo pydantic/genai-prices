@@ -259,13 +259,6 @@ def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> N
 
 def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -> None:
     """Every extractor mapping destination must be a registered usage key."""
-
-
-def validate_price_sanity(
-    prices_by_usage_key: dict[str, Decimal | TieredPrices],
-    family: UnitFamily,
-) -> None:
-    """Build-time cache-price sanity checks expressed in terms of dimensions."""
 ```
 
 This module does not validate raw registry structure. That stays in `UnitRegistry`.
@@ -431,8 +424,6 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     """
 ```
 
-`validate_price_sanity()` is not part of `set_custom_snapshot()`; it remains build-time-only.
-
 This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution.
 
 **`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` require `self is get_snapshot()`.** _(implements "`calc` and `extract_usage` on DataSnapshot require it to be the current global")_
@@ -544,8 +535,7 @@ def write_prices(
    - validate ancestor coverage
    - validate join coverage
 5. Validate extractor destinations against registry usage keys.
-6. Run build-time price sanity checks.
-7. Write wrapped `data.json` and `data_slim.json`.
+6. Write wrapped `data.json` and `data_slim.json`.
 
 **JSON schema generation becomes registry-derived.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
 The provider YAML schema no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. Instead, `build.py` derives:
@@ -795,7 +785,6 @@ build()
   -> resolve price keys to usage keys
   -> validate ancestor coverage / join coverage
   -> validate extractor destinations
-  -> validate price sanity
   -> write wrapped data.json and data_slim.json
 
 package_data()
