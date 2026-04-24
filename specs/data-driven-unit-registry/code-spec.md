@@ -200,6 +200,8 @@ Registry construction and mutation perform all structural validation:
 - no two units in a family share the same dimension set
 - every compatible pair in a family has its join present in that family
 
+The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
+
 **Module-level registry access is one lazy helper.** _(implements "There is one global DataSnapshot")_
 
 ```python
@@ -313,7 +315,7 @@ class Usage:
     def __repr__(self) -> str: ...
 ```
 
-Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior.
+Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for a cached extractor/normalizer later if profiling shows it matters.
 
 **`ModelPrice` becomes a registry-backed Pydantic model.** _(implements "ModelPrice supports attribute access backed by registry data", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs")_
 
@@ -424,6 +426,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     For non-None snapshots:
     - validate every model price key against snapshot.unit_registry.price_keys
     - resolve price keys to usage keys, then validate ancestor and join coverage per family
+      using registry relationship indexes rather than full-registry scans per model
     - validate extractor destinations against snapshot.unit_registry.units.keys()
     - leave the previous snapshot active if any validation fails
     """
@@ -663,7 +666,7 @@ Like Python, the JS requests default is passed in by pricing code via `defaultUs
 export function normalizeUsage(obj: unknown): Usage
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, infers ancestor totals from descendants, and returns a plain `Usage` object containing the provided plus inferred values. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, infers ancestor totals from descendants, and returns a plain `Usage` object containing the provided plus inferred values. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
 ---
 
@@ -681,7 +684,7 @@ export function validateExtractorDestinations(destKeys: Set<string>, usageKeys: 
 export function validateProviderData(providers: Provider[], families: Record<string, UnitFamily>): void
 ```
 
-`setUnitFamilies()` is the activation step for the active registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes.
+`setUnitFamilies()` is the activation step for the active registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
