@@ -121,7 +121,7 @@ export const unitFamiliesData: RawFamiliesDict = { ... }
 export const data: Provider[] = [ ... ]
 ```
 
-The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Model price objects built from these generated repo data exports are prepared for the bundled registry during startup, because build-time validation has already accepted the source provider YAML and registry before the generated files are written.
+The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Generated data exports contain units and prices only. They must not include serialized prepared pricing plans or decomposition coefficients; those are runtime-private caches built in memory.
 
 ---
 
@@ -460,16 +460,14 @@ class DataSnapshot:
 def _bundled_snapshot() -> DataSnapshot:
     from .data import providers, unit_families_data
 
-    snapshot = DataSnapshot(
+    return DataSnapshot(
         providers=providers,
         from_auto_update=False,
         unit_registry=UnitRegistry(unit_families_data),
     )
-    _prepare_all_model_prices(snapshot.providers, snapshot.unit_registry)
-    return snapshot
 ```
 
-`_prepare_all_model_prices(...)` is a `data_snapshot.py` traversal helper that prepares each `ModelPrice` in a provider payload. It does not perform full price-level validation in the bundled startup path; it records private prepared pricing plans on built-in `ModelPrice` objects because the generated repo data was already validated by the build pipeline before `data.py` was written.
+Bundled startup does not serialize, import, or eagerly compute prepared pricing plans for every built-in model. The generated repo data was already validated by the build pipeline, but each built-in `ModelPrice` still builds its private runtime plan lazily through `prepare_for_registry(...)` the first time `calc_price` needs it. This avoids increasing package/download size and avoids startup work for models that are never priced in the current process.
 
 **`set_custom_snapshot()` validates before activation.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
 
@@ -821,7 +819,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 For tiered prices, the threshold input is this normalized `usage.input_tokens` total, preserving Python's behavior: tier selection is based on the full inferred-or-provided input-token count, not on any one decomposed leaf.
 
-It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not validate or compute decomposition coefficients on every calculation; after startup or activation has prepared model prices, the hot path pays only a cheap prepared-plan check. The one-model validation/preparation fallback exists for bypassed/standalone model-price objects.
+It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not validate or compute decomposition coefficients on every calculation; after activation or first use has prepared a model price, the hot path pays only a cheap prepared-plan check. The one-model validation/preparation fallback exists for bundled build-validated data and for bypassed/standalone model-price objects.
 
 ---
 
@@ -838,7 +836,7 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 
 If parsing or validation fails, both the active registry and active provider data remain unchanged.
 
-The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Because generated `data.ts` came from build-validated repo data, startup prepares the embedded provider data's model prices for that bundled parsed registry without rerunning full provider validation.
+The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain prepared pricing plans. Embedded provider data prepares one model price lazily on first calculation, using the same private runtime cache as Python.
 
 The checked-in JS examples must be updated to cache and restore the wrapped payload shape, not a bare provider array, and to parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
 
@@ -897,7 +895,7 @@ get_snapshot()
        -> import providers, unit_families_data from generated data.py
        -> UnitRegistry(unit_families_data)
        -> DataSnapshot(providers=..., unit_registry=..., from_auto_update=False)
-       -> prepare generated ModelPrice objects for the bundled registry
+       -> do not prepare every generated ModelPrice eagerly
 ```
 
 ### Python snapshot activation
@@ -957,7 +955,7 @@ ModelPrice.calc_price(usage)
 generated data.ts
   -> unitFamiliesData bootstraps units.ts
   -> data bootstraps providerData
-  -> prepare generated providerData model prices for the bundled registry
+  -> do not prepare every generated model price eagerly
 
 runtime update
   -> parse wrapped JSON
