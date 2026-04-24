@@ -326,10 +326,9 @@ This keeps the exported name from `main` while removing the false implication th
 ```python
 class Usage:
     _values: dict[str, int]
-    _explicit_keys: frozenset[str]
 
     def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None values for registered usage keys and remember explicit keys."""
+        """Store non-None reported values for registered usage keys."""
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
@@ -348,18 +347,15 @@ class Usage:
         that inference depends on contradictory or underdetermined reported usage.
         """
 
-    def is_explicit(self, name: str) -> bool:
-        """Return True when name was supplied by the caller/extractor rather than inferred."""
-
     def __add__(self, other: Usage) -> Usage: ...
     def __radd__(self, other: Usage | int) -> Usage: ...
     def __eq__(self, other: object) -> bool: ...
     def __repr__(self) -> str: ...
 ```
 
-Construction does not infer ancestor totals and must not reject contradictory registered values. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Explicitly supplied values are never overwritten. `_values` starts with explicit values and may later contain cached inferred values; `_explicit_keys` records only the keys supplied by the caller, raw object, or extractor. The explicit-key distinction is internal support for contradiction diagnostics and should not change normal successful attribute access.
+Construction does not infer ancestor totals and must not reject contradictory registered values. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Reported values are never overwritten. `_values` contains reported values only. Do not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
-Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Cache successful inferences if that keeps the implementation simple. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory provided values, raise `ValueError` with a user-facing message. `Usage.__add__` should preserve explicit-key provenance instead of reclassifying cached inferred ancestors as explicit. It may drop cached inferred values and let the result infer lazily again, which avoids stale or overcounted derived totals. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for cached usage readers later if profiling shows it matters.
+Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Cache successful inferences only if that keeps the implementation simple, and keep any cache separate from `_values` so `__add__`, equality, and representation do not confuse inferred values with reported values. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory provided values, raise `ValueError` with a user-facing message. `Usage.__add__` should sum reported values and ignore/drop inferred caches, letting the result infer lazily again. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for cached usage readers later if profiling shows it matters.
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
@@ -771,7 +767,7 @@ export function computeLeafValues(
 ): Record<string, number>
 ```
 
-`buildFamilyDecompositionCache(...)` is an optional cache helper. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and may use a cached decomposition if one is available. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Negative leaves, contradictory usage, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. The normalized usage value also carries internal explicit-key provenance for diagnostics; error messages should not present inferred-only fields as if the caller supplied them.
+`buildFamilyDecompositionCache(...)` is an optional cache helper. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and may use a cached decomposition if one is available. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Negative leaves, contradictory usage, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not need explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
 
@@ -782,19 +778,15 @@ Like Python, the JS requests default is passed in by pricing code via `defaultUs
 **JS gets a plain-object normalization helper.** _(implements "`Usage` infers ancestor values from descendants", "Incomplete usage is handled gracefully, not rejected")_
 
 ```typescript
-declare const explicitUsageKeysSymbol: unique symbol
-
-type NormalizedUsage = Usage & {
-  readonly [explicitUsageKeysSymbol]?: ReadonlySet<string>
-}
+type NormalizedUsage = Usage
 
 export function normalizeUsage(obj: unknown): NormalizedUsage
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also attaches non-enumerable/private explicit-key provenance, for example behind a module-local symbol, so pricing diagnostics can distinguish caller-provided values from inferred totals without changing normal object behavior. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also must not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that needs it. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
 
-`getUsageValue(...)` is the JS inference boundary used by `calcPrice()`, `computeLeafValues()`, and any internal code that needs registry-aware usage reads. It returns a stored value without proactively checking the rest of the object for contradictions, lazily infers and optionally caches a missing value when the answer is coherent, returns zero when there is no relevant data, and throws a user-facing error only when the missing requested value cannot be inferred because the reported values are contradictory or underdetermine the answer. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
+`getUsageValue(...)` is the JS inference boundary used by `calcPrice()`, `computeLeafValues()`, and any internal code that needs registry-aware usage reads. It returns a stored value without proactively checking the rest of the object for contradictions, lazily infers and optionally caches a missing value when the answer is coherent, returns zero when there is no relevant data, and throws a user-facing error only when the missing requested value cannot be inferred because the reported values are contradictory or underdetermine the answer. If inferred values are cached, keep that cache separate from the enumerable reported usage object. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
 ---
 
