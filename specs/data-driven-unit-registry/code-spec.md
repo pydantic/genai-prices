@@ -473,6 +473,28 @@ This preserves the current CLI output shape while allowing new units to appear w
 
 ---
 
+## Python Build/Runtime Boundary
+
+**Registry and validation code should be shared when the dependency direction is clean, but duplication is acceptable at the build-package boundary.** _(implements "Derive, don't duplicate", "Validation replaces what hardcoded fields gave us implicitly, and adds more")_
+The `prices/` build package already has build-time types that mirror runtime package types. This is not ideal, but it is an established boundary in the repo: build-time parsing and schema generation operate before generated runtime data exists, while the published runtime package must not depend on the build package.
+
+The implementation should first try to make the registry and structural validation modules pure enough for both sides to use:
+
+- `UnitRegistry`, `UnitDef`, `UnitFamily`, and dimension/relationship helpers should avoid importing generated package data, `data_snapshot`, update machinery, or runtime globals.
+- Price-level validation helpers should accept plain mappings, registry objects, and protocol-shaped price values where possible, instead of requiring runtime-only model objects.
+- Build-time code may import those pure helpers from the runtime package if that does not create import cycles, generated-data dependencies, or awkward coupling to runtime-only Pydantic models.
+
+If that clean sharing turns out to be awkward, the fallback is explicit and acceptable: keep a small build-side mirror under `prices/src/prices/` following the existing `prices_types.py` pattern. In that case, keep the duplicated surface narrow and mechanical:
+
+- one source registry file (`prices/units.yml`) remains the source of truth
+- runtime and build-time registry objects must parse the same raw `unit_families` shape
+- tests should cover parity for structural validation, price-key resolution, ancestor coverage, and join coverage
+- any deliberate duplication should be named in comments as a package-boundary copy, not a second design
+
+This is a structural implementation decision, not a detail hidden inside `build()`. The final implementation should make the boundary obvious in module placement and tests.
+
+---
+
 ## Build Pipeline: `prices/src/prices/`
 
 ### `prices_types.py` — modified
