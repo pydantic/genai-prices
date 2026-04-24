@@ -103,7 +103,7 @@ Both generated JSON payloads change from a bare provider list to this shape:
 }
 ```
 
-`unit_families` carries the raw registry data from `prices/units.yml`. `providers` keeps the existing provider payload shape.
+`unit_families` carries the raw registry data from `prices/units.yml`. `providers` keeps the existing provider payload shape. Both full and slim payloads keep the unit family runtime fields; slimming applies to the provider payload.
 
 **Generated language-native data exports include unit families.** _(implements "Unit definitions are generated into language-native code alongside prices")_
 
@@ -600,6 +600,7 @@ export interface UnitDef {
   usageKey: string
   priceKey: string
   familyId: string
+  family: UnitFamily
   dimensions: Record<string, string>
 }
 
@@ -612,13 +613,14 @@ export interface UnitFamily {
 }
 
 export function parseFamilies(raw: RawFamiliesDict): Record<string, UnitFamily>
-// Parses raw family data into UnitFamily/UnitDef objects and validates structure
-// and join-closedness without mutating active runtime state. Raw unit keys are
-// usage keys; priceKey is raw.price_key ?? usageKey.
+// Parses raw family data into UnitFamily/UnitDef objects, fills family
+// back-references, and validates structure and join-closedness without mutating
+// active runtime state. Raw unit keys are usage keys; priceKey is
+// raw.price_key ?? usageKey.
 
 export function setUnitFamilies(raw: RawFamiliesDict | null): void
 // Replaces the active registry. For non-null input, delegates to parseFamilies()
-// before activation.
+// before activation. For null input, restores the generated bundled registry.
 
 export function getFamily(familyId: string): UnitFamily
 export function getUnit(usageKey: string): UnitDef
@@ -703,7 +705,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 1. normalizes raw input with `normalizeUsage(...)`
 2. reads `totalInputTokens` from normalized `usage.input_tokens`
 3. resolves stored price keys to usage-keyed units via `getUnitForPriceKey(priceKey)`
-4. groups resolved usage keys by family and computes leaf values per family
+4. groups resolved units by `unit.family` and computes leaf values per family
 5. passes `defaultUsage=1` for the requests family
 6. prices each leaf using the value stored under the unit's price key and `family.per`
 7. aggregates by `direction` into the existing result shape
