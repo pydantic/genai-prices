@@ -306,9 +306,6 @@ class Usage:
         Raise AttributeError for names that are not registered usage keys.
         """
 
-    def __setattr__(self, name: str, value: object) -> None:
-        """Prevent mutation after construction."""
-
     def __add__(self, other: Usage) -> Usage: ...
     def __radd__(self, other: Usage | int) -> Usage: ...
     def __eq__(self, other: object) -> bool: ...
@@ -316,6 +313,8 @@ class Usage:
 ```
 
 Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for a cached extractor/normalizer later if profiling shows it matters.
+
+Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
 **`ModelPrice` becomes a registry-backed Pydantic model.** _(implements "ModelPrice supports attribute access backed by registry data", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs")_
 
