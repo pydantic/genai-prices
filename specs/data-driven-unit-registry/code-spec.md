@@ -159,7 +159,7 @@ class UnitRegistry:
     families: dict[str, UnitFamily]
     units: dict[str, UnitDef]          # usage_key -> UnitDef across all families
     price_keys: dict[str, str]         # price_key -> usage_key across all families
-    validation_token: object           # changes for every independently constructed/mutated registry
+    validation_id: object              # changes for every independently constructed/mutated registry
 
     def __init__(self, raw_families: dict[str, dict] | None = None) -> None:
         """Parse raw families, validate structure, fill indexes and back-references."""
@@ -203,7 +203,7 @@ Registry construction and mutation perform all structural validation:
 
 The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
 
-`validation_token` is an opaque identity/version token used only for model-price validation marks. A copied or mutated registry must get a different token from the source registry, so a `ModelPrice` validated against one snapshot is not accidentally trusted against another snapshot whose units may have changed.
+`validation_id` is an opaque identity/version value used only for model-price validation marks. A copied or mutated registry must get a different validation id from the source registry, so a `ModelPrice` validated against one snapshot is not accidentally trusted against another snapshot whose units may have changed.
 
 **Module-level registry access is one lazy helper.** _(implements "There is one global DataSnapshot")_
 
@@ -265,7 +265,7 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
 
 
 def mark_model_price_validated(model_price: object, registry: UnitRegistry) -> None:
-    """Record that one ModelPrice has been validated for this registry token."""
+    """Record that one ModelPrice has been validated for this registry validation id."""
 
 
 def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -> None:
@@ -327,14 +327,14 @@ class ModelPrice(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra='allow')
 
     __pydantic_extra__: dict[str, Decimal | TieredPrices]
-    _validated_registry_token: object | None = pydantic.PrivateAttr(default=None)
+    _validated_registry_id: object | None = pydantic.PrivateAttr(default=None)
     _validated_price_key_fingerprint: frozenset[str] | None = pydantic.PrivateAttr(default=None)
 
     def is_validated_for(self, registry: UnitRegistry) -> bool:
-        """Return True when this price has been validated against this registry token."""
+        """Return True when this price has been validated against this registry validation id."""
 
     def mark_validated(self, registry: UnitRegistry) -> None:
-        """Record that the current stored price-key set is valid for this registry token."""
+        """Record that the current stored price-key set is valid for this registry validation id."""
 
     def invalidate_validation(self) -> None:
         """Clear any cached validation mark after supported price mutation."""
@@ -355,7 +355,7 @@ class ModelPrice(pydantic.BaseModel):
         """Return True when there are no stored prices or every stored price is zero-like."""
 ```
 
-The validation marker is private implementation state, not part of the serialized model-price data. It is scoped to both `registry.validation_token` and a fingerprint of the current effective stored price keys. "Effective" means keys whose value represents a present price; JS `undefined` and any Python absence/null sentinel do not count as priced. If the same `ModelPrice` object is reused in another snapshot with another registry, or if price keys are added/removed after validation, `is_validated_for(...)` returns false and the next calculation or activation path must validate again.
+The validation marker is private implementation state, not part of the serialized model-price data. It is scoped to both `registry.validation_id` and a fingerprint of the current effective stored price keys. "Effective" means keys whose value represents a present price; JS `undefined` and any Python absence/null sentinel do not count as priced. If the same `ModelPrice` object is reused in another snapshot with another registry, or if price keys are added/removed after validation, `is_validated_for(...)` returns false and the next calculation or activation path must validate again.
 
 Supported mutation paths for price data must clear the validation marker. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for extra fields. Setting a different value for an existing key does not structurally require revalidation, but clearing the mark for all supported price mutations is simpler and safe. Direct mutation of internal Pydantic storage such as `__pydantic_extra__` is not a supported public API.
 
@@ -681,9 +681,10 @@ export function getUnitForPriceKey(priceKey: string): UnitDef
 export function getUsageKeyForPriceKey(priceKey: string): string
 export function getAllUsageKeys(): Set<string>
 export function getAllPriceKeys(): Set<string>
+export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. The active parsed families object identity is the JS registry validation token; replacing the registry produces a new token, so model-price validation marks from the previous registry are not reused.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price validation marks from the previous registry are not reused.
 
 ---
 
@@ -738,7 +739,7 @@ export function markModelPriceValidated(modelPrice: ModelPrice, families: Parsed
 export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. After it successfully validates a staged payload, it marks each model price as validated for that exact parsed registry token and its current price-key fingerprint. The update path must then install that same parsed registry object; parsing the raw unit data a second time would produce a different validation token and stale the marks immediately. The marker can be a module-private `WeakMap<ModelPrice, { token: object; priceKeys: string }>` or equivalent; it is not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPriceValidated(...)` must always compare the current price-key fingerprint with the stored fingerprint. Any library-provided helper for mutating model prices should call `invalidateModelPriceValidation(...)` explicitly. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. After it successfully validates a staged payload, it marks each model price as validated for that exact `registryValidationId` and its current price-key fingerprint. The update path must then install that same parsed registry object; parsing the raw unit data a second time would produce a different validation id and stale the marks immediately. The marker can be a module-private `WeakMap<ModelPrice, { registryValidationId: object; priceKeys: string }>` or equivalent; it is not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPriceValidated(...)` must always compare the current price-key fingerprint with the stored fingerprint. Any library-provided helper for mutating model prices should call `invalidateModelPriceValidation(...)` explicitly. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
@@ -759,7 +760,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 `calcPrice()` now:
 
-1. reads the active parsed registry token
+1. reads the active `registryValidationId`
 2. if `isModelPriceValidated(modelPrice, activeFamilies)` is false, validates this one model price and marks it
 3. normalizes raw input with `normalizeUsage(...)`
 4. reads `totalInputTokens` from normalized `usage.input_tokens`
