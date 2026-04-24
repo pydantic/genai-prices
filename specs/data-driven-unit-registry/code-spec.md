@@ -336,6 +336,9 @@ class ModelPrice(pydantic.BaseModel):
     def mark_validated(self, registry: UnitRegistry) -> None:
         """Record that the current stored price-key set is valid for this registry token."""
 
+    def invalidate_validation(self) -> None:
+        """Clear any cached validation mark after supported price mutation."""
+
     def calc_price(self, usage: object) -> CalcPrice:
         """Price all configured units using the active global registry."""
 
@@ -352,7 +355,9 @@ class ModelPrice(pydantic.BaseModel):
         """Return True when there are no stored prices or every stored price is zero-like."""
 ```
 
-The validation marker is private implementation state, not part of the serialized model-price data. It is scoped to both `registry.validation_token` and a fingerprint of the current stored price keys. If the same `ModelPrice` object is reused in another snapshot with another registry, or if price keys are added/removed after validation, `is_validated_for(...)` returns false and the next calculation or activation path must validate again.
+The validation marker is private implementation state, not part of the serialized model-price data. It is scoped to both `registry.validation_token` and a fingerprint of the current effective stored price keys. "Effective" means keys whose value represents a present price; JS `undefined` and any Python absence/null sentinel do not count as priced. If the same `ModelPrice` object is reused in another snapshot with another registry, or if price keys are added/removed after validation, `is_validated_for(...)` returns false and the next calculation or activation path must validate again.
+
+Supported mutation paths for price data must clear the validation marker. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for extra fields. Setting a different value for an existing key does not structurally require revalidation, but clearing the mark for all supported price mutations is simpler and safe. Direct mutation of internal Pydantic storage such as `__pydantic_extra__` is not a supported public API.
 
 `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
@@ -453,6 +458,8 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
 ```
 
 This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution, and its model prices carry validation marks for that registry.
+
+This also covers user patching of bundled prices. A caller can copy the current provider/model data, add missing fields such as cache-token prices to the staged `ModelPrice` objects, and activate the new snapshot. The mutations invalidate any bundled validation marks; `set_custom_snapshot()` validates the updated price-key set and marks the prices again before activation.
 
 **`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` require `self is get_snapshot()`.** _(implements "`calc` and `extract_usage` on DataSnapshot require it to be the current global")_
 Both methods raise `RuntimeError` when called on a non-active snapshot. This is intentional discouragement of "standalone snapshot" execution: inactive snapshots are staging objects, not validated execution contexts. This guard applies to snapshot execution methods only; `ModelInfo.calc_price()` does not carry snapshot provenance and is not guarded. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots. _(implements "`find_provider_model` works on any snapshot, global or not")_
@@ -728,9 +735,10 @@ export function validateExtractorDestinations(destKeys: Set<string>, usageKeys: 
 export function validateProviderData(providers: Provider[], families: ParsedFamilies): void
 export function isModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): boolean
 export function markModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): void
+export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. After it successfully validates a staged payload, it marks each model price as validated for that exact parsed registry token and its current price-key fingerprint. The update path must then install that same parsed registry object; parsing the raw unit data a second time would produce a different validation token and stale the marks immediately. The marker can be a module-private `WeakMap<ModelPrice, { token: object; priceKeys: string }>` or equivalent; it is not part of serialized provider data. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. After it successfully validates a staged payload, it marks each model price as validated for that exact parsed registry token and its current price-key fingerprint. The update path must then install that same parsed registry object; parsing the raw unit data a second time would produce a different validation token and stale the marks immediately. The marker can be a module-private `WeakMap<ModelPrice, { token: object; priceKeys: string }>` or equivalent; it is not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPriceValidated(...)` must always compare the current price-key fingerprint with the stored fingerprint. Any library-provided helper for mutating model prices should call `invalidateModelPriceValidation(...)` explicitly. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
@@ -858,9 +866,12 @@ set_custom_snapshot(snapshot)
 ```text
 get_snapshot()
   -> registry = current_snapshot.unit_registry.copy()
+  -> providers = copy current_snapshot.providers/models/prices
+  -> mutate staged ModelPrice objects as needed
+       -> mutation invalidates inherited validation marks
   -> registry.add_family(...) and/or registry.add_unit(...)
   -> snapshot = DataSnapshot(
-       providers=current_snapshot.providers,
+       providers=providers,
        from_auto_update=False,
        unit_registry=registry,
      )
