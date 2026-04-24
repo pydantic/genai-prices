@@ -265,7 +265,7 @@ def validate_price_sanity(
     prices_by_usage_key: dict[str, Decimal | TieredPrices],
     family: UnitFamily,
 ) -> None:
-    """Build-time economic sanity checks expressed in terms of dimensions."""
+    """Build-time cache-price sanity checks expressed in terms of dimensions."""
 ```
 
 This module does not validate raw registry structure. That stays in `UnitRegistry`.
