@@ -266,7 +266,7 @@ def compute_leaf_values(
     """
 ```
 
-`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current usage values. Reading a missing usage value may trigger lazy inference on `Usage`. Explicit usage values in the same priced family may participate in consistency checks even when their units are not separate cost buckets; for example, `input_tokens=100` and `cache_read_tokens=200` must make token pricing fail even if the model has only an input catch-all price. Negative leaf values, contradictory usage, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
+`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current usage values. Reading a missing usage value may trigger lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
 
 Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this module is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; decomposition may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
 
@@ -409,7 +409,7 @@ Supported mutation paths that add or remove effective price keys must clear know
 3. Wrap non-`Usage` input with `Usage.from_raw`.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family, or read an equivalent cached pricing plan if present.
 5. For tiered prices, read `usage.input_tokens`; if it cannot be provided or inferred coherently, raise a usage error instead of guessing a tier.
-6. For each priced family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions, while rejecting reported contradictions in that family even when a contradictory unit is not separately priced.
+6. For each priced family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions, while ignoring unpriced reported usage values unless they are needed to infer a missing priced value.
 7. Pass `default_usage=1` only for the `requests` family.
 8. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
 9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
@@ -767,7 +767,7 @@ export function computeLeafValues(
 ): Record<string, number>
 ```
 
-`buildFamilyDecompositionCache(...)` is an optional cache helper. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and may use a cached decomposition if one is available. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Negative leaves, contradictory usage, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not need explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
+`buildFamilyDecompositionCache(...)` is an optional cache helper. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and may use a cached decomposition if one is available. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Unpriced reported usage keys are ignored unless needed to infer a missing priced value. Negative leaves, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not need explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
 
@@ -876,7 +876,7 @@ The existing extraction logic still builds a plain object of counts. The change 
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
 
-If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` tries to price the usage and must reconcile the contradiction.
+If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket or tier threshold.
 
 ---
 
