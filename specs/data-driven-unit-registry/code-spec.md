@@ -483,7 +483,7 @@ class ModelPrice(_Model, extra='allow'):
     def is_free(self) -> bool: ...
 ```
 
-The explicit hardcoded price fields from `main` are removed as the source of truth. Validation of allowed keys moves to build-time registry checks and schema generation.
+The explicit hardcoded price fields from `main` are removed as the source of truth. Validation of allowed keys moves to registry-derived build checks and schema generation.
 
 **`UsageExtractorMapping.dest` becomes `str`.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The literal `UsageField` union is removed from build-time types.
