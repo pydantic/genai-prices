@@ -10155,6 +10155,77 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.5',
+        name: 'GPT-5.5',
+        description: 'The best model for coding and agentic tasks across industries',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.5',
+            },
+            {
+              equals: 'gpt-5.5-2026-04-23',
+            },
+            {
+              equals: 'gpt-5-5',
+            },
+            {
+              equals: 'gpt-5-5-2026-04-23',
+            },
+            {
+              equals: 'gpt-5.5-chat',
+            },
+            {
+              equals: 'gpt-5.5-chat-latest',
+            },
+            {
+              equals: 'gpt-5-5-chat',
+            },
+            {
+              equals: 'gpt-5-5-chat-latest',
+            },
+            {
+              equals: 'gpt-5.5-codex',
+            },
+            {
+              equals: 'gpt-5-5-codex',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 0.5,
+          output_mtok: 30,
+        },
+      },
+      {
+        id: 'gpt-5.5-pro',
+        name: 'GPT-5.5 Pro',
+        description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.5-pro',
+            },
+            {
+              equals: 'gpt-5.5-pro-2026-04-23',
+            },
+            {
+              equals: 'gpt-5-5-pro',
+            },
+            {
+              equals: 'gpt-5-5-pro-2026-04-23',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 30,
+          output_mtok: 180,
+        },
+      },
+      {
         id: 'gpt-realtime',
         match: {
           or: [
