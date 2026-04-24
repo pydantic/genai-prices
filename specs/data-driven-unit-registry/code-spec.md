@@ -121,7 +121,7 @@ export const unitFamiliesData: RawFamiliesDict = { ... }
 export const data: Provider[] = [ ... ]
 ```
 
-The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Model price objects built from these generated repo data exports are marked as validated for the bundled registry during startup, because build-time validation has already accepted the source provider YAML and registry before the generated files are written.
+The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Model price objects built from these generated repo data exports are prepared for the bundled registry during startup, because build-time validation has already accepted the source provider YAML and registry before the generated files are written.
 
 ---
 
@@ -205,7 +205,7 @@ Registry construction and mutation perform all structural validation:
 
 The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
 
-`validation_id` is an opaque identity/version value used only for model-price validation marks. A copied or mutated registry must get a different validation id from the source registry, so a `ModelPrice` validated against one snapshot is not accidentally trusted against another snapshot whose units may have changed.
+`validation_id` is an opaque identity/version value used only for model-price prepared pricing plans. A copied or mutated registry must get a different validation id from the source registry, so a `ModelPrice` prepared against one snapshot is not accidentally trusted against another snapshot whose units may have changed.
 
 **Module-level registry access is one lazy helper.** _(implements "There is one global DataSnapshot")_
 
@@ -223,27 +223,48 @@ Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`,
 **Dimension-driven decomposition lives in a dedicated module.** _(implements "Decomposition uses dimensions, not hardcoded subtraction chains", "Only priced units participate in decomposition", "Decomposition operates within a family")_
 
 ```python
+@dataclass(frozen=True)
+class PreparedFamilyPricingPlan:
+    family: UnitFamily
+    leaf_coefficients: Mapping[str, tuple[tuple[str, int], ...]]
+    """Map priced usage key -> terms for computing that exclusive bucket from normalized usage."""
+
+
+@dataclass(frozen=True)
+class PreparedPricingPlan:
+    registry_id: object
+    price_key_fingerprint: frozenset[str]
+    price_key_to_usage_key: Mapping[str, str]
+    families: tuple[PreparedFamilyPricingPlan, ...]
+
+
 def is_descendant_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
     """Return True when ancestor.dimensions is a subset of descendant.dimensions."""
 
 
-def compute_leaf_values(
+def prepare_family_decomposition(
     priced_usage_keys: set[str],
-    usage: Usage,
     family: UnitFamily,
+) -> PreparedFamilyPricingPlan:
+    """Precompute reusable decomposition instructions for one model's priced units in one family."""
+
+
+def compute_leaf_values(
+    plan: PreparedFamilyPricingPlan,
+    usage: Usage,
     *,
     default_usage: int = 0,
 ) -> dict[str, int]:
-    """Compute exclusive usage for the priced usage-keyed units in one family.
+    """Apply a prepared family plan to normalized usage and return exclusive usage buckets.
 
     `default_usage` exists for backward-compat pricing rules such as requests=1 when
     the requests family is priced and no `requests` value was supplied.
     """
 ```
 
-`compute_leaf_values` uses the family dimension lattice and only the currently priced units. Negative leaf values raise `ValueError` with user-facing messages that describe the contradictory usage relationship, not the underlying algorithm.
+`prepare_family_decomposition(...)` uses the family dimension lattice and only the currently priced units. It is called when a `ModelPrice` is prepared for a registry, not on every price calculation. `compute_leaf_values(...)` applies that prepared plan to the current normalized usage. Negative leaf values raise `ValueError` with user-facing messages that describe the contradictory usage relationship, not the underlying algorithm.
 
-Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this function is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; the implementation may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
+Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this module is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; `prepare_family_decomposition(...)` may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
 
 ---
 
@@ -268,8 +289,8 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
     """Validate one model's price keys, ancestor coverage, and join coverage."""
 
 
-def mark_model_price_validated(model_price: object, registry: UnitRegistry) -> None:
-    """Record that one ModelPrice has been validated for this registry validation id."""
+def prepare_model_price(model_price: object, registry: UnitRegistry) -> PreparedPricingPlan:
+    """Validate one ModelPrice and build reusable pricing/decomposition state."""
 
 
 def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -> None:
@@ -278,7 +299,7 @@ def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -
 
 This module does not validate raw registry structure. That stays in `UnitRegistry`.
 
-The meaning of "required ancestors" is tied to the unresolved sparse-registry question in the prose spec. If the final design requires registry ancestor/downward closure, this helper can validate registered ancestors after structural validation has guaranteed the relevant units exist. If the final design allows sparse registry shapes, this helper and `compute_leaf_values(...)` must agree on the actual poset used for decomposition.
+The meaning of "required ancestors" is tied to the unresolved sparse-registry question in the prose spec. If the final design requires registry ancestor/downward closure, this helper can validate registered ancestors after structural validation has guaranteed the relevant units exist. If the final design allows sparse registry shapes, this helper and `prepare_family_decomposition(...)` must agree on the actual poset used for decomposition.
 
 ---
 
@@ -297,9 +318,10 @@ This keeps the exported name from `main` while removing the false implication th
 ```python
 class Usage:
     _values: dict[str, int]
+    _explicit_keys: frozenset[str]
 
     def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None values for registered usage keys and infer ancestor totals."""
+        """Store non-None values for registered usage keys, remember explicit keys, and infer ancestor totals."""
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
@@ -316,13 +338,16 @@ class Usage:
         Raise AttributeError for names that are not registered usage keys.
         """
 
+    def is_explicit(self, name: str) -> bool:
+        """Return True when name was supplied by the caller/extractor rather than inferred."""
+
     def __add__(self, other: Usage) -> Usage: ...
     def __radd__(self, other: Usage | int) -> Usage: ...
     def __eq__(self, other: object) -> bool: ...
     def __repr__(self) -> str: ...
 ```
 
-Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for a cached extractor/normalizer later if profiling shows it matters.
+Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `_values` contains both explicit and inferred values; `_explicit_keys` records only the keys supplied by the caller, raw object, or extractor. The explicit-key distinction is internal support for contradiction diagnostics and should not change normal attribute access. `Usage.__add__` should preserve explicit-key provenance instead of reclassifying every stored inferred ancestor as explicit. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for a cached extractor/normalizer later if profiling shows it matters.
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
@@ -333,17 +358,16 @@ class ModelPrice(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra='allow')
 
     __pydantic_extra__: dict[str, Decimal | TieredPrices]
-    _validated_registry_id: object | None = pydantic.PrivateAttr(default=None)
-    _validated_price_key_fingerprint: frozenset[str] | None = pydantic.PrivateAttr(default=None)
+    _prepared_pricing_plan: PreparedPricingPlan | None = pydantic.PrivateAttr(default=None)
 
-    def is_validated_for(self, registry: UnitRegistry) -> bool:
-        """Return True when this price has been validated against this registry validation id."""
+    def is_prepared_for(self, registry: UnitRegistry) -> bool:
+        """Return True when this price has prepared state for this registry validation id."""
 
-    def mark_validated(self, registry: UnitRegistry) -> None:
-        """Record that the current stored price-key set is valid for this registry validation id."""
+    def prepare_for_registry(self, registry: UnitRegistry) -> PreparedPricingPlan:
+        """Validate and build reusable pricing/decomposition state for this registry validation id."""
 
-    def invalidate_validation(self) -> None:
-        """Clear any cached validation mark after supported price mutation."""
+    def invalidate_prepared_pricing_plan(self) -> None:
+        """Clear prepared pricing state after supported price mutation."""
 
     def calc_price(self, usage: object) -> CalcPrice:
         """Price all configured units using the active global registry."""
@@ -361,17 +385,17 @@ class ModelPrice(pydantic.BaseModel):
         """Return True when there are no stored prices or every stored price is zero-like."""
 ```
 
-The validation marker is private implementation state, not part of the serialized model-price data. It is scoped to both `registry.validation_id` and a fingerprint of the current effective stored price keys. "Effective" means keys whose value represents a present price; JS `undefined` and any Python absence/null sentinel do not count as priced. If the same `ModelPrice` object is reused in another snapshot with another registry, or if price keys are added/removed after validation, `is_validated_for(...)` returns false and the next calculation or activation path must validate again.
+The prepared pricing plan is private implementation state, not part of the serialized model-price data. It is scoped to both `registry.validation_id` and a fingerprint of the current effective stored price keys. "Effective" means keys whose value represents a present price; JS `undefined` and any Python absence/null sentinel do not count as priced. The plan stores the resolved price-key/usage-key mapping, family groupings, and the per-family decomposition coefficients or equivalent decomposition instructions needed by `calc_price`. It does not depend on a particular usage object. If the same `ModelPrice` object is reused in another snapshot with another registry, or if price keys are added/removed after validation, `is_prepared_for(...)` returns false and the next calculation or activation path must validate and prepare again.
 
-Supported mutation paths for price data must clear the validation marker. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for extra fields. Setting a different value for an existing key does not structurally require revalidation, but clearing the mark for all supported price mutations is simpler and safe. Direct mutation of internal Pydantic storage such as `__pydantic_extra__` is not a supported public API.
+Supported mutation paths for price data must clear the prepared pricing plan. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for extra fields. Setting a different value for an existing key does not structurally require recomputing coefficients if the plan does not bake in price values, but clearing the plan for all supported price mutations is simpler and safe. Direct mutation of internal Pydantic storage such as `__pydantic_extra__` is not a supported public API.
 
 `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
 1. Fetch the active global registry.
-2. If `is_validated_for(registry)` is false, run `validate_model_price(...)` for this one price object and call `mark_validated(registry)`.
+2. If `is_prepared_for(registry)` is false, call `prepare_for_registry(registry)` for this one price object. This validates the current price-key set and builds the reusable decomposition plan.
 3. Wrap non-`Usage` input with `Usage.from_raw`.
-4. Resolve stored price keys through `registry.price_keys` to usage keys, then group those usage-keyed units by family.
-5. For each family, call `compute_leaf_values(...)`.
+4. Read the prepared plan's resolved price keys and per-family decomposition instructions.
+5. For each family in the plan, apply the prepared decomposition instructions to the normalized usage values.
 6. Pass `default_usage=1` only for the `requests` family.
 7. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
 8. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
@@ -441,11 +465,11 @@ def _bundled_snapshot() -> DataSnapshot:
         from_auto_update=False,
         unit_registry=UnitRegistry(unit_families_data),
     )
-    _mark_all_model_prices_validated(snapshot.providers, snapshot.unit_registry)
+    _prepare_all_model_prices(snapshot.providers, snapshot.unit_registry)
     return snapshot
 ```
 
-`_mark_all_model_prices_validated(...)` is a `data_snapshot.py` traversal helper that marks each `ModelPrice` in a provider payload. It does not perform price-level validation in the bundled startup path; it records the private marker on built-in `ModelPrice` objects because the generated repo data was already validated by the build pipeline before `data.py` was written.
+`_prepare_all_model_prices(...)` is a `data_snapshot.py` traversal helper that prepares each `ModelPrice` in a provider payload. It does not perform full price-level validation in the bundled startup path; it records private prepared pricing plans on built-in `ModelPrice` objects because the generated repo data was already validated by the build pipeline before `data.py` was written.
 
 **`set_custom_snapshot()` validates before activation.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
 
@@ -458,14 +482,14 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     - resolve price keys to usage keys, then validate ancestor and join coverage per family
       using registry relationship indexes rather than full-registry scans per model
     - validate extractor destinations against snapshot.unit_registry.units.keys()
-    - after all validation succeeds, mark each ModelPrice for snapshot.unit_registry
+    - after all validation succeeds, prepare each ModelPrice for snapshot.unit_registry
     - leave the previous snapshot active if any validation fails
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution, and its model prices carry validation marks for that registry.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution, and its model prices carry prepared pricing plans for that registry.
 
-This also covers user patching of bundled prices. A caller can copy the current provider/model data, add missing fields such as cache-token prices to the staged `ModelPrice` objects, and activate the new snapshot. The mutations invalidate any bundled validation marks; `set_custom_snapshot()` validates the updated price-key set and marks the prices again before activation.
+This also covers user patching of bundled prices. A caller can copy the current provider/model data, add missing fields such as cache-token prices to the staged `ModelPrice` objects, and activate the new snapshot. The mutations invalidate any bundled prepared pricing plans; `set_custom_snapshot()` validates the updated price-key set and prepares the prices again before activation.
 
 **`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` require `self is get_snapshot()`.** _(implements "`calc` and `extract_usage` on DataSnapshot require it to be the current global")_
 Both methods raise `RuntimeError` when called on a non-active snapshot. This is intentional discouragement of "standalone snapshot" execution: inactive snapshots are staging objects, not validated execution contexts. This guard applies to snapshot execution methods only; `ModelInfo.calc_price()` does not carry snapshot provenance and is not guarded. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots. _(implements "`find_provider_model` works on any snapshot, global or not")_
@@ -690,7 +714,7 @@ export function getAllPriceKeys(): Set<string>
 export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same atomic existing-family edit capability as Python, but the exact public API shape is still open. It may be a builder, a transaction-like helper, a replace-family helper, or a batch update function. Whatever API is chosen must work on staged parsed families and return or commit a structurally valid parsed registry without mutating the active registry in place. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price validation marks from the previous registry are not reused.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same atomic existing-family edit capability as Python, but the exact public API shape is still open. It may be a builder, a transaction-like helper, a replace-family helper, or a batch update function. Whatever API is chosen must work on staged parsed families and return or commit a structurally valid parsed registry without mutating the active registry in place. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price prepared plans from the previous registry are not reused.
 
 ---
 
@@ -701,15 +725,28 @@ The module bootstraps itself from generated `unitFamiliesData` and allows the ac
 ```typescript
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean
 
+export type PreparedFamilyPricingPlan = {
+  family: UnitFamily
+  leafCoefficients: Record<string, Array<[string, number]>>
+}
+
+export type PreparedPricingPlan = {
+  registryValidationId: object
+  priceKeyFingerprint: string
+  priceKeyToUsageKey: Record<string, string>
+  families: PreparedFamilyPricingPlan[]
+}
+
+export function prepareFamilyDecomposition(pricedUsageKeys: Set<string>, family: UnitFamily): PreparedFamilyPricingPlan
+
 export function computeLeafValues(
-  pricedUsageKeys: Set<string>,
-  usage: Usage,
-  family: UnitFamily,
+  plan: PreparedFamilyPricingPlan,
+  usage: NormalizedUsage,
   defaultUsage?: number,
 ): Record<string, number>
 ```
 
-`computeLeafValues()` consumes normalized plain usage data, not raw caller input. By the time decomposition runs, JS behavior matches Python behavior: ancestor totals have already been inferred, missing keys read as zero, and negative leaves indicate a genuine contradiction rather than an inference gap.
+`prepareFamilyDecomposition(...)` computes reusable decomposition instructions when a model price is prepared for a registry. `computeLeafValues()` consumes that prepared plan plus normalized usage data, not raw caller input. By the time decomposition runs, JS behavior matches Python behavior: ancestor totals have already been inferred, missing keys read as zero, and negative leaves indicate a genuine contradiction rather than an inference gap. The normalized usage value also carries internal explicit-key provenance for diagnostics; error messages should not present inferred-only fields as if the caller supplied them.
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
 
@@ -720,10 +757,16 @@ Like Python, the JS requests default is passed in by pricing code via `defaultUs
 **JS gets a plain-object normalization helper.** _(implements "`Usage` infers ancestor values from descendants", "Incomplete usage is handled gracefully, not rejected")_
 
 ```typescript
-export function normalizeUsage(obj: unknown): Usage
+declare const explicitUsageKeysSymbol: unique symbol
+
+type NormalizedUsage = Usage & {
+  readonly [explicitUsageKeysSymbol]?: ReadonlySet<string>
+}
+
+export function normalizeUsage(obj: unknown): NormalizedUsage
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, infers ancestor totals from descendants, and returns a plain `Usage` object containing the provided plus inferred values. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, infers ancestor totals from descendants, and returns a plain `Usage` object containing the provided plus inferred values. It also attaches non-enumerable/private explicit-key provenance, for example behind a module-local symbol, so pricing diagnostics can distinguish caller-provided values from inferred totals without changing normal object behavior. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
 ---
 
@@ -740,12 +783,12 @@ export function validateJoinCoverage(pricedUsageKeys: Set<string>, family: UnitF
 export function validateModelPrice(modelPrice: ModelPrice, families: ParsedFamilies): void
 export function validateExtractorDestinations(destKeys: Set<string>, usageKeys: Set<string>): void
 export function validateProviderData(providers: Provider[], families: ParsedFamilies): void
-export function isModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): boolean
-export function markModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): void
-export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
+export function isModelPricePrepared(modelPrice: ModelPrice, families: ParsedFamilies): boolean
+export function prepareModelPrice(modelPrice: ModelPrice, families: ParsedFamilies): PreparedPricingPlan
+export function invalidateModelPricePreparation(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. After it successfully validates a staged payload, it marks each model price as validated for that exact `registryValidationId` and its current price-key fingerprint. The update path must then install that same parsed registry object; parsing the raw unit data a second time would produce a different validation id and stale the marks immediately. The marker can be a module-private `WeakMap<ModelPrice, { registryValidationId: object; priceKeys: string }>` or equivalent; it is not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPriceValidated(...)` must always compare the current price-key fingerprint with the stored fingerprint. Any library-provided helper for mutating model prices should call `invalidateModelPriceValidation(...)` explicitly. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. After it successfully validates a staged payload, it prepares each model price for that exact `registryValidationId` and its current price-key fingerprint. The update path must then install that same parsed registry object; parsing the raw unit data a second time would produce a different validation id and stale the prepared plans immediately. The prepared plan can be stored in a module-private `WeakMap<ModelPrice, PreparedPricingPlan>` or equivalent; it is not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPricePrepared(...)` must always compare the current price-key fingerprint with the stored fingerprint. Any library-provided helper for mutating model prices should call `invalidateModelPricePreparation(...)` explicitly. Validation and plan preparation should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
@@ -767,18 +810,18 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 `calcPrice()` now:
 
 1. reads the active `registryValidationId`
-2. if `isModelPriceValidated(modelPrice, activeFamilies)` is false, validates this one model price and marks it
+2. if `isModelPricePrepared(modelPrice, activeFamilies)` is false, validates this one model price and prepares its reusable decomposition plan
 3. normalizes raw input with `normalizeUsage(...)`
 4. reads `totalInputTokens` from normalized `usage.input_tokens`
-5. resolves stored price keys to usage-keyed units via `getUnitForPriceKey(priceKey)`
-6. groups resolved units by `unit.family` and computes leaf values per family
+5. reads resolved price keys and per-family decomposition instructions from the prepared plan
+6. applies the prepared per-family decomposition instructions to the normalized usage values
 7. passes `defaultUsage=1` for the requests family
 8. prices each leaf using the value stored under the unit's price key and `family.per`
 9. aggregates by `direction` into the existing result shape
 
 For tiered prices, the threshold input is this normalized `usage.input_tokens` total, preserving Python's behavior: tier selection is based on the full inferred-or-provided input-token count, not on any one decomposed leaf.
 
-It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not validate every calculation; after startup or activation has marked model prices, the hot path pays only a cheap validation-marker check. The one-model validation fallback exists for bypassed/standalone model-price objects.
+It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not validate or compute decomposition coefficients on every calculation; after startup or activation has prepared model prices, the hot path pays only a cheap prepared-plan check. The one-model validation/preparation fallback exists for bypassed/standalone model-price objects.
 
 ---
 
@@ -795,7 +838,7 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 
 If parsing or validation fails, both the active registry and active provider data remain unchanged.
 
-The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Because generated `data.ts` came from build-validated repo data, startup marks the embedded provider data's model prices as validated for that bundled parsed registry without rerunning full provider validation.
+The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Because generated `data.ts` came from build-validated repo data, startup prepares the embedded provider data's model prices for that bundled parsed registry without rerunning full provider validation.
 
 The checked-in JS examples must be updated to cache and restore the wrapped payload shape, not a bare provider array, and to parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
 
@@ -854,7 +897,7 @@ get_snapshot()
        -> import providers, unit_families_data from generated data.py
        -> UnitRegistry(unit_families_data)
        -> DataSnapshot(providers=..., unit_registry=..., from_auto_update=False)
-       -> mark generated ModelPrice objects validated for the bundled registry
+       -> prepare generated ModelPrice objects for the bundled registry
 ```
 
 ### Python snapshot activation
@@ -863,7 +906,7 @@ get_snapshot()
 set_custom_snapshot(snapshot)
   -> if snapshot is None: clear custom snapshot
   -> else validate prices and extractor destinations against snapshot.unit_registry
-  -> after all validation succeeds, mark ModelPrice objects for snapshot.unit_registry
+  -> after all validation succeeds, prepare ModelPrice objects for snapshot.unit_registry
   -> on success: activate snapshot as the only trusted execution snapshot
   -> on failure: raise and keep previous snapshot
 ```
@@ -875,7 +918,7 @@ get_snapshot()
   -> registry = current_snapshot.unit_registry.copy()
   -> providers = copy current_snapshot.providers/models/prices
   -> mutate staged ModelPrice objects as needed
-       -> mutation invalidates inherited validation marks
+       -> mutation invalidates inherited prepared pricing plans
   -> registry.add_family(...), registry.add_unit(...), and/or atomic existing-family edit API
   -> snapshot = DataSnapshot(
        providers=providers,
@@ -884,7 +927,7 @@ get_snapshot()
      )
   -> set_custom_snapshot(snapshot)
        -> validate prices against expanded registry
-       -> mark ModelPrice objects for expanded registry
+       -> prepare ModelPrice objects for expanded registry
        -> activate on success
 ```
 
@@ -893,14 +936,14 @@ get_snapshot()
 ```text
 ModelPrice.calc_price(usage)
   -> registry = get_snapshot().unit_registry
-  -> if validation mark is missing/stale:
-       validate this ModelPrice against registry and mark it
+  -> if prepared pricing plan is missing/stale:
+       validate this ModelPrice against registry and build/cache the plan
   -> smart_usage = Usage.from_raw(usage)
   -> total_input_tokens = smart_usage.input_tokens
-  -> resolve stored price keys to usage keys and group by family
+  -> read resolved price keys and family decomposition instructions from cached plan
   -> for each family:
        default_usage = 1 only for requests
-       leaf_values = compute_leaf_values(priced_usage_keys, smart_usage, family, default_usage=...)
+       leaf_values = apply prepared decomposition instructions to smart_usage
   -> for each priced usage-keyed unit:
        price = stored price at unit.price_key
        cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
@@ -914,13 +957,13 @@ ModelPrice.calc_price(usage)
 generated data.ts
   -> unitFamiliesData bootstraps units.ts
   -> data bootstraps providerData
-  -> mark generated providerData model prices validated for the bundled registry
+  -> prepare generated providerData model prices for the bundled registry
 
 runtime update
   -> parse wrapped JSON
   -> stagedFamilies = parseFamilies(parsed.unit_families)
   -> validateProviderData(parsed.providers, stagedFamilies)
-       -> mark successfully validated model prices for stagedFamilies
+       -> prepare successfully validated model prices for stagedFamilies
   -> on success only:
        setUnitFamilies(stagedFamilies)
        setProviderData(parsed.providers)
@@ -939,7 +982,7 @@ copy active parsed families
      # validation does not require video to mirror other modalities.
   -> stagedProviders = copy and patch providerData/model prices
   -> validateProviderData(stagedProviders, stagedFamilies)
-       -> mark successfully validated model prices for stagedFamilies
+       -> prepare successfully validated model prices for stagedFamilies
   -> setUnitFamilies(stagedFamilies)
   -> setProviderData(stagedProviders)
 ```
