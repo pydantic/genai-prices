@@ -201,6 +201,8 @@ Registry construction and mutation perform all structural validation:
 - no two units in a family share the same dimension set
 - every compatible pair in a family has its join present in that family
 
+`add_unit(...)` validates after adding one unit and is appropriate only when the resulting family is valid immediately. The implementation must also provide an atomic existing-family edit path for join-dependent changes, but the exact public API shape is not settled by this spec yet. That path must stage changes to an existing family, merge dimension-declaration changes, add unit definitions, validate the complete candidate registry, and commit only if the final state is valid. A new dimension key adds a whole dimension axis, while values under an existing key extend that axis. This supports changes like adding `video` to an existing `modality` axis or adding a new dimension such as `region`. Existing units that omit the new dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
+
 The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
 
 `validation_id` is an opaque identity/version value used only for model-price validation marks. A copied or mutated registry must get a different validation id from the source registry, so a `ModelPrice` validated against one snapshot is not accidentally trusted against another snapshot whose units may have changed.
@@ -684,7 +686,7 @@ export function getAllPriceKeys(): Set<string>
 export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price validation marks from the previous registry are not reused.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same atomic existing-family edit capability as Python, but the exact public API shape is still open. It may be a builder, a transaction-like helper, a replace-family helper, or a batch update function. Whatever API is chosen must work on staged parsed families and return or commit a structurally valid parsed registry without mutating the active registry in place. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price validation marks from the previous registry are not reused.
 
 ---
 
@@ -870,7 +872,7 @@ get_snapshot()
   -> providers = copy current_snapshot.providers/models/prices
   -> mutate staged ModelPrice objects as needed
        -> mutation invalidates inherited validation marks
-  -> registry.add_family(...) and/or registry.add_unit(...)
+  -> registry.add_family(...), registry.add_unit(...), and/or atomic existing-family edit API
   -> snapshot = DataSnapshot(
        providers=providers,
        from_auto_update=False,
@@ -920,4 +922,20 @@ runtime update
        setProviderData(parsed.providers)
   -> on failure:
        keep both active registry and providerData unchanged
+```
+
+### JS custom unit flow
+
+```text
+copy active parsed families
+  -> stagedFamilies = atomic existing-family edit on 'tokens':
+       add dimension value { modality: ['video'] }
+       add unit cache_video_read_tokens
+     # This example intentionally adds only the unit the caller needs; registry
+     # validation does not require video to mirror other modalities.
+  -> stagedProviders = copy and patch providerData/model prices
+  -> validateProviderData(stagedProviders, stagedFamilies)
+       -> mark successfully validated model prices for stagedFamilies
+  -> setUnitFamilies(stagedFamilies)
+  -> setProviderData(stagedProviders)
 ```
