@@ -266,7 +266,7 @@ def compute_leaf_values(
     """
 ```
 
-`compute_leaf_values(...)` uses the family dimension lattice and only the currently priced units. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current normalized usage. Negative leaf values raise `ValueError` with user-facing messages that describe the contradictory usage relationship, not the underlying algorithm.
+`compute_leaf_values(...)` uses the family dimension lattice and only the currently priced units. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current usage values. Reading a missing usage value may trigger lazy inference on `Usage`. Negative leaf values, contradictory usage, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
 
 Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this module is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; decomposition may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
 
@@ -329,7 +329,7 @@ class Usage:
     _explicit_keys: frozenset[str]
 
     def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None values for registered usage keys, remember explicit keys, and infer ancestor totals."""
+        """Store non-None values for registered usage keys and remember explicit keys."""
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
@@ -341,9 +341,11 @@ class Usage:
         """
 
     def __getattr__(self, name: str) -> int:
-        """For registered usage keys, return the stored value or 0 if absent.
+        """For registered usage keys, return the stored value, lazily infer it, or return 0 if absent.
 
         Raise AttributeError for names that are not registered usage keys.
+        Raise ValueError only if a missing requested value must be inferred and
+        that inference depends on contradictory or underdetermined reported usage.
         """
 
     def is_explicit(self, name: str) -> bool:
@@ -355,7 +357,9 @@ class Usage:
     def __repr__(self) -> str: ...
 ```
 
-Construction-time inference fills ancestor values from descendants using the active global registry. Explicitly supplied values are never overwritten. `_values` contains both explicit and inferred values; `_explicit_keys` records only the keys supplied by the caller, raw object, or extractor. The explicit-key distinction is internal support for contradiction diagnostics and should not change normal attribute access. `Usage.__add__` should preserve explicit-key provenance instead of reclassifying every stored inferred ancestor as explicit. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for a cached extractor/normalizer later if profiling shows it matters.
+Construction does not infer ancestor totals and must not reject contradictory registered values. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Explicitly supplied values are never overwritten. `_values` starts with explicit values and may later contain cached inferred values; `_explicit_keys` records only the keys supplied by the caller, raw object, or extractor. The explicit-key distinction is internal support for contradiction diagnostics and should not change normal successful attribute access.
+
+Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Cache successful inferences if that keeps the implementation simple. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory provided values, raise `ValueError` with a user-facing message. `Usage.__add__` should preserve explicit-key provenance instead of reclassifying cached inferred ancestors as explicit. It may drop cached inferred values and let the result infer lazily again, which avoids stale or overcounted derived totals. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward and leave room for cached usage readers later if profiling shows it matters.
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
@@ -408,10 +412,11 @@ Supported mutation paths that add or remove effective price keys must clear know
 2. If `is_known_valid_for(registry)` is false, validate this one model price and mark it known valid.
 3. Wrap non-`Usage` input with `Usage.from_raw`.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family, or read an equivalent cached pricing plan if present.
-5. For each family, compute leaf values from the normalized usage, optionally using cached decomposition instructions.
-6. Pass `default_usage=1` only for the `requests` family.
-7. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
-8. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
+5. For tiered prices, read `usage.input_tokens`; if it cannot be provided or inferred coherently, raise a usage error instead of guessing a tier.
+6. For each family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions.
+7. Pass `default_usage=1` only for the `requests` family.
+8. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
+9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
 
 Families without a `direction` dimension contribute only to `total_price`.
 
@@ -766,7 +771,7 @@ export function computeLeafValues(
 ): Record<string, number>
 ```
 
-`buildFamilyDecompositionCache(...)` is an optional cache helper. `computeLeafValues()` consumes normalized usage data, not raw caller input, and may use a cached decomposition if one is available. By the time decomposition runs, JS behavior matches Python behavior: ancestor totals have already been inferred, missing keys read as zero, and negative leaves indicate a genuine contradiction rather than an inference gap. The normalized usage value also carries internal explicit-key provenance for diagnostics; error messages should not present inferred-only fields as if the caller supplied them.
+`buildFamilyDecompositionCache(...)` is an optional cache helper. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and may use a cached decomposition if one is available. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Negative leaves, contradictory usage, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. The normalized usage value also carries internal explicit-key provenance for diagnostics; error messages should not present inferred-only fields as if the caller supplied them.
 
 Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
 
@@ -784,9 +789,12 @@ type NormalizedUsage = Usage & {
 }
 
 export function normalizeUsage(obj: unknown): NormalizedUsage
+export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, infers ancestor totals from descendants, and returns a plain `Usage` object containing the provided plus inferred values. It also attaches non-enumerable/private explicit-key provenance, for example behind a module-local symbol, so pricing diagnostics can distinguish caller-provided values from inferred totals without changing normal object behavior. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also attaches non-enumerable/private explicit-key provenance, for example behind a module-local symbol, so pricing diagnostics can distinguish caller-provided values from inferred totals without changing normal object behavior. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
+
+`getUsageValue(...)` is the JS inference boundary used by `calcPrice()`, `computeLeafValues()`, and any internal code that needs registry-aware usage reads. It returns a stored value without proactively checking the rest of the object for contradictions, lazily infers and optionally caches a missing value when the answer is coherent, returns zero when there is no relevant data, and throws a user-facing error only when the missing requested value cannot be inferred because the reported values are contradictory or underdetermine the answer. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
 ---
 
@@ -835,14 +843,14 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 1. reads the active `registryValidationId`
 2. if `isModelPriceKnownValid(modelPrice, activeFamilies)` is false, validates and marks that one model price known valid
 3. normalizes raw input with `normalizeUsage(...)`
-4. reads `totalInputTokens` from normalized `usage.input_tokens`
+4. reads `totalInputTokens` with `getUsageValue(usage, 'input_tokens')` when tiered prices need it
 5. resolves price keys and groups priced units by family, or reads an equivalent cached pricing plan if present
-6. computes per-family leaf values from normalized usage, optionally using cached decomposition instructions
+6. computes per-family leaf values from registry-normalized usage, optionally using cached decomposition instructions
 7. passes `defaultUsage=1` for the requests family
 8. prices each leaf using the value stored under the unit's price key and `family.per`
 9. aggregates by `direction` into the existing result shape
 
-For tiered prices, the threshold input is this normalized `usage.input_tokens` total, preserving Python's behavior: tier selection is based on the full inferred-or-provided input-token count, not on any one decomposed leaf.
+For tiered prices, the threshold input is this provided-or-inferable `input_tokens` total, preserving Python's behavior: tier selection is based on the full input-token count, not on any one decomposed leaf. If the reported usage does not determine a coherent total, `calcPrice()` raises instead of selecting a tier.
 
 It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not validate every calculation; after activation or first use has marked a model price known valid, the hot path pays only a cheap known-valid check. Caching decomposition coefficients is allowed if useful, but not required. The one-model validation fallback exists for custom or bypassed model-price objects whose known-valid state is missing or stale.
 
@@ -874,7 +882,9 @@ The existing extraction logic still builds a plain object of counts. The change 
 
 - `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined usage key
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
-- `extractUsage(...)` returns that normalized plain object, so JS callers get the same inferred-ancestor behavior that Python callers get from `Usage`
+- `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
+
+If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` tries to price the usage and must reconcile the contradiction.
 
 ---
 
