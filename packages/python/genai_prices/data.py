@@ -5674,6 +5674,42 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-5.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.5'),
+                        ClauseEquals(equals='gpt-5.5-2026-04-23'),
+                        ClauseEquals(equals='gpt-5-5'),
+                        ClauseEquals(equals='gpt-5-5-2026-04-23'),
+                        ClauseEquals(equals='gpt-5.5-chat'),
+                        ClauseEquals(equals='gpt-5.5-chat-latest'),
+                        ClauseEquals(equals='gpt-5-5-chat'),
+                        ClauseEquals(equals='gpt-5-5-chat-latest'),
+                        ClauseEquals(equals='gpt-5.5-codex'),
+                        ClauseEquals(equals='gpt-5-5-codex'),
+                    ]
+                ),
+                name='GPT-5.5',
+                description='The best model for coding and agentic tasks across industries',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+            ),
+            ModelInfo(
+                id='gpt-5.5-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.5-pro'),
+                        ClauseEquals(equals='gpt-5.5-pro-2026-04-23'),
+                        ClauseEquals(equals='gpt-5-5-pro'),
+                        ClauseEquals(equals='gpt-5-5-pro-2026-04-23'),
+                    ]
+                ),
+                name='GPT-5.5 Pro',
+                description='Version of GPT-5.5 that produces smarter and more precise responses.',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+            ),
+            ModelInfo(
                 id='gpt-realtime',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-realtime'), ClauseEquals(equals='gpt-realtime-2025-08-28')]
