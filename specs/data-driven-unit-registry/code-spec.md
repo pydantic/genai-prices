@@ -408,7 +408,7 @@ Supported mutation paths that add or remove effective price keys must clear know
 2. If `is_known_valid_for(registry)` is false, validate this one model price and mark it known valid.
 3. Wrap non-`Usage` input with `Usage.from_raw`.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family, or read an equivalent cached pricing plan if present.
-5. For tiered prices, read `usage.input_tokens`; if it cannot be provided or inferred coherently, raise a usage error instead of guessing a tier.
+5. For tiered prices, read `usage.input_tokens`; if it is stored, use it without reconciling descendant values. If it is missing and cannot be inferred coherently, raise a usage error instead of guessing a tier.
 6. For each priced family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions, while ignoring unpriced reported usage values unless they are needed to infer a missing priced value.
 7. Pass `default_usage=1` only for the `requests` family.
 8. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
@@ -842,7 +842,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 8. prices each leaf using the value stored under the unit's price key and `family.per`
 9. aggregates by `direction` into the existing result shape
 
-For tiered prices, the threshold input is this provided-or-inferable `input_tokens` total, preserving Python's behavior: tier selection is based on the full input-token count, not on any one decomposed leaf. If the reported usage does not determine a coherent total, `calcPrice()` raises instead of selecting a tier.
+For tiered prices, the threshold input is this provided-or-inferable `input_tokens` total, preserving Python's behavior: tier selection is based on the full input-token count, not on any one decomposed leaf. If `input_tokens` is stored on the usage object, `calcPrice()` uses it directly and does not reconcile descendant values for tier selection. If `input_tokens` is missing and the reported usage does not determine a coherent total, `calcPrice()` raises instead of selecting a tier.
 
 It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not validate every calculation; after activation or first use has marked a model price known valid, the hot path pays only a cheap known-valid check. Caching decomposition coefficients is allowed if useful, but not required. The one-model validation fallback exists for custom or bypassed model-price objects whose known-valid state is missing or stale.
 
@@ -876,7 +876,7 @@ The existing extraction logic still builds a plain object of counts. The change 
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
 
-If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket or tier threshold.
+If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket.
 
 ---
 
