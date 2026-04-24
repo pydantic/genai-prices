@@ -5,11 +5,17 @@
 **The goal is to calculate prices as accurately as possible for a given request.**
 This is the reason the system exists. Every design decision traces back to this: maximize pricing accuracy given the information available.
 
+**Correct pricing semantics beat algorithmic convenience.** _(from "The goal is to calculate prices as accurately as possible")_
+The decomposition algorithm is an implementation detail, not a contract users need to understand. A reasonable pricing shape must not produce strange results because of obscure Mobius-sign assumptions or because an intermediate unit happens not to exist. If a model prices a specific subset (for example cached video tokens) but does not price an intermediate category (for example all video input tokens), that can be a legitimate statement that the intermediate category falls through to a broader catch-all price. The system must either calculate that correctly or reject genuinely ambiguous/impossible data with a clear validation error; silently returning a mathematically tidy but commercially wrong answer is unacceptable.
+
 **Price data must be complete; usage data may be incomplete.** _(from "The goal is to calculate prices as accurately as possible")_
 These are two different kinds of information with different completeness guarantees. Price data is authored by us (in provider YAML files) — we control it and can enforce completeness. If a model prices cached tokens and audio tokens, it must also price cached-audio tokens; anything less is a data quality bug, not an acceptable approximation. Usage data comes from callers at runtime — they provide what they have (sometimes just `input_tokens` and `output_tokens` from OpenTelemetry). We give the best answer possible with incomplete usage, but we don't accept incomplete prices.
 
 **Every usage value must land in exactly one pricing bucket.** _(from "Price data must be complete")_
 When a model prices overlapping units (e.g., "all input tokens" and "cached input tokens"), the system assigns each token-count to exactly one bucket. No double-counting, no dropped tokens. This is a correctness invariant enforced by price data completeness — it's not something we approximate or hope for.
+
+**Validation exists to protect pricing semantics, not to satisfy the algorithm.** _(from "Correct pricing semantics beat algorithmic convenience", "Validation replaces what hardcoded fields gave us")_
+Validation should reject data that is genuinely incomplete, ambiguous, or impossible to price accurately. It should not require redundant units or redundant prices solely because the current algorithm would otherwise be hard to implement. If a sparse but meaningful registry shape can be priced accurately by a better decomposition method, the design should prefer the correct method over forcing callers to add artificial intermediate units or artificial prices.
 
 **Units are data, not code.**
 A pricing unit — the thing you multiply usage by to get a cost — is defined once in a data file. That definition propagates to every language implementation. Adding a new unit requires editing a data file, nothing else. No Python class, no TypeScript interface, no schema update.
@@ -145,7 +151,7 @@ leaf(cache_read_tokens) = cache_read_tokens - cache_video_read_tokens
 leaf(cache_video_read_tokens) = cache_video_read_tokens
 ```
 
-So if sparse registry shapes are allowed and we keep the current full-depth sign rule, price calculation can be silently wrong. This is separate from sibling symmetry. The registry should not require every modality or dimension value to have the same shape as every other value, but allowing sparse shapes may require a different decomposition algorithm or stronger structural validation.
+So if sparse registry shapes are allowed and we keep the current full-depth sign rule, price calculation can be silently wrong. That violates the top-level rule that correct pricing semantics beat algorithmic convenience: "cached video has a special price, non-cached video falls through to normal input pricing" is a reasonable pricing shape, and it must not produce a bizarre extra credit in the input catch-all because an intermediate `input_video_tokens` unit is absent. This is separate from sibling symmetry. The registry should not require every modality or dimension value to have the same shape as every other value, but allowing sparse shapes may require a different decomposition algorithm or stronger structural validation.
 
 There are at least three possible resolutions:
 
