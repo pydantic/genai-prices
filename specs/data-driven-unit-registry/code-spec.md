@@ -243,6 +243,8 @@ def compute_leaf_values(
 
 `compute_leaf_values` uses the family dimension lattice and only the currently priced units. Negative leaf values raise `ValueError` with user-facing messages that describe the contradictory usage relationship, not the underlying algorithm.
 
+Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this function is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; the implementation may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
+
 ---
 
 ### `validation.py` — new file
@@ -255,7 +257,7 @@ def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]
 
 
 def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
-    """Every priced unit's ancestors in the same family must also be priced."""
+    """Every priced unit's required ancestors in the same family must also be priced."""
 
 
 def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
@@ -275,6 +277,8 @@ def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -
 ```
 
 This module does not validate raw registry structure. That stays in `UnitRegistry`.
+
+The meaning of "required ancestors" is tied to the unresolved sparse-registry question in the prose spec. If the final design requires registry ancestor/downward closure, this helper can validate registered ancestors after structural validation has guaranteed the relevant units exist. If the final design allows sparse registry shapes, this helper and `compute_leaf_values(...)` must agree on the actual poset used for decomposition.
 
 ---
 

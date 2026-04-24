@@ -120,6 +120,41 @@ If a model prices both `cache_read_mtok` (unit `cache_read_tokens`) and `input_a
 **Decomposition correctness depends on ancestor and join coverage.** _(from "Only priced units participate", "Ancestor coverage", "Join coverage")_
 The Mobius inversion formula sums only over priced units, using sign `(-1)^(depth(V) - depth(U))` from the full poset. This gives correct leaf values only when the set of priced units has no structural gaps — every ancestor of a priced unit is priced (ancestor coverage), and the join of any two priced units that share a common descendant is also priced (join coverage). Without these guarantees, skipping intermediate unpriced units produces wrong signs in the inclusion-exclusion. The validation rules are not just data quality checks — they are preconditions for the algorithm's correctness.
 
+**Open question: sparse registry shapes may break the current decomposition formula.** _(from "Decomposition correctness depends on ancestor and join coverage", "Users can define custom units at runtime")_
+The current formula uses `(-1)^(depth(V) - depth(U))`, where depth is the number of dimension assignments in the full dimension product. That works for the built-in symmetric token registry and for priced sets with no structural gaps. It is not obviously correct for sparse family shapes where some intermediate dimension combinations are not registered units.
+
+Example: suppose a runtime extension adds `cache_video_read_tokens` but does not add `input_video_tokens`. The registered/priced units might be:
+
+```text
+input_tokens              {direction: input}
+cache_read_tokens         {direction: input, cache: read}
+cache_video_read_tokens   {direction: input, cache: read, modality: video}
+```
+
+If the model prices all three units, the current full-depth formula for `input_tokens` treats `cache_video_read_tokens` as two dimensions deeper than `input_tokens`, giving:
+
+```text
+leaf(input_tokens) = input_tokens - cache_read_tokens + cache_video_read_tokens
+```
+
+But `cache_video_read_tokens` is already contained within `cache_read_tokens`. If there is no separate `input_video_tokens` bucket, the input catch-all remainder should be:
+
+```text
+leaf(input_tokens) = input_tokens - cache_read_tokens
+leaf(cache_read_tokens) = cache_read_tokens - cache_video_read_tokens
+leaf(cache_video_read_tokens) = cache_video_read_tokens
+```
+
+So if sparse registry shapes are allowed and we keep the current full-depth sign rule, price calculation can be silently wrong. This is separate from sibling symmetry. The registry should not require every modality or dimension value to have the same shape as every other value, but allowing sparse shapes may require a different decomposition algorithm or stronger structural validation.
+
+There are at least three possible resolutions:
+
+1. Require some form of ancestor/downward closure in `UnitRegistry` so structurally important intermediate units must exist. This keeps the simple full-depth formula, but the rule must be defined carefully. A naive "all dimension subsets must exist" rule would require nonsensical units such as `{cache: read}` without `{direction: input}`.
+2. Change decomposition to compute Mobius coefficients from the actual priced/registered unit poset rather than using `(-1)^(depth difference)` from the full dimension product. This supports sparse shapes better, but makes the algorithm and validation more complex.
+3. Allow sparse units in the registry but forbid pricing units whose missing intermediate ancestors would make the current formula invalid. This avoids silent wrong pricing but creates registry units that can exist while being hard or impossible to price until more units are added.
+
+This must be resolved before implementation. Build-time validation catches problems in repo-defined data, but runtime custom registries can still create sparse shapes. The spec should not rely on "the built-in registry happens to be symmetric" as the general rule.
+
 **The registry defines units symmetrically across modalities.** _(from "Registry join-closedness")_
 For the built-in `tokens` family, each modality gets the same four unit patterns: input, output, cache read, and cache write — even where no provider currently uses them. This is not the full Cartesian product of all dimension values (nonsensical combinations like `{direction: output, cache: read}` are excluded since caching is input-side). The built-in symmetry is a registry-data choice for today's token modalities, not a general validation rule. Custom unit families and runtime extensions do not need to give every value on an axis the same shape; they only need to satisfy the structural rules that apply to the units they actually define.
 
