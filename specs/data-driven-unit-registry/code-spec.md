@@ -266,7 +266,7 @@ def compute_leaf_values(
     """
 ```
 
-`compute_leaf_values(...)` uses the family dimension lattice and only the currently priced units. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current usage values. Reading a missing usage value may trigger lazy inference on `Usage`. Negative leaf values, contradictory usage, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
+`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current usage values. Reading a missing usage value may trigger lazy inference on `Usage`. Explicit usage values in the same priced family may participate in consistency checks even when their units are not separate cost buckets; for example, `input_tokens=100` and `cache_read_tokens=200` must make token pricing fail even if the model has only an input catch-all price. Negative leaf values, contradictory usage, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
 
 Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this module is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; decomposition may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
 
@@ -413,7 +413,7 @@ Supported mutation paths that add or remove effective price keys must clear know
 3. Wrap non-`Usage` input with `Usage.from_raw`.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family, or read an equivalent cached pricing plan if present.
 5. For tiered prices, read `usage.input_tokens`; if it cannot be provided or inferred coherently, raise a usage error instead of guessing a tier.
-6. For each family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions.
+6. For each priced family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions, while rejecting explicit contradictions in that family even when a contradictory unit is not separately priced.
 7. Pass `default_usage=1` only for the `requests` family.
 8. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
 9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
