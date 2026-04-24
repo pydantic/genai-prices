@@ -1,6 +1,6 @@
 # Pricing Examples
 
-These examples use approximate prices to show how the unit system handles real pricing patterns.
+These examples use approximate prices to show how the unit system handles real pricing patterns. YAML `prices` entries use price keys such as `input_mtok`; decomposition labels use usage-keyed units such as `input_tokens`.
 
 ## Audio Model — OpenAI GPT-4o Realtime
 
@@ -15,7 +15,7 @@ These examples use approximate prices to show how the unit system handles real p
     cache_audio_read_mtok: 2.5
 ```
 
-Audio tokens are much more expensive than text. The catch-all `input_mtok` is the text price. Decomposition: `input_mtok` leaf = input_tokens - cache_read_tokens - input_audio_tokens + cache_audio_read_tokens.
+Audio tokens are much more expensive than text. The catch-all unit `input_tokens` is priced by `input_mtok`, which is the text price. Decomposition: `input_tokens` leaf = input_tokens - cache_read_tokens - input_audio_tokens + cache_audio_read_tokens.
 
 ## Image Generation — OpenAI gpt-image-1.5
 
@@ -28,7 +28,7 @@ Audio tokens are much more expensive than text. The catch-all `input_mtok` is th
     output_image_mtok: 32
 ```
 
-Catch-all convention: `input_mtok` is text since there's no `input_text_mtok`. `output_mtok` and `output_image_mtok` are the same price because image is the default output modality. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_mtok` catch-all at $32/M — the image-rate catch-all. The `output_image_mtok` leaf is 0 (no `output_image_tokens` reported).
+Catch-all convention: unit `input_tokens` priced by `input_mtok` is text since there's no `input_text_mtok`. Unit `output_tokens` priced by `output_mtok` and unit `output_image_tokens` priced by `output_image_mtok` are the same price because image is the default output modality. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_tokens` catch-all at $32/M — the image-rate catch-all. The `output_image_tokens` leaf is 0 (no `output_image_tokens` reported).
 
 ## Multimodal Input — Google Gemini 2.5 Pro
 
@@ -46,7 +46,7 @@ Catch-all convention: `input_mtok` is text since there's no `input_text_mtok`. `
     cache_image_read_mtok: 0.03
 ```
 
-Separate rates per modality. The catch-all `input_mtok` ($1.25) is the text rate; other modalities are cheaper. Cached variants defined for each. This model also has long-context tiers handled by the existing `TieredPrices` mechanism.
+Separate rates per modality. The catch-all unit `input_tokens` priced by `input_mtok` ($1.25) is the text rate; other modalities are cheaper. Cached variants defined for each. This model also has long-context tiers handled by the existing `TieredPrices` mechanism.
 
 ## Image-Primary — Catch-All Convention
 
@@ -73,23 +73,23 @@ Image is the default modality. Someone sending `input_tokens: 1000` with no brea
     output_mtok: 10
 ```
 
-Audio in (audio tokens), text out (output tokens). `input_mtok` and `input_audio_mtok` are the same price — this model only takes audio input, but the catch-all ancestor is required.
+Audio in (audio tokens), text out (output tokens). Unit `input_tokens` (`input_mtok`) and unit `input_audio_tokens` (`input_audio_mtok`) are the same price — this model only takes audio input, but the catch-all ancestor is required.
 
 ## Simple Decomposition Walkthrough
 
 A model prices two input units in a parent-child chain (no sibling overlap, so join coverage is not triggered):
 
-- `input_mtok` at $3/M (catch-all input)
-- `cache_read_mtok` at $0.30/M (cached input)
-- `output_mtok` at $15/M
+- `input_tokens` via `input_mtok` at $3/M (catch-all input)
+- `cache_read_tokens` via `cache_read_mtok` at $0.30/M (cached input)
+- `output_tokens` via `output_mtok` at $15/M
 
 Usage: `{input_tokens: 1000, cache_read_tokens: 200, output_tokens: 500}`
 
 Leaf values:
 
-- `cache_read_mtok`: 200 (no more-specific priced unit)
-- `input_mtok`: 1000 - 200 = 800 (remainder)
-- `output_mtok`: 500
+- `cache_read_tokens`: 200 (no more-specific priced unit)
+- `input_tokens`: 1000 - 200 = 800 (remainder)
+- `output_tokens`: 500
 
 Cost: `(800/1M) x 3 + (200/1M) x 0.30 + (500/1M) x 15 = $0.01006`
 
@@ -97,21 +97,21 @@ Cost: `(800/1M) x 3 + (200/1M) x 0.30 + (500/1M) x 15 = $0.01006`
 
 A model prices four input units — including the join required by join coverage:
 
-- `input_mtok` at $5/M (catch-all input)
-- `cache_read_mtok` at $0.50/M (cached input)
-- `input_audio_mtok` at $100/M (audio input)
-- `cache_audio_read_mtok` at $2.50/M (cached audio input — the join of cache_read and input_audio)
-- `output_mtok` at $20/M
+- `input_tokens` via `input_mtok` at $5/M (catch-all input)
+- `cache_read_tokens` via `cache_read_mtok` at $0.50/M (cached input)
+- `input_audio_tokens` via `input_audio_mtok` at $100/M (audio input)
+- `cache_audio_read_tokens` via `cache_audio_read_mtok` at $2.50/M (cached audio input — the join of cache_read and input_audio)
+- `output_tokens` via `output_mtok` at $20/M
 
 Usage: `{input_tokens: 1000, cache_read_tokens: 200, input_audio_tokens: 300, cache_audio_read_tokens: 50, output_tokens: 500}`
 
 Leaf values (inclusion-exclusion via Mobius inversion):
 
-- `cache_audio_read_mtok`: 50 (leaf — no descendants)
-- `cache_read_mtok`: 200 - 50 = 150 (subtract cached-audio)
-- `input_audio_mtok`: 300 - 50 = 250 (subtract cached-audio)
-- `input_mtok`: 1000 - 200 - 300 + 50 = 550 (the +50 corrects for double-subtraction)
-- `output_mtok`: 500
+- `cache_audio_read_tokens`: 50 (leaf — no descendants)
+- `cache_read_tokens`: 200 - 50 = 150 (subtract cached-audio)
+- `input_audio_tokens`: 300 - 50 = 250 (subtract cached-audio)
+- `input_tokens`: 1000 - 200 - 300 + 50 = 550 (the +50 corrects for double-subtraction)
+- `output_tokens`: 500
 
 Sum: 50 + 150 + 250 + 550 + 500 = 1500 = 1000 + 500. Every token in exactly one bucket.
 

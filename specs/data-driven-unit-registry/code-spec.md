@@ -46,7 +46,7 @@ The final design has one checked-in source registry file (`prices/units.yml`), p
 
 ## Data Shapes
 
-**`prices/units.yml` is a new source-of-truth registry file.** _(implements "The registry is a YAML file that defines all built-in units", "`requests_kcount` becomes a unit in a `requests` family", "The registry defines units symmetrically across modalities")_
+**`prices/units.yml` is a new source-of-truth registry file.** _(implements "The registry is a YAML file that defines all built-in units", "`requests_kcount` becomes the price key for a unit in a `requests` family", "The registry defines units symmetrically across modalities")_
 The file is a top-level mapping of `family_id -> family data`. It is checked into the repo and becomes the only handwritten definition of built-in units.
 
 ```yaml
@@ -58,23 +58,23 @@ tokens:
     modality: [text, audio, image, video]
     cache: [read, write]
   units:
-    input_mtok:
-      usage_key: input_tokens
+    input_tokens:
+      price_key: input_mtok
       dimensions: { direction: input }
-    output_mtok:
-      usage_key: output_tokens
+    output_tokens:
+      price_key: output_mtok
       dimensions: { direction: output }
-    cache_read_mtok:
-      usage_key: cache_read_tokens
+    cache_read_tokens:
+      price_key: cache_read_mtok
       dimensions: { direction: input, cache: read }
-    cache_write_mtok:
-      usage_key: cache_write_tokens
+    cache_write_tokens:
+      price_key: cache_write_mtok
       dimensions: { direction: input, cache: write }
-    input_text_mtok:
-      usage_key: input_text_tokens
+    input_text_tokens:
+      price_key: input_text_mtok
       dimensions: { direction: input, modality: text }
-    cache_audio_read_mtok:
-      usage_key: cache_audio_read_tokens
+    cache_audio_read_tokens:
+      price_key: cache_audio_read_mtok
       dimensions: { direction: input, modality: audio, cache: read }
     # ... the full symmetric family, including text/audio/image/video variants
 
@@ -83,12 +83,12 @@ requests:
   description: Request counts
   dimensions: {}
   units:
-    requests_kcount:
-      usage_key: requests
+    requests:
+      price_key: requests_kcount
       dimensions: {}
 ```
 
-Unit IDs live only as dict keys in the raw data. `usage_key` defaults to the unit ID when omitted. The `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
+Usage keys live as dict keys in the raw data. `price_key` defaults to the usage key when omitted. The `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
 
 **`prices/data.json` and `prices/data_slim.json` become top-level dicts.** _(implements "`data.json` becomes a top-level dict, not a bare list", "Unit definitions travel with prices, not just with the package")_
 Both generated JSON payloads change from a bare provider list to this shape:
@@ -134,10 +134,10 @@ The runtime packages continue loading generated code at startup; they do not par
 ```python
 @dataclass
 class UnitDef:
-    id: str
+    usage_key: str
+    price_key: str
     family_id: str
     family: UnitFamily
-    usage_key: str
     dimensions: dict[str, str]
 
 
@@ -147,7 +147,7 @@ class UnitFamily:
     per: int
     description: str
     dimensions: dict[str, list[str]]
-    units: dict[str, UnitDef]
+    units: dict[str, UnitDef]  # usage_key -> UnitDef
 ```
 
 There is no `RawUnitDef`/`RawUnitFamily`/`RawFamiliesDict` model layer in Python runtime code. Raw registry data stays as plain dictionaries until `UnitRegistry` constructs these objects.
@@ -157,8 +157,8 @@ There is no `RawUnitDef`/`RawUnitFamily`/`RawFamiliesDict` model layer in Python
 ```python
 class UnitRegistry:
     families: dict[str, UnitFamily]
-    units: dict[str, UnitDef]          # unit_id -> UnitDef across all families
-    usage_keys: dict[str, str]         # usage_key -> unit_id across all families
+    units: dict[str, UnitDef]          # usage_key -> UnitDef across all families
+    price_keys: dict[str, str]         # price_key -> usage_key across all families
 
     def __init__(self, raw_families: dict[str, dict] | None = None) -> None:
         """Parse raw families, validate structure, fill indexes and back-references."""
@@ -177,9 +177,9 @@ class UnitRegistry:
     def add_unit(
         self,
         family_id: str,
-        unit_id: str,
+        usage_key: str,
         *,
-        usage_key: str | None = None,
+        price_key: str | None = None,
         dimensions: dict[str, str],
     ) -> None:
         """Add and validate one unit in an existing family."""
@@ -195,8 +195,8 @@ class UnitRegistry:
 Registry construction and mutation perform all structural validation:
 
 - unit dimension keys and values must exist in the family declaration
-- unit IDs are globally unique
 - usage keys are globally unique
+- price keys are globally unique
 - no two units in a family share the same dimension set
 - every compatible pair in a family has its join present in that family
 
@@ -207,7 +207,7 @@ def _get_registry() -> UnitRegistry:
     """Return get_snapshot().unit_registry via a lazy import."""
 ```
 
-Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().usage_keys[...]` directly.
+Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().price_keys[...]` directly. Code that needs the set of usage keys reads `_get_registry().units.keys()`.
 
 ---
 
@@ -221,13 +221,13 @@ def is_descendant_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
 
 
 def compute_leaf_values(
-    priced_unit_ids: set[str],
+    priced_usage_keys: set[str],
     usage: Usage,
     family: UnitFamily,
     *,
     default_usage: int = 0,
 ) -> dict[str, int]:
-    """Compute exclusive usage for the priced units in one family.
+    """Compute exclusive usage for the priced usage-keyed units in one family.
 
     `default_usage` exists for backward-compat pricing rules such as requests=1 when
     the requests family is priced and no `requests` value was supplied.
@@ -243,15 +243,15 @@ def compute_leaf_values(
 **Price-level validation is centralized here.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "Validation rules are expressed in terms of dimensions, not unit names")_
 
 ```python
-def validate_price_keys(price_keys: set[str], all_unit_ids: set[str]) -> None:
-    """Every model price key must be a registered unit ID."""
+def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None:
+    """Every model price key must be a registered price key."""
 
 
-def validate_ancestor_coverage(priced_unit_ids: set[str], family: UnitFamily) -> None:
+def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
     """Every priced unit's ancestors in the same family must also be priced."""
 
 
-def validate_join_coverage(priced_unit_ids: set[str], family: UnitFamily) -> None:
+def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
     """Every priced compatible pair whose join exists in the family must price that join."""
 
 
@@ -260,7 +260,7 @@ def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -
 
 
 def validate_price_sanity(
-    prices: dict[str, Decimal | TieredPrices],
+    prices_by_usage_key: dict[str, Decimal | TieredPrices],
     family: UnitFamily,
 ) -> None:
     """Build-time economic sanity checks expressed in terms of dimensions."""
@@ -280,7 +280,7 @@ AbstractUsage = object
 
 This keeps the exported name from `main` while removing the false implication that callers must satisfy a fixed protocol.
 
-**`Usage` becomes a registry-aware class with no hardcoded fields.** _(implements "`Usage` is a registry-aware class that infers, decomposes, and serves correct values", "`Usage` infers ancestor values from descendants")_
+**`Usage` becomes a registry-aware class with no hardcoded fields.** _(implements "`Usage` is a registry-aware class that infers and serves correct values", "`Usage` infers ancestor values from descendants")_
 
 ```python
 class Usage:
@@ -327,9 +327,9 @@ class ModelPrice(pydantic.BaseModel):
         """Price all configured units using the active global registry."""
 
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
-        """For registered unit IDs, return the stored price or None if absent.
+        """For registered price keys, return the stored price or None if absent.
 
-        Raise AttributeError for names that are not registered unit IDs.
+        Raise AttributeError for names that are not registered price keys.
         """
 
     def __str__(self) -> str:
@@ -342,10 +342,10 @@ class ModelPrice(pydantic.BaseModel):
 `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
 1. Wrap non-`Usage` input with `Usage.from_raw`.
-2. Use the flat registry index to group stored price keys by family.
+2. Resolve stored price keys through `registry.price_keys` to usage keys, then group those usage-keyed units by family.
 3. For each family, call `compute_leaf_values(...)`.
 4. Pass `default_usage=1` only for the `requests` family.
-5. Price each leaf with the family's `per` normalization.
+5. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
 6. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
 
 Families without a `direction` dimension contribute only to `total_price`.
@@ -422,9 +422,9 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     """Activate a snapshot or reset to bundled default.
 
     For non-None snapshots:
-    - validate every model price key against snapshot.unit_registry
-    - validate ancestor and join coverage per family
-    - validate extractor destinations against snapshot.unit_registry.usage_keys
+    - validate every model price key against snapshot.unit_registry.price_keys
+    - resolve price keys to usage keys, then validate ancestor and join coverage per family
+    - validate extractor destinations against snapshot.unit_registry.units.keys()
     - leave the previous snapshot active if any validation fails
     """
 ```
@@ -492,7 +492,7 @@ The literal `UsageField` union is removed from build-time types.
 
 ### `build.py` — modified
 
-**Build starts from the registry file, then validates provider data against it.** _(implements "Expensive validation happens once at construction/activation time, not on every `calc_price` call", "Price key validation: every key in a model's prices must be a registered unit ID", "Ancestor coverage is validated", "Join coverage is validated")_
+**Build starts from the registry file, then validates provider data against it.** _(implements "Expensive validation happens once at construction/activation time, not on every `calc_price` call", "Price key validation: every key in a model's prices must be a registered price key", "Ancestor coverage is validated", "Join coverage is validated")_
 
 ```python
 def build() -> None:
@@ -516,6 +516,7 @@ def write_prices(
 3. Load and validate provider YAML files with `prices_types.py`.
 4. For every model price payload:
    - validate price keys
+   - resolve price keys to usage keys
    - validate ancestor coverage
    - validate join coverage
 5. Validate extractor destinations against registry usage keys.
@@ -525,8 +526,8 @@ def write_prices(
 **JSON schema generation becomes registry-derived.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
 The provider YAML schema no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. Instead, `build.py` derives:
 
-- allowed price keys from `registry.units`
-- allowed extractor destinations from `registry.usage_keys`
+- allowed price keys from `registry.price_keys`
+- allowed extractor destinations from `registry.units`
 - the top-level wrapped `data.json` schema including `unit_families`
 
 No schema code references specific unit names.
@@ -566,7 +567,7 @@ export interface UsageExtractorMapping {
 
 export interface RawUnitData {
   dimensions: Record<string, string>
-  usage_key?: string
+  price_key?: string
 }
 
 export interface RawFamilyData {
@@ -596,9 +597,9 @@ Public JS callers still pass plain usage objects. The only extra behavior is an 
 
 ```typescript
 export interface UnitDef {
-  id: string
-  familyId: string
   usageKey: string
+  priceKey: string
+  familyId: string
   dimensions: Record<string, string>
 }
 
@@ -607,21 +608,24 @@ export interface UnitFamily {
   per: number
   description: string
   dimensions: Record<string, string[]>
-  units: Record<string, UnitDef>
+  units: Record<string, UnitDef> // usageKey -> UnitDef
 }
 
 export function parseFamilies(raw: RawFamiliesDict): Record<string, UnitFamily>
 // Parses raw family data into UnitFamily/UnitDef objects and validates structure
-// and join-closedness without mutating active runtime state.
+// and join-closedness without mutating active runtime state. Raw unit keys are
+// usage keys; priceKey is raw.price_key ?? usageKey.
 
 export function setUnitFamilies(raw: RawFamiliesDict | null): void
 // Replaces the active registry. For non-null input, delegates to parseFamilies()
 // before activation.
 
 export function getFamily(familyId: string): UnitFamily
-export function getUnit(unitId: string): UnitDef
+export function getUnit(usageKey: string): UnitDef
+export function getUnitForPriceKey(priceKey: string): UnitDef
+export function getUsageKeyForPriceKey(priceKey: string): string
 export function getAllUsageKeys(): Set<string>
-export function getAllUnitIds(): Set<string>
+export function getAllPriceKeys(): Set<string>
 ```
 
 The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON.
@@ -636,7 +640,7 @@ The module bootstraps itself from generated `unitFamiliesData` and allows the ac
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean
 
 export function computeLeafValues(
-  pricedUnitIds: Set<string>,
+  pricedUsageKeys: Set<string>,
   usage: Usage,
   family: UnitFamily,
   defaultUsage?: number,
@@ -668,9 +672,9 @@ export function normalizeUsage(obj: unknown): Usage
 ```typescript
 export function validateRegistryStructure(families: Record<string, UnitFamily>): void
 export function validateRegistryJoinClosedness(family: UnitFamily): void
-export function validatePriceKeys(priceKeys: Set<string>, allUnitIds: Set<string>): void
-export function validateAncestorCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void
-export function validateJoinCoverage(pricedUnitIds: Set<string>, family: UnitFamily): void
+export function validatePriceKeys(priceKeys: Set<string>, allPriceKeys: Set<string>): void
+export function validateAncestorCoverage(pricedUsageKeys: Set<string>, family: UnitFamily): void
+export function validateJoinCoverage(pricedUsageKeys: Set<string>, family: UnitFamily): void
 export function validateExtractorDestinations(destKeys: Set<string>, usageKeys: Set<string>): void
 export function validateProviderData(providers: Provider[], families: Record<string, UnitFamily>): void
 ```
@@ -698,10 +702,10 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 1. normalizes raw input with `normalizeUsage(...)`
 2. reads `totalInputTokens` from normalized `usage.input_tokens`
-3. groups stored price keys by family via `getUnit(unitId).familyId`
-4. computes leaf values per family
+3. resolves stored price keys to usage-keyed units via `getUnitForPriceKey(priceKey)`
+4. groups resolved usage keys by family and computes leaf values per family
 5. passes `defaultUsage=1` for the requests family
-6. prices each leaf using `family.per`
+6. prices each leaf using the value stored under the unit's price key and `family.per`
 7. aggregates by `direction` into the existing result shape
 
 For tiered prices, the threshold input is this normalized `usage.input_tokens` total, preserving Python's behavior: tier selection is based on the full inferred-or-provided input-token count, not on any one decomposed leaf.
@@ -750,7 +754,7 @@ prices/units.yml
   -> UnitRegistry(raw_families)
        -> create UnitFamily shells
        -> create UnitDef objects
-       -> fill families / units / usage_keys indexes
+       -> fill families / units / price_keys indexes
        -> validate dimension rules, uniqueness, join-closedness
 ```
 
@@ -761,7 +765,9 @@ build()
   -> load units.yml
   -> registry = UnitRegistry(unit_families)
   -> load provider YAML files
-  -> validate model price keys / ancestor coverage / join coverage
+  -> validate model price keys
+  -> resolve price keys to usage keys
+  -> validate ancestor coverage / join coverage
   -> validate extractor destinations
   -> validate price sanity
   -> write wrapped data.json and data_slim.json
@@ -815,11 +821,12 @@ ModelPrice.calc_price(usage)
   -> smart_usage = Usage.from_raw(usage)
   -> registry = get_snapshot().unit_registry
   -> total_input_tokens = smart_usage.input_tokens
-  -> group stored price keys by family
+  -> resolve stored price keys to usage keys and group by family
   -> for each family:
        default_usage = 1 only for requests
-       leaf_values = compute_leaf_values(priced_ids, smart_usage, family, default_usage=...)
-  -> for each priced unit:
+       leaf_values = compute_leaf_values(priced_usage_keys, smart_usage, family, default_usage=...)
+  -> for each priced usage-keyed unit:
+       price = stored price at unit.price_key
        cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
        aggregate by direction
   -> return {input_price, output_price, total_price}

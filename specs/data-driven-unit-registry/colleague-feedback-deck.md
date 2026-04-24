@@ -116,7 +116,7 @@ cached_text_input_tokens -= cache_audio_read_tokens
 A unit registry means:
 
 - there is a data file that declares the allowed units
-- each unit says which usage key it reads from
+- units are keyed by usage key, with optional separate price keys
 - token units also describe how they overlap
 - prices, usage extraction, and validation all derive from that registry
 
@@ -129,17 +129,17 @@ families:
       modality: [text, audio, image, video]
       cache: [read, write]
     units:
-      input_mtok:
-        usage_key: input_tokens
+      input_tokens:
+        price_key: input_mtok
         dimensions: { direction: input }
-      cache_read_mtok:
-        usage_key: cache_read_tokens
+      cache_read_tokens:
+        price_key: cache_read_mtok
         dimensions: { direction: input, cache: read }
-      input_audio_mtok:
-        usage_key: input_audio_tokens
+      input_audio_tokens:
+        price_key: input_audio_mtok
         dimensions: { direction: input, modality: audio }
-      cache_audio_read_mtok:
-        usage_key: cache_audio_read_tokens
+      cache_audio_read_tokens:
+        price_key: cache_audio_read_mtok
         dimensions: { direction: input, modality: audio, cache: read }
 ```
 

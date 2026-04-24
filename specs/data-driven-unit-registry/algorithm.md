@@ -13,7 +13,7 @@ leaf(U) = sum over all priced descendants V of U (including U itself):
             (-1)^(depth(V) - depth(U)) * usage(V)
 ```
 
-where `depth(V)` = number of dimension assignments on V (e.g., `input_mtok` has 1: `{direction: input}`, `cache_audio_read_mtok` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage_key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. Families with no dimensions (e.g., `requests`) have a single unit and no decomposition to perform.
+where `depth(V)` = number of dimension assignments on V (e.g., unit `input_tokens` has 1: `{direction: input}`, unit `cache_audio_read_tokens` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. Families with no dimensions (e.g., `requests`) have a single unit and no decomposition to perform.
 
 This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
 
@@ -26,36 +26,36 @@ Before applying the Mobius formula, missing usage values are resolved:
 
 Concretely, if `usage(U)` is missing for a non-leaf unit U, it is set to the inclusion-exclusion sum of its priced descendants' usage values. This is the inverse of the Mobius formula with `leaf(U) = 0`.
 
-Example: usage is `{input_audio_tokens: 300}`, priced units are `input_mtok` and `input_audio_mtok`.
+Example: usage is `{input_audio_tokens: 300}`, priced units are `input_tokens` (price key `input_mtok`) and `input_audio_tokens` (price key `input_audio_mtok`).
 
-- `input_audio_mtok` is a leaf: usage = 300 (provided).
-- `input_mtok` is not a leaf: `input_tokens` is missing. Inferred as 300 (sum of descendants).
-- `leaf(input_mtok) = 300 - 300 = 0`. `leaf(input_audio_mtok) = 300`.
+- `input_audio_tokens` is a leaf: usage = 300 (provided).
+- `input_tokens` is not a leaf: `input_tokens` is missing. Inferred as 300 (sum of descendants).
+- `leaf(input_tokens) = 300 - 300 = 0`. `leaf(input_audio_tokens) = 300`.
 - Total: 300 tokens priced, all at the audio rate.
 
-If `input_tokens` were explicitly provided as 1000: `leaf(input_mtok) = 1000 - 300 = 700`. No inference needed — both values are known.
+If `input_tokens` were explicitly provided as 1000: `leaf(input_tokens) = 1000 - 300 = 700`. No inference needed — both values are known.
 
 ## Two-way example
 
-Priced: `input_mtok` (1 dimension), `cache_read_mtok` (2 dimensions).
+Priced: `input_tokens` (1 dimension, price key `input_mtok`), `cache_read_tokens` (2 dimensions, price key `cache_read_mtok`).
 
 ```
-leaf(input_mtok)      = usage(input_tokens) - usage(cache_read_tokens)
-leaf(cache_read_mtok)  = usage(cache_read_tokens)
+leaf(input_tokens)      = usage(input_tokens) - usage(cache_read_tokens)
+leaf(cache_read_tokens) = usage(cache_read_tokens)
 ```
 
 ## Three-way overlap
 
-Priced: `input_mtok` (1 dim), `cache_read_mtok` (2 dims), `input_audio_mtok` (2 dims), `cache_audio_read_mtok` (3 dims).
+Priced: `input_tokens` (1 dim), `cache_read_tokens` (2 dims), `input_audio_tokens` (2 dims), `cache_audio_read_tokens` (3 dims). Their price keys are `input_mtok`, `cache_read_mtok`, `input_audio_mtok`, and `cache_audio_read_mtok`.
 
 ```
-leaf(input_mtok)            = input_tokens - cache_read_tokens - input_audio_tokens + cache_audio_read_tokens
-leaf(cache_read_mtok)       = cache_read_tokens - cache_audio_read_tokens
-leaf(input_audio_mtok)      = input_audio_tokens - cache_audio_read_tokens
-leaf(cache_audio_read_mtok) = cache_audio_read_tokens
+leaf(input_tokens)            = input_tokens - cache_read_tokens - input_audio_tokens + cache_audio_read_tokens
+leaf(cache_read_tokens)       = cache_read_tokens - cache_audio_read_tokens
+leaf(input_audio_tokens)      = input_audio_tokens - cache_audio_read_tokens
+leaf(cache_audio_read_tokens) = cache_audio_read_tokens
 ```
 
-The `+cache_audio_read_tokens` in `leaf(input_mtok)` is the inclusion-exclusion correction: without it, tokens that are both cached and audio would be subtracted twice.
+The `+cache_audio_read_tokens` in `leaf(input_tokens)` is the inclusion-exclusion correction: without it, tokens that are both cached and audio would be subtracted twice.
 
 ## Why this works
 
