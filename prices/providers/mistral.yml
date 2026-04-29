@@ -7,7 +7,7 @@ api_pattern: 'https://api\.mistral\.ai'
 provider_match:
   starts_with: mistral
 model_match:
-  regex: (?:mi|code|dev|magi|mini)stral|(?:mix|pix)tral
+  regex: mistral|codestral|devstral|magistral|ministral|mixtral|pixtral
 
 # https://github.com/mistralai/client-python/blob/v1.9.3/src/mistralai/models/usageinfo.py
 extractors:
