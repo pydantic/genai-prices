@@ -609,6 +609,10 @@ def test_litellm_provider_id():
     assert provider.id == 'openai'
     assert model.id == 'gpt-4.1'
 
+    provider, model = snapshot.find_provider_model('openai/gpt-5.2-20251211', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-5.2'
+
     provider, model = snapshot.find_provider_model('anthropic/claude-3-5-sonnet-20241022', None, 'litellm', None)
     assert provider.id == 'anthropic'
     assert model.id == 'claude-3-5-sonnet'
