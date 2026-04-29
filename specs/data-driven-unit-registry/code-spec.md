@@ -197,7 +197,7 @@ Registry construction and mutation perform all structural validation:
 
 The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
 
-`validation_id` is an opaque identity/version value used only for model-price known-valid state and optional decomposition caches. An independently constructed or mutated registry must get a different validation id from the source registry unless the mutation path can prove compatibility for existing validation state, so a `ModelPrice` validated or cached against one snapshot is not accidentally trusted against another snapshot whose units may have changed.
+`validation_id` is an opaque identity/version value used only for model-price known-valid state and optional decomposition caches. An independently constructed or mutated registry must get a different validation id from the source registry unless the mutation path can prove compatibility for existing validation state, so a `ModelPrice` validated or cached against one snapshot is not accidentally trusted against another snapshot whose units may have changed. A mismatched validation id makes previous known-valid/decomposition state stale; it does not require `set_custom_snapshot()` or JS activation to bulk-revalidate every trusted built-in price.
 
 **Module-level registry access is one lazy helper.** _(implements "There is one global DataSnapshot")_
 
@@ -490,7 +490,10 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     For non-None snapshots:
     - skip price-level validation for model prices already known valid for snapshot.unit_registry
       and their current price-key fingerprint
-    - validate missing/stale model prices against snapshot.unit_registry.price_keys
+    - skip trusted built-in or official auto-update model prices that are stale only because
+      the registry validation id changed; calc_price validates those one model at a time if used
+    - validate missing/stale custom, changed, runtime-authored, or otherwise untrusted model
+      prices against snapshot.unit_registry.price_keys
     - resolve their price keys to usage keys, then validate ancestor and join coverage per family
       using registry relationship indexes rather than full-registry scans
     - validate extractor destinations against snapshot.unit_registry.units.keys()
@@ -501,7 +504,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution, and any model prices that needed runtime validation carry known-valid state for that registry. Unchanged model prices from trusted bundled or official auto-update data keep their known-valid state and are not revalidated.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution, and any custom, changed, runtime-authored, or otherwise untrusted model prices that needed runtime validation carry known-valid state for that registry. Unchanged model prices from trusted bundled or official auto-update data are not revalidated in bulk. They keep known-valid state when the registry validation id still matches; if a registry change makes that state stale and compatibility was not proven, the one-model `calc_price` fallback validates them only if they are actually used.
 
 This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate known-valid state and any decomposition cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
@@ -726,7 +729,7 @@ export function getAllPriceKeys(): Set<string>
 export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same existing-family batch unit-addition capability as Python. Whatever API name is chosen must let callers patch the snapshot/update payload they are working with rather than manually copy the active parsed families and provider data. Internally, the implementation can stage parsed families and return or commit a structurally valid parsed registry only after validation succeeds. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price known-valid state and decomposition caches from the previous registry are not reused unless a registry mutation path can explicitly prove compatibility.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same existing-family batch unit-addition capability as Python. Whatever API name is chosen must let callers patch the snapshot/update payload they are working with rather than manually copy the active parsed families and provider data. Internally, the implementation can stage parsed families and return or commit a structurally valid parsed registry only after validation succeeds. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price known-valid state and decomposition caches from the previous registry are stale unless a registry mutation path can explicitly prove compatibility. Stale trusted built-in prices are not bulk-revalidated during activation; `calcPrice()` validates one such price if that model is later priced.
 
 ---
 
@@ -808,7 +811,7 @@ export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
 export function invalidateModelPriceDecompositionCache(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. It skips model prices that are already known valid for the staged registry and current price-key fingerprint, validates only missing/stale model prices, and marks newly validated prices known valid after all checks succeed. Official generated/auto-update provider data can be marked known valid from trusted repo provenance without running price-level validation for every model. The update path must then install the same parsed registry object; parsing the raw unit data a second time would produce a different validation id and stale private state immediately. Known-valid state and optional decomposition caches can be stored in module-private `WeakMap`s or equivalent; they are not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPriceKnownValid(...)` and any cache lookup must always compare the current price-key fingerprint with stored fingerprints. Library-provided helpers for patching snapshot/provider data should invalidate known-valid state when effective price keys are added/removed and invalidate cached decomposition state when the cache may be stale, without requiring callers to manually clone the whole provider payload. Validation and any plan-building should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. It skips model prices that are already known valid for the staged registry and current price-key fingerprint, and it also skips unchanged trusted built-in or official auto-update prices whose known-valid state is stale only because the registry validation id changed. It validates only missing/stale custom, changed, runtime-authored, or otherwise untrusted model prices, and marks newly validated prices known valid after all checks succeed. Official generated/auto-update provider data can be marked known valid from trusted repo provenance without running price-level validation for every model. The update path must then install the same parsed registry object; parsing the raw unit data a second time would produce a different validation id and stale private state immediately. Known-valid state and optional decomposition caches can be stored in module-private `WeakMap`s or equivalent; they are not part of serialized provider data. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; `isModelPriceKnownValid(...)` and any cache lookup must always compare the current price-key fingerprint with stored fingerprints. Library-provided helpers for patching snapshot/provider data should invalidate known-valid state when effective price keys are added/removed and invalidate cached decomposition state when the cache may be stale, without requiring callers to manually clone the whole provider payload. Validation and any plan-building should iterate each model's stored price keys and use parsed registry indexes/relationship caches; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
@@ -856,7 +859,7 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 3. mark parsed provider data as known valid for `stagedFamilies` using trusted repo-update provenance, without price-level validation of every model
 4. on success only: `setUnitFamilies(stagedFamilies)` and `setProviderData(parsed.providers)`
 
-If parsing or structural registry validation fails, both the active registry and active provider data remain unchanged. User-provided provider data that lacks trusted repo provenance still goes through `validateProviderData(...)`, which validates only missing/stale model prices and marks them known valid before activation.
+If parsing or structural registry validation fails, both the active registry and active provider data remain unchanged. User-provided provider data that lacks trusted repo provenance still goes through `validateProviderData(...)`, which validates only missing/stale custom, changed, runtime-authored, or otherwise untrusted model prices and marks them known valid before activation.
 
 The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain decomposition caches. Embedded provider data may build a decomposition cache for one model price lazily on first calculation, using the same optional private runtime cache as Python.
 
@@ -931,6 +934,8 @@ set_custom_snapshot(snapshot)
   -> for each ModelPrice:
        if known-valid state matches snapshot.unit_registry and current price-key fingerprint:
          skip price-level validation
+       else if unchanged trusted built-in/official price is stale only because registry id changed:
+         skip activation-time validation; calc_price will validate this one model if used
        else:
          validate this ModelPrice against snapshot.unit_registry
   -> after all validation succeeds, mark newly validated ModelPrice objects known valid
@@ -948,7 +953,9 @@ snapshot = get_snapshot() or an inactive snapshot returned from fetch()
        -> mutation invalidates inherited known-valid/decomposition-cache state for changed prices
   -> snapshot.add_family(...), snapshot.add_units(...)
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
-       -> validate only missing/stale ModelPrice objects against expanded registry
+       -> validate only missing/stale custom, changed, or otherwise untrusted ModelPrice objects
+          against expanded registry
+       -> do not bulk-revalidate unchanged trusted built-in prices
        -> mark validated prices known valid
        -> activate on success
   -> if snapshot is already active: supported mutations have already updated the active snapshot,
@@ -989,7 +996,8 @@ runtime update
   -> for official repo-built update:
        mark parsed provider data known valid for stagedFamilies without full price validation
      for user-provided staged data:
-       validate missing/stale model prices and mark them known valid
+       validate missing/stale custom, changed, or otherwise untrusted model prices and mark them known valid
+       skip unchanged trusted built-in prices even if stale only because registry id changed
   -> on success only:
        setUnitFamilies(stagedFamilies)
        setProviderData(parsed.providers)
@@ -1008,6 +1016,7 @@ stagedFamilies/stagedProviders = patch the active or fetched snapshot/update pay
   -> patch providerData/model prices through supported helpers
   -> validateProviderData(stagedProviders, stagedFamilies)
        -> skip still-known-valid built-in prices
+       -> skip stale trusted built-in prices; calcPrice validates one model if used
        -> validate changed/new prices and mark them known valid
   -> setUnitFamilies(stagedFamilies)
   -> setProviderData(stagedProviders)
