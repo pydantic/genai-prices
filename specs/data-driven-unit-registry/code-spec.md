@@ -124,7 +124,7 @@ The runtime packages continue loading generated code at startup; they do not par
 
 ### `units.py` — new file
 
-**`UnitDef` and `UnitFamily` are plain dataclasses.** _(implements "`UnitRegistry` is the runtime representation of unit definitions")_
+**`UnitDef` and `UnitFamily` are plain dataclasses.** _(implements "`UnitRegistry` owns the runtime unit graph")_
 
 ```python
 @dataclass
@@ -146,7 +146,7 @@ class UnitFamily:
 
 There is no `RawUnitDef`/`RawUnitFamily`/`RawFamiliesDict` model layer in Python runtime code. Raw registry data stays as plain dictionaries until `UnitRegistry` constructs these objects.
 
-**`UnitRegistry` owns all runtime unit state.** _(implements "`UnitRegistry` is the runtime representation of unit definitions", "Users can define custom units at runtime", "Registry interval closure", "Registry join-closedness: compatible unit pairs must have their join in the family")_
+**`UnitRegistry` owns all runtime unit state.** _(implements "`UnitRegistry` owns the runtime unit graph", "Users can define custom units at runtime", "Registry interval closure", "Registry join-closedness: compatible unit pairs must have their join in the family")_
 
 ```python
 class UnitRegistry:
@@ -417,6 +417,7 @@ def calc_unit_price(
 ```
 
 The tier threshold input remains `usage.input_tokens`, preserving current tiered-pricing semantics.
+Callers should only demand an inferred input-token total when a `TieredPrices` value needs it; non-tiered prices can pass a neutral value because they ignore the threshold parameter.
 
 **`UsageExtractorMapping.dest` becomes `str`.** _(implements "The extraction pipeline is data-driven end-to-end")_
 
@@ -707,7 +708,7 @@ Public JS callers still pass plain usage objects. The only extra behavior is an 
 
 ### `units.ts` — new file
 
-**JS gets a runtime registry module parallel to Python's `UnitRegistry`.** _(implements "`UnitRegistry` is the runtime representation of unit definitions", "Unit definitions travel with prices, not just with the package")_
+**JS gets a runtime registry module parallel to Python's `UnitRegistry`.** _(implements "`UnitRegistry` owns the runtime unit graph", "Unit definitions travel with prices, not just with the package")_
 
 ```typescript
 export type { ParsedFamilies, RawFamiliesDict, UnitDef, UnitFamily } from './types'
@@ -975,7 +976,8 @@ ModelPrice.calc_price(usage)
        validate this ModelPrice against registry and mark it known valid
        # Pure unit additions do not make unchanged trusted prices missing/stale.
   -> smart_usage = Usage.from_raw(usage)
-  -> total_input_tokens = smart_usage.input_tokens
+  -> total_input_tokens = smart_usage.input_tokens only if any TieredPrices value needs a threshold;
+     otherwise use a neutral value because non-tiered unit prices ignore it
   -> resolve price keys and group by family, or read an equivalent cached plan if present
   -> for each family:
        default_usage = 1 only for requests
