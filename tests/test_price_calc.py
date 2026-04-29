@@ -21,6 +21,13 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+def test_litellm_compact_date_model_ref():
+    price = calc_price(Usage(input_tokens=1000, output_tokens=100), 'openai/gpt-5.2-20251211', provider_id='litellm')
+    expected_price = calc_price(Usage(input_tokens=1000, output_tokens=100), 'gpt-5.2-2025-12-11', provider_id='openai')
+
+    assert price == expected_price
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),
