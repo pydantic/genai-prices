@@ -168,15 +168,12 @@ class UnitRegistry:
     ) -> None:
         """Add and validate a new family."""
 
-    def add_unit(
+    def add_units(
         self,
         family_id: str,
-        usage_key: str,
-        *,
-        price_key: str | None = None,
-        dimensions: dict[str, str],
+        units: dict[str, dict],
     ) -> None:
-        """Add and validate one unit in an existing family."""
+        """Atomically add one or more units to an existing family, then validate."""
 
     def copy(self) -> UnitRegistry:
         """Return an independent copy. Useful internally; not required for ordinary user patches."""
@@ -193,7 +190,7 @@ Registry construction and mutation perform all structural validation:
 - no two units in a family share the same dimension set
 - every compatible pair in a family has its join present in that family
 
-`add_unit(...)` validates after adding one unit and is appropriate only when the resulting family is valid immediately. The implementation must also provide an atomic existing-family edit path for join-dependent changes, but the exact public API shape is not settled by this spec yet. That path must stage unit definitions for an existing family, validate the complete candidate registry, and commit only if the final state is valid. Unit dimension maps are the only source of dimension keys and values: adding a unit with `{modality: video}` or `{region: us}` introduces that value or axis if the final registry validates. Existing units that omit a dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
+`add_units(...)` is the only existing-family unit-addition API. It stages all supplied units against a candidate family, validates the complete candidate registry once, and commits only if the final state is valid. Passing a one-unit mapping handles the simple case; passing several units handles changes that would be invalid one unit at a time under join-closedness or any future interval-closure rule. Unit dimension maps are the only source of dimension keys and values: adding a unit with `{modality: video}` or `{region: us}` introduces that value or axis if the final registry validates. Existing units that omit a dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
 
 `UnitRegistry.copy()` may remain available as a low-level helper, but it is not the required public workflow for custom pricing. `DataSnapshot` should expose or forward supported unit-editing operations so callers can patch the snapshot they are working with. The implementation may still copy the registry internally to validate and roll back failed edits.
 
@@ -461,9 +458,9 @@ class DataSnapshot:
 
 `_bundled_snapshot()` always passes an explicit registry built from generated data, so it never depends on the fallback.
 
-`DataSnapshot` is the public editing surface for runtime customizations. Callers should be able to patch the snapshot they are working with by using supported mutation helpers for unit definitions and model prices; they should not need to manually deep-copy the registry, provider tree, models, or `ModelPrice` objects just to add one unit or one price. The exact method names are still open, but the required capabilities are:
+`DataSnapshot` is the public editing surface for runtime customizations. Callers should be able to patch the snapshot they are working with by using supported mutation helpers for unit definitions and model prices; they should not need to manually deep-copy the registry, provider tree, models, or `ModelPrice` objects just to add one unit or one price. The exact snapshot convenience method names are still open, but the required capabilities are:
 
-- add a unit family or unit to `snapshot.unit_registry`, including atomic existing-family edits
+- add a unit family or a batch of units to `snapshot.unit_registry`
 - update a model's effective price keys on the snapshot
 - invalidate known-valid state and optional decomposition caches only for changed `ModelPrice` objects
 - validate/rollback registry structure before a registry edit becomes visible
@@ -732,7 +729,7 @@ export function getAllPriceKeys(): Set<string>
 export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same atomic existing-family edit capability as Python, but the exact public API shape is still open. It may be a builder, a transaction-like helper, a replace-family helper, or a batch update function. Whatever API is chosen must let callers patch the snapshot/update payload they are working with rather than manually copy the active parsed families and provider data. Internally, the implementation can stage parsed families and return or commit a structurally valid parsed registry only after validation succeeds. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price known-valid state and decomposition caches from the previous registry are not reused unless a registry mutation path can explicitly prove compatibility.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated JSON. JS needs the same existing-family batch unit-addition capability as Python. Whatever API name is chosen must let callers patch the snapshot/update payload they are working with rather than manually copy the active parsed families and provider data. Internally, the implementation can stage parsed families and return or commit a structurally valid parsed registry only after validation succeeds. The active parsed families object identity is the JS `registryValidationId`; replacing the registry produces a new validation id, so model-price known-valid state and decomposition caches from the previous registry are not reused unless a registry mutation path can explicitly prove compatibility.
 
 ---
 
@@ -951,7 +948,7 @@ snapshot = get_snapshot() or an inactive snapshot returned from fetch()
   -> edit the snapshot or fetched inactive snapshot through supported mutation APIs
   -> mutate relevant ModelPrice objects as needed
        -> mutation invalidates inherited known-valid/decomposition-cache state for changed prices
-  -> snapshot.add_family(...), snapshot.add_unit(...), and/or atomic existing-family edit API
+  -> snapshot.add_family(...), snapshot.add_units(...)
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
        -> validate only missing/stale ModelPrice objects against expanded registry
        -> mark validated prices known valid
@@ -1006,10 +1003,10 @@ runtime update
 
 ```text
 stagedFamilies/stagedProviders = patch the active or fetched snapshot/update payload through supported helpers
-  -> atomic existing-family edit on 'tokens':
-       add unit cache_video_read_tokens
-     # This example intentionally adds only the unit the caller needs; registry
-     # validation does not require video to mirror other modalities.
+  -> batch unit edit on 'tokens':
+       add the units required by the final registry shape
+     # Registry validation does not require video to mirror other modalities,
+     # but the supplied batch must satisfy the structural rules we choose.
   -> patch providerData/model prices through supported helpers
   -> validateProviderData(stagedProviders, stagedFamilies)
        -> skip still-known-valid built-in prices
