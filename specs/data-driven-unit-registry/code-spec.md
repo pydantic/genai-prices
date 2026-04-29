@@ -452,7 +452,7 @@ class UsageExtractorMapping:
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
 
 **`ModelInfo.calc_price()` keeps its public signature but delegates to the new generic pricing path.** _(implements "All public API signatures are preserved")_
-The method still accepts a usage object and returns `PriceCalculation`; internally it passes the original usage object unchanged to the selected model price object's `calc_price()` method rather than wrapping usage before dispatch. This preserves custom `ModelPrice` overrides that inspect non-registry usage fields. It relies on `ModelPrice.calc_price()` rather than the hardcoded token-only logic from `main`. It does not guard against the `ModelInfo` having been obtained from an inactive `DataSnapshot`. That pattern is unsupported but allowed; it uses the active global registry, matching the rest of the pricing path.
+The method still accepts a usage object and returns `PriceCalculation`; internally it verifies that the supplied provider/model pair belongs to the current global snapshot before dispatch. If the pair is not active, it raises `RuntimeError` instead of pricing an escaped inactive-snapshot model against the active registry. After that guard, it passes the original usage object unchanged to the selected model price object's `calc_price()` method rather than wrapping usage before dispatch. This preserves custom `ModelPrice` overrides that inspect non-registry usage fields. It relies on `ModelPrice.calc_price()` rather than the hardcoded token-only logic from `main`.
 
 ---
 
@@ -531,7 +531,7 @@ This activation step is what turns a snapshot from staged data into trusted runt
 This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate known-valid state and any decomposition cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
 **`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` require `self is get_snapshot()`.** _(implements "`calc` and `extract_usage` on DataSnapshot require it to be the current global")_
-Both methods raise `RuntimeError` when called on a non-active snapshot. This is intentional discouragement of "standalone snapshot" execution: inactive snapshots are staging objects, not validated execution contexts. This guard applies to snapshot execution methods only; `ModelInfo.calc_price()` does not carry snapshot provenance and is not guarded. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots. _(implements "`find_provider_model` works on any snapshot, global or not")_
+Both methods raise `RuntimeError` when called on a non-active snapshot. This is intentional discouragement of "standalone snapshot" execution: inactive snapshots are staging objects, not validated execution contexts. `ModelInfo.calc_price()` also guards against escaped inactive-snapshot provider/model pairs because it has no snapshot parameter. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots. _(implements "`find_provider_model` works on any snapshot, global or not")_
 
 ---
 
@@ -989,6 +989,12 @@ snapshot = get_snapshot() or an inactive snapshot returned from fetch()
 ### Python hot path
 
 ```text
+ModelInfo.calc_price(usage, provider, ...)
+  -> verify provider/model pair belongs by identity to get_snapshot()
+  -> if not active: raise RuntimeError
+  -> model_price = self.get_prices(genai_request_timestamp)
+  -> model_price.calc_price(usage)
+
 ModelPrice.calc_price(usage)
   -> registry = get_snapshot().unit_registry
   -> if known-valid state is missing/stale:
