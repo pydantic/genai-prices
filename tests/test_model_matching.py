@@ -416,6 +416,23 @@ def test_model_matching(provider_ref: str, model_ref: str, expected: str):
     assert (provider.id, model.id) == expected
 
 
+def test_mistral_model_match_handles_pixtral_and_mixtral():
+    from genai_prices.data_snapshot import DataSnapshot
+
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    test_cases = [
+        ('pixtral-12b-latest', 'pixtral-12b'),
+        ('pixtral-large-2411', 'pixtral-large'),
+        ('mixtral-8x7b-instruct-v0.1', 'mixtral-8x7b'),
+    ]
+    for model_ref, expected_model_id in test_cases:
+        provider, model = snapshot.find_provider_model(model_ref, None, None, None)
+
+        assert provider.id == 'mistral'
+        assert model.id == expected_model_id
+
+
 def test_fallback_tries_all_providers():
     """Test that fallback iterates through all providers until finding a match.
 

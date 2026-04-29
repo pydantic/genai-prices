@@ -8105,7 +8105,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
     api_pattern: 'https://api\\.mistral\\.ai',
     model_match: {
-      regex: '(?:mi|code|dev|magi|mini)stral',
+      regex: 'mistral|codestral|devstral|magistral|ministral|mixtral|pixtral',
     },
     provider_match: {
       starts_with: 'mistral',
