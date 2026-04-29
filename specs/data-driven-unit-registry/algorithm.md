@@ -1,11 +1,10 @@
 # Decomposition Algorithm
 
 This document explains the decomposition model used by the spec examples. The
-prose spec is the source of truth. In particular, sparse registry shapes remain
-an open design question: the full-depth formula below is valid for the built-in
-closed token lattice and similarly complete family shapes, but it must not be
-implemented as the general runtime rule until the sparse-registry question is
-resolved.
+prose spec is the source of truth. The full-depth formula below relies on the
+registry and price-coverage rules in the prose spec: registry interval closure,
+registry join-closedness, price ancestor coverage, and price join coverage.
+Those rules reject sparse shapes that would make this formula silently wrong.
 
 ## Mobius Inversion on the Containment Poset
 
@@ -27,25 +26,29 @@ where `depth(V)` = number of dimension assignments on V (e.g., unit `input_token
 
 This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
 
-## Sparse Registry Caveat
+## Sparse Registry Guardrails
 
 The full-depth sign rule assumes there are no structural gaps that affect the
 priced set. It works for the built-in symmetric token registry and for other
-closed shapes where ancestor and join coverage give the formula the intermediate
-units it relies on.
+closed shapes where registry closure and price coverage give the formula the
+intermediate units and prices it relies on.
 
-It is not obviously correct when a registry allows a specific unit without a
-structurally important intermediate unit. For example, if a family has
-`input_tokens`, `cache_read_tokens`, and `cache_video_read_tokens`, but no
-`input_video_tokens`, the full-depth formula would add
-`cache_video_read_tokens` back into the `input_tokens` catch-all. That may be
-commercially wrong: cached video can be a special price while non-cached video
-falls through to the broader input price.
+It is wrong when a registry allows a specific unit without structurally
+important intermediate units. For example, if a family has `input_tokens`,
+`cache_read_tokens`, and `cache_video_read_tokens`, but no
+`input_video_tokens`, the full-depth formula would add `cache_video_read_tokens`
+back into the `input_tokens` catch-all. That may be commercially wrong: cached
+video can be a special price while intermediate categories fall through to the
+broader input price.
 
-The main spec tracks this as an open question. The implementation must either
-define an ancestor/downward-closure rule, compute coefficients from the actual
-registered/priced poset, or reject sparse price sets that would make the chosen
-formula wrong. Do not use this file to bypass that decision.
+The main spec resolves this with registry interval closure plus registry
+join-closedness. The example registry is invalid unless it also defines
+`input_video_tokens`. If `cache_read_tokens` is also an intermediate ancestor of
+`cache_video_read_tokens`, ancestor coverage requires its price when cached
+video is priced. If those intermediate categories use the same commercial rate
+as ordinary input tokens, the model repeats the numeric price explicitly. That
+duplication is intentional; it keeps the registry and price data structurally
+complete and lets the full-depth formula remain the general runtime rule.
 
 ## Usage Value Reads
 

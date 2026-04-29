@@ -146,7 +146,7 @@ class UnitFamily:
 
 There is no `RawUnitDef`/`RawUnitFamily`/`RawFamiliesDict` model layer in Python runtime code. Raw registry data stays as plain dictionaries until `UnitRegistry` constructs these objects.
 
-**`UnitRegistry` owns all runtime unit state.** _(implements "`UnitRegistry` is the runtime representation of unit definitions", "Users can define custom units at runtime", "Registry join-closedness: compatible unit pairs must have their join in the family")_
+**`UnitRegistry` owns all runtime unit state.** _(implements "`UnitRegistry` is the runtime representation of unit definitions", "Users can define custom units at runtime", "Registry interval closure", "Registry join-closedness: compatible unit pairs must have their join in the family")_
 
 ```python
 class UnitRegistry:
@@ -188,9 +188,10 @@ Registry construction and mutation perform all structural validation:
 - usage keys are globally unique
 - price keys are globally unique
 - no two units in a family share the same dimension set
+- every comparable pair in a family has all intermediate dimension sets present
 - every compatible pair in a family has its join present in that family
 
-`add_units(...)` is the only existing-family unit-addition API. It stages all supplied units against a candidate family, validates the complete candidate registry once, and commits only if the final state is valid. Passing a one-unit mapping handles the simple case; passing several units handles changes that would be invalid one unit at a time under join-closedness or any future interval-closure rule. Unit dimension maps are the only source of dimension keys and values: adding a unit with `{modality: video}` or `{region: us}` introduces that value or axis if the final registry validates. Existing units that omit a dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
+`add_units(...)` is the only existing-family unit-addition API. It stages all supplied units against a candidate family, validates the complete candidate registry once, and commits only if the final state is valid. Passing a one-unit mapping handles the simple case; passing several units handles changes that would be invalid one unit at a time under interval closure or join-closedness. Unit dimension maps are the only source of dimension keys and values: adding a unit with `{modality: video}` or `{region: us}` introduces that value or axis if the final registry validates. Existing units that omit a dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
 
 `UnitRegistry.copy()` may remain available as a low-level helper, but it is not the required public workflow for custom pricing. `DataSnapshot` should expose or forward supported unit-editing operations so callers can patch the snapshot they are working with. The implementation may still copy the registry internally to validate and roll back failed edits.
 
@@ -257,9 +258,7 @@ def compute_leaf_values(
     """
 ```
 
-`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. The key dependency is conceptual: decomposition coefficients depend on the registry/family shape, the model's priced usage keys, and the final sparse-registry rule; the resulting leaf values also depend on the current usage values. Reading a missing usage value may trigger lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
-
-Important unresolved dependency: the prose spec's sparse-registry ancestor-closure question must be resolved before this module is implemented. If sparse family shapes are allowed, the current simple `(-1)^(depth difference)` formula may be wrong; decomposition may need to compute Mobius coefficients from the actual priced/registered unit poset instead. Do not hard-code the full-depth sign rule until that decision is made.
+`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. A cached `CachedFamilyDecomposition` is allowed when it keeps the implementation simple, but it is not required. Decomposition coefficients depend on the registry/family shape and the model's priced usage keys; the resulting leaf values also depend on the current usage values. The full-depth sign rule is valid because registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage remove the structural gaps that would otherwise break it. Reading a missing usage value may trigger lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
 
 ---
 
@@ -277,7 +276,7 @@ def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily) 
 
 
 def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
-    """Every priced compatible pair whose join exists in the family must price that join."""
+    """Every priced compatible pair must price its join unit."""
 
 
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
@@ -296,9 +295,7 @@ def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -
     """Every extractor mapping destination must be a registered usage key."""
 ```
 
-This module does not validate raw registry structure. That stays in `UnitRegistry`.
-
-The meaning of "required ancestors" is tied to the unresolved sparse-registry question in the prose spec. If the final design requires registry ancestor/downward closure, this helper can validate registered ancestors after structural validation has guaranteed the relevant units exist. If the final design allows sparse registry shapes, validation and decomposition must agree on the actual poset used for decomposition.
+This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it.
 
 ---
 
@@ -560,7 +557,7 @@ If that clean sharing turns out to be awkward, the fallback is explicit and acce
 
 - one source registry file (`prices/units.yml`) remains the source of truth
 - runtime and build-time registry objects must parse the same raw `unit_families` shape
-- tests should cover parity for structural validation, price-key resolution, ancestor coverage, and join coverage
+- tests should cover parity for structural validation (including interval closure and join-closedness), price-key resolution, ancestor coverage, and join coverage
 - any deliberate duplication should be named in comments as a package-boundary copy, not a second design
 
 This is a structural implementation decision, not a detail hidden inside `build()`. The final implementation should make the boundary obvious in module placement and tests.
@@ -609,7 +606,7 @@ def write_prices(
 `build()` changes in this order:
 
 1. Load `prices/units.yml`.
-2. Construct `UnitRegistry(unit_families)`; this performs structural validation.
+2. Construct `UnitRegistry(unit_families)`; this performs structural validation, including interval closure and join-closedness.
 3. Load and validate provider YAML files with `prices_types.py`.
 4. For every model price payload:
    - validate price keys
@@ -712,8 +709,8 @@ export type { ParsedFamilies, RawFamiliesDict, UnitDef, UnitFamily } from './typ
 
 export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies
 // Parses raw family data into UnitFamily/UnitDef objects, fills family
-// back-references, and validates structure and join-closedness without mutating
-// active runtime state. Raw unit keys are usage keys; priceKey is
+// back-references, and validates structure, interval closure, and
+// join-closedness without mutating active runtime state. Raw unit keys are usage keys; priceKey is
 // raw.price_key ?? usageKey.
 
 export function setUnitFamilies(families: ParsedFamilies | null): void
@@ -795,6 +792,7 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 
 ```typescript
 export function validateRegistryStructure(families: ParsedFamilies): void
+export function validateRegistryIntervalClosure(family: UnitFamily): void
 export function validateRegistryJoinClosedness(family: UnitFamily): void
 export function validatePriceKeys(priceKeys: Set<string>, allPriceKeys: Set<string>): void
 export function validateAncestorCoverage(pricedUsageKeys: Set<string>, family: UnitFamily): void
@@ -890,7 +888,7 @@ prices/units.yml
        -> create UnitFamily shells
        -> create UnitDef objects
        -> fill families / units / price_keys indexes
-       -> validate dimension rules, uniqueness, join-closedness
+       -> validate dimension rules, uniqueness, interval closure, join-closedness
 ```
 
 ### Build-time validation and packaging
