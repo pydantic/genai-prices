@@ -41,29 +41,31 @@ Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mto
 **Users can define custom units at runtime.** _(from "Units are data, not code")_
 Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units. Users can add units to existing unit families or create entirely new unit families.
 
+**Unit dimensions are unit-local.** _(from "Users can define custom units at runtime")_
 Unit dimensions are defined on the units themselves; adding a unit with a new dimension key or value is how an existing family gains that axis or value.
 
+**Runtime unit and price patches happen through `DataSnapshot`.** _(from "Users can define custom units at runtime")_
 The public workflow should not require callers to manually copy the current registry, providers, models, or prices before making a small patch. A `DataSnapshot` is the user-facing editing surface: callers can edit a snapshot's unit registry and model prices directly through supported mutation APIs, then activate that snapshot if it is not already active. The implementation may copy internally to provide rollback, but that is not user-visible ceremony.
 
-Existing-family unit additions are batch operations: callers pass one or more unit definitions, and the registry validates only after applying the whole batch to a candidate family. A one-unit batch covers simple additions; a larger batch covers additions whose intermediate states would be invalid.
-
-Registry mutation validates usage key uniqueness, price key uniqueness, dimension-set uniqueness, interval closure, and join-closedness before the batch becomes visible. There is no externally visible "build then validate" state for registry structure: mutation either commits a valid registry state or fails and leaves the registry unchanged.
+**Registry mutations commit only structurally valid states.** _(from "Users can define custom units at runtime", "Validation replaces what hardcoded fields gave us")_
+Registry mutations validate usage key uniqueness, price key uniqueness, dimension-set uniqueness, interval closure, and join-closedness before the mutation becomes visible. There is no externally visible "build then validate" state for registry structure: mutation either commits a valid registry state or fails and leaves the registry unchanged.
 
 **Unit definitions travel with prices, not just with the package.** _(from "Units are data, not code", "Users can define custom units at runtime")_
 Currently, prices are in `data.json` which clients can auto-update at runtime (pulled on merge, before a package release). Unit definitions are bundled into the Python/JS packages separately from that runtime-updated payload, so they only change on package release. This means a new unit's prices could arrive before the client knows the unit exists. Unit definitions must be included in `data.json` (and `data_slim.json`) so they travel together with the prices that depend on them. When a client pulls fresh price data, it gets the units too.
 
-**`UnitRegistry` is the runtime representation of unit definitions.** _(from "Units are data, not code", "Users can define custom units at runtime")_
+**`UnitRegistry` owns the runtime unit graph.** _(from "Units are data, not code", "Users can define custom units at runtime")_
 A single class that owns all unit families and their units.
 
+**`UnitRegistry` construction parses and indexes raw unit data.** _(from "`UnitRegistry` owns the runtime unit graph")_
 Constructed from a raw dict (the `unit_families` section of `data.json` or `units.yml`), it parses, validates structural integrity (usage-key/price-key/dimension-set uniqueness, interval closure, join-closedness), builds flat indexes for O(1) lookup by usage key and O(1) price-key resolution, and fills in back-references so each unit knows its usage key, its price key, its family ID, and has a direct reference to its family object.
 
-Mutable: adding a family or adding units to an existing family validates and updates the indexes. These mutations may be exposed directly on `UnitRegistry` or as convenience methods on `DataSnapshot`, but callers should not need to construct a parallel registry by hand for ordinary patches.
+**`UnitRegistry` mutation keeps indexes and relationships current.** _(from "`UnitRegistry` owns the runtime unit graph", "Runtime unit and price patches happen through `DataSnapshot`")_
+`UnitRegistry` is mutable: adding a family or adding units to an existing family validates and updates the indexes. These mutations may be exposed directly on `UnitRegistry` or as convenience methods on `DataSnapshot`, but callers should not need to construct a parallel registry by hand for ordinary patches.
 
-Existing-family unit additions use one batch API, not a separate single-unit API plus a separate complex edit API. Passing one unit is the simple case; passing several units is the complex case.
-
+**Unit definition objects have one runtime model per concept.** _(from "`UnitRegistry` construction parses and indexes raw unit data")_
 `UnitDef` and `UnitFamily` are dataclasses (not Pydantic models) — the registry constructs them with all fields populated, including back-references. There is one model class per concept, not a "raw" and "parsed" variant. In the YAML/JSON, usage keys are dict keys; the registry promotes them to fields on construction, and `price_key` defaults to the usage key when omitted.
 
-**Existing-family unit edits are batch operations.** _(from "Users can define custom units at runtime", "`UnitRegistry` is the runtime representation of unit definitions")_
+**Existing-family unit edits are batch operations.** _(from "Users can define custom units at runtime", "`UnitRegistry` mutation keeps indexes and relationships current")_
 The registry does not expose a separate "add exactly one unit" operation for existing families. It exposes one batch operation that accepts one or more unit definitions for a single existing family, applies them to a candidate family, validates the complete candidate registry, and commits only if the final state is valid. Passing a one-unit batch is how callers perform a simple addition. Passing a larger batch is how callers add units that are only valid together under structural rules such as interval closure or join-closedness. Because dimensions are unit-local, there is no separate operation for adding dimension values or whole dimension axes; a staged unit that uses `{modality: video}` or `{region: us}` introduces that value or axis if the final registry validates. If validation fails, the original registry is unchanged.
 
 The batch operation does not invent or require a shape. It does not auto-generate units for every dimension value, require a new modality to match existing modalities, add prices, validate model prices, update extractors, or activate a `DataSnapshot`. It only edits unit definitions. After editing units, callers add matching provider/model price changes to the same snapshot. If that snapshot is inactive, `set_custom_snapshot` performs price-level and extractor validation before activation. If that snapshot is already active, supported price mutations must invalidate stale known-valid/decomposition state and either validate the changed model price immediately or leave it to the one-model defensive validation in `calc_price`; in either case, unchanged trusted prices must not be revalidated just because the snapshot received one patch.
