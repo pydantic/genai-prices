@@ -53,10 +53,6 @@ The file is a top-level mapping of `family_id -> family data`. It is checked int
 tokens:
   per: 1_000_000
   description: Token counts
-  dimensions:
-    direction: [input, output]
-    modality: [text, audio, image, video]
-    cache: [read, write]
   units:
     input_tokens:
       price_key: input_mtok
@@ -81,7 +77,6 @@ tokens:
 requests:
   per: 1_000
   description: Request counts
-  dimensions: {}
   units:
     requests:
       price_key: requests_kcount
@@ -146,7 +141,6 @@ class UnitFamily:
     id: str
     per: int
     description: str
-    dimensions: dict[str, list[str]]
     units: dict[str, UnitDef]  # usage_key -> UnitDef
 ```
 
@@ -170,7 +164,6 @@ class UnitRegistry:
         *,
         per: int,
         description: str,
-        dimensions: dict[str, list[str]],
         units: dict[str, dict],
     ) -> None:
         """Add and validate a new family."""
@@ -190,18 +183,17 @@ class UnitRegistry:
 
     @staticmethod
     def are_compatible(a: UnitDef, b: UnitDef) -> bool:
-        """Return True when the two units do not conflict on any dimension axis."""
+        """Return True when the two units do not conflict on any dimension key."""
 ```
 
 Registry construction and mutation perform all structural validation:
 
-- unit dimension keys and values must exist in the family declaration
 - usage keys are globally unique
 - price keys are globally unique
 - no two units in a family share the same dimension set
 - every compatible pair in a family has its join present in that family
 
-`add_unit(...)` validates after adding one unit and is appropriate only when the resulting family is valid immediately. The implementation must also provide an atomic existing-family edit path for join-dependent changes, but the exact public API shape is not settled by this spec yet. That path must stage changes to an existing family, merge dimension-declaration changes, add unit definitions, validate the complete candidate registry, and commit only if the final state is valid. A new dimension key adds a whole dimension axis, while values under an existing key extend that axis. This supports changes like adding `video` to an existing `modality` axis or adding a new dimension such as `region`. Existing units that omit the new dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
+`add_unit(...)` validates after adding one unit and is appropriate only when the resulting family is valid immediately. The implementation must also provide an atomic existing-family edit path for join-dependent changes, but the exact public API shape is not settled by this spec yet. That path must stage unit definitions for an existing family, validate the complete candidate registry, and commit only if the final state is valid. Unit dimension maps are the only source of dimension keys and values: adding a unit with `{modality: video}` or `{region: us}` introduces that value or axis if the final registry validates. Existing units that omit a dimension remain catch-all units for that axis. Extending an axis does not require copying the unit shape used by other values on that axis; only the supplied final registry must satisfy structural validation.
 
 The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
 
@@ -667,7 +659,6 @@ export interface RawUnitData {
 
 export interface RawFamilyData {
   description: string
-  dimensions: Record<string, string[]>
   per: number
   units: Record<string, RawUnitData>
 }
@@ -686,7 +677,6 @@ export interface UnitFamily {
   id: string
   per: number
   description: string
-  dimensions: Record<string, string[]>
   units: Record<string, UnitDef> // usageKey -> UnitDef
 }
 
@@ -1009,7 +999,6 @@ runtime update
 ```text
 copy active parsed families
   -> stagedFamilies = atomic existing-family edit on 'tokens':
-       add dimension value { modality: ['video'] }
        add unit cache_video_read_tokens
      # This example intentionally adds only the unit the caller needs; registry
      # validation does not require video to mirror other modalities.
