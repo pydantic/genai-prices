@@ -347,12 +347,12 @@ Registered attribute access is the inference boundary. If a value is stored, ret
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
-**`ModelPrice` remains a subclass-friendly registry-backed price object.** _(implements "ModelPrice supports attribute access backed by registry data", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs", "Manual custom pricing remains supported")_
+**`ModelPrice` remains a subclass-friendly registry-backed price object.** _(implements "ModelPrice supports attribute access backed by registry data", "Normal `ModelPrice` handles new registry price keys without code changes", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs", "Manual custom pricing remains supported")_
 
 ```python
 @dataclass(init=False)
 class ModelPrice:
-    # Legacy typed fields may remain as dataclass fields for compatibility and type checkers.
+    # Legacy typed fields remain compatibility surface; they are not the registry-backed key whitelist.
     input_mtok: Decimal | TieredPrices | None = None
     cache_write_mtok: Decimal | TieredPrices | None = None
     cache_read_mtok: Decimal | TieredPrices | None = None
@@ -362,13 +362,13 @@ class ModelPrice:
     output_audio_mtok: Decimal | TieredPrices | None = None
     requests_kcount: Decimal | None = None
 
-    _extra_prices: dict[str, Decimal | TieredPrices | None]
+    _extra_prices: dict[str, Decimal | TieredPrices | None]  # candidate non-hardcoded price keys
     _known_valid_registry_id: object | None
     _known_valid_price_key_fingerprint: frozenset[str] | None
     _pricing_plan_cache: CachedPricingPlan | None
 
     def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
-        """Accept legacy fields and registry-backed price keys."""
+        """Accept legacy fields and candidate registry-backed price keys, including non-hardcoded keys."""
 
     def is_known_valid_for(self, registry: UnitRegistry) -> bool:
         """Return True when this price-key set is already known valid for this registry or a compatible extension."""
@@ -386,9 +386,9 @@ class ModelPrice:
         """Price all configured units using the active global registry."""
 
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
-        """For registered price keys, return the stored price or None if absent.
+        """Return stored dynamic prices, or None for absent active-registry price keys.
 
-        Raise AttributeError for names that are not registered price keys.
+        Raise AttributeError for names that are neither stored nor active-registry price keys.
         """
 
     def __str__(self) -> str:
@@ -398,11 +398,13 @@ class ModelPrice:
         """Return True when there are no stored prices or every stored price is zero-like."""
 ```
 
-Runtime `ModelPrice` must remain compatible with the current Python pattern where users define `@dataclass` subclasses, add custom fields, override `calc_price()`, and optionally call `super().calc_price(usage)`. Do not make runtime `ModelPrice` a `pydantic.BaseModel` unless the implementation also preserves that dataclass-subclass constructor behavior. A custom subclass field such as `sausage_price` is not a registry price key just because it is present on the object; it is owned by the custom override unless it is also a registered price key.
+Normal runtime `ModelPrice` accepts price-key kwargs that are not declared as dataclass fields. Those kwargs are stored in `_extra_prices` as candidate dynamic price keys, then accepted or rejected only when validation receives a `UnitRegistry`. A non-hardcoded registered key such as a future `image_tokens` price key works without adding a new `ModelPrice` field; a misspelled candidate key fails during build or snapshot validation. Constructor behavior must not use legacy dataclass fields as a closed-world whitelist.
 
-Known-valid state and any cached pricing plan are private implementation state, not part of serialized model-price data. Both are scoped to registry validation compatibility and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Known-valid state means price-level validation has already accepted this price-key set for the registry basis that matters to that price, either in the repo build pipeline or during runtime snapshot activation. A cached pricing plan, if implemented, stores the resolved price-key/usage-key mapping, family groupings, and per-family decomposition coefficients or equivalent decomposition instructions. It does not depend on a particular usage object. This cache is optional; `calc_price` may compute the same decomposition directly from the model's priced keys and registry indexes. Pure unit additions do not make unchanged trusted prices or their pricing plans stale. If the same `ModelPrice` object is reused in another snapshot whose registry deletes or changes units referenced by the price, or if price keys are added/removed after validation, `is_known_valid_for(...)` returns false and any cached plan is stale.
+Runtime `ModelPrice` must remain compatible with the current Python pattern where users define `@dataclass` subclasses, add custom fields, override `calc_price()`, and optionally call `super().calc_price(usage)`. Do not make runtime `ModelPrice` a `pydantic.BaseModel` unless the implementation also preserves that dataclass-subclass constructor behavior. If normal Python dataclass subclass constructors would reject non-hardcoded candidate price-key kwargs before `ModelPrice` can store them, use a metaclass, constructor wrapper, or equivalent interception point to preserve both behaviors: declared subclass fields pass through as subclass fields, and undeclared candidate price keys are captured in `_extra_prices`. A custom subclass field such as `sausage_price` is not a registry price key just because it is present on the object; it is owned by the custom override unless it is also a registered price key.
 
-Supported mutation paths that add or remove effective registered price keys must clear known-valid state and any cached decomposition state. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for dynamic registry price fields. Setting a different value for an existing key does not structurally require revalidation or recomputing coefficients if the cache does not bake in price values; clearing only the cache is acceptable if the implementation cannot cheaply prove price values are unbound from the cache. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys should not trigger registry validation/cache invalidation.
+Known-valid state and any cached pricing plan are private implementation state, not part of serialized model-price data. Both are scoped to registry validation compatibility and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Validation must inspect present legacy compatibility fields and every `_extra_prices` candidate key. Any `_extra_prices` key that is not registered in the validation registry is an invalid price key, not a silently ignored custom field. Declared subclass fields outside the base compatibility surface are ignored unless the validation registry also names them as price keys. Known-valid state means price-level validation has already accepted this price-key set for the registry basis that matters to that price, either in the repo build pipeline or during runtime snapshot activation. A cached pricing plan, if implemented, stores the resolved price-key/usage-key mapping, family groupings, and per-family decomposition coefficients or equivalent decomposition instructions. It does not depend on a particular usage object. This cache is optional; `calc_price` may compute the same decomposition directly from the model's priced keys and registry indexes. Pure unit additions do not make unchanged trusted prices or their pricing plans stale. If the same `ModelPrice` object is reused in another snapshot whose registry deletes or changes units referenced by the price, or if price keys are added/removed after validation, `is_known_valid_for(...)` returns false and any cached plan is stale.
+
+Supported mutation paths that add or remove effective registered price keys must clear known-valid state and any cached decomposition state. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for dynamic registry price fields. Non-hardcoded names assigned through supported normal-`ModelPrice` mutation paths are candidate dynamic price keys and are stored for later registry validation. Setting a different value for an existing key does not structurally require revalidation or recomputing coefficients if the cache does not bake in price values; clearing only the cache is acceptable if the implementation cannot cheaply prove price values are unbound from the cache. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys should not trigger registry validation/cache invalidation.
 
 Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
