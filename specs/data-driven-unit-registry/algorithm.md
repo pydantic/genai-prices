@@ -1,8 +1,18 @@
 # Decomposition Algorithm
 
+This document explains the decomposition model used by the spec examples. The
+prose spec is the source of truth. In particular, sparse registry shapes remain
+an open design question: the full-depth formula below is valid for the built-in
+closed token lattice and similarly complete family shapes, but it must not be
+implemented as the general runtime rule until the sparse-registry question is
+resolved.
+
 ## Mobius Inversion on the Containment Poset
 
-The containment poset is defined by dimension set inclusion: unit A is an ancestor of unit B if A's dimensions are a subset of B's. Only priced units participate — unpriced units are invisible to the algorithm.
+The containment poset is defined by dimension set inclusion: unit A is an
+ancestor of unit B if A's dimensions are a subset of B's. Only priced units
+become cost buckets; unpriced reported usage keys are ignored unless they are
+needed to infer a missing priced value.
 
 Descendant/ancestor relationships are determined by the full registry poset (dimension set inclusion), not just the priced subset. Only priced units participate in the sum, but the depth of each unit is its total number of dimensions regardless of what else is priced.
 
@@ -17,19 +27,47 @@ where `depth(V)` = number of dimension assignments on V (e.g., unit `input_token
 
 This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
 
-## Inference of missing ancestor usage
+## Sparse Registry Caveat
 
-Before applying the Mobius formula, missing usage values are resolved:
+The full-depth sign rule assumes there are no structural gaps that affect the
+priced set. It works for the built-in symmetric token registry and for other
+closed shapes where ancestor and join coverage give the formula the intermediate
+units it relies on.
 
-1. **Leaf-level priced units** (no more-specific priced descendants): missing usage defaults to 0.
-2. **Non-leaf priced units**: missing usage is inferred such that the unit's leaf value is 0 — meaning no remainder beyond what its descendants account for.
+It is not obviously correct when a registry allows a specific unit without a
+structurally important intermediate unit. For example, if a family has
+`input_tokens`, `cache_read_tokens`, and `cache_video_read_tokens`, but no
+`input_video_tokens`, the full-depth formula would add
+`cache_video_read_tokens` back into the `input_tokens` catch-all. That may be
+commercially wrong: cached video can be a special price while non-cached video
+falls through to the broader input price.
 
-Concretely, if `usage(U)` is missing for a non-leaf unit U, it is set to the inclusion-exclusion sum of its priced descendants' usage values. This is the inverse of the Mobius formula with `leaf(U) = 0`.
+The main spec tracks this as an open question. The implementation must either
+define an ancestor/downward-closure rule, compute coefficients from the actual
+registered/priced poset, or reject sparse price sets that would make the chosen
+formula wrong. Do not use this file to bypass that decision.
+
+## Usage Value Reads
+
+Usage is not normalized at construction time and there is no eager
+decomposition pre-pass. `calc_price` wraps raw usage in the registry-aware usage
+representation and asks for only the values it needs:
+
+- If a requested value was reported, it is returned directly without checking
+  other reported fields for contradictions.
+- If no relevant data exists, the value is zero.
+- If a missing value is determined by reported descendants, it is inferred for
+  that read.
+- If a missing value is underdetermined or depends on contradictory reported
+  values, the read raises a user-facing usage error.
+
+Inferred usage values are not cached. Re-reading a missing value recomputes it
+from the stored reported values and the active registry.
 
 Example: usage is `{input_audio_tokens: 300}`, priced units are `input_tokens` (price key `input_mtok`) and `input_audio_tokens` (price key `input_audio_mtok`).
 
 - `input_audio_tokens` is a leaf: usage = 300 (provided).
-- `input_tokens` is not a leaf: `input_tokens` is missing. Inferred as 300 (sum of descendants).
+- `input_tokens` is not provided. Reading it can infer 300 from the descendant.
 - `leaf(input_tokens) = 300 - 300 = 0`. `leaf(input_audio_tokens) = 300`.
 - Total: 300 tokens priced, all at the audio rate.
 
@@ -65,4 +103,15 @@ The key property: the sum of all leaf values equals the root usage value. Every 
 
 ## Negative leaf values
 
-If `leaf(U) < 0`, the explicitly provided usage data is contradictory — a subset's count exceeds its superset's. The algorithm detects this and raises an error with the specific units and values involved. Negative leaves can only arise when both a parent and child usage value are explicitly provided and the child exceeds the parent. Missing ancestor usage is inferred from descendants (the ancestor's leaf value defaults to zero), so incomplete usage never produces negative leaves.
+If `leaf(U) < 0`, the priced usage values cannot be reconciled — a
+more-specific count does not fit inside a less-specific count after overlap
+correction. Price calculation raises a user-facing error instead of reporting a
+negative or nonsensical cost.
+
+This check is demand-driven. Contradictory reported usage is allowed to exist,
+and direct reads of stored values still return the stored values. `calc_price`
+raises only when the contradiction affects priced buckets or a value it must
+infer. For example, `{input_tokens: 100, cache_read_tokens: 200}` is acceptable
+for a model that only prices `input_tokens`; the cache value is unpriced and not
+needed. The same usage must fail for a model that also prices
+`cache_read_tokens`, because the priced buckets cannot be reconciled.
