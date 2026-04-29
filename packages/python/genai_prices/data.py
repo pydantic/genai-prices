@@ -6746,6 +6746,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='deepseek/deepseek-v3.2',
+                match=ClauseEquals(equals='deepseek/deepseek-v3.2'),
+                name='DeepSeek V3.2',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.252'), cache_read_mtok=Decimal('0.0252'), output_mtok=Decimal('0.378')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek/deepseek-v3.2-exp',
                 match=ClauseEquals(equals='deepseek/deepseek-v3.2-exp'),
                 name='DeepSeek V3.2 Experimental',
