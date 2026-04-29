@@ -494,6 +494,21 @@ def test_fallback_when_model_not_found_directly():
     assert non_existent is None
 
 
+def test_missing_fallback_provider_returns_none():
+    """Test that a missing fallback provider is ignored."""
+    from genai_prices.types import Provider
+
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['missing-provider'],
+        models=[],
+    )
+
+    assert main_provider.find_model('missing-model', all_providers=[main_provider]) is None
+
+
 def test_prioritize_direct_match_over_fallback():
     """Test that direct matches are prioritized over fallback matches."""
     from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider
