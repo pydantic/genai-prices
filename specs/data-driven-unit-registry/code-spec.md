@@ -347,16 +347,28 @@ Registered attribute access is the inference boundary. If a value is stored, ret
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
-**`ModelPrice` becomes a registry-backed Pydantic model.** _(implements "ModelPrice supports attribute access backed by registry data", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs")_
+**`ModelPrice` remains a subclass-friendly registry-backed price object.** _(implements "ModelPrice supports attribute access backed by registry data", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs", "Manual custom pricing remains supported")_
 
 ```python
-class ModelPrice(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra='allow')
+@dataclass(init=False)
+class ModelPrice:
+    # Legacy typed fields may remain as dataclass fields for compatibility and type checkers.
+    input_mtok: Decimal | TieredPrices | None = None
+    cache_write_mtok: Decimal | TieredPrices | None = None
+    cache_read_mtok: Decimal | TieredPrices | None = None
+    output_mtok: Decimal | TieredPrices | None = None
+    input_audio_mtok: Decimal | TieredPrices | None = None
+    cache_audio_read_mtok: Decimal | TieredPrices | None = None
+    output_audio_mtok: Decimal | TieredPrices | None = None
+    requests_kcount: Decimal | None = None
 
-    __pydantic_extra__: dict[str, Decimal | TieredPrices]
-    _known_valid_registry_id: object | None = pydantic.PrivateAttr(default=None)
-    _known_valid_price_key_fingerprint: frozenset[str] | None = pydantic.PrivateAttr(default=None)
-    _pricing_plan_cache: CachedPricingPlan | None = pydantic.PrivateAttr(default=None)
+    _extra_prices: dict[str, Decimal | TieredPrices | None]
+    _known_valid_registry_id: object | None
+    _known_valid_price_key_fingerprint: frozenset[str] | None
+    _pricing_plan_cache: CachedPricingPlan | None
+
+    def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
+        """Accept legacy fields and registry-backed price keys."""
 
     def is_known_valid_for(self, registry: UnitRegistry) -> bool:
         """Return True when this price-key set is already known valid for this registry or a compatible extension."""
@@ -386,15 +398,17 @@ class ModelPrice(pydantic.BaseModel):
         """Return True when there are no stored prices or every stored price is zero-like."""
 ```
 
-Known-valid state and any cached pricing plan are private implementation state, not part of serialized model-price data. Both are scoped to registry validation compatibility and a fingerprint of the current effective stored price keys. "Effective" means keys whose value represents a present price; JS `undefined` and any Python absence/null sentinel do not count as priced. Known-valid state means price-level validation has already accepted this price-key set for the registry basis that matters to that price, either in the repo build pipeline or during runtime snapshot activation. A cached pricing plan, if implemented, stores the resolved price-key/usage-key mapping, family groupings, and per-family decomposition coefficients or equivalent decomposition instructions. It does not depend on a particular usage object. This cache is optional; `calc_price` may compute the same decomposition directly from the model's priced keys and registry indexes. Pure unit additions do not make unchanged trusted prices or their pricing plans stale. If the same `ModelPrice` object is reused in another snapshot whose registry deletes or changes units referenced by the price, or if price keys are added/removed after validation, `is_known_valid_for(...)` returns false and any cached plan is stale.
+Runtime `ModelPrice` must remain compatible with the current Python pattern where users define `@dataclass` subclasses, add custom fields, override `calc_price()`, and optionally call `super().calc_price(usage)`. Do not make runtime `ModelPrice` a `pydantic.BaseModel` unless the implementation also preserves that dataclass-subclass constructor behavior. A custom subclass field such as `sausage_price` is not a registry price key just because it is present on the object; it is owned by the custom override unless it is also a registered price key.
 
-Supported mutation paths that add or remove effective price keys must clear known-valid state and any cached decomposition state. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for extra fields. Setting a different value for an existing key does not structurally require revalidation or recomputing coefficients if the cache does not bake in price values; clearing only the cache is acceptable if the implementation cannot cheaply prove price values are unbound from the cache. Direct mutation of internal Pydantic storage such as `__pydantic_extra__` is not a supported public API.
+Known-valid state and any cached pricing plan are private implementation state, not part of serialized model-price data. Both are scoped to registry validation compatibility and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Known-valid state means price-level validation has already accepted this price-key set for the registry basis that matters to that price, either in the repo build pipeline or during runtime snapshot activation. A cached pricing plan, if implemented, stores the resolved price-key/usage-key mapping, family groupings, and per-family decomposition coefficients or equivalent decomposition instructions. It does not depend on a particular usage object. This cache is optional; `calc_price` may compute the same decomposition directly from the model's priced keys and registry indexes. Pure unit additions do not make unchanged trusted prices or their pricing plans stale. If the same `ModelPrice` object is reused in another snapshot whose registry deletes or changes units referenced by the price, or if price keys are added/removed after validation, `is_known_valid_for(...)` returns false and any cached plan is stale.
 
-`ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
+Supported mutation paths that add or remove effective registered price keys must clear known-valid state and any cached decomposition state. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and any explicit mapping-style helper added for dynamic registry price fields. Setting a different value for an existing key does not structurally require revalidation or recomputing coefficients if the cache does not bake in price values; clearing only the cache is acceptable if the implementation cannot cheaply prove price values are unbound from the cache. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys should not trigger registry validation/cache invalidation.
+
+Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
 1. Fetch the active global registry.
 2. If `is_known_valid_for(registry)` is false, validate this one model price and mark it known valid.
-3. Wrap non-`Usage` input with `Usage.from_raw`.
+3. Wrap non-`Usage` input with `Usage.from_raw` for an internal local variable only; do not mutate or replace the caller's original object.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family, or read an equivalent cached pricing plan if present.
 5. For tiered prices, read `usage.input_tokens`; if it is stored, use it without reconciling descendant values. If it is missing and cannot be inferred coherently, raise a usage error instead of guessing a tier.
 6. For each priced family, compute leaf values from the registry-aware usage, optionally using cached decomposition instructions, while ignoring unpriced reported usage values unless they are needed to infer a missing priced value.
@@ -403,6 +417,7 @@ Supported mutation paths that add or remove effective price keys must clear know
 9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
 
 Families without a `direction` dimension contribute only to `total_price`.
+Custom `ModelPrice` subclasses may override this method and bypass or augment the base flow. The outer pricing orchestration must dispatch to the selected object's method with the original usage object so custom overrides can read arbitrary non-registry usage fields before or after calling `super().calc_price(usage)`.
 
 **`calc_unit_price` replaces `calc_mtok_price`.** _(implements "The system is general across unit families", "TieredPrices is not refactored in this change")_
 
@@ -435,7 +450,7 @@ class UsageExtractorMapping:
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
 
 **`ModelInfo.calc_price()` keeps its public signature but delegates to the new generic pricing path.** _(implements "All public API signatures are preserved")_
-The method still accepts a usage object and returns `PriceCalculation`; internally it relies on `ModelPrice.calc_price()` rather than the hardcoded token-only logic from `main`. It does not guard against the `ModelInfo` having been obtained from an inactive `DataSnapshot`. That pattern is unsupported but allowed; it uses the active global registry, matching the rest of the pricing path.
+The method still accepts a usage object and returns `PriceCalculation`; internally it passes the original usage object unchanged to the selected model price object's `calc_price()` method rather than wrapping usage before dispatch. This preserves custom `ModelPrice` overrides that inspect non-registry usage fields. It relies on `ModelPrice.calc_price()` rather than the hardcoded token-only logic from `main`. It does not guard against the `ModelInfo` having been obtained from an inactive `DataSnapshot`. That pattern is unsupported but allowed; it uses the active global registry, matching the rest of the pricing path.
 
 ---
 
@@ -497,6 +512,8 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
       additive registry changes; unit additions do not make those prices stale
     - validate missing/stale custom, changed, runtime-authored, or otherwise untrusted model
       prices against snapshot.unit_registry.price_keys
+    - ignore subclass-only custom ModelPrice fields that are not registered price keys and are
+      handled by custom calc_price() override logic
     - resolve their price keys to usage keys, then validate ancestor and join coverage per family
       using registry relationship indexes rather than full-registry scans
     - validate extractor destinations against snapshot.unit_registry.units.keys()
@@ -557,7 +574,7 @@ The implementation should first try to make the registry and structural validati
 
 - `UnitRegistry`, `UnitDef`, `UnitFamily`, and dimension/relationship helpers should avoid importing generated package data, `data_snapshot`, update machinery, or runtime globals.
 - Price-level validation helpers should accept plain mappings, registry objects, and protocol-shaped price values where possible, instead of requiring runtime-only model objects.
-- Build-time code may import those pure helpers from the runtime package if that does not create import cycles, generated-data dependencies, or awkward coupling to runtime-only Pydantic models.
+- Build-time code may import those pure helpers from the runtime package if that does not create import cycles, generated-data dependencies, or awkward coupling to runtime-only `ModelPrice` subclassing behavior.
 
 If that clean sharing turns out to be awkward, the fallback is explicit and acceptable: keep a small build-side mirror under `prices/src/prices/` following the existing `prices_types.py` pattern. In that case, keep the duplicated surface narrow and mechanical:
 
