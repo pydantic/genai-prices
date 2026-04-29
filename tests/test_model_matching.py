@@ -263,6 +263,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai.chat', 'o3-mini-2025-01-31', snapshot(('openai', 'o3-mini'))),
     ('openai.chat', 'o3-mini', snapshot(('openai', 'o3-mini'))),
     ('openrouter', 'deepseek/deepseek-chat-v3-0324', snapshot(('openrouter', 'deepseek/deepseek-chat-v3-0324'))),
+    ('openrouter', 'deepseek/deepseek-v3.2', snapshot(('openrouter', 'deepseek/deepseek-v3.2'))),
     pytest.param('nebius', 'nebius/deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('nebius', 'llama-3.1-8b-instant', None, marks=mark_xfail_todo),
     pytest.param('litellm', 'gpt-4o-mini-2024-07-18', None, marks=mark_xfail_todo),

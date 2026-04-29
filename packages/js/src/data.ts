@@ -12044,6 +12044,19 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'deepseek/deepseek-v3.2',
+        name: 'DeepSeek V3.2',
+        match: {
+          equals: 'deepseek/deepseek-v3.2',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.252,
+          cache_read_mtok: 0.0252,
+          output_mtok: 0.378,
+        },
+      },
+      {
         id: 'deepseek/deepseek-v3.2-exp',
         name: 'DeepSeek V3.2 Experimental',
         match: {
