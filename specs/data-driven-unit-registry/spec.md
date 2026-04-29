@@ -41,6 +41,8 @@ Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mto
 **Users can define custom units at runtime.** _(from "Units are data, not code")_
 Without modifying the repository, without making a PR. Custom units are first-class: same mechanisms, same validation, same decomposition as built-in units. Users can add units to existing unit families or create entirely new unit families.
 
+Runtime-defined custom units are a real requirement, not an optional simplification to be deferred behind a build-time-only registry. Direct `Usage` objects are the primary customization path, but custom units also need to be usable by extractor configs after the snapshot containing those units is activated.
+
 **Unit dimensions are unit-local.** _(from "Users can define custom units at runtime")_
 Unit dimensions are defined on the units themselves; adding a unit with a new dimension key or value is how an existing family gains that axis or value.
 
@@ -221,6 +223,8 @@ Not every missing ancestor can be inferred. If available values cross independen
 
 Open implementation point: `Usage` does not currently need to remember whether each value was reported or inferred. With lazy inference, direct reads of stored values are inert, missing-value inference knows it is computing a missing value, and pricing errors can be explained from the stored values involved in the contradiction. Keep the API and internal state minimal. If implementation work finds a concrete diagnostic that genuinely needs per-value provenance, add private bookkeeping then; otherwise do not store it.
 
+Do not add a new immutability requirement to `Usage` in this change. Today's Python `Usage` is mutable, and making it immutable is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should preserve the stored reported values consistently; otherwise mutation semantics stay no stricter than they are today.
+
 **Decomposition stays in `calc_price`, not on `Usage`.** _(from "Usage is a registry-aware class", "Decomposition uses dimensions")_
 Decomposition — computing how much of a usage value is exclusive to each priced unit (Mobius inversion) — depends on the set of priced units, which is pricing data. `Usage` does not expose a leaf-value method. `calc_price` handles the Mobius inversion internally, reading values from the smart `Usage` as needed. This keeps `Usage` focused on what it naturally owns: reported values and value inference. `calc_price` owns the price-dependent decomposition. TieredPrices asks `usage.input_tokens` for the total input count; if that value was reported, it is used directly. If it was not reported and cannot be inferred coherently, price calculation fails with a usage error instead of selecting a nonsensical tier.
 
@@ -229,6 +233,8 @@ Decomposition — computing how much of a usage value is exclusive to each price
 
 **The extraction pipeline is data-driven end-to-end.** _(from "Units are data, not code", "Usage is a registry-aware class", "No new code generation")_
 Extractors are already defined in provider YAML — they map paths in API responses to usage fields. Currently the output side is hardcoded: `UsageExtractorMapping.dest` is a `UsageField` literal type, and the `Usage` object has fixed fields. Both constraints are removed. `dest` becomes a plain string referencing any usage key in the registry. The `UsageField` literal type goes away. The generated JSON schema for provider YAML files validates extractor `dest` fields against the registry's usage keys, giving autocomplete when writing extractors. At runtime, extractor `dest` values are validated against the registry. The full chain — provider YAML extractor definition → `Usage` object → `calc_price` — requires no code changes when new units are added to the registry. A new unit with a new usage key is immediately available as an extractor destination, a `Usage` attribute, and a pricing input.
+
+Extractor destinations are registered usage keys, not arbitrary strings and not price keys. Repo-defined extractors validate against the build-time registry. Runtime-authored extractor configs validate against the staged snapshot's registry during activation, so an extractor can reference a runtime custom unit only after that unit has been added to the same snapshot. Extractor support for custom units is supported but secondary: the most important runtime path is still direct usage/pricing with custom units.
 
 Extraction reports provider data; it does not certify that the provider's usage numbers are internally coherent. If an API response contains contradictory registered usage fields, `extract_usage` still returns a `Usage` object containing those values. Direct reads of fields that the provider supplied return the supplied values. The contradiction becomes a hard error only when code asks for a missing value whose inference cannot be determined, or when `calc_price` must reconcile the contradictory values to price a unit the model actually prices.
 

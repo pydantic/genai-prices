@@ -428,6 +428,8 @@ class UsageExtractorMapping:
     required: bool
 ```
 
+`dest` is a registered usage key from the snapshot registry, not an arbitrary string and not a model-price key. Repo-defined extractor mappings are validated against the build-time registry. Runtime-authored extractor mappings are validated against the staged snapshot's registry during `set_custom_snapshot()`, which lets a custom extractor target a runtime custom unit only after that unit has been added to the same snapshot.
+
 **`UsageExtractor.extract()` constructs `Usage` from a dict of collected values.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
 
@@ -875,6 +877,8 @@ The existing extraction logic still builds a plain object of counts. The change 
 - `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined usage key
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
+
+Extractor destinations are usage keys, not arbitrary strings and not price keys. Repo-defined extractor config is checked against the generated registry schema/build registry. Runtime-authored extractor config is accepted only after validation against the staged parsed registry, so custom extractor destinations and custom units travel through the same snapshot activation boundary.
 
 If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket.
 
