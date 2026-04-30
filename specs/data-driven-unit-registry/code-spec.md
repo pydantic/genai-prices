@@ -3,17 +3,33 @@
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
 **Phase 2 runtime custom unit architecture is in [phase-2-runtime-custom-units/code-spec](phase-2-runtime-custom-units/code-spec.md).**
 **Phase 3 global snapshot semi-enforcement is in [phase-3-global-snapshot-enforcement/code-spec](phase-3-global-snapshot-enforcement/code-spec.md).**
-**Baseline:** this document describes the final `main` -> target-state diff for the PR. It intentionally ignores the current branch's partial implementation state.
+**Baseline:** this document describes the complete Phase 1 target-state diff across delivery slices 1A, 1B, and 1C. It intentionally ignores the current branch's partial implementation state.
 
 **Future phases are extension constraints, not Phase 1 implementation scope.** _(implements "Future phases guide Phase 1 without expanding its scope")_
 This code spec should keep Phase 1 compatible with later directions, but it should not add runtime unit mutation APIs, registry transaction machinery, additive-registry cache compatibility, or non-global snapshot execution guards to the Phase 1 diff. When a later concern only affects future workflow detail, this document should preserve the underlying extension point and leave the concrete runtime workflow to that later code spec.
 
 ---
 
-## PR Shape
+## Phase 1 Delivery Slices
+
+**Delivery slices are review boundaries inside Phase 1, not new product phases.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
+Phase 1 still has one target behavior: repo-defined unit registries. The slices describe how to land that target safely:
+
+- **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the existing unit set. It does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
+- **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the existing unit set while continuing to consume the current provider-array remote data shape. It does not depend on Python internals and should preserve current JS behavior.
+- **1C: Shared data contract.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, and repo-defined new units can finally travel through generated package data and official auto-updates.
+
+1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the compatibility boundary where older clients that expect a bare provider array must be accounted for.
+
+**New repo-defined units are not enabled until 1C.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
+Before the shared payload carries `unit_families`, adding new units would create half-support: one runtime might know a unit internally, but remote price updates and the other runtime might not. 1A and 1B can validate that existing prices conform to the registry-shaped model, but they should not require provider price edits, new price keys, or data-shape changes just to preserve current behavior. New unit data becomes reviewable once 1C lands.
+
+---
+
+## Phase 1 Target Shape
 
 **New tracked source files.**
-The final diff adds these hand-written files:
+The complete Phase 1 target diff adds these hand-written files:
 
 - `prices/units.yml`
 - `packages/python/genai_prices/units.py`
@@ -25,7 +41,7 @@ The final diff adds these hand-written files:
 - `packages/js/src/validation.ts`
 
 **Modified tracked source files.**
-The final diff modifies these existing files from `main`:
+The complete Phase 1 target diff modifies these existing files from `main`:
 
 - `packages/python/genai_prices/types.py`
 - `packages/python/genai_prices/data_snapshot.py`
@@ -45,7 +61,7 @@ The final diff modifies these existing files from `main`:
 - generated JSON outputs and JSON schemas under `prices/`
 
 **No separate runtime `units*.json` artifact is introduced.** _(implements "Unit definitions travel with prices, not just with the package", "No new code generation")_
-The final design has one checked-in source registry file (`prices/units.yml`), plus generated embeddings of that same registry inside `prices/data*.json`, `packages/python/genai_prices/data.py`, and `packages/js/src/data.ts`. The PR diff from `main` does not add or remove any standalone bundled units JSON file.
+The final design has one checked-in source registry file (`prices/units.yml`), plus generated embeddings of that same registry inside `prices/data*.json`, `packages/python/genai_prices/data.py`, and `packages/js/src/data.ts`. In 1A and 1B, language-native package data may embed units while `prices/data*.json` stays unchanged. 1C adds unit families to the shared generated JSON payloads. The complete Phase 1 target diff does not add or remove any standalone bundled units JSON file.
 
 ---
 
@@ -90,7 +106,9 @@ requests:
 
 Usage keys live as dict keys in the raw data. `price_key` defaults to the usage key when omitted. The `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
 
-**`prices/data.json` and `prices/data_slim.json` become top-level dicts.** _(implements "`data.json` becomes a top-level dict, not a bare list", "Unit definitions travel with prices, not just with the package")_
+1A and 1B use this registry for the existing unit set only. Review new unit definitions together with 1C, when the shared payload can carry units and prices together.
+
+**1C changes `prices/data.json` and `prices/data_slim.json` into top-level dicts.** _(implements "`data.json` becomes a top-level dict, not a bare list", "Unit definitions travel with prices, not just with the package")_
 Both generated JSON payloads change from a bare provider list to this shape:
 
 ```json
@@ -104,6 +122,8 @@ Both generated JSON payloads change from a bare provider list to this shape:
 ```
 
 `unit_families` carries the raw registry data from `prices/units.yml`. `providers` keeps the existing provider payload shape. Both full and slim payloads keep the unit family runtime fields; slimming applies to the provider payload.
+
+1A and 1B keep the remote JSON payload shape as a bare provider list. Do not merge this wrapped JSON change until both runtimes can parse it.
 
 **Generated language-native data exports include unit families.** _(implements "Unit definitions are generated into language-native code alongside prices")_
 
@@ -123,9 +143,11 @@ export const data: Provider[] = [ ... ]
 
 The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Generated data exports contain units and prices only. They must not include serialized decomposition caches, decomposition coefficients, or bulky per-model validation artifacts; those are runtime-private state built or marked in memory.
 
+Python may gain `unit_families_data` in 1A, JavaScript may gain `unitFamiliesData` in 1B, and 1C aligns both generated exports with the wrapped JSON payload.
+
 ---
 
-## Python Package: `packages/python/genai_prices/`
+## 1A Python Package: `packages/python/genai_prices/`
 
 ### `units.py` — new file
 
@@ -510,7 +532,7 @@ Phase 1 does not add `self is get_snapshot()` guards to these methods. The regis
 
 ---
 
-### `update_prices.py` — modified
+### `update_prices.py` — modified in 1C
 
 **`UpdatePrices.fetch()` parses the new top-level JSON wrapper.** _(implements "Unit definitions travel with prices, not just with the package")_
 
@@ -520,6 +542,8 @@ def fetch(self) -> DataSnapshot | None:
 ```
 
 Instead of validating the whole payload as `list[Provider]`, `fetch()` parses the wrapper object, validates the provider object shape, constructs `UnitRegistry(raw['unit_families'])`, and returns a `DataSnapshot` containing both. Because this fetch path reads official repo-built data, it treats returned model prices as known valid for that fetched registry without running price-level validation for every model or computing decomposition caches.
+
+1A leaves `UpdatePrices.fetch()` compatible with the existing provider-array remote payload and uses the bundled/generated Python registry for runtime pricing.
 
 ---
 
@@ -542,7 +566,7 @@ This preserves the current CLI output shape while allowing new units to appear w
 
 ---
 
-## Python Build/Runtime Boundary
+## 1A/1C Python Build/Runtime Boundary
 
 **Registry and validation code should be shared when the dependency direction is clean, but duplication is acceptable at the build-package boundary.** _(implements "Derive, don't duplicate", "Validation replaces what hardcoded fields gave us implicitly, and adds more")_
 The `prices/` build package already has build-time types that mirror runtime package types. This is not ideal, but it is an established boundary in the repo: build-time parsing and schema generation operate before generated runtime data exists, while the published runtime package must not depend on the build package.
@@ -564,11 +588,11 @@ This is a structural implementation decision, not a detail hidden inside `build(
 
 ---
 
-## Build Pipeline: `prices/src/prices/`
+## 1A/1C Build Pipeline: `prices/src/prices/`
 
 ### `prices_types.py` — modified
 
-**Build-time `ModelPrice` becomes registry-permissive.** _(implements "Validation replaces what hardcoded fields gave us implicitly, and adds more", "Generated JSON schemas provide editor autocomplete for provider YAML files")_
+**Build-time `ModelPrice` becomes registry-permissive in the complete Phase 1 target.** _(implements "Validation replaces what hardcoded fields gave us implicitly, and adds more", "Generated JSON schemas provide editor autocomplete for provider YAML files")_
 
 ```python
 class ModelPrice(_Model, extra='allow'):
@@ -578,6 +602,8 @@ class ModelPrice(_Model, extra='allow'):
 ```
 
 The explicit hardcoded price fields from `main` are removed as the source of truth. Validation of allowed keys moves to registry-derived build checks and schema generation.
+
+1A should avoid visible provider-YAML acceptance changes unless they are required to preserve existing behavior through the internal Python refactor. The broader schema and authoring-surface change belongs with the shared-data-contract work.
 
 **`UsageExtractorMapping.dest` becomes `str`.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The literal `UsageField` union is removed from build-time types.
@@ -603,7 +629,7 @@ def write_prices(
     """Write one wrapped prices payload."""
 ```
 
-`build()` changes in this order:
+The complete 1C `build()` changes in this order:
 
 1. Load `prices/units.yml`.
 2. Construct `UnitRegistry(unit_families)`; this performs structural validation, including interval closure and join-closedness.
@@ -616,7 +642,9 @@ def write_prices(
 5. Validate extractor destinations against registry usage keys.
 6. Write wrapped `data.json` and `data_slim.json`.
 
-**JSON schema generation becomes registry-derived.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
+In 1A and 1B, build/package code may read `prices/units.yml` to generate or validate language-native runtime data, but it must not write wrapped `data.json` / `data_slim.json`.
+
+**JSON schema generation becomes registry-derived in 1C.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
 The provider YAML schema no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. Instead, `build.py` derives:
 
 - allowed price keys from `registry.price_keys`
@@ -624,6 +652,8 @@ The provider YAML schema no longer relies on hardcoded `ModelPrice` fields or a 
 - the top-level wrapped `data.json` schema including `unit_families`
 
 No schema code references specific unit names.
+
+1A and 1B may use registry-derived checks internally, but should not change the published editor schema/autocomplete surface if that would turn the runtime refactor into an authoring behavior change.
 
 ---
 
@@ -637,11 +667,11 @@ def package_python_data(data_path: Path) -> None: ...
 def package_ts_data(data_path: Path) -> None: ...
 ```
 
-`package_python_data()` and `package_ts_data()` both read the wrapped `data.json`, split out `providers` and `unit_families`, and emit both into generated package data files.
+In the complete 1C target, `package_python_data()` and `package_ts_data()` both read the wrapped `data.json`, split out `providers` and `unit_families`, and emit both into generated package data files. Before 1C, the package-data path may combine the existing provider-array data with `prices/units.yml` or another package-internal generated unit source, as long as the published `prices/data*.json` contract does not change.
 
 ---
 
-## JS Package: `packages/js/src/`
+## 1B JS Package: `packages/js/src/`
 
 ### `types.ts` — modified
 
@@ -845,7 +875,7 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 
 ---
 
-### `api.ts` — modified
+### `api.ts` — modified in 1C
 
 **Runtime data activation now handles wrapped JSON plus unit families.** _(implements "Unit definitions travel with prices, not just with the package")_
 
@@ -861,6 +891,8 @@ If parsing or structural registry validation fails, both the active registry and
 The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain decomposition caches. Embedded provider data may build a decomposition cache for one model price lazily on first calculation, using the same optional private runtime cache as Python.
 
 The checked-in JS examples must be updated to cache and restore the wrapped payload shape, not a bare provider array, and to parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
+
+1B leaves `updatePrices()` and the checked-in examples compatible with the existing provider-array remote payload while registry-backed JS pricing is refactored internally.
 
 ---
 
@@ -879,7 +911,7 @@ If a provider response contains contradictory registered usage counts, `extractU
 
 ---
 
-## Call Relationships
+## Call Relationships Across 1A/1B/1C
 
 ### Registry construction
 
@@ -896,6 +928,7 @@ prices/units.yml
 ### Build-time validation and packaging
 
 ```text
+1C target:
 build()
   -> load units.yml
   -> registry = UnitRegistry(unit_families)
@@ -911,6 +944,10 @@ package_data()
   -> package_python_data(): emit providers + unit_families_data
   -> package_ts_data(): emit data + unitFamiliesData
   -> generated runtime data is trusted only because build validation succeeded first
+
+1A/1B:
+  -> generate or embed language-native unit registry data for the target runtime
+  -> keep prices/data.json and prices/data_slim.json as provider arrays
 ```
 
 ### Python bundled startup
