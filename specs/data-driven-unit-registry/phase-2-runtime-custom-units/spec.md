@@ -17,6 +17,8 @@ The raw data shape stays `family_id -> family data -> units -> usage_key -> unit
 **Runtime unit and price patches happen through `DataSnapshot`.** _(from "Users can define custom units at runtime")_
 The public workflow should be "edit the snapshot, then activate it if needed." Callers should not need to manually deep-copy the current registry, providers, models, or prices before making a small patch. The implementation may copy internally to provide validation rollback, but that is not user-visible ceremony.
 
+If a Phase 1 snapshot borrowed the active registry by default, Phase 2 unit-editing APIs must detach or copy-on-write before the first registry mutation. A future `DataSnapshot.add_units()` must patch only the staged snapshot registry and must not mutate the active registry before `set_custom_snapshot()` activates the staged snapshot.
+
 **Registry mutations commit only structurally valid states.** _(from "Runtime unit and price patches happen through `DataSnapshot`")_
 Registry mutations validate usage key uniqueness, price key uniqueness, dimension-set uniqueness, interval closure, and join-closedness before the mutation becomes visible. There is no externally visible invalid intermediate registry: mutation either commits a valid registry state or fails and leaves the registry unchanged.
 
