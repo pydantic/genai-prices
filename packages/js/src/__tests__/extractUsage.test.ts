@@ -128,6 +128,41 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('OpenRouter provider', () => {
+    const openrouterProvider: Provider = data.find((provider) => provider.id === 'openrouter')!
+
+    it('should extract chat usage with cache write tokens', () => {
+      const responseData = {
+        model: 'anthropic/claude-4.6-sonnet-20260217',
+        usage: {
+          completion_tokens: 1906,
+          prompt_tokens: 4819,
+          prompt_tokens_details: {
+            audio_tokens: 17,
+            cached_tokens: 0,
+            cache_write_tokens: 4800,
+          },
+          completion_tokens_details: {
+            audio_tokens: 23,
+          },
+          total_tokens: 6725,
+        },
+      }
+
+      const { model, usage } = extractUsage(openrouterProvider, responseData, 'chat')
+
+      expect(model).toBe('anthropic/claude-4.6-sonnet-20260217')
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 4800,
+        input_audio_tokens: 17,
+        input_tokens: 4819,
+        output_audio_tokens: 23,
+        output_tokens: 1906,
+      })
+    })
+  })
+
   describe('error handling', () => {
     it.each([
       [{}, 'Missing value at `usage`'],
