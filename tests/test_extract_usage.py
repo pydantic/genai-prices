@@ -126,6 +126,62 @@ def test_openai():
         provider.extract_usage(response_data)
 
 
+def test_openrouter_chat_cache_write_tokens():
+    provider = next(provider for provider in providers if provider.id == 'openrouter')
+    assert provider.name == 'OpenRouter'
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'anthropic/claude-4.6-sonnet-20260217',
+        'usage': {
+            'prompt_tokens': 4819,
+            'completion_tokens': 1906,
+            'total_tokens': 6725,
+            'prompt_tokens_details': {
+                'cached_tokens': 0,
+                'cache_write_tokens': 4800,
+                'audio_tokens': 17,
+            },
+            'completion_tokens_details': {
+                'audio_tokens': 23,
+            },
+        },
+    }
+    usage = provider.extract_usage(response_data, api_flavor='chat')
+    assert usage == snapshot(
+        (
+            'anthropic/claude-4.6-sonnet-20260217',
+            Usage(
+                input_tokens=4819,
+                cache_write_tokens=4800,
+                cache_read_tokens=0,
+                output_tokens=1906,
+                input_audio_tokens=17,
+                output_audio_tokens=23,
+            ),
+        )
+    )
+
+    extracted_usage = extract_usage(response_data, provider_id='openrouter', api_flavor='chat')
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=4819,
+            cache_write_tokens=4800,
+            cache_read_tokens=0,
+            output_tokens=1906,
+            input_audio_tokens=17,
+            output_audio_tokens=23,
+        )
+    )
+    assert extracted_usage.provider.name == snapshot('OpenRouter')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('anthropic/claude-sonnet-4.6')
+
+    extracted_usage_by_url = extract_usage(
+        response_data, provider_api_url='https://openrouter.ai/api/v1', api_flavor='chat'
+    )
+    assert extracted_usage_by_url.usage == extracted_usage.usage
+
+
 @pytest.mark.parametrize(
     'response_data,error',
     [
