@@ -66,7 +66,7 @@ class DataSnapshot:
 The exact public names can be language-idiomatic, but the capabilities are fixed: add a unit family, add a batch of units to an existing family, update model price keys on the same snapshot, invalidate validation markers and optional small decomposition caches only for changed `ModelPrice` objects, and leave inactive snapshots as staging objects until activation.
 
 **Snapshot unit edits are validated with rollback before becoming visible.** _(implements "Registry mutations commit only structurally valid states")_
-An implementation may use internal copy-on-write, transactions, or candidate registry objects. If a snapshot holds a borrowed registry, including the Phase 1 default active registry, the first unit edit must detach before mutation so staged edits cannot affect the active snapshot before activation. Failed registry edits must leave the snapshot's previous registry visible and unchanged. Direct mutation of private registry indexes is not a supported public API.
+An implementation may use internal copy-on-write, transactions, candidate registry objects, or another explicit staging model. If a snapshot can hold a borrowed registry, including the Phase 1 default active registry, Phase 2 should decide and document how first unit edits interact with that borrowed registry. Failed registry edits must leave the snapshot's previous registry visible and unchanged. Direct mutation of private registry indexes is not a supported public API.
 
 **`set_custom_snapshot()` validates against the staged custom registry.** _(implements "Snapshot activation validates custom units, prices, and extractors together")_
 
