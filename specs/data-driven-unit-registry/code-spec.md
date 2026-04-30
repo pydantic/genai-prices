@@ -22,6 +22,8 @@ Phase 1 still has one target behavior: repo-defined unit registries. The slices 
 
 1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the intentional compatibility break: once both current runtimes can parse the wrapped payload, the shared remote `data.json` / `data_slim.json` files change shape even though older released clients that expect a bare provider array will fail when they auto-update. This spec does not require dual payloads, backward-compatible wrapper detection in old clients, or a versioned rollout URL. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
 
+1A/1B do not enforce full registry join-closedness on the current-unit subset. That subset intentionally omits future public units such as `cache_audio_write_tokens`; exposing them before the shared data contract can carry them would be a behavior change. To keep decomposition safe, 1A/1B model-price validation must reject any priced compatible pair whose join is absent from the active subset. The current repo data does not price `cache_write_mtok` and `input_audio_mtok` together, so the known current prices do not trigger that missing-join case.
+
 **New repo-defined units are not enabled until 1C.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
 Before the shared payload carries `unit_families`, adding new units would create half-support: one runtime might know a unit internally, but remote price updates and the other runtime might not. 1A and 1B can validate that existing prices conform to the registry-shaped model, but their active registries stay limited to the current hardcoded unit surface and should not require provider price edits, new price keys, or data-shape changes just to preserve current behavior. New unit data becomes reviewable once 1C lands. Plain Python dataclass subclasses accepting those future price keys as undeclared constructor kwargs is a 1D compatibility enhancement, not a 1C blocker.
 
@@ -109,6 +111,8 @@ Usage keys live as dict keys in the raw data. `price_key` defaults to the usage 
 
 1A and 1B use a current-unit subset of this registry. That subset exposes only the hardcoded usage/price keys that already exist in the target language, plus the `requests` family if the slice moves existing request-count pricing behind the registry. Do not add text/image/video units, cache-by-modality units that are not already public, or any other new registered usage/price keys in 1A or 1B. Review those new unit definitions together with 1C, when the shared payload can carry units and prices together. If full interval/join closure for the future expanded lattice requires structural units that are not part of today's public surface, defer those units and the corresponding stricter structural validation to 1C rather than exposing behavior-changing keys early.
 
+Before 1C, this deferral is safe only if price validation refuses priced sets that would need a missing join. If a custom 1A/1B price set includes two compatible current units and their dimension-union unit is absent from the subset, activation or one-model defensive validation must fail before `compute_leaf_values(...)` runs.
+
 **1C changes `prices/data.json` and `prices/data_slim.json` into top-level dicts.** _(implements "`data.json` becomes a top-level dict, not a bare list", "Unit definitions travel with prices, not just with the package")_
 Both generated JSON payloads change from a bare provider list to this shape:
 
@@ -191,13 +195,15 @@ class UnitRegistry:
         """Return True when the two units do not conflict on any dimension key."""
 ```
 
-Registry construction performs all structural validation:
+Complete 1C registry construction performs all structural validation:
 
 - usage keys are globally unique
 - price keys are globally unique
 - no two units in a family share the same dimension set
 - every comparable pair in a family has all intermediate dimension sets present
 - every compatible pair in a family has its join present in that family
+
+In 1A/1B, construction may skip full join-closedness for the current-unit subset when satisfying it would require exposing future units. It should still validate uniqueness and comparable-pair interval closure for the subset. Decomposition safety comes from model-price validation rejecting compatible priced pairs whose join is missing from that subset; in 1C and later, the missing-join case is impossible because registry construction validates full join-closedness.
 
 Phase 1 does not add public `add_family(...)`, `add_units(...)`, or `copy()` mutation APIs. Runtime custom unit mutation APIs belong to the Phase 2 code spec.
 
@@ -252,7 +258,7 @@ def compute_leaf_values(
     """
 ```
 
-`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. 1A should compute decomposition directly unless a tiny `CachedFamilyDecomposition` helper makes the code simpler; it does not need a model-wide pricing-plan cache. Decomposition coefficients depend on the registry/family shape and the model's priced usage keys; the resulting leaf values also depend on the current usage values. The full-depth sign rule is valid because registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage remove the structural gaps that would otherwise break it. Reading a missing usage value may trigger lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
+`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. 1A should compute decomposition directly unless a tiny `CachedFamilyDecomposition` helper makes the code simpler; it does not need a model-wide pricing-plan cache. Decomposition coefficients depend on the registry/family shape and the model's priced usage keys; the resulting leaf values also depend on the current usage values. The full-depth sign rule is valid because registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage remove the structural gaps that would otherwise break it. In 1A/1B, full registry join-closedness is deferred, so validation must reject any priced compatible pair whose join is absent from the current-unit subset before this function runs. Reading a missing usage value may trigger lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
 
 ---
 
@@ -270,7 +276,7 @@ def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily) 
 
 
 def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
-    """Every priced compatible pair must price its join unit."""
+    """Every priced compatible pair must price its join unit, or fail if that join is absent."""
 
 
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
@@ -281,7 +287,7 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
     """Every extractor mapping destination must be an externally reported usage key."""
 ```
 
-This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, a simple exact-registry marker can live on `ModelPrice` without becoming a broader framework.
+This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, a simple exact-registry marker can live on `ModelPrice` without becoming a broader framework.
 
 ---
 
@@ -561,7 +567,7 @@ If that clean sharing turns out to be awkward, the fallback is explicit and acce
 
 - one source registry file (`prices/units.yml`) remains the source of truth
 - runtime and build-time registry objects must parse the same raw `unit_families` shape
-- tests should cover parity for structural validation (including interval closure and join-closedness), price-key resolution, ancestor coverage, and join coverage
+- tests should cover parity for structural validation (including interval closure and, in 1C+, join-closedness), price-key resolution, ancestor coverage, join coverage, and 1A/1B missing-join safety
 - any deliberate duplication should be named in comments as a package-boundary copy, not a second design
 
 This is a structural implementation decision, not a detail hidden inside `build()`. The final implementation should make the boundary obvious in module placement and tests.
@@ -733,9 +739,9 @@ export type { ParsedFamilies, RawFamiliesDict, UnitDef, UnitFamily } from './typ
 
 export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies
 // Parses raw family data into UnitFamily/UnitDef objects, fills family
-// back-references, and validates structure, interval closure, and
-// join-closedness without mutating active runtime state. Raw unit keys are usage keys; priceKey is
-// raw.price_key ?? usageKey.
+// back-references, and validates structure plus interval closure. In 1C+
+// it also validates full join-closedness. Raw unit keys are usage keys;
+// priceKey is raw.price_key ?? usageKey.
 
 export function setUnitFamilies(families: ParsedFamilies | null): void
 // Replaces the active parsed registry. For null input, restores the generated
@@ -906,7 +912,8 @@ prices/units.yml
        -> create UnitFamily shells
        -> create UnitDef objects
        -> fill families / units / price_keys indexes
-       -> validate dimension rules, uniqueness, interval closure, join-closedness
+       -> validate dimension rules, uniqueness, interval closure
+       -> in 1C+: validate join-closedness
 ```
 
 ### Build-time validation and packaging
