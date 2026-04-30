@@ -111,6 +111,8 @@ Usage keys live as dict keys in the raw data. `price_key` defaults to the usage 
 
 `requests` is deliberately the only Phase 1 per-usage-object unit. Its registry entry exists so the `requests_kcount` price key participates in registry-backed lookup, validation, display, and total-cost aggregation. It does not make synthetic usage sources data-driven in general, and implementations may keep the one-request-per-`Usage`-object quantity as an explicit special case in pricing code. Do not add a generic `fixed_count`, `reported`, or source-kind registry field in Phase 1 just to model this request-count behavior.
 
+This is the sole Phase 1 exception to the otherwise name-agnostic validation and extraction design. Code may explicitly recognize usage key `requests` and price key `requests_kcount` to exclude the unit from caller/extractor usage and to price one request per `Usage` object. Do not use this exception to hardcode normal reported token, modality, cache, or future unit names in validation logic.
+
 1A and 1B use a current-unit subset of this registry. That subset exposes only the hardcoded usage/price keys that already exist in the target language, plus the `requests` family if the slice moves existing request-count pricing behind the registry. Do not add text/image/video units, cache-by-modality units that are not already public, or any other new registered usage/price keys in 1A or 1B. Review those new unit definitions together with 1C, when the shared payload can carry units and prices together. If full interval/join closure for the future expanded lattice requires structural units that are not part of today's public surface, defer those units and the corresponding stricter structural validation to 1C rather than exposing behavior-changing keys early.
 
 Before 1C, this deferral is safe only if price validation refuses priced sets that would need a missing join. If a custom 1A/1B price set includes two compatible current units and their dimension-union unit is absent from the subset, activation or one-model defensive validation must fail before `compute_leaf_values(...)` runs.
@@ -224,7 +226,7 @@ def _get_registry() -> UnitRegistry:
 
 Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().price_keys[...]` directly. Code that needs the set of caller/extractor usage keys reads the registry's units while skipping non-reported pricing-only units such as `requests`.
 
-That skip is intentionally name/special-case aware in Phase 1: `requests` is the one-request-per-`Usage`-object unit, not a caller-reported unit whose quantity can be inferred from the registry.
+That skip is intentionally name/special-case aware in Phase 1 and is the explicit exception to the otherwise name-agnostic validation rule: `requests` is the one-request-per-`Usage`-object unit, not a caller-reported unit whose quantity can be inferred from the registry.
 
 ---
 
@@ -675,7 +677,7 @@ In 1A and 1B, build/package code may read `prices/units.yml` to generate or vali
 - the top-level wrapped `data.json` schema including `unit_families` in 1C
 - reserved-name/key-safety checks from the runtime `Usage`/`ModelPrice` surfaces plus the shared cross-language denylist
 
-No schema code references specific unit names.
+No schema code references specific unit names, except for the explicit Phase 1 `requests` / `requests_kcount` non-reported pricing-only exception where needed to keep extractor and usage destinations correct.
 
 1A and 1B may use registry-derived checks internally, but should not change the published editor schema/autocomplete surface if that would turn the runtime refactor into an authoring behavior change.
 
