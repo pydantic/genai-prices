@@ -5,10 +5,10 @@
 **Phase 3 global snapshot semi-enforcement is in [phase-3-global-snapshot-enforcement/code-spec](phase-3-global-snapshot-enforcement/code-spec.md).**
 **Baseline:** this document describes the complete Phase 1 target-state diff across delivery slices 1A, 1B, 1C, and 1D. It intentionally ignores the current branch's partial implementation state.
 
-**Historical implementation note:** a discarded proof-of-concept exists on branch `feat/token-unit-registry`. Implementers starting from `main` may use that branch's decomposition test vectors and rough unit inventory as references, but they should not copy its runtime architecture. In particular, that branch predates this phased spec and mixes future unit definitions, standalone `units*.json` artifacts, schema polish, provider-data edits, and Python/JavaScript runtime changes that now belong in separate delivery slices.
+**Historical implementation note:** a discarded proof-of-concept exists on branch `feat/token-unit-registry`. Implementers starting from `main` can use that branch's decomposition test vectors and rough unit inventory as references, but they must not copy its runtime architecture. In particular, that branch predates this phased spec and mixes future unit definitions, standalone `units*.json` artifacts, schema polish, provider-data edits, and Python/JavaScript runtime changes that now belong in separate delivery slices.
 
 **Future phases are extension constraints, not Phase 1 implementation scope.** _(implements "Future phases guide Phase 1 without expanding its scope")_
-This code spec should keep Phase 1 compatible with later directions, but it should not add runtime unit mutation APIs, registry transaction machinery, additive-registry cache compatibility, or non-global snapshot execution guards to the Phase 1 diff. When a later concern only affects future workflow detail, this document should preserve the underlying extension point and leave the concrete runtime workflow to that later code spec.
+This code spec keeps Phase 1 compatible with later directions, but it does not add runtime unit mutation APIs, registry transaction machinery, additive-registry cache compatibility, or non-global snapshot execution guards to the Phase 1 diff. When a later concern only affects future workflow detail, this document preserves the underlying extension point and leaves the concrete runtime workflow to that later code spec.
 
 ---
 
@@ -17,17 +17,17 @@ This code spec should keep Phase 1 compatible with later directions, but it shou
 **Delivery slices are review boundaries inside Phase 1, not new product phases.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
 Phase 1 still has one target behavior: repo-defined unit registries. The slices describe how to land that target safely:
 
-- **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the current hardcoded unit set only. The active 1A registry exposes only today's supported usage keys (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`) and their corresponding current price keys (`input_mtok`, `output_mtok`, `cache_read_mtok`, `cache_write_mtok`, `input_audio_mtok`, `cache_audio_read_mtok`, `output_audio_mtok`), plus the existing request-count pricing behavior if that slice moves `requests_kcount` behind the registry. It may keep existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add text/image/video or other future units, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
-- **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the current hardcoded unit set while continuing to consume the current provider-array remote data shape. It does not add text/image/video or other future units, does not depend on Python internals, and should preserve current JS behavior.
+- **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the current hardcoded unit set only. The active 1A registry exposes only today's supported usage keys (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`) and their corresponding current price keys (`input_mtok`, `output_mtok`, `cache_read_mtok`, `cache_write_mtok`, `input_audio_mtok`, `cache_audio_read_mtok`, `output_audio_mtok`), plus the `requests` unit and `requests_kcount` price key for existing request-count pricing. It keeps existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add text/image/video or other future units, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and must preserve current user-visible pricing behavior.
+- **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the current hardcoded unit set while continuing to consume the current provider-array remote data shape. It includes the existing request-count pricing behavior in the registry-backed path, does not add text/image/video or other future units, does not depend on Python internals, and must preserve current JS behavior.
 - **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, repo-defined extractor destinations validate against the registry carried by the same payload, and repo-defined new units can finally travel through generated package data and fetched auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
-- **1D: Polish and compatibility hardening.** CLI price presentation, provider YAML autocomplete/schema polish, generated schema hints for extractor destinations, cross-language reserved-name validation for dynamic usage/price keys, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
+- **1D: Polish and compatibility hardening.** CLI price presentation, provider YAML autocomplete/schema polish, generated schema hints for extractor destinations, cross-language reserved-name validation for dynamic usage/price keys, and dataclass subclass dynamic price-key constructor support land after the core Python and shared-data work. This slice does not block proving the registry-driven pricing model.
 
-1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the intentional compatibility break: once both current runtimes can parse the wrapped payload, the shared remote `data.json` / `data_slim.json` files change shape even though older released clients that expect a bare provider array will fail when they auto-update. This spec does not require dual payloads, backward-compatible wrapper detection in old clients, or a versioned rollout URL. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
+1A and 1B introduce generated language-native unit registry data for the current-unit subset, but they do not publish a changed shared remote payload. 1C is the intentional compatibility break: once both current runtimes can parse the wrapped payload, the shared remote `data.json` / `data_slim.json` files change shape even though older released clients that expect a bare provider array will fail when they auto-update. This spec does not require dual payloads, backward-compatible wrapper detection in old clients, or a versioned rollout URL. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
 
 1A/1B do not enforce full registry join-closedness on the current-unit subset. That subset intentionally omits future public units such as `cache_audio_write_tokens`; exposing them before the shared data contract can carry them would be a behavior change. To keep decomposition safe, 1A/1B model-price validation must reject any priced compatible pair whose join is absent from the active subset. The current repo data does not price `cache_write_mtok` and `input_audio_mtok` together, so the known current prices do not trigger that missing-join case.
 
 **New repo-defined units are not enabled until 1C.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
-Before the shared payload carries `unit_families`, adding new units would create half-support: one runtime might know a unit internally, but remote price updates and the other runtime might not. 1A and 1B can validate that existing prices conform to the registry-shaped model, but their active registries stay limited to the current hardcoded unit surface and should not require provider price edits, new price keys, or data-shape changes just to preserve current behavior. New unit data becomes reviewable once 1C lands. Plain Python dataclass subclasses accepting those future price keys as undeclared constructor kwargs is a 1D compatibility enhancement, not a 1C blocker.
+Before the shared payload carries `unit_families`, adding new units would create half-support: one runtime would know a unit internally, but remote price updates and the other runtime would not. 1A and 1B validate that existing prices conform to the registry-shaped model, but their active registries stay limited to the current hardcoded unit surface and do not require provider price edits, new price keys, or data-shape changes just to preserve current behavior. New unit data becomes reviewable once 1C lands. Plain Python dataclass subclasses accepting those future price keys as undeclared constructor kwargs is a 1D compatibility enhancement, not a 1C blocker.
 
 ---
 
@@ -66,7 +66,7 @@ The complete Phase 1 target diff modifies these existing files from `main`:
 - generated JSON outputs and JSON schemas under `prices/`
 
 **No separate runtime `units*.json` artifact is introduced.** _(implements "Unit definitions travel with prices, not just with the package", "No new code generation")_
-The final design has one checked-in source registry file (`prices/units.yml`), plus generated embeddings of that same registry inside `prices/data*.json`, `packages/python/genai_prices/data.py`, and `packages/js/src/data.ts`. In 1A and 1B, language-native package data may embed units while `prices/data*.json` stays unchanged. 1C adds unit families to the shared generated JSON payloads. The complete Phase 1 target diff does not add or remove any standalone bundled units JSON file.
+The final design has one checked-in source registry file (`prices/units.yml`), plus generated embeddings of that same registry inside `prices/data*.json`, `packages/python/genai_prices/data.py`, and `packages/js/src/data.ts`. In 1A and 1B, language-native package data embeds the current-unit subset while `prices/data*.json` stays unchanged. 1C adds unit families to the shared generated JSON payloads. The complete Phase 1 target diff does not add or remove any standalone bundled units JSON file.
 
 ---
 
@@ -111,11 +111,11 @@ requests:
 
 Usage keys live as dict keys in the raw data. `price_key` defaults to the usage key when omitted. In the complete 1C target, the `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
 
-`requests` is deliberately the only Phase 1 per-usage-object unit. Its registry entry exists so the `requests_kcount` price key participates in registry-backed lookup, validation, display, and total-cost aggregation. It does not make synthetic usage sources data-driven in general, and implementations may keep the one-request-per-`Usage`-object quantity as an explicit special case in pricing code. Do not add a generic `fixed_count`, `reported`, or source-kind registry field in Phase 1 just to model this request-count behavior.
+`requests` is deliberately the only Phase 1 per-usage-object unit. Its registry entry exists so the `requests_kcount` price key participates in registry-backed lookup, validation, display, and total-cost aggregation. It does not make synthetic usage sources data-driven in general. Pricing code keeps the one-request-per-`Usage`-object quantity as an explicit special case. Do not add a generic `fixed_count`, `reported`, or source-kind registry field in Phase 1 just to model this request-count behavior.
 
-This is the sole Phase 1 exception to the otherwise name-agnostic validation and extraction design. Code may explicitly recognize usage key `requests` and price key `requests_kcount` to exclude the unit from caller/extractor usage and to price one request per `Usage` object. Do not use this exception to hardcode normal reported token, modality, cache, or future unit names in validation logic.
+This is the sole Phase 1 exception to the otherwise name-agnostic validation and extraction design. Code explicitly recognizes usage key `requests` and price key `requests_kcount` to exclude the unit from caller/extractor usage and to price one request per `Usage` object. Do not use this exception to hardcode normal reported token, modality, cache, or future unit names in validation logic.
 
-1A and 1B use a current-unit subset of this registry. That subset exposes only the hardcoded usage/price keys that already exist in the target language, plus the `requests` family if the slice moves existing request-count pricing behind the registry. Do not add text/image/video units, cache-by-modality units that are not already public, or any other new registered usage/price keys in 1A or 1B. Review those new unit definitions together with 1C, when the shared payload can carry units and prices together. If full interval/join closure for the future expanded lattice requires structural units that are not part of today's public surface, defer those units and the corresponding stricter structural validation to 1C rather than exposing behavior-changing keys early.
+1A and 1B use a current-unit subset of this registry. That subset exposes only the hardcoded usage/price keys that already exist in the target language, plus the `requests` family and `requests_kcount` price key for existing request-count pricing. Do not add text/image/video units, cache-by-modality units that are not already public, or any other new registered usage/price keys in 1A or 1B. Review those new unit definitions together with 1C, when the shared payload can carry units and prices together. Structural units required only for the future expanded lattice and the corresponding stricter structural validation are deferred to 1C rather than exposing behavior-changing keys early.
 
 Before 1C, this deferral is safe only if price validation refuses priced sets that would need a missing join. If a custom 1A/1B price set includes two compatible current units and their dimension-union unit is absent from the subset, activation or one-model defensive validation must fail before `compute_leaf_values(...)` runs.
 
@@ -154,7 +154,7 @@ export const data: Provider[] = [ ... ]
 
 The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Generated data exports contain units and prices only. They must not include serialized decomposition caches, decomposition coefficients, or bulky per-model validation artifacts; those are runtime-private state built or marked in memory.
 
-Python may gain `unit_families_data` in 1A containing only the current-unit subset, JavaScript may gain `unitFamiliesData` in 1B containing only the current-unit subset, and 1C expands both generated exports and aligns them with the wrapped JSON payload.
+Python gains `unit_families_data` in 1A containing only the current-unit subset, JavaScript gains `unitFamiliesData` in 1B containing only the current-unit subset, and 1C expands both generated exports and aligns them with the wrapped JSON payload.
 
 ---
 
@@ -192,6 +192,8 @@ class UnitRegistry:
     units: dict[str, UnitDef]          # usage_key -> UnitDef across all families
     price_keys: dict[str, str]         # price_key -> usage_key across all families
     validation_id: object              # unique for each independently constructed registry
+    _units_by_dimension: dict[str, dict[frozenset[tuple[str, str]], UnitDef]]
+    _ancestor_usage_keys: dict[str, frozenset[str]]
 
     def __init__(self, raw_families: dict[str, dict] | None = None) -> None:
         """Parse raw families, validate structure, fill indexes and back-references."""
@@ -209,15 +211,15 @@ Complete 1C registry construction performs all structural validation:
 - every comparable pair in a family has all intermediate dimension sets present
 - every compatible pair in a family has its join present in that family
 
-1D adds key-safety validation for dynamic public names. Usage keys and price keys should be valid, public, attribute-safe names in both runtimes and must not collide with reserved Python/JavaScript names, prototype-like names, private/dunder names, or existing `Usage`/`ModelPrice` public and internal attributes. This validation is intentionally about runtime key safety, not unit semantics; the denylist can mention runtime method/property names but should not hardcode pricing concepts such as `input_tokens` or `input_mtok`.
+1D adds key-safety validation for dynamic public names. Usage keys and price keys must be valid, public, attribute-safe names in both runtimes and must not collide with reserved Python/JavaScript names, prototype-like names, private/dunder names, or existing `Usage`/`ModelPrice` public and internal attributes. This validation is intentionally about runtime key safety, not unit semantics; the denylist can mention runtime method/property names but must not hardcode pricing concepts such as `input_tokens` or `input_mtok`.
 
-In 1A/1B, construction may skip full join-closedness for the current-unit subset when satisfying it would require exposing future units. It should still validate uniqueness and comparable-pair interval closure for the subset. Decomposition safety comes from model-price validation rejecting compatible priced pairs whose join is missing from that subset; in 1C and later, the missing-join case is impossible because registry construction validates full join-closedness.
+In 1A/1B, construction skips full join-closedness for the current-unit subset because satisfying it would require exposing future units. It still validates uniqueness and comparable-pair interval closure for the subset. Decomposition safety comes from model-price validation rejecting compatible priced pairs whose join is missing from that subset; in 1C and later, the missing-join case is impossible because registry construction validates full join-closedness.
 
 Phase 1 does not add public `add_family(...)`, `add_units(...)`, or `copy()` mutation APIs. Runtime custom unit mutation APIs belong to the Phase 2 code spec.
 
-The registry also owns any private relationship indexes needed to keep downstream checks simple: ancestor lookup by usage key, join lookup by dimension union, family grouping, or equivalent caches. These are implementation details, but validation should be written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
+The registry owns two private relationship indexes that keep downstream checks simple: `_units_by_dimension` maps each family id and dimension set to its `UnitDef`, and `_ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Join lookup is performed by unioning two compatible dimension sets and reading `_units_by_dimension[family_id]`. Validation is written against model-priced units plus these indexes rather than by scanning every registry unit for every model.
 
-`validation_id` is an optional opaque identity value used only if a runtime needs an exact-registry validation marker or a small optional decomposition cache. 1A may omit this until the implementation has a concrete need. Any runtime marker or cache matches only when the exact registry identity and price-key fingerprint match. Broader compatibility across additive/destructive runtime registry mutations belongs to Phase 2.
+`validation_id` is an opaque `object()` created during every registry construction. Runtime validation trust matches only when this exact registry identity and the model price-key fingerprint match. Phase 1 does not add decomposition caches. Broader compatibility across additive/destructive runtime registry mutations belongs to Phase 2.
 
 **Module-level registry access is one lazy helper.** _(implements "Phase 1 assumes one active global DataSnapshot")_
 
@@ -237,38 +239,19 @@ That skip is intentionally name/special-case aware in Phase 1 and is the explici
 **Dimension-driven decomposition lives in a dedicated module.** _(implements "Decomposition uses dimensions, not hardcoded subtraction chains", "Only priced units participate in decomposition", "Decomposition operates within a family")_
 
 ```python
-@dataclass(frozen=True)
-class CachedFamilyDecomposition:
-    family: UnitFamily
-    leaf_coefficients: Mapping[str, tuple[tuple[str, int], ...]]
-    """Optional cache: priced usage key -> terms for computing that exclusive bucket."""
-
-
 def is_descendant_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
     """Return True when ancestor.dimensions is a subset of descendant.dimensions."""
-
-
-def build_family_decomposition_cache(
-    priced_usage_keys: set[str],
-    family: UnitFamily,
-) -> CachedFamilyDecomposition:
-    """Optionally precompute reusable decomposition instructions for one model/family."""
 
 
 def compute_leaf_values(
     priced_usage_keys: set[str],
     usage: Usage,
     family: UnitFamily,
-    *,
-    cache: CachedFamilyDecomposition | None = None,
 ) -> dict[str, int]:
-    """Return exclusive usage buckets for one family.
-
-    If a cache is supplied, use it; otherwise compute the decomposition directly.
-    """
+    """Return exclusive usage buckets for priced units in one family."""
 ```
 
-`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. 1A should compute decomposition directly unless a tiny `CachedFamilyDecomposition` helper makes the code simpler; it does not need a model-wide pricing-plan cache. Decomposition coefficients depend on the registry/family shape and the model's priced usage keys; the resulting leaf values also depend on the current usage values. The full-depth sign rule is valid because registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage remove the structural gaps that would otherwise break it. In 1A/1B, full registry join-closedness is deferred, so validation must reject any priced compatible pair whose join is absent from the current-unit subset before this function runs. Reading a missing usage value may trigger lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
+`compute_leaf_values(...)` uses the family dimension lattice and only priced units become returned cost buckets. Phase 1 computes decomposition directly from the registry indexes and the model's priced usage keys; it does not introduce cached decomposition plans, cached coefficients, or a model-wide pricing-plan cache. The full-depth sign rule is valid because registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage remove the structural gaps that would otherwise break it. In 1A/1B, full registry join-closedness is deferred, so validation must reject any priced compatible pair whose join is absent from the current-unit subset before this function runs. Reading a missing usage value goes through lazy inference on `Usage`. Unpriced reported usage keys do not participate in consistency checks unless they are needed to infer a missing priced value. For example, `input_tokens=100` and `cache_read_tokens=200` must not fail for a model that only has an input catch-all price, but must fail when `cache_read_tokens` is also priced. Negative leaf values, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise `ValueError` with user-facing messages that describe the usage data problem, not the underlying algorithm.
 
 ---
 
@@ -301,9 +284,9 @@ def validate_public_registry_key_names(registry: UnitRegistry) -> None:
     """1D: reject usage/price keys that are not safe dynamic attributes in Python and JS."""
 ```
 
-This module does not validate core raw registry structure such as interval closure or join-closedness. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, use runtime-private trust-context state rather than generated or serialized per-price markers.
+This module does not validate core raw registry structure such as interval closure or join-closedness. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. Do not add validation-provenance helpers or pricing-plan cache builders; repeated validation is handled by the runtime-private snapshot trust context, not by generated or serialized per-price markers.
 
-`validate_public_registry_key_names(...)` is 1D compatibility hardening and can run after `UnitRegistry` construction during build/export validation and snapshot activation. It should reject usage keys and price keys that would be inaccessible or ambiguous through dynamic attribute/property access: invalid identifier-like names, names beginning with `_`, dunder names, Python keywords when exposed as Python attributes, JavaScript prototype/object names such as `__proto__`, `prototype`, and `constructor`, and names already owned by `Usage` or `ModelPrice` such as methods, storage fields, or compatibility shims. The reserved-name set should be derived from the runtime classes plus a small shared cross-language denylist. It must not become a whitelist of commercial pricing concepts.
+`validate_public_registry_key_names(...)` is 1D compatibility hardening and runs after `UnitRegistry` construction during build/export validation and snapshot activation. It rejects usage keys and price keys that would be inaccessible or ambiguous through dynamic attribute/property access: invalid identifier-like names, names beginning with `_`, dunder names, Python keywords when exposed as Python attributes, JavaScript prototype/object names such as `__proto__`, `prototype`, and `constructor`, and names already owned by `Usage` or `ModelPrice` such as methods, storage fields, or compatibility shims. The reserved-name set is derived from the runtime classes plus a small shared cross-language denylist. It must not become a whitelist of commercial pricing concepts.
 
 ---
 
@@ -352,17 +335,21 @@ class Usage:
     def __repr__(self) -> str: ...
 ```
 
-Construction does not infer ancestor totals and must not reject contradictory registered values. Direct Python `Usage(...)` construction is strict about names: every supplied keyword must be a registered externally reported usage key for the active registry, and non-reported pricing-only keys such as `requests` raise just like unknown typos. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Reported values are never overwritten. `_values` contains reported values only. Do not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
+Construction does not infer ancestor totals and must not reject contradictory registered values. Direct Python `Usage(...)` construction is strict about names: every supplied keyword must be a registered externally reported usage key for the active registry, and non-reported pricing-only keys such as `requests` raise just like unknown typos. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Reported values are never overwritten. `_values` contains reported values only. Do not add explicit-vs-inferred provenance in Phase 1; diagnostics must be produced from the reported values and the current missing-value inference context.
 
-Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. The observable behavior follows the missing-read algorithm in `algorithm.md`: no relevant descendants returns zero, one uniquely determined total returns that value, and contradictory or underdetermined descendant reports raise `ValueError`. Do not cache inferred usage values; recompute them when requested. This avoids subtle bugs where derived ancestors start behaving like reported data in `__add__`, equality, representation, or later diagnostics. `Usage.__add__` should sum reported values only, letting the result infer lazily again. `Usage` does not know the one-request-per-usage-object pricing rule; that explicit special case stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known externally reported usage keys and ignores extras, preserving existing permissive behavior for raw caller objects. This may scan the registry's usage-key set while skipping non-reported pricing-only units such as `requests`; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward.
+Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. The observable behavior follows the missing-read algorithm in `algorithm.md`: no relevant descendants returns zero, one uniquely determined total returns that value, and contradictory or underdetermined descendant reports raise `ValueError`. Do not cache inferred usage values; recompute them when requested. This avoids subtle bugs where derived ancestors start behaving like reported data in `__add__`, equality, representation, or later diagnostics. `Usage.__add__` sums reported values only, letting the result infer lazily again. `Usage` does not know the one-request-per-usage-object pricing rule; that explicit special case stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known externally reported usage keys and ignores extras, preserving existing permissive behavior for raw caller objects. This scans the registry's usage-key set while skipping non-reported pricing-only units such as `requests`; the registry is expected to stay small enough that this remains straightforward.
 
-Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
+Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. Phase 1 does not add custom registry-aware assignment support for usage keys; leave mutation semantics no stricter than they are today, and keep all registry-aware reads behind `__getattr__`.
 
 **`ModelPrice` remains a subclass-friendly registry-backed price object.** _(implements "ModelPrice supports attribute access backed by registry data", "Normal `ModelPrice` handles new registry price keys without code changes", "Dataclass subclass dynamic price-key constructor support is 1D polish", "`calc_price` is a hot path", "`input_price` and `output_price` are backward-compat accessors over direction-filtered costs", "Manual custom pricing remains supported")_
 
 ```python
+class ModelPriceMeta(type):
+    """1D: split undeclared dynamic price-key kwargs before dataclass subclass __init__."""
+
+
 @dataclass(init=False)
-class ModelPrice:
+class ModelPrice(metaclass=ModelPriceMeta):
     # Legacy typed fields remain compatibility surface; they are not the registry-backed key whitelist.
     input_mtok: Decimal | TieredPrices | None = None
     cache_write_mtok: Decimal | TieredPrices | None = None
@@ -377,8 +364,8 @@ class ModelPrice:
     def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
         """1C: accept legacy fields plus candidate registry-backed price keys on base ModelPrice."""
 
-    def invalidate_validation_and_decomposition_cache(self) -> None:
-        """Notify runtime-private validation/cache state after structural price mutation."""
+    def invalidate_validation_trust(self) -> None:
+        """Notify runtime-private validation state after effective price-key additions/removals."""
 
     def calc_price(self, usage: object) -> CalcPrice:
         """Price all configured units using the active global registry."""
@@ -396,22 +383,22 @@ class ModelPrice:
         """Return True when there are no stored prices or every stored price is zero-like."""
 ```
 
-1A may keep the existing dataclass fields as the storage surface for current registered price keys. Pricing and validation still use registry metadata, but 1A does not need `_extra_prices` or non-hardcoded price-key constructor support because no new repo-defined price keys are enabled yet.
+1A keeps the existing dataclass fields as the storage surface for current registered price keys. Pricing and validation still use registry metadata, but 1A does not add `_extra_prices` or non-hardcoded price-key constructor support because no new repo-defined price keys are enabled yet.
 
 In 1C, base runtime `ModelPrice` accepts price-key kwargs that are not declared as dataclass fields. Those kwargs are stored in `_extra_prices` as candidate dynamic price keys, then accepted or rejected only when validation receives a `UnitRegistry`. A non-hardcoded registered key such as a future `image_mtok` price key works on base `ModelPrice` without adding a new dataclass field; a misspelled candidate key fails during build or snapshot validation. Base constructor behavior must not use legacy dataclass fields as a closed-world whitelist once 1C enables new repo-defined units.
 
-Runtime `ModelPrice` must remain compatible with the current Python pattern where users define `@dataclass` subclasses, add custom fields, override `calc_price()`, and optionally call `super().calc_price(usage)` with existing inherited price fields. Do not make runtime `ModelPrice` a `pydantic.BaseModel` unless the implementation also preserves that existing dataclass-subclass constructor behavior. A custom subclass field such as `sausage_price` is not a registry price key just because it is present on the object; it is owned by the custom override unless it is also a registered price key.
+Runtime `ModelPrice` must remain compatible with the current Python pattern where users define `@dataclass` subclasses, add custom fields, override `calc_price()`, and sometimes call `super().calc_price(usage)` with existing inherited price fields. Do not make runtime `ModelPrice` a `pydantic.BaseModel` unless the implementation also preserves that existing dataclass-subclass constructor behavior. A custom subclass field such as `sausage_price` is not a registry price key just because it is present on the object; it is owned by the custom override unless it is also a registered price key.
 
-1D may add support for plain dataclass subclasses accepting undeclared dynamic price-key kwargs. If normal Python dataclass subclass constructors reject non-hardcoded candidate price-key kwargs before `ModelPrice` can store them, use a metaclass, constructor wrapper, or equivalent interception point to preserve both behaviors: declared subclass fields pass through as subclass fields, and undeclared candidate price keys are captured in `_extra_prices`. This is a Python-specific compatibility polish item, not part of the 1A core proof or the 1C shared data contract.
+1D adds support for plain dataclass subclasses accepting undeclared dynamic price-key kwargs by giving `ModelPrice` a metaclass that intercepts construction, splits undeclared candidate price-key kwargs before the dataclass subclass `__init__` sees them, calls the normal dataclass constructor with declared subclass fields, and then stores the captured dynamic price keys in `_extra_prices`. This preserves both behaviors: declared subclass fields pass through as subclass fields, and undeclared candidate price keys are captured in `_extra_prices`. This is a Python-specific compatibility polish item, not part of the 1A core proof or the 1C shared data contract.
 
-Any validation marker or cached decomposition helper is private runtime state, not part of serialized model-price data. Do not add marker fields, marker constructor arguments, or fingerprint literals to `data.json`, `data_slim.json`, generated Python `data.py`, or generated JavaScript `data.ts`. Generated package data should continue to contain only the providers, unit families, and raw price values. 1A does not require a provenance or pricing-plan framework. If a marker is useful, prefer a snapshot-level trust context, weak map, weak set, or equivalent partial index constructed at runtime from the trusted snapshot/provider graph. That context is scoped to the active registry identity and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Validation must inspect present legacy compatibility fields and, once 1C adds `_extra_prices`, every `_extra_prices` candidate key. Any `_extra_prices` key that is not registered in the validation registry is an invalid price key, not a silently ignored custom field. Declared subclass fields outside the base compatibility surface are ignored unless the validation registry also names them as price keys. A marker means price-level validation has accepted this price-key set for that exact registry, either by trusting a generated/fetched snapshot source or during runtime snapshot activation. `calc_price` may compute decomposition directly from the model's priced keys and registry indexes. If price keys are added/removed after validation or the active registry identity changes, the trust-context lookup fails and any small optional cache is stale. Compatibility across additive runtime registry mutations belongs to Phase 2.
+Validation trust is private runtime state, not part of serialized model-price data. Do not add marker fields, marker constructor arguments, or fingerprint literals to `data.json`, `data_slim.json`, generated Python `data.py`, or generated JavaScript `data.ts`. Generated package data contains only the providers, unit families, and raw price values. 1A does not add a provenance or pricing-plan framework. It uses the snapshot-level trust context described in `data_snapshot.py`, scoped to the active registry identity and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Validation must inspect present legacy compatibility fields and, once 1C adds `_extra_prices`, every `_extra_prices` candidate key. Any `_extra_prices` key that is not registered in the validation registry is an invalid price key, not a silently ignored custom field. Declared subclass fields outside the base compatibility surface are ignored unless the validation registry also names them as price keys. Trust means price-level validation has accepted this price-key set for that exact registry, either by trusting a generated/fetched snapshot source or during runtime snapshot activation. `calc_price` computes decomposition directly from the model's priced keys and registry indexes. If price keys are added/removed after validation or the active registry identity changes, the trust-context lookup fails and one-model validation runs before pricing. Compatibility across additive runtime registry mutations belongs to Phase 2.
 
-Supported mutation paths that add or remove effective registered price keys must invalidate trust for that `ModelPrice` object and clear any small optional cache. Attribute assignment itself does not run ancestor or join validation; validation is final-state validation at snapshot activation or at the one-model `calc_price()` fallback. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and, in 1C, any explicit mapping-style helper added for dynamic registry price fields. Non-hardcoded names assigned through supported normal-`ModelPrice` mutation paths are candidate dynamic price keys and are stored for later registry validation once 1C introduces that storage. Setting a different value for an existing present key does not structurally require revalidation. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys should not trigger registry validation/cache invalidation.
+Supported mutation paths that add or remove effective registered price keys must invalidate trust for that `ModelPrice` object. Attribute assignment itself does not run ancestor or join validation; validation is final-state validation at snapshot activation or at the one-model `calc_price()` fallback. In Python this means centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys, including dynamic registry price fields stored in `_extra_prices` once 1C introduces that storage. Non-hardcoded names assigned through supported normal-`ModelPrice` mutation paths are candidate dynamic price keys and are stored for later registry validation. Setting a different value for an existing present key does not structurally require revalidation. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys must not trigger registry validation invalidation.
 
 Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
 1. Fetch the active global registry.
-2. If the active snapshot trust context or simple exact-registry validation marker does not cover this model price's current fingerprint, validate this one model price and update runtime-private validation state.
+2. If the active snapshot trust context does not cover this model price's current fingerprint, validate this one model price and update runtime-private validation state.
 3. Wrap non-`Usage` input with `Usage.from_raw` for an internal local variable only; do not mutate or replace the caller's original object.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family.
 5. For tiered prices, read `usage.input_tokens`; if it is stored, use it without reconciling descendant values. If it is missing and cannot be inferred coherently, raise a usage error instead of guessing a tier.
@@ -421,7 +408,7 @@ Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this f
 9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
 
 Families without a `direction` dimension contribute only to `total_price`.
-Custom `ModelPrice` subclasses may override this method and bypass or augment the base flow. The outer pricing orchestration must dispatch to the selected object's method with the original usage object so custom overrides can read arbitrary non-registry usage fields before or after calling `super().calc_price(usage)`.
+Custom `ModelPrice` subclasses can override this method and bypass or augment the base flow. The outer pricing orchestration must dispatch to the selected object's method with the original usage object so custom overrides can read arbitrary non-registry usage fields before or after calling `super().calc_price(usage)`.
 
 **`calc_unit_price` replaces `calc_mtok_price`.** _(implements "The system is general across unit families", "TieredPrices is not refactored in this change")_
 
@@ -436,7 +423,7 @@ def calc_unit_price(
 ```
 
 The tier threshold input remains `usage.input_tokens`, preserving current tiered-pricing semantics.
-Callers should only demand an inferred input-token total when a `TieredPrices` value needs it; non-tiered prices can pass a neutral value because they ignore the threshold parameter.
+Callers demand an inferred input-token total only when a `TieredPrices` value needs it; non-tiered prices pass a neutral value because they ignore the threshold parameter.
 
 **Runtime `UsageExtractorMapping.dest` becomes `str` with the 1A `Usage` refactor.** _(implements "The extraction pipeline is data-driven end-to-end")_
 
@@ -463,18 +450,21 @@ The method still accepts a usage object and returns `PriceCalculation`. Phase 1 
 **`DataSnapshot` gains `unit_registry`, defaulting from the current global snapshot when omitted.** _(implements "Unit families live in the data snapshot alongside prices", "Phase 1 assumes one active global DataSnapshot")_
 
 ```python
-import weakref
+@dataclass
+class PriceValidationRecord:
+    model_price: ModelPrice
+    fingerprint: frozenset[str]
 
 
 @dataclass
 class TrustedPriceValidationContext:
     registry_validation_id: object
     source_id: object
-    trusted_model_prices: weakref.WeakSet[ModelPrice] | None
-    baseline_fingerprints: weakref.WeakKeyDictionary[ModelPrice, frozenset[str]]
-    dirty_model_prices: weakref.WeakSet[ModelPrice]
-    validated_fingerprints: weakref.WeakKeyDictionary[ModelPrice, frozenset[str]]
-    # Optional indexes may be populated lazily from the trusted provider graph.
+    trusted_records: dict[int, PriceValidationRecord]
+    validated_records: dict[int, PriceValidationRecord]
+    dirty_model_price_ids: set[int]
+    # Records are keyed by id(model_price), and each record also stores the object
+    # reference to avoid id-reuse ambiguity for the snapshot's lifetime.
     # This is runtime-private state, not generated source or serialized data.
 
 
@@ -493,9 +483,9 @@ class DataSnapshot:
 
 `_bundled_snapshot()` always passes an explicit registry built from generated data, so it never depends on the fallback.
 
-`_trusted_price_validation` is a runtime-only partial trust index for snapshots created from generated package data or fetched prevalidated payloads. It is created by the snapshot construction path, not by generated `ModelPrice(...)` calls. It may lazily populate weak-map entries only for model prices that are checked, changed, or validated during activation. A generated or fetched `ModelPrice` object is considered structurally trusted only while the active registry validation id matches and its effective price-key fingerprint is unchanged or not marked dirty. This avoids expanding `data.json`, `data_slim.json`, generated Python `data.py`, and generated JavaScript `data.ts` with per-price marker data.
+`_trusted_price_validation` is a runtime-only partial trust index for snapshots created from generated package data or fetched prevalidated payloads. It is created by the snapshot construction path, not by generated `ModelPrice(...)` calls. It records entries for model prices that are checked, changed, or validated during activation. A generated or fetched `ModelPrice` object is considered structurally trusted only while the active registry validation id matches, its stored object reference matches, its effective price-key fingerprint is unchanged, and its object id is not marked dirty. The context uses id-keyed records instead of `WeakKeyDictionary`/`WeakSet` because `ModelPrice` remains a normal dataclass with value equality and is not required to be hashable. This avoids expanding `data.json`, `data_slim.json`, generated Python `data.py`, and generated JavaScript `data.ts` with per-price marker data.
 
-`DataSnapshot` remains the staging object for runtime customizations, but Phase 1 customizations are limited to provider/model price data that references registered units. It does not expose public unit-registry mutation helpers. Supported price mutation helpers, if added, should update a model's effective price keys on the snapshot and invalidate only the changed `ModelPrice` object's trust-context entry or small optional cache. Runtime unit editing, copy-on-write registry transactions, and registry rollback behavior belong to Phase 2.
+`DataSnapshot` remains the staging object for runtime customizations, but Phase 1 customizations are limited to provider/model price data that references registered units. It does not expose public unit-registry mutation helpers. Supported `ModelPrice` mutation paths update a model's effective price keys on the snapshot and invalidate only the changed `ModelPrice` object's trust-context entry. Runtime unit editing, copy-on-write registry transactions, and registry rollback behavior belong to Phase 2.
 
 **`_bundled_snapshot()` builds the registry from generated code.** _(implements "Unit definitions are generated into language-native code alongside prices")_
 
@@ -511,9 +501,9 @@ def _bundled_snapshot() -> DataSnapshot:
     )
 ```
 
-Bundled startup does not serialize, import, validate, or eagerly compute decomposition plans for every built-in model. The generated repo data was already validated by the build pipeline, so built-in model prices may be trusted by construction for the bundled registry without a per-model runtime provenance framework. If the implementation uses a tiny decomposition cache, each built-in `ModelPrice` builds it lazily the first time `calc_price` needs it. This avoids increasing package/download size and avoids startup work for models that are never priced in the current process.
+Bundled startup does not serialize, import, validate, or eagerly compute decomposition plans for every built-in model. The generated repo data was already validated by the build pipeline, so built-in model prices are trusted by construction for the bundled registry through the snapshot-level trust context. Decomposition is computed directly at pricing time. This avoids increasing package/download size and avoids startup work for models that are never priced in the current process.
 
-The bundled snapshot may create one `TrustedPriceValidationContext` for the whole provider graph. It must not require generated code to pass a marker or fingerprint into every `ModelPrice` constructor. Any per-object entries in that context are populated in memory, lazily or by a single runtime walk, and are never serialized.
+The bundled snapshot creates one `TrustedPriceValidationContext` for the whole provider graph. It must not require generated code to pass a marker or fingerprint into every `ModelPrice` constructor. Per-object entries in that context are populated in memory and are never serialized.
 
 **`set_custom_snapshot()` validation stays minimal in 1A and becomes stricter in 1C.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "`set_custom_snapshot` validation stays narrow in 1A", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
 
@@ -534,13 +524,13 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     - resolve validated price keys to usage keys
     - validate ancestor and join coverage per family
     - validate extractor destinations against snapshot.unit_registry's reported usage keys
-    - optionally record runtime-private validation state in the snapshot trust context
+    - record runtime-private validation state in the snapshot trust context
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry and where runtime-authored extractor destinations are checked. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk. If a trusted snapshot is activated, activation may install or carry forward a single runtime-private trust context for that snapshot instead of attaching marker fields to every model price.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot can contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation stays narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry and where runtime-authored extractor destinations are checked. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk. When a trusted snapshot is activated, activation installs or carries forward a single runtime-private trust context for that snapshot instead of attaching marker fields to every model price.
 
-This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate any trust-context entry or optional small cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
+This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate the trust-context entry for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
 **`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their existing callable shape.** _(implements "Phase 1 does not block non-global snapshot execution", "`find_provider_model` works on any snapshot, global or not")_
 Phase 1 does not add `self is get_snapshot()` guards to these methods. The registry-aware internals still use the active global registry, so the expected path is to activate a snapshot before using it for pricing or extraction. Explicitly rejecting non-active snapshots and escaped inactive-snapshot models belongs to Phase 3. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots.
@@ -570,7 +560,7 @@ Instead of validating the whole payload as `list[Provider]`, `fetch()` parses th
 - `_price_field_label()` derives labels from unit metadata and family normalization rather than a hardcoded field-name map.
 - `_format_model_price_value()` and `_format_model_prices()` iterate stored price keys and format them generically from registry data.
 
-This preserves the current CLI output shape while allowing new units to appear without code changes. In 1A, the CLI may keep using existing flags and legacy `ModelPrice` fields as long as current CLI behavior still works.
+This preserves the current CLI output shape while allowing new units to appear without code changes. In 1A, the CLI keeps using existing flags and legacy `ModelPrice` fields as long as current CLI behavior still works.
 
 ---
 
@@ -584,26 +574,19 @@ This preserves the current CLI output shape while allowing new units to appear w
 
 ## 1A/1C Python Build/Runtime Boundary
 
-**Registry and validation code should be shared when the dependency direction is clean, but duplication is acceptable at the build-package boundary.** _(implements "Derive, don't duplicate", "Validation replaces what hardcoded fields gave us implicitly, and adds more")_
-The `prices/` build package already has build-time types that mirror runtime package types. This is not ideal, but it is an established boundary in the repo: build-time parsing and schema generation operate before generated runtime data exists, while the published runtime package must not depend on the build package.
+**Registry and validation code is shared from pure runtime modules.** _(implements "Derive, don't duplicate", "Validation replaces what hardcoded fields gave us implicitly, and adds more")_
+The `prices/` build package already has build-time types that mirror runtime package types, but the unit registry and registry-derived validation rules are not duplicated. The build package imports the pure registry and validation helpers from `genai_prices.units` and `genai_prices.validation`. This keeps one implementation of structural registry validation, price-key resolution, ancestor coverage, and join coverage.
 
-The implementation should first try to make the registry and structural validation modules pure enough for both sides to use:
+To make that dependency direction clean:
 
-- `UnitRegistry`, `UnitDef`, `UnitFamily`, and dimension/relationship helpers should avoid importing generated package data, `data_snapshot`, update machinery, or runtime globals.
-- Price-level validation helpers should accept plain mappings, registry objects, and protocol-shaped price values where possible, instead of requiring runtime-only model objects.
-- Build-time code may import those pure helpers from the runtime package if that does not create import cycles, generated-data dependencies, or awkward coupling to runtime-only `ModelPrice` subclassing behavior.
+- `UnitRegistry`, `UnitDef`, `UnitFamily`, and dimension/relationship helpers must not import generated package data, `data_snapshot`, update machinery, or runtime globals.
+- Price-level validation helpers accept plain mappings, registry objects, and protocol-shaped price values instead of requiring runtime-only model objects.
+- Build-time code imports only these pure helpers from the runtime package; it does not import generated `data.py`, bundled snapshot code, or runtime global snapshot state.
 
-If that clean sharing turns out to be awkward, the fallback is explicit and acceptable: keep a small build-side mirror under `prices/src/prices/` following the existing `prices_types.py` pattern. In that case, keep the duplicated surface narrow and mechanical:
+This is a structural implementation decision, not a detail hidden inside `build()`. Module placement and tests make the dependency boundary obvious. Tests cover build/runtime use of the shared helpers for structural validation, price-key resolution, ancestor coverage, join coverage, and 1A/1B missing-join safety.
 
-- one source registry file (`prices/units.yml`) remains the source of truth
-- runtime and build-time registry objects must parse the same raw `unit_families` shape
-- tests should cover parity for structural validation (including interval closure and, in 1C+, join-closedness), price-key resolution, ancestor coverage, join coverage, and 1A/1B missing-join safety
-- any deliberate duplication should be named in comments as a package-boundary copy, not a second design
-
-This is a structural implementation decision, not a detail hidden inside `build()`. The final implementation should make the boundary obvious in module placement and tests.
-
-**Build/export validation should be reusable by external payload producers.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
-`UpdatePrices(url=...)` trusts fetched model prices from any URL as prevalidated, so the validation that makes a `data.json` safe to publish must live in code that third-party publishers are likely to reuse. Do not bury full price-level validation only inside a repo-specific `build()` command that also discovers local provider YAML files and writes repo outputs. The build package should expose a small importable validation/export helper used by the official build and available to external producers that start from provider objects or parsed YAML:
+**Build/export validation is reusable by external payload producers.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
+`UpdatePrices(url=...)` trusts fetched model prices from any URL as prevalidated, so the validation that makes a `data.json` safe to publish must live in code that third-party publishers are likely to reuse. Do not bury full price-level validation only inside a repo-specific `build()` command that also discovers local provider YAML files and writes repo outputs. The build package exposes a small importable validation/export helper used by the official build and available to external producers that start from provider objects or parsed YAML:
 
 ```python
 def validate_export_payload(
@@ -613,7 +596,7 @@ def validate_export_payload(
     """Validate registry structure and all provider model prices before export."""
 ```
 
-The exact name can change, but the boundary should stay: accept already parsed providers plus raw `unit_families`, construct/validate `UnitRegistry`, validate every model price key, ancestor coverage, and join coverage, and return the validated registry or raise. `build()` and any wrapper that writes `data.json` / `data_slim.json` call this helper before serialization. External publishers who do not want to hand-author wrapped JSON from scratch can reuse the same helper or CLI path before hosting a payload for `UpdatePrices(url=...)`. Runtime `UpdatePrices.fetch()` does not call this helper; the trust boundary is at publication time, not every client fetch.
+The helper name is `validate_export_payload`. It accepts already parsed providers plus raw `unit_families`, constructs/validates `UnitRegistry`, validates every model price key, ancestor coverage, and join coverage, and returns the validated registry or raises. `build()` and any wrapper that writes `data.json` / `data_slim.json` call this helper before serialization. External publishers who do not want to hand-author wrapped JSON from scratch can reuse the same helper or CLI path before hosting a payload for `UpdatePrices(url=...)`. Runtime `UpdatePrices.fetch()` does not call this helper; the trust boundary is at publication time, not every client fetch.
 
 ---
 
@@ -632,7 +615,7 @@ class ModelPrice(_Model, extra='allow'):
 
 The explicit hardcoded price fields from `main` are removed as the source of truth. Validation of allowed price keys moves to registry-derived build checks. Provider-editor schema/autocomplete polish can follow in 1D.
 
-1A should avoid visible provider-YAML acceptance changes unless they are required to preserve existing behavior through the internal Python refactor. Broader price-key acceptance belongs with 1C because new repo-defined units do not become usable until the shared data contract changes.
+1A avoids visible provider-YAML acceptance changes unless they are required to preserve existing behavior through the internal Python refactor. Broader price-key acceptance belongs with 1C because new repo-defined units do not become usable until the shared data contract changes.
 
 **Build-time `UsageExtractorMapping.dest` becomes `str` in 1C.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The literal `UsageField` union is removed from build-time types so provider data can reference any externally reported usage key carried by the 1C unit registry. Registry-derived validation replaces the removed literal type: the reusable export-validation helper rejects extractor destinations that are not reported usage keys, including non-reported pricing-only units such as `requests`. Generated provider-YAML schema/autocomplete for extractor destinations is 1D polish.
@@ -672,7 +655,7 @@ The complete 1C `build()` changes in this order for prices and wrapped payloads:
 
 1D adds generated provider-YAML schema/autocomplete for extractor destinations; it does not introduce the authoritative validation rule.
 
-In 1A and 1B, build/package code may read `prices/units.yml` to generate or validate language-native runtime data for the current-unit subset only, but it must not write wrapped `data.json` / `data_slim.json`.
+In 1A and 1B, build/package code reads `prices/units.yml` to generate or validate language-native runtime data for the current-unit subset only, but it must not write wrapped `data.json` / `data_slim.json`.
 
 **JSON schema generation is split between 1C payload shape and 1D authoring polish.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
 1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union, and it adds reserved-name/key-safety validation for registry-defined usage and price keys. That generated schema is for IDE autocomplete and inline feedback only; build/export validation remains the authoritative check. In 1D, `build.py` derives:
@@ -684,7 +667,7 @@ In 1A and 1B, build/package code may read `prices/units.yml` to generate or vali
 
 No schema code references specific unit names, except for the explicit Phase 1 `requests` / `requests_kcount` non-reported pricing-only exception where needed to keep extractor and usage destinations correct.
 
-1A and 1B may use registry-derived checks internally, but should not change the published editor schema/autocomplete surface if that would turn the runtime refactor into an authoring behavior change.
+1A and 1B use registry-derived checks internally, but they do not change the published editor schema/autocomplete surface because that would turn the runtime refactor into an authoring behavior change.
 
 ---
 
@@ -698,7 +681,7 @@ def package_python_data(data_path: Path) -> None: ...
 def package_ts_data(data_path: Path) -> None: ...
 ```
 
-In the complete 1C target, `package_python_data()` and `package_ts_data()` both read the wrapped `data.json`, split out `providers` and `unit_families`, and emit both into generated package data files. Before 1C, the package-data path may combine the existing provider-array data with `prices/units.yml` or another package-internal generated unit source, as long as the published `prices/data*.json` contract does not change.
+In the complete 1C target, `package_python_data()` and `package_ts_data()` both read the wrapped `data.json`, split out `providers` and `unit_families`, and emit both into generated package data files. Before 1C, the package-data path reads the existing provider-array data plus `prices/units.yml`, filters the registry to the current-unit subset, and emits `unit_families_data` / `unitFamiliesData` in generated package data while leaving the published `prices/data*.json` contract unchanged.
 
 ---
 
@@ -787,7 +770,7 @@ export function getAllPriceKeys(): Set<string>
 export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from fetched runtime-update JSON. Phase 1 does not add JS APIs for callers to add or mutate unit families at runtime. The active parsed families object identity can be part of the JS `registryValidationId` only if the implementation needs a simple exact-registry validation marker. Runtime custom unit staging, additive-registry compatibility, and broader cache compatibility belong to Phase 2.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from fetched runtime-update JSON. Phase 1 does not add JS APIs for callers to add or mutate unit families at runtime. `setUnitFamilies(...)` creates a fresh opaque object for `registryValidationId` every time it accepts a new active parsed registry, and `getRegistryValidationId()` returns that object for trust-context checks. Runtime custom unit staging and additive-registry compatibility belong to Phase 2.
 
 ---
 
@@ -798,25 +781,14 @@ The module bootstraps itself from generated `unitFamiliesData` and allows the ac
 ```typescript
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean
 
-export type CachedFamilyDecomposition = {
-  family: UnitFamily
-  leafCoefficients: Record<string, Array<[string, number]>>
-}
-
-export function buildFamilyDecompositionCache(
-  pricedUsageKeys: Set<string>,
-  family: UnitFamily,
-): CachedFamilyDecomposition
-
 export function computeLeafValues(
   pricedUsageKeys: Set<string>,
   usage: NormalizedUsage,
   family: UnitFamily,
-  cache?: CachedFamilyDecomposition,
 ): Record<string, number>
 ```
 
-`buildFamilyDecompositionCache(...)` is an optional tiny helper, not a required pricing-plan framework. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and can compute decomposition directly. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Unpriced reported usage keys are ignored unless needed to infer a missing priced value. Negative leaves, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not need explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
+`computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and computes decomposition directly from the active registry indexes and the model's priced usage keys. Phase 1 does not introduce cached decomposition plans or coefficient caches. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Unpriced reported usage keys are ignored unless needed to infer a missing priced value. Negative leaves, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not store explicit-vs-inferred provenance in Phase 1.
 
 Like Python, JS request pricing uses the one-request-per-usage-object value in pricing code, not caller-supplied usage.
 
@@ -833,7 +805,7 @@ export function normalizeUsage(obj: unknown): NormalizedUsage
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known externally reported usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also must not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that needs it. This may scan the registry's usage-key set while skipping non-reported pricing-only units such as `requests`; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known externally reported usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors, must not reject contradictory registered usage values, and does not add explicit-vs-inferred provenance in Phase 1. It scans the registry's usage-key set while skipping non-reported pricing-only units such as `requests`; the registry is expected to stay small enough that this keeps the permissive API correct.
 
 `getUsageValue(...)` is the JS inference boundary used by `calcPrice()`, `computeLeafValues()`, and any internal code that needs registry-aware usage reads. It returns a stored value without proactively checking the rest of the object for contradictions, lazily infers a missing value when the answer is coherent, returns zero when there is no relevant data, and throws a user-facing error only when the missing requested value cannot be inferred because the reported values are contradictory or underdetermine the answer. It does not cache inferred usage values. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
@@ -853,13 +825,12 @@ export function validateJoinCoverage(pricedUsageKeys: Set<string>, family: UnitF
 export function validateModelPrice(modelPrice: ModelPrice, families: ParsedFamilies): void
 export function validateExtractorDestinations(destKeys: Set<string>, usageKeys: Set<string>): void
 export function validateProviderData(providers: Provider[], families: ParsedFamilies): void
-export function hasModelPriceValidationMarker(modelPrice: ModelPrice, families: ParsedFamilies): boolean
+export function hasModelPriceValidationTrust(modelPrice: ModelPrice, families: ParsedFamilies): boolean
 export function markModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): void
 export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
-export function invalidateModelPriceDecompositionCache(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Like Python, JS should keep this minimal until dynamic/shared-data work makes stricter validation necessary: trusted generated or fetched update provider data is treated as prevalidated, and custom/changed provider data validates only the affected model prices. A simple validation marker can live in a module-private trust context using `WeakMap`/`WeakSet` state keyed by model price object, exact active registry identity, and current price-key fingerprint if repeated validation is a concrete problem. That trust context is constructed at runtime from the active generated or fetched provider graph; generated `data.ts` must not emit marker properties, fingerprints, or per-price trust metadata. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; any marker lookup must compare fingerprints and fail closed. Library-provided helpers for patching provider price data should invalidate the marker when effective price keys are added/removed. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship helpers; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Like Python, JS keeps this minimal until dynamic/shared-data work makes stricter validation necessary: trusted generated or fetched update provider data is treated as prevalidated, and custom/changed provider data validates only the affected model prices. Validation state lives in a module-private trust context using `WeakMap`/`WeakSet` state keyed by model price object, exact active registry validation id, and current price-key fingerprint. That trust context is constructed at runtime from the active generated or fetched provider graph; generated `data.ts` must not emit marker properties, fingerprints, or per-price trust metadata. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; every trust lookup compares fingerprints and fails closed. Phase 1 does not add JS decomposition caches. Validation iterates each model's stored price keys and uses parsed registry indexes/relationship helpers; it does not repeatedly scan every registry unit for every model.
 
 ---
 
@@ -881,7 +852,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 `calcPrice()` now:
 
 1. reads the active parsed registry
-2. if the active trust context or simple exact-registry marker does not cover this model price's current fingerprint, validates this one model price and updates runtime-private validation state
+2. if the active trust context does not cover this model price's current fingerprint, validates this one model price and updates runtime-private validation state
 3. normalizes raw input with `normalizeUsage(...)`
 4. reads `totalInputTokens` with `getUsageValue(usage, 'input_tokens')` when tiered prices need it
 5. resolves price keys and groups priced units by family
@@ -892,7 +863,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 For tiered prices, the threshold input is this provided-or-inferable `input_tokens` total, preserving Python's behavior: tier selection is based on the full input-token count, not on any one decomposed leaf. If `input_tokens` is stored on the usage object, `calcPrice()` uses it directly and does not reconcile descendant values for tier selection. If `input_tokens` is missing and the reported usage does not determine a coherent total, `calcPrice()` raises instead of selecting a tier.
 
-It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not need a broad validation/cache framework; after activation or first use has recorded runtime-private trust-context state, the hot path pays only a cheap trust/fingerprint check. The one-model validation fallback exists for custom or bypassed model-price objects whose validation state is missing or stale. Additive/destructive runtime registry change behavior belongs to Phase 2.
+It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not add a broad validation/cache framework; after activation or first use has recorded runtime-private trust-context state, the hot path pays only a cheap trust/fingerprint check. The one-model validation fallback exists for custom or bypassed model-price objects whose validation state is missing or stale. Additive/destructive runtime registry change behavior belongs to Phase 2.
 
 ---
 
@@ -909,7 +880,7 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 
 If parsing or structural registry validation fails, both the active registry and active provider data remain unchanged. Direct user-provided provider data that did not arrive through the trusted fetched-payload path still goes through `validateProviderData(...)`, which validates only custom, changed, or otherwise untrusted model prices before activation.
 
-The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain validation markers, price-key fingerprints, decomposition caches, or per-price trust metadata. Embedded provider data may compute decomposition directly on first calculation, using only a tiny lazy cache if it keeps the implementation simpler. Any trusted-price marker state is module-private runtime state built from the active provider graph, not generated source.
+The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain validation markers, price-key fingerprints, decomposition caches, or per-price trust metadata. Embedded provider data computes decomposition directly on each calculation. Trusted-price state is module-private runtime state built from the active provider graph, not generated source.
 
 The checked-in JS examples must be updated to cache and restore the wrapped payload shape, not a bare provider array, and to parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
 
@@ -1001,7 +972,7 @@ set_custom_snapshot(snapshot)
   -> in 1C:
        validate candidate dynamic price keys against snapshot.unit_registry
        validate ancestor and join coverage for changed/custom price-key sets
-       optionally record runtime-private validation state in the snapshot trust context
+       record runtime-private validation state in the snapshot trust context
   -> on success: activate snapshot as the active runtime snapshot
   -> on failure: raise and keep previous snapshot
 ```
@@ -1011,13 +982,13 @@ set_custom_snapshot(snapshot)
 ```text
 snapshot = get_snapshot() or an inactive snapshot returned from fetch()
   -> mutate relevant ModelPrice objects for registered price keys as needed
-       -> mutation invalidates trust-context state or any small optional cache for changed prices
+       -> mutation invalidates trust-context state for changed prices
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
        -> validate only custom/changed ModelPrice objects required for the current slice
        -> do not revalidate unchanged trusted built-in prices just because one custom price changed
        -> activate on success
   -> if snapshot is already active: supported mutations have already updated the active snapshot,
-       and changed prices are validated either by the mutation helper or by the one-model calc fallback
+       and changed prices are validated by the one-model calc fallback before pricing
 ```
 
 ### Python hot path
@@ -1029,7 +1000,7 @@ ModelInfo.calc_price(usage, provider, ...)
 
 ModelPrice.calc_price(usage)
   -> registry = get_snapshot().unit_registry
-  -> if the active trust context or simple exact-registry marker is missing/stale
+  -> if the active trust context is missing/stale
      for this ModelPrice's current fingerprint:
        validate this ModelPrice against registry and update runtime-private validation state
   -> smart_usage = Usage.from_raw(usage)
