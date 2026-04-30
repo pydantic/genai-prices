@@ -98,7 +98,7 @@ tokens:
 
 requests:
   per: 1_000
-  description: Request counts
+  description: Request counts. Fixed at one per calc_price call; not caller-supplied Usage.
   units:
     requests:
       price_key: requests_kcount
@@ -212,7 +212,7 @@ def _get_registry() -> UnitRegistry:
     """Return get_snapshot().unit_registry via a lazy import."""
 ```
 
-Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().price_keys[...]` directly. Code that needs the set of usage keys reads `_get_registry().units.keys()`.
+Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().price_keys[...]` directly. Code that needs the set of caller/extractor usage keys reads the registry's units while skipping fixed pricing-only units such as `requests`.
 
 ---
 
@@ -244,15 +244,11 @@ def compute_leaf_values(
     usage: Usage,
     family: UnitFamily,
     *,
-    default_usage: int = 0,
     cache: CachedFamilyDecomposition | None = None,
 ) -> dict[str, int]:
     """Return exclusive usage buckets for one family.
 
     If a cache is supplied, use it; otherwise compute the decomposition directly.
-
-    `default_usage` exists for backward-compat pricing rules such as requests=1 when
-    the requests family is priced and no `requests` value was supplied.
     """
 ```
 
@@ -281,8 +277,8 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
     """Validate one model's price keys, ancestor coverage, and join coverage."""
 
 
-def validate_extractor_destinations(dest_keys: set[str], usage_keys: set[str]) -> None:
-    """Every extractor mapping destination must be a registered usage key."""
+def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str]) -> None:
+    """Every extractor mapping destination must be an externally reported usage key."""
 ```
 
 This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, a simple exact-registry marker can live on `ModelPrice` without becoming a broader framework.
@@ -306,21 +302,21 @@ class Usage:
     _values: dict[str, int]
 
     def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None reported values for registered usage keys."""
+        """Store non-None reported values for externally reported usage keys."""
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
         """Wrap arbitrary usage input.
 
         - Usage: return as-is
-        - Mapping: read known usage keys and construct, ignoring extras
-        - Other object: read known usage keys via getattr and construct, ignoring extras
+        - Mapping: read known externally reported usage keys and construct, ignoring extras
+        - Other object: read known externally reported usage keys via getattr and construct, ignoring extras
         """
 
     def __getattr__(self, name: str) -> int:
-        """For registered usage keys, return the stored value, lazily infer it, or return 0 if absent.
+        """For externally reported usage keys, return the stored value, lazily infer it, or return 0 if absent.
 
-        Raise AttributeError for names that are not registered usage keys.
+        Raise AttributeError for names that are not externally reported usage keys.
         Raise ValueError only if a missing requested value must be inferred and
         that inference depends on contradictory or underdetermined reported usage.
         """
@@ -333,7 +329,7 @@ class Usage:
 
 Construction does not infer ancestor totals and must not reject contradictory registered values. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Reported values are never overwritten. `_values` contains reported values only. Do not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
-Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Do not cache inferred usage values; recompute them when requested. This avoids subtle bugs where derived ancestors start behaving like reported data in `__add__`, equality, representation, or later diagnostics. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory reported values, raise `ValueError` with a user-facing message. `Usage.__add__` should sum reported values only, letting the result infer lazily again. `Usage` does not know the requests default-to-1 rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward.
+Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Do not cache inferred usage values; recompute them when requested. This avoids subtle bugs where derived ancestors start behaving like reported data in `__add__`, equality, representation, or later diagnostics. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory reported values, raise `ValueError` with a user-facing message. `Usage.__add__` should sum reported values only, letting the result infer lazily again. `Usage` does not know the fixed one-request-per-call pricing rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known externally reported usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set while skipping fixed pricing-only units such as `requests`; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward.
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
@@ -404,7 +400,7 @@ Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this f
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family.
 5. For tiered prices, read `usage.input_tokens`; if it is stored, use it without reconciling descendant values. If it is missing and cannot be inferred coherently, raise a usage error instead of guessing a tier.
 6. For each priced family, compute leaf values from the registry-aware usage while ignoring unpriced reported usage values unless they are needed to infer a missing priced value.
-7. Pass `default_usage=1` only for the `requests` family.
+7. For the `requests` family, use the fixed leaf value `{'requests': 1}` instead of reading from caller usage.
 8. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
 9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
 
@@ -436,7 +432,7 @@ class UsageExtractorMapping:
     required: bool
 ```
 
-`dest` is a registered usage key from the snapshot registry, not an arbitrary string and not a model-price key. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined and fetched-payload extractor destinations are validated during 1C build/export validation against the registry that ships with the same payload. In Phase 1 they can target only repo-defined or fetched-update usage keys; runtime custom unit extractor targets belong to Phase 2. 1D only adds generated provider-YAML schema/autocomplete for these destinations.
+`dest` is an externally reported usage key from the snapshot registry, not an arbitrary string, not a model-price key, and not a fixed pricing-only unit such as `requests`. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined and fetched-payload extractor destinations are validated during 1C build/export validation against the registry that ships with the same payload. In Phase 1 they can target only repo-defined or fetched-update reported usage keys; runtime custom unit extractor targets belong to Phase 2. 1D only adds generated provider-YAML schema/autocomplete for these destinations.
 
 **`UsageExtractor.extract()` constructs `Usage` from a dict of collected values.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
@@ -501,7 +497,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     - validate candidate dynamic keys against snapshot.unit_registry.price_keys
     - resolve validated price keys to usage keys
     - validate ancestor and join coverage per family
-    - validate extractor destinations against snapshot.unit_registry.units.keys()
+    - validate extractor destinations against snapshot.unit_registry's reported usage keys
     - optionally record a simple exact-registry validation marker
     """
 ```
@@ -603,7 +599,7 @@ The explicit hardcoded price fields from `main` are removed as the source of tru
 1A should avoid visible provider-YAML acceptance changes unless they are required to preserve existing behavior through the internal Python refactor. Broader price-key acceptance belongs with 1C because new repo-defined units do not become usable until the shared data contract changes.
 
 **Build-time `UsageExtractorMapping.dest` becomes `str` in 1C.** _(implements "The extraction pipeline is data-driven end-to-end")_
-The literal `UsageField` union is removed from build-time types so provider data can reference any registered usage key carried by the 1C unit registry. Registry-derived validation replaces the removed literal type: the reusable export-validation helper rejects extractor destinations that are not registered usage keys. Generated provider-YAML schema/autocomplete for extractor destinations is 1D polish.
+The literal `UsageField` union is removed from build-time types so provider data can reference any externally reported usage key carried by the 1C unit registry. Registry-derived validation replaces the removed literal type: the reusable export-validation helper rejects extractor destinations that are not reported usage keys, including fixed pricing-only units such as `requests`. Generated provider-YAML schema/autocomplete for extractor destinations is 1D polish.
 
 ---
 
@@ -635,7 +631,7 @@ The complete 1C `build()` changes in this order for prices and wrapped payloads:
    - resolve price keys to usage keys
    - validate ancestor coverage
    - validate join coverage
-     It also validates every extractor destination against `registry.units`.
+     It also validates every extractor destination against the registry's externally reported usage keys.
 4. Write wrapped `data.json` and `data_slim.json`.
 
 1D adds generated provider-YAML schema/autocomplete for extractor destinations; it does not introduce the authoritative validation rule.
@@ -646,7 +642,7 @@ In 1A and 1B, build/package code may read `prices/units.yml` to generate or vali
 1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. That generated schema is for IDE autocomplete and inline feedback only; 1C build/export validation is the authoritative check. In 1D, `build.py` derives:
 
 - allowed price keys from `registry.price_keys`
-- allowed extractor destinations from `registry.units`
+- allowed extractor destinations from the registry's externally reported usage keys
 - the top-level wrapped `data.json` schema including `unit_families` in 1C
 
 No schema code references specific unit names.
@@ -779,14 +775,13 @@ export function computeLeafValues(
   pricedUsageKeys: Set<string>,
   usage: NormalizedUsage,
   family: UnitFamily,
-  defaultUsage?: number,
   cache?: CachedFamilyDecomposition,
 ): Record<string, number>
 ```
 
 `buildFamilyDecompositionCache(...)` is an optional tiny helper, not a required pricing-plan framework. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and can compute decomposition directly. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Unpriced reported usage keys are ignored unless needed to infer a missing priced value. Negative leaves, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not need explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
-Like Python, the JS requests default is passed in by pricing code via `defaultUsage=1`.
+Like Python, JS request pricing uses the fixed one-request-per-call value in pricing code, not caller-supplied usage.
 
 ---
 
@@ -801,7 +796,7 @@ export function normalizeUsage(obj: unknown): NormalizedUsage
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also must not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that needs it. This may scan the registry's usage-key set; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known externally reported usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also must not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that needs it. This may scan the registry's usage-key set while skipping fixed pricing-only units such as `requests`; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
 
 `getUsageValue(...)` is the JS inference boundary used by `calcPrice()`, `computeLeafValues()`, and any internal code that needs registry-aware usage reads. It returns a stored value without proactively checking the rest of the object for contradictions, lazily infers a missing value when the answer is coherent, returns zero when there is no relevant data, and throws a user-facing error only when the missing requested value cannot be inferred because the reported values are contradictory or underdetermine the answer. It does not cache inferred usage values. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
@@ -854,7 +849,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 4. reads `totalInputTokens` with `getUsageValue(usage, 'input_tokens')` when tiered prices need it
 5. resolves price keys and groups priced units by family
 6. computes per-family leaf values from registry-normalized usage
-7. passes `defaultUsage=1` for the requests family
+7. uses the fixed leaf value `{requests: 1}` for the requests family
 8. prices each leaf using the value stored under the unit's price key and `family.per`
 9. aggregates by `direction` into the existing result shape
 
@@ -890,11 +885,11 @@ The checked-in JS examples must be updated to cache and restore the wrapped payl
 **Extractor output keys are no longer a fixed union.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The existing extraction logic still builds a plain object of counts. The change here is both structural and semantic:
 
-- `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined usage key
+- `UsageExtractorMapping.dest` is now `string`, so extracted usage can target any registry-defined externally reported usage key
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
 
-Extractor destinations are usage keys, not arbitrary strings and not price keys. Repo-defined extractor config is checked against the build/export registry in 1C; generated schema support only adds IDE autocomplete in 1D. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update usage keys. Runtime custom unit extractor destinations belong to Phase 2.
+Extractor destinations are externally reported usage keys, not arbitrary strings, not price keys, and not fixed pricing-only units such as `requests`. Repo-defined extractor config is checked against the build/export registry in 1C; generated schema support only adds IDE autocomplete in 1D. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update reported usage keys. Runtime custom unit extractor destinations belong to Phase 2.
 
 If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket.
 
@@ -925,7 +920,7 @@ build()
   -> validate model price keys
   -> resolve price keys to usage keys
   -> validate ancestor coverage / join coverage
-  -> validate extractor destinations against registry usage keys
+  -> validate extractor destinations against the registry's reported usage keys
   -> write wrapped data.json and data_slim.json
 
 package_data()
@@ -939,7 +934,7 @@ package_data()
   -> keep prices/data.json and prices/data_slim.json as provider arrays
 
 1D:
-  -> derive provider YAML schema/autocomplete from registry price keys and usage keys
+  -> derive provider YAML schema/autocomplete from registry price keys and reported usage keys
 ```
 
 ### Python bundled startup
@@ -1000,8 +995,8 @@ ModelPrice.calc_price(usage)
      otherwise use a neutral value because non-tiered unit prices ignore it
   -> resolve price keys and group by family
   -> for each family:
-       default_usage = 1 only for requests
-       leaf_values = compute decomposition from smart_usage
+       if requests, use fixed leaf value {"requests": 1}
+       otherwise, compute decomposition from smart_usage
   -> for each priced usage-keyed unit:
        price = stored price at unit.price_key
        cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)

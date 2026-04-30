@@ -22,7 +22,7 @@ leaf(U) = sum over all priced descendants V of U (including U itself):
             (-1)^(depth(V) - depth(U)) * usage(V)
 ```
 
-where `depth(V)` = number of dimension assignments on V (e.g., unit `input_tokens` has 1: `{direction: input}`, unit `cache_audio_read_tokens` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. Families with no dimensions (e.g., `requests`) have a single unit and no decomposition to perform.
+where `depth(V)` = number of dimension assignments on V (e.g., unit `input_tokens` has 1: `{direction: input}`, unit `cache_audio_read_tokens` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. The current `requests` unit is a fixed one-per-call pricing rule, not a usage-reported family that needs decomposition.
 
 This is standard Mobius inversion on a product of flat lattices: each dimension is an independent categorical axis whose values are incomparable.
 
