@@ -216,6 +216,9 @@ Provider YAML files and usage objects are written frequently. People figure out 
 **Generated JSON schemas provide editor autocomplete for provider YAML files.** _(from "Naming optimizes for writability", "The registry is a YAML file")_
 The unit registry generates a JSON schema that provider YAML files reference (via the `yaml-language-server` directive). This gives autocomplete and inline editor feedback for both price keys and extractor destination fields, reducing reliance on memorizing names. This is Phase 1D authoring polish rather than the source of truth for correctness. Actual extractor destination validation belongs to the 1C build/export and snapshot-activation validation paths; the generated schema is regenerated whenever the registry changes.
 
+**Dynamic key reserved-name validation is 1D hardening.** _(from "ModelPrice supports attribute access backed by registry data", "Usage is a registry-aware class")_
+Usage keys become `Usage` attribute names and extractor destinations. Price keys become `ModelPrice` attribute names and provider-YAML price keys. Phase 1D should add explicit cross-language key-safety validation so repo-defined, fetched, and later runtime-authored registry data cannot introduce names that are inaccessible or collide with runtime behavior. The validation should reject non-public/private names, dunder/prototype-like names, language keywords where relevant, and names already owned by the `Usage` or `ModelPrice` public surface such as methods, properties, internal storage, and compatibility shims. The exact denylist can be derived from the runtime classes plus a small shared Python/JavaScript reserved-name set. This is a key-safety rule, not a semantic unit-name whitelist: it may mention runtime method/property names, but it must not hardcode pricing concepts such as `input_tokens` or `input_mtok`. Until this 1D hardening lands, trusted payload producers are responsible for avoiding colliding dynamic keys.
+
 **ModelPrice supports attribute access backed by registry data.** _(from "The registry is a YAML file", "Backward compatibility")_
 ModelPrice is not a plain dict — that would break `model_price.input_mtok`. It's an object that supports attribute access, but the set of valid attributes comes from the registry's price keys. Legacy names like `input_mtok` continue to work. Keeping typed dataclass fields or properties for existing names is acceptable as a backward-compat shim — but it's a convenience for type checkers and subclass constructors, not the source of truth. Future names need no code changes on the base `ModelPrice` once 1C adds dynamic price-key storage. Supported model-price mutation paths that add or remove effective price keys invalidate any private trust-context entry or exact-registry validation marker and any optional cached decomposition state for that model price. They do not need to revalidate immediately; `set_custom_snapshot` validates stale or untrusted model prices early, and `calc_price` performs one-model validation if a mutated price is used before activation.
 
@@ -285,11 +288,15 @@ The family does not separately declare allowed dimension keys or values. A dimen
 **Usage keys are globally unique across all unit families.** _(from "Validation replaces what hardcoded fields gave us", "Usage is a registry-aware class")_
 A usage key identifies a single unit in the entire registry, not just within its family. Usage keys are the raw registry keys, and externally reported usage keys are also `Usage` attribute names and extractor destinations. The special `requests` unit still needs a unique registry usage key, but it is not a caller-supplied usage field. If two unit families could share a usage key, usage extraction and decomposition would be ambiguous.
 
+Starting in 1D, usage keys also pass the reserved-name/key-safety validation described above.
+
 **Unit uniqueness: no two units in a family may have identical dimension sets.** _(from "Validation replaces what hardcoded fields gave us", "Dimensions define unit specificity")_
 Dimensions uniquely identify a unit's position in the containment poset. Two units with the same dimensions would be the same slot — that's a data error, not an edge case.
 
 **Price keys are globally unique across all unit families.** _(from "Validation replaces what hardcoded fields gave us", "ModelPrice supports attribute access")_
 A price key maps one-to-one to a unit globally, not just within a family. ModelPrice uses price keys as attribute names — if two units shared a price key, price storage and attribute access would be ambiguous.
+
+Starting in 1D, price keys also pass the reserved-name/key-safety validation described above.
 
 **Ancestor coverage is validated.** _(from "Ancestor coverage: pricing a unit requires pricing all its ancestors", "Expensive validation happens once at construction/activation time")_
 Checked in the build pipeline for repo-defined prices, and at `set_custom_snapshot` time for custom runtime price data. Not deferred to calc_price.

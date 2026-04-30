@@ -18,7 +18,7 @@ Phase 1 still has one target behavior: repo-defined unit registries. The slices 
 - **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the current hardcoded unit set only. The active 1A registry exposes only today's supported usage keys (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`) and their corresponding current price keys (`input_mtok`, `output_mtok`, `cache_read_mtok`, `cache_write_mtok`, `input_audio_mtok`, `cache_audio_read_mtok`, `output_audio_mtok`), plus the existing request-count pricing behavior if that slice moves `requests_kcount` behind the registry. It may keep existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add text/image/video or other future units, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
 - **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the current hardcoded unit set while continuing to consume the current provider-array remote data shape. It does not add text/image/video or other future units, does not depend on Python internals, and should preserve current JS behavior.
 - **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, repo-defined extractor destinations validate against the registry carried by the same payload, and repo-defined new units can finally travel through generated package data and fetched auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
-- **1D: Polish and Python-specific compatibility.** CLI price presentation, provider YAML autocomplete/schema polish, generated schema hints for extractor destinations, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
+- **1D: Polish and compatibility hardening.** CLI price presentation, provider YAML autocomplete/schema polish, generated schema hints for extractor destinations, cross-language reserved-name validation for dynamic usage/price keys, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
 
 1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the intentional compatibility break: once both current runtimes can parse the wrapped payload, the shared remote `data.json` / `data_slim.json` files change shape even though older released clients that expect a bare provider array will fail when they auto-update. This spec does not require dual payloads, backward-compatible wrapper detection in old clients, or a versioned rollout URL. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
 
@@ -205,6 +205,8 @@ Complete 1C registry construction performs all structural validation:
 - every comparable pair in a family has all intermediate dimension sets present
 - every compatible pair in a family has its join present in that family
 
+1D adds key-safety validation for dynamic public names. Usage keys and price keys should be valid, public, attribute-safe names in both runtimes and must not collide with reserved Python/JavaScript names, prototype-like names, private/dunder names, or existing `Usage`/`ModelPrice` public and internal attributes. This validation is intentionally about runtime key safety, not unit semantics; the denylist can mention runtime method/property names but should not hardcode pricing concepts such as `input_tokens` or `input_mtok`.
+
 In 1A/1B, construction may skip full join-closedness for the current-unit subset when satisfying it would require exposing future units. It should still validate uniqueness and comparable-pair interval closure for the subset. Decomposition safety comes from model-price validation rejecting compatible priced pairs whose join is missing from that subset; in 1C and later, the missing-join case is impossible because registry construction validates full join-closedness.
 
 Phase 1 does not add public `add_family(...)`, `add_units(...)`, or `copy()` mutation APIs. Runtime custom unit mutation APIs belong to the Phase 2 code spec.
@@ -289,9 +291,15 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
 
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str]) -> None:
     """Every extractor mapping destination must be an externally reported usage key."""
+
+
+def validate_public_registry_key_names(registry: UnitRegistry) -> None:
+    """1D: reject usage/price keys that are not safe dynamic attributes in Python and JS."""
 ```
 
-This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, use runtime-private trust-context state rather than generated or serialized per-price markers.
+This module does not validate core raw registry structure such as interval closure or join-closedness. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, use runtime-private trust-context state rather than generated or serialized per-price markers.
+
+`validate_public_registry_key_names(...)` is 1D compatibility hardening and can run after `UnitRegistry` construction during build/export validation and snapshot activation. It should reject usage keys and price keys that would be inaccessible or ambiguous through dynamic attribute/property access: invalid identifier-like names, names beginning with `_`, dunder names, Python keywords when exposed as Python attributes, JavaScript prototype/object names such as `__proto__`, `prototype`, and `constructor`, and names already owned by `Usage` or `ModelPrice` such as methods, storage fields, or compatibility shims. The reserved-name set should be derived from the runtime classes plus a small shared cross-language denylist. It must not become a whitelist of commercial pricing concepts.
 
 ---
 
@@ -660,11 +668,12 @@ The complete 1C `build()` changes in this order for prices and wrapped payloads:
 In 1A and 1B, build/package code may read `prices/units.yml` to generate or validate language-native runtime data for the current-unit subset only, but it must not write wrapped `data.json` / `data_slim.json`.
 
 **JSON schema generation is split between 1C payload shape and 1D authoring polish.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
-1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. That generated schema is for IDE autocomplete and inline feedback only; 1C build/export validation is the authoritative check. In 1D, `build.py` derives:
+1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union, and it adds reserved-name/key-safety validation for registry-defined usage and price keys. That generated schema is for IDE autocomplete and inline feedback only; build/export validation remains the authoritative check. In 1D, `build.py` derives:
 
 - allowed price keys from `registry.price_keys`
 - allowed extractor destinations from the registry's externally reported usage keys
 - the top-level wrapped `data.json` schema including `unit_families` in 1C
+- reserved-name/key-safety checks from the runtime `Usage`/`ModelPrice` surfaces plus the shared cross-language denylist
 
 No schema code references specific unit names.
 
@@ -957,6 +966,7 @@ package_data()
 
 1D:
   -> derive provider YAML schema/autocomplete from registry price keys and reported usage keys
+  -> validate registry-defined usage/price keys against reserved runtime names
 ```
 
 ### Python bundled startup
