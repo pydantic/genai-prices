@@ -136,14 +136,14 @@ describe('extractUsage', () => {
         model: 'anthropic/claude-4.6-sonnet-20260217',
         usage: {
           completion_tokens: 1906,
+          completion_tokens_details: {
+            audio_tokens: 23,
+          },
           prompt_tokens: 4819,
           prompt_tokens_details: {
             audio_tokens: 17,
-            cached_tokens: 0,
             cache_write_tokens: 4800,
-          },
-          completion_tokens_details: {
-            audio_tokens: 23,
+            cached_tokens: 0,
           },
           total_tokens: 6725,
         },
