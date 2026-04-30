@@ -2,10 +2,11 @@
 
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
 **Phase 2 runtime custom unit architecture is in [phase-2-runtime-custom-units/code-spec](phase-2-runtime-custom-units/code-spec.md).**
+**Phase 3 global snapshot semi-enforcement is in [phase-3-global-snapshot-enforcement/code-spec](phase-3-global-snapshot-enforcement/code-spec.md).**
 **Baseline:** this document describes the final `main` -> target-state diff for the PR. It intentionally ignores the current branch's partial implementation state.
 
-**Phase 2 is an extension constraint, not Phase 1 implementation scope.** _(implements "Phase 2 guides Phase 1 without expanding its scope")_
-This code spec should keep Phase 1 compatible with the later runtime custom-unit direction, but it should not add runtime unit mutation APIs, registry transaction machinery, or additive-registry cache compatibility to the Phase 1 diff. When a Phase 2 concern only affects future workflow detail, this document should preserve the underlying extension point and leave the concrete runtime workflow to the Phase 2 code spec.
+**Future phases are extension constraints, not Phase 1 implementation scope.** _(implements "Future phases guide Phase 1 without expanding its scope")_
+This code spec should keep Phase 1 compatible with later directions, but it should not add runtime unit mutation APIs, registry transaction machinery, additive-registry cache compatibility, or non-global snapshot execution guards to the Phase 1 diff. When a later concern only affects future workflow detail, this document should preserve the underlying extension point and leave the concrete runtime workflow to that later code spec.
 
 ---
 
@@ -181,7 +182,7 @@ The registry also owns any private relationship indexes needed to keep downstrea
 
 `validation_id` is an opaque identity value used only for model-price known-valid state and optional decomposition caches. In Phase 1, runtime caches and known-valid state match only when the exact registry identity and price-key fingerprint match. Broader compatibility across additive/destructive runtime registry mutations belongs to Phase 2.
 
-**Module-level registry access is one lazy helper.** _(implements "There is one global DataSnapshot")_
+**Module-level registry access is one lazy helper.** _(implements "Phase 1 assumes one active global DataSnapshot")_
 
 ```python
 def _get_registry() -> UnitRegistry:
@@ -433,14 +434,14 @@ class UsageExtractorMapping:
 **`UsageExtractor.extract()` constructs `Usage` from a dict of collected values.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
 
-**`ModelInfo.calc_price()` keeps its public signature but delegates to the new generic pricing path.** _(implements "All public API signatures are preserved")_
-The method still accepts a usage object and returns `PriceCalculation`; internally it verifies that the supplied provider/model pair belongs to the current global snapshot before dispatch. If the pair is not active, it raises `RuntimeError` instead of pricing an escaped inactive-snapshot model against the active registry. After that guard, it passes the original usage object unchanged to the selected model price object's `calc_price()` method rather than wrapping usage before dispatch. This preserves custom `ModelPrice` overrides that inspect non-registry usage fields. It relies on `ModelPrice.calc_price()` rather than the hardcoded token-only logic from `main`.
+**`ModelInfo.calc_price()` keeps its public signature but delegates to the new generic pricing path.** _(implements "All public API signatures are preserved", "Phase 1 does not block non-global snapshot execution")_
+The method still accepts a usage object and returns `PriceCalculation`. Phase 1 does not add an active-snapshot identity guard here; it relies on the ordinary active global snapshot path and lets `ModelPrice.calc_price()` read the active registry. It passes the original usage object unchanged to the selected model price object's `calc_price()` method rather than wrapping usage before dispatch. This preserves custom `ModelPrice` overrides that inspect non-registry usage fields. It relies on `ModelPrice.calc_price()` rather than the hardcoded token-only logic from `main`. Active-snapshot identity guards belong to Phase 3.
 
 ---
 
 ### `data_snapshot.py` — modified
 
-**`DataSnapshot` gains `unit_registry`, defaulting from the current global snapshot when omitted.** _(implements "Unit families live in the data snapshot alongside prices", "There is one global DataSnapshot")_
+**`DataSnapshot` gains `unit_registry`, defaulting from the current global snapshot when omitted.** _(implements "Unit families live in the data snapshot alongside prices", "Phase 1 assumes one active global DataSnapshot")_
 
 ```python
 @dataclass
@@ -500,12 +501,12 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the sole registry/provider set used for execution, and any custom, changed, or otherwise untrusted model prices that needed runtime validation carry known-valid state for that registry. Unchanged model prices from trusted bundled or official auto-update data are not revalidated in bulk when their trusted provenance matches the snapshot registry.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. After successful activation, the snapshot becomes the active registry/provider set for ordinary execution, and any custom, changed, or otherwise untrusted model prices that needed runtime validation carry known-valid state for that registry. Unchanged model prices from trusted bundled or official auto-update data are not revalidated in bulk when their trusted provenance matches the snapshot registry.
 
 This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate known-valid state and any decomposition cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
-**`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` require `self is get_snapshot()`.** _(implements "`calc` and `extract_usage` on DataSnapshot require it to be the current global")_
-Both methods raise `RuntimeError` when called on a non-active snapshot. This is intentional discouragement of "standalone snapshot" execution: inactive snapshots are staging objects, not validated execution contexts. `ModelInfo.calc_price()` also guards against escaped inactive-snapshot provider/model pairs because it has no snapshot parameter. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots. _(implements "`find_provider_model` works on any snapshot, global or not")_
+**`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their existing callable shape.** _(implements "Phase 1 does not block non-global snapshot execution", "`find_provider_model` works on any snapshot, global or not")_
+Phase 1 does not add `self is get_snapshot()` guards to these methods. The registry-aware internals still use the active global registry, so the expected path is to activate a snapshot before using it for pricing or extraction. Explicitly rejecting non-active snapshots and escaped inactive-snapshot models belongs to Phase 3. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots.
 
 ---
 
@@ -938,7 +939,7 @@ set_custom_snapshot(snapshot)
          validate this ModelPrice against snapshot.unit_registry
   -> after all validation succeeds, mark newly validated ModelPrice objects known valid
   -> optionally build decomposition caches for newly validated ModelPrice objects
-  -> on success: activate snapshot as the only trusted execution snapshot
+  -> on success: activate snapshot as the active runtime snapshot
   -> on failure: raise and keep previous snapshot
 ```
 
@@ -962,8 +963,6 @@ snapshot = get_snapshot() or an inactive snapshot returned from fetch()
 
 ```text
 ModelInfo.calc_price(usage, provider, ...)
-  -> verify provider/model pair belongs by identity to get_snapshot()
-  -> if not active: raise RuntimeError
   -> model_price = self.get_prices(genai_request_timestamp)
   -> model_price.calc_price(usage)
 
