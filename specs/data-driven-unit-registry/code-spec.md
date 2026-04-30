@@ -15,15 +15,15 @@ This code spec should keep Phase 1 compatible with later directions, but it shou
 **Delivery slices are review boundaries inside Phase 1, not new product phases.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
 Phase 1 still has one target behavior: repo-defined unit registries. The slices describe how to land that target safely:
 
-- **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the existing unit set. It may keep existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
-- **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the existing unit set while continuing to consume the current provider-array remote data shape. It does not depend on Python internals and should preserve current JS behavior.
+- **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the current hardcoded unit set only. The active 1A registry exposes only today's supported usage keys (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`) and their corresponding current price keys (`input_mtok`, `output_mtok`, `cache_read_mtok`, `cache_write_mtok`, `input_audio_mtok`, `cache_audio_read_mtok`, `output_audio_mtok`), plus the existing request-count pricing behavior if that slice moves `requests_kcount` behind the registry. It may keep existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add text/image/video or other future units, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
+- **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the current hardcoded unit set while continuing to consume the current provider-array remote data shape. It does not add text/image/video or other future units, does not depend on Python internals, and should preserve current JS behavior.
 - **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, and repo-defined new units can finally travel through generated package data and official auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
 - **1D: Polish and Python-specific compatibility.** CLI price presentation, provider YAML autocomplete/schema polish, registry-derived extractor authoring checks, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
 
 1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the compatibility boundary where older clients that expect a bare provider array must be accounted for. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
 
 **New repo-defined units are not enabled until 1C.** _(implements "Phase 1 is delivered in behavior-preserving runtime slices before the shared data contract changes")_
-Before the shared payload carries `unit_families`, adding new units would create half-support: one runtime might know a unit internally, but remote price updates and the other runtime might not. 1A and 1B can validate that existing prices conform to the registry-shaped model, but they should not require provider price edits, new price keys, or data-shape changes just to preserve current behavior. New unit data becomes reviewable once 1C lands. Plain Python dataclass subclasses accepting those future price keys as undeclared constructor kwargs is a 1D compatibility enhancement, not a 1C blocker.
+Before the shared payload carries `unit_families`, adding new units would create half-support: one runtime might know a unit internally, but remote price updates and the other runtime might not. 1A and 1B can validate that existing prices conform to the registry-shaped model, but their active registries stay limited to the current hardcoded unit surface and should not require provider price edits, new price keys, or data-shape changes just to preserve current behavior. New unit data becomes reviewable once 1C lands. Plain Python dataclass subclasses accepting those future price keys as undeclared constructor kwargs is a 1D compatibility enhancement, not a 1C blocker.
 
 ---
 
@@ -94,7 +94,7 @@ tokens:
     cache_audio_read_tokens:
       price_key: cache_audio_read_mtok
       dimensions: { direction: input, modality: audio, cache: read }
-    # ... the full symmetric family, including text/audio/image/video variants
+    # 1C target: the full symmetric family, including text/audio/image/video variants
 
 requests:
   per: 1_000
@@ -105,9 +105,9 @@ requests:
       dimensions: {}
 ```
 
-Usage keys live as dict keys in the raw data. `price_key` defaults to the usage key when omitted. The `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
+Usage keys live as dict keys in the raw data. `price_key` defaults to the usage key when omitted. In the complete 1C target, the `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
 
-1A and 1B use this registry for the existing unit set only. Review new unit definitions together with 1C, when the shared payload can carry units and prices together.
+1A and 1B use a current-unit subset of this registry. That subset exposes only the hardcoded usage/price keys that already exist in the target language, plus the `requests` family if the slice moves existing request-count pricing behind the registry. Do not add text/image/video units, cache-by-modality units that are not already public, or any other new registered usage/price keys in 1A or 1B. Review those new unit definitions together with 1C, when the shared payload can carry units and prices together. If full interval/join closure for the future expanded lattice requires structural units that are not part of today's public surface, defer those units and the corresponding stricter structural validation to 1C rather than exposing behavior-changing keys early.
 
 **1C changes `prices/data.json` and `prices/data_slim.json` into top-level dicts.** _(implements "`data.json` becomes a top-level dict, not a bare list", "Unit definitions travel with prices, not just with the package")_
 Both generated JSON payloads change from a bare provider list to this shape:
@@ -144,7 +144,7 @@ export const data: Provider[] = [ ... ]
 
 The runtime packages continue loading generated code at startup; they do not parse `prices/units.yml` directly. Generated data exports contain units and prices only. They must not include serialized decomposition caches, decomposition coefficients, or bulky per-model validation artifacts; those are runtime-private state built or marked in memory.
 
-Python may gain `unit_families_data` in 1A, JavaScript may gain `unitFamiliesData` in 1B, and 1C aligns both generated exports with the wrapped JSON payload.
+Python may gain `unit_families_data` in 1A containing only the current-unit subset, JavaScript may gain `unitFamiliesData` in 1B containing only the current-unit subset, and 1C expands both generated exports and aligns them with the wrapped JSON payload.
 
 ---
 
@@ -625,7 +625,7 @@ The complete 1C `build()` changes in this order for prices and wrapped payloads:
 
 1D extends build-time authoring validation by validating extractor destinations against registry usage keys.
 
-In 1A and 1B, build/package code may read `prices/units.yml` to generate or validate language-native runtime data, but it must not write wrapped `data.json` / `data_slim.json`.
+In 1A and 1B, build/package code may read `prices/units.yml` to generate or validate language-native runtime data for the current-unit subset only, but it must not write wrapped `data.json` / `data_slim.json`.
 
 **JSON schema generation is split between 1C payload shape and 1D authoring polish.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
 1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. Instead, `build.py` derives:
@@ -919,7 +919,7 @@ package_data()
   -> generated runtime data is trusted only because build validation succeeded first
 
 1A/1B:
-  -> generate or embed language-native unit registry data for the target runtime
+  -> generate or embed language-native unit registry data for the current hardcoded unit subset
   -> keep prices/data.json and prices/data_slim.json as provider arrays
 
 1D:
