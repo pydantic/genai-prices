@@ -100,7 +100,7 @@ tokens:
 
 requests:
   per: 1_000
-  description: Request counts. Fixed at one per calc_price call; not caller-supplied Usage.
+  description: Request counts. Explicit special case: one per Usage object passed to calc_price; not caller-supplied Usage.
   units:
     requests:
       price_key: requests_kcount
@@ -108,6 +108,8 @@ requests:
 ```
 
 Usage keys live as dict keys in the raw data. `price_key` defaults to the usage key when omitted. In the complete 1C target, the `tokens` family contains the full built-in unit lattice needed by the prose spec, not just the currently hardcoded fields from `main`.
+
+`requests` is deliberately the only Phase 1 per-usage-object unit. Its registry entry exists so the `requests_kcount` price key participates in registry-backed lookup, validation, display, and total-cost aggregation. It does not make synthetic usage sources data-driven in general, and implementations may keep the one-request-per-`Usage`-object quantity as an explicit special case in pricing code. Do not add a generic `fixed_count`, `reported`, or source-kind registry field in Phase 1 just to model this request-count behavior.
 
 1A and 1B use a current-unit subset of this registry. That subset exposes only the hardcoded usage/price keys that already exist in the target language, plus the `requests` family if the slice moves existing request-count pricing behind the registry. Do not add text/image/video units, cache-by-modality units that are not already public, or any other new registered usage/price keys in 1A or 1B. Review those new unit definitions together with 1C, when the shared payload can carry units and prices together. If full interval/join closure for the future expanded lattice requires structural units that are not part of today's public surface, defer those units and the corresponding stricter structural validation to 1C rather than exposing behavior-changing keys early.
 
@@ -218,7 +220,9 @@ def _get_registry() -> UnitRegistry:
     """Return get_snapshot().unit_registry via a lazy import."""
 ```
 
-Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().price_keys[...]` directly. Code that needs the set of caller/extractor usage keys reads the registry's units while skipping fixed pricing-only units such as `requests`.
+Other modules use `_get_registry().units[...]`, `_get_registry().families[...]`, and `_get_registry().price_keys[...]` directly. Code that needs the set of caller/extractor usage keys reads the registry's units while skipping non-reported pricing-only units such as `requests`.
+
+That skip is intentionally name/special-case aware in Phase 1: `requests` is the one-request-per-`Usage`-object unit, not a caller-reported unit whose quantity can be inferred from the registry.
 
 ---
 
@@ -308,7 +312,7 @@ class Usage:
     _values: dict[str, int]
 
     def __init__(self, **kwargs: int | None) -> None:
-        """Store non-None reported values for externally reported usage keys."""
+        """Store non-None reported values for externally reported usage keys, excluding request count."""
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
@@ -335,7 +339,7 @@ class Usage:
 
 Construction does not infer ancestor totals and must not reject contradictory registered values. It stores the non-`None` values reported by the caller or extractor so provider APIs can be represented faithfully even when their usage payload is internally inconsistent. Reported values are never overwritten. `_values` contains reported values only. Do not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
-Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Do not cache inferred usage values; recompute them when requested. This avoids subtle bugs where derived ancestors start behaving like reported data in `__add__`, equality, representation, or later diagnostics. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory reported values, raise `ValueError` with a user-facing message. `Usage.__add__` should sum reported values only, letting the result infer lazily again. `Usage` does not know the fixed one-request-per-call pricing rule; that stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known externally reported usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set while skipping fixed pricing-only units such as `requests`; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward.
+Registered attribute access is the inference boundary. If a value is stored, return it without scanning the rest of the usage object for possible contradictions. If it is missing, infer it from descendants only when the active registry relationships and currently stored values determine a coherent value. Do not cache inferred usage values; recompute them when requested. This avoids subtle bugs where derived ancestors start behaving like reported data in `__add__`, equality, representation, or later diagnostics. If there is no data for the requested unit, return zero. If the missing-value inference needs values that cross independent dimensions without enough totals/intersections to determine a unique answer, or if it must reconcile contradictory reported values, raise `ValueError` with a user-facing message. `Usage.__add__` should sum reported values only, letting the result infer lazily again. `Usage` does not know the one-request-per-usage-object pricing rule; that explicit special case stays in pricing code. When `from_raw(...)` wraps arbitrary mappings/objects, it reads known externally reported usage keys and ignores extras, preserving existing permissive behavior. This may scan the registry's usage-key set while skipping non-reported pricing-only units such as `requests`; that is acceptable for now because the registry is expected to stay small and the behavior is correct. Keep the implementation straightforward.
 
 Do not add a new immutability contract for `Usage` in this change. Today's Python `Usage` is a mutable dataclass, and preventing mutation is unrelated to the unit-registry goal. If registered usage-key assignment is implemented, it should keep the underlying stored values consistent; otherwise, leave mutation semantics no stricter than they are today.
 
@@ -406,7 +410,7 @@ Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this f
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family.
 5. For tiered prices, read `usage.input_tokens`; if it is stored, use it without reconciling descendant values. If it is missing and cannot be inferred coherently, raise a usage error instead of guessing a tier.
 6. For each priced family, compute leaf values from the registry-aware usage while ignoring unpriced reported usage values unless they are needed to infer a missing priced value.
-7. For the `requests` family, use the fixed leaf value `{'requests': 1}` instead of reading from caller usage.
+7. For the explicitly special `requests` family, use the fixed leaf value `{'requests': 1}` for the one request represented by the `Usage` object instead of reading from caller usage.
 8. Price each leaf using the price stored under the unit's `price_key` and the family's `per` normalization.
 9. Aggregate per-unit costs into `input_price`, `output_price`, and `total_price`.
 
@@ -438,7 +442,7 @@ class UsageExtractorMapping:
     required: bool
 ```
 
-`dest` is an externally reported usage key from the snapshot registry, not an arbitrary string, not a model-price key, and not a fixed pricing-only unit such as `requests`. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined and fetched-payload extractor destinations are validated during 1C build/export validation against the registry that ships with the same payload. In Phase 1 they can target only repo-defined or fetched-update reported usage keys; runtime custom unit extractor targets belong to Phase 2. 1D only adds generated provider-YAML schema/autocomplete for these destinations.
+`dest` is an externally reported usage key from the snapshot registry, not an arbitrary string, not a model-price key, and not a non-reported pricing-only unit such as `requests`. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined and fetched-payload extractor destinations are validated during 1C build/export validation against the registry that ships with the same payload. In Phase 1 they can target only repo-defined or fetched-update reported usage keys; runtime custom unit extractor targets belong to Phase 2. 1D only adds generated provider-YAML schema/autocomplete for these destinations.
 
 **`UsageExtractor.extract()` constructs `Usage` from a dict of collected values.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
@@ -605,7 +609,7 @@ The explicit hardcoded price fields from `main` are removed as the source of tru
 1A should avoid visible provider-YAML acceptance changes unless they are required to preserve existing behavior through the internal Python refactor. Broader price-key acceptance belongs with 1C because new repo-defined units do not become usable until the shared data contract changes.
 
 **Build-time `UsageExtractorMapping.dest` becomes `str` in 1C.** _(implements "The extraction pipeline is data-driven end-to-end")_
-The literal `UsageField` union is removed from build-time types so provider data can reference any externally reported usage key carried by the 1C unit registry. Registry-derived validation replaces the removed literal type: the reusable export-validation helper rejects extractor destinations that are not reported usage keys, including fixed pricing-only units such as `requests`. Generated provider-YAML schema/autocomplete for extractor destinations is 1D polish.
+The literal `UsageField` union is removed from build-time types so provider data can reference any externally reported usage key carried by the 1C unit registry. Registry-derived validation replaces the removed literal type: the reusable export-validation helper rejects extractor destinations that are not reported usage keys, including non-reported pricing-only units such as `requests`. Generated provider-YAML schema/autocomplete for extractor destinations is 1D polish.
 
 ---
 
@@ -787,7 +791,7 @@ export function computeLeafValues(
 
 `buildFamilyDecompositionCache(...)` is an optional tiny helper, not a required pricing-plan framework. `computeLeafValues()` consumes registry-normalized usage data, not raw caller input, and can compute decomposition directly. Reading a missing value goes through the same lazy inference helper used by the rest of JS pricing. Missing keys with no relevant data read as zero. Unpriced reported usage keys are ignored unless needed to infer a missing priced value. Negative leaves, contradictory usage that affects priced buckets, or required values that cannot be inferred coherently raise a user-facing error rather than reporting a negative or nonsensical cost. Usage values do not need explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that cannot be produced from the reported values and the current missing-value inference context.
 
-Like Python, JS request pricing uses the fixed one-request-per-call value in pricing code, not caller-supplied usage.
+Like Python, JS request pricing uses the one-request-per-usage-object value in pricing code, not caller-supplied usage.
 
 ---
 
@@ -802,7 +806,7 @@ export function normalizeUsage(obj: unknown): NormalizedUsage
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
-`normalizeUsage(...)` accepts a plain JS usage object, reads known externally reported usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also must not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that needs it. This may scan the registry's usage-key set while skipping fixed pricing-only units such as `requests`; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
+`normalizeUsage(...)` accepts a plain JS usage object, reads known externally reported usage keys, ignores extra unknown keys, and returns a plain `Usage` object containing the reported values. It does not infer ancestors and must not reject contradictory registered usage values. It also must not add explicit-vs-inferred provenance unless implementation work finds a concrete diagnostic that needs it. This may scan the registry's usage-key set while skipping non-reported pricing-only units such as `requests`; that is acceptable for now because it keeps the permissive API correct and the registry is expected to stay small.
 
 `getUsageValue(...)` is the JS inference boundary used by `calcPrice()`, `computeLeafValues()`, and any internal code that needs registry-aware usage reads. It returns a stored value without proactively checking the rest of the object for contradictions, lazily infers a missing value when the answer is coherent, returns zero when there is no relevant data, and throws a user-facing error only when the missing requested value cannot be inferred because the reported values are contradictory or underdetermine the answer. It does not cache inferred usage values. This keeps JS behavior aligned with Python without introducing a wrapper class that provides little value.
 
@@ -895,7 +899,7 @@ The existing extraction logic still builds a plain object of counts. The change 
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
 
-Extractor destinations are externally reported usage keys, not arbitrary strings, not price keys, and not fixed pricing-only units such as `requests`. Repo-defined extractor config is checked against the build/export registry in 1C; generated schema support only adds IDE autocomplete in 1D. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update reported usage keys. Runtime custom unit extractor destinations belong to Phase 2.
+Extractor destinations are externally reported usage keys, not arbitrary strings, not price keys, and not non-reported pricing-only units such as `requests`. Repo-defined extractor config is checked against the build/export registry in 1C; generated schema support only adds IDE autocomplete in 1D. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update reported usage keys. Runtime custom unit extractor destinations belong to Phase 2.
 
 If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket.
 
