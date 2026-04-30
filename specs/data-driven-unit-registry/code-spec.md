@@ -5,6 +5,8 @@
 **Phase 3 global snapshot semi-enforcement is in [phase-3-global-snapshot-enforcement/code-spec](phase-3-global-snapshot-enforcement/code-spec.md).**
 **Baseline:** this document describes the complete Phase 1 target-state diff across delivery slices 1A, 1B, 1C, and 1D. It intentionally ignores the current branch's partial implementation state.
 
+**Historical implementation note:** a discarded proof-of-concept exists on branch `feat/token-unit-registry`. Implementers starting from `main` may use that branch's decomposition test vectors and rough unit inventory as references, but they should not copy its runtime architecture. In particular, that branch predates this phased spec and mixes future unit definitions, standalone `units*.json` artifacts, schema polish, provider-data edits, and Python/JavaScript runtime changes that now belong in separate delivery slices.
+
 **Future phases are extension constraints, not Phase 1 implementation scope.** _(implements "Future phases guide Phase 1 without expanding its scope")_
 This code spec should keep Phase 1 compatible with later directions, but it should not add runtime unit mutation APIs, registry transaction machinery, additive-registry cache compatibility, or non-global snapshot execution guards to the Phase 1 diff. When a later concern only affects future workflow detail, this document should preserve the underlying extension point and leave the concrete runtime workflow to that later code spec.
 
