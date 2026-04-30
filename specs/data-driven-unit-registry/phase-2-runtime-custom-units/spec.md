@@ -5,6 +5,9 @@
 **Phase 1 remains the source of truth for the base registry.**
 Phase 2 builds on the repo-defined unit registry in [../spec](../spec.md). It does not replace `prices/units.yml`, generated package data, wrapped `data.json`, generic decomposition, or registry-backed `Usage`/`ModelPrice` behavior. It adds a user-facing way to define additional units at runtime.
 
+**This phase is a future-direction guardrail for Phase 1.** _(from "Phase 1 remains the source of truth for the base registry")_
+The purpose of this folder is to keep runtime custom units visible while Phase 1 stays narrow. Phase 2 requirements should influence Phase 1 only where they keep Phase 1 extensible: shared raw unit shapes, validation boundaries, registry-backed access, and snapshot activation semantics. They should not require Phase 1 to implement runtime mutation APIs or settle every Phase 2 workflow detail before the repo-defined unit registry works.
+
 **Users can define custom units at runtime.** _(from "Phase 1 remains the source of truth for the base registry")_
 Without modifying the repository and without making a PR, callers can add units to existing unit families or create entirely new unit families. Custom units are first-class after activation: they use the same validation, usage inference, price-key resolution, and decomposition machinery as repo-defined units.
 

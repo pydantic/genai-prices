@@ -5,6 +5,9 @@
 **This document is Phase 1: repo-defined units only.**
 Phase 1 lets new units enter the system through repo-authored `prices/units.yml` and official generated data. Runtime callers can consume official registries and can still customize providers or prices for registered units, but they cannot create or mutate unit definitions at runtime. Phase 2 runtime custom units are specified in [phase-2-runtime-custom-units](phase-2-runtime-custom-units/spec.md).
 
+**Phase 2 guides Phase 1 without expanding its scope.** _(from "This document is Phase 1")_
+The Phase 2 folder records delayed runtime custom-unit requirements so Phase 1 can keep the data model, validation boundaries, and public object shapes pointed in the right direction. Phase 1 should not implement runtime unit mutation, solve every Phase 2 API detail, or carry complexity that matters only after runtime custom units exist. When a future-facing detail is useful only to avoid closing a door, Phase 1 should preserve the door and leave the detailed workflow to Phase 2.
+
 **The goal is to calculate prices as accurately as possible for a given request.**
 This is the reason the system exists. Every design decision traces back to this: maximize pricing accuracy given the information available.
 
@@ -44,7 +47,7 @@ Changes are justified only by genuine data gaps — e.g., a model that prices ca
 **Validation replaces what hardcoded fields gave us implicitly, and adds more.** _(from "Units are data, not code", "Derive, don't duplicate")_
 Hardcoded ModelPrice fields provided implicit validation: a typo like `inptu_mtok` would fail because the field doesn't exist. Moving to data-driven units means explicit validation must replace that safety net and go further. Validation is comprehensive — it's cheaper to reject bad data at build/activation time than to debug wrong prices at runtime.
 
-**Runtime custom units are deferred to Phase 2.** _(from "This document is Phase 1: repo-defined units only", "Units are data, not code")_
+**Runtime custom units are deferred to Phase 2.** _(from "Phase 2 guides Phase 1 without expanding its scope", "Units are data, not code")_
 Phase 1 should keep the data model open for runtime custom units without implementing runtime unit mutation APIs. The registry shape, validation rules, dynamic `Usage` and `ModelPrice` access, extractor destination strings, and generated payload format should not assume the built-in token/request units are the only units that will ever exist. The user-facing workflow for adding or mutating units at runtime belongs to the Phase 2 spec.
 
 **Unit dimensions are unit-local.** _(from "Units are data, not code", "Runtime custom units are deferred to Phase 2")_

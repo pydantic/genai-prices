@@ -4,6 +4,9 @@
 **Phase 2 runtime custom unit architecture is in [phase-2-runtime-custom-units/code-spec](phase-2-runtime-custom-units/code-spec.md).**
 **Baseline:** this document describes the final `main` -> target-state diff for the PR. It intentionally ignores the current branch's partial implementation state.
 
+**Phase 2 is an extension constraint, not Phase 1 implementation scope.** _(implements "Phase 2 guides Phase 1 without expanding its scope")_
+This code spec should keep Phase 1 compatible with the later runtime custom-unit direction, but it should not add runtime unit mutation APIs, registry transaction machinery, or additive-registry cache compatibility to the Phase 1 diff. When a Phase 2 concern only affects future workflow detail, this document should preserve the underlying extension point and leave the concrete runtime workflow to the Phase 2 code spec.
+
 ---
 
 ## PR Shape

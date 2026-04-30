@@ -3,6 +3,9 @@
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
 **Phase 1 code architecture is in [../code-spec](../code-spec.md).**
 
+**This code spec records the future extension path.** _(implements "This phase is a future-direction guardrail for Phase 1")_
+The Phase 2 code architecture exists so Phase 1 can avoid decisions that would make runtime custom units awkward later. It is intentionally secondary to the Phase 1 code spec until Phase 2 starts: Phase 1 should preserve shared data shapes, validation boundaries, and snapshot activation hooks, but it should not implement the mutation APIs below or treat every Phase 2 signature as final before the runtime-custom-unit work is active.
+
 **Phase 2 extends the Phase 1 files instead of introducing a parallel registry.** _(implements "Phase 1 remains the source of truth for the base registry")_
 The implementation modifies the Phase 1 `UnitRegistry`, `DataSnapshot`, validation helpers, Python/JS model-price invalidation helpers, and JS registry activation. It does not add a second runtime unit system.
 
