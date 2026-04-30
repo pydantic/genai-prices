@@ -546,6 +546,7 @@ This preserves the current CLI output shape while allowing new units to appear w
 
 **Top-level public exports remain the same.** _(implements "All public API signatures are preserved")_
 `Usage`, `calc_price`, `UpdatePrices`, `wait_prices_updated_sync`, `wait_prices_updated_async`, and `__version__` stay exported from the same module.
+`UnitRegistry`, `UnitFamily`, and `UnitDef` are intentionally not added to the top-level `genai_prices` exports; callers who need registry introspection import them from `genai_prices.units`.
 
 ---
 
