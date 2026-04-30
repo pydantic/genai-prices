@@ -17,8 +17,8 @@ Phase 1 still has one target behavior: repo-defined unit registries. The slices 
 
 - **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the current hardcoded unit set only. The active 1A registry exposes only today's supported usage keys (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`) and their corresponding current price keys (`input_mtok`, `output_mtok`, `cache_read_mtok`, `cache_write_mtok`, `input_audio_mtok`, `cache_audio_read_mtok`, `output_audio_mtok`), plus the existing request-count pricing behavior if that slice moves `requests_kcount` behind the registry. It may keep existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add text/image/video or other future units, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
 - **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the current hardcoded unit set while continuing to consume the current provider-array remote data shape. It does not add text/image/video or other future units, does not depend on Python internals, and should preserve current JS behavior.
-- **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, and repo-defined new units can finally travel through generated package data and fetched auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
-- **1D: Polish and Python-specific compatibility.** CLI price presentation, provider YAML autocomplete/schema polish, registry-derived extractor authoring checks, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
+- **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, repo-defined extractor destinations validate against the registry carried by the same payload, and repo-defined new units can finally travel through generated package data and fetched auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
+- **1D: Polish and Python-specific compatibility.** CLI price presentation, provider YAML autocomplete/schema polish, generated schema hints for extractor destinations, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
 
 1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the intentional compatibility break: once both current runtimes can parse the wrapped payload, the shared remote `data.json` / `data_slim.json` files change shape even though older released clients that expect a bare provider array will fail when they auto-update. This spec does not require dual payloads, backward-compatible wrapper detection in old clients, or a versioned rollout URL. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
 
@@ -436,7 +436,7 @@ class UsageExtractorMapping:
     required: bool
 ```
 
-`dest` is a registered usage key from the snapshot registry, not an arbitrary string and not a model-price key. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined extractor authoring validation and autocomplete move to 1D. In Phase 1 they can target only repo-defined or fetched-update usage keys; runtime custom unit extractor targets belong to Phase 2.
+`dest` is a registered usage key from the snapshot registry, not an arbitrary string and not a model-price key. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined and fetched-payload extractor destinations are validated during 1C build/export validation against the registry that ships with the same payload. In Phase 1 they can target only repo-defined or fetched-update usage keys; runtime custom unit extractor targets belong to Phase 2. 1D only adds generated provider-YAML schema/autocomplete for these destinations.
 
 **`UsageExtractor.extract()` constructs `Usage` from a dict of collected values.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
@@ -501,11 +501,12 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     - validate candidate dynamic keys against snapshot.unit_registry.price_keys
     - resolve validated price keys to usage keys
     - validate ancestor and join coverage per family
+    - validate extractor destinations against snapshot.unit_registry.units.keys()
     - optionally record a simple exact-registry validation marker
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry and where runtime-authored extractor destinations are checked. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk.
 
 This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate any simple validation marker or optional small cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
@@ -600,8 +601,8 @@ The explicit hardcoded price fields from `main` are removed as the source of tru
 
 1A should avoid visible provider-YAML acceptance changes unless they are required to preserve existing behavior through the internal Python refactor. Broader price-key acceptance belongs with 1C because new repo-defined units do not become usable until the shared data contract changes.
 
-**Build-time `UsageExtractorMapping.dest` becomes `str` in 1D.** _(implements "The extraction pipeline is data-driven end-to-end")_
-The literal `UsageField` union is removed from build-time types.
+**Build-time `UsageExtractorMapping.dest` becomes `str` in 1C.** _(implements "The extraction pipeline is data-driven end-to-end")_
+The literal `UsageField` union is removed from build-time types so provider data can reference any registered usage key carried by the 1C unit registry. Registry-derived validation replaces the removed literal type: the reusable export-validation helper rejects extractor destinations that are not registered usage keys. Generated provider-YAML schema/autocomplete for extractor destinations is 1D polish.
 
 ---
 
@@ -633,14 +634,15 @@ The complete 1C `build()` changes in this order for prices and wrapped payloads:
    - resolve price keys to usage keys
    - validate ancestor coverage
    - validate join coverage
+     It also validates every extractor destination against `registry.units`.
 4. Write wrapped `data.json` and `data_slim.json`.
 
-1D extends build-time authoring validation by validating extractor destinations against registry usage keys.
+1D adds generated provider-YAML schema/autocomplete for extractor destinations; it does not introduce the authoritative validation rule.
 
 In 1A and 1B, build/package code may read `prices/units.yml` to generate or validate language-native runtime data for the current-unit subset only, but it must not write wrapped `data.json` / `data_slim.json`.
 
 **JSON schema generation is split between 1C payload shape and 1D authoring polish.** _(implements "Generated JSON schemas provide editor autocomplete for provider YAML files", "Validation rules are expressed in terms of dimensions, not unit names")_
-1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. Instead, `build.py` derives:
+1C updates the generated `data.json` schema for the wrapped payload including `unit_families`. 1D updates the provider YAML/editor schema so it no longer relies on hardcoded `ModelPrice` fields or a hardcoded extractor `dest` union. That generated schema is for IDE autocomplete and inline feedback only; 1C build/export validation is the authoritative check. In 1D, `build.py` derives:
 
 - allowed price keys from `registry.price_keys`
 - allowed extractor destinations from `registry.units`
@@ -891,7 +893,7 @@ The existing extraction logic still builds a plain object of counts. The change 
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
 
-Extractor destinations are usage keys, not arbitrary strings and not price keys. Repo-defined extractor config is checked against the generated registry schema/build registry. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update usage keys. Runtime custom unit extractor destinations belong to Phase 2.
+Extractor destinations are usage keys, not arbitrary strings and not price keys. Repo-defined extractor config is checked against the build/export registry in 1C; generated schema support only adds IDE autocomplete in 1D. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update usage keys. Runtime custom unit extractor destinations belong to Phase 2.
 
 If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket.
 
@@ -922,6 +924,7 @@ build()
   -> validate model price keys
   -> resolve price keys to usage keys
   -> validate ancestor coverage / join coverage
+  -> validate extractor destinations against registry usage keys
   -> write wrapped data.json and data_slim.json
 
 package_data()
@@ -935,7 +938,6 @@ package_data()
   -> keep prices/data.json and prices/data_slim.json as provider arrays
 
 1D:
-  -> validate extractor destinations against registry usage keys
   -> derive provider YAML schema/autocomplete from registry price keys and usage keys
 ```
 
