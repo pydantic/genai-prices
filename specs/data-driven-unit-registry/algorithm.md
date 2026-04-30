@@ -24,7 +24,7 @@ leaf(U) = sum over all priced descendants V of U (including U itself):
 
 where `depth(V)` = number of dimension assignments on V (e.g., unit `input_tokens` has 1: `{direction: input}`, unit `cache_audio_read_tokens` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. Families with no dimensions (e.g., `requests`) have a single unit and no decomposition to perform.
 
-This is standard Mobius inversion on a product of chains (our dimensions are independent categorical axes).
+This is standard Mobius inversion on a product of flat lattices: each dimension is an independent categorical axis whose values are incomparable.
 
 ## Sparse Registry Guardrails
 
@@ -102,7 +102,7 @@ The `+cache_audio_read_tokens` in `leaf(input_tokens)` is the inclusion-exclusio
 
 The containment poset is a product of flat lattices — one per dimension axis. Each axis contributes a flat lattice: "unspecified" at the bottom, with the axis's values (e.g., `text`, `audio`, `image`, `video` for modality) incomparable above it. The product of these lattices gives the full poset. The Mobius function for a product of flat lattices is `mu(U, V) = (-1)^(depth(V) - depth(U))` when V is a descendant of U (i.e., U's dimensions are a subset of V's), and 0 otherwise. Each step from U toward V adds exactly one dimension assignment, and the signs alternate. This is a standard result in combinatorics — the product formula for Mobius functions.
 
-The key property: the sum of all leaf values equals the root usage value. Every token is in exactly one leaf bucket.
+The key property: under each least-specific unit, the sum of its descendant leaf values equals that least-specific unit's usage value. Every token in that subtree is in exactly one leaf bucket.
 
 ## Negative leaf values
 
