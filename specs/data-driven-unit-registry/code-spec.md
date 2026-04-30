@@ -291,7 +291,7 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
     """Every extractor mapping destination must be an externally reported usage key."""
 ```
 
-This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, a simple exact-registry marker can live on `ModelPrice` without becoming a broader framework.
+This module does not validate raw registry structure. That stays in `UnitRegistry`. `validate_ancestor_coverage(...)` checks registered ancestors after registry interval closure has guaranteed that structurally required intermediates exist. In 1C and later, `validate_join_coverage(...)` can assume a compatible pair's join exists because registry join-closedness already proved it. In 1A/1B, where full join-closedness is deferred for the current-unit subset, the same validation path must reject a priced compatible pair if the join unit is absent. 1A does not require validation-provenance helpers or pricing-plan cache builders; if repeated validation becomes a concrete problem, use runtime-private trust-context state rather than generated or serialized per-price markers.
 
 ---
 
@@ -359,20 +359,11 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
 
     _extra_prices: dict[str, Decimal | TieredPrices | None]  # 1C: candidate non-hardcoded price keys
-    _validation_marker_registry_id: object | None
-    _validation_marker_price_key_fingerprint: frozenset[str] | None
-
     def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
         """1C: accept legacy fields plus candidate registry-backed price keys on base ModelPrice."""
 
-    def has_validation_marker_for(self, registry: UnitRegistry) -> bool:
-        """Return True when this price-key set was already validated for this exact registry."""
-
-    def mark_validated_for(self, registry: UnitRegistry) -> None:
-        """Optionally record that the current price-key set is valid for this exact registry."""
-
     def invalidate_validation_and_decomposition_cache(self) -> None:
-        """Clear the validation marker and any small optional cache after structural price mutation."""
+        """Notify runtime-private validation/cache state after structural price mutation."""
 
     def calc_price(self, usage: object) -> CalcPrice:
         """Price all configured units using the active global registry."""
@@ -398,14 +389,14 @@ Runtime `ModelPrice` must remain compatible with the current Python pattern wher
 
 1D may add support for plain dataclass subclasses accepting undeclared dynamic price-key kwargs. If normal Python dataclass subclass constructors reject non-hardcoded candidate price-key kwargs before `ModelPrice` can store them, use a metaclass, constructor wrapper, or equivalent interception point to preserve both behaviors: declared subclass fields pass through as subclass fields, and undeclared candidate price keys are captured in `_extra_prices`. This is a Python-specific compatibility polish item, not part of the 1A core proof or the 1C shared data contract.
 
-Any validation marker or cached decomposition helper is private implementation state, not part of serialized model-price data. 1A does not require a provenance or pricing-plan framework. If a marker is useful, it is scoped to the active registry identity and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Validation must inspect present legacy compatibility fields and, once 1C adds `_extra_prices`, every `_extra_prices` candidate key. Any `_extra_prices` key that is not registered in the validation registry is an invalid price key, not a silently ignored custom field. Declared subclass fields outside the base compatibility surface are ignored unless the validation registry also names them as price keys. A marker means price-level validation has accepted this price-key set for that exact registry, either in the repo build pipeline or during runtime snapshot activation. `calc_price` may compute decomposition directly from the model's priced keys and registry indexes. If price keys are added/removed after validation or the active registry identity changes, `has_validation_marker_for(...)` returns false and any small optional cache is stale. Compatibility across additive runtime registry mutations belongs to Phase 2.
+Any validation marker or cached decomposition helper is private runtime state, not part of serialized model-price data. Do not add marker fields, marker constructor arguments, or fingerprint literals to `data.json`, `data_slim.json`, generated Python `data.py`, or generated JavaScript `data.ts`. Generated package data should continue to contain only the providers, unit families, and raw price values. 1A does not require a provenance or pricing-plan framework. If a marker is useful, prefer a snapshot-level trust context, weak map, weak set, or equivalent partial index constructed at runtime from the trusted snapshot/provider graph. That context is scoped to the active registry identity and a fingerprint of the current effective registered price keys. "Effective" means registered keys whose value represents a present price; JS `undefined`, any Python absence/null sentinel, and Python subclass-only custom fields do not count as priced registry units. Validation must inspect present legacy compatibility fields and, once 1C adds `_extra_prices`, every `_extra_prices` candidate key. Any `_extra_prices` key that is not registered in the validation registry is an invalid price key, not a silently ignored custom field. Declared subclass fields outside the base compatibility surface are ignored unless the validation registry also names them as price keys. A marker means price-level validation has accepted this price-key set for that exact registry, either by trusting a generated/fetched snapshot source or during runtime snapshot activation. `calc_price` may compute decomposition directly from the model's priced keys and registry indexes. If price keys are added/removed after validation or the active registry identity changes, the trust-context lookup fails and any small optional cache is stale. Compatibility across additive runtime registry mutations belongs to Phase 2.
 
-Supported mutation paths that add or remove effective registered price keys must clear any validation marker and any small optional cache. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and, in 1C, any explicit mapping-style helper added for dynamic registry price fields. Non-hardcoded names assigned through supported normal-`ModelPrice` mutation paths are candidate dynamic price keys and are stored for later registry validation once 1C introduces that storage. Setting a different value for an existing key does not structurally require revalidation. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys should not trigger registry validation/cache invalidation.
+Supported mutation paths that add or remove effective registered price keys must invalidate trust for that `ModelPrice` object and clear any small optional cache. Attribute assignment itself does not run ancestor or join validation; validation is final-state validation at snapshot activation or at the one-model `calc_price()` fallback. In Python this means overriding or centralizing `__setattr__`/`__delattr__` handling for registry-backed price keys and, in 1C, any explicit mapping-style helper added for dynamic registry price fields. Non-hardcoded names assigned through supported normal-`ModelPrice` mutation paths are candidate dynamic price keys and are stored for later registry validation once 1C introduces that storage. Setting a different value for an existing present key does not structurally require revalidation. Direct mutation of private storage such as `_extra_prices` is not a supported public API. Subclass-only custom fields that are not registered price keys should not trigger registry validation/cache invalidation.
 
 Base `ModelPrice.calc_price()` changes from hardcoded token arithmetic to this flow:
 
 1. Fetch the active global registry.
-2. If a simple exact-registry validation marker exists and is stale or missing, validate this one model price and update the marker.
+2. If the active snapshot trust context or simple exact-registry validation marker does not cover this model price's current fingerprint, validate this one model price and update runtime-private validation state.
 3. Wrap non-`Usage` input with `Usage.from_raw` for an internal local variable only; do not mutate or replace the caller's original object.
 4. Resolve stored price keys through `registry.price_keys` to usage keys and group those units by family.
 5. For tiered prices, read `usage.input_tokens`; if it is stored, use it without reconciling descendant values. If it is missing and cannot be inferred coherently, raise a usage error instead of guessing a tier.
@@ -457,11 +448,27 @@ The method still accepts a usage object and returns `PriceCalculation`. Phase 1 
 **`DataSnapshot` gains `unit_registry`, defaulting from the current global snapshot when omitted.** _(implements "Unit families live in the data snapshot alongside prices", "Phase 1 assumes one active global DataSnapshot")_
 
 ```python
+import weakref
+
+
+@dataclass
+class TrustedPriceValidationContext:
+    registry_validation_id: object
+    source_id: object
+    trusted_model_prices: weakref.WeakSet[ModelPrice] | None
+    baseline_fingerprints: weakref.WeakKeyDictionary[ModelPrice, frozenset[str]]
+    dirty_model_prices: weakref.WeakSet[ModelPrice]
+    validated_fingerprints: weakref.WeakKeyDictionary[ModelPrice, frozenset[str]]
+    # Optional indexes may be populated lazily from the trusted provider graph.
+    # This is runtime-private state, not generated source or serialized data.
+
+
 @dataclass
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
     unit_registry: UnitRegistry | None = None
+    _trusted_price_validation: TrustedPriceValidationContext | None = None
     _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]] = ...
     timestamp: datetime = ...
 
@@ -471,7 +478,9 @@ class DataSnapshot:
 
 `_bundled_snapshot()` always passes an explicit registry built from generated data, so it never depends on the fallback.
 
-`DataSnapshot` remains the staging object for runtime customizations, but Phase 1 customizations are limited to provider/model price data that references registered units. It does not expose public unit-registry mutation helpers. Supported price mutation helpers, if added, should update a model's effective price keys on the snapshot and invalidate only the changed `ModelPrice` object's simple validation marker or small optional cache. Runtime unit editing, copy-on-write registry transactions, and registry rollback behavior belong to Phase 2.
+`_trusted_price_validation` is a runtime-only partial trust index for snapshots created from generated package data or fetched prevalidated payloads. It is created by the snapshot construction path, not by generated `ModelPrice(...)` calls. It may lazily populate weak-map entries only for model prices that are checked, changed, or validated during activation. A generated or fetched `ModelPrice` object is considered structurally trusted only while the active registry validation id matches and its effective price-key fingerprint is unchanged or not marked dirty. This avoids expanding `data.json`, `data_slim.json`, generated Python `data.py`, and generated JavaScript `data.ts` with per-price marker data.
+
+`DataSnapshot` remains the staging object for runtime customizations, but Phase 1 customizations are limited to provider/model price data that references registered units. It does not expose public unit-registry mutation helpers. Supported price mutation helpers, if added, should update a model's effective price keys on the snapshot and invalidate only the changed `ModelPrice` object's trust-context entry or small optional cache. Runtime unit editing, copy-on-write registry transactions, and registry rollback behavior belong to Phase 2.
 
 **`_bundled_snapshot()` builds the registry from generated code.** _(implements "Unit definitions are generated into language-native code alongside prices")_
 
@@ -488,6 +497,8 @@ def _bundled_snapshot() -> DataSnapshot:
 ```
 
 Bundled startup does not serialize, import, validate, or eagerly compute decomposition plans for every built-in model. The generated repo data was already validated by the build pipeline, so built-in model prices may be trusted by construction for the bundled registry without a per-model runtime provenance framework. If the implementation uses a tiny decomposition cache, each built-in `ModelPrice` builds it lazily the first time `calc_price` needs it. This avoids increasing package/download size and avoids startup work for models that are never priced in the current process.
+
+The bundled snapshot may create one `TrustedPriceValidationContext` for the whole provider graph. It must not require generated code to pass a marker or fingerprint into every `ModelPrice` constructor. Any per-object entries in that context are populated in memory, lazily or by a single runtime walk, and are never serialized.
 
 **`set_custom_snapshot()` validation stays minimal in 1A and becomes stricter in 1C.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "`set_custom_snapshot` validation stays narrow in 1A", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
 
@@ -508,13 +519,13 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     - resolve validated price keys to usage keys
     - validate ancestor and join coverage per family
     - validate extractor destinations against snapshot.unit_registry's reported usage keys
-    - optionally record a simple exact-registry validation marker
+    - optionally record runtime-private validation state in the snapshot trust context
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry and where runtime-authored extractor destinations are checked. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry and where runtime-authored extractor destinations are checked. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk. If a trusted snapshot is activated, activation may install or carry forward a single runtime-private trust context for that snapshot instead of attaching marker fields to every model price.
 
-This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate any simple validation marker or optional small cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
+This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate any trust-context entry or optional small cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
 **`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their existing callable shape.** _(implements "Phase 1 does not block non-global snapshot execution", "`find_provider_model` works on any snapshot, global or not")_
 Phase 1 does not add `self is get_snapshot()` guards to these methods. The registry-aware internals still use the active global registry, so the expected path is to activate a snapshot before using it for pricing or extraction. Explicitly rejecting non-active snapshots and escaped inactive-snapshot models belongs to Phase 3. `find_provider_model()` and `find_provider()` stay pure lookup helpers and remain usable on inactive snapshots.
@@ -832,7 +843,7 @@ export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
 export function invalidateModelPriceDecompositionCache(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Like Python, JS should keep this minimal until dynamic/shared-data work makes stricter validation necessary: trusted generated or fetched update provider data is treated as prevalidated, and custom/changed provider data validates only the affected model prices. A simple validation marker can be stored in a module-private `WeakMap` keyed by model price object, exact active registry identity, and current price-key fingerprint if repeated validation is a concrete problem. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; any marker lookup must compare fingerprints and fail closed. Library-provided helpers for patching provider price data should invalidate the marker when effective price keys are added/removed. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship helpers; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Like Python, JS should keep this minimal until dynamic/shared-data work makes stricter validation necessary: trusted generated or fetched update provider data is treated as prevalidated, and custom/changed provider data validates only the affected model prices. A simple validation marker can live in a module-private trust context using `WeakMap`/`WeakSet` state keyed by model price object, exact active registry identity, and current price-key fingerprint if repeated validation is a concrete problem. That trust context is constructed at runtime from the active generated or fetched provider graph; generated `data.ts` must not emit marker properties, fingerprints, or per-price trust metadata. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; any marker lookup must compare fingerprints and fail closed. Library-provided helpers for patching provider price data should invalidate the marker when effective price keys are added/removed. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship helpers; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
@@ -854,7 +865,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 `calcPrice()` now:
 
 1. reads the active parsed registry
-2. if a simple exact-registry marker exists and is stale or missing, validates this one model price and updates the marker
+2. if the active trust context or simple exact-registry marker does not cover this model price's current fingerprint, validates this one model price and updates runtime-private validation state
 3. normalizes raw input with `normalizeUsage(...)`
 4. reads `totalInputTokens` with `getUsageValue(usage, 'input_tokens')` when tiered prices need it
 5. resolves price keys and groups priced units by family
@@ -865,7 +876,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 For tiered prices, the threshold input is this provided-or-inferable `input_tokens` total, preserving Python's behavior: tier selection is based on the full input-token count, not on any one decomposed leaf. If `input_tokens` is stored on the usage object, `calcPrice()` uses it directly and does not reconcile descendant values for tier selection. If `input_tokens` is missing and the reported usage does not determine a coherent total, `calcPrice()` raises instead of selecting a tier.
 
-It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not need a broad validation/cache framework; after activation or first use has recorded a simple exact-registry marker, the hot path pays only a cheap marker check. The one-model validation fallback exists for custom or bypassed model-price objects whose marker is missing or stale. Additive/destructive runtime registry change behavior belongs to Phase 2.
+It no longer contains hardcoded logic for cache/audio/request arithmetic. It does not need a broad validation/cache framework; after activation or first use has recorded runtime-private trust-context state, the hot path pays only a cheap trust/fingerprint check. The one-model validation fallback exists for custom or bypassed model-price objects whose validation state is missing or stale. Additive/destructive runtime registry change behavior belongs to Phase 2.
 
 ---
 
@@ -882,7 +893,7 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 
 If parsing or structural registry validation fails, both the active registry and active provider data remain unchanged. Direct user-provided provider data that did not arrive through the trusted fetched-payload path still goes through `validateProviderData(...)`, which validates only custom, changed, or otherwise untrusted model prices before activation.
 
-The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain decomposition caches. Embedded provider data may compute decomposition directly on first calculation, using only a tiny lazy cache if it keeps the implementation simpler.
+The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain validation markers, price-key fingerprints, decomposition caches, or per-price trust metadata. Embedded provider data may compute decomposition directly on first calculation, using only a tiny lazy cache if it keeps the implementation simpler. Any trusted-price marker state is module-private runtime state built from the active provider graph, not generated source.
 
 The checked-in JS examples must be updated to cache and restore the wrapped payload shape, not a bare provider array, and to parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
 
@@ -956,7 +967,9 @@ get_snapshot()
        -> import providers, unit_families_data from generated data.py
        -> UnitRegistry(unit_families_data)
        -> DataSnapshot(providers=..., unit_registry=..., from_auto_update=False)
+       -> create one runtime-private trusted-price context for this provider graph
        -> do not validate every generated ModelPrice or precompute decomposition state
+       -> do not require generated data.py to emit per-price validation markers
 ```
 
 ### Python snapshot activation
@@ -971,7 +984,7 @@ set_custom_snapshot(snapshot)
   -> in 1C:
        validate candidate dynamic price keys against snapshot.unit_registry
        validate ancestor and join coverage for changed/custom price-key sets
-       optionally record simple exact-registry validation markers
+       optionally record runtime-private validation state in the snapshot trust context
   -> on success: activate snapshot as the active runtime snapshot
   -> on failure: raise and keep previous snapshot
 ```
@@ -981,7 +994,7 @@ set_custom_snapshot(snapshot)
 ```text
 snapshot = get_snapshot() or an inactive snapshot returned from fetch()
   -> mutate relevant ModelPrice objects for registered price keys as needed
-       -> mutation invalidates any simple validation marker or small optional cache for changed prices
+       -> mutation invalidates trust-context state or any small optional cache for changed prices
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
        -> validate only custom/changed ModelPrice objects required for the current slice
        -> do not revalidate unchanged trusted built-in prices just because one custom price changed
@@ -999,8 +1012,9 @@ ModelInfo.calc_price(usage, provider, ...)
 
 ModelPrice.calc_price(usage)
   -> registry = get_snapshot().unit_registry
-  -> if a simple exact-registry marker exists and is missing/stale:
-       validate this ModelPrice against registry and update the marker
+  -> if the active trust context or simple exact-registry marker is missing/stale
+     for this ModelPrice's current fingerprint:
+       validate this ModelPrice against registry and update runtime-private validation state
   -> smart_usage = Usage.from_raw(usage)
   -> total_input_tokens = smart_usage.input_tokens only if any TieredPrices value needs a threshold;
      otherwise use a neutral value because non-tiered unit prices ignore it
@@ -1021,7 +1035,9 @@ ModelPrice.calc_price(usage)
 generated data.ts
   -> unitFamiliesData bootstraps units.ts
   -> data bootstraps providerData
+  -> create one module-private trusted-price context for the active generated provider graph
   -> do not validate every generated model price or precompute decomposition state
+  -> do not require generated data.ts to emit per-price validation markers
 
 runtime update
   -> parse wrapped JSON
