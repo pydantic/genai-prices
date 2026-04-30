@@ -63,7 +63,7 @@ class DataSnapshot:
         """Patch this snapshot with a validated batch of units for one family."""
 ```
 
-The exact public names can be language-idiomatic, but the capabilities are fixed: add a unit family, add a batch of units to an existing family, update model price keys on the same snapshot, invalidate known-valid state and optional decomposition caches only for changed `ModelPrice` objects, and leave inactive snapshots as staging objects until activation.
+The exact public names can be language-idiomatic, but the capabilities are fixed: add a unit family, add a batch of units to an existing family, update model price keys on the same snapshot, invalidate validation markers and optional small decomposition caches only for changed `ModelPrice` objects, and leave inactive snapshots as staging objects until activation.
 
 **Snapshot unit edits are validated with rollback before becoming visible.** _(implements "Registry mutations commit only structurally valid states")_
 An implementation may use internal copy-on-write, transactions, or candidate registry objects. Failed registry edits must leave the snapshot's previous registry visible and unchanged. Direct mutation of private registry indexes is not a supported public API.
@@ -76,13 +76,13 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
 
     For non-None snapshots:
     - validate the snapshot registry structure before activation
-    - skip price-level validation for model prices already known valid for a compatible registry
-      and their current price-key fingerprint
+    - skip price-level validation for model prices that have a compatible validation marker
+      for their current price-key fingerprint
     - validate missing/stale custom, changed, runtime-authored, or otherwise untrusted model
       prices against snapshot.unit_registry.price_keys
     - validate extractor destinations against snapshot.unit_registry.units.keys()
-    - after all validation succeeds, mark newly validated ModelPrice objects known valid
-    - optionally build decomposition caches for newly validated ModelPrice objects
+    - after all validation succeeds, record validation markers for newly validated ModelPrice objects
+    - optionally build small decomposition caches for newly validated ModelPrice objects
     - leave the previous snapshot active if any validation fails
     """
 ```
@@ -90,7 +90,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
 This activation step is what turns custom units from staged data into trusted runtime state. Runtime-authored extractor mappings can target custom usage keys only after those keys exist in the staged registry being activated.
 
 **Price mutation helpers preserve Phase 1 subclass behavior.** _(implements "Runtime unit and price patches happen through `DataSnapshot`")_
-Runtime `ModelPrice` continues to distinguish registered price keys, candidate dynamic price keys, and declared subclass-only custom fields. Adding or removing effective registered price keys through supported mutation paths clears known-valid state and any cached decomposition state for that model price. Subclass-only fields that are not registered price keys still do not trigger registry validation.
+Runtime `ModelPrice` continues to distinguish registered price keys, candidate dynamic price keys, and declared subclass-only custom fields. Adding or removing effective registered price keys through supported mutation paths clears validation markers and any cached decomposition state for that model price. Subclass-only fields that are not registered price keys still do not trigger registry validation.
 
 **Python custom unit flow.** _(implements "Runtime unit and price patches happen through `DataSnapshot`", "Snapshot activation validates custom units, prices, and extractors together")_
 
@@ -99,12 +99,12 @@ snapshot = get_snapshot() or an inactive snapshot returned from fetch()
   -> edit the snapshot through supported mutation APIs
   -> snapshot.add_unit_family(...), snapshot.add_units(...)
   -> mutate relevant ModelPrice objects for the new registered price keys
-       -> mutation invalidates known-valid/decomposition-cache state for changed prices
+       -> mutation invalidates validation markers and any optional decomposition cache for changed prices
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
        -> validate only missing/stale custom, changed, or otherwise untrusted ModelPrice objects
           against expanded registry
        -> do not revalidate unchanged trusted built-in prices just because units were added
-       -> mark validated prices known valid
+       -> record validation markers for validated prices
        -> activate on success
   -> if snapshot is already active: supported mutations have already updated the active snapshot,
        and changed prices are validated either by the mutation helper or by the one-model calc fallback
@@ -122,10 +122,10 @@ export function addUnits(
 ): ParsedFamilies
 ```
 
-The helpers return or commit a structurally valid parsed registry only after validation succeeds. JS can use object identity as part of `registryValidationId`, but known-valid checks need compatibility handling for pure additive extensions.
+The helpers return or commit a structurally valid parsed registry only after validation succeeds. JS can use object identity as part of `registryValidationId`, but validation-marker checks need compatibility handling for pure additive extensions.
 
 **JS validation and activation stay atomic.** _(implements "Snapshot activation validates custom units, prices, and extractors together", "Pure additive unit additions preserve trusted unchanged prices")_
-`validateProviderData(stagedProviders, stagedFamilies)` validates changed/new model prices and extractor destinations against the staged parsed registry. If validation fails, neither active provider data nor active unit families change. Known-valid state and optional decomposition caches can remain in module-private `WeakMap`s, but their compatibility checks must account for pure additive unit extensions.
+`validateProviderData(stagedProviders, stagedFamilies)` validates changed/new model prices and extractor destinations against the staged parsed registry. If validation fails, neither active provider data nor active unit families change. Validation markers and optional decomposition caches can remain in module-private `WeakMap`s, but their compatibility checks must account for pure additive unit extensions.
 
 **JS custom unit flow.** _(implements "Runtime unit patches use the same batch boundary in every language")_
 
@@ -135,9 +135,9 @@ stagedFamilies/stagedProviders = patch the active or fetched payload through sup
        add the units required by the final registry shape
   -> patch providerData/model prices through supported helpers
   -> validateProviderData(stagedProviders, stagedFamilies)
-       -> skip still-known-valid built-in prices
+       -> skip built-in prices with compatible validation markers
        -> skip unchanged trusted built-in prices across pure unit additions
-       -> validate changed/new prices and mark them known valid
+       -> validate changed/new prices and record validation markers
   -> setUnitFamilies(stagedFamilies)
   -> setProviderData(stagedProviders)
 ```

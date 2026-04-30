@@ -9,7 +9,7 @@ Phase 1 assumes ordinary registry-aware execution uses the active global `DataSn
 This phase can be implemented before, after, or between other phases if it makes implementation smoother. It is separated from Phase 1 because it is not required for the repo-defined unit registry to work for the normal active-snapshot path.
 
 **This is semi-enforcement, not multi-snapshot architecture.** _(from "This phase turns the active-global-snapshot assumption into guardrails")_
-The goal is to stop accidental execution against stale or inactive snapshot objects, not to make multiple snapshots safely executable at the same time. Supporting concurrent executable snapshots would require explicit context/provenance design across pricing, extraction, usage inference, known-valid state, and decomposition caches. That is out of scope here.
+The goal is to stop accidental execution against stale or inactive snapshot objects, not to make multiple snapshots safely executable at the same time. Supporting concurrent executable snapshots would require explicit context/provenance design across pricing, extraction, usage inference, validation markers, and decomposition caches. That is out of scope here.
 
 **Only execution paths are blocked.** _(from "This is semi-enforcement, not multi-snapshot architecture")_
 Lookup and staging workflows still work on inactive snapshots. A caller can fetch a snapshot, inspect providers/models, patch model prices, and then activate it with `set_custom_snapshot(snapshot)`. The guardrails apply only when a method would calculate prices or extract usage through a snapshot that is not the active global snapshot.
