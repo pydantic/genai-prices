@@ -17,7 +17,7 @@ Phase 1 still has one target behavior: repo-defined unit registries. The slices 
 
 - **1A: Python internal registry refactor.** Python moves current hardcoded unit behavior behind `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, validation helpers, and generic decomposition for the current hardcoded unit set only. The active 1A registry exposes only today's supported usage keys (`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`) and their corresponding current price keys (`input_mtok`, `output_mtok`, `cache_read_mtok`, `cache_write_mtok`, `input_audio_mtok`, `cache_audio_read_mtok`, `output_audio_mtok`), plus the existing request-count pricing behavior if that slice moves `requests_kcount` behind the registry. It may keep existing `ModelPrice` dataclass fields as the storage surface for current price keys. It does not add base dynamic price-key constructor support, does not add text/image/video or other future units, does not add a full custom-snapshot validation framework, does not change `prices/data.json` or `prices/data_slim.json`, does not require JavaScript changes, and should preserve current user-visible pricing behavior.
 - **1B: JavaScript internal registry refactor.** JavaScript makes the same internal move for the current hardcoded unit set while continuing to consume the current provider-array remote data shape. It does not add text/image/video or other future units, does not depend on Python internals, and should preserve current JS behavior.
-- **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, and repo-defined new units can finally travel through generated package data and official auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
+- **1C: Shared data contract and base dynamic price keys.** The generated JSON payloads become wrapped objects carrying `unit_families` plus `providers`, both runtimes parse the wrapped payload, and repo-defined new units can finally travel through generated package data and fetched auto-updates. Python base `ModelPrice` also gains dynamic price-key storage for non-hardcoded registered price keys in this slice.
 - **1D: Polish and Python-specific compatibility.** CLI price presentation, provider YAML autocomplete/schema polish, registry-derived extractor authoring checks, and dataclass subclass dynamic price-key constructor support can land after the core Python and shared-data work. This slice should not block proving the registry-driven pricing model.
 
 1A and 1B may introduce language-native embedded unit registry data or package-internal generated unit data, but they must not publish a changed shared remote payload. 1C is the intentional compatibility break: once both current runtimes can parse the wrapped payload, the shared remote `data.json` / `data_slim.json` files change shape even though older released clients that expect a bare provider array will fail when they auto-update. This spec does not require dual payloads, backward-compatible wrapper detection in old clients, or a versioned rollout URL. 1D is deliberately polish/compatibility work, not a prerequisite for the first Python proof.
@@ -436,7 +436,7 @@ class UsageExtractorMapping:
     required: bool
 ```
 
-`dest` is a registered usage key from the snapshot registry, not an arbitrary string and not a model-price key. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined extractor authoring validation and autocomplete move to 1D. In Phase 1 they can target only repo-defined or official-update usage keys; runtime custom unit extractor targets belong to Phase 2.
+`dest` is a registered usage key from the snapshot registry, not an arbitrary string and not a model-price key. Runtime-authored extractor mappings in custom provider snapshots are validated against the staged snapshot's registry during `set_custom_snapshot()`. Repo-defined extractor authoring validation and autocomplete move to 1D. In Phase 1 they can target only repo-defined or fetched-update usage keys; runtime custom unit extractor targets belong to Phase 2.
 
 **`UsageExtractor.extract()` constructs `Usage` from a dict of collected values.** _(implements "The extraction pipeline is data-driven end-to-end")_
 The method stops mutating dataclass fields directly. It accumulates extracted counts in `dict[str, int]`, then returns `Usage(**values)`.
@@ -491,7 +491,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
 
     In 1A, for non-None snapshots:
     - preserve existing custom snapshot behavior
-    - skip trusted built-in model prices from repo-validated generated data
+    - skip trusted built-in model prices from prevalidated generated data
     - validate only custom or changed model prices needed to avoid wrong registry-driven pricing
     - ignore subclass-only custom ModelPrice fields that are handled by custom calc_price()
       override logic
@@ -505,7 +505,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
     """
 ```
 
-This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry. Unchanged model prices from trusted bundled or official auto-update data are not revalidated in bulk.
+This activation step is what turns a snapshot from staged data into trusted runtime state. Before activation, a snapshot may contain `ModelPrice` objects and extractor configs whose unit references have not yet been checked against that snapshot's registry. In 1A, existing dataclass fields still catch many price-key typos before activation, so activation validation should stay narrow. After 1C adds base dynamic price-key storage, activation becomes the main place where candidate dynamic keys are accepted or rejected against the snapshot registry. Unchanged model prices from trusted bundled or fetched auto-update data are not revalidated in bulk.
 
 This also covers user patching of bundled prices. A caller can edit a snapshot, add missing fields such as cache-token prices to the relevant `ModelPrice` objects, and activate the snapshot if it is not already active. The mutations invalidate any simple validation marker or optional small cache for the changed model prices only; `set_custom_snapshot()` validates those updated price-key sets before activation without validating every unchanged built-in price.
 
@@ -523,7 +523,7 @@ def fetch(self) -> DataSnapshot | None:
     """Fetch data.json, parse unit_families and providers, build a snapshot."""
 ```
 
-Instead of validating the whole payload as `list[Provider]`, `fetch()` parses the wrapper object, validates the provider object shape, constructs `UnitRegistry(raw['unit_families'])`, and returns a `DataSnapshot` containing both. Because this fetch path reads official repo-built data, it treats returned model prices as repo-validated for that fetched registry without running price-level validation for every model or precomputing decomposition state.
+Instead of validating the whole payload as `list[Provider]`, `fetch()` parses the wrapper object, validates the provider object shape, constructs `UnitRegistry(raw['unit_families'])`, and returns a `DataSnapshot` containing both. Fetching a data URL is a trusted prevalidated data-feed operation regardless of which URL the caller configured. `fetch()` therefore treats returned model prices as already validated for that fetched registry without running price-level validation for every model or precomputing decomposition state. Runtime parsing still rejects malformed provider shapes and structurally invalid unit registries; it does not prove that every model price in the fetched payload satisfies price-key, ancestor, or join coverage rules.
 
 1A leaves `UpdatePrices.fetch()` compatible with the existing provider-array remote payload and uses the bundled/generated Python registry for runtime pricing.
 
@@ -567,6 +567,19 @@ If that clean sharing turns out to be awkward, the fallback is explicit and acce
 - any deliberate duplication should be named in comments as a package-boundary copy, not a second design
 
 This is a structural implementation decision, not a detail hidden inside `build()`. The final implementation should make the boundary obvious in module placement and tests.
+
+**Build/export validation should be reusable by external payload producers.** _(implements "Validation is split between the registry and `set_custom_snapshot`", "Expensive validation happens once at construction/activation time, not on every `calc_price` call")_
+`UpdatePrices(url=...)` trusts fetched model prices from any URL as prevalidated, so the validation that makes a `data.json` safe to publish must live in code that third-party publishers are likely to reuse. Do not bury full price-level validation only inside a repo-specific `build()` command that also discovers local provider YAML files and writes repo outputs. The build package should expose a small importable validation/export helper used by the official build and available to external producers that start from provider objects or parsed YAML:
+
+```python
+def validate_export_payload(
+    providers: list[Provider],
+    unit_families: dict[str, dict],
+) -> UnitRegistry:
+    """Validate registry structure and all provider model prices before export."""
+```
+
+The exact name can change, but the boundary should stay: accept already parsed providers plus raw `unit_families`, construct/validate `UnitRegistry`, validate every model price key, ancestor coverage, and join coverage, and return the validated registry or raise. `build()` and any wrapper that writes `data.json` / `data_slim.json` call this helper before serialization. External publishers who do not want to hand-author wrapped JSON from scratch can reuse the same helper or CLI path before hosting a payload for `UpdatePrices(url=...)`. Runtime `UpdatePrices.fetch()` does not call this helper; the trust boundary is at publication time, not every client fetch.
 
 ---
 
@@ -614,14 +627,13 @@ def write_prices(
 The complete 1C `build()` changes in this order for prices and wrapped payloads:
 
 1. Load `prices/units.yml`.
-2. Construct `UnitRegistry(unit_families)`; this performs structural validation, including interval closure and join-closedness.
-3. Load and validate provider YAML files with `prices_types.py`.
-4. For every model price payload:
+2. Load and validate provider YAML files with `prices_types.py`.
+3. Call the reusable export-validation helper over the parsed providers and raw unit families. Internally, it constructs `UnitRegistry(unit_families)` for structural validation and, for every model price payload, it:
    - validate price keys
    - resolve price keys to usage keys
    - validate ancestor coverage
    - validate join coverage
-5. Write wrapped `data.json` and `data_slim.json`.
+4. Write wrapped `data.json` and `data_slim.json`.
 
 1D extends build-time authoring validation by validating extractor destinations against registry usage keys.
 
@@ -739,7 +751,7 @@ export function getAllPriceKeys(): Set<string>
 export function getRegistryValidationId(): object
 ```
 
-The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from runtime-updated official JSON. Phase 1 does not add JS APIs for callers to add or mutate unit families at runtime. The active parsed families object identity can be part of the JS `registryValidationId` only if the implementation needs a simple exact-registry validation marker. Runtime custom unit staging, additive-registry compatibility, and broader cache compatibility belong to Phase 2.
+The module bootstraps itself from generated `unitFamiliesData` and allows the active registry to be replaced from fetched runtime-update JSON. Phase 1 does not add JS APIs for callers to add or mutate unit families at runtime. The active parsed families object identity can be part of the JS `registryValidationId` only if the implementation needs a simple exact-registry validation marker. Runtime custom unit staging, additive-registry compatibility, and broader cache compatibility belong to Phase 2.
 
 ---
 
@@ -812,7 +824,7 @@ export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
 export function invalidateModelPriceDecompositionCache(modelPrice: ModelPrice): void
 ```
 
-`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Like Python, JS should keep this minimal until dynamic/shared-data work makes stricter validation necessary: trusted generated or official update provider data is trusted because the repo build validated it, and custom/changed provider data validates only the affected model prices. A simple validation marker can be stored in a module-private `WeakMap` keyed by model price object, exact active registry identity, and current price-key fingerprint if repeated validation is a concrete problem. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; any marker lookup must compare fingerprints and fail closed. Library-provided helpers for patching provider price data should invalidate the marker when effective price keys are added/removed. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship helpers; avoid repeatedly scanning every registry unit for every model.
+`setUnitFamilies()` is the activation step for the active parsed registry. `validateProviderData()` validates a staged provider payload against a staged parsed registry so runtime updates can be atomic: if validation fails, neither the active registry nor active provider data changes. Like Python, JS should keep this minimal until dynamic/shared-data work makes stricter validation necessary: trusted generated or fetched update provider data is treated as prevalidated, and custom/changed provider data validates only the affected model prices. A simple validation marker can be stored in a module-private `WeakMap` keyed by model price object, exact active registry identity, and current price-key fingerprint if repeated validation is a concrete problem. JS model prices are plain objects, so arbitrary caller mutation cannot be intercepted; any marker lookup must compare fingerprints and fail closed. Library-provided helpers for patching provider price data should invalidate the marker when effective price keys are added/removed. Validation should iterate each model's stored price keys and use parsed registry indexes/relationship helpers; avoid repeatedly scanning every registry unit for every model.
 
 ---
 
@@ -853,14 +865,14 @@ It no longer contains hardcoded logic for cache/audio/request arithmetic. It doe
 
 **Runtime data activation now handles wrapped JSON plus unit families.** _(implements "Unit definitions travel with prices, not just with the package")_
 
-`updatePrices()` passes both `setProviderData` and `setUnitFamilies` to the storage factory. The official runtime update path stages the new repo-built payload in this order:
+`updatePrices()` passes both `setProviderData` and `setUnitFamilies` to the storage factory. The runtime update path for any configured data URL stages the fetched payload in this order:
 
 1. parse wrapped JSON
 2. `stagedFamilies = parseFamilies(parsed.unit_families)`
-3. treat parsed provider data as repo-validated for `stagedFamilies`, without price-level validation of every model
+3. treat parsed provider data as prevalidated for `stagedFamilies`, without price-level validation of every model
 4. on success only: `setUnitFamilies(stagedFamilies)` and `setProviderData(parsed.providers)`
 
-If parsing or structural registry validation fails, both the active registry and active provider data remain unchanged. User-provided provider data still goes through `validateProviderData(...)`, which validates only custom, changed, or otherwise untrusted model prices before activation.
+If parsing or structural registry validation fails, both the active registry and active provider data remain unchanged. Direct user-provided provider data that did not arrive through the trusted fetched-payload path still goes through `validateProviderData(...)`, which validates only custom, changed, or otherwise untrusted model prices before activation.
 
 The embedded startup path still uses generated `data.ts`, but the active registry is initialized from `unitFamiliesData` instead of being implicit in engine code. Generated `data.ts` came from build-validated repo data, but it does not contain decomposition caches. Embedded provider data may compute decomposition directly on first calculation, using only a tiny lazy cache if it keeps the implementation simpler.
 
@@ -879,7 +891,7 @@ The existing extraction logic still builds a plain object of counts. The change 
 - after extraction, the raw count object is normalized through `normalizeUsage(...)`
 - `extractUsage(...)` returns that normalized plain object without trying to prove the provider's reported counts are mutually consistent
 
-Extractor destinations are usage keys, not arbitrary strings and not price keys. Repo-defined extractor config is checked against the generated registry schema/build registry. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or official-update usage keys. Runtime custom unit extractor destinations belong to Phase 2.
+Extractor destinations are usage keys, not arbitrary strings and not price keys. Repo-defined extractor config is checked against the generated registry schema/build registry. Runtime-authored extractor config in custom provider data is accepted only after validation against the staged parsed registry, and in Phase 1 it can target only repo-defined or fetched-update usage keys. Runtime custom unit extractor destinations belong to Phase 2.
 
 If a provider response contains contradictory registered usage counts, `extractUsage(...)` still returns them. Direct reads of supplied properties keep returning the supplied values. Contradictions become hard errors only when code asks for a missing inferred value through `getUsageValue(...)` or when `calcPrice(...)` must reconcile the contradiction to compute a priced bucket.
 
@@ -916,7 +928,7 @@ package_data()
   -> read wrapped data.json
   -> package_python_data(): emit providers + unit_families_data
   -> package_ts_data(): emit data + unitFamiliesData
-  -> generated runtime data is trusted only because build validation succeeded first
+  -> generated runtime data is trusted because export validation succeeded first
 
 1A/1B:
   -> generate or embed language-native unit registry data for the current hardcoded unit subset
@@ -1005,8 +1017,8 @@ generated data.ts
 runtime update
   -> parse wrapped JSON
   -> stagedFamilies = parseFamilies(parsed.unit_families)
-  -> for official repo-built update:
-       treat parsed provider data as repo-validated for stagedFamilies without full price validation
+  -> for fetched data-url update:
+       treat parsed provider data as prevalidated for stagedFamilies without full price validation
      for user-provided staged data:
        validate only custom, changed, or otherwise untrusted model prices
   -> on success only:

@@ -35,7 +35,7 @@ Before activation, a snapshot can contain custom units, custom prices, and extra
 Extractor destinations remain registered usage keys. A runtime-authored extractor can target a runtime custom unit only after that unit has been added to the snapshot being activated.
 
 **Pure additive unit additions preserve trusted unchanged prices.** _(from "Snapshot activation validates custom units, prices, and extractors together")_
-Adding units without deleting or changing existing unit definitions must not force revalidation of every trusted built-in or official price. Unchanged trusted prices remain trusted when the units and price-key mappings they reference still exist with the same meaning. Destructive changes can make affected prices stale, but even then validation should happen for changed/untrusted prices during activation and for one trusted price only if it is later used.
+Adding units without deleting or changing existing unit definitions must not force revalidation of every trusted built-in, fetched, or otherwise prevalidated price. Unchanged trusted prices remain trusted when the units and price-key mappings they reference still exist with the same meaning. Destructive changes can make affected prices stale, but even then validation should happen for changed/untrusted prices during activation and for one trusted price only if it is later used.
 This runtime-mutation compatibility problem is where broader validation-marker and optional decomposition-cache design belongs; Phase 1A should only keep enough private hooks open to avoid blocking this later.
 
 **Multiple executable snapshots remain out of scope.** _(from "Phase 1 remains the source of truth for the base registry")_
