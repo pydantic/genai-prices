@@ -91,7 +91,7 @@ Leaf values:
 - `input_tokens`: 1000 - 200 = 800 (remainder)
 - `output_tokens`: 500
 
-Cost: `(800/1M) x 3 + (200/1M) x 0.30 + (500/1M) x 15 = $0.01006`
+Cost: `(800/1M) x 3 + (200/1M) x 0.30 + (500/1M) x 15 = $0.00996`
 
 ## Decomposition With Overlap (Join Coverage)
 
