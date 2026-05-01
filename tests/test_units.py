@@ -1,9 +1,11 @@
+import json
 from pathlib import Path
 from typing import Any, cast
 
 import pytest
 import ruamel.yaml
 
+from genai_prices import data
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
 from genai_prices.types import Usage
 from genai_prices.units import UnitRegistry
@@ -659,3 +661,24 @@ tokens:
         match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
     ):
         package_data.load_unit_families()
+
+
+def test_generated_python_unit_families_data_builds_registry() -> None:
+    registry = UnitRegistry(data.unit_families_data)
+
+    assert set(registry.families) == {'tokens', 'requests'}
+    assert set(registry.units) == {
+        'input_tokens',
+        'output_tokens',
+        'cache_read_tokens',
+        'cache_write_tokens',
+        'input_audio_tokens',
+        'cache_audio_read_tokens',
+        'output_audio_tokens',
+        'requests',
+    }
+
+
+def test_remote_payload_roots_remain_provider_arrays() -> None:
+    assert isinstance(json.loads(Path('prices/data.json').read_text()), list)
+    assert isinstance(json.loads(Path('prices/data_slim.json').read_text()), list)

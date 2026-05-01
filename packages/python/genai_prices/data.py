@@ -2,10 +2,11 @@
 
 import datetime
 from decimal import Decimal
+from typing import Any
 
 from .types import *
 
-__all__ = ('providers',)
+__all__ = 'providers', 'unit_families_data'
 
 providers: list[Provider] = [
     Provider(
@@ -10402,3 +10403,38 @@ providers: list[Provider] = [
         ],
     ),
 ]
+unit_families_data: dict[str, Any] = {
+    'tokens': {
+        'per': 1000000,
+        'description': 'Token counts',
+        'units': {
+            'input_tokens': {'price_key': 'input_mtok', 'dimensions': {'direction': 'input'}},
+            'output_tokens': {'price_key': 'output_mtok', 'dimensions': {'direction': 'output'}},
+            'cache_read_tokens': {
+                'price_key': 'cache_read_mtok',
+                'dimensions': {'direction': 'input', 'cache': 'read'},
+            },
+            'cache_write_tokens': {
+                'price_key': 'cache_write_mtok',
+                'dimensions': {'direction': 'input', 'cache': 'write'},
+            },
+            'input_audio_tokens': {
+                'price_key': 'input_audio_mtok',
+                'dimensions': {'direction': 'input', 'modality': 'audio'},
+            },
+            'cache_audio_read_tokens': {
+                'price_key': 'cache_audio_read_mtok',
+                'dimensions': {'direction': 'input', 'modality': 'audio', 'cache': 'read'},
+            },
+            'output_audio_tokens': {
+                'price_key': 'output_audio_mtok',
+                'dimensions': {'direction': 'output', 'modality': 'audio'},
+            },
+        },
+    },
+    'requests': {
+        'per': 1000,
+        'description': 'Request counts. Explicit special case: one per Usage object passed to calc_price; not caller-supplied Usage.',
+        'units': {'requests': {'price_key': 'requests_kcount', 'dimensions': {}}},
+    },
+}
