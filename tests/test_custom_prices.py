@@ -162,3 +162,33 @@ def test_extra_source_sausage():
         assert price.model.name == snapshot('gpt-4o Custom')
         assert price.provider.id == snapshot('openai')
         assert price.auto_update_timestamp is None
+
+
+def test_custom_price_override_gets_original_usage_and_super_prices_registered_fields() -> None:
+    @dataclass
+    class BonusUsage:
+        input_tokens: int
+        bonus_units: int
+
+    @dataclass
+    class BonusModelPrice(types.ModelPrice):
+        bonus_price: Decimal | None = None
+
+        def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
+            price = super().calc_price(usage)
+            if isinstance(usage, BonusUsage) and self.bonus_price is not None:
+                price['total_price'] += self.bonus_price * usage.bonus_units
+            return price
+
+    provider = types.Provider(id='testing', name='Testing', api_pattern='testing', models=[])
+    model = types.ModelInfo(
+        id='bonus',
+        match=types.ClauseEquals('bonus'),
+        prices=BonusModelPrice(input_mtok=Decimal('1'), bonus_price=Decimal('2')),
+    )
+
+    price = model.calc_price(BonusUsage(input_tokens=1_000_000, bonus_units=3), provider)
+
+    assert price.input_price == Decimal('1')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('7')
