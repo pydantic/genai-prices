@@ -7,6 +7,7 @@ import ruamel.yaml
 from genai_prices.units import UnitRegistry
 from genai_prices.validation import (
     validate_ancestor_coverage,
+    validate_extractor_destinations,
     validate_join_coverage,
     validate_model_price,
     validate_price_keys,
@@ -503,3 +504,33 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
         match='Missing registered join unit for priced units cache_write_tokens and input_audio_tokens',
     ):
         validate_model_price({'input_mtok', 'cache_write_mtok', 'input_audio_mtok'}, registry)
+
+
+def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -> None:
+    registry = UnitRegistry(_load_units())
+
+    validate_extractor_destinations(
+        {'input_tokens', 'cache_read_tokens', 'cache_audio_read_tokens'},
+        registry.reported_usage_keys(),
+    )
+
+
+def test_validate_extractor_destinations_rejects_price_keys() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Invalid extractor destination: input_mtok'):
+        validate_extractor_destinations({'input_mtok'}, registry.reported_usage_keys())
+
+
+def test_validate_extractor_destinations_rejects_unknown_strings() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Invalid extractor destination: imaginary_tokens'):
+        validate_extractor_destinations({'imaginary_tokens'}, registry.reported_usage_keys())
+
+
+def test_validate_extractor_destinations_rejects_pricing_only_requests() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Invalid extractor destination: requests'):
+        validate_extractor_destinations({'requests'}, registry.reported_usage_keys())

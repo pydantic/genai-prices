@@ -4,7 +4,13 @@ from collections.abc import Mapping
 
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 
-__all__ = 'validate_ancestor_coverage', 'validate_join_coverage', 'validate_model_price', 'validate_price_keys'
+__all__ = (
+    'validate_ancestor_coverage',
+    'validate_extractor_destinations',
+    'validate_join_coverage',
+    'validate_model_price',
+    'validate_price_keys',
+)
 
 
 def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None:
@@ -59,3 +65,10 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
     for family, priced_usage_keys in usage_keys_by_family.items():
         validate_ancestor_coverage(priced_usage_keys, family, registry)
         validate_join_coverage(priced_usage_keys, family, registry)
+
+
+def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str] | frozenset[str]) -> None:
+    invalid_destinations = dest_keys - reported_usage_keys
+    if invalid_destinations:
+        bad_keys = ', '.join(sorted(invalid_destinations))
+        raise ValueError(f'Invalid extractor destination: {bad_keys}')
