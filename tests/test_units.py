@@ -14,6 +14,7 @@ from genai_prices.validation import (
     validate_model_price,
     validate_price_keys,
 )
+from prices import package_data
 
 
 def _load_units() -> dict[str, Any]:
@@ -628,3 +629,33 @@ def test_compute_leaf_values_rejects_negative_leaf_values() -> None:
             Usage(input_tokens=100, cache_read_tokens=200),
             registry.families['tokens'],
         )
+
+
+def test_package_data_loads_unit_families() -> None:
+    assert set(package_data.load_unit_families()) == {'tokens', 'requests'}
+
+
+def test_package_data_surfaces_registry_structural_errors(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    (tmp_path / 'units.yml').write_text(
+        """\
+tokens:
+  per: 1_000_000
+  units:
+    input_tokens:
+      price_key: input_mtok
+      dimensions: {direction: input}
+    prompt_tokens:
+      price_key: prompt_mtok
+      dimensions: {direction: input}
+"""
+    )
+    monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
+
+    with pytest.raises(
+        ValueError,
+        match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
+    ):
+        package_data.load_unit_families()

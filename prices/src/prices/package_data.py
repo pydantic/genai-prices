@@ -2,7 +2,9 @@ import json
 import re
 import subprocess
 from pathlib import Path
-from typing import TypeAlias
+from typing import Any, TypeAlias, cast
+
+import ruamel.yaml
 
 from .utils import package_dir as this_package_dir, root_dir
 
@@ -18,6 +20,7 @@ def package_python_data(data_path: Path):
 
     from genai_prices.types import __file__ as genai_prices_file, providers_schema
 
+    load_unit_families()
     providers_schema.rebuild()
     providers = providers_schema.validate_json(data_path.read_bytes())
 
@@ -60,6 +63,17 @@ providers: list[Provider] = {providers}
     )
 
     print(f'Data successfully written to {data_py.relative_to(root_dir)}')
+
+
+def load_unit_families() -> dict[str, Any]:
+    from genai_prices.units import UnitRegistry
+
+    yaml = ruamel.yaml.YAML(typ='safe')
+    with (this_package_dir / 'units.yml').open() as f:
+        unit_families = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+
+    UnitRegistry(unit_families)
+    return unit_families
 
 
 def package_ts_data(data_path: Path):
