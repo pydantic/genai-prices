@@ -35,6 +35,28 @@ def _load_units() -> dict[str, Any]:
         return cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
 
 
+def _custom_price_key_unit_families() -> dict[str, Any]:
+    return {
+        'tokens': {
+            'per': 1_000_000,
+            'units': {
+                'input_tokens': {
+                    'price_key': 'input_mtok',
+                    'dimensions': {'direction': 'input'},
+                },
+                'sausage_tokens': {
+                    'price_key': 'sausage_mtok',
+                    'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
+                },
+            },
+        },
+    }
+
+
+def _custom_price_key_registry() -> UnitRegistry:
+    return UnitRegistry(_custom_price_key_unit_families())
+
+
 @contextmanager
 def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
     registry = UnitRegistry(raw_families)
@@ -468,23 +490,7 @@ def test_collect_effective_model_price_keys_ignores_none_values() -> None:
 
 
 def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -> None:
-    registry = UnitRegistry(
-        {
-            'tokens': {
-                'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'sausage_tokens': {
-                        'price_key': 'sausage_mtok',
-                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
-                    },
-                },
-            },
-        }
-    )
+    registry = _custom_price_key_registry()
 
     @dataclass
     class CustomModelPrice(ModelPrice):
@@ -497,23 +503,7 @@ def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
-    with _active_registry(
-        {
-            'tokens': {
-                'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'sausage_tokens': {
-                        'price_key': 'sausage_mtok',
-                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
-                    },
-                },
-            },
-        }
-    ):
+    with _active_registry(_custom_price_key_unit_families()):
         assert ModelPrice().sausage_mtok is None
 
 
@@ -578,23 +568,7 @@ def test_group_model_price_units_by_family_ignores_subclass_only_fields() -> Non
 
 
 def test_group_model_price_units_by_family_handles_registered_custom_fields() -> None:
-    registry = UnitRegistry(
-        {
-            'tokens': {
-                'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'sausage_tokens': {
-                        'price_key': 'sausage_mtok',
-                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
-                    },
-                },
-            },
-        }
-    )
+    registry = _custom_price_key_registry()
 
     @dataclass
     class CustomModelPrice(ModelPrice):
