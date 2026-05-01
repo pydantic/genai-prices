@@ -14,12 +14,15 @@ from typing import Any, cast
 import pytest
 import ruamel.yaml
 
-from genai_prices import data
+from genai_prices import calc_price, data
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
 from genai_prices.types import (
+    ClauseEquals,
     ConditionalPrice,
+    ModelInfo,
     ModelPrice,
+    Provider,
     Usage,
     _collect_effective_model_price_keys,
     _group_model_price_units_by_family,
@@ -940,6 +943,35 @@ def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
     try:
         set_custom_snapshot(snapshot)
         assert get_snapshot() is snapshot
+    finally:
+        set_custom_snapshot(None)
+
+
+def test_model_price_validation_runs_on_base_calc_not_snapshot_activation() -> None:
+    snapshot = DataSnapshot(
+        providers=[
+            Provider(
+                id='testing',
+                name='Testing',
+                api_pattern='testing',
+                models=[
+                    ModelInfo(
+                        id='bad-cache-price',
+                        match=ClauseEquals('bad-cache-price'),
+                        prices=ModelPrice(cache_read_mtok=Decimal('1')),
+                    )
+                ],
+            )
+        ],
+        from_auto_update=False,
+    )
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+
+        with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
+            calc_price(Usage(cache_read_tokens=100), model_ref='bad-cache-price', provider_id='testing')
     finally:
         set_custom_snapshot(None)
 

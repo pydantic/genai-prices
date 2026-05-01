@@ -816,6 +816,12 @@ class ModelPrice:
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+        from genai_prices.validation import validate_model_price
+
+        registry = _get_registry()
+        validate_model_price(_collect_effective_model_price_keys(self, registry), registry)
+
         usage_data = cast(Any, usage)
         input_price = Decimal(0)
         output_price = Decimal(0)
@@ -943,9 +949,7 @@ def _price_value_is_free(value: object) -> bool:
     return not value
 
 
-def _collect_effective_model_price_keys(  # pyright: ignore[reportUnusedFunction]
-    model_price: ModelPrice, registry: UnitRegistry
-) -> set[str]:
+def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> set[str]:
     return set(_iter_effective_model_price_keys(model_price, registry))
 
 
