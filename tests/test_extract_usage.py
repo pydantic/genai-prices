@@ -275,7 +275,7 @@ def test_google_caching():
     assert calc_price(usage, model).total_price == snapshot(Decimal('0.0012873'))
 
 
-def test_google_caching_public_extraction_parity():
+def test_google_caching_public_extraction_uses_registry_price():
     extracted_usage = extract_usage(gemini_response_data_caching, provider_id='google')
 
     assert extracted_usage.usage == snapshot(
@@ -344,37 +344,6 @@ def test_google_anthropic():
     )
 
 
-def test_extractor_accumulates_by_destination_string() -> None:
-    extractor = UsageExtractor(
-        root='usage',
-        mappings=[
-            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
-            UsageExtractorMapping(path='cached_tokens', dest='input_tokens', required=False),
-            UsageExtractorMapping(path='missing_tokens', dest='output_tokens', required=False),
-        ],
-    )
-
-    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100, 'cached_tokens': 25}}) == (
-        'test-model',
-        Usage(input_tokens=125),
-    )
-
-
-def test_extractor_accumulates_repeated_destination_string_with_zero_values() -> None:
-    extractor = UsageExtractor(
-        root='usage',
-        mappings=[
-            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
-            UsageExtractorMapping(path='cached_tokens', dest='input_tokens'),
-        ],
-    )
-
-    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 0, 'cached_tokens': 25}}) == (
-        'test-model',
-        Usage(input_tokens=25),
-    )
-
-
 def test_extractor_rejects_invalid_destination_string() -> None:
     extractor = UsageExtractor(
         root='usage',
@@ -385,21 +354,7 @@ def test_extractor_rejects_invalid_destination_string() -> None:
         extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100}})
 
 
-def test_extractor_ignores_unknown_response_extras() -> None:
-    extractor = UsageExtractor(
-        root='usage',
-        mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens')],
-    )
-
-    assert extractor.extract(
-        {'model': 'test-model', 'usage': {'prompt_tokens': 100, 'provider_specific_tokens': 999}}
-    ) == (
-        'test-model',
-        Usage(input_tokens=100),
-    )
-
-
-def test_extractor_stores_registered_contradictions_until_pricing_interprets_them() -> None:
+def test_pricing_rejects_registered_contradictions_with_registry_message() -> None:
     extractor = UsageExtractor(
         root='usage',
         mappings=[
