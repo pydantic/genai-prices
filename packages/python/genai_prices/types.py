@@ -829,7 +829,7 @@ class ModelPrice:
         input_price = Decimal(0)
         output_price = Decimal(0)
         total_price = Decimal(0)
-        total_input_tokens = usage_data.input_tokens
+        total_input_tokens = usage_data.input_tokens if _model_price_uses_tiered_prices(self, registry) else 0
 
         for family, units in grouped_units.items():
             for unit in units:
@@ -927,6 +927,13 @@ def _price_value_is_free(value: object) -> bool:
 
 def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> set[str]:
     return set(_iter_effective_model_price_keys(model_price, registry))
+
+
+def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegistry) -> bool:
+    return any(
+        isinstance(getattr(model_price, price_key), TieredPrices)
+        for price_key in _iter_effective_model_price_keys(model_price, registry)
+    )
 
 
 def _group_model_price_units_by_family(
