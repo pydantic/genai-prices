@@ -36,7 +36,7 @@ from genai_prices.validation import (
     validate_model_price,
     validate_price_keys,
 )
-from prices import package_data
+from prices import package_data, prices_types as build_types
 
 
 def _load_units() -> dict[str, Any]:
@@ -57,6 +57,25 @@ def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
 
 def _usage_keys_by_family(groups: dict[UnitFamily, set[UnitDef]]) -> dict[str, set[str]]:
     return {family.id: {unit.usage_key for unit in units} for family, units in groups.items()}
+
+
+def _build_provider_prices(
+    prices: build_types.ModelPrice | list[build_types.ConditionalPrice],
+    *,
+    model_id: str = 'model',
+) -> build_types.Provider:
+    return build_types.Provider(
+        id='testing',
+        name='Testing',
+        api_pattern='testing',
+        models=[
+            build_types.ModelInfo(
+                id=model_id,
+                match=build_types.ClauseEquals(equals=model_id),
+                prices=prices,
+            )
+        ],
+    )
 
 
 def test_units_yml_defines_current_python_unit_surface() -> None:
@@ -928,6 +947,100 @@ tokens:
         match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
     ):
         package_data.load_unit_families()
+
+
+def test_package_data_accepts_valid_provider_model_prices() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), requests_kcount=Decimal('1'))
+    )
+
+    package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_validates_conditional_model_prices() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        [build_types.ConditionalPrice(prices=build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))]
+    )
+
+    package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_unknown_price_keys() -> None:
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                },
+            },
+        }
+    )
+    provider = _build_provider_prices(build_types.ModelPrice(output_mtok=Decimal('1')), model_id='unknown-price')
+
+    with pytest.raises(
+        ValueError, match='Invalid model price for testing/unknown-price: Unknown price key: output_mtok'
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_missing_ancestors() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(build_types.ModelPrice(cache_read_mtok=Decimal('1')), model_id='missing-ancestor')
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-ancestor: Missing ancestor price for cache_read_tokens',
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_required_joins() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(
+            input_mtok=Decimal('1'),
+            cache_read_mtok=Decimal('0.5'),
+            input_audio_mtok=Decimal('2'),
+        ),
+        model_id='missing-join-price',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-join-price: Missing join price for cache_read_tokens',
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_missing_join_units_for_conditional_prices() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        [
+            build_types.ConditionalPrice(
+                prices=build_types.ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('0.5'),
+                    input_audio_mtok=Decimal('2'),
+                )
+            )
+        ],
+        model_id='missing-join-unit',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Invalid model price for testing/missing-join-unit\\[0\\]: '
+            'Missing registered join unit for priced units cache_write_tokens and input_audio_tokens'
+        ),
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
 
 
 def test_generated_python_unit_families_data_builds_registry() -> None:
