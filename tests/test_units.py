@@ -1110,6 +1110,28 @@ def test_package_data_extractor_validation_rejects_pricing_only_requests() -> No
         package_data.validate_provider_extractor_destinations([provider], registry)
 
 
+def test_package_data_extractor_validation_reports_multiple_invalid_destinations() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[
+            build_types.UsageExtractor(
+                root='usage',
+                mappings=[
+                    build_types.UsageExtractorMapping(path='prompt_tokens', dest='input_mtok'),
+                    build_types.UsageExtractorMapping(path='requests', dest='requests'),
+                ],
+            )
+        ],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: input_mtok, requests',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
+
+
 def test_generated_python_unit_families_data_builds_registry() -> None:
     registry = UnitRegistry(data.unit_families_data)
 
