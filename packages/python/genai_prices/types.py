@@ -14,7 +14,7 @@ import pydantic
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
-    from genai_prices.units import UnitDef
+    from genai_prices.units import UnitDef, UnitRegistry
 
 __all__ = (
     'ProviderID',
@@ -933,6 +933,16 @@ def _price_value_is_free(value: object) -> bool:
     if isinstance(value, Decimal):
         return value == 0
     return not value
+
+
+def _collect_effective_model_price_keys(  # pyright: ignore[reportUnusedFunction]
+    model_price: ModelPrice, registry: UnitRegistry
+) -> set[str]:
+    return {
+        field.name
+        for field in dataclasses.fields(model_price)
+        if field.name in registry.price_keys and getattr(model_price, field.name) is not None
+    }
 
 
 @dataclass

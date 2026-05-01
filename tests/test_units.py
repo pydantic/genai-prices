@@ -1,9 +1,12 @@
+from __future__ import annotations
+
 import json
 import subprocess
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, cast
@@ -14,7 +17,7 @@ import ruamel.yaml
 from genai_prices import data
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
-from genai_prices.types import Usage
+from genai_prices.types import ModelPrice, Usage, _collect_effective_model_price_keys
 from genai_prices.units import UnitRegistry, _get_registry
 from genai_prices.validation import (
     validate_ancestor_coverage,
@@ -526,6 +529,51 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
         match='Missing registered join unit for priced units cache_write_tokens and input_audio_tokens',
     ):
         validate_model_price({'input_mtok', 'cache_write_mtok', 'input_audio_mtok'}, registry)
+
+
+def test_collect_effective_model_price_keys_reads_base_fields() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert _collect_effective_model_price_keys(
+        ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')), registry
+    ) == {'input_mtok', 'output_mtok'}
+
+
+def test_collect_effective_model_price_keys_ignores_none_values() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert _collect_effective_model_price_keys(ModelPrice(input_mtok=Decimal('1'), output_mtok=None), registry) == {
+        'input_mtok'
+    }
+
+
+def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -> None:
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'sausage_tokens': {
+                        'price_key': 'sausage_mtok',
+                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
+                    },
+                },
+            },
+        }
+    )
+
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_mtok: Decimal | None = None
+        sausage_price: Decimal | None = None
+
+    price = CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'), sausage_price=Decimal('3'))
+
+    assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
 def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -> None:
