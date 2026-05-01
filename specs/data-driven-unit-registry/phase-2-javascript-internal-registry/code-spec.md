@@ -28,6 +28,42 @@ Represent caller usage and model prices as open records:
 ```typescript
 export type Usage = Record<string, number | undefined>
 export type ModelPrice = Record<string, number | TieredPrices | undefined>
+
+export interface UsageExtractorMapping {
+  dest: string
+  path: ExtractPath
+  required: boolean
+}
+
+export interface RawUnitData {
+  dimensions: Record<string, string>
+  price_key?: string
+}
+
+export interface RawFamilyData {
+  description: string
+  per: number
+  units: Record<string, RawUnitData>
+}
+
+export type RawFamiliesDict = Record<string, RawFamilyData>
+
+export interface UnitDef {
+  usageKey: string
+  priceKey: string
+  familyId: string
+  family: UnitFamily
+  dimensions: Record<string, string>
+}
+
+export interface UnitFamily {
+  id: string
+  per: number
+  description: string
+  units: Record<string, UnitDef>
+}
+
+export type ParsedFamilies = Record<string, UnitFamily>
 ```
 
 Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string`, but authoritative extractor-destination validation waits for the registry validation paths in Phase 3; Phase 2 must not expand the remote authoring surface.
@@ -88,6 +124,19 @@ Implement helpers for registry structure, interval closure, price-key validity, 
 Validation iterates the current model's effective price keys and uses parsed registry indexes or relationship helpers. It must not repeatedly scan the whole registry for every model when direct indexes are available, and it must not hardcode ordinary unit names. The explicit `requests` exclusion is allowed for caller/extractor usage.
 
 **`engine.ts` switches from hardcoded arithmetic to registry-driven pricing.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
+`calcUnitPrice(...)` replaces token-specific helper logic, and `calcPrice(...)` becomes registry-driven:
+
+```typescript
+function calcUnitPrice(
+  price: number | TieredPrices | undefined,
+  count: number | undefined,
+  totalInputTokens: number,
+  per: number,
+): number
+
+export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult
+```
+
 `calcPrice(usage, modelPrice)` should:
 
 1. read the active parsed registry
@@ -108,6 +157,9 @@ Aggregation stays compatible with the current result shape. Costs from units who
 Generated `data.ts` exports both current provider data and current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `unitFamiliesData`.
 
 Runtime update URLs still return provider arrays. Phase 2 therefore keeps update parsing compatible with the existing provider-array payload and preserves the active generated registry while replacing provider data. If local user-provided staged data is validated, provider-data validation must happen against the active parsed registry and leave active state unchanged on failure.
+
+**`extractUsage.ts` returns normalized plain usage without proving consistency.** _(implements "JavaScript preserves its plain-object public usage contract", "JavaScript behavior stays aligned with Python semantics")_
+Extractor output keys are registry usage keys, not fixed TypeScript unions. Extraction builds a plain object of counts, normalizes it through `normalizeUsage(...)`, and returns that normalized plain object. It does not prove provider-reported counts are mutually consistent. Contradictory registered usage values remain stored until `getUsageValue(...)` or `calcPrice(...)` needs to infer a missing value or compute a priced bucket.
 
 **Tests prove JavaScript parity and cross-language alignment.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
 Add JavaScript tests for current price parity, request pricing, usage normalization, lazy inference, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.

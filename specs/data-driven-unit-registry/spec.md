@@ -36,8 +36,20 @@ Generated data stays in files that are already generated, such as Python `data.p
 **Provider YAML churn is limited to real data gaps.** _(from "Backward compatibility is preserved unless clearly impractical", "Price data must be complete; usage data may be incomplete")_
 The registry work should not rename or restructure existing provider YAML for its own sake. Provider data changes are justified when validation exposes a genuine completeness bug, such as a model pricing cached tokens and audio tokens but lacking the cached-audio overlap price. Adding an explicit repeated price to make a commercial fallback unambiguous is data correctness, not churn.
 
+**Early runtime refactors preserve behavior before the shared contract changes.** _(from "Backward compatibility is preserved unless clearly impractical", "Units are data, not code")_
+Python and JavaScript first move their current hardcoded pricing behavior behind internal registries without changing the public remote `data.json` / `data_slim.json` shape. Those early registries expose only the current public usage and price surface for the runtime being refactored. They make today's units registry-shaped internally, but they do not practically enable new repo-defined units for clients.
+
+**The current-unit subset is a delivery exception, not a weaker model.** _(from "Early runtime refactors preserve behavior before the shared contract changes", "Validation exists to protect pricing semantics")_
+Phases 1 and 2 may omit future structural join units because exposing those keys before the shared payload can carry them would be a behavior change. That exception is safe only because model-price validation rejects any priced compatible pair whose join is absent before decomposition runs. Full registry join-closedness starts when the complete shared registry is published in Phase 3.
+
+**New repo-defined units become end-to-end only with the shared registry payload.** _(from "Early runtime refactors preserve behavior before the shared contract changes", "Units are data, not code")_
+Before Phase 3, adding units to package-internal generated data would create half-support: one runtime might know a unit, but remote price updates and the other runtime would not. Review new built-in units with the Phase 3 wrapped payload change, where unit definitions and the prices that depend on them ship together.
+
 **The registry model is a data-defined unit graph used by every runtime.** _(from "Units are data, not code", "Derive, don't duplicate")_
 A registry contains unit families. A family has a normalization factor such as `per: 1_000_000` and units whose usage values can overlap. A unit has a usage key, a price key, and dimension assignments. The runtime parses that raw data into indexed `UnitFamily` and `UnitDef` objects so pricing, validation, extraction, and display all use the same source of truth.
+
+**Registry construction promotes raw data into indexed runtime objects.** _(from "The registry model is a data-defined unit graph used by every runtime")_
+Raw family data stays as plain data until a runtime constructs the registry. Construction promotes usage-key dict keys into `UnitDef.usage_key`, defaults missing `price_key` to the usage key, fills family and unit back-references, and builds flat lookup indexes for usage keys, price keys, dimension sets, ancestors, and join lookup. Downstream validation and pricing use those indexes instead of rediscovering relationships by scanning every unit.
 
 **The system is general across unit families.** _(from "The registry model is a data-defined unit graph used by every runtime")_
 Any reported or inferable quantity with the shape `usage_value * price / normalization_factor` can be represented: tokens, requests, characters, duration, tool calls reported by an API, or future units. Tokens are the first complex family because their usage values overlap across direction, modality, and cache dimensions. The decomposition and validation model is not token-specific.
@@ -90,6 +102,15 @@ The checked-in source for built-in units is `prices/units.yml`. Runtime packages
 **Validation rules are semantic preconditions.** _(from "Validation exists to protect pricing semantics")_
 Validation is expressed in terms of registry dimensions and indexes, not ordinary unit names such as `input_tokens` or `input_mtok`. The explicit exception is the non-reported `requests` / `requests_kcount` pricing rule. Validation does not add economic sanity checks such as cache-read <= uncached, modality price ordering, or cache-write ordering; those may be useful later but are outside the unit-registry correctness rules.
 
+**Validation is split by lifecycle boundary.** _(from "Validation rules are semantic preconditions", "Registry construction promotes raw data into indexed runtime objects")_
+Registry construction validates structural unit rules. Build/export validation validates provider model prices and extractor destinations before publishing generated data. Runtime fetches structurally parse the registry but trust fetched model prices as prevalidated by the publisher. Snapshot activation validates custom, changed, runtime-authored, stale, or otherwise untrusted prices and extractors against the staged snapshot registry. A one-model defensive check before pricing is allowed when runtime trust is absent or stale.
+
+**ModelPrice construction stays context-free.** _(from "Validation is split by lifecycle boundary", "Manual custom pricing remains supported")_
+Constructing a `ModelPrice` does not validate price keys, ancestor coverage, or join coverage because construction often happens before the relevant snapshot registry is known. Candidate dynamic price keys are accepted into model-price storage and accepted or rejected later at build, activation, or defensive one-model validation. Subclass-only custom fields remain custom override state unless the active registry also names them as price keys.
+
+**Trusted generated and fetched prices are not bulk-revalidated at runtime.** _(from "Validation is split by lifecycle boundary", "Provider YAML churn is limited to real data gaps")_
+The official build validates generated bundled data before publication, and external payload producers are expected to validate before hosting runtime update payloads. Runtime activation and fetch paths must not revalidate every unchanged trusted model price just because a snapshot is loaded, one custom price changed, or a pure additive unit extension exists. Runtime validation focuses on changed, custom, stale, runtime-authored, or otherwise untrusted objects.
+
 **Usage keys and price keys are globally unique.** _(from "Validation rules are semantic preconditions")_
 A usage key identifies one unit across the entire registry, not just within one family. Usage keys are also raw registry unit keys, usage attributes, and extractor destinations for externally reported units. A price key maps one-to-one to a unit globally and becomes a provider-YAML key and model-price attribute. Duplicate usage keys or duplicate price keys would make extraction, dynamic access, and price-key resolution ambiguous.
 
@@ -124,6 +145,9 @@ Each phase should be reviewable and shippable after the previous phase. Later ph
 
 **Phase-local code specs are the implementation source of truth.** _(from "The work is seven numbered phases", "Phase order is the review contract")_
 There is no top-level code spec. Use the phase-local prose spec plus the matching phase-local code spec. Phase 1 describes the implementation delta from the pre-registry baseline; Phases 2 through 7 describe only what must change after the previous phase is complete.
+
+**Cross-phase call relationships remain documented as supporting detail.** _(from "Phase-local code specs are the implementation source of truth")_
+The phase-local code specs are still authoritative, but an implementing agent also needs to see how build validation, packaging, bundled startup, snapshot activation, custom price patching, pricing hot paths, and JavaScript runtime update activation connect across phase boundaries. [implementation-flow](implementation-flow.md) records that connective detail without reintroducing a top-level code spec.
 
 **Phase 1 proves the Python runtime model for the current unit surface.** _(from "Phase order is the review contract", "The registry model is a data-defined unit graph used by every runtime")_
 [Phase 1: Python Internal Registry Refactor](phase-1-python-internal-registry/spec.md) ([code spec](phase-1-python-internal-registry/code-spec.md)) moves Python's existing hardcoded usage and price behavior behind a data-shaped `UnitRegistry`, registry-aware `Usage`, registry-backed `ModelPrice`, and generic decomposition for the current public unit set only. It preserves the current remote JSON shape and does not enable new repo-defined units.

@@ -29,5 +29,13 @@ Preserve existing behavior for declared custom subclass fields such as `sausage_
 **Make CLI price display registry-driven.** _(implements "CLI price presentation becomes registry-driven")_
 Update `_cli_impl.py` so price-field collection iterates each `ModelPrice` object's effective stored price keys, labels derive from unit metadata and family normalization, and formatting does not depend on a hardcoded dataclass-field list. Existing CLI flags and output for current units should remain compatible.
 
+Concretely:
+
+- `_collect_model_price_fields()` iterates stored/effective price keys from each `ModelPrice` instead of `dataclasses.fields(ModelPrice)`.
+- `_price_field_label()` derives labels from `UnitDef`, `UnitFamily.description`, and `UnitFamily.per` instead of a hardcoded field-name map.
+- `_format_model_price_value()` and `_format_model_prices()` iterate registry-backed price keys and format values generically.
+
+The CLI may keep compatibility aliases and familiar labels for existing units, but new registered units must appear without adding new hardcoded price-field branches.
+
 **Tests cover hardening boundaries.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the shared contract works")_
 Add tests for reserved-name rejection in both Python and JavaScript-relevant cases, generated provider schema price-key and extractor-destination suggestions, dataclass subclass constructor handling for undeclared dynamic price keys plus declared custom fields, and CLI display of both legacy and newly registered price keys.

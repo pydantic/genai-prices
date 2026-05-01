@@ -20,6 +20,8 @@ Change both generated JSON payloads to:
 
 Do not keep writing a provider-array compatibility payload in parallel, and do not add a separate runtime unit artifact. The wrapper is the single shared runtime-update contract for this phase.
 
+The generated `data.json` schema also changes to describe this wrapped payload shape. Provider YAML authoring schemas are different: they remain editor/autocomplete support and become registry-derived in Phase 4, after the authoritative wrapped payload and export validation exist.
+
 **`prices/units.yml` expands to the complete repo-defined registry.** _(implements "The complete repo-defined registry starts here")_
 The built-in `tokens` family now includes the complete symmetric Phase 3 unit lattice needed by the prose spec. Each modality gets the same valid input/output/cache-read/cache-write patterns where those concepts make sense; nonsensical combinations such as output cache reads are not added. The `requests` family remains the explicit one-request-per-usage-object pricing unit.
 
@@ -27,6 +29,12 @@ The built-in `tokens` family now includes the complete symmetric Phase 3 unit la
 
 **Generated package data reads and emits wrapped payloads.** _(implements "Unit definitions travel with the prices that depend on them")_
 Update `prices/src/prices/package_data.py` so Python and JavaScript package data generation reads wrapped `data.json`, splits `providers` and `unit_families`, and emits:
+
+```python
+def package_data() -> None: ...
+def package_python_data(data_path: Path) -> None: ...
+def package_ts_data(data_path: Path) -> None: ...
+```
 
 ```python
 # packages/python/genai_prices/data.py
@@ -56,6 +64,22 @@ def validate_export_payload(
 
 `build()` should load `prices/units.yml`, parse provider YAML, call `validate_export_payload(...)`, validate extractor destinations against externally reported usage keys, and only then write wrapped `data.json` and `data_slim.json`. External publishers can reuse the helper before hosting a payload for `UpdatePrices(url=...)`.
 
+The complete Phase 3 build/write flow is:
+
+```python
+def build() -> None:
+    """Build provider/editor schemas plus wrapped runtime data payloads."""
+
+def write_prices(
+    providers: list[Provider],
+    unit_families: dict[str, dict],
+    prices_file: str,
+    *,
+    slim: bool = False,
+) -> None:
+    """Write one wrapped prices payload."""
+```
+
 `UpdatePrices.fetch()` and JavaScript runtime update code do not call this helper for every fetched payload. They parse the wrapper, construct/structurally validate the registry, parse providers, and treat fetched model prices as prevalidated by the publisher.
 
 The helper name and boundary are intentional. Do not bury full price-level validation only inside a repo-local command that discovers YAML files and writes outputs. The reusable helper accepts already parsed providers plus raw `unit_families`, constructs and validates `UnitRegistry`, validates model price keys, resolves price keys to usage keys, checks ancestor and join coverage, validates extractor destinations, and returns the validated registry or raises.
@@ -72,7 +96,13 @@ Add `_extra_prices: dict[str, Decimal | TieredPrices | None]` to base `ModelPric
 `set_custom_snapshot(snapshot)` validates candidate dynamic keys, ancestor coverage, join coverage, and extractor destinations against `snapshot.unit_registry` for custom, changed, runtime-authored, or otherwise untrusted objects. It still skips unchanged trusted generated/fetched prices and still leaves the previous active snapshot in place on validation failure.
 
 **Runtime update paths parse wrapped payloads atomically.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
-Python `UpdatePrices.fetch()` parses `unit_families` and `providers`, constructs `UnitRegistry(raw['unit_families'])`, and returns `DataSnapshot(providers=..., unit_registry=...)`.
+Python `UpdatePrices.fetch()` parses `unit_families` and `providers`, constructs `UnitRegistry(raw['unit_families'])`, and returns `DataSnapshot(providers=..., unit_registry=...)`:
+
+```python
+class UpdatePrices:
+    def fetch(self) -> DataSnapshot | None:
+        """Fetch wrapped data, parse unit_families and providers, and return a staged snapshot."""
+```
 
 JavaScript `api.ts` stages runtime updates in this order:
 
@@ -82,6 +112,19 @@ JavaScript `api.ts` stages runtime updates in this order:
 4. on success only, replace active unit families and active provider data
 
 If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
+
+`updatePrices()` passes both provider-data and unit-family activation callbacks through the storage factory:
+
+```typescript
+export interface StorageFactoryParams {
+  onCalc: (cb: () => void) => void
+  remoteDataUrl: string
+  setProviderData: (data: ProviderDataPayload) => void
+  setUnitFamilies: (families: ParsedFamilies | null) => void
+}
+```
+
+Checked-in JavaScript browser and node examples that cache provider data must cache and restore the wrapped payload shape, not a bare provider array, and parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
 
 Generated Python and JavaScript package data remain pure data. They must not contain validation markers, trust flags, fingerprints, marker constructor arguments, decomposition plans, or cached coefficients. Runtime-private trust state starts in Phase 5.
 
