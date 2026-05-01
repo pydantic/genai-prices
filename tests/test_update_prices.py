@@ -16,6 +16,38 @@ from genai_prices import (
 pytestmark = pytest.mark.anyio
 
 
+def test_update_prices_fetch_parses_provider_array_and_borrows_active_registry(monkeypatch: pytest.MonkeyPatch):
+    active_registry = data_snapshot.get_snapshot().unit_registry
+    content = (
+        b'[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
+        b'"models":[{"id":"gpt-4o-mini","match":{"equals":"gpt-4o-mini"},'
+        b'"prices":{"input_mtok":0.15,"output_mtok":0.6}}]}]'
+    )
+
+    class Response:
+        def __init__(self, content: bytes) -> None:
+            self.content = content
+
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(url: str, timeout: httpx.Timeout) -> Response:
+        assert url == 'https://example.test/prices.json'
+        assert timeout is not None
+        return Response(content)
+
+    monkeypatch.setattr(httpx, 'get', fake_get)
+
+    snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert snapshot is not None
+    assert snapshot.from_auto_update is True
+    assert snapshot.unit_registry is active_registry
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'
+
+
 @pytest.mark.default_cassette('success.yaml')
 @pytest.mark.vcr()
 def test_update_prices_wait_on_start():
