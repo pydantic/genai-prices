@@ -5,6 +5,7 @@ import pytest
 import ruamel.yaml
 
 from genai_prices.units import UnitRegistry
+from genai_prices.validation import validate_price_keys
 
 
 def _load_units() -> dict[str, Any]:
@@ -385,3 +386,16 @@ def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:
     )
 
     assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
+
+
+def test_validate_price_keys_accepts_current_price_keys() -> None:
+    registry = UnitRegistry(_load_units())
+
+    validate_price_keys(set(registry.price_keys), registry.price_keys)
+
+
+def test_validate_price_keys_rejects_unknown_price_key() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Unknown price key: inptu_mtok'):
+        validate_price_keys({'input_mtok', 'inptu_mtok'}, registry.price_keys)
