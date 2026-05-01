@@ -883,6 +883,9 @@ class ModelPrice:
 
         return ', '.join(parts)
 
+    def is_free(self) -> bool:
+        return all(_price_value_is_free(getattr(self, field.name)) for field in dataclasses.fields(self))
+
 
 def calc_mtok_price(
     field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
@@ -920,6 +923,16 @@ def calc_unit_price(
     else:
         unit_price = price * count
     return unit_price / per
+
+
+def _price_value_is_free(value: object) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, TieredPrices):
+        return value.base == 0 and all(tier.price == 0 for tier in value.tiers)
+    if isinstance(value, Decimal):
+        return value == 0
+    return not value
 
 
 @dataclass
