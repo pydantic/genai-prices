@@ -2,9 +2,10 @@ import json
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, TypeAlias, cast
+from typing import Any, cast
 
 import ruamel.yaml
+from typing_extensions import TypeAlias
 
 from .utils import package_dir as this_package_dir, root_dir
 
