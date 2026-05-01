@@ -64,10 +64,16 @@ class UnitRegistry:
                 if unit.price_key in self.price_keys:
                     raise ValueError(f'Duplicate unit price key: {unit.price_key}')
 
+                dimension_set = self._dimension_set(unit)
+                if existing_unit := family_dimensions.get(dimension_set):
+                    raise ValueError(
+                        f'Duplicate dimensions in unit family {family_id}: {existing_unit.usage_key} and {usage_key}'
+                    )
+
                 family.units[usage_key] = unit
                 self.units[usage_key] = unit
                 self.price_keys[unit.price_key] = usage_key
-                family_dimensions[self._dimension_set(unit)] = unit
+                family_dimensions[dimension_set] = unit
 
         for usage_key, unit in self.units.items():
             self._ancestor_usage_keys[usage_key] = frozenset(

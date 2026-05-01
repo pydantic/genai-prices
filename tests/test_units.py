@@ -268,3 +268,54 @@ def test_unit_registry_rejects_duplicate_price_keys() -> None:
                 },
             }
         )
+
+
+def test_unit_registry_rejects_duplicate_dimension_sets_within_family() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
+    ):
+        UnitRegistry(
+            {
+                'tokens': {
+                    'per': 1_000_000,
+                    'units': {
+                        'input_tokens': {
+                            'price_key': 'input_mtok',
+                            'dimensions': {'direction': 'input'},
+                        },
+                        'prompt_tokens': {
+                            'price_key': 'prompt_mtok',
+                            'dimensions': {'direction': 'input'},
+                        },
+                    },
+                },
+            }
+        )
+
+
+def test_unit_registry_allows_same_dimension_set_across_families() -> None:
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                },
+            },
+            'characters': {
+                'per': 1_000,
+                'units': {
+                    'input_characters': {
+                        'price_key': 'input_kchar',
+                        'dimensions': {'direction': 'input'},
+                    },
+                },
+            },
+        }
+    )
+
+    assert registry.units['input_tokens'].dimensions == registry.units['input_characters'].dimensions
