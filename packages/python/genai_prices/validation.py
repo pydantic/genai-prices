@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from genai_prices.units import UnitFamily, UnitRegistry
+from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 
-__all__ = 'validate_ancestor_coverage', 'validate_price_keys'
+__all__ = 'validate_ancestor_coverage', 'validate_join_coverage', 'validate_price_keys'
 
 
 def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None:
@@ -21,3 +21,28 @@ def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily, 
         if missing_ancestors:
             bad_keys = ', '.join(sorted(missing_ancestors))
             raise ValueError(f'Missing ancestor price for {usage_key}: {bad_keys}')
+
+
+def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, registry: UnitRegistry) -> None:
+    family_priced_usage_keys = priced_usage_keys & family.units.keys()
+    priced_units = _priced_units(family_priced_usage_keys, family)
+
+    for index, first_unit in enumerate(priced_units):
+        for second_unit in priced_units[index + 1 :]:
+            if not UnitRegistry.are_compatible(first_unit, second_unit):
+                continue
+
+            join = registry.find_join(first_unit, second_unit)
+            if join is None:
+                raise ValueError(
+                    f'Missing registered join unit for priced units {first_unit.usage_key} and {second_unit.usage_key}'
+                )
+
+            if join.usage_key not in family_priced_usage_keys:
+                raise ValueError(
+                    f'Missing join price for {first_unit.usage_key} and {second_unit.usage_key}: {join.usage_key}'
+                )
+
+
+def _priced_units(priced_usage_keys: set[str], family: UnitFamily) -> list[UnitDef]:
+    return [family.units[usage_key] for usage_key in sorted(priced_usage_keys)]
