@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from itertools import combinations
 from typing import Any, cast
 
 __all__ = 'UnitDef', 'UnitFamily', 'UnitRegistry'
@@ -82,6 +83,8 @@ class UnitRegistry:
                 if maybe_ancestor is not unit and self._is_dimension_subset(maybe_ancestor, unit)
             )
 
+        self._validate_interval_closure()
+
     @staticmethod
     def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:
         return frozenset(unit.dimensions.items())
@@ -113,3 +116,24 @@ class UnitRegistry:
     def reported_usage_keys(self) -> frozenset[str]:
         """Return registered keys callers may report, excluding Phase 1 pricing-only requests."""
         return frozenset(usage_key for usage_key in self.units if usage_key != 'requests')
+
+    def _validate_interval_closure(self) -> None:
+        for family in self.families.values():
+            for ancestor in family.units.values():
+                for descendant in family.units.values():
+                    if ancestor is descendant or not self._is_dimension_subset(ancestor, descendant):
+                        continue
+
+                    added_dimensions = descendant.dimensions.items() - ancestor.dimensions.items()
+                    for size in range(1, len(added_dimensions)):
+                        for added_subset in combinations(added_dimensions, size):
+                            required_dimensions = frozenset(ancestor.dimensions.items() | set(added_subset))
+                            if required_dimensions not in self._units_by_dimension[family.id]:
+                                missing_dimensions = ', '.join(
+                                    f'{key}={value}' for key, value in sorted(required_dimensions)
+                                )
+                                raise ValueError(
+                                    f'Missing intermediate unit dimensions in family {family.id} '
+                                    f'between {ancestor.usage_key} and {descendant.usage_key}: '
+                                    f'{missing_dimensions}'
+                                )

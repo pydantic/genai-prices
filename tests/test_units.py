@@ -319,3 +319,69 @@ def test_unit_registry_allows_same_dimension_set_across_families() -> None:
     )
 
     assert registry.units['input_tokens'].dimensions == registry.units['input_characters'].dimensions
+
+
+def test_unit_registry_rejects_skipped_intermediate_dimension_sets() -> None:
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Missing intermediate unit dimensions in family tokens between input_tokens and cache_video_read_tokens'
+        ),
+    ):
+        UnitRegistry(
+            {
+                'tokens': {
+                    'per': 1_000_000,
+                    'units': {
+                        'input_tokens': {
+                            'price_key': 'input_mtok',
+                            'dimensions': {'direction': 'input'},
+                        },
+                        'cache_read_tokens': {
+                            'price_key': 'cache_read_mtok',
+                            'dimensions': {'direction': 'input', 'cache': 'read'},
+                        },
+                        'cache_video_read_tokens': {
+                            'price_key': 'cache_video_read_mtok',
+                            'dimensions': {'direction': 'input', 'modality': 'video', 'cache': 'read'},
+                        },
+                    },
+                },
+            }
+        )
+
+
+def test_unit_registry_current_token_subset_satisfies_interval_closure() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert registry.units['cache_audio_read_tokens'].dimensions == {
+        'direction': 'input',
+        'modality': 'audio',
+        'cache': 'read',
+    }
+
+
+def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'cache_write_tokens': {
+                        'price_key': 'cache_write_mtok',
+                        'dimensions': {'direction': 'input', 'cache': 'write'},
+                    },
+                    'input_audio_tokens': {
+                        'price_key': 'input_audio_mtok',
+                        'dimensions': {'direction': 'input', 'modality': 'audio'},
+                    },
+                },
+            },
+        }
+    )
+
+    assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
