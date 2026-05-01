@@ -326,6 +326,7 @@ models:
         tiers:
           - start: 1000000
             price: 0.175
+      cache_audio_read_mtok: 0.175
 
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite

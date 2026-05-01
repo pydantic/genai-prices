@@ -18,6 +18,7 @@ from genai_prices import data
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
 from genai_prices.types import (
+    ConditionalPrice,
     ModelPrice,
     Usage,
     _collect_effective_model_price_keys,
@@ -538,6 +539,28 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
         match='Missing registered join unit for priced units cache_write_tokens and input_audio_tokens',
     ):
         validate_model_price({'input_mtok', 'cache_write_mtok', 'input_audio_mtok'}, registry)
+
+
+def test_bundled_provider_model_prices_pass_registry_validation() -> None:
+    registry = UnitRegistry(data.unit_families_data)
+    failures: list[str] = []
+
+    for provider in data.providers:
+        for model in provider.models:
+            prices = model.prices if isinstance(model.prices, list) else [model.prices]
+            for index, maybe_conditional_price in enumerate(prices):
+                price = (
+                    maybe_conditional_price.prices
+                    if isinstance(maybe_conditional_price, ConditionalPrice)
+                    else maybe_conditional_price
+                )
+                price_keys = _collect_effective_model_price_keys(price, registry)
+                try:
+                    validate_model_price(price_keys, registry)
+                except ValueError as exc:
+                    failures.append(f'{provider.id}/{model.id}[{index}]: {exc}')
+
+    assert failures == []
 
 
 def test_collect_effective_model_price_keys_reads_base_fields() -> None:

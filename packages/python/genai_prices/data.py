@@ -1861,6 +1861,7 @@ providers: list[Provider] = [
                     ),
                     output_mtok=Decimal('0.4'),
                     input_audio_mtok=Decimal('0.7'),
+                    cache_audio_read_mtok=Decimal('0.175'),
                 ),
             ),
             ModelInfo(
@@ -5366,7 +5367,9 @@ providers: list[Provider] = [
                 name='gpt 4o audio preview',
                 description='Audio model for gpt-4o',
                 context_window=128000,
-                prices=ModelPrice(output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini',
@@ -5396,7 +5399,9 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
                 name='gpt 4o mini audio preview',
                 description='Audio model for gpt-4o mini',
-                prices=ModelPrice(output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini-realtime-preview',
@@ -5418,7 +5423,9 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-mini-tts',
                 match=ClauseEquals(equals='gpt-4o-mini-tts'),
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_audio_mtok=Decimal('12')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), output_mtok=Decimal('12'), output_audio_mtok=Decimal('12')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-realtime-preview',
