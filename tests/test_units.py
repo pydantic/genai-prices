@@ -5,7 +5,7 @@ import pytest
 import ruamel.yaml
 
 from genai_prices.units import UnitRegistry
-from genai_prices.validation import validate_price_keys
+from genai_prices.validation import validate_ancestor_coverage, validate_price_keys
 
 
 def _load_units() -> dict[str, Any]:
@@ -399,3 +399,24 @@ def test_validate_price_keys_rejects_unknown_price_key() -> None:
 
     with pytest.raises(ValueError, match='Unknown price key: inptu_mtok'):
         validate_price_keys({'input_mtok', 'inptu_mtok'}, registry.price_keys)
+
+
+def test_validate_ancestor_coverage_accepts_parent_child_pricing() -> None:
+    registry = UnitRegistry(_load_units())
+
+    validate_ancestor_coverage(
+        {'input_tokens', 'cache_read_tokens'},
+        registry.families['tokens'],
+        registry,
+    )
+
+
+def test_validate_ancestor_coverage_rejects_missing_ancestor_price() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
+        validate_ancestor_coverage(
+            {'cache_read_tokens'},
+            registry.families['tokens'],
+            registry,
+        )

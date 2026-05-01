@@ -117,6 +117,9 @@ class UnitRegistry:
         """Return registered keys callers may report, excluding Phase 1 pricing-only requests."""
         return frozenset(usage_key for usage_key in self.units if usage_key != 'requests')
 
+    def ancestor_usage_keys(self, usage_key: str) -> frozenset[str]:
+        return self._ancestor_usage_keys[usage_key]
+
     def _validate_interval_closure(self) -> None:
         for family in self.families.values():
             for ancestor in family.units.values():
