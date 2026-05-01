@@ -849,6 +849,12 @@ def test_usage_infers_missing_value_from_descendant() -> None:
     assert usage.input_tokens == 300
 
 
+def test_usage_infers_missing_value_from_overlapping_descendants_with_reported_overlap() -> None:
+    usage = Usage(input_audio_tokens=300, cache_read_tokens=200, cache_audio_read_tokens=50)
+
+    assert usage.input_tokens == 450
+
+
 def test_usage_infers_missing_value_from_non_overlapping_synthetic_descendants() -> None:
     with _active_registry(
         {
@@ -886,6 +892,23 @@ def test_usage_missing_value_inference_returns_zero_without_descendants() -> Non
     usage = Usage(output_tokens=100)
 
     assert usage.input_tokens == 0
+
+
+def test_usage_missing_value_inference_rejects_underdetermined_overlap() -> None:
+    usage = Usage(input_audio_tokens=300, cache_read_tokens=200)
+
+    with pytest.raises(
+        ValueError,
+        match='Cannot infer input_tokens from reported usage keys cache_read_tokens, input_audio_tokens',
+    ):
+        _ = usage.input_tokens
+
+
+def test_usage_missing_value_inference_rejects_contradictory_descendants() -> None:
+    usage = Usage(input_audio_tokens=50, cache_audio_read_tokens=100)
+
+    with pytest.raises(ValueError, match='Contradictory usage data for input_tokens'):
+        _ = usage.input_tokens
 
 
 def test_usage_missing_value_inference_is_not_cached() -> None:
