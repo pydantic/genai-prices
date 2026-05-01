@@ -21,7 +21,7 @@ There is still no separate runtime unit file. Runtime package startup reads gene
 **Provider prices and extractor destinations validate against the same registry payload.** _(from "Unit definitions travel with the prices that depend on them")_
 Build/export validation constructs the registry from `prices/units.yml`, validates provider price keys, ancestor coverage, join coverage, and extractor destinations, then writes the wrapped payload. Fetched wrapped payloads are parsed and structurally checked at runtime, but their model prices are treated as prevalidated by the publisher.
 
-The build/export validator is the publication trust boundary. It must be reusable outside the repo-specific build command so external payload producers can validate providers plus raw unit families before hosting data for `UpdatePrices(url=...)`. Client fetches should not re-run price-level validation for every model on every update.
+The build/export validator is the publication trust boundary. It must be reusable outside the repo-specific build command so external payload producers can validate providers plus raw unit families before hosting data for `UpdatePrices(url=...)`. Client fetches should not re-run price-level validation for every model on every update. Until Phase 5 adds runtime-private validation trust, standard runtime pricing still validates the selected model price every time before calculating against it.
 
 **Python base `ModelPrice` accepts registered non-hardcoded price keys.** _(from "Phase 3 makes repo-defined units an end-to-end feature")_
 Base `ModelPrice` stores candidate dynamic price-key kwargs outside the legacy dataclass fields and accepts or rejects them when validation has a registry context. A registered future key works on the base class without adding a new field. A misspelled key fails validation instead of disappearing.
@@ -30,4 +30,4 @@ Base `ModelPrice` stores candidate dynamic price-key kwargs outside the legacy d
 Phase 3 promises non-hardcoded registered key support for base `ModelPrice`. Plain Python dataclass subclasses accepting undeclared dynamic price-key kwargs require additional constructor interception and are handled as compatibility polish in Phase 4.
 
 **Runtime validation caching still waits for Phase 5.** _(from "Provider prices and extractor destinations validate against the same registry payload", "Python base `ModelPrice` accepts registered non-hardcoded price keys")_
-Phase 3 can repeat one-model validation when defensive runtime checks are needed. It must not add validation trust contexts, price-key fingerprints, dirty sets, generated validation markers, or decomposition caches.
+Phase 3 repeats one-model validation before every standard base pricing calculation, including for dynamic price keys. It must not add activation-time model-price validation, validation trust contexts, price-key fingerprints, dirty sets, generated validation markers, or decomposition caches.

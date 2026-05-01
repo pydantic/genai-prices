@@ -57,7 +57,7 @@ Supported mutation paths that add or remove registered price keys call this hook
 `ModelPrice.calc_price(...)` checks the active snapshot trust context before running one-model validation. It skips validation only when the same model object, exact registry `validation_id`, and current effective price-key fingerprint all match a trusted record. Missing or stale trust falls back to one-model validation and updates runtime-private state before pricing.
 
 **Snapshot activation records trust for newly validated prices.** _(implements "Runtime validation trust is snapshot- and registry-specific")_
-`set_custom_snapshot(snapshot)` validates missing, stale, custom, changed, runtime-authored, or otherwise untrusted model prices. After all validation succeeds, it records validation trust in the snapshot context. If validation fails, the previous active snapshot and its trust context remain in place.
+`set_custom_snapshot(snapshot)` validates missing, stale, custom, changed, runtime-authored, or otherwise untrusted model prices. This is the first phase that performs model-price validation during snapshot activation; earlier phases validate the selected model price on every standard base pricing call. After all validation succeeds, it records validation trust in the snapshot context. If validation fails, the previous active snapshot and its trust context remain in place.
 
 **JavaScript registry and validation modules gain fail-closed trust helpers.** _(implements "JavaScript validation trust fails closed")_
 Add helpers equivalent to:

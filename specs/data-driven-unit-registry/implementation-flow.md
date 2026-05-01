@@ -133,16 +133,16 @@ Generated package data is pure data. Runtime-private validation trust is created
 set_custom_snapshot(snapshot)
   -> if snapshot is None: clear custom snapshot
   -> validate the staged registry structure when needed
-  -> validate only custom, changed, runtime-authored, stale, or otherwise untrusted ModelPrice objects
-  -> validate candidate dynamic price keys against snapshot.unit_registry in Phase 3+
-  -> validate ancestor and join coverage for changed/custom price-key sets
-  -> validate extractor destinations against snapshot.unit_registry reported usage keys
+  -> in Phases 1-4: do not validate ModelPrice objects at activation time
+  -> in Phases 1-4: candidate dynamic price keys, ancestor coverage, and join coverage are validated on use by ModelPrice.calc_price()
+  -> validate extractor destinations only at lifecycle boundaries that already own extractor validation for the current phase
+  -> in Phase 5+: validate missing, custom, changed, runtime-authored, stale, or otherwise untrusted ModelPrice objects before recording trust
   -> in Phase 5+: record runtime-private validation state in the snapshot trust context
   -> on success: activate snapshot as the active runtime snapshot
   -> on failure: raise and keep the previous active snapshot
 ```
 
-Activation is the boundary where staged runtime objects become active runtime state. It must not bulk-revalidate unchanged trusted generated or fetched prices merely because one custom price changed.
+Activation is the boundary where staged runtime objects become active runtime state. Before Phase 5, it is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates. Phase 5 can add activation-time model-price validation only to seed runtime-private trust and skip repeated hot-path validation safely.
 
 ## Python Custom Price Flow
 
@@ -152,12 +152,13 @@ snapshot = get_snapshot() or an inactive snapshot returned from fetch()
   -> mutate relevant ModelPrice objects for registered price keys as needed
        -> in Phase 5+: mutation invalidates trust-context state for changed key sets
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
-       -> validate only custom/changed/stale/untrusted ModelPrice objects required for the current phase
-       -> do not revalidate unchanged trusted built-in prices just because one custom price changed
+       -> in Phases 1-4: activate without model-price validation
+       -> in Phase 5+: validate missing/custom/changed/stale/untrusted ModelPrice objects and record trust
        -> activate on success
   -> if snapshot is already active:
        -> supported mutations have already updated the active snapshot
-       -> changed prices are validated by the one-model calc fallback before pricing when needed
+       -> in Phases 1-4: changed prices are validated by the next standard base calc before pricing
+       -> in Phase 5+: changed key sets invalidate trust and are revalidated before trusted pricing
 ```
 
 Custom `ModelPrice` overrides receive the original usage object. The base `ModelPrice.calc_price()` wraps usage internally only for registry-driven pricing.
@@ -172,7 +173,8 @@ ModelInfo.calc_price(usage, provider, ...)
 ModelPrice.calc_price(usage)
   -> registry = get_snapshot().unit_registry
   -> validate this ModelPrice against registry
-       -> in Phase 5+: skip validation when active trust covers this ModelPrice fingerprint
+       -> in Phases 1-4: always run this one-model validation before pricing
+       -> in Phase 5+: skip validation only when active trust covers this ModelPrice fingerprint
   -> smart_usage = Usage.from_raw(usage)
   -> total_input_tokens = smart_usage.input_tokens only if any TieredPrices value needs a threshold
        -> otherwise use a neutral threshold because non-tiered prices ignore it
@@ -207,7 +209,8 @@ runtime update
   -> for fetched data-url update:
        -> treat parsed provider data as prevalidated for stagedFamilies without full price validation
   -> for user-provided staged data:
-       -> validate only custom, changed, or otherwise untrusted model prices
+       -> in Phases 1-4: parse structurally but do not validate model-price coverage at activation
+       -> in Phase 5+: validate missing, custom, changed, or otherwise untrusted model prices before recording trust
   -> on success only:
        -> setUnitFamilies(stagedFamilies)
        -> setProviderData(parsed.providers)

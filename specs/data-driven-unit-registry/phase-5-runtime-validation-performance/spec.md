@@ -11,6 +11,9 @@ The accepted registry shape, price-key validation rules, extractor validation ru
 **Runtime validation trust is snapshot- and registry-specific.** _(from "Performance optimizations must be behavior-preserving")_
 A model price can skip repeated validation only when the runtime can prove it is the same model price object, validated against the same registry validation identity, with the same effective price-key fingerprint.
 
+**Phase 5 is the first activation-time model-price validation phase.** _(from "Runtime validation trust is snapshot- and registry-specific")_
+Phases 1 through 4 validate model prices on use before every standard base pricing calculation. Phase 5 may move validation earlier for missing, custom, changed, runtime-authored, stale, or otherwise untrusted prices during snapshot activation, but only to record runtime-private trust that preserves the same accepted/rejected behavior as use-time validation.
+
 **Supported mutation paths invalidate trust when effective price keys change.** _(from "Runtime validation trust is snapshot- and registry-specific")_
 Adding or removing effective registered price keys makes prior validation stale. Setting a different value for an already-present key does not structurally require invalidation because ancestor and join coverage depend on keys, not values.
 

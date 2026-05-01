@@ -231,7 +231,7 @@ def calc_unit_price(
 
 The tier threshold remains the provided-or-inferable `input_tokens` total. If no configured price uses `TieredPrices`, pass a neutral threshold value because non-tiered prices ignore it. Families without a `direction` dimension contribute only to `total_price`; `input_price` and `output_price` are direction-filtered compatibility aggregates.
 
-Attribute assignment and deletion on `ModelPrice` do not run ancestor or join validation immediately. Validation is final-state validation at snapshot activation or a one-model defensive `calc_price()` fallback. Subclass-only fields that are not registered price keys remain subclass-owned state and must not trigger registry validation.
+Attribute assignment and deletion on `ModelPrice` do not run ancestor or join validation immediately. Phase 1 validates the final effective price-key set every time standard base `calc_price()` calculates against that `ModelPrice`. Snapshot activation does not perform model-price validation until Phase 5 adds runtime-private trust state. Subclass-only fields that are not registered price keys remain subclass-owned state and must not trigger registry validation.
 
 **Python extractor destinations become registry strings without certifying consistency.** _(implements "`Usage` becomes registry-aware and remains permissive for raw caller objects")_
 `UsageExtractorMapping.dest` becomes a string destination that must name an externally reported registry usage key when validation has a registry context:
@@ -270,7 +270,7 @@ def _bundled_snapshot() -> DataSnapshot:
     """Build the bundled snapshot from generated providers and unit families."""
 ```
 
-`set_custom_snapshot(snapshot)` keeps the public signature. For non-`None` snapshots, it validates only custom, changed, or otherwise untrusted model prices needed for registry-driven pricing, ignores subclass-only custom fields handled by custom overrides, and leaves the previous active snapshot in place on failure. It does not bulk-validate generated data and does not install validation trust state.
+`set_custom_snapshot(snapshot)` keeps the public signature. For non-`None` snapshots, it installs the staged snapshot without model-price validation. Price-key validity, ancestor coverage, join coverage, and missing-join safety are checked by standard base `ModelPrice.calc_price()` every time it calculates against a selected model price. Activation-time model-price validation and any resulting trust records are deferred to Phase 5.
 
 `DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their callable shape in Phase 1. Phase 1 does not add `self is get_snapshot()` execution guards; it relies on the ordinary active-global-snapshot workflow. `find_provider()`, `find_provider_model()`, and lookup caches remain pure lookup/staging helpers that work on inactive snapshots.
 
@@ -302,3 +302,4 @@ ModelInfo.calc_price(usage, provider, ...)
 
 **Tests prove behavior preservation plus registry semantics.** _(implements "Phase 1 proves the registry model in Python without changing public behavior")_
 Add focused Python tests for current price parity, current request pricing, `Usage` strict construction and permissive raw wrapping, lazy inference, inconsistent usage interpretation, ancestor and join validation, missing-join rejection for the current subset, custom `ModelPrice` subclass preservation, `DataSnapshot` registry defaults, and unchanged provider-array update parsing.
+Include coverage that an invalid staged/custom model price is not rejected by `set_custom_snapshot(...)` in Phase 1, but is rejected when standard base pricing calculates against that model price.

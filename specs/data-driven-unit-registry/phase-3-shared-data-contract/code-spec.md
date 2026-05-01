@@ -92,8 +92,8 @@ Add `_extra_prices: dict[str, Decimal | TieredPrices | None]` to base `ModelPric
 
 `__getattr__`, supported assignment, deletion, `is_free()`, string rendering, and effective price-key iteration must include both legacy fields and `_extra_prices`. Any `_extra_prices` key that is not registered in the validation registry is invalid. Declared subclass-only custom fields remain custom override state unless their names are also registered price keys.
 
-**Python snapshot activation becomes stricter for dynamic price data.** _(implements "Python base `ModelPrice` accepts registered non-hardcoded price keys", "Runtime validation caching still waits for Phase 5")_
-`set_custom_snapshot(snapshot)` validates candidate dynamic keys, ancestor coverage, join coverage, and extractor destinations against `snapshot.unit_registry` for custom, changed, runtime-authored, or otherwise untrusted objects. It still skips unchanged trusted generated/fetched prices and still leaves the previous active snapshot in place on validation failure.
+**Python pricing validates dynamic price data on use.** _(implements "Python base `ModelPrice` accepts registered non-hardcoded price keys", "Runtime validation caching still waits for Phase 5")_
+`set_custom_snapshot(snapshot)` does not perform model-price validation in Phase 3. Standard base `ModelPrice.calc_price(...)` validates candidate dynamic keys, ancestor coverage, and join coverage against the active snapshot registry every time before calculating against the selected model price. Misspelled dynamic keys and incomplete dynamic price sets therefore fail on use. Activation-time model-price validation and trust records remain Phase 5 work.
 
 **Runtime update paths parse wrapped payloads atomically.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
 Python `UpdatePrices.fetch()` parses `unit_families` and `providers`, constructs `UnitRegistry(raw['unit_families'])`, and returns `DataSnapshot(providers=..., unit_registry=...)`:
@@ -111,7 +111,7 @@ JavaScript `api.ts` stages runtime updates in this order:
 3. parse providers
 4. on success only, replace active unit families and active provider data
 
-If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
+If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. Runtime update activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
 
 `updatePrices()` passes both provider-data and unit-family activation callbacks through the storage factory:
 
@@ -129,4 +129,4 @@ Checked-in JavaScript browser and node examples that cache provider data must ca
 Generated Python and JavaScript package data remain pure data. They must not contain validation markers, trust flags, fingerprints, marker constructor arguments, decomposition plans, or cached coefficients. Runtime-private trust state starts in Phase 5.
 
 **Tests cover the wrapper and dynamic-key boundary.** _(implements "Phase 3 makes repo-defined units an end-to-end feature")_
-Add tests for wrapped full/slim payload schemas, Python and JavaScript runtime update parsing, generated package data exports, complete-registry join-closedness, build/export validation for prices and extractor destinations, base Python `ModelPrice` with a registered non-hardcoded key, rejection of misspelled dynamic keys, and unchanged generated-output purity with no validation artifacts.
+Add tests for wrapped full/slim payload schemas, Python and JavaScript runtime update parsing, generated package data exports, complete-registry join-closedness, build/export validation for prices and extractor destinations, base Python `ModelPrice` with a registered non-hardcoded key, rejection of misspelled dynamic keys during pricing, no Phase 3 activation-time model-price validation, and unchanged generated-output purity with no validation artifacts.
