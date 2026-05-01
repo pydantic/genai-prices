@@ -47,6 +47,10 @@ class DataSnapshot:
     )
     timestamp: datetime = field(default_factory=datetime.now)
 
+    def __post_init__(self) -> None:
+        if self.unit_registry is None:
+            self.unit_registry = get_snapshot().unit_registry
+
     def active(self, ttl: timedelta) -> bool:
         """Check if the snapshot is "active" (e.g. hasn't expired) based on a time to live."""
         return self.timestamp + ttl > datetime.now()

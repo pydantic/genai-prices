@@ -8,7 +8,7 @@ import pytest
 import ruamel.yaml
 
 from genai_prices import data
-from genai_prices.data_snapshot import get_snapshot
+from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
 from genai_prices.types import Usage
 from genai_prices.units import UnitRegistry, _get_registry
@@ -718,3 +718,30 @@ def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> Non
         ],
         check=True,
     )
+
+
+def test_custom_snapshots_default_to_active_registry() -> None:
+    active_registry = get_snapshot().unit_registry
+
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    assert snapshot.unit_registry is active_registry
+
+
+def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+    finally:
+        set_custom_snapshot(None)
+
+
+def test_inactive_snapshot_lookup_helpers_continue_to_work() -> None:
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
+
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'
