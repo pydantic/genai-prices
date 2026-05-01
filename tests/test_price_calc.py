@@ -289,6 +289,18 @@ def test_calc_unit_price_handles_tiered_prices() -> None:
     assert calc_unit_price(price, 10, total_input_tokens=101, per=1_000) == Decimal('0.02')
 
 
+def test_tiered_price_regression_uses_provided_input_token_threshold() -> None:
+    price = ModelPrice(
+        output_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=100_000, price=Decimal('2'))])
+    ).calc_price(Usage(input_tokens=100_000, input_audio_tokens=200_000, output_tokens=10_000))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0.01'),
+        'total_price': Decimal('0.01'),
+    }
+
+
 def test_calc_unit_price_uses_non_million_normalization_factor() -> None:
     assert calc_unit_price(Decimal('12'), 2, total_input_tokens=0, per=1_000) == Decimal('0.024')
 
