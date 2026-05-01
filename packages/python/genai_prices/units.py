@@ -77,3 +77,11 @@ class UnitRegistry:
     @staticmethod
     def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
         return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
+
+    @staticmethod
+    def are_compatible(a: UnitDef, b: UnitDef) -> bool:
+        """Return whether two units can overlap without conflicting dimensions."""
+        if a.family is not b.family:
+            return False
+
+        return all(b.dimensions.get(key, value) == value for key, value in a.dimensions.items())

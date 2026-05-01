@@ -111,3 +111,29 @@ def test_unit_registry_indexes_ancestor_usage_keys() -> None:
         {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'}
     )
     assert registry._ancestor_usage_keys['requests'] == frozenset()
+
+
+def test_unit_registry_compatibility_rejects_cross_family_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not UnitRegistry.are_compatible(registry.units['input_tokens'], registry.units['requests'])
+
+
+def test_unit_registry_compatibility_rejects_conflicting_dimensions() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not UnitRegistry.are_compatible(registry.units['input_tokens'], registry.units['output_tokens'])
+
+
+def test_unit_registry_compatibility_accepts_parent_child_pairs() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert UnitRegistry.are_compatible(registry.units['input_tokens'], registry.units['cache_read_tokens'])
+    assert UnitRegistry.are_compatible(registry.units['cache_read_tokens'], registry.units['input_tokens'])
+
+
+def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert UnitRegistry.are_compatible(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
+    assert UnitRegistry.are_compatible(registry.units['input_audio_tokens'], registry.units['cache_read_tokens'])
