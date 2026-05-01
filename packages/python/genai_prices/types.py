@@ -223,7 +223,10 @@ class Usage:
 
     def __getattr__(self, name: str) -> int:
         if name in _reported_usage_keys():
-            return self._values.get(name, 0)
+            if name in self._values:
+                return self._values[name]
+
+            return self._infer_missing_value(name)
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
@@ -239,6 +242,9 @@ class Usage:
                 self._values.pop(key, None)
             else:
                 self._values[key] = value
+
+    def reported_value(self, usage_key: str) -> int:
+        return self._values.get(usage_key, 0)
 
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
@@ -270,6 +276,31 @@ class Usage:
 
     def _ordered_values(self) -> list[tuple[str, int]]:
         return [(key, self._values[key]) for key in _reported_usage_key_order() if key in self._values]
+
+    def _infer_missing_value(self, usage_key: str) -> int:
+        from genai_prices.units import UnitRegistry, _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
+        requested_unit = registry.units[usage_key]
+        descendant_values = [
+            (unit, value)
+            for reported_key, value in self._values.items()
+            if (unit := registry.units.get(reported_key)) is not None
+            and unit is not requested_unit
+            and UnitRegistry.is_ancestor_or_self(requested_unit, unit)
+        ]
+        if not descendant_values:
+            return 0
+
+        broadest_reported_descendants = [
+            (unit, value)
+            for unit, value in descendant_values
+            if not any(
+                other_unit is not unit and UnitRegistry.is_ancestor_or_self(other_unit, unit)
+                for other_unit, _ in descendant_values
+            )
+        ]
+        return sum(value for _, value in broadest_reported_descendants)
 
 
 @dataclass
@@ -409,7 +440,7 @@ class UsageExtractor:
         for mapping in self.mappings:
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
-                current_value = getattr(usage, mapping.dest) or 0
+                current_value = usage.reported_value(mapping.dest)
                 setattr(usage, mapping.dest, current_value + value)
                 values_set = True
         if not values_set:

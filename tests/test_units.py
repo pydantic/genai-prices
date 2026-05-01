@@ -1,6 +1,8 @@
 import json
 import subprocess
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
@@ -28,6 +30,16 @@ def _load_units() -> dict[str, Any]:
     yaml = ruamel.yaml.YAML(typ='safe')
     with Path('prices/units.yml').open() as f:
         return cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+
+
+@contextmanager
+def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
+    registry = UnitRegistry(raw_families)
+    set_custom_snapshot(DataSnapshot(providers=data.providers, from_auto_update=False, unit_registry=registry))
+    try:
+        yield registry
+    finally:
+        set_custom_snapshot(None)
 
 
 def test_units_yml_defines_current_python_unit_surface() -> None:
@@ -829,3 +841,55 @@ def test_usage_from_raw_skips_explicit_none_values() -> None:
 def test_usage_from_raw_does_not_loosen_direct_construction() -> None:
     with pytest.raises(ValueError, match='Unknown usage key: sausage_tokens'):
         Usage(input_tokens=100, sausage_tokens=50)
+
+
+def test_usage_infers_missing_value_from_descendant() -> None:
+    usage = Usage(input_audio_tokens=300)
+
+    assert usage.input_tokens == 300
+
+
+def test_usage_infers_missing_value_from_non_overlapping_synthetic_descendants() -> None:
+    with _active_registry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'input_text_tokens': {
+                        'price_key': 'input_text_mtok',
+                        'dimensions': {'direction': 'input', 'modality': 'text'},
+                    },
+                    'input_audio_tokens': {
+                        'price_key': 'input_audio_mtok',
+                        'dimensions': {'direction': 'input', 'modality': 'audio'},
+                    },
+                },
+            },
+        }
+    ):
+        usage = Usage(input_text_tokens=200, input_audio_tokens=300)
+
+        assert usage.input_tokens == 500
+
+
+def test_usage_returns_stored_value_without_auditing_descendants() -> None:
+    usage = Usage(input_tokens=100, input_audio_tokens=300)
+
+    assert usage.input_tokens == 100
+
+
+def test_usage_missing_value_inference_returns_zero_without_descendants() -> None:
+    usage = Usage(output_tokens=100)
+
+    assert usage.input_tokens == 0
+
+
+def test_usage_missing_value_inference_is_not_cached() -> None:
+    usage = Usage(input_audio_tokens=300)
+
+    assert usage.input_tokens == 300
+    assert 'input_tokens' not in usage._values
