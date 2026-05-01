@@ -3,7 +3,10 @@
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
 **Baseline:** this phase starts from the pre-registry Python package and current provider-array `data.json` / `data_slim.json` contract.
 
-**Phase 1 adds Python registry modules for the current unit surface.** _(implements "Phase 1 proves the registry model in Python without changing public behavior")_
+**Start from the shared model, then implement the Python slice.** _(implements "Phase 1 is the first implementation slice of the shared pricing goal", "The Phase 1 registry model has four runtime pieces")_
+Read [../spec](../spec.md) for the pricing invariants and vocabulary: accurate pricing, complete price data, incomplete usage data, unit families, usage keys, price keys, dimensions, and registry-driven decomposition. This code spec only describes the Python delta needed for Phase 1.
+
+**Phase 1 adds Python registry modules for the current unit surface.** _(implements "Phase 1 proves the Python registry model without changing public behavior")_
 Add these hand-written Python runtime modules:
 
 - `packages/python/genai_prices/units.py`
