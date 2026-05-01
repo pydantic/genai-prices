@@ -183,6 +183,28 @@ def test_model_price_registry_decomposition_handles_audio_cache_overlap() -> Non
     }
 
 
+def test_overlap_price_parity_handles_cached_audio_overlap() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_read_mtok=Decimal('0.25'),
+        input_audio_mtok=Decimal('2'),
+        cache_audio_read_mtok=Decimal('0.5'),
+    ).calc_price(
+        Usage(
+            input_tokens=1_000,
+            cache_read_tokens=400,
+            input_audio_tokens=300,
+            cache_audio_read_tokens=100,
+        )
+    )
+
+    assert price == {
+        'input_price': Decimal('0.000925'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.000925'),
+    }
+
+
 def test_model_price_registry_decomposition_handles_output_audio() -> None:
     price = ModelPrice(output_mtok=Decimal('5'), output_audio_mtok=Decimal('10')).calc_price(
         Usage(output_tokens=700, output_audio_tokens=200)
@@ -192,6 +214,18 @@ def test_model_price_registry_decomposition_handles_output_audio() -> None:
         'input_price': Decimal('0'),
         'output_price': Decimal('0.0045'),
         'total_price': Decimal('0.0045'),
+    }
+
+
+def test_overlap_price_parity_handles_output_audio() -> None:
+    price = ModelPrice(output_mtok=Decimal('5'), output_audio_mtok=Decimal('9')).calc_price(
+        Usage(output_tokens=800, output_audio_tokens=300)
+    )
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0.0052'),
+        'total_price': Decimal('0.0052'),
     }
 
 
