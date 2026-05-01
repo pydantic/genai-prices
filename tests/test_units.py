@@ -1,7 +1,9 @@
 import json
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, cast
 
 import pytest
@@ -787,3 +789,43 @@ def test_usage_repr_preserves_legacy_snapshot_order() -> None:
     assert repr(Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)) == (
         'Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)'
     )
+
+
+def test_usage_from_raw_reads_known_mapping_keys() -> None:
+    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
+
+    assert usage == Usage(input_tokens=100, output_tokens=50)
+
+
+def test_usage_from_raw_reads_known_object_attributes() -> None:
+    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=50))
+
+    assert usage == Usage(input_tokens=100, output_tokens=50)
+
+
+def test_usage_from_raw_reads_known_dataclass_attributes() -> None:
+    @dataclass
+    class RawUsage:
+        input_tokens: int
+        output_tokens: int
+
+    usage = Usage.from_raw(RawUsage(input_tokens=100, output_tokens=50))
+
+    assert usage == Usage(input_tokens=100, output_tokens=50)
+
+
+def test_usage_from_raw_ignores_unknown_extras() -> None:
+    usage = Usage.from_raw({'input_tokens': 100, 'sausage_tokens': 50})
+
+    assert usage == Usage(input_tokens=100)
+
+
+def test_usage_from_raw_skips_explicit_none_values() -> None:
+    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': None})
+
+    assert usage == Usage(input_tokens=100)
+
+
+def test_usage_from_raw_does_not_loosen_direct_construction() -> None:
+    with pytest.raises(ValueError, match='Unknown usage key: sausage_tokens'):
+        Usage(input_tokens=100, sausage_tokens=50)

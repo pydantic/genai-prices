@@ -200,6 +200,19 @@ class Usage:
         object.__setattr__(self, '_values', {})
         self._store_values(kwargs)
 
+    @classmethod
+    def from_raw(cls, obj: object) -> Usage:
+        if isinstance(obj, Usage):
+            return obj
+
+        values: dict[str, int] = {}
+        for key in _reported_usage_keys():
+            value = _raw_usage_value(obj, key)
+            if value is not None:
+                values[key] = value
+
+        return cls(**values)
+
     def __setattr__(self, name: str, value: int | None) -> None:
         if name == '_values':
             object.__setattr__(self, name, value)
@@ -525,6 +538,19 @@ def _reported_usage_key_order() -> tuple[str, ...]:
     registry_keys = tuple(_get_registry().reported_usage_keys())
     extra_keys = tuple(key for key in registry_keys if key not in _USAGE_REPR_ORDER)
     return _USAGE_REPR_ORDER + extra_keys
+
+
+def _raw_usage_value(obj: object, key: str) -> int | None:
+    if isinstance(obj, Mapping):
+        value = cast(Mapping[str, object], obj).get(key)
+        if value is None:
+            return None
+        return cast(int, value)
+
+    value = getattr(obj, key, None)
+    if value is None:
+        return None
+    return cast(int, value)
 
 
 @dataclass
