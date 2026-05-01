@@ -90,3 +90,24 @@ def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
 
     assert registry.units['input_characters'].price_key == 'input_characters'
     assert registry.price_keys['input_characters'] == 'input_characters'
+
+
+def test_unit_registry_indexes_units_by_dimension_set() -> None:
+    registry = UnitRegistry(_load_units())
+
+    token_units_by_dimension = registry._units_by_dimension['tokens']
+
+    assert token_units_by_dimension[frozenset({('direction', 'input')})] is registry.units['input_tokens']
+    assert (
+        token_units_by_dimension[frozenset({('direction', 'input'), ('modality', 'audio')})]
+        is registry.units['input_audio_tokens']
+    )
+
+
+def test_unit_registry_indexes_ancestor_usage_keys() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert registry._ancestor_usage_keys['cache_audio_read_tokens'] == frozenset(
+        {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'}
+    )
+    assert registry._ancestor_usage_keys['requests'] == frozenset()
