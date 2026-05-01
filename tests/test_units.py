@@ -576,6 +576,44 @@ def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
+def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
+    with _active_registry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'sausage_tokens': {
+                        'price_key': 'sausage_mtok',
+                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
+                    },
+                },
+            },
+        }
+    ):
+        assert ModelPrice().sausage_mtok is None
+
+
+def test_model_price_getattr_rejects_unknown_attributes() -> None:
+    with pytest.raises(AttributeError, match='imaginary_price'):
+        _ = ModelPrice().imaginary_price
+
+
+def test_model_price_getattr_preserves_subclass_only_fields() -> None:
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_price: Decimal | None = None
+
+    assert CustomModelPrice(sausage_price=Decimal('3')).sausage_price == Decimal('3')
+
+
+def test_model_price_getattr_does_not_change_string_rendering() -> None:
+    assert str(ModelPrice(input_mtok=Decimal('1'))) == '$1/input MTok'
+
+
 def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -> None:
     registry = UnitRegistry(_load_units())
 

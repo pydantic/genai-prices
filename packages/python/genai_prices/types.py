@@ -886,6 +886,14 @@ class ModelPrice:
     def is_free(self) -> bool:
         return all(_price_value_is_free(getattr(self, field.name)) for field in dataclasses.fields(self))
 
+    def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        if name in _get_registry().price_keys:
+            return None
+
+        raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+
 
 def calc_mtok_price(
     field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
