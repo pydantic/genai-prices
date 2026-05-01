@@ -191,44 +191,72 @@ class ExtractedUsage:
 AbstractUsage = object
 
 
-@dataclass
 class Usage:
     """Simple token usage container."""
 
-    input_tokens: int | None = None
-    """Number of input/prompt tokens."""
+    _values: dict[str, int]
 
-    cache_write_tokens: int | None = None
-    """Number of tokens written to the cache."""
-    cache_read_tokens: int | None = None
-    """Number of tokens read from the cache."""
+    def __init__(self, **kwargs: int | None) -> None:
+        object.__setattr__(self, '_values', {})
+        self._store_values(kwargs)
 
-    output_tokens: int | None = None
-    """Number of output/completion tokens."""
+    def __setattr__(self, name: str, value: int | None) -> None:
+        if name == '_values':
+            object.__setattr__(self, name, value)
+        elif name in _reported_usage_keys():
+            self._store_values({name: value})
+        else:
+            object.__setattr__(self, name, value)
 
-    input_audio_tokens: int | None = None
-    """Number of audio input tokens."""
-    cache_audio_read_tokens: int | None = None
-    """Number of audio tokens read from the cache."""
-    output_audio_tokens: int | None = None
-    """Number of output audio tokens."""
+    def __getattr__(self, name: str) -> int:
+        if name in _reported_usage_keys():
+            return self._values.get(name, 0)
+
+        raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+
+    def _store_values(self, values: Mapping[str, int | None]) -> None:
+        reported_usage_keys = _reported_usage_keys()
+        unknown_keys = values.keys() - reported_usage_keys
+        if unknown_keys:
+            bad_keys = ', '.join(sorted(unknown_keys))
+            raise ValueError(f'Unknown usage key: {bad_keys}')
+
+        for key, value in values.items():
+            if value is None:
+                self._values.pop(key, None)
+            else:
+                self._values[key] = value
 
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
             return NotImplemented
 
-        def _add_option(a: int | None, b: int | None) -> int | None:
-            return None if a is b is None else (a or 0) + (b or 0)
-
         return Usage(
             **{
-                field.name: _add_option(getattr(self, field.name), getattr(other, field.name))
-                for field in dataclasses.fields(self)
+                key: self._values.get(key, 0) + other._values.get(key, 0)
+                for key in self._values.keys() | other._values.keys()
             }
         )
 
-    def __radd__(self, other: Usage) -> Usage:
-        return self + other
+    def __radd__(self, other: Usage | int) -> Usage:
+        if other == 0:
+            return self
+        if isinstance(other, Usage):
+            return other + self
+        return NotImplemented
+
+    def __eq__(self, other: object) -> Any:
+        if not isinstance(other, Usage):
+            return NotImplemented
+
+        return self._values == other._values
+
+    def __repr__(self) -> str:
+        values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
+        return f'Usage({values})'
+
+    def _ordered_values(self) -> list[tuple[str, int]]:
+        return [(key, self._values[key]) for key in _reported_usage_key_order() if key in self._values]
 
 
 @dataclass
@@ -472,6 +500,31 @@ def _dot_path(data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | 
 
 def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
+
+
+_USAGE_REPR_ORDER = (
+    'input_tokens',
+    'cache_write_tokens',
+    'cache_read_tokens',
+    'output_tokens',
+    'input_audio_tokens',
+    'cache_audio_read_tokens',
+    'output_audio_tokens',
+)
+
+
+def _reported_usage_keys() -> frozenset[str]:
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    return _get_registry().reported_usage_keys()
+
+
+def _reported_usage_key_order() -> tuple[str, ...]:
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry_keys = tuple(_get_registry().reported_usage_keys())
+    extra_keys = tuple(key for key in registry_keys if key not in _USAGE_REPR_ORDER)
+    return _USAGE_REPR_ORDER + extra_keys
 
 
 @dataclass

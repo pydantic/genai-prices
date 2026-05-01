@@ -745,3 +745,45 @@ def test_inactive_snapshot_lookup_helpers_continue_to_work() -> None:
 
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:
+    usage = Usage(input_tokens=100, output_tokens=None)
+
+    assert usage.input_tokens == 100
+    assert usage.output_tokens == 0
+
+
+def test_usage_direct_construction_rejects_unknown_keywords() -> None:
+    with pytest.raises(ValueError, match='Unknown usage key: imaginary_tokens'):
+        Usage(imaginary_tokens=1)
+
+
+def test_usage_direct_construction_rejects_pricing_only_requests() -> None:
+    with pytest.raises(ValueError, match='Unknown usage key: requests'):
+        Usage(requests=1)
+
+
+def test_usage_missing_registered_reads_return_zero() -> None:
+    usage = Usage()
+
+    assert usage.input_tokens == 0
+    assert usage.cache_audio_read_tokens == 0
+
+
+def test_usage_addition_operates_on_reported_values() -> None:
+    assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=5) == Usage(
+        input_tokens=10,
+        output_tokens=15,
+    )
+
+
+def test_usage_equality_operates_on_reported_values() -> None:
+    assert Usage(input_tokens=0) != Usage()
+    assert Usage(input_tokens=0) == Usage(input_tokens=0)
+
+
+def test_usage_repr_preserves_legacy_snapshot_order() -> None:
+    assert repr(Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)) == (
+        'Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)'
+    )
