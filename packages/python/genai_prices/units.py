@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from itertools import combinations
 from typing import Any, cast
 
-__all__ = 'UnitDef', 'UnitFamily', 'UnitRegistry'
+__all__ = 'UnitDef', 'UnitFamily', 'UnitRegistry', '_get_registry'
 
 
 @dataclass(eq=False)
@@ -140,3 +140,13 @@ class UnitRegistry:
                                     f'between {ancestor.usage_key} and {descendant.usage_key}: '
                                     f'{missing_dimensions}'
                                 )
+
+
+def _get_registry() -> UnitRegistry:
+    from genai_prices.data_snapshot import get_snapshot
+
+    registry = get_snapshot().unit_registry
+    if registry is None:
+        raise RuntimeError('Active data snapshot has no unit registry')
+
+    return registry

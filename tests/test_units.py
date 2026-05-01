@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any, cast
 
@@ -9,7 +11,7 @@ from genai_prices import data
 from genai_prices.data_snapshot import get_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
 from genai_prices.types import Usage
-from genai_prices.units import UnitRegistry
+from genai_prices.units import UnitRegistry, _get_registry
 from genai_prices.validation import (
     validate_ancestor_coverage,
     validate_extractor_destinations,
@@ -699,3 +701,20 @@ def test_bundled_snapshot_lookup_helpers_still_work() -> None:
 
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_get_registry_returns_bundled_snapshot_registry() -> None:
+    snapshot = get_snapshot()
+
+    assert _get_registry() is snapshot.unit_registry
+
+
+def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> None:
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            ("from genai_prices.units import UnitRegistry; UnitRegistry({'tokens': {'per': 1, 'units': {}}})"),
+        ],
+        check=True,
+    )
