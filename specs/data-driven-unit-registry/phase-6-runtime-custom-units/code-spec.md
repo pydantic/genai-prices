@@ -34,18 +34,12 @@ class UnitRegistry:
 
 `add_units(...)` stages all supplied units against a candidate family, validates the complete candidate registry once, and commits only if the final state is valid. Unit dimension maps remain the only source of dimension keys and values.
 
-**Registry validation identity gains additive-compatibility semantics.** _(implements "Pure additive unit additions preserve trusted unchanged prices")_
-Phase 5 introduced exact registry validation identities. Phase 6 extends that model with explicit compatible validation ids:
+**Registry validation identity tracks mutation compatibility.** _(implements "Pure additive unit additions preserve trusted unchanged prices")_
+Phase 5 introduced exact registry validation identities. Phase 6 extends that model so pure additive registry mutations can preserve validation compatibility for unchanged trusted prices whose referenced units and price-key mappings still exist with the same meaning.
 
-```python
-class UnitRegistry:
-    validation_id: object
-    compatible_validation_ids: frozenset[object]
-```
+The exact private representation is an implementation decision. It may preserve an inherited compatibility id, record compatible prior ids, store a compatibility chain, or use an equivalent mechanism. An independently constructed or destructively mutated registry gets a different validation basis from its source. Validation trust can be reused only when the current effective price-key fingerprint matches and the registry can prove compatibility with the registry that validated that price.
 
-A pure additive registry mutation creates a fresh `validation_id` and carries forward the previous registry's `validation_id` plus its `compatible_validation_ids`. An independently constructed or destructively mutated registry gets a fresh `validation_id` and an empty compatibility set. Validation trust can be reused when the current effective price-key fingerprint matches and the price was validated against either the exact current `validation_id` or one of the current registry's compatible ids.
-
-**`DataSnapshot` exposes the supported custom-unit editing surface.** _(implements "Runtime unit and price patches happen through `DataSnapshot`", "Borrowed registry staging uses copy-on-write detachment")_
+**`DataSnapshot` exposes the supported custom-unit editing surface.** _(implements "Runtime unit and price patches happen through `DataSnapshot`", "Borrowed registry staging must be decided before mutation APIs land")_
 
 ```python
 @dataclass
@@ -68,7 +62,7 @@ class DataSnapshot:
         """Patch this snapshot with a validated batch of units for one family."""
 ```
 
-The methods detach or otherwise stage a borrowed registry before mutation so an inactive snapshot edit cannot mutate the currently active registry. Failed registry edits leave the snapshot's previous registry visible and unchanged. Direct mutation of private registry indexes is not a supported public API.
+The exact staging model must be chosen and documented when these APIs are implemented. Copy-on-write detachment, transactions, candidate registry objects, explicit copied snapshots, or another rollback model are acceptable. If a snapshot can hold a borrowed registry, including the earlier default active registry, the first unit edit must not mutate the active registry accidentally. Failed registry edits leave the snapshot's previous registry visible and unchanged. Direct mutation of private registry indexes is not a supported public API.
 
 **`set_custom_snapshot()` validates against the staged custom registry.** _(implements "Snapshot activation validates custom units, prices, and extractors together", "Pure additive unit additions preserve trusted unchanged prices")_
 
