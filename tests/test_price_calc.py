@@ -251,6 +251,26 @@ def test_model_price_registry_decomposition_prices_requests_only_in_total() -> N
     }
 
 
+def test_request_price_regression_counts_one_request_per_price_calculation() -> None:
+    price = ModelPrice(requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000, output_tokens=500))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.012'),
+    }
+
+
+def test_request_price_regression_contributes_only_to_total_price() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000))
+
+    assert price == {
+        'input_price': Decimal('0.001'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.013'),
+    }
+
+
 def test_calc_unit_price_matches_mtok_wrapper() -> None:
     assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
         Decimal('2.5'), 500_000, total_input_tokens=0
