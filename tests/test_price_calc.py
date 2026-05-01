@@ -120,6 +120,77 @@ def test_requests_kcount_prices():
     assert price.provider.name == snapshot('Perplexity')
 
 
+def test_model_price_registry_decomposition_matches_current_text_cache_pricing() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('2'),
+        cache_write_mtok=Decimal('0.5'),
+        cache_read_mtok=Decimal('0.25'),
+        output_mtok=Decimal('10'),
+    ).calc_price(Usage(input_tokens=1_000, cache_write_tokens=20, cache_read_tokens=30, output_tokens=100))
+
+    assert price == {
+        'input_price': Decimal('0.0019175'),
+        'output_price': Decimal('0.001'),
+        'total_price': Decimal('0.0029175'),
+    }
+
+
+def test_model_price_registry_decomposition_handles_audio_cache_overlap() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_read_mtok=Decimal('2'),
+        input_audio_mtok=Decimal('3'),
+        cache_audio_read_mtok=Decimal('4'),
+    ).calc_price(
+        Usage(
+            input_tokens=1_000,
+            cache_read_tokens=400,
+            input_audio_tokens=300,
+            cache_audio_read_tokens=100,
+        )
+    )
+
+    assert price == {
+        'input_price': Decimal('0.002'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.002'),
+    }
+
+
+def test_model_price_registry_decomposition_handles_output_audio() -> None:
+    price = ModelPrice(output_mtok=Decimal('5'), output_audio_mtok=Decimal('10')).calc_price(
+        Usage(output_tokens=700, output_audio_tokens=200)
+    )
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0.0045'),
+        'total_price': Decimal('0.0045'),
+    }
+
+
+def test_model_price_registry_decomposition_charges_unpriced_descendants_through_parent() -> None:
+    price = ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('10')).calc_price(
+        Usage(input_tokens=700, input_audio_tokens=200, output_tokens=70, output_audio_tokens=20)
+    )
+
+    assert price == {
+        'input_price': Decimal('0.0035'),
+        'output_price': Decimal('0.0007'),
+        'total_price': Decimal('0.0042'),
+    }
+
+
+def test_model_price_registry_decomposition_prices_requests_only_in_total() -> None:
+    price = ModelPrice(requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.012'),
+    }
+
+
 def test_calc_unit_price_matches_mtok_wrapper() -> None:
     assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
         Decimal('2.5'), 500_000, total_input_tokens=0

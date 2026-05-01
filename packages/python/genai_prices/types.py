@@ -822,54 +822,30 @@ class ModelPrice:
         registry = _get_registry()
         validate_model_price(_collect_effective_model_price_keys(self, registry), registry)
 
-        usage_data = cast(Any, usage)
+        usage_data = Usage.from_raw(usage)
+        grouped_units = _group_model_price_units_by_family(self, registry)
+        priced_counts = _compute_registry_priced_counts(grouped_units, usage_data)
+
         input_price = Decimal(0)
         output_price = Decimal(0)
+        total_price = Decimal(0)
+        total_input_tokens = usage_data.input_tokens
 
-        # Calculate total input tokens for tier determination
-        total_input_tokens = usage_data.input_tokens or 0
+        for family, units in grouped_units.items():
+            for unit in units:
+                unit_price = calc_unit_price(
+                    getattr(self, unit.price_key),
+                    priced_counts[unit.usage_key],
+                    total_input_tokens,
+                    family.per,
+                )
+                total_price += unit_price
 
-        uncached_audio_input_tokens = usage_data.input_audio_tokens or 0
-        if cache_audio_read_tokens := (usage_data.cache_audio_read_tokens or 0):
-            uncached_audio_input_tokens -= cache_audio_read_tokens
-
-        if uncached_audio_input_tokens < 0:
-            raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
-        input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
-
-        uncached_text_input_tokens = usage_data.input_tokens or 0
-        uncached_text_input_tokens -= uncached_audio_input_tokens
-        if cache_write_tokens := usage_data.cache_write_tokens:
-            uncached_text_input_tokens -= cache_write_tokens
-        if cache_read_tokens := usage_data.cache_read_tokens:
-            uncached_text_input_tokens -= cache_read_tokens
-
-        if uncached_text_input_tokens < 0:
-            raise ValueError('Uncached text input tokens cannot be negative')
-        input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_write_mtok, usage_data.cache_write_tokens, total_input_tokens)
-
-        cached_text_input_tokens = usage_data.cache_read_tokens or 0
-        cached_text_input_tokens -= cache_audio_read_tokens
-
-        if cached_text_input_tokens < 0:
-            raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-        input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(
-            self.cache_audio_read_mtok, usage_data.cache_audio_read_tokens, total_input_tokens
-        )
-
-        text_output_tokens = usage_data.output_tokens or 0
-        text_output_tokens -= usage_data.output_audio_tokens or 0
-        if text_output_tokens < 0:
-            raise ValueError('output_audio_tokens cannot be greater than output_tokens')
-        output_price += calc_mtok_price(self.output_mtok, text_output_tokens, total_input_tokens)
-        output_price += calc_mtok_price(self.output_audio_mtok, usage_data.output_audio_tokens, total_input_tokens)
-
-        total_price = input_price + output_price
-
-        if self.requests_kcount is not None:
-            total_price += self.requests_kcount / 1000
+                direction = unit.dimensions.get('direction')
+                if direction == 'input':
+                    input_price += unit_price
+                elif direction == 'output':
+                    output_price += unit_price
 
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
@@ -953,7 +929,7 @@ def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitR
     return set(_iter_effective_model_price_keys(model_price, registry))
 
 
-def _group_model_price_units_by_family(  # pyright: ignore[reportUnusedFunction]
+def _group_model_price_units_by_family(
     model_price: ModelPrice, registry: UnitRegistry
 ) -> dict[UnitFamily, set[UnitDef]]:
     groups: dict[UnitFamily, set[UnitDef]] = {}
@@ -964,9 +940,7 @@ def _group_model_price_units_by_family(  # pyright: ignore[reportUnusedFunction]
     return groups
 
 
-def _compute_registry_priced_counts(  # pyright: ignore[reportUnusedFunction]
-    grouped_units: Mapping[UnitFamily, set[UnitDef]], usage: Usage
-) -> dict[str, int]:
+def _compute_registry_priced_counts(grouped_units: Mapping[UnitFamily, set[UnitDef]], usage: Usage) -> dict[str, int]:
     from genai_prices.decompose import compute_leaf_values
 
     counts: dict[str, int] = {}
