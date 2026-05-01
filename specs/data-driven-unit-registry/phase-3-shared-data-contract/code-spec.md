@@ -25,6 +25,83 @@ The generated `data.json` schema also changes to describe this wrapped payload s
 **`prices/units.yml` expands to the complete repo-defined registry.** _(implements "The complete repo-defined registry starts here")_
 The built-in `tokens` family now includes the complete symmetric Phase 3 unit lattice needed by the prose spec. Each modality gets the same valid input/output/cache-read/cache-write patterns where those concepts make sense; nonsensical combinations such as output cache reads are not added. The `requests` family remains the explicit one-request-per-usage-object pricing unit.
 
+The complete built-in Phase 3 unit inventory is:
+
+```yaml
+tokens:
+  per: 1_000_000
+  description: Token counts
+  units:
+    input_tokens:
+      price_key: input_mtok
+      dimensions: { direction: input }
+    output_tokens:
+      price_key: output_mtok
+      dimensions: { direction: output }
+    cache_read_tokens:
+      price_key: cache_read_mtok
+      dimensions: { direction: input, cache: read }
+    cache_write_tokens:
+      price_key: cache_write_mtok
+      dimensions: { direction: input, cache: write }
+    input_text_tokens:
+      price_key: input_text_mtok
+      dimensions: { direction: input, modality: text }
+    output_text_tokens:
+      price_key: output_text_mtok
+      dimensions: { direction: output, modality: text }
+    cache_text_read_tokens:
+      price_key: cache_text_read_mtok
+      dimensions: { direction: input, modality: text, cache: read }
+    cache_text_write_tokens:
+      price_key: cache_text_write_mtok
+      dimensions: { direction: input, modality: text, cache: write }
+    input_audio_tokens:
+      price_key: input_audio_mtok
+      dimensions: { direction: input, modality: audio }
+    output_audio_tokens:
+      price_key: output_audio_mtok
+      dimensions: { direction: output, modality: audio }
+    cache_audio_read_tokens:
+      price_key: cache_audio_read_mtok
+      dimensions: { direction: input, modality: audio, cache: read }
+    cache_audio_write_tokens:
+      price_key: cache_audio_write_mtok
+      dimensions: { direction: input, modality: audio, cache: write }
+    input_image_tokens:
+      price_key: input_image_mtok
+      dimensions: { direction: input, modality: image }
+    output_image_tokens:
+      price_key: output_image_mtok
+      dimensions: { direction: output, modality: image }
+    cache_image_read_tokens:
+      price_key: cache_image_read_mtok
+      dimensions: { direction: input, modality: image, cache: read }
+    cache_image_write_tokens:
+      price_key: cache_image_write_mtok
+      dimensions: { direction: input, modality: image, cache: write }
+    input_video_tokens:
+      price_key: input_video_mtok
+      dimensions: { direction: input, modality: video }
+    output_video_tokens:
+      price_key: output_video_mtok
+      dimensions: { direction: output, modality: video }
+    cache_video_read_tokens:
+      price_key: cache_video_read_mtok
+      dimensions: { direction: input, modality: video, cache: read }
+    cache_video_write_tokens:
+      price_key: cache_video_write_mtok
+      dimensions: { direction: input, modality: video, cache: write }
+
+requests:
+  per: 1_000
+  description: Request counts. Explicit special case: one per Usage object passed to calc_price; not caller-supplied Usage.
+  units:
+    requests:
+      price_key: requests_kcount
+      dimensions: {}
+```
+
 `UnitRegistry` construction now validates full join-closedness for every family. The Phase 1/2 missing-join exception is removed for complete registries.
 
 **Generated package data reads and emits wrapped payloads.** _(implements "Unit definitions travel with the prices that depend on them")_
@@ -59,10 +136,10 @@ def validate_export_payload(
     providers: list[Provider],
     unit_families: dict[str, dict],
 ) -> UnitRegistry:
-    """Validate registry structure and all provider model prices before export."""
+    """Validate registry structure, provider model prices, and extractor destinations before export."""
 ```
 
-`build()` should load `prices/units.yml`, parse provider YAML, call `validate_export_payload(...)`, validate extractor destinations against externally reported usage keys, and only then write wrapped `data.json` and `data_slim.json`. External publishers can reuse the helper before hosting a payload for `UpdatePrices(url=...)`.
+`build()` should load `prices/units.yml`, parse provider YAML, call `validate_export_payload(...)`, and only then write wrapped `data.json` and `data_slim.json`. Extractor destination validation lives inside `validate_export_payload(...)` so external publishers get the same authoritative checks before hosting a payload for `UpdatePrices(url=...)`.
 
 The complete Phase 3 build/write flow is:
 

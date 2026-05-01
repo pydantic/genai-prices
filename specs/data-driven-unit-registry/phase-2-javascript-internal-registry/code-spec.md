@@ -66,7 +66,7 @@ export interface UnitFamily {
 export type ParsedFamilies = Record<string, UnitFamily>
 ```
 
-Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string`, but authoritative extractor-destination validation waits for the registry validation paths in Phase 3; Phase 2 must not expand the remote authoring surface.
+Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string` so JavaScript can consume generated current-subset data and extractor outputs through registry-aware helpers. Phase 2 does not add authoritative extractor-destination validation to runtime updates or the remote authoring surface; that starts in Phase 3 when wrapped payload export validation owns providers and unit families together.
 
 Public JavaScript callers still pass plain usage objects. The normalization step returns another plain object rather than a wrapper class. This preserves the existing call surface while allowing `calcPrice()`, decomposition, and extraction to share registry-aware reads internally.
 
@@ -119,7 +119,7 @@ Use the same semantics as Phase 1 Python and the shared [../algorithm](../algori
 Do not introduce cached decomposition plans or coefficients in this phase. Direct decomposition reads missing values through `getUsageValue(...)`, ignores unpriced reported values unless needed to infer a missing priced value, and raises user-facing errors for impossible priced buckets.
 
 **`validation.ts` mirrors Python's structural and price-level checks.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
-Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, extractor destinations, model prices, and provider data. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Standard `calcPrice(...)` calls model-price validation every time before decomposition. Do not add activation-time model-price validation, validation marker APIs, registry validation ids, `WeakMap` trust state, or decomposition caches.
+Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, model prices, and provider data. Extractor-destination validation helpers may exist for parity with Python and Phase 3 reuse, but Phase 2 only uses them in tests or local helper-level checks, not as an authoritative runtime-update gate. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Standard `calcPrice(...)` calls model-price validation every time before decomposition. Do not add activation-time model-price validation, validation marker APIs, registry validation ids, `WeakMap` trust state, or decomposition caches.
 
 Validation iterates the current model's effective price keys and uses parsed registry indexes or relationship helpers. It must not repeatedly scan the whole registry for every model when direct indexes are available, and it must not hardcode ordinary unit names. The explicit `requests` exclusion is allowed for caller/extractor usage.
 
