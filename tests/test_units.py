@@ -137,3 +137,36 @@ def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
 
     assert UnitRegistry.are_compatible(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
     assert UnitRegistry.are_compatible(registry.units['input_audio_tokens'], registry.units['cache_read_tokens'])
+
+
+def test_unit_registry_ancestor_helper_accepts_self() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert UnitRegistry.is_ancestor_or_self(registry.units['input_tokens'], registry.units['input_tokens'])
+
+
+def test_unit_registry_ancestor_helper_accepts_parent_child_pairs() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert UnitRegistry.is_ancestor_or_self(registry.units['input_tokens'], registry.units['cache_read_tokens'])
+    assert not UnitRegistry.is_ancestor_or_self(registry.units['cache_read_tokens'], registry.units['input_tokens'])
+
+
+def test_unit_registry_ancestor_helper_rejects_siblings() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not UnitRegistry.is_ancestor_or_self(
+        registry.units['cache_read_tokens'], registry.units['input_audio_tokens']
+    )
+
+
+def test_unit_registry_ancestor_helper_rejects_incompatible_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not UnitRegistry.is_ancestor_or_self(registry.units['input_tokens'], registry.units['output_tokens'])
+
+
+def test_unit_registry_ancestor_helper_rejects_cross_family_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not UnitRegistry.is_ancestor_or_self(registry.units['requests'], registry.units['input_tokens'])

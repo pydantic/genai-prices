@@ -85,3 +85,8 @@ class UnitRegistry:
             return False
 
         return all(b.dimensions.get(key, value) == value for key, value in a.dimensions.items())
+
+    @staticmethod
+    def is_ancestor_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
+        """Return whether ancestor contains descendant within the same family."""
+        return ancestor.family is descendant.family and UnitRegistry._is_dimension_subset(ancestor, descendant)
