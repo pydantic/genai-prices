@@ -8,10 +8,9 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import pytest
-import ruamel.yaml
 
 from genai_prices import calc_price, data
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
@@ -28,11 +27,7 @@ from genai_prices.types import (
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry
 from prices import package_data, prices_types as build_types
 
-
-def _load_units() -> dict[str, Any]:
-    yaml = ruamel.yaml.YAML(typ='safe')
-    with Path('prices/units.yml').open() as f:
-        return cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+from .unit_registry_helpers import load_units
 
 
 def _custom_price_key_unit_families() -> dict[str, Any]:
@@ -100,7 +95,7 @@ def _build_extractor(dest: str) -> build_types.UsageExtractor:
 
 
 def test_units_yml_defines_current_python_unit_surface() -> None:
-    raw_families = _load_units()
+    raw_families = load_units()
 
     assert set(raw_families) == {'tokens', 'requests'}
 
@@ -132,7 +127,7 @@ def test_units_yml_defines_current_python_unit_surface() -> None:
 
 
 def test_unit_registry_constructs_current_units() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert set(registry.families) == {'tokens', 'requests'}
     assert set(registry.units) == {
@@ -150,7 +145,7 @@ def test_unit_registry_constructs_current_units() -> None:
 
 
 def test_unit_registry_sets_family_and_unit_backrefs() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     token_family = registry.families['tokens']
     input_unit = registry.units['input_tokens']
@@ -180,7 +175,7 @@ def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
 
 
 def test_unit_registry_indexes_units_by_dimension_set() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     token_units_by_dimension = registry._units_by_dimension['tokens']
 
@@ -192,7 +187,7 @@ def test_unit_registry_indexes_units_by_dimension_set() -> None:
 
 
 def test_unit_registry_indexes_ancestor_usage_keys() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert registry._ancestor_usage_keys['cache_audio_read_tokens'] == frozenset(
         {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'}
@@ -201,46 +196,46 @@ def test_unit_registry_indexes_ancestor_usage_keys() -> None:
 
 
 def test_unit_registry_compatibility_rejects_cross_family_units() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert not UnitRegistry.are_compatible(registry.units['input_tokens'], registry.units['requests'])
 
 
 def test_unit_registry_compatibility_rejects_conflicting_dimensions() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert not UnitRegistry.are_compatible(registry.units['input_tokens'], registry.units['output_tokens'])
 
 
 def test_unit_registry_compatibility_accepts_parent_child_pairs() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert UnitRegistry.are_compatible(registry.units['input_tokens'], registry.units['cache_read_tokens'])
     assert UnitRegistry.are_compatible(registry.units['cache_read_tokens'], registry.units['input_tokens'])
 
 
 def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert UnitRegistry.are_compatible(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
     assert UnitRegistry.are_compatible(registry.units['input_audio_tokens'], registry.units['cache_read_tokens'])
 
 
 def test_unit_registry_ancestor_helper_accepts_self() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert UnitRegistry.is_ancestor_or_self(registry.units['input_tokens'], registry.units['input_tokens'])
 
 
 def test_unit_registry_ancestor_helper_accepts_parent_child_pairs() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert UnitRegistry.is_ancestor_or_self(registry.units['input_tokens'], registry.units['cache_read_tokens'])
     assert not UnitRegistry.is_ancestor_or_self(registry.units['cache_read_tokens'], registry.units['input_tokens'])
 
 
 def test_unit_registry_ancestor_helper_rejects_siblings() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert not UnitRegistry.is_ancestor_or_self(
         registry.units['cache_read_tokens'], registry.units['input_audio_tokens']
@@ -248,19 +243,19 @@ def test_unit_registry_ancestor_helper_rejects_siblings() -> None:
 
 
 def test_unit_registry_ancestor_helper_rejects_incompatible_units() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert not UnitRegistry.is_ancestor_or_self(registry.units['input_tokens'], registry.units['output_tokens'])
 
 
 def test_unit_registry_ancestor_helper_rejects_cross_family_units() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert not UnitRegistry.is_ancestor_or_self(registry.units['requests'], registry.units['input_tokens'])
 
 
 def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert (
         registry.find_join(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
@@ -269,7 +264,7 @@ def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
 
 
 def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert (
         registry.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
@@ -278,19 +273,19 @@ def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() ->
 
 
 def test_unit_registry_join_lookup_returns_none_for_incompatible_units() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert registry.find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
 
 
 def test_unit_registry_join_lookup_returns_none_for_missing_compatible_join() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
 
 
 def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert registry.reported_usage_keys() == frozenset(
         {
@@ -306,7 +301,7 @@ def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
 
 
 def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert 'requests' not in registry.reported_usage_keys()
 
@@ -438,7 +433,7 @@ def test_unit_registry_rejects_skipped_intermediate_dimension_sets() -> None:
 
 
 def test_unit_registry_current_token_subset_satisfies_interval_closure() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert registry.units['cache_audio_read_tokens'].dimensions == {
         'direction': 'input',
@@ -474,7 +469,7 @@ def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:
 
 
 def test_collect_effective_model_price_keys_reads_base_fields() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert _collect_effective_model_price_keys(
         ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')), registry
@@ -482,7 +477,7 @@ def test_collect_effective_model_price_keys_reads_base_fields() -> None:
 
 
 def test_collect_effective_model_price_keys_ignores_none_values() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     assert _collect_effective_model_price_keys(ModelPrice(input_mtok=Decimal('1'), output_mtok=None), registry) == {
         'input_mtok'
@@ -525,7 +520,7 @@ def test_model_price_getattr_does_not_change_string_rendering() -> None:
 
 
 def test_group_model_price_units_by_family_handles_token_prices() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     groups = _group_model_price_units_by_family(
         ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry
@@ -535,7 +530,7 @@ def test_group_model_price_units_by_family_handles_token_prices() -> None:
 
 
 def test_group_model_price_units_by_family_handles_request_prices() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     groups = _group_model_price_units_by_family(ModelPrice(requests_kcount=Decimal('1')), registry)
 
@@ -543,7 +538,7 @@ def test_group_model_price_units_by_family_handles_request_prices() -> None:
 
 
 def test_group_model_price_units_by_family_handles_mixed_families_in_field_order() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     groups = _group_model_price_units_by_family(
         ModelPrice(input_mtok=Decimal('1'), requests_kcount=Decimal('2')), registry
@@ -554,7 +549,7 @@ def test_group_model_price_units_by_family_handles_mixed_families_in_field_order
 
 
 def test_group_model_price_units_by_family_ignores_subclass_only_fields() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     @dataclass
     class CustomModelPrice(ModelPrice):
@@ -583,7 +578,7 @@ def test_group_model_price_units_by_family_handles_registered_custom_fields() ->
 
 
 def test_compute_registry_priced_counts_handles_parent_child_token_counts() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     grouped_units = _group_model_price_units_by_family(
         ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry
     )
@@ -595,7 +590,7 @@ def test_compute_registry_priced_counts_handles_parent_child_token_counts() -> N
 
 
 def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     grouped_units = _group_model_price_units_by_family(
         ModelPrice(
             input_mtok=Decimal('1'),
@@ -623,14 +618,14 @@ def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
 
 
 def test_compute_registry_priced_counts_handles_one_request_count() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     grouped_units = _group_model_price_units_by_family(ModelPrice(requests_kcount=Decimal('1')), registry)
 
     assert _compute_registry_priced_counts(grouped_units, Usage()) == {'requests': 1}
 
 
 def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_only_prices() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     grouped_units = _group_model_price_units_by_family(ModelPrice(requests_kcount=Decimal('1')), registry)
 
     assert set(_compute_registry_priced_counts(grouped_units, Usage(input_tokens=100))) == {'requests'}
@@ -667,7 +662,7 @@ tokens:
 
 
 def test_package_data_accepts_valid_provider_model_prices() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), requests_kcount=Decimal('1'))
     )
@@ -676,7 +671,7 @@ def test_package_data_accepts_valid_provider_model_prices() -> None:
 
 
 def test_package_data_validates_conditional_model_prices() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         [build_types.ConditionalPrice(prices=build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))]
     )
@@ -707,7 +702,7 @@ def test_package_data_model_price_validation_rejects_unknown_price_keys() -> Non
 
 
 def test_package_data_model_price_validation_rejects_missing_ancestors() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(build_types.ModelPrice(cache_read_mtok=Decimal('1')), model_id='missing-ancestor')
 
     with pytest.raises(
@@ -718,7 +713,7 @@ def test_package_data_model_price_validation_rejects_missing_ancestors() -> None
 
 
 def test_package_data_model_price_validation_rejects_required_joins() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(
             input_mtok=Decimal('1'),
@@ -736,7 +731,7 @@ def test_package_data_model_price_validation_rejects_required_joins() -> None:
 
 
 def test_package_data_model_price_validation_rejects_missing_join_units_for_conditional_prices() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         [
             build_types.ConditionalPrice(
@@ -761,13 +756,13 @@ def test_package_data_model_price_validation_rejects_missing_join_units_for_cond
 
 
 def test_package_data_accepts_current_provider_extractor_destinations() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
 
     package_data.validate_provider_extractor_destinations(data.providers, registry)
 
 
 def test_package_data_accepts_valid_synthetic_extractor_destinations() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1')),
         extractors=[_build_extractor('input_tokens')],
@@ -777,7 +772,7 @@ def test_package_data_accepts_valid_synthetic_extractor_destinations() -> None:
 
 
 def test_package_data_extractor_validation_rejects_price_keys() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1')),
         extractors=[_build_extractor('input_mtok')],
@@ -791,7 +786,7 @@ def test_package_data_extractor_validation_rejects_price_keys() -> None:
 
 
 def test_package_data_extractor_validation_rejects_unknown_destinations() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1')),
         extractors=[_build_extractor('imaginary_tokens')],
@@ -805,7 +800,7 @@ def test_package_data_extractor_validation_rejects_unknown_destinations() -> Non
 
 
 def test_package_data_extractor_validation_rejects_pricing_only_requests() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1')),
         extractors=[_build_extractor('requests')],
@@ -819,7 +814,7 @@ def test_package_data_extractor_validation_rejects_pricing_only_requests() -> No
 
 
 def test_package_data_extractor_validation_reports_multiple_invalid_destinations() -> None:
-    registry = UnitRegistry(_load_units())
+    registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1')),
         extractors=[
