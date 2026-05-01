@@ -51,6 +51,9 @@ class UnitRegistry:
 
             raw_units = cast(Mapping[str, Mapping[str, Any]], raw_family.get('units', {}))
             for usage_key, raw_unit in raw_units.items():
+                if usage_key in self.units:
+                    raise ValueError(f'Duplicate unit usage key: {usage_key}')
+
                 unit = UnitDef(
                     usage_key=usage_key,
                     price_key=cast(str, raw_unit.get('price_key', usage_key)),
@@ -58,6 +61,9 @@ class UnitRegistry:
                     family=family,
                     dimensions=dict(cast(Mapping[str, str], raw_unit.get('dimensions', {}))),
                 )
+                if unit.price_key in self.price_keys:
+                    raise ValueError(f'Duplicate unit price key: {unit.price_key}')
+
                 family.units[usage_key] = unit
                 self.units[usage_key] = unit
                 self.price_keys[unit.price_key] = usage_key

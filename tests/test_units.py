@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, cast
 
+import pytest
 import ruamel.yaml
 
 from genai_prices.units import UnitRegistry
@@ -222,3 +223,48 @@ def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> No
     registry = UnitRegistry(_load_units())
 
     assert 'requests' not in registry.reported_usage_keys()
+
+
+def test_unit_registry_rejects_duplicate_usage_keys_across_families() -> None:
+    with pytest.raises(ValueError, match='Duplicate unit usage key: input_tokens'):
+        UnitRegistry(
+            {
+                'tokens': {
+                    'per': 1_000_000,
+                    'units': {
+                        'input_tokens': {
+                            'dimensions': {'direction': 'input'},
+                        },
+                    },
+                },
+                'characters': {
+                    'per': 1_000,
+                    'units': {
+                        'input_tokens': {
+                            'dimensions': {'direction': 'input'},
+                        },
+                    },
+                },
+            }
+        )
+
+
+def test_unit_registry_rejects_duplicate_price_keys() -> None:
+    with pytest.raises(ValueError, match='Duplicate unit price key: input_mtok'):
+        UnitRegistry(
+            {
+                'tokens': {
+                    'per': 1_000_000,
+                    'units': {
+                        'input_tokens': {
+                            'price_key': 'input_mtok',
+                            'dimensions': {'direction': 'input'},
+                        },
+                        'input_audio_tokens': {
+                            'price_key': 'input_mtok',
+                            'dimensions': {'direction': 'input', 'modality': 'audio'},
+                        },
+                    },
+                },
+            }
+        )
