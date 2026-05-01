@@ -6,6 +6,7 @@ import pytest
 import ruamel.yaml
 
 from genai_prices import data
+from genai_prices.data_snapshot import get_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
 from genai_prices.types import Usage
 from genai_prices.units import UnitRegistry
@@ -682,3 +683,19 @@ def test_generated_python_unit_families_data_builds_registry() -> None:
 def test_remote_payload_roots_remain_provider_arrays() -> None:
     assert isinstance(json.loads(Path('prices/data.json').read_text()), list)
     assert isinstance(json.loads(Path('prices/data_slim.json').read_text()), list)
+
+
+def test_bundled_snapshot_carries_unit_registry() -> None:
+    snapshot = get_snapshot()
+
+    assert isinstance(snapshot.unit_registry, UnitRegistry)
+    assert set(snapshot.unit_registry.families) == {'tokens', 'requests'}
+
+
+def test_bundled_snapshot_lookup_helpers_still_work() -> None:
+    snapshot = get_snapshot()
+
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
+
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'

@@ -7,6 +7,7 @@ from functools import cache
 from typing import Any
 
 from . import types
+from .units import UnitRegistry
 
 __all__ = 'DataSnapshot', 'set_custom_snapshot'
 
@@ -22,9 +23,13 @@ def get_snapshot() -> DataSnapshot:
 
 @cache
 def _bundled_snapshot() -> DataSnapshot:
-    from .data import providers
+    from .data import providers, unit_families_data
 
-    return DataSnapshot(providers=providers, from_auto_update=False)
+    return DataSnapshot(
+        providers=providers,
+        from_auto_update=False,
+        unit_registry=UnitRegistry(unit_families_data),
+    )
 
 
 def set_custom_snapshot(snapshot: DataSnapshot | None):
@@ -36,6 +41,7 @@ def set_custom_snapshot(snapshot: DataSnapshot | None):
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
+    unit_registry: UnitRegistry | None = None
     _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]] = field(
         default_factory=lambda: {}
     )
