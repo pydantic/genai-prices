@@ -1,0 +1,101 @@
+# Code Spec: Phase 2 JavaScript Internal Registry Refactor
+
+**This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
+**Previous phase:** [Phase 1 Python Internal Registry Refactor](../phase-1-python-internal-registry/code-spec.md).
+
+**Phase 2 changes only the JavaScript package and shared packaging needed for JavaScript startup data.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
+Add these hand-written JavaScript/TypeScript modules:
+
+- `packages/js/src/units.ts`
+- `packages/js/src/usage.ts`
+- `packages/js/src/decompose.ts`
+- `packages/js/src/validation.ts`
+
+Modify:
+
+- `packages/js/src/types.ts`
+- `packages/js/src/engine.ts`
+- `packages/js/src/api.ts`
+- `packages/js/src/extractUsage.ts`
+- `packages/js/src/data.ts` (generated)
+- `prices/src/prices/package_data.py`
+
+Do not change `prices/data.json` or `prices/data_slim.json` into wrapped payloads in this phase.
+
+**`types.ts` becomes registry-compatible for usage, prices, and units.** _(implements "JavaScript preserves its plain-object public usage contract")_
+Represent caller usage and model prices as open records:
+
+```typescript
+export type Usage = Record<string, number | undefined>
+export type ModelPrice = Record<string, number | TieredPrices | undefined>
+```
+
+Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string`, but authoritative extractor-destination validation waits for the registry validation paths in Phase 3; Phase 2 must not expand the remote authoring surface.
+
+**`units.ts` parses generated unit family data and manages the active registry.** _(implements "The active JavaScript registry is limited to the current JavaScript unit surface")_
+Implement:
+
+```typescript
+export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies
+export function setUnitFamilies(families: ParsedFamilies | null): void
+export function getFamily(familyId: string): UnitFamily
+export function getUnit(usageKey: string): UnitDef
+export function getUnitForPriceKey(priceKey: string): UnitDef
+export function getUsageKeyForPriceKey(priceKey: string): string
+export function getAllUsageKeys(): Set<string>
+export function getAllPriceKeys(): Set<string>
+```
+
+`parseFamilies(...)` fills family back-references, indexes price keys, validates uniqueness and interval closure, and skips full join-closedness for the current subset. `setUnitFamilies(null)` restores the generated bundled registry. Do not expose public runtime unit mutation APIs.
+
+**`usage.ts` provides registry-aware reads over plain objects.** _(implements "JavaScript preserves its plain-object public usage contract")_
+Implement:
+
+```typescript
+export type NormalizedUsage = Usage
+export function normalizeUsage(obj: unknown): NormalizedUsage
+export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
+```
+
+`normalizeUsage(...)` reads known externally reported usage keys, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly, lazily infers missing values when uniquely determined, returns zero for no relevant data, and throws user-facing errors for contradictory or underdetermined required inference. It does not cache inferred values or store provenance.
+
+**`decompose.ts` mirrors Python's dimension-driven decomposition.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
+Implement:
+
+```typescript
+export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean
+
+export function computeLeafValues(
+  pricedUsageKeys: Set<string>,
+  usage: NormalizedUsage,
+  family: UnitFamily,
+): Record<string, number>
+```
+
+Use the same semantics as Phase 1 Python and the shared [../algorithm](../algorithm.md). The requests family is priced explicitly in engine code, not read from caller usage.
+
+**`validation.ts` mirrors Python's structural and price-level checks.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
+Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, extractor destinations, model prices, and provider data. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Do not add validation marker APIs, registry validation ids, `WeakMap` trust state, or decomposition caches.
+
+**`engine.ts` switches from hardcoded arithmetic to registry-driven pricing.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
+`calcPrice(usage, modelPrice)` should:
+
+1. read the active parsed registry
+2. validate the current model price's effective registered price-key set
+3. normalize raw usage
+4. read `input_tokens` only when tiered prices need the threshold
+5. resolve price keys and group by family
+6. compute per-family leaf values
+7. price `requests` as one request per usage object
+8. normalize by `family.per`
+9. aggregate into the existing result shape
+
+Keep tiered-price semantics aligned with Python: a stored `input_tokens` total is used directly for tier selection, and missing totals are inferred only when coherent.
+
+**`api.ts` and generated startup data remain provider-array compatible.** _(implements "The shared remote payload shape remains unchanged", "Runtime updates stay atomic for provider data and registry state")_
+Generated `data.ts` exports both current provider data and current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `unitFamiliesData`.
+
+Runtime update URLs still return provider arrays. Phase 2 therefore keeps update parsing compatible with the existing provider-array payload and preserves the active generated registry while replacing provider data. If local user-provided staged data is validated, provider-data validation must happen against the active parsed registry and leave active state unchanged on failure.
+
+**Tests prove JavaScript parity and cross-language alignment.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
+Add JavaScript tests for current price parity, request pricing, usage normalization, lazy inference, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.

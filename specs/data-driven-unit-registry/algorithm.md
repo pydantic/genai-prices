@@ -6,11 +6,11 @@ registry and price-coverage rules in the prose spec: registry interval closure,
 registry join-closedness, price ancestor coverage, and price join coverage.
 Those rules reject sparse shapes that would make this formula silently wrong.
 
-The 1A/1B current-unit subset is a delivery exception: it may omit future join
-units so those units do not become public before the shared data contract can
-carry them. In that subset, price validation must reject any priced compatible
-pair whose join unit is absent before this formula runs. The current repo data
-does not price such a pair.
+The Phase 1 and Phase 2 current-unit subsets are delivery exceptions: they may
+omit future join units so those units do not become public before the shared
+data contract can carry them in Phase 3. In those subsets, price validation must
+reject any priced compatible pair whose join unit is absent before this formula
+runs. The current repo data does not price such a pair.
 
 ## Mobius Inversion on the Containment Poset
 
@@ -43,8 +43,8 @@ It is wrong when a registry allows a specific unit without structurally
 important intermediate units. For example, if a family has `input_tokens`,
 `cache_read_tokens`, and `cache_video_read_tokens`, but no
 `input_video_tokens`, the full-depth formula would add `cache_video_read_tokens`
-back into the `input_tokens` catch-all. That may be commercially wrong: cached
-video can be a special price while intermediate categories fall through to the
+back into the `input_tokens` catch-all. That is commercially wrong when cached
+video has a special price while intermediate categories fall through to the
 broader input price.
 
 The main spec resolves this with registry interval closure plus registry
@@ -56,7 +56,7 @@ as ordinary input tokens, the model repeats the numeric price explicitly. That
 duplication is intentional; it keeps the registry and price data structurally
 complete and lets the full-depth formula remain the general runtime rule.
 
-Before the complete 1C registry, the current-unit subset handles this by
+Before the complete Phase 3 registry, the current-unit subset handles this by
 forbidding priced sets that need a missing join. For example,
 `cache_write_tokens` and `input_audio_tokens` are compatible, but the subset
 does not expose `cache_audio_write_tokens`; a model price that includes both
