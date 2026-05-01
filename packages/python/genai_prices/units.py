@@ -97,3 +97,7 @@ class UnitRegistry:
             return None
 
         return self._units_by_dimension[a.family_id].get(frozenset(a.dimensions.items() | b.dimensions.items()))
+
+    def reported_usage_keys(self) -> frozenset[str]:
+        """Return registered keys callers may report, excluding Phase 1 pricing-only requests."""
+        return frozenset(usage_key for usage_key in self.units if usage_key != 'requests')

@@ -200,3 +200,25 @@ def test_unit_registry_join_lookup_returns_none_for_missing_compatible_join() ->
     registry = UnitRegistry(_load_units())
 
     assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
+
+
+def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert registry.reported_usage_keys() == frozenset(
+        {
+            'input_tokens',
+            'output_tokens',
+            'cache_read_tokens',
+            'cache_write_tokens',
+            'input_audio_tokens',
+            'cache_audio_read_tokens',
+            'output_audio_tokens',
+        }
+    )
+
+
+def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert 'requests' not in registry.reported_usage_keys()
