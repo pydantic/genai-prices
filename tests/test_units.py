@@ -17,8 +17,13 @@ import ruamel.yaml
 from genai_prices import data
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.decompose import compute_leaf_values, is_descendant_or_self
-from genai_prices.types import ModelPrice, Usage, _collect_effective_model_price_keys
-from genai_prices.units import UnitRegistry, _get_registry
+from genai_prices.types import (
+    ModelPrice,
+    Usage,
+    _collect_effective_model_price_keys,
+    _group_model_price_units_by_family,
+)
+from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry
 from genai_prices.validation import (
     validate_ancestor_coverage,
     validate_extractor_destinations,
@@ -43,6 +48,10 @@ def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
         yield registry
     finally:
         set_custom_snapshot(None)
+
+
+def _usage_keys_by_family(groups: dict[UnitFamily, set[UnitDef]]) -> dict[str, set[str]]:
+    return {family.id: {unit.usage_key for unit in units} for family, units in groups.items()}
 
 
 def test_units_yml_defines_current_python_unit_surface() -> None:
@@ -612,6 +621,80 @@ def test_model_price_getattr_preserves_subclass_only_fields() -> None:
 
 def test_model_price_getattr_does_not_change_string_rendering() -> None:
     assert str(ModelPrice(input_mtok=Decimal('1'))) == '$1/input MTok'
+
+
+def test_group_model_price_units_by_family_handles_token_prices() -> None:
+    registry = UnitRegistry(_load_units())
+
+    groups = _group_model_price_units_by_family(
+        ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry
+    )
+
+    assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens', 'cache_read_tokens'}}
+
+
+def test_group_model_price_units_by_family_handles_request_prices() -> None:
+    registry = UnitRegistry(_load_units())
+
+    groups = _group_model_price_units_by_family(ModelPrice(requests_kcount=Decimal('1')), registry)
+
+    assert _usage_keys_by_family(groups) == {'requests': {'requests'}}
+
+
+def test_group_model_price_units_by_family_handles_mixed_families_in_field_order() -> None:
+    registry = UnitRegistry(_load_units())
+
+    groups = _group_model_price_units_by_family(
+        ModelPrice(input_mtok=Decimal('1'), requests_kcount=Decimal('2')), registry
+    )
+
+    assert list(groups) == [registry.families['tokens'], registry.families['requests']]
+    assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens'}, 'requests': {'requests'}}
+
+
+def test_group_model_price_units_by_family_ignores_subclass_only_fields() -> None:
+    registry = UnitRegistry(_load_units())
+
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_price: Decimal | None = None
+
+    groups = _group_model_price_units_by_family(
+        CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('2')), registry
+    )
+
+    assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens'}}
+
+
+def test_group_model_price_units_by_family_handles_registered_custom_fields() -> None:
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'sausage_tokens': {
+                        'price_key': 'sausage_mtok',
+                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
+                    },
+                },
+            },
+        }
+    )
+
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_mtok: Decimal | None = None
+
+    groups = _group_model_price_units_by_family(
+        CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')), registry
+    )
+
+    assert list(groups) == [registry.families['tokens']]
+    assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens', 'sausage_tokens'}}
 
 
 def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -> None:

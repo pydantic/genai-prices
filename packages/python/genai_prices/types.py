@@ -2,7 +2,7 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -14,7 +14,7 @@ import pydantic
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
-    from genai_prices.units import UnitDef, UnitRegistry
+    from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 
 __all__ = (
     'ProviderID',
@@ -946,11 +946,24 @@ def _price_value_is_free(value: object) -> bool:
 def _collect_effective_model_price_keys(  # pyright: ignore[reportUnusedFunction]
     model_price: ModelPrice, registry: UnitRegistry
 ) -> set[str]:
-    return {
-        field.name
-        for field in dataclasses.fields(model_price)
-        if field.name in registry.price_keys and getattr(model_price, field.name) is not None
-    }
+    return set(_iter_effective_model_price_keys(model_price, registry))
+
+
+def _group_model_price_units_by_family(  # pyright: ignore[reportUnusedFunction]
+    model_price: ModelPrice, registry: UnitRegistry
+) -> dict[UnitFamily, set[UnitDef]]:
+    groups: dict[UnitFamily, set[UnitDef]] = {}
+    for price_key in _iter_effective_model_price_keys(model_price, registry):
+        unit = registry.units[registry.price_keys[price_key]]
+        groups.setdefault(unit.family, set()).add(unit)
+
+    return groups
+
+
+def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
+    for field in dataclasses.fields(model_price):
+        if field.name in registry.price_keys and getattr(model_price, field.name) is not None:
+            yield field.name
 
 
 @dataclass
