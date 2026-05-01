@@ -8,7 +8,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
-from genai_prices.types import Provider
+from genai_prices.types import ModelPrice, Provider, UsageExtractor, UsageExtractorMapping
 
 
 class MyMapping(Mapping[str, Any]):
@@ -275,6 +275,30 @@ def test_google_caching():
     assert calc_price(usage, model).total_price == snapshot(Decimal('0.0012623'))
 
 
+def test_google_caching_public_extraction_parity():
+    extracted_usage = extract_usage(gemini_response_data_caching, provider_id='google')
+
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=14152,
+            cache_read_tokens=12239,
+            output_tokens=129,
+            input_audio_tokens=150,
+            cache_audio_read_tokens=129,
+            output_audio_tokens=10,
+        )
+    )
+    assert extracted_usage.model is not None
+    assert (
+        extracted_usage.calc_price().total_price
+        == calc_price(
+            extracted_usage.usage,
+            extracted_usage.model.id,
+            provider_id='google',
+        ).total_price
+    )
+
+
 gemini_response_data_thoughtless = {
     'usageMetadata': {
         'promptTokenCount': 75,
@@ -326,6 +350,68 @@ def test_google_anthropic():
             Usage(input_tokens=483, cache_write_tokens=0, cache_read_tokens=0, output_tokens=78),
         )
     )
+
+
+def test_extractor_accumulates_by_destination_string() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
+            UsageExtractorMapping(path='cached_tokens', dest='input_tokens', required=False),
+            UsageExtractorMapping(path='missing_tokens', dest='output_tokens', required=False),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100, 'cached_tokens': 25}}) == (
+        'test-model',
+        Usage(input_tokens=125),
+    )
+
+
+def test_extractor_accumulates_repeated_destination_string_with_zero_values() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
+            UsageExtractorMapping(path='cached_tokens', dest='input_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 0, 'cached_tokens': 25}}) == (
+        'test-model',
+        Usage(input_tokens=25),
+    )
+
+
+def test_extractor_ignores_unknown_response_extras() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens')],
+    )
+
+    assert extractor.extract(
+        {'model': 'test-model', 'usage': {'prompt_tokens': 100, 'provider_specific_tokens': 999}}
+    ) == (
+        'test-model',
+        Usage(input_tokens=100),
+    )
+
+
+def test_extractor_stores_registered_contradictions_until_pricing_interprets_them() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
+            UsageExtractorMapping(path='audio_tokens', dest='input_audio_tokens'),
+        ],
+    )
+
+    _, usage = extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 50, 'audio_tokens': 100}})
+
+    assert usage == Usage(input_tokens=50, input_audio_tokens=100)
+    assert usage.input_tokens == 50
+    with pytest.raises(ValueError, match='negative|Impossible usage data'):
+        ModelPrice(input_mtok=Decimal('1'), input_audio_mtok=Decimal('2')).calc_price(usage)
 
 
 def test_accumulate_extracted_usage():
