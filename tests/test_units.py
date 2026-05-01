@@ -4,6 +4,7 @@ from typing import Any, cast
 import pytest
 import ruamel.yaml
 
+from genai_prices.decompose import is_descendant_or_self
 from genai_prices.units import UnitRegistry
 from genai_prices.validation import (
     validate_ancestor_coverage,
@@ -534,3 +535,34 @@ def test_validate_extractor_destinations_rejects_pricing_only_requests() -> None
 
     with pytest.raises(ValueError, match='Invalid extractor destination: requests'):
         validate_extractor_destinations({'requests'}, registry.reported_usage_keys())
+
+
+def test_decomposition_descendant_helper_accepts_self() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert is_descendant_or_self(registry.units['input_tokens'], registry.units['input_tokens'])
+
+
+def test_decomposition_descendant_helper_accepts_parent_child_pairs() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert is_descendant_or_self(registry.units['input_tokens'], registry.units['cache_read_tokens'])
+    assert not is_descendant_or_self(registry.units['cache_read_tokens'], registry.units['input_tokens'])
+
+
+def test_decomposition_descendant_helper_rejects_siblings() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not is_descendant_or_self(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
+
+
+def test_decomposition_descendant_helper_rejects_cross_family_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not is_descendant_or_self(registry.units['requests'], registry.units['input_tokens'])
+
+
+def test_decomposition_descendant_helper_rejects_incompatible_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert not is_descendant_or_self(registry.units['input_tokens'], registry.units['output_tokens'])
