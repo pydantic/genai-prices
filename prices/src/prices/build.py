@@ -5,7 +5,7 @@ import gzip
 import io
 from decimal import Decimal
 from operator import attrgetter
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import pydantic_core
 import ruamel.yaml
@@ -14,6 +14,9 @@ from pydantic.main import IncEx
 
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
+
+if TYPE_CHECKING:
+    from genai_prices.units import UnitRegistry
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -54,8 +57,9 @@ def build():
     providers.sort(key=attrgetter('id'))
     for provider in providers:
         provider.exclude_removed()
-    validate_model_prices(providers)
-    validate_extractors(providers)
+    unit_registry = load_unit_registry()
+    validate_model_prices(providers, unit_registry)
+    validate_extractors(providers, unit_registry)
     write_prices(providers, 'data.json')
     for provider in providers:
         provider.exclude_free()
@@ -128,18 +132,22 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
     )
 
 
-def validate_model_prices(providers: list[Provider]) -> None:
-    from genai_prices.units import UnitRegistry
-    from prices.package_data import load_unit_families, validate_provider_model_prices
+def load_unit_registry() -> UnitRegistry:
+    from prices.package_data import load_unit_families, load_unit_registry as package_load_unit_registry
 
-    validate_provider_model_prices(providers, UnitRegistry(load_unit_families()))
+    return package_load_unit_registry(load_unit_families())
 
 
-def validate_extractors(providers: list[Provider]) -> None:
-    from genai_prices.units import UnitRegistry
-    from prices.package_data import load_unit_families, validate_provider_extractor_destinations
+def validate_model_prices(providers: list[Provider], registry: UnitRegistry) -> None:
+    from prices.package_data import validate_provider_model_prices
 
-    validate_provider_extractor_destinations(providers, UnitRegistry(load_unit_families()))
+    validate_provider_model_prices(providers, registry)
+
+
+def validate_extractors(providers: list[Provider], registry: UnitRegistry) -> None:
+    from prices.package_data import validate_provider_extractor_destinations
+
+    validate_provider_extractor_destinations(providers, registry)
 
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:

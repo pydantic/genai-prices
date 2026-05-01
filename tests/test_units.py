@@ -663,7 +663,7 @@ tokens:
         ValueError,
         match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
     ):
-        package_data.load_unit_families()
+        package_data.load_unit_registry(package_data.load_unit_families())
 
 
 def test_package_data_accepts_valid_provider_model_prices() -> None:

@@ -28,10 +28,9 @@ def package_python_data(data_path: Path):
     """Prep python package data."""
 
     from genai_prices.types import __file__ as genai_prices_file, providers_schema
-    from genai_prices.units import UnitRegistry
 
     unit_families = load_unit_families()
-    registry = UnitRegistry(unit_families)
+    registry = load_unit_registry(unit_families)
     providers_schema.rebuild()
     providers = providers_schema.validate_json(data_path.read_bytes())
     validate_provider_model_prices(providers, registry)
@@ -81,14 +80,17 @@ unit_families_data: dict[str, Any] = {unit_families!r}
 
 
 def load_unit_families() -> dict[str, Any]:
-    from genai_prices.units import UnitRegistry
-
     yaml = ruamel.yaml.YAML(typ='safe')
     with (this_package_dir / 'units.yml').open() as f:
         unit_families = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
 
-    UnitRegistry(unit_families)
     return unit_families
+
+
+def load_unit_registry(unit_families: dict[str, Any] | None = None) -> UnitRegistry:
+    from genai_prices.units import UnitRegistry
+
+    return UnitRegistry(load_unit_families() if unit_families is None else unit_families)
 
 
 def validate_provider_model_prices(providers: Iterable[object], registry: UnitRegistry) -> None:
