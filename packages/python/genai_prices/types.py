@@ -519,24 +519,13 @@ class Provider:
         return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
 
 
-UsageField = Literal[
-    'input_tokens',
-    'cache_write_tokens',
-    'cache_read_tokens',
-    'output_tokens',
-    'input_audio_tokens',
-    'cache_audio_read_tokens',
-    'output_audio_tokens',
-]
-
-
 @dataclass
 class UsageExtractorMapping:
     """Mappings from used to build usage."""
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField
+    dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -578,17 +567,16 @@ class UsageExtractor:
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
 
-        usage = Usage()
+        values: dict[str, int] = {}
         values_set = False
         for mapping in self.mappings:
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
-                current_value = usage.reported_value(mapping.dest)
-                setattr(usage, mapping.dest, current_value + value)
+                values[mapping.dest] = values.get(mapping.dest, 0) + value
                 values_set = True
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
-        return model_name, usage
+        return model_name, Usage(**values)
 
 
 E = TypeVar('E')

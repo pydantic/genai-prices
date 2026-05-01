@@ -44,10 +44,6 @@ def test_package_schema():
 
     package_schema['$defs']['ClauseRegex']['properties']['regex']['format'] = 'regex'
 
-    # The provider source schema accepts registry-derived extractor destinations
-    # before the runtime package switches extraction to string destinations.
-    package_schema['$defs']['UsageExtractorMapping']['properties']['dest'] = {'title': 'Dest', 'type': 'string'}
-
     prices_schema_path = prices_package_dir / 'data.schema.json'
     prices_schema = from_json(prices_schema_path.read_bytes())
 

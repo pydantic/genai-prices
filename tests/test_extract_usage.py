@@ -8,7 +8,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
-from genai_prices.types import Provider
+from genai_prices.types import Provider, UsageExtractor, UsageExtractorMapping
 
 
 class MyMapping(Mapping[str, Any]):
@@ -326,6 +326,32 @@ def test_google_anthropic():
             Usage(input_tokens=483, cache_write_tokens=0, cache_read_tokens=0, output_tokens=78),
         )
     )
+
+
+def test_extractor_accumulates_by_destination_string() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
+            UsageExtractorMapping(path='cached_tokens', dest='input_tokens', required=False),
+            UsageExtractorMapping(path='missing_tokens', dest='output_tokens', required=False),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100, 'cached_tokens': 25}}) == (
+        'test-model',
+        Usage(input_tokens=125),
+    )
+
+
+def test_extractor_rejects_invalid_destination_string() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='prompt_tokens', dest='imaginary_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Unknown usage key: imaginary_tokens'):
+        extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100}})
 
 
 def test_accumulate_extracted_usage():
