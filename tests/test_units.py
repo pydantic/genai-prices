@@ -170,3 +170,33 @@ def test_unit_registry_ancestor_helper_rejects_cross_family_units() -> None:
     registry = UnitRegistry(_load_units())
 
     assert not UnitRegistry.is_ancestor_or_self(registry.units['requests'], registry.units['input_tokens'])
+
+
+def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert (
+        registry.find_join(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
+        is registry.units['cache_audio_read_tokens']
+    )
+
+
+def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert (
+        registry.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
+        is registry.units['cache_audio_read_tokens']
+    )
+
+
+def test_unit_registry_join_lookup_returns_none_for_incompatible_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert registry.find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
+
+
+def test_unit_registry_join_lookup_returns_none_for_missing_compatible_join() -> None:
+    registry = UnitRegistry(_load_units())
+
+    assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None

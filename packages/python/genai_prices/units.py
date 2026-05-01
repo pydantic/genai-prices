@@ -90,3 +90,10 @@ class UnitRegistry:
     def is_ancestor_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
         """Return whether ancestor contains descendant within the same family."""
         return ancestor.family is descendant.family and UnitRegistry._is_dimension_subset(ancestor, descendant)
+
+    def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
+        """Return the most specific registered unit joining two compatible units, if present."""
+        if not self.are_compatible(a, b):
+            return None
+
+        return self._units_by_dimension[a.family_id].get(frozenset(a.dimensions.items() | b.dimensions.items()))
