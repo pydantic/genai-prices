@@ -4,7 +4,7 @@ from collections.abc import Mapping
 
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 
-__all__ = 'validate_ancestor_coverage', 'validate_join_coverage', 'validate_price_keys'
+__all__ = 'validate_ancestor_coverage', 'validate_join_coverage', 'validate_model_price', 'validate_price_keys'
 
 
 def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None:
@@ -46,3 +46,16 @@ def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, regi
 
 def _priced_units(priced_usage_keys: set[str], family: UnitFamily) -> list[UnitDef]:
     return [family.units[usage_key] for usage_key in sorted(priced_usage_keys)]
+
+
+def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
+    validate_price_keys(price_keys, registry.price_keys)
+
+    usage_keys_by_family: dict[UnitFamily, set[str]] = {}
+    for price_key in price_keys:
+        unit = registry.units[registry.price_keys[price_key]]
+        usage_keys_by_family.setdefault(unit.family, set()).add(unit.usage_key)
+
+    for family, priced_usage_keys in usage_keys_by_family.items():
+        validate_ancestor_coverage(priced_usage_keys, family, registry)
+        validate_join_coverage(priced_usage_keys, family, registry)

@@ -5,7 +5,12 @@ import pytest
 import ruamel.yaml
 
 from genai_prices.units import UnitRegistry
-from genai_prices.validation import validate_ancestor_coverage, validate_join_coverage, validate_price_keys
+from genai_prices.validation import (
+    validate_ancestor_coverage,
+    validate_join_coverage,
+    validate_model_price,
+    validate_price_keys,
+)
 
 
 def _load_units() -> dict[str, Any]:
@@ -458,3 +463,43 @@ def test_validate_join_coverage_accepts_priced_join() -> None:
         registry.families['tokens'],
         registry,
     )
+
+
+def test_validate_model_price_accepts_valid_current_price_sets() -> None:
+    registry = UnitRegistry(_load_units())
+
+    validate_model_price({'input_mtok', 'cache_read_mtok', 'requests_kcount'}, registry)
+
+
+def test_validate_model_price_rejects_unknown_price_keys() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Unknown price key: inptu_mtok'):
+        validate_model_price({'input_mtok', 'inptu_mtok'}, registry)
+
+
+def test_validate_model_price_rejects_missing_ancestor_prices() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
+        validate_model_price({'cache_read_mtok'}, registry)
+
+
+def test_validate_model_price_rejects_required_join_prices() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(
+        ValueError,
+        match='Missing join price for cache_read_tokens and input_audio_tokens: cache_audio_read_tokens',
+    ):
+        validate_model_price({'input_mtok', 'cache_read_mtok', 'input_audio_mtok'}, registry)
+
+
+def test_validate_model_price_rejects_missing_join_units() -> None:
+    registry = UnitRegistry(_load_units())
+
+    with pytest.raises(
+        ValueError,
+        match='Missing registered join unit for priced units cache_write_tokens and input_audio_tokens',
+    ):
+        validate_model_price({'input_mtok', 'cache_write_mtok', 'input_audio_mtok'}, registry)
