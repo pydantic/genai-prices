@@ -55,6 +55,18 @@ def test_removed_field_not_in_data_json():
             assert 'removed' not in model, f'removed field found in data.json for model {model["id"]}'
 
 
+def test_remote_payloads_remain_provider_arrays():
+    """Remote JSON payloads stay provider arrays."""
+    from prices.utils import package_dir
+
+    for filename in ('data.json', 'data_slim.json'):
+        payload: list[object] = json.loads((package_dir / filename).read_bytes())
+
+        assert isinstance(payload, list)
+        assert payload
+        assert all(isinstance(provider, dict) for provider in payload)
+
+
 def test_python_data_carries_units():
     """Unit registry data is bundled only in Python package data."""
     assert 'unit_families_data' in genai_data.__all__
