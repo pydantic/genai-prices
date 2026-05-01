@@ -32,6 +32,8 @@ export type ModelPrice = Record<string, number | TieredPrices | undefined>
 
 Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string`, but authoritative extractor-destination validation waits for the registry validation paths in Phase 3; Phase 2 must not expand the remote authoring surface.
 
+Public JavaScript callers still pass plain usage objects. The normalization step returns another plain object rather than a wrapper class. This preserves the existing call surface while allowing `calcPrice()`, decomposition, and extraction to share registry-aware reads internally.
+
 **`units.ts` parses generated unit family data and manages the active registry.** _(implements "The active JavaScript registry is limited to the current JavaScript unit surface")_
 Implement:
 
@@ -48,6 +50,8 @@ export function getAllPriceKeys(): Set<string>
 
 `parseFamilies(...)` fills family back-references, indexes price keys, validates uniqueness and interval closure, and skips full join-closedness for the current subset. `setUnitFamilies(null)` restores the generated bundled registry. Do not expose public runtime unit mutation APIs.
 
+Like Python, the active current-unit subset excludes future public keys until Phase 3. Any priced compatible pair whose join is absent from that subset must fail model-price validation before decomposition.
+
 **`usage.ts` provides registry-aware reads over plain objects.** _(implements "JavaScript preserves its plain-object public usage contract")_
 Implement:
 
@@ -58,6 +62,8 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
 `normalizeUsage(...)` reads known externally reported usage keys, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly, lazily infers missing values when uniquely determined, returns zero for no relevant data, and throws user-facing errors for contradictory or underdetermined required inference. It does not cache inferred values or store provenance.
+
+`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `getUsageValue(...)` or `calcPrice(...)` must interpret them.
 
 **`decompose.ts` mirrors Python's dimension-driven decomposition.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
 Implement:
@@ -74,8 +80,12 @@ export function computeLeafValues(
 
 Use the same semantics as Phase 1 Python and the shared [../algorithm](../algorithm.md). The requests family is priced explicitly in engine code, not read from caller usage.
 
+Do not introduce cached decomposition plans or coefficients in this phase. Direct decomposition reads missing values through `getUsageValue(...)`, ignores unpriced reported values unless needed to infer a missing priced value, and raises user-facing errors for impossible priced buckets.
+
 **`validation.ts` mirrors Python's structural and price-level checks.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
 Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, extractor destinations, model prices, and provider data. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Do not add validation marker APIs, registry validation ids, `WeakMap` trust state, or decomposition caches.
+
+Validation iterates the current model's effective price keys and uses parsed registry indexes or relationship helpers. It must not repeatedly scan the whole registry for every model when direct indexes are available, and it must not hardcode ordinary unit names. The explicit `requests` exclusion is allowed for caller/extractor usage.
 
 **`engine.ts` switches from hardcoded arithmetic to registry-driven pricing.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
 `calcPrice(usage, modelPrice)` should:
@@ -91,6 +101,8 @@ Implement helpers for registry structure, interval closure, price-key validity, 
 9. aggregate into the existing result shape
 
 Keep tiered-price semantics aligned with Python: a stored `input_tokens` total is used directly for tier selection, and missing totals are inferred only when coherent.
+
+Aggregation stays compatible with the current result shape. Costs from units whose dimensions include `{direction: input}` contribute to the existing input aggregate, units whose dimensions include `{direction: output}` contribute to the output aggregate, and families without a direction dimension such as `requests` contribute only to total.
 
 **`api.ts` and generated startup data remain provider-array compatible.** _(implements "The shared remote payload shape remains unchanged", "Runtime updates stay atomic for provider data and registry state")_
 Generated `data.ts` exports both current provider data and current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `unitFamiliesData`.

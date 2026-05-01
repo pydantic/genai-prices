@@ -19,6 +19,8 @@ Run it during build/export validation and custom snapshot activation after struc
 **Generate provider YAML schemas from the registry.** _(implements "Provider YAML authoring gets registry-derived autocomplete")_
 Update schema generation so provider YAML price keys come from `registry.price_keys` and extractor destinations come from externally reported usage keys. The generated schema should improve autocomplete and inline feedback, but build/export validation remains the authoritative check. Schema generation must not hardcode ordinary unit names; the explicit `requests` pricing-only exclusion is allowed where needed.
 
+Keep the authoring schema aligned with the built-in naming patterns in the registry, but do not move those patterns into validation code. The schema is regenerated from the registry when units change. It may expose autocomplete for names such as `cache_audio_read_mtok` and `cache_image_read_mtok` because those are registry price keys, not because the schema generator knows token modality concepts.
+
 **Add Python dataclass-subclass dynamic price-key constructor support.** _(implements "Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs")_
 Introduce constructor interception around `ModelPrice` subclasses, for example with `ModelPriceMeta`, so undeclared candidate dynamic price-key kwargs are split before a generated dataclass subclass `__init__` receives them. The normal subclass constructor receives declared subclass fields. Captured dynamic price keys are stored in base `_extra_prices` and validated later against the active or staged registry.
 

@@ -18,6 +18,8 @@ Change both generated JSON payloads to:
 
 `unit_families` carries raw registry data from `prices/units.yml`. `providers` keeps the existing provider object shape. `data_slim.json` keeps the runtime unit-family fields and applies slimming only to provider data.
 
+Do not keep writing a provider-array compatibility payload in parallel, and do not add a separate runtime unit artifact. The wrapper is the single shared runtime-update contract for this phase.
+
 **`prices/units.yml` expands to the complete repo-defined registry.** _(implements "The complete repo-defined registry starts here")_
 The built-in `tokens` family now includes the complete symmetric Phase 3 unit lattice needed by the prose spec. Each modality gets the same valid input/output/cache-read/cache-write patterns where those concepts make sense; nonsensical combinations such as output cache reads are not added. The `requests` family remains the explicit one-request-per-usage-object pricing unit.
 
@@ -56,6 +58,8 @@ def validate_export_payload(
 
 `UpdatePrices.fetch()` and JavaScript runtime update code do not call this helper for every fetched payload. They parse the wrapper, construct/structurally validate the registry, parse providers, and treat fetched model prices as prevalidated by the publisher.
 
+The helper name and boundary are intentional. Do not bury full price-level validation only inside a repo-local command that discovers YAML files and writes outputs. The reusable helper accepts already parsed providers plus raw `unit_families`, constructs and validates `UnitRegistry`, validates model price keys, resolves price keys to usage keys, checks ancestor and join coverage, validates extractor destinations, and returns the validated registry or raises.
+
 **Build-time provider models become registry-permissive.** _(implements "Provider prices and extractor destinations validate against the same registry payload")_
 In `prices/src/prices/prices_types.py`, build-time `ModelPrice` no longer uses hardcoded fields as the accepted price-key whitelist. Use a registry-permissive shape such as Pydantic extra-allowed storage for price values, then rely on export validation to reject unknown price keys. `UsageExtractorMapping.dest` becomes `str`; export validation rejects destinations that are not externally reported usage keys or that target pricing-only `requests`.
 
@@ -78,6 +82,8 @@ JavaScript `api.ts` stages runtime updates in this order:
 4. on success only, replace active unit families and active provider data
 
 If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
+
+Generated Python and JavaScript package data remain pure data. They must not contain validation markers, trust flags, fingerprints, marker constructor arguments, decomposition plans, or cached coefficients. Runtime-private trust state starts in Phase 5.
 
 **Tests cover the wrapper and dynamic-key boundary.** _(implements "Phase 3 makes repo-defined units an end-to-end feature")_
 Add tests for wrapped full/slim payload schemas, Python and JavaScript runtime update parsing, generated package data exports, complete-registry join-closedness, build/export validation for prices and extractor destinations, base Python `ModelPrice` with a registered non-hardcoded key, rejection of misspelled dynamic keys, and unchanged generated-output purity with no validation artifacts.

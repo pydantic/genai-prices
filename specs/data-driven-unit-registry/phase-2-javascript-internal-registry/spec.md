@@ -14,6 +14,9 @@ JavaScript generated package data can embed unit families for startup, but runti
 **JavaScript preserves its plain-object public usage contract.** _(from "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
 Callers continue passing plain objects. The runtime normalizes known externally reported usage keys into a plain object, ignores unknown extras, and reads missing values through registry-aware lazy inference. Contradictory usage can exist until a missing-value read or price calculation must interpret it.
 
+**JavaScript behavior stays aligned with Python semantics.** _(from "JavaScript preserves its plain-object public usage contract")_
+Direct reads of stored usage values are inert, missing values are inferred only when uniquely determined, unpriced reported keys are ignored unless needed, and request pricing uses the explicit one-request-per-usage-object rule in pricing code. Tier selection uses the provided or inferable `input_tokens` total, matching Python.
+
 **JavaScript validation mirrors Python's Phase 1 split.** _(from "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
 Registry parsing validates structural rules for the current subset. Price-level validation checks price keys, ancestor coverage, join coverage, and missing-join safety before decomposition where needed. Runtime validation trust state and decomposition caches remain deferred to Phase 5.
 
