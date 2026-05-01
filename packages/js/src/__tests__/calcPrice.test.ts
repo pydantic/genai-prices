@@ -76,6 +76,27 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should charge unpriced descendant tokens through parent prices', () => {
+      const usage: Usage = {
+        input_audio_tokens: 200,
+        input_tokens: 700,
+        output_audio_tokens: 20,
+        output_tokens: 70,
+      }
+      const modelPrice: ModelPrice = {
+        input_mtok: 5.0,
+        output_mtok: 10.0,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      expect(result).toMatchObject({
+        input_price: 0.0035,
+        output_price: 0.0007,
+        total_price: 0.0042,
+      })
+    })
+
     it('should handle requests as total cost', () => {
       const usage: Usage = {
         input_tokens: 1000,
