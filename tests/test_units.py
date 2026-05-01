@@ -25,6 +25,7 @@ from genai_prices.types import (
     Provider,
     Usage,
     _collect_effective_model_price_keys,
+    _compute_registry_priced_counts,
     _group_model_price_units_by_family,
 )
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry
@@ -721,6 +722,60 @@ def test_group_model_price_units_by_family_handles_registered_custom_fields() ->
 
     assert list(groups) == [registry.families['tokens']]
     assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens', 'sausage_tokens'}}
+
+
+def test_compute_registry_priced_counts_handles_parent_child_token_counts() -> None:
+    registry = UnitRegistry(_load_units())
+    grouped_units = _group_model_price_units_by_family(
+        ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry
+    )
+
+    assert _compute_registry_priced_counts(
+        grouped_units,
+        Usage(input_tokens=1_000, cache_read_tokens=250),
+    ) == {'cache_read_tokens': 250, 'input_tokens': 750}
+
+
+def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
+    registry = UnitRegistry(_load_units())
+    grouped_units = _group_model_price_units_by_family(
+        ModelPrice(
+            input_mtok=Decimal('1'),
+            cache_read_mtok=Decimal('2'),
+            input_audio_mtok=Decimal('3'),
+            cache_audio_read_mtok=Decimal('4'),
+        ),
+        registry,
+    )
+
+    assert _compute_registry_priced_counts(
+        grouped_units,
+        Usage(
+            input_tokens=1_000,
+            cache_read_tokens=400,
+            input_audio_tokens=300,
+            cache_audio_read_tokens=100,
+        ),
+    ) == {
+        'cache_audio_read_tokens': 100,
+        'cache_read_tokens': 300,
+        'input_audio_tokens': 200,
+        'input_tokens': 400,
+    }
+
+
+def test_compute_registry_priced_counts_handles_one_request_count() -> None:
+    registry = UnitRegistry(_load_units())
+    grouped_units = _group_model_price_units_by_family(ModelPrice(requests_kcount=Decimal('1')), registry)
+
+    assert _compute_registry_priced_counts(grouped_units, Usage()) == {'requests': 1}
+
+
+def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_only_prices() -> None:
+    registry = UnitRegistry(_load_units())
+    grouped_units = _group_model_price_units_by_family(ModelPrice(requests_kcount=Decimal('1')), registry)
+
+    assert set(_compute_registry_priced_counts(grouped_units, Usage(input_tokens=100))) == {'requests'}
 
 
 def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -> None:

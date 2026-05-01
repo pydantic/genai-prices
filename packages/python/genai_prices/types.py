@@ -964,6 +964,22 @@ def _group_model_price_units_by_family(  # pyright: ignore[reportUnusedFunction]
     return groups
 
 
+def _compute_registry_priced_counts(  # pyright: ignore[reportUnusedFunction]
+    grouped_units: Mapping[UnitFamily, set[UnitDef]], usage: Usage
+) -> dict[str, int]:
+    from genai_prices.decompose import compute_leaf_values
+
+    counts: dict[str, int] = {}
+    for family, units in grouped_units.items():
+        usage_keys = {unit.usage_key for unit in units}
+        if family.id == 'requests':
+            counts.update({usage_key: 1 for usage_key in usage_keys})
+        else:
+            counts.update(compute_leaf_values(usage_keys, usage, family))
+
+    return counts
+
+
 def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
     for field in dataclasses.fields(model_price):
         if field.name in registry.price_keys and getattr(model_price, field.name) is not None:
