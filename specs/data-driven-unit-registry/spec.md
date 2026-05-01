@@ -50,6 +50,7 @@ A registry contains unit families. A family has a normalization factor such as `
 
 **Registry construction promotes raw data into indexed runtime objects.** _(from "The registry model is a data-defined unit graph used by every runtime")_
 Raw family data stays as plain data until a runtime constructs the registry. Construction promotes usage-key dict keys into `UnitDef.usage_key`, defaults missing `price_key` to the usage key, fills family and unit back-references, and builds flat lookup indexes for usage keys, price keys, dimension sets, ancestors, and join lookup. Downstream validation and pricing use those indexes instead of rediscovering relationships by scanning every unit.
+Runtime graph objects that contain back-references, such as unit-to-family links and family-to-unit maps, should use identity semantics rather than recursive value equality so they remain safe to reference, group, and hash by object identity when a language supports that distinction.
 
 **The system is general across unit families.** _(from "The registry model is a data-defined unit graph used by every runtime")_
 Any reported or inferable quantity with the shape `usage_value * price / normalization_factor` can be represented: tokens, requests, characters, duration, tool calls reported by an API, or future units. Tokens are the first complex family because their usage values overlap across direction, modality, and cache dimensions. The decomposition and validation model is not token-specific.
