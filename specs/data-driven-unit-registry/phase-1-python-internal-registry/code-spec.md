@@ -151,6 +151,8 @@ Do not add cached decomposition plans, cached coefficients, or model-wide pricin
 AbstractUsage = object
 ```
 
+This keeps the exported name from `main` while removing the false implication that callers must satisfy a fixed protocol.
+
 `Usage` becomes a normal class backed by `_values: dict[str, int]`:
 
 ```python

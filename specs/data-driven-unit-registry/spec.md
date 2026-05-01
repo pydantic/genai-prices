@@ -13,7 +13,7 @@ Price data is authored or published by us and can be validated before use. If a 
 When a model prices overlapping units such as all input tokens and cached input tokens, each token count is assigned to one priced bucket. The system must not double-count or drop usage.
 
 **Validation exists to protect pricing semantics.** _(from "Correct pricing semantics beat algorithmic convenience", "Price data must be complete; usage data may be incomplete")_
-Validation rejects data that is incomplete, ambiguous, or impossible to price accurately. Registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage are semantic completeness rules. They are not arbitrary requirements imposed to satisfy an algorithm.
+Validation rejects data that is incomplete, ambiguous, or impossible to price accurately. Hardcoded price fields used to reject typos such as `inptu_mtok` implicitly; registry-driven price keys must replace that safety net with explicit validation and go further. Registry interval closure, registry join-closedness, price ancestor coverage, and price join coverage are semantic completeness rules. They are not arbitrary requirements imposed to satisfy an algorithm. Rejecting bad data at build or activation time is cheaper than debugging wrong prices at runtime.
 
 **Units are data, not code.**
 A pricing unit is defined once in data and propagated to every runtime. Adding a repo-defined unit should mean editing registry data, not adding Python fields, TypeScript interfaces, schema literals, extractor unions, and hand-maintained subtraction logic.
