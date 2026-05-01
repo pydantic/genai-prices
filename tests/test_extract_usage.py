@@ -275,6 +275,22 @@ def test_google_caching():
     assert calc_price(usage, model).total_price == snapshot(Decimal('0.0012873'))
 
 
+def test_google_caching_public_extraction_parity():
+    extracted_usage = extract_usage(gemini_response_data_caching, provider_id='google')
+
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=14152,
+            cache_read_tokens=12239,
+            output_tokens=129,
+            input_audio_tokens=150,
+            cache_audio_read_tokens=129,
+            output_audio_tokens=10,
+        )
+    )
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0012873'))
+
+
 gemini_response_data_thoughtless = {
     'usageMetadata': {
         'promptTokenCount': 75,
@@ -341,6 +357,21 @@ def test_extractor_accumulates_by_destination_string() -> None:
     assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100, 'cached_tokens': 25}}) == (
         'test-model',
         Usage(input_tokens=125),
+    )
+
+
+def test_extractor_accumulates_repeated_destination_string_with_zero_values() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
+            UsageExtractorMapping(path='cached_tokens', dest='input_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 0, 'cached_tokens': 25}}) == (
+        'test-model',
+        Usage(input_tokens=25),
     )
 
 
