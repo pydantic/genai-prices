@@ -55,6 +55,7 @@ def build():
     for provider in providers:
         provider.exclude_removed()
     validate_model_prices(providers)
+    validate_extractors(providers)
     write_prices(providers, 'data.json')
     for provider in providers:
         provider.exclude_free()
@@ -132,6 +133,13 @@ def validate_model_prices(providers: list[Provider]) -> None:
     from prices.package_data import load_unit_families, validate_provider_model_prices
 
     validate_provider_model_prices(providers, UnitRegistry(load_unit_families()))
+
+
+def validate_extractors(providers: list[Provider]) -> None:
+    from genai_prices.units import UnitRegistry
+    from prices.package_data import load_unit_families, validate_provider_extractor_destinations
+
+    validate_provider_extractor_destinations(providers, UnitRegistry(load_unit_families()))
 
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:

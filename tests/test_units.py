@@ -62,12 +62,14 @@ def _usage_keys_by_family(groups: dict[UnitFamily, set[UnitDef]]) -> dict[str, s
 def _build_provider_prices(
     prices: build_types.ModelPrice | list[build_types.ConditionalPrice],
     *,
+    extractors: list[build_types.UsageExtractor] | None = None,
     model_id: str = 'model',
 ) -> build_types.Provider:
     return build_types.Provider(
         id='testing',
         name='Testing',
         api_pattern='testing',
+        extractors=extractors,
         models=[
             build_types.ModelInfo(
                 id=model_id,
@@ -75,6 +77,13 @@ def _build_provider_prices(
                 prices=prices,
             )
         ],
+    )
+
+
+def _build_extractor(dest: str) -> build_types.UsageExtractor:
+    return build_types.UsageExtractor(
+        root='usage',
+        mappings=[build_types.UsageExtractorMapping(path='value', dest=dest)],
     )
 
 
@@ -1041,6 +1050,64 @@ def test_package_data_model_price_validation_rejects_missing_join_units_for_cond
         ),
     ):
         package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_accepts_current_provider_extractor_destinations() -> None:
+    registry = UnitRegistry(_load_units())
+
+    package_data.validate_provider_extractor_destinations(data.providers, registry)
+
+
+def test_package_data_accepts_valid_synthetic_extractor_destinations() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('input_tokens')],
+    )
+
+    package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_package_data_extractor_validation_rejects_price_keys() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('input_mtok')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: input_mtok',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_package_data_extractor_validation_rejects_unknown_destinations() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('imaginary_tokens')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: imaginary_tokens',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_package_data_extractor_validation_rejects_pricing_only_requests() -> None:
+    registry = UnitRegistry(_load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('requests')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: requests',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
 
 
 def test_generated_python_unit_families_data_builds_registry() -> None:
