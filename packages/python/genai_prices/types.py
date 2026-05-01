@@ -897,22 +897,29 @@ def calc_mtok_price(
         token_count: Number of tokens of this specific type to price
         total_input_tokens: Total input tokens for tier determination (used only for tiered pricing)
     """
-    if field_mtok is None or token_count is None:
+    return calc_unit_price(field_mtok, token_count, total_input_tokens, 1_000_000)
+
+
+def calc_unit_price(
+    price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: int, per: int
+) -> Decimal:
+    """Calculate the price for a unit count normalized by the unit family's ``per`` value."""
+    if price is None or count is None:
         return Decimal(0)
 
-    if isinstance(field_mtok, TieredPrices):
+    if isinstance(price, TieredPrices):
         # Threshold-based pricing: tier is determined by total_input_tokens
         # Find the highest tier that applies based on total input tokens
         # When total_input_tokens is 0, no tier condition is met, so base rate is used
-        applicable_price = field_mtok.base
-        for tier in reversed(field_mtok.tiers):
+        applicable_price = price.base
+        for tier in reversed(price.tiers):
             if total_input_tokens > tier.start:
                 applicable_price = tier.price
                 break
-        price = applicable_price * token_count
+        unit_price = applicable_price * count
     else:
-        price = field_mtok * token_count
-    return price / 1_000_000
+        unit_price = price * count
+    return unit_price / per
 
 
 @dataclass

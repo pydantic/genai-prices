@@ -5,7 +5,7 @@ import pytest
 from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
-from genai_prices.types import ModelPrice, TieredPrices
+from genai_prices.types import ModelPrice, Tier, TieredPrices, calc_mtok_price, calc_unit_price
 
 pytestmark = pytest.mark.anyio
 
@@ -95,6 +95,28 @@ def test_requests_kcount_prices():
     assert price.total_price == snapshot(Decimal('0.012'))
     assert price.model.name == snapshot('Sonar')
     assert price.provider.name == snapshot('Perplexity')
+
+
+def test_calc_unit_price_matches_mtok_wrapper() -> None:
+    assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
+        Decimal('2.5'), 500_000, total_input_tokens=0
+    )
+
+
+def test_calc_unit_price_handles_absent_price_or_count() -> None:
+    assert calc_unit_price(None, 500, total_input_tokens=0, per=1_000) == Decimal(0)
+    assert calc_unit_price(Decimal('2.5'), None, total_input_tokens=0, per=1_000) == Decimal(0)
+
+
+def test_calc_unit_price_handles_tiered_prices() -> None:
+    price = TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'))])
+
+    assert calc_unit_price(price, 10, total_input_tokens=100, per=1_000) == Decimal('0.01')
+    assert calc_unit_price(price, 10, total_input_tokens=101, per=1_000) == Decimal('0.02')
+
+
+def test_calc_unit_price_uses_non_million_normalization_factor() -> None:
+    assert calc_unit_price(Decimal('12'), 2, total_input_tokens=0, per=1_000) == Decimal('0.024')
 
 
 def test_price_constraint_before():
