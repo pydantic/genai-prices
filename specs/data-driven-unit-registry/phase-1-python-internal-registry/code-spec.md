@@ -65,7 +65,7 @@ Usage keys are raw unit dict keys. `price_key` defaults to the usage key when om
 Use one runtime model per concept:
 
 ```python
-@dataclass
+@dataclass(eq=False)
 class UnitDef:
     usage_key: str
     price_key: str
@@ -74,7 +74,7 @@ class UnitDef:
     dimensions: dict[str, str]
 
 
-@dataclass
+@dataclass(eq=False)
 class UnitFamily:
     id: str
     per: int
@@ -97,7 +97,7 @@ class UnitRegistry:
         """Return whether two units can overlap without conflicting dimensions."""
 ```
 
-`UnitRegistry.__init__(raw_families)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, fills indexes and back-references, and validates uniqueness plus interval closure. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. It exposes no public mutation APIs in this phase.
+`UnitRegistry.__init__(raw_families)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, fills indexes and back-references, and validates uniqueness plus interval closure. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. `UnitDef` and `UnitFamily` use `eq=False` because they form an object graph with back-references; identity equality keeps family objects hashable for grouping and avoids recursive value comparisons. The registry exposes no public mutation APIs in this phase.
 
 The registry owns two private relationship indexes that keep downstream checks simple. `_units_by_dimension` maps each family id and dimension set to its `UnitDef`. `_ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Join lookup unions two compatible dimension sets and reads `_units_by_dimension[family_id]`. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
 
@@ -117,15 +117,17 @@ Provide helpers equivalent to:
 
 ```python
 def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None: ...
-def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None: ...
-def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None: ...
+def validate_ancestor_coverage(
+    priced_usage_keys: set[str], family: UnitFamily, registry: UnitRegistry
+) -> None: ...
+def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, registry: UnitRegistry) -> None: ...
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None: ...
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str]) -> None: ...
 ```
 
 `validate_join_coverage(...)` must fail when a compatible priced pair's join unit is absent from the Phase 1 subset. Do not add trust markers, fingerprints, weak maps, dirty sets, or cache builders.
 
-This module does not own raw registry structural checks such as dimension-set uniqueness, interval closure, or join-closedness; those stay in `UnitRegistry`. Validation helpers work from model-priced units plus registry indexes and relationship helpers. They must not scan every registry unit for every model when direct indexes are available, and they must not hardcode ordinary usage or price key names. The only name-aware exception is excluding `requests` from caller/extractor usage.
+This module does not own raw registry structural checks such as dimension-set uniqueness, interval closure, or join-closedness; those stay in `UnitRegistry`. Ancestor and join validation helpers receive both the family under validation and the registry that owns the relationship indexes. Validation helpers work from model-priced units plus registry indexes and relationship helpers. They must not scan every registry unit for every model when direct indexes are available, and they must not hardcode ordinary usage or price key names. The only name-aware exception is excluding `requests` from caller/extractor usage.
 
 **`decompose.py` implements dimension-driven decomposition.** _(implements "Validation protects pricing semantics without runtime trust caching")_
 Add:
