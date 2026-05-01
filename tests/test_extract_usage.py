@@ -8,7 +8,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
-from genai_prices.types import Provider, UsageExtractor, UsageExtractorMapping
+from genai_prices.types import ModelPrice, Provider, UsageExtractor, UsageExtractorMapping
 
 
 class MyMapping(Mapping[str, Any]):
@@ -383,6 +383,37 @@ def test_extractor_rejects_invalid_destination_string() -> None:
 
     with pytest.raises(ValueError, match='Unknown usage key: imaginary_tokens'):
         extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100}})
+
+
+def test_extractor_ignores_unknown_response_extras() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens')],
+    )
+
+    assert extractor.extract(
+        {'model': 'test-model', 'usage': {'prompt_tokens': 100, 'provider_specific_tokens': 999}}
+    ) == (
+        'test-model',
+        Usage(input_tokens=100),
+    )
+
+
+def test_extractor_stores_registered_contradictions_until_pricing_interprets_them() -> None:
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens'),
+            UsageExtractorMapping(path='audio_tokens', dest='input_audio_tokens'),
+        ],
+    )
+
+    _, usage = extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 50, 'audio_tokens': 100}})
+
+    assert usage == Usage(input_tokens=50, input_audio_tokens=100)
+    assert usage.input_tokens == 50
+    with pytest.raises(ValueError, match='Impossible usage data for input_tokens'):
+        ModelPrice(input_mtok=Decimal('1'), input_audio_mtok=Decimal('2')).calc_price(usage)
 
 
 def test_accumulate_extracted_usage():
