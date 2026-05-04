@@ -10,6 +10,7 @@ Phase 1 creates:
   -> packages/python/genai_prices/units.py
   -> packages/python/genai_prices/decompose.py
   -> packages/python/genai_prices/validation.py
+  -> packages/python/genai_prices/data_units.py (generated)
 
 Phase 1 modifies:
   -> packages/python/genai_prices/types.py
@@ -104,7 +105,7 @@ build()
 
 package_data()
   -> read wrapped data.json
-  -> package_python_data(): emit providers + unit_families_data
+  -> package_python_data(): emit providers + unit_families_data in separate generated Python modules
   -> package_ts_data(): emit data + unitFamiliesData
   -> generated runtime data is trusted because export validation succeeded first
 ```
@@ -116,16 +117,17 @@ Phase 1 and Phase 2 generate or embed language-native unit registry data for the
 ```text
 get_snapshot()
   -> _bundled_snapshot()
-       -> import providers, unit_families_data from generated data.py
+       -> import providers from generated data.py
+       -> import unit_families_data from generated data_units.py
        -> UnitRegistry(unit_families_data)
        -> DataSnapshot(providers=..., unit_registry=..., from_auto_update=False)
        -> do not validate every generated ModelPrice at import/startup
        -> do not precompute decomposition state
-       -> do not require generated data.py to emit per-price validation markers
+       -> do not require generated data.py or data_units.py to emit per-price validation markers
        -> in Phase 5+: create runtime-private trusted-price context for this provider graph
 ```
 
-Generated package data is pure data. Runtime-private validation trust is created from loaded objects, not serialized into the generated files.
+Generated package data is pure data. Runtime-private validation trust is created from loaded objects, not serialized into the generated files. The Python units-data module is separate so custom-provider code can borrow the default registry without importing the bundled provider list.
 
 ## Python Snapshot Activation
 

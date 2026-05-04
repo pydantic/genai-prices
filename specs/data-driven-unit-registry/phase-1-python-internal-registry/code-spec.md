@@ -16,7 +16,7 @@ Add these hand-written Python runtime modules:
 - `packages/python/genai_prices/decompose.py`
 - `packages/python/genai_prices/validation.py`
 
-Add `prices/units.yml` as the checked-in source registry for the current public unit surface used by this phase. Generated Python package data embeds a filtered/current unit-family dict as `unit_families_data`. Do not change `prices/data.json` or `prices/data_slim.json` into wrapped payloads in Phase 1.
+Add `prices/units.yml` as the checked-in source registry for the current public unit surface used by this phase. Generated Python package data embeds a filtered/current unit-family dict as `unit_families_data` in `packages/python/genai_prices/data_units.py`, separate from provider-heavy generated `data.py`. Do not change `prices/data.json` or `prices/data_slim.json` into wrapped payloads in Phase 1.
 
 Do not introduce a standalone runtime `units*.json` artifact. The source registry is checked-in YAML and runtime delivery is generated package data in Phase 1, then shared wrapped price payloads in Phase 3. Do not generate source-code fields into handwritten runtime modules; registry-derived behavior is implemented with runtime lookups.
 
@@ -273,7 +273,7 @@ class DataSnapshot:
         """If unit_registry is None, borrow the active global snapshot registry."""
 ```
 
-`_bundled_snapshot()` imports generated `providers` and `unit_families_data`, builds `UnitRegistry(unit_families_data)`, and passes it explicitly:
+`_bundled_snapshot()` imports generated `providers` from `data.py` and `unit_families_data` from the small generated `data_units.py`, builds `UnitRegistry(unit_families_data)`, and passes it explicitly:
 
 ```python
 @cache
@@ -285,8 +285,8 @@ def _bundled_snapshot() -> DataSnapshot:
 
 `DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their callable shape in Phase 1. Phase 1 does not add `self is get_snapshot()` execution guards; it relies on the ordinary active-global-snapshot workflow. `find_provider()`, `find_provider_model()`, and lookup caches remain pure lookup/staging helpers that work on inactive snapshots.
 
-**Build and package-data changes are Python-only and payload-preserving.** _(implements "The remote `data.json` and `data_slim.json` payloads remain provider arrays")_
-Update `prices/src/prices/package_data.py` so generated Python `data.py` exports both `providers` and current-subset `unit_families_data`. Any build helper that validates or filters the current subset should reuse `genai_prices.units` and `genai_prices.validation`; do not duplicate registry relationship logic in the build package.
+**Build and package-data changes are Python-only and payload-preserving.** _(implements "The remote `data.json` and `data_slim.json` payloads remain provider arrays", "Python unit data stays separate from generated provider data")_
+Update `prices/src/prices/package_data.py` so generated Python `data.py` exports only providers, and generated Python `data_units.py` exports current-subset `unit_families_data`. Any build helper that validates or filters the current subset should reuse `genai_prices.units` and `genai_prices.validation`; do not duplicate registry relationship logic in the build package.
 
 Build/runtime sharing is intentional. The build package may import pure registry and validation helpers, but those helpers must not import generated package data or runtime globals. Tests should cover structural validation, price-key resolution, ancestor coverage, join coverage, and missing-join safety through the shared helpers.
 
