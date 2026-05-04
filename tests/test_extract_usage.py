@@ -352,14 +352,13 @@ def test_google_anthropic():
     )
 
 
-def test_extractor_rejects_invalid_destination_string() -> None:
-    extractor = UsageExtractor(
-        root='usage',
-        mappings=[UsageExtractorMapping(path='prompt_tokens', dest='imaginary_tokens')],
-    )
-
-    with pytest.raises(ValueError, match='Unknown usage key: imaginary_tokens'):
-        extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100}})
+@pytest.mark.parametrize('dest', ['imaginary_tokens', 'input_mtok', 'requests'])
+def test_extractor_rejects_invalid_destination_string_at_construction(dest: str) -> None:
+    with pytest.raises(ValueError, match=f'Invalid extractor destination: {dest}'):
+        UsageExtractor(
+            root='usage',
+            mappings=[UsageExtractorMapping(path='prompt_tokens', dest=dest)],
+        )
 
 
 def test_extractor_accumulates_by_destination_string() -> None:

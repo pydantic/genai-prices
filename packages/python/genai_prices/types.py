@@ -2,11 +2,13 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
+import sys
 from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from fractions import Fraction
+from functools import cache
 from itertools import combinations, product
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
@@ -547,6 +549,9 @@ class UsageExtractor:
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
 
+    def __post_init__(self) -> None:
+        _validate_usage_extractor_destinations(self.mappings)
+
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
@@ -577,6 +582,31 @@ class UsageExtractor:
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
         return model_name, Usage(**values)
+
+
+def _validate_usage_extractor_destinations(mappings: Sequence[UsageExtractorMapping]) -> None:
+    from genai_prices.validation import validate_extractor_destinations
+
+    validate_extractor_destinations(
+        {mapping.dest for mapping in mappings},
+        _reported_usage_keys_for_extractor_construction(),
+    )
+
+
+def _reported_usage_keys_for_extractor_construction() -> frozenset[str]:
+    data_module = sys.modules.get('genai_prices.data')
+    if data_module is not None and not hasattr(data_module, 'providers'):
+        return _bundled_reported_usage_keys()
+
+    return _reported_usage_keys()
+
+
+@cache
+def _bundled_reported_usage_keys() -> frozenset[str]:
+    from genai_prices.data_units import unit_families_data
+    from genai_prices.units import UnitRegistry
+
+    return UnitRegistry(unit_families_data).reported_usage_keys()
 
 
 E = TypeVar('E')
