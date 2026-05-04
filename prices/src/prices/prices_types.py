@@ -121,12 +121,23 @@ class Provider(_Model):
         self.models[:] = [model for model in self.models if not model.is_free()]
 
 
+UsageField = Literal[
+    'input_tokens',
+    'cache_write_tokens',
+    'cache_read_tokens',
+    'output_tokens',
+    'input_audio_tokens',
+    'cache_audio_read_tokens',
+    'output_audio_tokens',
+]
+
+
 class UsageExtractorMapping(_Model):
     """Mappings from used to build usage."""
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: str
+    dest: UsageField
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.

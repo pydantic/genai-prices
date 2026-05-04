@@ -88,10 +88,16 @@ def _build_provider_prices(
 
 
 def _build_extractor(dest: str) -> build_types.UsageExtractor:
-    return build_types.UsageExtractor(
+    return build_types.UsageExtractor.model_construct(
         root='usage',
-        mappings=[build_types.UsageExtractorMapping(path='value', dest=dest)],
+        mappings=[_build_extractor_mapping('value', dest)],
+        api_flavor='default',
+        model_path='model',
     )
+
+
+def _build_extractor_mapping(path: str, dest: str, *, required: bool = True) -> build_types.UsageExtractorMapping:
+    return build_types.UsageExtractorMapping.model_construct(path=path, dest=dest, required=required)
 
 
 def test_units_yml_defines_current_python_unit_surface() -> None:
@@ -818,12 +824,14 @@ def test_package_data_extractor_validation_reports_multiple_invalid_destinations
     provider = _build_provider_prices(
         build_types.ModelPrice(input_mtok=Decimal('1')),
         extractors=[
-            build_types.UsageExtractor(
+            build_types.UsageExtractor.model_construct(
                 root='usage',
                 mappings=[
-                    build_types.UsageExtractorMapping(path='prompt_tokens', dest='input_mtok'),
-                    build_types.UsageExtractorMapping(path='requests', dest='requests'),
+                    _build_extractor_mapping('prompt_tokens', 'input_mtok'),
+                    _build_extractor_mapping('requests', 'requests'),
                 ],
+                api_flavor='default',
+                model_path='model',
             )
         ],
     )

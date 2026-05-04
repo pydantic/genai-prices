@@ -46,6 +46,16 @@ def test_package_schema():
 
     prices_schema_path = prices_package_dir / 'data.schema.json'
     prices_schema = from_json(prices_schema_path.read_bytes())
+    dest_schema = prices_schema['$defs']['UsageExtractorMapping']['properties']['dest']
+    assert dest_schema.pop('enum') == [
+        'input_tokens',
+        'cache_write_tokens',
+        'cache_read_tokens',
+        'output_tokens',
+        'input_audio_tokens',
+        'cache_audio_read_tokens',
+        'output_audio_tokens',
+    ]
 
     remove_ignored_fields(prices_schema)
 
