@@ -21,6 +21,8 @@ Update schema generation so provider YAML price keys come from `registry.price_k
 
 Keep the authoring schema aligned with the built-in naming patterns in the registry, but do not move those patterns into validation code. The schema is regenerated from the registry when units change. It may expose autocomplete for names such as `cache_audio_read_mtok` and `cache_image_read_mtok` because those are registry price keys, not because the schema generator knows token modality concepts.
 
+Add repo data regression tests that walk the built-in `tokens` family from `prices/units.yml` and assert that token usage keys, price keys, non-cached modality names, and cached modality names follow the documented built-in conventions. Keep these tests scoped to repo-authored built-in token data; production registry validation must not enforce token-specific semantic naming rules for arbitrary families or runtime custom units.
+
 **Add Python dataclass-subclass dynamic price-key constructor support.** _(implements "Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs")_
 Introduce constructor interception around `ModelPrice` subclasses, for example with `ModelPriceMeta`, so undeclared candidate dynamic price-key kwargs are split before a generated dataclass subclass `__init__` receives them. The normal subclass constructor receives declared subclass fields. Captured dynamic price keys are stored in base `_extra_prices` and validated later against the active or staged registry.
 
@@ -38,4 +40,4 @@ Concretely:
 The CLI may keep compatibility aliases and familiar labels for existing units, but new registered units must appear without adding new hardcoded price-field branches.
 
 **Tests cover hardening boundaries.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the shared contract works")_
-Add tests for reserved-name rejection in both Python and JavaScript-relevant cases, generated provider schema price-key and extractor-destination suggestions, dataclass subclass constructor handling for undeclared dynamic price keys plus declared custom fields, and CLI display of both legacy and newly registered price keys.
+Add tests for reserved-name rejection in both Python and JavaScript-relevant cases, built-in token naming convention regressions, generated provider schema price-key and extractor-destination suggestions, dataclass subclass constructor handling for undeclared dynamic price keys plus declared custom fields, and CLI display of both legacy and newly registered price keys.

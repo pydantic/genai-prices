@@ -66,6 +66,7 @@ The usage key names the reported or inferred count, such as `input_tokens`. The 
 
 **Naming optimizes for writability.** _(from "Usage keys and price keys have different jobs", "Backward compatibility is preserved unless clearly impractical")_
 Provider YAML files and usage objects are written by people who infer names from nearby examples. Consistency matters because authors will see `cache_audio_read_mtok` and expect `cache_image_read_mtok` to work. Token naming follows the existing patterns: cached modality units use `cache_{modality}_{op}`, non-cached modality units use `{direction}_{modality}`, token price keys use `_mtok`, and token usage keys use `_tokens`. These are authoring conventions for built-in token data, not validation code that hardcodes commercial unit names.
+Repo tests must protect those built-in token naming conventions as data regressions. That test coverage is not runtime/export validation for arbitrary families or runtime custom units; production validation still derives accepted keys and relationships from the registry data itself.
 
 **Dimensions define specificity and overlap.** _(from "The registry model is a data-defined unit graph used by every runtime")_
 Dimension assignments such as `{direction: input}`, `{direction: input, cache: read}`, and `{direction: input, modality: audio, cache: read}` define containment. A unit is an ancestor of another unit when its dimensions are a subset of the other's dimensions. This structure replaces hardcoded token-specific subtraction chains.
