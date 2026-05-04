@@ -637,7 +637,7 @@ class ModelPrice:
         #
         # With all prices present, the disjoint priced buckets are:
         #
-        #   input_mtok: 300 tokens
+        #   input_mtok: 400 tokens
         #   cache_read_mtok: 300 tokens
         #   input_audio_mtok: 200 tokens
         #   cache_audio_read_mtok: 100 tokens
