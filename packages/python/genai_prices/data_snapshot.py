@@ -23,7 +23,8 @@ def get_snapshot() -> DataSnapshot:
 
 @cache
 def _bundled_snapshot() -> DataSnapshot:
-    from .data import providers, unit_families_data
+    from .data import providers
+    from .data_units import unit_families_data
 
     return DataSnapshot(
         providers=providers,

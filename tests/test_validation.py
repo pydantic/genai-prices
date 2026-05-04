@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from genai_prices import data
+from genai_prices import data, data_units
 from genai_prices.types import ConditionalPrice, _collect_effective_model_price_keys
 from genai_prices.units import UnitRegistry
 from genai_prices.validation import (
@@ -129,7 +129,7 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
 
 
 def test_bundled_provider_model_prices_pass_registry_validation() -> None:
-    registry = UnitRegistry(data.unit_families_data)
+    registry = UnitRegistry(data_units.unit_families_data)
     failures: list[str] = []
 
     for provider in data.providers:

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 
-from genai_prices import data as genai_data
+from genai_prices import data as genai_data, data_units as genai_data_units
 from genai_prices.data import providers
 
 
@@ -67,7 +69,22 @@ def test_remote_payloads_remain_provider_arrays():
         assert all(isinstance(provider, dict) for provider in payload)
 
 
-def test_python_data_carries_units():
-    """Unit registry data is bundled only in Python package data."""
-    assert 'unit_families_data' in genai_data.__all__
-    assert isinstance(genai_data.unit_families_data, dict)
+def test_python_unit_data_is_separate_from_provider_data():
+    """Unit registry data is bundled separately from provider-heavy Python data."""
+    assert 'unit_families_data' not in genai_data.__all__
+    assert 'unit_families_data' in genai_data_units.__all__
+    assert isinstance(genai_data_units.unit_families_data, dict)
+
+
+def test_python_unit_data_import_does_not_import_provider_data():
+    """Importing bundled unit registry data does not import the generated provider list."""
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            "import sys; import genai_prices.data_units; assert 'genai_prices.data' not in sys.modules",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

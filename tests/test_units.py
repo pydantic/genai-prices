@@ -12,7 +12,7 @@ from typing import Any
 
 import pytest
 
-from genai_prices import calc_price, data
+from genai_prices import calc_price, data, data_units
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
     ClauseEquals,
@@ -836,7 +836,7 @@ def test_package_data_extractor_validation_reports_multiple_invalid_destinations
 
 
 def test_generated_python_unit_families_data_builds_registry() -> None:
-    registry = UnitRegistry(data.unit_families_data)
+    registry = UnitRegistry(data_units.unit_families_data)
 
     assert set(registry.families) == {'tokens', 'requests'}
     assert set(registry.units) == {
