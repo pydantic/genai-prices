@@ -3,18 +3,18 @@
 **Code-level architecture is in [code-spec](code-spec.md).**
 
 **Phase 1 is the first implementation slice of the shared pricing goal.**
-The root [Data-Driven Unit Registry](../spec.md) spec defines the overall model: calculate prices accurately, require complete price data, tolerate incomplete usage data, define units as data, and derive runtime behavior from a registry. Phase 1 proves that model in Python for today's public units without changing user-visible behavior.
+The root [Data-Driven Unit Registry](../spec.md) spec defines the overall model: calculate prices accurately, require complete price data, tolerate incomplete usage data, define units as data, and derive runtime behavior from a registry. Phase 1 proves that model in Python for today's public units while keeping the supported Python pricing and update entry points stable.
 
 **The Phase 1 registry model has four runtime pieces.** _(from "Phase 1 is the first implementation slice of the shared pricing goal")_
 First, raw registry data describes unit families, normalization factors, usage keys, price keys, and unit dimensions. Second, `UnitRegistry` parses that data into indexed `UnitFamily` and `UnitDef` objects. Third, `Usage` reads reported usage keys and lazily infers missing values from the registry. Fourth, base `ModelPrice.calc_price()` resolves price keys through the registry and decomposes only the units priced by the current model.
 
-**Phase 1 proves the Python registry model without changing public behavior.** _(from "The Phase 1 registry model has four runtime pieces")_
-Python moves today's hardcoded usage and price semantics behind a data-shaped registry, registry-aware usage reads, registry-backed model prices, and generic decomposition. Existing Python caller behavior, provider data, and runtime update payload shape remain unchanged.
+**Phase 1 preserves supported entry points while changing unsafe internals.** _(from "The Phase 1 registry model has four runtime pieces")_
+Python moves today's hardcoded usage and price semantics behind a data-shaped registry, registry-aware usage reads, registry-backed model prices, and generic decomposition. Existing pricing call signatures, permissive raw usage objects, provider data, and runtime update payload shape remain unchanged. This phase is allowed to tighten behavior when old behavior would hide incomplete price data or when preserving dataclass internals would block lazy registry reads; those exceptions are specified below.
 
-**The active registry is limited to the current Python unit surface.** _(from "Phase 1 proves the Python registry model without changing public behavior")_
+**The active registry is limited to the current Python unit surface.** _(from "Phase 1 preserves supported entry points while changing unsafe internals")_
 The Phase 1 registry exposes only the usage keys and price keys Python already supports: `input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `input_audio_tokens`, `cache_audio_read_tokens`, `output_audio_tokens`, their current `_mtok` price keys, plus the existing `requests` / `requests_kcount` request-pricing surface. Text, image, video, cache-by-modality units not already public, and other future units are not registered in this phase.
 
-**The remote payload shape matters because prices update outside package releases.** _(from "Phase 1 proves the Python registry model without changing public behavior")_
+**The remote payload shape matters because prices update outside package releases.** _(from "Phase 1 preserves supported entry points while changing unsafe internals")_
 The packages load generated language-native data at startup, but long-running clients can fetch `prices/data.json` or `prices/data_slim.json` to receive updated prices before a package release. If Phase 1 changed those remote files to include unit families, older released clients would break. Phase 1 therefore keeps both remote payloads as provider arrays and embeds only the current-unit registry subset into Python generated package data.
 
 **Phase 1 adds no separate runtime unit artifact.** _(from "The remote payload shape matters because prices update outside package releases")_
@@ -32,16 +32,22 @@ The current-unit subset intentionally omits future overlap units that would beco
 **Phase 1 preserves the complete-price/incomplete-usage contract.** _(from "Phase 1 is the first implementation slice of the shared pricing goal", "`UnitRegistry` owns Python's runtime unit graph")_
 Provider/model prices must be complete for the units they price: registered price keys, required ancestors, and required joins are validated before registry-driven pricing. Runtime usage remains allowed to be partial or contradictory when first received; errors occur only when missing-value inference or price calculation must interpret data that cannot produce an accurate bucket.
 
+**Complete-price validation intentionally supersedes old fallback overlap pricing.** _(from "Phase 1 preserves the complete-price/incomplete-usage contract", "Phase 1 preserves supported entry points while changing unsafe internals")_
+Before registry validation, a manual `ModelPrice` that priced `cache_read_mtok` and `input_audio_mtok` without `cache_audio_read_mtok` could price cached-audio tokens by falling them into one parent bucket. Phase 1 rejects that price set instead. This goes against the broad behavior-preservation goal, but it follows from the complete-price contract: overlapping priced units require an explicit registered join price so usage cannot be double-counted, dropped, or silently assigned to a fallback bucket that the provider data did not state.
+
 **`Usage` becomes registry-aware and remains permissive for raw caller objects.** _(from "Phase 1 preserves the complete-price/incomplete-usage contract")_
 Direct `Usage(...)` construction is strict for registered externally reported usage keys and rejects unknown keywords and non-reported pricing-only keys such as `requests`. `Usage.from_raw(obj)` reads known externally reported keys from mappings or objects and ignores extras, preserving the existing permissive raw-object contract. Missing values are inferred lazily from stored descendant values only when the requested value is uniquely determined; contradictory or underdetermined inference raises when interpreted, not when the object is constructed.
 
 **`Usage` stores reported values only.** _(from "`Usage` becomes registry-aware and remains permissive for raw caller objects")_
 Construction does not infer ancestors, normalize values, remember explicit-versus-inferred provenance, or reject contradictory registered values. `Usage.__add__`, equality, and representation operate on reported values; derived values are recomputed lazily on reads. This avoids bugs where inferred ancestors start behaving like caller-supplied data.
 
-**Phase 1 does not make `Usage` immutable.** _(from "`Usage` becomes registry-aware and remains permissive for raw caller objects")_
-Today's Python `Usage` is mutable, and immutability is unrelated to proving the registry pricing model. Phase 1 does not add custom registry-aware assignment semantics; registry-aware behavior lives behind reads and pricing.
+**`Usage` no longer preserves dataclass-introspection compatibility.** _(from "`Usage` stores reported values only", "Phase 1 preserves supported entry points while changing unsafe internals")_
+Prior `Usage` was a dataclass, so `dataclasses.is_dataclass(usage)` and `dataclasses.asdict(usage)` worked. Phase 1 intentionally drops that implementation detail: lazy registry reads need a normal class that stores only reported values and computes derived attributes on demand. Construction, attribute reads, equality, representation, addition, and raw-object wrapping remain supported; dataclass introspection over fixed fields is not a compatibility promise in this phase.
 
-**`ModelPrice` remains subclass-friendly and uses current legacy fields for storage.** _(from "Phase 1 proves the Python registry model without changing public behavior")_
+**Phase 1 keeps `Usage` mutable but does not make assignment a new extension point.** _(from "`Usage` no longer preserves dataclass-introspection compatibility")_
+Today's Python `Usage` is mutable, and immutability is unrelated to proving the registry pricing model. Assignment to a registered externally reported usage key may update the stored reported value to preserve ordinary field-mutation workflows. That does not make assignment a way to create dynamic usage keys; the active registry still decides which names are reported usage values, and registry-aware behavior lives behind reads and pricing.
+
+**`ModelPrice` remains subclass-friendly and uses current legacy fields for storage.** _(from "Phase 1 preserves supported entry points while changing unsafe internals")_
 Existing dataclass fields continue to store current price keys. Custom `@dataclass` subclasses with declared fields and custom `calc_price()` overrides continue to work, including overrides that inspect arbitrary fields on the original usage object. Phase 1 does not add base dynamic price-key constructor storage for future registered keys; that starts in Phase 3.
 
 **`ModelPrice` construction does not validate against the registry.** _(from "`ModelPrice` remains subclass-friendly and uses current legacy fields for storage")_

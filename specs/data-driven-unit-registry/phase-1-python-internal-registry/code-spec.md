@@ -9,7 +9,7 @@ A discarded proof-of-concept exists on branch `feat/token-unit-registry`. Implem
 **Start from the shared model, then implement the Python slice.** _(implements "Phase 1 is the first implementation slice of the shared pricing goal", "The Phase 1 registry model has four runtime pieces")_
 Read [../spec](../spec.md) for the pricing invariants and vocabulary: accurate pricing, complete price data, incomplete usage data, unit families, usage keys, price keys, dimensions, and registry-driven decomposition. This code spec only describes the Python delta needed for Phase 1.
 
-**Phase 1 adds Python registry modules for the current unit surface.** _(implements "Phase 1 proves the Python registry model without changing public behavior")_
+**Phase 1 adds Python registry modules for the current unit surface.** _(implements "Phase 1 preserves supported entry points while changing unsafe internals")_
 Add these hand-written Python runtime modules:
 
 - `packages/python/genai_prices/units.py`
@@ -129,6 +129,8 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
 
 This module does not own raw registry structural checks such as dimension-set uniqueness, interval closure, or join-closedness; those stay in `UnitRegistry`. Ancestor and join validation helpers receive both the family under validation and the registry that owns the relationship indexes. Validation helpers work from model-priced units plus registry indexes and relationship helpers. They must not scan every registry unit for every model when direct indexes are available, and they must not hardcode ordinary usage or price key names. The only name-aware exception is excluding `requests` from caller/extractor usage.
 
+Join coverage applies to manually constructed `ModelPrice` objects at standard base-pricing time. A current-surface price set such as `{input_mtok, cache_read_mtok, input_audio_mtok}` is rejected without `cache_audio_read_mtok`; the previous parent-bucket fallback is not preserved because the registry contract treats missing overlap prices as incomplete price data.
+
 **`decompose.py` implements dimension-driven decomposition.** _(implements "Validation protects pricing semantics without runtime trust caching")_
 Add:
 
@@ -171,6 +173,9 @@ class Usage:
     def __getattr__(self, name: str) -> int:
         """Return a stored registered value, lazily infer it, or raise a user-facing error."""
 
+    def __setattr__(self, name: str, value: int | None) -> None:
+        """Update a registered reported value, or assign an ordinary object attribute."""
+
     def __add__(self, other: Usage) -> Usage: ...
     def __radd__(self, other: Usage | int) -> Usage: ...
     def __eq__(self, other: object) -> bool: ...
@@ -178,6 +183,10 @@ class Usage:
 ```
 
 Direct construction is strict for registered externally reported usage keys and rejects unknown keyword names and non-reported pricing-only keys such as `requests`. `from_raw(...)` reads known externally reported usage keys from mappings or objects and ignores extras. Construction stores reported values only; it does not infer ancestors, normalize values, remember explicit-versus-inferred provenance, or reject contradictory registered values. Derived values are recomputed lazily on reads so they never start behaving like caller-supplied data in `__add__`, equality, representation, or diagnostics.
+
+Unlike the previous dataclass implementation, `Usage` does not preserve `dataclasses.asdict(...)`, `dataclasses.is_dataclass(...)`, or fixed-field dataclass introspection compatibility. That is an intentional Phase 1 exception to behavior preservation because fixed dataclass fields cannot represent registry-derived missing reads without storing derived values as if they were reported.
+
+To keep ordinary field mutation viable after leaving dataclasses, assignment to a registered externally reported usage key stores the value as reported usage, and assigning `None` removes the stored value. Assignment to non-registered names remains ordinary object assignment. Do not add public APIs for dynamically defining usage keys; the active registry decides which names are stored usage values.
 
 `ModelPrice` keeps existing dataclass fields for current price keys, including `requests_kcount`, and keeps subclass-friendly behavior. `ModelPrice.calc_price(usage: object)` changes from hardcoded token arithmetic to:
 
@@ -302,6 +311,6 @@ ModelInfo.calc_price(usage, provider, ...)
 
 `__init__.py` does not gain new top-level exports in this phase. Existing top-level exports such as `Usage`, `calc_price`, `UpdatePrices`, wait helpers, and `__version__` stay where they are. `UnitRegistry`, `UnitFamily`, and `UnitDef` are available from `genai_prices.units` for introspection, not re-exported from the package root.
 
-**Tests prove behavior preservation plus registry semantics.** _(implements "Phase 1 proves the registry model in Python without changing public behavior")_
+**Tests prove entry-point preservation plus registry semantics.** _(implements "Phase 1 preserves supported entry points while changing unsafe internals")_
 Add focused Python tests for current price parity, current request pricing, `Usage` strict construction and permissive raw wrapping, lazy inference, inconsistent usage interpretation, ancestor and join validation, missing-join rejection for the current subset, custom `ModelPrice` subclass preservation, `DataSnapshot` registry defaults, and unchanged provider-array update parsing.
 Include coverage that an invalid staged/custom model price is not rejected by `set_custom_snapshot(...)` in Phase 1, but is rejected when standard base pricing calculates against that model price.
