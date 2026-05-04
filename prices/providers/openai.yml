@@ -371,6 +371,8 @@ models:
     context_window: 128000
     prices_checked: 2025-07-22
     prices:
+      # prompt_tokens includes audio_tokens; this catch-all prices the
+      # non-audio remainder since OpenAI lists no separate text-input rate.
       input_mtok: 2.5
       input_audio_mtok: 2.5
       output_mtok: 10
@@ -410,6 +412,8 @@ models:
       starts_with: gpt-4o-mini-audio
     prices_checked: 2025-07-22
     prices:
+      # prompt_tokens includes audio_tokens; this catch-all prices the
+      # non-audio remainder since OpenAI lists no separate text-input rate.
       input_mtok: 0.15
       input_audio_mtok: 0.15
       output_mtok: 0.6
@@ -439,6 +443,8 @@ models:
       equals: gpt-4o-mini-tts
     prices:
       input_mtok: 0.6
+      # completion_tokens includes audio_tokens; this catch-all prices the
+      # non-audio remainder since OpenAI lists no separate text-output rate.
       output_mtok: 12
       output_audio_mtok: 12
 

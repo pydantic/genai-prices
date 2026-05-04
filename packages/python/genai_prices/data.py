@@ -1855,9 +1855,7 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.025'), tiers=[Tier(start=1000000, price=Decimal('0.175'))]
-                    ),
+                    cache_read_mtok=Decimal('0.025'),
                     output_mtok=Decimal('0.4'),
                     input_audio_mtok=Decimal('0.7'),
                     cache_audio_read_mtok=Decimal('0.175'),
