@@ -1,11 +1,14 @@
 from decimal import Decimal
 
-import pytest
-
 from genai_prices import Usage
 from genai_prices.types import ModelPrice
 
-pytestmark = pytest.mark.anyio
+MILLION = Decimal(1_000_000)
+THOUSAND = Decimal(1_000)
+
+
+def mtok(rate: str, tokens: int) -> Decimal:
+    return Decimal(rate) * tokens / MILLION
 
 
 def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
@@ -16,10 +19,12 @@ def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
         output_mtok=Decimal('10'),
     ).calc_price(Usage(input_tokens=1_000, cache_write_tokens=20, cache_read_tokens=30, output_tokens=100))
 
+    expected_input = mtok('2', 950) + mtok('0.5', 20) + mtok('0.25', 30)
+    expected_output = mtok('10', 100)
     assert price == {
-        'input_price': Decimal('0.0019175'),
-        'output_price': Decimal('0.001'),
-        'total_price': Decimal('0.0029175'),
+        'input_price': expected_input,
+        'output_price': expected_output,
+        'total_price': expected_input + expected_output,
     }
 
 
@@ -28,10 +33,12 @@ def test_standard_price_parity_handles_simple_input_output_tokens() -> None:
         Usage(input_tokens=2_000, output_tokens=500)
     )
 
+    expected_input = mtok('1.25', 2_000)
+    expected_output = mtok('3', 500)
     assert price == {
-        'input_price': Decimal('0.0025'),
-        'output_price': Decimal('0.0015'),
-        'total_price': Decimal('0.0040'),
+        'input_price': expected_input,
+        'output_price': expected_output,
+        'total_price': expected_input + expected_output,
     }
 
 
@@ -42,10 +49,11 @@ def test_standard_price_parity_handles_cache_read_write_tokens() -> None:
         cache_read_mtok=Decimal('0.25'),
     ).calc_price(Usage(input_tokens=1_000, cache_write_tokens=200, cache_read_tokens=300))
 
+    expected_input = mtok('2', 500) + mtok('0.5', 200) + mtok('0.25', 300)
     assert price == {
-        'input_price': Decimal('0.001175'),
+        'input_price': expected_input,
         'output_price': Decimal('0'),
-        'total_price': Decimal('0.001175'),
+        'total_price': expected_input,
     }
 
 
@@ -64,10 +72,11 @@ def test_model_price_decomposition_handles_audio_cache_overlap() -> None:
         )
     )
 
+    expected_input = mtok('1', 400) + mtok('2', 300) + mtok('3', 200) + mtok('4', 100)
     assert price == {
-        'input_price': Decimal('0.002'),
+        'input_price': expected_input,
         'output_price': Decimal('0'),
-        'total_price': Decimal('0.002'),
+        'total_price': expected_input,
     }
 
 
@@ -86,10 +95,11 @@ def test_overlap_price_parity_handles_cached_audio_overlap() -> None:
         )
     )
 
+    expected_input = mtok('1', 400) + mtok('0.25', 300) + mtok('2', 200) + mtok('0.5', 100)
     assert price == {
-        'input_price': Decimal('0.000925'),
+        'input_price': expected_input,
         'output_price': Decimal('0'),
-        'total_price': Decimal('0.000925'),
+        'total_price': expected_input,
     }
 
 
@@ -98,10 +108,11 @@ def test_model_price_decomposition_handles_output_audio() -> None:
         Usage(output_tokens=700, output_audio_tokens=200)
     )
 
+    expected_output = mtok('5', 500) + mtok('10', 200)
     assert price == {
         'input_price': Decimal('0'),
-        'output_price': Decimal('0.0045'),
-        'total_price': Decimal('0.0045'),
+        'output_price': expected_output,
+        'total_price': expected_output,
     }
 
 
@@ -110,38 +121,43 @@ def test_overlap_price_parity_handles_output_audio() -> None:
         Usage(output_tokens=800, output_audio_tokens=300)
     )
 
+    expected_output = mtok('5', 500) + mtok('9', 300)
     assert price == {
         'input_price': Decimal('0'),
-        'output_price': Decimal('0.0052'),
-        'total_price': Decimal('0.0052'),
+        'output_price': expected_output,
+        'total_price': expected_output,
     }
 
 
 def test_model_price_prices_requests_only_in_total() -> None:
     price = ModelPrice(requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000))
 
+    expected_total = Decimal('12') / THOUSAND
     assert price == {
         'input_price': Decimal('0'),
         'output_price': Decimal('0'),
-        'total_price': Decimal('0.012'),
+        'total_price': expected_total,
     }
 
 
 def test_request_price_regression_counts_one_request_per_price_calculation() -> None:
     price = ModelPrice(requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000, output_tokens=500))
 
+    expected_total = Decimal('12') / THOUSAND
     assert price == {
         'input_price': Decimal('0'),
         'output_price': Decimal('0'),
-        'total_price': Decimal('0.012'),
+        'total_price': expected_total,
     }
 
 
 def test_request_price_regression_contributes_only_to_total_price() -> None:
     price = ModelPrice(input_mtok=Decimal('1'), requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000))
 
+    expected_input = mtok('1', 1_000)
+    expected_request = Decimal('12') / THOUSAND
     assert price == {
-        'input_price': Decimal('0.001'),
+        'input_price': expected_input,
         'output_price': Decimal('0'),
-        'total_price': Decimal('0.013'),
+        'total_price': expected_input + expected_request,
     }
