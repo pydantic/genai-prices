@@ -25,3 +25,6 @@ JavaScript model prices are plain objects and arbitrary mutation cannot be inter
 
 **Decomposition caches are benchmark-gated.** _(from "Performance optimizations must be behavior-preserving")_
 Cached decomposition coefficients or plans are allowed only if benchmarks show direct decomposition remains material after validation trust is in place. Any cache key must include the exact registry validation identity and the model's effective priced usage-key set.
+
+**Usage registry-key lookups are a Phase 5 optimization target.** _(from "Performance optimizations must be behavior-preserving")_
+Phase 1 keeps `Usage` construction, assignment, reads, and representation live against the active registry. Phase 5 should benchmark and, if useful, cache registry-derived reported usage key sets and registry-order reported key tuples by exact registry validation identity without changing `Usage` semantics.
