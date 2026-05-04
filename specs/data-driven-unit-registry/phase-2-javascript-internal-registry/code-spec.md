@@ -18,6 +18,7 @@ Modify:
 - `packages/js/src/api.ts`
 - `packages/js/src/extractUsage.ts`
 - `packages/js/src/data.ts` (generated)
+- `packages/js/src/dataUnits.ts` (generated)
 - `prices/src/prices/package_data.py`
 
 Do not change `prices/data.json` or `prices/data_slim.json` into wrapped payloads in this phase.
@@ -153,8 +154,8 @@ Keep tiered-price semantics aligned with Python: a stored `input_tokens` total i
 
 Aggregation stays compatible with the current result shape. Costs from units whose dimensions include `{direction: input}` contribute to the existing input aggregate, units whose dimensions include `{direction: output}` contribute to the output aggregate, and families without a direction dimension such as `requests` contribute only to total.
 
-**`api.ts` and generated startup data remain provider-array compatible.** _(implements "The shared remote payload shape remains unchanged", "Runtime updates stay atomic for provider data and registry state")_
-Generated `data.ts` exports both current provider data and current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `unitFamiliesData`.
+**`api.ts` and generated startup data remain provider-array compatible.** _(implements "The shared remote payload shape remains unchanged", "JavaScript unit data stays separate from generated provider data", "Runtime updates stay atomic for provider data and registry state")_
+Generated `data.ts` exports only current provider data. Generated `dataUnits.ts` exports current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `dataUnits.ts`, so code that supplies custom provider data can reuse the default registry without importing the bundled provider list.
 
 Runtime update URLs still return provider arrays. Phase 2 therefore keeps update parsing compatible with the existing provider-array payload and preserves the active generated registry while replacing provider data. Local staged provider data can be parsed and structurally checked against the active parsed registry, but Phase 2 does not reject a staged update for model-price coverage; standard pricing validates the selected model price on use and leaves activation-time model-price validation to Phase 5.
 

@@ -11,6 +11,9 @@ The registered usage and price keys match the current JavaScript behavior, inclu
 **The shared remote payload shape remains unchanged.** _(from "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
 JavaScript generated package data can embed unit families for startup, but runtime update URLs still return bare provider arrays in Phase 2. Wrapped `unit_families` payloads start in Phase 3 after both runtimes have registry-backed internals.
 
+**JavaScript unit data stays separate from generated provider data.** _(from "The shared remote payload shape remains unchanged")_
+JavaScript users can provide their own provider data without paying the import cost of the bundled generated providers. Phase 2 preserves that workflow by generating the small current-unit registry subset into a separate JavaScript package module from the provider-heavy generated `data.ts`. Code that only needs the default unit registry must import the units-data module, not the bundled provider list.
+
 **JavaScript preserves its plain-object public usage contract.** _(from "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
 Callers continue passing plain objects. The runtime normalizes known externally reported usage keys into a plain object, ignores unknown extras, and reads missing values through registry-aware lazy inference. Contradictory usage can exist until a missing-value read or price calculation must interpret it.
 

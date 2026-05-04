@@ -11,9 +11,9 @@ Both payloads change from a bare provider list to `{"unit_families": {...}, "pro
 This phase accepts the one-time remote-payload break rather than maintaining dual payloads, fallback wrapper detection for older clients, or a parallel versioned rollout URL. After the wrapper exists, future top-level metadata can be added without another bare-list-to-object break. `data_slim.json` undergoes the same structural change; slimming applies to provider descriptive data, while unit-family runtime fields remain available.
 
 **Unit definitions travel with the prices that depend on them.** _(from "`data.json` and `data_slim.json` become wrapped top-level objects")_
-Runtime auto-updates must not be able to deliver prices for units that the client does not know. The unit registry is therefore generated into `data.json`, `data_slim.json`, Python `data.py`, and JavaScript `data.ts` alongside provider data.
+Runtime auto-updates must not be able to deliver prices for units that the client does not know. The unit registry is therefore generated into `data.json` and `data_slim.json` alongside provider data, and into small language-native package modules separate from provider-heavy generated package data.
 
-There is still no separate runtime unit file. Runtime package startup reads generated language-native data. Runtime auto-update reads the wrapped fetched payload. Both paths activate providers and unit families as one coherent snapshot.
+There is still no separate remote runtime unit file or update URL. Runtime package startup reads generated language-native provider data plus generated language-native unit data. Runtime auto-update reads the wrapped fetched payload. Both paths activate providers and unit families as one coherent snapshot.
 
 **The complete repo-defined registry starts here.** _(from "Unit definitions travel with the prices that depend on them")_
 `prices/units.yml` becomes the complete source for built-in repo-defined units, including the built-in token lattice needed by the shared pricing semantics. Full registry join-closedness is now a structural validation rule rather than a current-subset exception.

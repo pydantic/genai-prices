@@ -106,7 +106,7 @@ build()
 package_data()
   -> read wrapped data.json
   -> package_python_data(): emit providers + unit_families_data in separate generated Python modules
-  -> package_ts_data(): emit data + unitFamiliesData
+  -> package_ts_data(): emit data + unitFamiliesData in separate generated JavaScript modules
   -> generated runtime data is trusted because export validation succeeded first
 ```
 
@@ -198,11 +198,12 @@ Tier selection uses the provided or inferable `input_tokens` total. If `input_to
 
 ```text
 generated data.ts
-  -> unitFamiliesData bootstraps units.ts
   -> data bootstraps providerData
+generated dataUnits.ts
+  -> unitFamiliesData bootstraps units.ts
   -> do not validate every generated model price at module startup
   -> do not precompute decomposition state
-  -> do not require generated data.ts to emit per-price validation markers
+  -> do not require generated data.ts or dataUnits.ts to emit per-price validation markers
   -> in Phase 5+: create module-private trusted-price context for the active generated provider graph
 
 runtime update
