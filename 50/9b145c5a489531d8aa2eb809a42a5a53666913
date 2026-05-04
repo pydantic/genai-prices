@@ -1,0 +1,23 @@
+packages/python/genai_prices/types.py
+  a190d10d30f65083 640
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "509b145c5a489531d8aa2eb809a42a5a53666913",
+  "prompts": {
+    "a190d10d30f65083": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56754148-3831-40a9-863f-5756387584de",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Alex Hall",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
