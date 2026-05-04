@@ -244,8 +244,8 @@ The tier threshold remains the provided-or-inferable `input_tokens` total. If no
 
 Attribute assignment and deletion on `ModelPrice` do not run ancestor or join validation immediately. Phase 1 validates the final effective price-key set every time standard base `calc_price()` calculates against that `ModelPrice`. Snapshot activation does not perform model-price validation until Phase 5 adds runtime-private trust state. Subclass-only fields that are not registered price keys remain subclass-owned state and must not trigger registry validation.
 
-**Python extractor destinations become registry strings without certifying consistency.** _(implements "`Usage` becomes registry-aware and remains permissive for raw caller objects")_
-`UsageExtractorMapping.dest` becomes a string destination that must name an externally reported registry usage key when validation has a registry context:
+**Python runtime extractor destinations become registry strings without certifying consistency.** _(implements "`Usage` becomes registry-aware and remains permissive for raw caller objects")_
+`packages/python/genai_prices/types.py` `UsageExtractorMapping.dest` becomes a string destination that must name an externally reported registry usage key when validation has a registry context:
 
 ```python
 @dataclass
@@ -258,6 +258,8 @@ class UsageExtractorMapping:
 `UsageExtractor.__post_init__()` validates every mapping destination against externally reported usage keys before any response data is extracted. Runtime-created extractors validate against the active registry. Generated bundled provider-data import is a special construction context: `UsageExtractor.__post_init__` must validate against the bundled units-data module without importing the provider-heavy generated `data.py` through the active snapshot path.
 
 `UsageExtractor.extract(...)` accumulates extracted counts in `dict[str, int]` and returns `Usage(**values)`. Extraction does not mutate dataclass usage fields directly, does not target price keys, and does not target the non-reported `requests` unit. If a provider response contains contradictory registered usage counts, extraction still returns those reported values; contradictions become errors only when a missing inferred value or priced bucket needs interpretation.
+
+Do not change `prices/src/prices/prices_types.py` `UsageField`, the build-time `UsageExtractorMapping.dest` annotation, or the generated provider/data JSON schema enum in Phase 1. Build/package-data validation still rejects invalid current provider extractor destinations after parsing. Registry-derived provider YAML schema/autocomplete is Phase 4 work.
 
 **`data_snapshot.py` carries a registry and preserves current snapshot workflows.** _(implements "`DataSnapshot` carries the Python registry but keeps current activation behavior")_
 Add `unit_registry: UnitRegistry | None = None` to `DataSnapshot`:
