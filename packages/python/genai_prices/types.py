@@ -622,6 +622,34 @@ class ModelPrice:
         input_audio_tokens = usage.input_audio_tokens or 0
         output_audio_tokens = usage.output_audio_tokens or 0
 
+        # Provider usage fields can be inclusive parent/child buckets rather than disjoint buckets.
+        # For example, Google can report:
+        #
+        #   input_tokens=1_000
+        #   cache_read_tokens=400
+        #   input_audio_tokens=300
+        #   cache_audio_read_tokens=100
+        #
+        # The 100 cached audio tokens are included in all three ancestor buckets:
+        # input_tokens, cache_read_tokens, and input_audio_tokens. Pricing must charge
+        # each physical token once, using the most specific available priced bucket and
+        # falling back to a parent bucket only when the child bucket has no price.
+        #
+        # With all prices present, the disjoint priced buckets are:
+        #
+        #   input_mtok: 300 tokens
+        #   cache_read_mtok: 300 tokens
+        #   input_audio_mtok: 200 tokens
+        #   cache_audio_read_mtok: 100 tokens
+        #
+        # If cache_audio_read_mtok is missing but cache_read_mtok exists, cached audio
+        # falls back to cache_read_mtok. That keeps it out of input_audio_mtok so it is
+        # not double charged:
+        #
+        #   input_mtok: 400 tokens
+        #   cache_read_mtok: 400 tokens
+        #   input_audio_mtok: 200 tokens
+        #   cache_audio_read_mtok: 0 tokens
         priced_cache_audio_read_tokens = cache_audio_read_tokens if self.cache_audio_read_mtok is not None else 0
         cache_audio_read_tokens_priced_as_cache_read = (
             cache_audio_read_tokens if self.cache_audio_read_mtok is None and self.cache_read_mtok is not None else 0
