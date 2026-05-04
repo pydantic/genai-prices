@@ -850,6 +850,8 @@ class ModelPrice:
         input_price = Decimal(0)
         output_price = Decimal(0)
         total_price = Decimal(0)
+        # Reading input_tokens can trigger lazy inference errors; only do it when
+        # tiered pricing actually needs the threshold.
         total_input_tokens = usage_data.input_tokens if _model_price_uses_tiered_prices(self, registry) else 0
 
         for family, units in grouped_units.items():
