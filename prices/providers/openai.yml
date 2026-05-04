@@ -371,6 +371,7 @@ models:
     context_window: 128000
     prices_checked: 2025-07-22
     prices:
+      # OpenAI prices text and audio input equally for this audio preview.
       input_mtok: 2.5
       input_audio_mtok: 2.5
       output_mtok: 10
@@ -410,6 +411,7 @@ models:
       starts_with: gpt-4o-mini-audio
     prices_checked: 2025-07-22
     prices:
+      # OpenAI prices text and audio input equally for this audio preview.
       input_mtok: 0.15
       input_audio_mtok: 0.15
       output_mtok: 0.6
@@ -439,6 +441,7 @@ models:
       equals: gpt-4o-mini-tts
     prices:
       input_mtok: 0.6
+      # OpenAI prices text and audio output equally for this TTS model.
       output_mtok: 12
       output_audio_mtok: 12
 
