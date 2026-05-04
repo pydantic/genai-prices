@@ -87,6 +87,31 @@ def test_usage_repr_preserves_legacy_snapshot_order() -> None:
     )
 
 
+def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
+    with _active_registry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'sausage_tokens': {
+                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
+                    },
+                    'cheese_tokens': {
+                        'dimensions': {'direction': 'input', 'ingredient': 'cheese'},
+                    },
+                },
+            },
+        }
+    ):
+        usage = Usage(cheese_tokens=2, input_tokens=3, sausage_tokens=1)
+
+        assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
+
+
 def test_usage_from_raw_reads_known_mapping_keys() -> None:
     usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
 

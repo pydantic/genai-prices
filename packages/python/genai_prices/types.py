@@ -697,8 +697,9 @@ def _reported_usage_keys() -> frozenset[str]:
 def _reported_usage_key_order() -> tuple[str, ...]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
-    registry_keys = tuple(_get_registry().reported_usage_keys())
-    extra_keys = tuple(key for key in registry_keys if key not in _USAGE_REPR_ORDER)
+    registry = _get_registry()
+    reported_keys = registry.reported_usage_keys()
+    extra_keys = tuple(key for key in registry.units if key in reported_keys and key not in _USAGE_REPR_ORDER)
     return _USAGE_REPR_ORDER + extra_keys
 
 
