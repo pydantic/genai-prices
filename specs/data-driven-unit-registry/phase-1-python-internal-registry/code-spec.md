@@ -255,6 +255,8 @@ class UsageExtractorMapping:
     required: bool
 ```
 
+`UsageExtractor.__post_init__()` validates every mapping destination against externally reported usage keys before any response data is extracted. Runtime-created extractors validate against the active registry. Generated bundled provider-data import is a special construction context: `UsageExtractor.__post_init__` must validate against the bundled units-data module without importing the provider-heavy generated `data.py` through the active snapshot path.
+
 `UsageExtractor.extract(...)` accumulates extracted counts in `dict[str, int]` and returns `Usage(**values)`. Extraction does not mutate dataclass usage fields directly, does not target price keys, and does not target the non-reported `requests` unit. If a provider response contains contradictory registered usage counts, extraction still returns those reported values; contradictions become errors only when a missing inferred value or priced bucket needs interpretation.
 
 **`data_snapshot.py` carries a registry and preserves current snapshot workflows.** _(implements "`DataSnapshot` carries the Python registry but keeps current activation behavior")_

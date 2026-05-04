@@ -137,7 +137,7 @@ set_custom_snapshot(snapshot)
   -> validate the staged registry structure when needed
   -> in Phases 1-4: do not validate ModelPrice objects at activation time
   -> in Phases 1-4: candidate dynamic price keys, ancestor coverage, and join coverage are validated on use by ModelPrice.calc_price()
-  -> validate extractor destinations only at lifecycle boundaries that already own extractor validation for the current phase
+  -> validate extractor destinations when UsageExtractor objects are constructed, plus lifecycle boundaries that already own extractor validation for the current phase
   -> in Phase 5+: validate missing, custom, changed, runtime-authored, stale, or otherwise untrusted ModelPrice objects before recording trust
   -> in Phase 5+: record runtime-private validation state in the snapshot trust context
   -> on success: activate snapshot as the active runtime snapshot

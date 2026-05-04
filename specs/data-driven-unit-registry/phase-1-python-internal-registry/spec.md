@@ -74,5 +74,8 @@ Generated bundled data is trusted because the build validated it. Fetched auto-u
 **The request-count unit is the only Phase 1 pricing-only unit special case.** _(from "The active registry is limited to the current Python unit surface")_
 `requests` exists in the registry so `requests_kcount` participates in lookup, validation, display, and total-cost aggregation. It is not caller-supplied usage and not an extractor destination. Pricing code supplies one request per `Usage` object explicitly.
 
+**`UsageExtractor` construction validates destination keys.** _(from "`Usage` becomes registry-aware and remains permissive for raw caller objects", "The request-count unit is the only Phase 1 pricing-only unit special case")_
+Constructing a runtime `UsageExtractor` validates every mapping destination against the active registry's externally reported usage keys, rejecting price keys, arbitrary strings, and pricing-only `requests` before any response data is extracted. Generated bundled provider data validates its extractor destinations against the bundled units-data module while `data.py` is importing, so this construction-time check does not force the generated provider list into code paths that only need the default unit registry.
+
 **Python errors describe user data problems, not decomposition internals.** _(from "`Usage` becomes registry-aware and remains permissive for raw caller objects", "Validation protects pricing semantics without runtime trust caching")_
 Errors should talk about unknown keys, missing registered prices, contradictory usage, or values that cannot be inferred. They should not mention Mobius inversion, leaves, coefficients, posets, or internal dimension algorithms.
