@@ -41,6 +41,27 @@ def test_usage_direct_construction_rejects_pricing_only_requests() -> None:
         Usage(requests=1)
 
 
+def test_usage_assignment_preserves_regular_object_attributes() -> None:
+    usage = Usage()
+
+    usage.imaginary_tokens = 1
+
+    assert usage.imaginary_tokens == 1
+    assert 'imaginary_tokens' not in usage._values
+
+
+def test_usage_assignment_updates_registered_reported_values() -> None:
+    usage = Usage()
+
+    usage.input_tokens = 100
+    assert usage.input_tokens == 100
+    assert usage._values['input_tokens'] == 100
+
+    usage.input_tokens = None
+    assert 'input_tokens' not in usage._values
+    assert usage.input_tokens == 0
+
+
 def test_usage_missing_registered_reads_return_zero() -> None:
     usage = Usage()
 

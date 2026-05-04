@@ -203,6 +203,12 @@ class Usage:
 
     def __init__(self, **kwargs: int | None) -> None:
         object.__setattr__(self, '_values', {})
+        reported_usage_keys = _reported_usage_keys()
+        unknown_keys = kwargs.keys() - reported_usage_keys
+        if unknown_keys:
+            bad_keys = ', '.join(sorted(unknown_keys))
+            raise ValueError(f'Unknown usage key: {bad_keys}')
+
         self._store_values(kwargs)
 
     @classmethod
@@ -236,12 +242,6 @@ class Usage:
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
     def _store_values(self, values: Mapping[str, int | None]) -> None:
-        reported_usage_keys = _reported_usage_keys()
-        unknown_keys = values.keys() - reported_usage_keys
-        if unknown_keys:
-            bad_keys = ', '.join(sorted(unknown_keys))
-            raise ValueError(f'Unknown usage key: {bad_keys}')
-
         for key, value in values.items():
             if value is None:
                 self._values.pop(key, None)
