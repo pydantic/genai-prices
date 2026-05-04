@@ -81,9 +81,9 @@ def test_usage_equality_operates_on_reported_values() -> None:
     assert Usage(input_tokens=0) == Usage(input_tokens=0)
 
 
-def test_usage_repr_preserves_legacy_snapshot_order() -> None:
+def test_usage_repr_uses_registry_order() -> None:
     assert repr(Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)) == (
-        'Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)'
+        'Usage(input_tokens=10, output_tokens=2, cache_read_tokens=0, cache_write_tokens=1)'
     )
 
 

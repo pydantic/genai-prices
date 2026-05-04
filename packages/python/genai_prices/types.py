@@ -677,20 +677,11 @@ def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
 
 
-_USAGE_REPR_ORDER = (
-    'input_tokens',
-    'cache_write_tokens',
-    'cache_read_tokens',
-    'output_tokens',
-    'input_audio_tokens',
-    'cache_audio_read_tokens',
-    'output_audio_tokens',
-)
-
-
 def _reported_usage_keys() -> frozenset[str]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
+    # Phase 5 should benchmark/cache this active-registry key set and the
+    # corresponding registry-order tuple once registry validation identities exist.
     return _get_registry().reported_usage_keys()
 
 
@@ -699,8 +690,7 @@ def _reported_usage_key_order() -> tuple[str, ...]:
 
     registry = _get_registry()
     reported_keys = registry.reported_usage_keys()
-    extra_keys = tuple(key for key in registry.units if key in reported_keys and key not in _USAGE_REPR_ORDER)
-    return _USAGE_REPR_ORDER + extra_keys
+    return tuple(key for key in registry.units if key in reported_keys)
 
 
 def _raw_usage_value(obj: object, key: str) -> int | None:
