@@ -4,6 +4,12 @@ import type { ModelPrice, Usage } from '../types'
 
 import { calcPrice } from '../engine'
 
+const MILLION = 1_000_000
+
+function mtok(rate: number, tokens: number): number {
+  return (rate * tokens) / MILLION
+}
+
 describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
     it('should calculate input and output prices separately', () => {
@@ -90,10 +96,58 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice(usage, modelPrice)
 
+      const inputPrice = mtok(5.0, 700)
+      const outputPrice = mtok(10.0, 70)
       expect(result).toMatchObject({
-        input_price: 0.0035,
-        output_price: 0.0007,
-        total_price: 0.0042,
+        input_price: inputPrice,
+        output_price: outputPrice,
+        total_price: inputPrice + outputPrice,
+      })
+    })
+
+    it('should charge unpriced cache-audio overlap through one parent bucket', () => {
+      const usage: Usage = {
+        cache_audio_read_tokens: 100,
+        cache_read_tokens: 400,
+        input_audio_tokens: 300,
+        input_tokens: 1000,
+      }
+      const modelPrice: ModelPrice = {
+        cache_read_mtok: 2.0,
+        input_audio_mtok: 3.0,
+        input_mtok: 1.0,
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      const inputPrice = mtok(1.0, 400) + mtok(2.0, 400) + mtok(3.0, 200)
+      expect(result).toMatchObject({
+        input_price: inputPrice,
+        output_price: 0,
+        total_price: inputPrice,
+      })
+    })
+
+    it('should use provided input tokens for output tier thresholds', () => {
+      const usage: Usage = {
+        input_audio_tokens: 200000,
+        input_tokens: 100000,
+        output_tokens: 10000,
+      }
+      const modelPrice: ModelPrice = {
+        output_mtok: {
+          base: 1.0,
+          tiers: [{ price: 2.0, start: 100000 }],
+        },
+      }
+
+      const result = calcPrice(usage, modelPrice)
+
+      const outputPrice = mtok(1.0, 10000)
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: outputPrice,
+        total_price: outputPrice,
       })
     })
 

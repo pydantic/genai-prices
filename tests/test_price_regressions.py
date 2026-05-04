@@ -177,6 +177,28 @@ def test_model_price_charges_unpriced_descendants_through_parent() -> None:
     }
 
 
+def test_cache_audio_read_without_specific_price_uses_one_parent_bucket() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_read_mtok=Decimal('2'),
+        input_audio_mtok=Decimal('3'),
+    ).calc_price(
+        Usage(
+            input_tokens=1_000,
+            cache_read_tokens=400,
+            input_audio_tokens=300,
+            cache_audio_read_tokens=100,
+        )
+    )
+
+    expected_input = mtok('1', 400) + mtok('2', 400) + mtok('3', 200)
+    assert price == {
+        'input_price': expected_input,
+        'output_price': Decimal('0'),
+        'total_price': expected_input,
+    }
+
+
 def test_tiered_price_regression_uses_provided_input_token_threshold() -> None:
     price = ModelPrice(
         output_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=100_000, price=Decimal('2'))])

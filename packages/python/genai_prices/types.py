@@ -623,10 +623,15 @@ class ModelPrice:
         output_audio_tokens = usage.output_audio_tokens or 0
 
         priced_cache_audio_read_tokens = cache_audio_read_tokens if self.cache_audio_read_mtok is not None else 0
+        cache_audio_read_tokens_priced_as_cache_read = (
+            cache_audio_read_tokens if self.cache_audio_read_mtok is None and self.cache_read_mtok is not None else 0
+        )
 
         priced_audio_input_tokens = 0
         if self.input_audio_mtok is not None:
-            priced_audio_input_tokens = input_audio_tokens - priced_cache_audio_read_tokens
+            priced_audio_input_tokens = (
+                input_audio_tokens - priced_cache_audio_read_tokens - cache_audio_read_tokens_priced_as_cache_read
+            )
 
         if priced_audio_input_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')

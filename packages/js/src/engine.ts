@@ -58,10 +58,12 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   const outputAudioTokens = usage.output_audio_tokens ?? 0
 
   const pricedCacheAudioReadTokens = modelPrice.cache_audio_read_mtok === undefined ? 0 : cacheAudioReadTokens
+  const cacheAudioReadTokensPricedAsCacheRead =
+    modelPrice.cache_audio_read_mtok === undefined && modelPrice.cache_read_mtok !== undefined ? cacheAudioReadTokens : 0
 
   let pricedAudioInputTokens = 0
   if (modelPrice.input_audio_mtok !== undefined) {
-    pricedAudioInputTokens = inputAudioTokens - pricedCacheAudioReadTokens
+    pricedAudioInputTokens = inputAudioTokens - pricedCacheAudioReadTokens - cacheAudioReadTokensPricedAsCacheRead
   }
   if (pricedAudioInputTokens < 0) {
     throw new Error('cache_audio_read_tokens cannot be greater than input_audio_tokens')
