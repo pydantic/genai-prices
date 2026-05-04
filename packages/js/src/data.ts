@@ -3266,17 +3266,10 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: {
-            base: 0.025,
-            tiers: [
-              {
-                start: 1000000,
-                price: 0.175,
-              },
-            ],
-          },
+          cache_read_mtok: 0.025,
           output_mtok: 0.4,
           input_audio_mtok: 0.7,
+          cache_audio_read_mtok: 0.175,
         },
       },
       {
@@ -9573,6 +9566,7 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         prices: {
+          input_mtok: 2.5,
           output_mtok: 10,
           input_audio_mtok: 2.5,
         },
@@ -9624,6 +9618,7 @@ export const data: Provider[] = [
           starts_with: 'gpt-4o-mini-audio',
         },
         prices: {
+          input_mtok: 0.15,
           output_mtok: 0.6,
           input_audio_mtok: 0.15,
         },
@@ -9660,6 +9655,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.6,
+          output_mtok: 12,
           output_audio_mtok: 12,
         },
       },
