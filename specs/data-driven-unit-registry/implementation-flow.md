@@ -10,6 +10,7 @@ Phase 1 creates:
   -> packages/python/genai_prices/units.py
   -> packages/python/genai_prices/decompose.py
   -> packages/python/genai_prices/validation.py
+  -> packages/python/genai_prices/data_units.py (generated)
 
 Phase 1 modifies:
   -> packages/python/genai_prices/types.py
@@ -104,8 +105,8 @@ build()
 
 package_data()
   -> read wrapped data.json
-  -> package_python_data(): emit providers + unit_families_data
-  -> package_ts_data(): emit data + unitFamiliesData
+  -> package_python_data(): emit providers + unit_families_data in separate generated Python modules
+  -> package_ts_data(): emit data + unitFamiliesData in separate generated JavaScript modules
   -> generated runtime data is trusted because export validation succeeded first
 ```
 
@@ -116,16 +117,17 @@ Phase 1 and Phase 2 generate or embed language-native unit registry data for the
 ```text
 get_snapshot()
   -> _bundled_snapshot()
-       -> import providers, unit_families_data from generated data.py
+       -> import providers from generated data.py
+       -> import unit_families_data from generated data_units.py
        -> UnitRegistry(unit_families_data)
        -> DataSnapshot(providers=..., unit_registry=..., from_auto_update=False)
        -> do not validate every generated ModelPrice at import/startup
        -> do not precompute decomposition state
-       -> do not require generated data.py to emit per-price validation markers
+       -> do not require generated data.py or data_units.py to emit per-price validation markers
        -> in Phase 5+: create runtime-private trusted-price context for this provider graph
 ```
 
-Generated package data is pure data. Runtime-private validation trust is created from loaded objects, not serialized into the generated files.
+Generated package data is pure data. Runtime-private validation trust is created from loaded objects, not serialized into the generated files. The Python units-data module is separate so custom-provider code can borrow the default registry without importing the bundled provider list.
 
 ## Python Snapshot Activation
 
@@ -135,7 +137,7 @@ set_custom_snapshot(snapshot)
   -> validate the staged registry structure when needed
   -> in Phases 1-4: do not validate ModelPrice objects at activation time
   -> in Phases 1-4: candidate dynamic price keys, ancestor coverage, and join coverage are validated on use by ModelPrice.calc_price()
-  -> validate extractor destinations only at lifecycle boundaries that already own extractor validation for the current phase
+  -> validate extractor destinations when UsageExtractor objects are constructed, plus lifecycle boundaries that already own extractor validation for the current phase
   -> in Phase 5+: validate missing, custom, changed, runtime-authored, stale, or otherwise untrusted ModelPrice objects before recording trust
   -> in Phase 5+: record runtime-private validation state in the snapshot trust context
   -> on success: activate snapshot as the active runtime snapshot
@@ -176,13 +178,17 @@ ModelPrice.calc_price(usage)
        -> in Phases 1-4: always run this one-model validation before pricing
        -> in Phase 5+: skip validation only when active trust covers this ModelPrice fingerprint
   -> smart_usage = Usage.from_raw(usage)
-  -> total_input_tokens = smart_usage.input_tokens only if any TieredPrices value needs a threshold
-       -> otherwise use a neutral threshold because non-tiered prices ignore it
   -> resolve price keys to usage keys
   -> group priced units by family
   -> for each family:
        -> if requests, use fixed leaf value {"requests": 1}
-       -> otherwise compute decomposition from smart_usage
+       -> otherwise compute decomposition from explicit smart_usage values
+       -> in Phases 1-7: raise when a missing ancestor or overlap would need inference
+       -> in Phase 8+: infer missing values only when uniquely determined
+  -> total_input_tokens = smart_usage.input_tokens only if a TieredPrices value is configured
+       -> otherwise use a neutral threshold because non-tiered prices ignore it
+       -> in Phases 1-7: safe missing reads return zero; ambiguous missing reads raise
+       -> in Phase 8+: infer an ambiguous missing threshold only when uniquely determined
   -> for each priced usage-keyed unit:
        -> price = stored price at unit.price_key
        -> cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
@@ -190,17 +196,18 @@ ModelPrice.calc_price(usage)
   -> return input_price, output_price, total_price
 ```
 
-Tier selection uses the provided or inferable `input_tokens` total. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts.
+Tier selection reads `input_tokens` through the normal usage-read path before Phase 8. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts. If it is safely missing, the threshold is zero. Phase 8 may infer a missing threshold when descendant usage uniquely determines it.
 
 ## JavaScript Runtime Activation
 
 ```text
 generated data.ts
-  -> unitFamiliesData bootstraps units.ts
   -> data bootstraps providerData
+generated dataUnits.ts
+  -> unitFamiliesData bootstraps units.ts
   -> do not validate every generated model price at module startup
   -> do not precompute decomposition state
-  -> do not require generated data.ts to emit per-price validation markers
+  -> do not require generated data.ts or dataUnits.ts to emit per-price validation markers
   -> in Phase 5+: create module-private trusted-price context for the active generated provider graph
 
 runtime update

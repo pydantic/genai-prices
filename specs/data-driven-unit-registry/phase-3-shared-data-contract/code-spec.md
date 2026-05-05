@@ -104,8 +104,8 @@ requests:
 
 `UnitRegistry` construction now validates full join-closedness for every family. The Phase 1/2 missing-join exception is removed for complete registries.
 
-**Generated package data reads and emits wrapped payloads.** _(implements "Unit definitions travel with the prices that depend on them")_
-Update `prices/src/prices/package_data.py` so Python and JavaScript package data generation reads wrapped `data.json`, splits `providers` and `unit_families`, and emits:
+**Generated package data reads wrapped payloads and emits split modules.** _(implements "Unit definitions travel with the prices that depend on them")_
+Update `prices/src/prices/package_data.py` so Python and JavaScript package data generation reads wrapped `data.json`, splits `providers` and `unit_families`, and emits providers separately from unit families:
 
 ```python
 def package_data() -> None: ...
@@ -115,15 +115,24 @@ def package_ts_data(data_path: Path) -> None: ...
 
 ```python
 # packages/python/genai_prices/data.py
-__all__ = ('providers', 'unit_families_data')
-unit_families_data: dict[str, dict] = { ... }
+__all__ = ('providers',)
 providers: list[Provider] = [ ... ]
+```
+
+```python
+# packages/python/genai_prices/data_units.py
+__all__ = ('unit_families_data',)
+unit_families_data: dict[str, dict] = { ... }
 ```
 
 ```typescript
 // packages/js/src/data.ts
-export const unitFamiliesData: RawFamiliesDict = { ... }
 export const data: Provider[] = [ ... ]
+```
+
+```typescript
+// packages/js/src/dataUnits.ts
+export const unitFamiliesData: RawFamiliesDict = { ... }
 ```
 
 Generated outputs contain raw unit and price data only. They must not contain validation markers, trust flags, fingerprints, or decomposition caches.

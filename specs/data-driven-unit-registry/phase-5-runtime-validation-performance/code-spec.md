@@ -74,5 +74,8 @@ export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
 **Decomposition caches require benchmark evidence and exact keys.** _(implements "Decomposition caches are benchmark-gated")_
 If benchmarks justify caching decomposition coefficients, key caches by exact registry validation id plus the effective priced usage-key set. Do not serialize caches. Do not add caches that change error timing or user-facing decomposition behavior.
 
+**Usage registry-key caches require exact registry identity.** _(implements "Usage registry-key lookups are a Phase 5 optimization target")_
+Benchmark the repeated active-registry lookups used by `Usage` construction, assignment, reads, and representation. If the cost is material, cache the reported usage key set and registry-order reported key tuple by exact `UnitRegistry.validation_id`. The cache must be invalidated by registry replacement and must preserve current `Usage` behavior for custom snapshots.
+
 **Tests and benchmarks prove no behavior drift.** _(implements "Performance optimizations must be behavior-preserving")_
 Add tests for trust hits, stale trust on registry changes, stale trust on key additions/removals, no stale trust on value-only changes, Python id-reuse protection, JavaScript fail-closed fingerprint mismatches, generated-output purity, and parity with Phase 4 behavior. Add benchmarks that justify any decomposition cache included in the phase.

@@ -6,7 +6,7 @@
 Phases 1 through 4 prove the registry model, wrapped payload shape, validation behavior, public access patterns, and compatibility hardening. Phase 5 can optimize repeated runtime validation and decomposition work, but it must not change correctness semantics.
 
 **Performance optimizations must be behavior-preserving.** _(from "Phase 5 adds performance state after the data model is proven")_
-The accepted registry shape, price-key validation rules, extractor validation rules, usage inference semantics, decomposition semantics, generated payload shape, and public API behavior remain exactly as defined by Phases 1 through 4.
+The accepted registry shape, price-key validation rules, extractor validation rules, explicit-only missing-usage rules, decomposition semantics, generated payload shape, and public API behavior remain exactly as defined by Phases 1 through 4.
 
 **Runtime validation trust is snapshot- and registry-specific.** _(from "Performance optimizations must be behavior-preserving")_
 A model price can skip repeated validation only when the runtime can prove it is the same model price object, validated against the same registry validation identity, with the same effective price-key fingerprint.
@@ -25,3 +25,6 @@ JavaScript model prices are plain objects and arbitrary mutation cannot be inter
 
 **Decomposition caches are benchmark-gated.** _(from "Performance optimizations must be behavior-preserving")_
 Cached decomposition coefficients or plans are allowed only if benchmarks show direct decomposition remains material after validation trust is in place. Any cache key must include the exact registry validation identity and the model's effective priced usage-key set.
+
+**Usage registry-key lookups are a Phase 5 optimization target.** _(from "Performance optimizations must be behavior-preserving")_
+Phase 1 keeps `Usage` construction, assignment, reads, and representation live against the active registry. Phase 5 should benchmark and, if useful, cache registry-derived reported usage key sets and registry-order reported key tuples by exact registry validation identity without changing `Usage` semantics.

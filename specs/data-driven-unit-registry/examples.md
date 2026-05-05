@@ -93,6 +93,11 @@ Leaf values:
 
 Cost: `(800/1M) x 3 + (200/1M) x 0.30 + (500/1M) x 15 = $0.00996`
 
+If usage instead reported only `{cache_read_tokens: 200, output_tokens: 500}`,
+Phases 1 through 7 raise for this model because `input_tokens` is a priced
+ancestor and was omitted. Missing descendants are safely zero; missing ancestors
+are not inferred until Phase 8.
+
 ## Decomposition With Overlap (Join Coverage)
 
 A model prices four input units — including the join required by join coverage:
@@ -114,5 +119,10 @@ Leaf values (inclusion-exclusion via Mobius inversion):
 - `output_tokens`: 500
 
 Sum: 50 + 150 + 250 + 550 + 500 = 1500 = 1000 + 500. Every token in exactly one bucket.
+
+If `cache_audio_read_tokens` is omitted while both `cache_read_tokens` and
+`input_audio_tokens` are positive, Phases 1 through 7 raise for this price set
+instead of assuming the cached-audio overlap is zero. Phase 8 may infer a missing
+overlap only when the reported descendants uniquely determine it.
 
 See [algorithm](algorithm.md) for the general formula.
