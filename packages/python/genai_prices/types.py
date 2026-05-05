@@ -289,20 +289,27 @@ class Usage:
 
         registry = _get_registry()
         requested_unit = registry.units[usage_key]
-        descendant_values = [
-            (unit, value)
+        descendant_keys = [
+            unit.usage_key
             for reported_key, value in self._values.items()
-            if (unit := registry.units.get(reported_key)) is not None
+            if value > 0
+            and (unit := registry.units.get(reported_key)) is not None
             and unit is not requested_unit
             and UnitRegistry.is_ancestor_or_self(requested_unit, unit)
         ]
-        if not descendant_values:
+        if not descendant_keys:
             return 0
 
-        return _infer_usage_total(requested_unit, sorted(descendant_values, key=lambda item: item[0].usage_key))
+        reported_keys = ', '.join(sorted(descendant_keys))
+        raise ValueError(
+            f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
+            f'require explicit {usage_key}'
+        )
 
 
-def _infer_usage_total(requested_unit: UnitDef, descendant_values: Sequence[tuple[UnitDef, int]]) -> int:
+def _infer_usage_total(  # pyright: ignore[reportUnusedFunction]
+    requested_unit: UnitDef, descendant_values: Sequence[tuple[UnitDef, int]]
+) -> int:
     atoms = _usage_inference_atoms(requested_unit, descendant_values)
     equations = [
         [Fraction(1 if _atom_is_contained_in_unit(atom, unit, requested_unit) else 0) for atom in atoms]

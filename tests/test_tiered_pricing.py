@@ -280,19 +280,33 @@ def test_openai_gpt_5_4_tiered_pricing_with_cache():
     assert price.total_price == snapshot(Decimal('0.025'))
 
 
-def test_tiered_price_uses_inferred_input_tokens_for_threshold() -> None:
+def test_tiered_price_rejects_ambiguous_missing_input_token_threshold() -> None:
     price = types.ModelPrice(
-        input_mtok=Decimal('0'),
-        input_audio_mtok=types.TieredPrices(
+        output_mtok=types.TieredPrices(
+            base=Decimal('1'),
+            tiers=[types.Tier(start=100_000, price=Decimal('2'))],
+        )
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Missing usage for input_tokens: reported descendant usage keys input_audio_tokens',
+    ):
+        price.calc_price(Usage(input_audio_tokens=200_000, output_tokens=10_000))
+
+
+def test_tiered_price_uses_zero_threshold_for_safely_missing_input_tokens() -> None:
+    price = types.ModelPrice(
+        output_mtok=types.TieredPrices(
             base=Decimal('1'),
             tiers=[types.Tier(start=100_000, price=Decimal('2'))],
         ),
-    ).calc_price(Usage(input_audio_tokens=200_000))
+    ).calc_price(Usage(output_tokens=10_000))
 
     assert price == {
-        'input_price': Decimal('0.4'),
-        'output_price': Decimal('0'),
-        'total_price': Decimal('0.4'),
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0.01'),
+        'total_price': Decimal('0.01'),
     }
 
 
@@ -321,7 +335,7 @@ def test_tiered_price_rejects_underdetermined_input_token_threshold() -> None:
 
     with pytest.raises(
         ValueError,
-        match='Cannot infer input_tokens from reported usage keys cache_read_tokens, input_audio_tokens',
+        match='Missing usage for input_tokens: reported descendant usage keys cache_read_tokens, input_audio_tokens',
     ):
         price.calc_price(Usage(input_audio_tokens=200_000, cache_read_tokens=50_000, output_tokens=10_000))
 
