@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
+from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, are_compatible
 
 __all__ = (
     'validate_ancestor_coverage',
@@ -35,7 +35,7 @@ def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, regi
 
     for index, first_unit in enumerate(priced_units):
         for second_unit in priced_units[index + 1 :]:
-            if not UnitRegistry.are_compatible(first_unit, second_unit):
+            if not are_compatible(first_unit, second_unit):
                 continue
 
             join = registry.find_join(first_unit, second_unit)

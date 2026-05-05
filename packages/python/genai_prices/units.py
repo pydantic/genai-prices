@@ -65,7 +65,7 @@ class UnitRegistry:
                 if unit.price_key in self.price_keys:
                     raise ValueError(f'Duplicate unit price key: {unit.price_key}')
 
-                dimension_set = self._dimension_set(unit)
+                dimension_set = _dimension_set(unit)
                 if existing_unit := family_dimensions.get(dimension_set):
                     raise ValueError(
                         f'Duplicate dimensions in unit family {family_id}: {existing_unit.usage_key} and {usage_key}'
@@ -80,35 +80,14 @@ class UnitRegistry:
             self._ancestor_usage_keys[usage_key] = frozenset(
                 maybe_ancestor.usage_key
                 for maybe_ancestor in unit.family.units.values()
-                if maybe_ancestor is not unit and self._is_dimension_subset(maybe_ancestor, unit)
+                if maybe_ancestor is not unit and _is_dimension_subset(maybe_ancestor, unit)
             )
 
         self._validate_interval_closure()
 
-    @staticmethod
-    def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:
-        return frozenset(unit.dimensions.items())
-
-    @staticmethod
-    def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
-        return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
-
-    @staticmethod
-    def are_compatible(a: UnitDef, b: UnitDef) -> bool:
-        """Return whether two units can overlap without conflicting dimensions."""
-        if a.family is not b.family:
-            return False
-
-        return all(b.dimensions.get(key, value) == value for key, value in a.dimensions.items())
-
-    @staticmethod
-    def is_ancestor_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
-        """Return whether ancestor contains descendant within the same family."""
-        return ancestor.family is descendant.family and UnitRegistry._is_dimension_subset(ancestor, descendant)
-
     def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
         """Return the most specific registered unit joining two compatible units, if present."""
-        if not self.are_compatible(a, b):
+        if not are_compatible(a, b):
             return None
 
         return self._units_by_dimension[a.family_id].get(frozenset(a.dimensions.items() | b.dimensions.items()))
@@ -124,7 +103,7 @@ class UnitRegistry:
         for family in self.families.values():
             for ancestor in family.units.values():
                 for descendant in family.units.values():
-                    if ancestor is descendant or not self._is_dimension_subset(ancestor, descendant):
+                    if ancestor is descendant or not _is_dimension_subset(ancestor, descendant):
                         continue
 
                     added_dimensions = descendant.dimensions.items() - ancestor.dimensions.items()
@@ -140,6 +119,22 @@ class UnitRegistry:
                                     f'between {ancestor.usage_key} and {descendant.usage_key}: '
                                     f'{missing_dimensions}'
                                 )
+
+
+def are_compatible(a: UnitDef, b: UnitDef) -> bool:
+    """Return whether two units can overlap without conflicting dimensions."""
+    if a.family is not b.family:
+        return False
+
+    return all(b.dimensions.get(key, value) == value for key, value in a.dimensions.items())
+
+
+def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:
+    return frozenset(unit.dimensions.items())
+
+
+def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
+    return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
 
 
 def _get_registry() -> UnitRegistry:

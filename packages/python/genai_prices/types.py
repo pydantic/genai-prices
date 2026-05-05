@@ -283,7 +283,8 @@ class Usage:
         return [(key, self._values[key]) for key in _reported_usage_key_order() if key in self._values]
 
     def _infer_missing_value(self, usage_key: str) -> int:
-        from genai_prices.units import UnitRegistry, _get_registry  # pyright: ignore[reportPrivateUsage]
+        from genai_prices.decompose import is_descendant_or_self
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
         registry = _get_registry()
         requested_unit = registry.units[usage_key]
@@ -293,7 +294,7 @@ class Usage:
             if value > 0
             and (unit := registry.units.get(reported_key)) is not None
             and unit is not requested_unit
-            and UnitRegistry.is_ancestor_or_self(requested_unit, unit)
+            and is_descendant_or_self(requested_unit, unit)
         ]
         if not descendant_keys:
             overlapping_keys = _reported_overlap_keys_for_join(
@@ -326,14 +327,15 @@ class Usage:
 def _reported_overlap_keys_for_join(
     requested_unit: UnitDef, reported_units: Sequence[UnitDef], registry: UnitRegistry
 ) -> tuple[str, str] | None:
-    from genai_prices.units import UnitRegistry
+    from genai_prices.decompose import is_descendant_or_self
+    from genai_prices.units import are_compatible
 
     sorted_units = sorted(reported_units, key=lambda unit: unit.usage_key)
     for index, left in enumerate(sorted_units):
         for right in sorted_units[index + 1 :]:
-            if not UnitRegistry.are_compatible(left, right):
+            if not are_compatible(left, right):
                 continue
-            if UnitRegistry.is_ancestor_or_self(left, right) or UnitRegistry.is_ancestor_or_self(right, left):
+            if is_descendant_or_self(left, right) or is_descendant_or_self(right, left):
                 continue
             if registry.find_join(left, right) is requested_unit:
                 return left.usage_key, right.usage_key
