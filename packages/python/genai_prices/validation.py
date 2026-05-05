@@ -1,14 +1,6 @@
 from __future__ import annotations
 
-from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, are_compatible
-
-__all__ = (
-    'validate_ancestor_coverage',
-    'validate_extractor_destinations',
-    'validate_join_coverage',
-    'validate_model_price',
-    'validate_price_keys',
-)
+from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 
 
 def validate_price_keys(price_keys: set[str], registry: UnitRegistry) -> None:
@@ -33,7 +25,7 @@ def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> N
 
     for index, first_unit in enumerate(priced_units):
         for second_unit in priced_units[index + 1 :]:
-            if not are_compatible(first_unit, second_unit):
+            if not first_unit.is_compatible_with(second_unit):
                 continue
 
             join = family.find_join(first_unit, second_unit)

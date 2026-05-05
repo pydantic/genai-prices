@@ -5,8 +5,6 @@ from dataclasses import dataclass, field
 from itertools import combinations
 from typing import Any, cast
 
-__all__ = 'UnitDef', 'UnitFamily', 'UnitRegistry', '_get_registry'
-
 
 @dataclass(eq=False)
 class UnitDef:
@@ -15,6 +13,13 @@ class UnitDef:
     family_id: str
     family: UnitFamily
     dimensions: dict[str, str]
+
+    def is_compatible_with(self, other: UnitDef) -> bool:
+        """Return whether two units can overlap without conflicting dimensions."""
+        if self.family is not other.family:
+            return False
+
+        return all(other.dimensions.get(key, value) == value for key, value in self.dimensions.items())
 
 
 @dataclass(eq=False)
@@ -27,7 +32,7 @@ class UnitFamily:
 
     def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
         """Return the most specific registered unit joining two family units, if present."""
-        if not are_compatible(a, b):
+        if not a.is_compatible_with(b):
             return None
 
         return self.units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
@@ -122,14 +127,6 @@ class UnitRegistry:
                                 )
 
 
-def are_compatible(a: UnitDef, b: UnitDef) -> bool:
-    """Return whether two units can overlap without conflicting dimensions."""
-    if a.family is not b.family:
-        return False
-
-    return all(b.dimensions.get(key, value) == value for key, value in a.dimensions.items())
-
-
 def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:
     return frozenset(unit.dimensions.items())
 
@@ -138,7 +135,7 @@ def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
     return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
 
 
-def _get_registry() -> UnitRegistry:
+def _get_registry() -> UnitRegistry:  # pyright: ignore[reportUnusedFunction]
     from genai_prices.data_snapshot import get_snapshot
 
     registry = get_snapshot().unit_registry

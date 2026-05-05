@@ -327,12 +327,11 @@ def _reported_overlap_keys_for_join(
     requested_unit: UnitDef, reported_units: Sequence[UnitDef]
 ) -> tuple[str, str] | None:
     from genai_prices.decompose import is_descendant_or_self
-    from genai_prices.units import are_compatible
 
     sorted_units = sorted(reported_units, key=lambda unit: unit.usage_key)
     for index, left in enumerate(sorted_units):
         for right in sorted_units[index + 1 :]:
-            if not are_compatible(left, right):
+            if not left.is_compatible_with(right):
                 continue
             if is_descendant_or_self(left, right) or is_descendant_or_self(right, left):
                 continue
