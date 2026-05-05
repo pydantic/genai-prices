@@ -98,9 +98,11 @@ export function normalizeUsage(obj: unknown): NormalizedUsage
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 ```
 
-`normalizeUsage(...)` reads known externally reported usage keys, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly, lazily infers missing values when uniquely determined, returns zero for no relevant data, and throws user-facing errors for contradictory or underdetermined required inference. It does not cache inferred values or store provenance.
+`normalizeUsage(...)` reads known externally reported usage keys, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly, returns `0` for unambiguous missing registered values, and raises when a missing read would require inferring an omitted ancestor or overlap. It does not infer missing values, cache derived values, or store provenance.
 
-`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `getUsageValue(...)` or `calcPrice(...)` must interpret them.
+The missing-read check is registry-driven and mirrors Python: a missing read is ambiguous when either a positive reported strict descendant of the requested unit exists, or the requested unit is the join of two positive reported compatible units that are incomparable with each other. A missing descendant of a reported ancestor returns `0` rather than raising because missing more-specific usage is allowed to mean "not reported".
+
+`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `getUsageValue(...)` or `calcPrice(...)` must interpret affected usage.
 
 **`decompose.ts` mirrors Python's dimension-driven decomposition.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
 Implement:
@@ -117,7 +119,7 @@ export function computeLeafValues(
 
 Use the same semantics as Phase 1 Python and the shared [../algorithm](../algorithm.md). The requests family is priced explicitly in engine code, not read from caller usage.
 
-Do not introduce cached decomposition plans or coefficients in this phase. Direct decomposition reads missing values through `getUsageValue(...)`, ignores unpriced reported values unless needed to infer a missing priced value, and raises user-facing errors for impossible priced buckets.
+Do not introduce cached decomposition plans or coefficients in this phase. Direct decomposition reads explicit values through `getUsageValue(...)`, treats missing priced units as zero only when the omission is unambiguous, ignores unpriced reported values when explicit priced ancestors make them unnecessary, and raises user-facing errors when pricing would require inferring a missing ancestor or overlap.
 
 **`validation.ts` mirrors Python's structural and price-level checks.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
 Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, model prices, and provider data. Extractor-destination validation helpers may exist for parity with Python and Phase 3 reuse, but Phase 2 only uses them in tests or local helper-level checks, not as an authoritative runtime-update gate. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Standard `calcPrice(...)` calls model-price validation every time before decomposition. Do not add activation-time model-price validation, validation marker APIs, registry validation ids, `WeakMap` trust state, or decomposition caches.
@@ -143,14 +145,14 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 1. read the active parsed registry
 2. validate the current model price's effective registered price-key set
 3. normalize raw usage
-4. read `input_tokens` only when tiered prices need the threshold
-5. resolve price keys and group by family
-6. compute per-family leaf values
+4. resolve price keys and group by family
+5. compute per-family leaf values with explicit-only missing-usage checks
+6. read `input_tokens` through `getUsageValue(...)` when a selected price uses `TieredPrices`
 7. price `requests` as one request per usage object
 8. normalize by `family.per`
 9. aggregate into the existing result shape
 
-Keep tiered-price semantics aligned with Python: a stored `input_tokens` total is used directly for tier selection, and missing totals are inferred only when coherent.
+Keep tiered-price semantics aligned with Python: tier selection reads `input_tokens` through `getUsageValue(...)`. A stored `input_tokens` total is used directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises until Phase 8 may add coherent missing-threshold inference.
 
 Aggregation stays compatible with the current result shape. Costs from units whose dimensions include `{direction: input}` contribute to the existing input aggregate, units whose dimensions include `{direction: output}` contribute to the output aggregate, and families without a direction dimension such as `requests` contribute only to total.
 
@@ -160,7 +162,7 @@ Generated `data.ts` exports only current provider data. Generated `dataUnits.ts`
 Runtime update URLs still return provider arrays. Phase 2 therefore keeps update parsing compatible with the existing provider-array payload and preserves the active generated registry while replacing provider data. Local staged provider data can be parsed and structurally checked against the active parsed registry, but Phase 2 does not reject a staged update for model-price coverage; standard pricing validates the selected model price on use and leaves activation-time model-price validation to Phase 5.
 
 **`extractUsage.ts` returns normalized plain usage without proving consistency.** _(implements "JavaScript preserves its plain-object public usage contract", "JavaScript behavior stays aligned with Python semantics")_
-Extractor output keys are registry usage keys, not fixed TypeScript unions. Extraction builds a plain object of counts, normalizes it through `normalizeUsage(...)`, and returns that normalized plain object. It does not prove provider-reported counts are mutually consistent. Contradictory registered usage values remain stored until `getUsageValue(...)` or `calcPrice(...)` needs to infer a missing value or compute a priced bucket.
+Extractor output keys are registry usage keys, not fixed TypeScript unions. Extraction builds a plain object of counts, normalizes it through `normalizeUsage(...)`, and returns that normalized plain object. It does not prove provider-reported counts are mutually consistent. Contradictory registered usage values remain stored until `calcPrice(...)` needs to compute an affected priced bucket.
 
 **Tests prove JavaScript parity and cross-language alignment.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
-Add JavaScript tests for current price parity, request pricing, usage normalization, lazy inference, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.
+Add JavaScript tests for current price parity, request pricing, usage normalization, unambiguous missing registered values returning zero without being materialized, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.

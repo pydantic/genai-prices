@@ -7,9 +7,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from fractions import Fraction
 from functools import cache
-from itertools import combinations, product
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
@@ -289,163 +287,58 @@ class Usage:
 
         registry = _get_registry()
         requested_unit = registry.units[usage_key]
-        descendant_values = [
-            (unit, value)
+        descendant_keys = [
+            unit.usage_key
             for reported_key, value in self._values.items()
-            if (unit := registry.units.get(reported_key)) is not None
+            if value > 0
+            and (unit := registry.units.get(reported_key)) is not None
             and unit is not requested_unit
             and UnitRegistry.is_ancestor_or_self(requested_unit, unit)
         ]
-        if not descendant_values:
-            return 0
+        if not descendant_keys:
+            overlapping_keys = _reported_overlap_keys_for_join(
+                requested_unit,
+                [
+                    unit
+                    for reported_key, value in self._values.items()
+                    if value > 0
+                    and (unit := registry.units.get(reported_key)) is not None
+                    and unit.family is requested_unit.family
+                ],
+                registry,
+            )
+            if not overlapping_keys:
+                return 0
 
-        return _infer_usage_total(requested_unit, sorted(descendant_values, key=lambda item: item[0].usage_key))
+            reported_keys = ', '.join(overlapping_keys)
+            raise ValueError(
+                f'Missing usage for {usage_key}: reported overlapping usage keys {reported_keys} '
+                f'require explicit {usage_key}'
+            )
 
-
-def _infer_usage_total(requested_unit: UnitDef, descendant_values: Sequence[tuple[UnitDef, int]]) -> int:
-    atoms = _usage_inference_atoms(requested_unit, descendant_values)
-    equations = [
-        [Fraction(1 if _atom_is_contained_in_unit(atom, unit, requested_unit) else 0) for atom in atoms]
-        for unit, _ in descendant_values
-    ]
-    values = [Fraction(value) for _, value in descendant_values]
-
-    possible_totals = _feasible_total_values(equations, values)
-    if not possible_totals:
+        reported_keys = ', '.join(sorted(descendant_keys))
         raise ValueError(
-            f'Contradictory usage data for {requested_unit.usage_key}: '
-            f'reported descendant usage values cannot be reconciled'
+            f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
+            f'require explicit {usage_key}'
         )
 
-    reported_keys = ', '.join(unit.usage_key for unit, _ in descendant_values)
-    if len(possible_totals) != 1:
-        raise ValueError(
-            f'Cannot infer {requested_unit.usage_key} from reported usage keys {reported_keys}: '
-            f'missing overlap or more-specific usage data'
-        )
 
-    total = next(iter(possible_totals))
-    if total.denominator != 1:
-        raise ValueError(
-            f'Contradictory usage data for {requested_unit.usage_key}: '
-            f'reported descendant usage values cannot be reconciled'
-        )
-    return total.numerator
+def _reported_overlap_keys_for_join(
+    requested_unit: UnitDef, reported_units: Sequence[UnitDef], registry: UnitRegistry
+) -> tuple[str, str] | None:
+    from genai_prices.units import UnitRegistry
 
-
-def _usage_inference_atoms(
-    requested_unit: UnitDef, descendant_values: Sequence[tuple[UnitDef, int]]
-) -> list[tuple[tuple[str, str | None], ...]]:
-    dimension_values: dict[str, set[str]] = {}
-    for unit, _ in descendant_values:
-        for key, value in unit.dimensions.items():
-            if key not in requested_unit.dimensions:
-                dimension_values.setdefault(key, set()).add(value)
-
-    axes = sorted(dimension_values)
-    value_options = [sorted(dimension_values[axis]) + [None] for axis in axes]
-    atoms: list[tuple[tuple[str, str | None], ...]] = []
-    for values in product(*value_options):
-        atom = tuple(zip(axes, values))
-        if any(_atom_is_contained_in_unit(atom, unit, requested_unit) for unit, _ in descendant_values):
-            atoms.append(atom)
-
-    return atoms
-
-
-def _atom_is_contained_in_unit(
-    atom: tuple[tuple[str, str | None], ...], unit: UnitDef, requested_unit: UnitDef
-) -> bool:
-    atom_dimensions = dict(atom)
-    return all(
-        key in requested_unit.dimensions or atom_dimensions.get(key) == value for key, value in unit.dimensions.items()
-    )
-
-
-def _feasible_total_values(equations: Sequence[Sequence[Fraction]], values: Sequence[Fraction]) -> set[Fraction]:
-    rank = _matrix_rank(equations)
-    atom_count = len(equations[0]) if equations else 0
-    possible_totals: set[Fraction] = set()
-
-    for basis in combinations(range(atom_count), rank):
-        basis_equations = [[row[column] for column in basis] for row in equations]
-        if _matrix_rank(basis_equations) != rank:
-            continue
-
-        solution = _solve_linear_system(basis_equations, values)
-        if solution is None or any(value < 0 for value in solution):
-            continue
-
-        possible_totals.add(sum(solution, start=Fraction(0)))
-
-    return possible_totals
-
-
-def _matrix_rank(matrix: Sequence[Sequence[Fraction]]) -> int:
-    rows = [list(row) for row in matrix]
-    if not rows:
-        return 0
-
-    row_count = len(rows)
-    column_count = len(rows[0])
-    rank = 0
-    for column in range(column_count):
-        pivot = next((row for row in range(rank, row_count) if rows[row][column] != 0), None)
-        if pivot is None:
-            continue
-
-        rows[rank], rows[pivot] = rows[pivot], rows[rank]
-        pivot_value = rows[rank][column]
-        rows[rank] = [value / pivot_value for value in rows[rank]]
-        for row in range(row_count):
-            if row == rank or rows[row][column] == 0:
+    sorted_units = sorted(reported_units, key=lambda unit: unit.usage_key)
+    for index, left in enumerate(sorted_units):
+        for right in sorted_units[index + 1 :]:
+            if not UnitRegistry.are_compatible(left, right):
                 continue
-            factor = rows[row][column]
-            rows[row] = [value - factor * pivot_value for value, pivot_value in zip(rows[row], rows[rank])]
-
-        rank += 1
-
-    return rank
-
-
-def _solve_linear_system(equations: Sequence[Sequence[Fraction]], values: Sequence[Fraction]) -> list[Fraction] | None:
-    rows = [list(row) + [value] for row, value in zip(equations, values)]
-    if not rows:
-        return []
-
-    variable_count = len(rows[0]) - 1
-    row_count = len(rows)
-    rank = 0
-    pivot_columns: list[int] = []
-    for column in range(variable_count):
-        pivot = next((row for row in range(rank, row_count) if rows[row][column] != 0), None)
-        if pivot is None:
-            continue
-
-        rows[rank], rows[pivot] = rows[pivot], rows[rank]
-        pivot_value = rows[rank][column]
-        rows[rank] = [value / pivot_value for value in rows[rank]]
-        for row in range(row_count):
-            if row == rank or rows[row][column] == 0:
+            if UnitRegistry.is_ancestor_or_self(left, right) or UnitRegistry.is_ancestor_or_self(right, left):
                 continue
-            factor = rows[row][column]
-            rows[row] = [value - factor * pivot_value for value, pivot_value in zip(rows[row], rows[rank])]
+            if registry.find_join(left, right) is requested_unit:
+                return left.usage_key, right.usage_key
 
-        pivot_columns.append(column)
-        rank += 1
-
-    for row in rows:
-        if all(value == 0 for value in row[:variable_count]) and row[-1] != 0:
-            return None
-
-    if rank != variable_count:
-        return None
-
-    solution = [Fraction(0) for _ in range(variable_count)]
-    for row_index, column in enumerate(pivot_columns):
-        solution[column] = rows[row_index][-1]
-
-    return solution
+    return None
 
 
 @dataclass

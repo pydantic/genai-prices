@@ -6,7 +6,7 @@
 Phases 1 through 5 establish repo-defined unit data, both runtime implementations, wrapped payloads, compatibility hardening, and runtime validation performance state. Phase 6 adds a user-facing way to define additional units at runtime without replacing those foundations.
 
 **Users can define custom units at runtime.** _(from "Phase 6 adds runtime unit editing on top of the optimized registry runtime")_
-Without modifying the repository and without making a PR, callers can add units to existing unit families or create entirely new unit families. Custom units are first-class after activation: they use the same validation, usage inference, price-key resolution, decomposition, and validation-trust machinery as repo-defined units.
+Without modifying the repository and without making a PR, callers can add units to existing unit families or create entirely new unit families. Custom units are first-class after activation: they use the same validation, price-key resolution, explicit-only missing-usage checks, decomposition, and validation-trust machinery as repo-defined units. Phase 8 adds usage inference for both repo-defined and runtime custom units.
 
 **Runtime custom units reuse the Phase 3 raw unit shape.** _(from "Users can define custom units at runtime")_
 The raw data shape stays `family_id -> family data -> units -> usage_key -> unit data`. Unit dimensions remain unit-local; adding a unit with a new dimension key or value is how an existing family gains that axis or value. There is no separate declaration surface for dimension keys or values.
