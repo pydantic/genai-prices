@@ -1,7 +1,7 @@
 # Code Spec: Phase 8 Usage Inference
 
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
-**Baseline:** this phase starts after Phase 7, with both runtimes using explicit-only missing-usage checks and active-snapshot guardrails.
+**Baseline:** this phase starts after Phase 7, with both runtimes using explicit-only missing-usage checks for direct reads and pricing, plus active-snapshot guardrails.
 
 **Phase 8 replaces conservative missing-usage failures with demand-driven inference.** _(implements "Phase 8 adds missing-usage inference after the registry architecture is complete")_
 The implementation should remove the Phase 1/2 rule that missing priced ancestors and overlaps always fail when descendant or overlapping usage suggests they may be needed. Instead, the runtime attempts to infer the missing value. It still raises if the value is contradictory or underdetermined.

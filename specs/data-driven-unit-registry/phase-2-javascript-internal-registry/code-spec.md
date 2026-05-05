@@ -95,12 +95,14 @@ Implement:
 ```typescript
 export type NormalizedUsage = Usage
 export function normalizeUsage(obj: unknown): NormalizedUsage
-export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
+export function getUsageValue(usage: NormalizedUsage, usageKey: string): number | undefined
 ```
 
-`normalizeUsage(...)` reads known externally reported usage keys, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly and returns `undefined` for missing registered values in Phase 2. It does not infer missing values, cache derived values, or store provenance.
+`normalizeUsage(...)` reads known externally reported usage keys, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly, returns `undefined` for unambiguous missing registered values, and raises when a missing read would require inferring an omitted ancestor or overlap. It does not infer missing values, cache derived values, or store provenance.
 
-`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `calcPrice(...)` must interpret affected priced buckets.
+The missing-read check is registry-driven and mirrors Python: a missing read is ambiguous when either a positive reported strict descendant of the requested unit exists, or the requested unit is the join of two positive reported compatible units that are incomparable with each other. A missing descendant of a reported ancestor returns `undefined` rather than raising because missing more-specific usage is allowed to mean "not reported".
+
+`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `getUsageValue(...)` or `calcPrice(...)` must interpret affected usage.
 
 **`decompose.ts` mirrors Python's dimension-driven decomposition.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
 Implement:
@@ -163,4 +165,4 @@ Runtime update URLs still return provider arrays. Phase 2 therefore keeps update
 Extractor output keys are registry usage keys, not fixed TypeScript unions. Extraction builds a plain object of counts, normalizes it through `normalizeUsage(...)`, and returns that normalized plain object. It does not prove provider-reported counts are mutually consistent. Contradictory registered usage values remain stored until `calcPrice(...)` needs to compute an affected priced bucket.
 
 **Tests prove JavaScript parity and cross-language alignment.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
-Add JavaScript tests for current price parity, request pricing, usage normalization, missing registered values, explicit-only missing-usage pricing errors, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.
+Add JavaScript tests for current price parity, request pricing, usage normalization, unambiguous missing registered values, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.

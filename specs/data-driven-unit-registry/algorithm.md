@@ -71,8 +71,12 @@ representation and asks for only the explicit values it needs:
 
 - If a requested value was reported, it is returned directly without checking
   other reported fields for contradictions.
-- If a requested registered value was not reported, it remains missing at the
-  usage-read boundary in Phases 1 through 7.
+- If a requested registered value was not reported and no positive reported
+  related values could make it non-zero, it remains missing at the usage-read
+  boundary in Phases 1 through 7.
+- If a requested registered value was not reported and positive reported related
+  values mean answering would require inferring an omitted ancestor or overlap,
+  the read raises a user-facing missing-usage error in Phases 1 through 7.
 - During pricing, a missing priced value is treated as zero only when no
   positive reported descendant and no positive reported overlapping ancestors
   make the omission ambiguous.
@@ -81,6 +85,12 @@ representation and asks for only the explicit values it needs:
 
 Demand-driven missing-value inference is Phase 8. Until then this document
 describes explicit-value decomposition only.
+
+For direct reads before Phase 8, a missing registered value is ambiguous when
+either a positive reported strict descendant of the requested unit exists, or
+the requested unit is the join of two positive reported compatible units that
+are incomparable with each other. A missing descendant of a reported ancestor is
+still just missing; missing more-specific usage can mean "not reported".
 
 ## Two-way example
 
@@ -118,9 +128,9 @@ correction. Price calculation raises a user-facing error instead of reporting a
 negative or nonsensical cost.
 
 This check is demand-driven. Contradictory reported usage is allowed to exist,
-and direct reads of stored values still return the stored values. `calc_price`
-raises only when the contradiction affects priced buckets or a value it must
-price. For example, `{input_tokens: 100, cache_read_tokens: 200}` is acceptable
+and direct reads of stored values still return the stored values. Direct reads
+and `calc_price` raise only when the contradiction affects the requested missing
+value or priced buckets. For example, `{input_tokens: 100, cache_read_tokens: 200}` is acceptable
 for a model that only prices `input_tokens`; the cache value is unpriced and not
 needed. The same usage must fail for a model that also prices
 `cache_read_tokens`, because the priced buckets cannot be reconciled.
