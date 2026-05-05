@@ -77,11 +77,12 @@ representation and asks for only the explicit values it needs:
 - If a requested registered value was not reported and positive reported related
   values mean answering would require inferring an omitted ancestor or overlap,
   the read raises a user-facing missing-usage error in Phases 1 through 7.
-- During pricing, a missing priced value is treated as zero only when no
-  positive reported descendant and no positive reported overlapping ancestors
-  make the omission ambiguous.
-- If pricing would require an omitted ancestor or omitted overlap, it raises a
-  user-facing missing-usage error instead of inferring the value.
+- During pricing, decomposition asks for the selected priced usage keys through
+  the same usage-read path. It can ignore unpriced usage keys it never needs to
+  read, and it raises the usage-read error when a priced key is missing and
+  would require an omitted ancestor or omitted overlap.
+- After those priced values are read, decomposition raises if explicit reported
+  priced values imply an impossible negative exclusive bucket.
 
 Demand-driven missing-value inference is Phase 8. Until then this document
 describes explicit-value decomposition only.

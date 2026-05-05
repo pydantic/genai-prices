@@ -144,19 +144,11 @@ def compute_leaf_values(
 ) -> dict[str, int]: ...
 ```
 
-The function computes exclusive buckets only for priced units in one family. It reads explicit reported values for priced units, treats a missing priced unit as zero only when the omission is unambiguous, and raises user-facing usage errors when pricing would require inferring a missing ancestor or overlap. Use the shared behavior in [../algorithm](../algorithm.md) and [../examples](../examples.md).
+The function computes exclusive buckets only for priced units in one family. It reads selected priced usage keys through `Usage.__getattr__(...)`, so stored values return directly, safe missing values read as zero, and missing priced ancestors or joins raise through the same registry-driven usage-read path used by direct attribute access. Use the shared behavior in [../algorithm](../algorithm.md) and [../examples](../examples.md).
 
-Phase 1 does not infer missing usage values. Before computing leaves for a family, decomposition checks the selected priced units against reported usage:
+Phase 1 does not infer missing usage values. Decomposition should not duplicate the missing-ancestor or missing-join read rules from `Usage`; it decides which priced keys matter for the selected model and asks for only those keys. This preserves the existing behavior where `{input_tokens: 100, cache_read_tokens: 200}` can price a model that only has `input_mtok`: the explicit priced ancestor is read directly, and the unpriced descendant is ignored because the model has no cache bucket.
 
-1. If a priced unit is missing and any positive reported descendant of that unit exists, raise because pricing would require synthesizing that ancestor from descendants.
-2. If two positive reported priced units are compatible, incomparable, and their priced join is missing, raise because pricing would require guessing the overlap.
-3. If a priced unit is missing and neither rule applies, use zero for that priced unit.
-
-These checks are relationship-driven and use the parsed registry. They must not hardcode token names. They may ignore unpriced reported descendants when an explicit priced ancestor is present, preserving the existing behavior where `{input_tokens: 100, cache_read_tokens: 200}` can price a model that only has `input_mtok`.
-
-Decomposition owns these checks instead of relying only on `Usage.__getattr__(...)`. Direct usage reads and pricing both return zero for safe missing values, but pricing has extra context: it can ignore unpriced descendants when an explicit priced ancestor is available and must reject missing priced ancestors or joins before computing exclusive buckets.
-
-Do not add cached decomposition plans, cached coefficients, or model-wide pricing-plan objects in Phase 1. Correctness comes from validation plus direct decomposition. Negative exclusive values raise user-facing errors that describe impossible usage relationships rather than Mobius inversion, leaves, coefficients, or posets.
+Do not add cached decomposition plans, cached coefficients, or model-wide pricing-plan objects in Phase 1. Correctness comes from validation plus direct decomposition through `Usage` reads. Negative exclusive values raise user-facing errors that describe impossible usage relationships rather than Mobius inversion, leaves, coefficients, or posets.
 
 **`types.py` changes `Usage` and `ModelPrice` without changing public signatures.** _(implements "`Usage` becomes registry-aware and remains permissive for raw caller objects", "`ModelPrice` remains subclass-friendly and uses current legacy fields for storage")_
 `AbstractUsage` becomes a compatibility alias to `object`:
