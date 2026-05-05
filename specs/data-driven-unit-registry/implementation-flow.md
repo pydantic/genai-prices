@@ -178,13 +178,17 @@ ModelPrice.calc_price(usage)
        -> in Phases 1-4: always run this one-model validation before pricing
        -> in Phase 5+: skip validation only when active trust covers this ModelPrice fingerprint
   -> smart_usage = Usage.from_raw(usage)
-  -> total_input_tokens = smart_usage.input_tokens only if any TieredPrices value needs a threshold
-       -> otherwise use a neutral threshold because non-tiered prices ignore it
   -> resolve price keys to usage keys
   -> group priced units by family
   -> for each family:
        -> if requests, use fixed leaf value {"requests": 1}
-       -> otherwise compute decomposition from smart_usage
+       -> otherwise compute decomposition from explicit smart_usage values
+       -> in Phases 1-7: raise when a missing ancestor or overlap would need inference
+       -> in Phase 8+: infer missing values only when uniquely determined
+  -> total_input_tokens = explicit smart_usage.input_tokens only if a TieredPrices value prices non-zero usage
+       -> otherwise use a neutral threshold because non-tiered prices ignore it
+       -> in Phases 1-7: raise if that needed threshold was omitted
+       -> in Phase 8+: infer a missing threshold only when uniquely determined
   -> for each priced usage-keyed unit:
        -> price = stored price at unit.price_key
        -> cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
@@ -192,7 +196,7 @@ ModelPrice.calc_price(usage)
   -> return input_price, output_price, total_price
 ```
 
-Tier selection uses the provided or inferable `input_tokens` total. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts.
+Tier selection uses the explicit `input_tokens` total before Phase 8. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts. Phase 8 may infer a missing threshold when descendant usage uniquely determines it.
 
 ## JavaScript Runtime Activation
 
