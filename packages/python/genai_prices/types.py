@@ -298,13 +298,49 @@ class Usage:
             and UnitRegistry.is_ancestor_or_self(requested_unit, unit)
         ]
         if not descendant_keys:
-            return 0
+            overlapping_keys = _reported_overlap_keys_for_join(
+                requested_unit,
+                [
+                    unit
+                    for reported_key, value in self._values.items()
+                    if value > 0
+                    and (unit := registry.units.get(reported_key)) is not None
+                    and unit.family is requested_unit.family
+                ],
+                registry,
+            )
+            if not overlapping_keys:
+                return 0
+
+            reported_keys = ', '.join(overlapping_keys)
+            raise ValueError(
+                f'Missing usage for {usage_key}: reported overlapping usage keys {reported_keys} '
+                f'require explicit {usage_key}'
+            )
 
         reported_keys = ', '.join(sorted(descendant_keys))
         raise ValueError(
             f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
             f'require explicit {usage_key}'
         )
+
+
+def _reported_overlap_keys_for_join(
+    requested_unit: UnitDef, reported_units: Sequence[UnitDef], registry: UnitRegistry
+) -> tuple[str, str] | None:
+    from genai_prices.units import UnitRegistry
+
+    sorted_units = sorted(reported_units, key=lambda unit: unit.usage_key)
+    for index, left in enumerate(sorted_units):
+        for right in sorted_units[index + 1 :]:
+            if not UnitRegistry.are_compatible(left, right):
+                continue
+            if UnitRegistry.is_ancestor_or_self(left, right) or UnitRegistry.is_ancestor_or_self(right, left):
+                continue
+            if registry.find_join(left, right) is requested_unit:
+                return left.usage_key, right.usage_key
+
+    return None
 
 
 def _infer_usage_total(  # pyright: ignore[reportUnusedFunction]

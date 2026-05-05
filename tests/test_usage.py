@@ -228,6 +228,26 @@ def test_usage_missing_ancestor_read_rejects_overlapping_descendants() -> None:
         _ = usage.input_tokens
 
 
+def test_usage_missing_join_read_rejects_overlapping_ancestors() -> None:
+    usage = Usage(input_audio_tokens=300, cache_read_tokens=200)
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Missing usage for cache_audio_read_tokens: reported overlapping usage keys '
+            'cache_read_tokens, input_audio_tokens'
+        ),
+    ):
+        _ = usage.cache_audio_read_tokens
+
+
+def test_usage_missing_descendant_read_returns_zero_without_reporting() -> None:
+    usage = Usage(input_tokens=100)
+
+    assert usage.cache_read_tokens == 0
+    assert 'cache_read_tokens' not in usage._values
+
+
 def test_usage_missing_ancestor_read_rejects_descendants_without_reconciling() -> None:
     usage = Usage(input_audio_tokens=50, cache_audio_read_tokens=100)
 
