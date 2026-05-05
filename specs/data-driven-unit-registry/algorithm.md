@@ -72,8 +72,8 @@ representation and asks for only the explicit values it needs:
 - If a requested value was reported, it is returned directly without checking
   other reported fields for contradictions.
 - If a requested registered value was not reported and no positive reported
-  related values could make it non-zero, it remains missing at the usage-read
-  boundary in Phases 1 through 7.
+  related values could make it non-zero, the read returns zero in Phases 1
+  through 7 without materializing that zero as reported usage.
 - If a requested registered value was not reported and positive reported related
   values mean answering would require inferring an omitted ancestor or overlap,
   the read raises a user-facing missing-usage error in Phases 1 through 7.
@@ -89,8 +89,9 @@ describes explicit-value decomposition only.
 For direct reads before Phase 8, a missing registered value is ambiguous when
 either a positive reported strict descendant of the requested unit exists, or
 the requested unit is the join of two positive reported compatible units that
-are incomparable with each other. A missing descendant of a reported ancestor is
-still just missing; missing more-specific usage can mean "not reported".
+are incomparable with each other. A missing descendant of a reported ancestor
+still reads as zero; missing more-specific usage can mean "not reported", and
+that read-time zero is not stored as reported usage.
 
 ## Two-way example
 

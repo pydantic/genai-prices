@@ -154,7 +154,7 @@ Phase 1 does not infer missing usage values. Before computing leaves for a famil
 
 These checks are relationship-driven and use the parsed registry. They must not hardcode token names. They may ignore unpriced reported descendants when an explicit priced ancestor is present, preserving the existing behavior where `{input_tokens: 100, cache_read_tokens: 200}` can price a model that only has `input_mtok`.
 
-Decomposition owns these checks instead of delegating to `Usage.__getattr__(...)`. Direct usage reads and pricing have different safe-missing behavior: Python usage reads return `None` for unambiguous missing values, while pricing treats unambiguous missing priced units as zero and can ignore unpriced descendants when an explicit priced ancestor is available.
+Decomposition owns these checks instead of relying only on `Usage.__getattr__(...)`. Direct usage reads and pricing both return zero for safe missing values, but pricing has extra context: it can ignore unpriced descendants when an explicit priced ancestor is available and must reject missing priced ancestors or joins before computing exclusive buckets.
 
 Do not add cached decomposition plans, cached coefficients, or model-wide pricing-plan objects in Phase 1. Correctness comes from validation plus direct decomposition. Negative exclusive values raise user-facing errors that describe impossible usage relationships rather than Mobius inversion, leaves, coefficients, or posets.
 
@@ -180,8 +180,8 @@ class Usage:
     def from_raw(cls, obj: object) -> Usage:
         """Wrap arbitrary usage input while ignoring unknown raw-object extras."""
 
-    def __getattr__(self, name: str) -> int | None:
-        """Return a stored registered value, None for an unambiguous missing value, or raise."""
+    def __getattr__(self, name: str) -> int:
+        """Return a stored registered value, zero for an unambiguous missing value, or raise."""
 
     def __setattr__(self, name: str, value: int | None) -> None:
         """Update a registered reported value, or assign an ordinary object attribute."""
@@ -197,12 +197,12 @@ Direct construction is strict for registered externally reported usage keys and 
 For registered attribute reads:
 
 1. If the value was reported, return it directly without auditing descendants.
-2. If the value is missing and no positive reported related value could make it non-zero, return `None`, matching the old dataclass shape more closely than implicit zero. The zero rule applies inside pricing decomposition for safely absent priced units, not to direct Python `Usage` attribute reads.
+2. If the value is missing and no positive reported related value could make it non-zero, return `0` without storing that zero or making the key count as reported.
 3. If the value is missing and positive reported related values mean answering would require inferring an omitted ancestor or overlap, raise a user-facing missing-usage error.
 
-The missing-read check is registry-driven. A missing read is ambiguous when either a positive reported strict descendant of the requested unit exists, or the requested unit is the join of two positive reported compatible units that are incomparable with each other. A missing descendant of a reported ancestor is not ambiguous by itself; for example `Usage(input_tokens=100).cache_read_tokens` returns `None` rather than raising because missing more-specific usage is allowed to mean "not reported".
+The missing-read check is registry-driven. A missing read is ambiguous when either a positive reported strict descendant of the requested unit exists, or the requested unit is the join of two positive reported compatible units that are incomparable with each other. A missing descendant of a reported ancestor is not ambiguous by itself; for example `Usage(input_tokens=100).cache_read_tokens` returns `0` rather than raising because missing more-specific usage is allowed to mean "not reported".
 
-For example, `Usage(input_audio_tokens=300).input_tokens` raises in Phase 1 because `input_tokens` was omitted and answering would require inferring an ancestor total. `Usage(output_tokens=100).input_tokens` returns `None` because no input-side usage was reported. `Usage.__repr__` orders stored reported values by active registry unit order; do not keep a separate hardcoded legacy field-order tuple.
+For example, `Usage(input_audio_tokens=300).input_tokens` raises in Phase 1 because `input_tokens` was omitted and answering would require inferring an ancestor total. `Usage(output_tokens=100).input_tokens` returns `0` because no input-side usage was reported. `Usage.__repr__` orders stored reported values by active registry unit order; do not keep a separate hardcoded legacy field-order tuple.
 
 Unlike the previous dataclass implementation, `Usage` does not preserve `dataclasses.asdict(...)`, `dataclasses.is_dataclass(...)`, or fixed-field dataclass introspection compatibility. That is an intentional Phase 1 exception to behavior preservation because fixed dataclass fields do not fit registry-defined usage keys without regenerating handwritten runtime fields.
 
@@ -336,5 +336,5 @@ ModelInfo.calc_price(usage, provider, ...)
 `__init__.py` does not gain new top-level exports in this phase. Existing top-level exports such as `Usage`, `calc_price`, `UpdatePrices`, wait helpers, and `__version__` stay where they are. `UnitRegistry`, `UnitFamily`, and `UnitDef` are available from `genai_prices.units` for introspection, not re-exported from the package root.
 
 **Tests prove entry-point preservation plus registry semantics.** _(implements "Phase 1 preserves supported entry points while changing unsafe internals")_
-Add focused Python tests for current price parity, current request pricing, `Usage` strict construction and permissive raw wrapping, unambiguous missing registered reads returning `None`, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, inconsistent usage interpretation, ancestor and join validation, missing-join rejection for the current subset, custom `ModelPrice` subclass preservation, `DataSnapshot` registry defaults, and unchanged provider-array update parsing.
+Add focused Python tests for current price parity, current request pricing, `Usage` strict construction and permissive raw wrapping, unambiguous missing registered reads returning zero without becoming reported, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, inconsistent usage interpretation, ancestor and join validation, missing-join rejection for the current subset, custom `ModelPrice` subclass preservation, `DataSnapshot` registry defaults, and unchanged provider-array update parsing.
 Include coverage that an invalid staged/custom model price is not rejected by `set_custom_snapshot(...)` in Phase 1, but is rejected when standard base pricing calculates against that model price.
