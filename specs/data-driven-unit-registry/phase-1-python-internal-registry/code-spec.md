@@ -91,15 +91,13 @@ class UnitRegistry:
 
     def __init__(self, raw_families: dict[str, dict] | None = None) -> None:
         """Parse raw families, validate structure, and fill indexes."""
-
-    @staticmethod
-    def are_compatible(a: UnitDef, b: UnitDef) -> bool:
-        """Return whether two units can overlap without conflicting dimensions."""
 ```
 
 `UnitRegistry.__init__(raw_families)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, fills indexes and back-references, and validates uniqueness plus interval closure. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. `UnitDef` and `UnitFamily` use `eq=False` because they form an object graph with back-references; identity equality keeps family objects hashable for grouping and avoids recursive value comparisons. The registry exposes no public mutation APIs in this phase.
 
 The registry owns two private relationship indexes that keep downstream checks simple. `_units_by_dimension` maps each family id and dimension set to its `UnitDef`. `_ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Join lookup unions two compatible dimension sets and reads `_units_by_dimension[family_id]`. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
+
+Relationship predicates must not be public `UnitRegistry` static methods. Keep dimension-set helpers and compatibility checks as module-private implementation details, or use the existing decomposition helper for containment checks where that already expresses the needed relationship. Public relationship surface may be added later only when there is a caller-facing API need.
 
 There is no `RawUnitDef` / `RawUnitFamily` runtime model layer in Python. Raw registry data stays as dictionaries until `UnitRegistry` constructs `UnitDef` and `UnitFamily`. `units.py` must remain pure enough for the build package to import: it must not import generated `data.py`, bundled snapshots, update machinery, or runtime global snapshot state.
 
