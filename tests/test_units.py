@@ -183,7 +183,7 @@ def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
 def test_unit_registry_indexes_units_by_dimension_set() -> None:
     registry = UnitRegistry(load_units())
 
-    token_units_by_dimension = registry._units_by_dimension['tokens']
+    token_units_by_dimension = registry.families['tokens'].units_by_dimension
 
     assert token_units_by_dimension[frozenset({('direction', 'input')})] is registry.units['input_tokens']
     assert (

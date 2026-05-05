@@ -23,13 +23,13 @@ class UnitFamily:
     per: int
     description: str
     units: dict[str, UnitDef] = field(default_factory=dict)
+    units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef] = field(default_factory=dict)
 
 
 class UnitRegistry:
     families: dict[str, UnitFamily]
     units: dict[str, UnitDef]
     price_keys: dict[str, str]
-    _units_by_dimension: dict[str, dict[frozenset[tuple[str, str]], UnitDef]]
     _ancestor_usage_keys: dict[str, frozenset[str]]
 
     def __init__(self, raw_families: Mapping[str, Mapping[str, Any]] | None = None) -> None:
@@ -37,7 +37,6 @@ class UnitRegistry:
         self.families = {}
         self.units = {}
         self.price_keys = {}
-        self._units_by_dimension = {}
         self._ancestor_usage_keys = {}
 
         for family_id, raw_family in (raw_families or {}).items():
@@ -47,8 +46,6 @@ class UnitRegistry:
                 description=cast(str, raw_family.get('description', '')),
             )
             self.families[family_id] = family
-            family_dimensions: dict[frozenset[tuple[str, str]], UnitDef] = {}
-            self._units_by_dimension[family_id] = family_dimensions
 
             raw_units = cast(Mapping[str, Mapping[str, Any]], raw_family.get('units', {}))
             for usage_key, raw_unit in raw_units.items():
@@ -66,7 +63,7 @@ class UnitRegistry:
                     raise ValueError(f'Duplicate unit price key: {unit.price_key}')
 
                 dimension_set = _dimension_set(unit)
-                if existing_unit := family_dimensions.get(dimension_set):
+                if existing_unit := family.units_by_dimension.get(dimension_set):
                     raise ValueError(
                         f'Duplicate dimensions in unit family {family_id}: {existing_unit.usage_key} and {usage_key}'
                     )
@@ -74,7 +71,7 @@ class UnitRegistry:
                 family.units[usage_key] = unit
                 self.units[usage_key] = unit
                 self.price_keys[unit.price_key] = usage_key
-                family_dimensions[dimension_set] = unit
+                family.units_by_dimension[dimension_set] = unit
 
         for usage_key, unit in self.units.items():
             self._ancestor_usage_keys[usage_key] = frozenset(
@@ -90,7 +87,7 @@ class UnitRegistry:
         if not are_compatible(a, b):
             return None
 
-        return self._units_by_dimension[a.family_id].get(frozenset(a.dimensions.items() | b.dimensions.items()))
+        return a.family.units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
 
     def reported_usage_keys(self) -> frozenset[str]:
         """Return registered keys callers may report, excluding Phase 1 pricing-only requests."""
@@ -110,7 +107,7 @@ class UnitRegistry:
                     for size in range(1, len(added_dimensions)):
                         for added_subset in combinations(added_dimensions, size):
                             required_dimensions = frozenset(ancestor.dimensions.items() | set(added_subset))
-                            if required_dimensions not in self._units_by_dimension[family.id]:
+                            if required_dimensions not in family.units_by_dimension:
                                 missing_dimensions = ', '.join(
                                     f'{key}={value}' for key, value in sorted(required_dimensions)
                                 )
