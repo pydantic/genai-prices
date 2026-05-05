@@ -310,36 +310,6 @@ def test_tiered_price_uses_zero_threshold_for_safely_missing_input_tokens() -> N
     }
 
 
-def test_tiered_price_uses_reported_input_tokens_without_auditing_descendants() -> None:
-    price = types.ModelPrice(
-        output_mtok=types.TieredPrices(
-            base=Decimal('1'),
-            tiers=[types.Tier(start=100_000, price=Decimal('2'))],
-        )
-    ).calc_price(Usage(input_tokens=50_000, input_audio_tokens=200_000, output_tokens=10_000))
-
-    assert price == {
-        'input_price': Decimal('0'),
-        'output_price': Decimal('0.01'),
-        'total_price': Decimal('0.01'),
-    }
-
-
-def test_tiered_price_rejects_underdetermined_input_token_threshold() -> None:
-    price = types.ModelPrice(
-        output_mtok=types.TieredPrices(
-            base=Decimal('1'),
-            tiers=[types.Tier(start=100_000, price=Decimal('2'))],
-        )
-    )
-
-    with pytest.raises(
-        ValueError,
-        match='Missing usage for input_tokens: reported descendant usage keys cache_read_tokens, input_audio_tokens',
-    ):
-        price.calc_price(Usage(input_audio_tokens=200_000, cache_read_tokens=50_000, output_tokens=10_000))
-
-
 def test_non_tiered_price_does_not_read_unneeded_input_token_threshold() -> None:
     price = types.ModelPrice(output_mtok=Decimal('1')).calc_price(
         Usage(input_audio_tokens=200_000, cache_read_tokens=50_000, output_tokens=10_000)

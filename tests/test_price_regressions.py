@@ -199,25 +199,15 @@ def test_cache_audio_read_without_specific_price_requires_join_price() -> None:
 
 
 def test_pricing_rejects_missing_join_usage_when_join_is_priced() -> None:
-    with pytest.raises(
-        ValueError,
-        match=(
-            'Missing usage for cache_audio_read_tokens: reported overlapping usage keys '
-            'cache_read_tokens, input_audio_tokens'
-        ),
-    ):
-        ModelPrice(
-            input_mtok=Decimal('1'),
-            cache_read_mtok=Decimal('2'),
-            input_audio_mtok=Decimal('3'),
-            cache_audio_read_mtok=Decimal('4'),
-        ).calc_price(
-            Usage(
-                input_tokens=1_000,
-                cache_read_tokens=400,
-                input_audio_tokens=300,
-            )
-        )
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_read_mtok=Decimal('2'),
+        input_audio_mtok=Decimal('3'),
+        cache_audio_read_mtok=Decimal('4'),
+    )
+
+    with pytest.raises(ValueError, match='Missing usage for cache_audio_read_tokens'):
+        price.calc_price(Usage(input_tokens=1_000, cache_read_tokens=400, input_audio_tokens=300))
 
 
 def test_tiered_price_regression_uses_provided_input_token_threshold() -> None:

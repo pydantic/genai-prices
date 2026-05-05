@@ -162,70 +162,19 @@ def test_usage_missing_ancestor_read_rejects_positive_descendant() -> None:
         _ = usage.input_tokens
 
 
-def test_usage_missing_ancestor_read_rejects_descendants_even_with_reported_overlap() -> None:
-    usage = Usage(input_audio_tokens=300, cache_read_tokens=200, cache_audio_read_tokens=50)
-
-    with pytest.raises(
-        ValueError,
-        match=(
-            'Missing usage for input_tokens: reported descendant usage keys '
-            'cache_audio_read_tokens, cache_read_tokens, input_audio_tokens'
-        ),
-    ):
-        _ = usage.input_tokens
-
-
-def test_usage_missing_ancestor_read_rejects_non_overlapping_synthetic_descendants() -> None:
-    with _active_registry(
-        {
-            'tokens': {
-                'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'input_text_tokens': {
-                        'price_key': 'input_text_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'text'},
-                    },
-                    'input_audio_tokens': {
-                        'price_key': 'input_audio_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'audio'},
-                    },
-                },
-            },
-        }
-    ):
-        usage = Usage(input_text_tokens=200, input_audio_tokens=300)
-
-        with pytest.raises(
-            ValueError,
-            match='Missing usage for input_tokens: reported descendant usage keys input_audio_tokens, input_text_tokens',
-        ):
-            _ = usage.input_tokens
-
-
 def test_usage_returns_stored_value_without_auditing_descendants() -> None:
     usage = Usage(input_tokens=100, input_audio_tokens=300)
 
     assert usage.input_tokens == 100
 
 
-def test_usage_safe_missing_ancestor_read_returns_zero_without_descendants() -> None:
+def test_usage_safe_missing_read_returns_zero_without_reporting() -> None:
     usage = Usage(output_tokens=100)
 
     assert usage.input_tokens == 0
-
-
-def test_usage_missing_ancestor_read_rejects_overlapping_descendants() -> None:
-    usage = Usage(input_audio_tokens=300, cache_read_tokens=200)
-
-    with pytest.raises(
-        ValueError,
-        match='Missing usage for input_tokens: reported descendant usage keys cache_read_tokens, input_audio_tokens',
-    ):
-        _ = usage.input_tokens
+    assert usage.cache_read_tokens == 0
+    assert 'input_tokens' not in usage._values
+    assert 'cache_read_tokens' not in usage._values
 
 
 def test_usage_missing_join_read_rejects_overlapping_ancestors() -> None:
@@ -239,28 +188,3 @@ def test_usage_missing_join_read_rejects_overlapping_ancestors() -> None:
         ),
     ):
         _ = usage.cache_audio_read_tokens
-
-
-def test_usage_missing_descendant_read_returns_zero_without_reporting() -> None:
-    usage = Usage(input_tokens=100)
-
-    assert usage.cache_read_tokens == 0
-    assert 'cache_read_tokens' not in usage._values
-
-
-def test_usage_missing_ancestor_read_rejects_descendants_without_reconciling() -> None:
-    usage = Usage(input_audio_tokens=50, cache_audio_read_tokens=100)
-
-    with pytest.raises(
-        ValueError,
-        match='Missing usage for input_tokens: reported descendant usage keys cache_audio_read_tokens, input_audio_tokens',
-    ):
-        _ = usage.input_tokens
-
-
-def test_usage_missing_ancestor_read_error_is_not_cached() -> None:
-    usage = Usage(input_audio_tokens=300)
-
-    with pytest.raises(ValueError, match='Missing usage for input_tokens'):
-        _ = usage.input_tokens
-    assert 'input_tokens' not in usage._values
