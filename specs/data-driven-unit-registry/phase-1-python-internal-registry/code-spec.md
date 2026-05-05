@@ -73,6 +73,9 @@ class UnitDef:
     family: UnitFamily
     dimensions: dict[str, str]
 
+    def is_compatible_with(self, other: UnitDef) -> bool:
+        """Return whether two units can overlap without conflicting dimensions."""
+
 
 @dataclass(eq=False)
 class UnitFamily:
@@ -103,7 +106,9 @@ class UnitRegistry:
 
 The parsed graph owns relationship indexes that keep downstream checks simple. `UnitFamily.units_by_dimension` maps each dimension set in that family to its `UnitDef`, and `UnitFamily.find_join(...)` owns join lookup for units in that family. `UnitRegistry._units_by_price_key` maps each price key to the priced `UnitDef`, and `unit_for_price_key(...)` is the public lookup boundary. `UnitRegistry._ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
 
-Relationship predicates must not be public `UnitRegistry` static methods. Keep dimension-set helpers and compatibility checks as module-private implementation details, or use the existing decomposition helper for containment checks where that already expresses the needed relationship. Public relationship surface may be added later only when there is a caller-facing API need.
+Relationship predicates must not be public `UnitRegistry` static methods. Compatibility is a `UnitDef` method because it only needs the two unit definitions. Containment checks should use the existing decomposition helper where that already expresses the needed relationship. Public relationship surface may be added later only when there is a caller-facing API need.
+
+Internal helper modules such as `validation.py` and `decompose.py` do not define curated `__all__` exports in Phase 1. They are implementation modules rather than new public package surfaces.
 
 There is no `RawUnitDef` / `RawUnitFamily` runtime model layer in Python. Raw registry data stays as dictionaries until `UnitRegistry` constructs `UnitDef` and `UnitFamily`. `units.py` must remain pure enough for the build package to import: it must not import generated `data.py`, bundled snapshots, update machinery, or runtime global snapshot state.
 
