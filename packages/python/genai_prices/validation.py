@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
-
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, are_compatible
 
 __all__ = (
@@ -13,8 +11,8 @@ __all__ = (
 )
 
 
-def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None:
-    unknown_price_keys = price_keys - price_key_index.keys()
+def validate_price_keys(price_keys: set[str], registry: UnitRegistry) -> None:
+    unknown_price_keys = {price_key for price_key in price_keys if _unit_for_price_key(price_key, registry) is None}
     if unknown_price_keys:
         bad_keys = ', '.join(sorted(unknown_price_keys))
         raise ValueError(f'Unknown price key: {bad_keys}')
@@ -55,11 +53,11 @@ def _priced_units(priced_usage_keys: set[str], family: UnitFamily) -> list[UnitD
 
 
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
-    validate_price_keys(price_keys, registry.price_keys)
+    validate_price_keys(price_keys, registry)
 
     usage_keys_by_family: dict[UnitFamily, set[str]] = {}
     for price_key in price_keys:
-        unit = registry.units[registry.price_keys[price_key]]
+        unit = registry.unit_for_price_key(price_key)
         usage_keys_by_family.setdefault(unit.family, set()).add(unit.usage_key)
 
     for family, priced_usage_keys in usage_keys_by_family.items():
@@ -72,3 +70,10 @@ def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: se
     if invalid_destinations:
         bad_keys = ', '.join(sorted(invalid_destinations))
         raise ValueError(f'Invalid extractor destination: {bad_keys}')
+
+
+def _unit_for_price_key(price_key: str, registry: UnitRegistry) -> UnitDef | None:
+    try:
+        return registry.unit_for_price_key(price_key)
+    except KeyError:
+        return None

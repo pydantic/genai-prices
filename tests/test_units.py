@@ -146,8 +146,8 @@ def test_unit_registry_constructs_current_units() -> None:
         'output_audio_tokens',
         'requests',
     }
-    assert registry.price_keys['input_mtok'] == 'input_tokens'
-    assert registry.price_keys['requests_kcount'] == 'requests'
+    assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
+    assert registry.unit_for_price_key('requests_kcount') is registry.units['requests']
 
 
 def test_unit_registry_sets_family_and_unit_backrefs() -> None:
@@ -177,7 +177,7 @@ def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
     )
 
     assert registry.units['input_characters'].price_key == 'input_characters'
-    assert registry.price_keys['input_characters'] == 'input_characters'
+    assert registry.unit_for_price_key('input_characters') is registry.units['input_characters']
 
 
 def test_unit_registry_indexes_units_by_dimension_set() -> None:

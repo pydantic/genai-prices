@@ -19,14 +19,14 @@ from .unit_registry_helpers import load_units
 def test_validate_price_keys_accepts_current_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
-    validate_price_keys(set(registry.price_keys), registry.price_keys)
+    validate_price_keys({'input_mtok', 'output_mtok', 'requests_kcount'}, registry)
 
 
 def test_validate_price_keys_rejects_unknown_price_key() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Unknown price key: inptu_mtok'):
-        validate_price_keys({'input_mtok', 'inptu_mtok'}, registry.price_keys)
+        validate_price_keys({'input_mtok', 'inptu_mtok'}, registry)
 
 
 def test_validate_ancestor_coverage_accepts_parent_child_pricing() -> None:

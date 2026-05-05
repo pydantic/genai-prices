@@ -29,14 +29,14 @@ class UnitFamily:
 class UnitRegistry:
     families: dict[str, UnitFamily]
     units: dict[str, UnitDef]
-    price_keys: dict[str, str]
+    _units_by_price_key: dict[str, UnitDef]
     _ancestor_usage_keys: dict[str, frozenset[str]]
 
     def __init__(self, raw_families: Mapping[str, Mapping[str, Any]] | None = None) -> None:
         """Parse raw unit-family dictionaries into indexed runtime objects."""
         self.families = {}
         self.units = {}
-        self.price_keys = {}
+        self._units_by_price_key = {}
         self._ancestor_usage_keys = {}
 
         for family_id, raw_family in (raw_families or {}).items():
@@ -59,7 +59,7 @@ class UnitRegistry:
                     family=family,
                     dimensions=dict(cast(Mapping[str, str], raw_unit.get('dimensions', {}))),
                 )
-                if unit.price_key in self.price_keys:
+                if unit.price_key in self._units_by_price_key:
                     raise ValueError(f'Duplicate unit price key: {unit.price_key}')
 
                 dimension_set = _dimension_set(unit)
@@ -70,7 +70,7 @@ class UnitRegistry:
 
                 family.units[usage_key] = unit
                 self.units[usage_key] = unit
-                self.price_keys[unit.price_key] = usage_key
+                self._units_by_price_key[unit.price_key] = unit
                 family.units_by_dimension[dimension_set] = unit
 
         for usage_key, unit in self.units.items():
@@ -88,6 +88,10 @@ class UnitRegistry:
             return None
 
         return a.family.units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
+
+    def unit_for_price_key(self, price_key: str) -> UnitDef:
+        """Return the registered unit priced by price_key."""
+        return self._units_by_price_key[price_key]
 
     def reported_usage_keys(self) -> frozenset[str]:
         """Return registered keys callers may report, excluding Phase 1 pricing-only requests."""

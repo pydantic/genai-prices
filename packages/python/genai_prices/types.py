@@ -794,7 +794,11 @@ class ModelPrice:
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
-        if name in _get_registry().price_keys:
+        try:
+            _get_registry().unit_for_price_key(name)
+        except KeyError:
+            pass
+        else:
             return None
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
@@ -864,7 +868,7 @@ def _group_model_price_units_by_family(
 ) -> dict[UnitFamily, set[UnitDef]]:
     groups: dict[UnitFamily, set[UnitDef]] = {}
     for price_key in _iter_effective_model_price_keys(model_price, registry):
-        unit = registry.units[registry.price_keys[price_key]]
+        unit = registry.unit_for_price_key(price_key)
         groups.setdefault(unit.family, set()).add(unit)
 
     return groups
@@ -886,7 +890,12 @@ def _compute_registry_priced_counts(grouped_units: Mapping[UnitFamily, set[UnitD
 
 def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
     for field in dataclasses.fields(model_price):
-        if field.name in registry.price_keys and getattr(model_price, field.name) is not None:
+        try:
+            registry.unit_for_price_key(field.name)
+        except KeyError:
+            continue
+
+        if getattr(model_price, field.name) is not None:
             yield field.name
 
 
