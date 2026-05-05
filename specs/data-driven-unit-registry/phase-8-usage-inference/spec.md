@@ -18,10 +18,10 @@ For a missing requested unit, the runtime may use reported descendants in the sa
 The runtime derives containment, overlap, and disjointness from registry dimensions and relationship indexes. It must not hardcode token names such as `input_tokens`, `cache_read_tokens`, or `cache_audio_read_tokens`. Runtime custom units added in Phase 6 participate in the same inference behavior after activation.
 
 **Pricing may use inference where earlier phases raised.** _(from "Missing values are inferred only when uniquely determined", "Reported values remain authoritative")_
-Before Phase 8, pricing raises when a missing ancestor, missing overlap, or missing tier threshold would require guessing. Phase 8 replaces those conservative failures with inferred values when the registry and reported usage uniquely determine them. Pricing still raises when the missing value is contradictory or underdetermined.
+Before Phase 8, pricing raises when a missing ancestor, missing overlap, or tier threshold read would require guessing. Phase 8 replaces those conservative failures with inferred values when the registry and reported usage uniquely determine them. Pricing still raises when the missing value is contradictory or underdetermined.
 
 **Tier thresholds use the same inference rule.** _(from "Pricing may use inference where earlier phases raised")_
-The `TieredPrices` threshold remains the `input_tokens` total. If `input_tokens` was reported, tier selection uses it directly and does not audit descendants. If it was omitted, Phase 8 may infer it from reported descendants only when the total is uniquely determined; otherwise price calculation raises instead of selecting a guessed tier.
+The `TieredPrices` threshold remains the `input_tokens` total. If `input_tokens` was reported, tier selection uses it directly and does not audit descendants. If it was safely omitted, earlier phases use zero and Phase 8 keeps that result. If related reported usage makes the omitted threshold ambiguous, Phase 8 may infer it from reported descendants only when the total is uniquely determined; otherwise price calculation raises instead of selecting a guessed tier.
 
 **Inference errors describe usage facts, not solving machinery.** _(from "Missing values are inferred only when uniquely determined")_
 User-facing errors should name the missing usage key and the reported keys that made it contradictory or underdetermined. They must not mention linear algebra, ranks, atoms, Mobius inversion, leaves, coefficients, posets, or other implementation details.

@@ -234,7 +234,7 @@ The generic pricing flow is:
 3. wrap raw usage through `Usage.from_raw(...)` for the base method only
 4. resolve price keys to usage keys and group by family
 5. compute per-family leaf values with explicit-only missing-usage checks
-6. require an explicit `input_tokens` threshold when a selected tiered price has non-zero usage
+6. read the `input_tokens` tier threshold through `Usage` when any selected price uses `TieredPrices`
 7. price `requests` as one request per usage object
 8. normalize by `family.per`
 9. aggregate into the existing input/output/total result shape
@@ -252,7 +252,7 @@ def calc_unit_price(
 ) -> Decimal: ...
 ```
 
-The tier threshold remains the explicit `input_tokens` total in Phase 1. If a selected `TieredPrices` value contributes non-zero usage and `input_tokens` was not reported, price calculation raises instead of inferring the threshold. If no configured price uses `TieredPrices`, pass a neutral threshold value because non-tiered prices ignore it. Families without a `direction` dimension contribute only to `total_price`; `input_price` and `output_price` are direction-filtered compatibility aggregates.
+The tier threshold remains the `input_tokens` total in Phase 1, read through `Usage.__getattr__(...)`. Stored `input_tokens` returns directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises through the usage-read path instead of inferring the threshold. If no configured price uses `TieredPrices`, pass a neutral threshold value because non-tiered prices ignore it. Families without a `direction` dimension contribute only to `total_price`; `input_price` and `output_price` are direction-filtered compatibility aggregates.
 
 Attribute assignment and deletion on `ModelPrice` do not run ancestor or join validation immediately. Phase 1 validates the final effective price-key set every time standard base `calc_price()` calculates against that `ModelPrice`. Snapshot activation does not perform model-price validation until Phase 5 adds runtime-private trust state. Subclass-only fields that are not registered price keys remain subclass-owned state and must not trigger registry validation.
 
@@ -318,7 +318,7 @@ ModelInfo.calc_price(usage, provider, ...)
        -> resolve price keys to usage keys
        -> group priced units by family
        -> compute leaf values per priced family with explicit-only missing-usage checks
-       -> require explicit input_tokens if a tiered price applies to non-zero usage
+       -> read input_tokens through Usage if a tiered price is configured
        -> price requests as {"requests": 1}
        -> aggregate by direction into the existing result shape
 ```

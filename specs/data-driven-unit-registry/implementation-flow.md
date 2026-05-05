@@ -185,10 +185,10 @@ ModelPrice.calc_price(usage)
        -> otherwise compute decomposition from explicit smart_usage values
        -> in Phases 1-7: raise when a missing ancestor or overlap would need inference
        -> in Phase 8+: infer missing values only when uniquely determined
-  -> total_input_tokens = explicit smart_usage.input_tokens only if a TieredPrices value prices non-zero usage
+  -> total_input_tokens = smart_usage.input_tokens only if a TieredPrices value is configured
        -> otherwise use a neutral threshold because non-tiered prices ignore it
-       -> in Phases 1-7: raise if that needed threshold was omitted
-       -> in Phase 8+: infer a missing threshold only when uniquely determined
+       -> in Phases 1-7: safe missing reads return zero; ambiguous missing reads raise
+       -> in Phase 8+: infer an ambiguous missing threshold only when uniquely determined
   -> for each priced usage-keyed unit:
        -> price = stored price at unit.price_key
        -> cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
@@ -196,7 +196,7 @@ ModelPrice.calc_price(usage)
   -> return input_price, output_price, total_price
 ```
 
-Tier selection uses the explicit `input_tokens` total before Phase 8. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts. Phase 8 may infer a missing threshold when descendant usage uniquely determines it.
+Tier selection reads `input_tokens` through the normal usage-read path before Phase 8. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts. If it is safely missing, the threshold is zero. Phase 8 may infer a missing threshold when descendant usage uniquely determines it.
 
 ## JavaScript Runtime Activation
 

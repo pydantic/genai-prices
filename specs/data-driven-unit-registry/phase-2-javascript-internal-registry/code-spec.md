@@ -147,12 +147,12 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 3. normalize raw usage
 4. resolve price keys and group by family
 5. compute per-family leaf values with explicit-only missing-usage checks
-6. require explicit `input_tokens` when a selected tiered price has non-zero usage
+6. read `input_tokens` through `getUsageValue(...)` when a selected price uses `TieredPrices`
 7. price `requests` as one request per usage object
 8. normalize by `family.per`
 9. aggregate into the existing result shape
 
-Keep tiered-price semantics aligned with Python: a stored `input_tokens` total is used directly for tier selection, and missing totals raise when a selected tiered price contributes non-zero usage. Phase 8 may add coherent missing-threshold inference.
+Keep tiered-price semantics aligned with Python: tier selection reads `input_tokens` through `getUsageValue(...)`. A stored `input_tokens` total is used directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises until Phase 8 may add coherent missing-threshold inference.
 
 Aggregation stays compatible with the current result shape. Costs from units whose dimensions include `{direction: input}` contribute to the existing input aggregate, units whose dimensions include `{direction: output}` contribute to the output aggregate, and families without a direction dimension such as `requests` contribute only to total.
 
