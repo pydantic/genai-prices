@@ -489,6 +489,11 @@ def _validate_usage_extractor_destinations(mappings: Sequence[UsageExtractorMapp
 def _reported_usage_keys_for_extractor_construction() -> frozenset[str]:
     data_module = sys.modules.get('genai_prices.data')
     if data_module is not None and not hasattr(data_module, 'providers'):
+        # Generated data constructs UsageExtractor instances before data.providers
+        # is assigned. Reading the active snapshot here would re-enter that import,
+        # so validate constructor-time extractor destinations against bundled
+        # unit data directly. TODO Phase 5: replace this import-state probe with
+        # registry-identity keyed usage-key caches once those exist.
         return _bundled_reported_usage_keys()
 
     return _reported_usage_keys()
