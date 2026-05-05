@@ -82,6 +82,9 @@ class UnitFamily:
     units: dict[str, UnitDef]
     units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef]
 
+    def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
+        """Return the most specific registered unit joining two family units, if present."""
+
 
 class UnitRegistry:
     families: dict[str, UnitFamily]
@@ -98,7 +101,7 @@ class UnitRegistry:
 
 `UnitRegistry.__init__(raw_families)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, fills indexes and back-references, and validates uniqueness plus interval closure. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. `UnitDef` and `UnitFamily` use `eq=False` because they form an object graph with back-references; identity equality keeps family objects hashable for grouping and avoids recursive value comparisons. The registry exposes no public mutation APIs in this phase.
 
-The parsed graph owns relationship indexes that keep downstream checks simple. `UnitFamily.units_by_dimension` maps each dimension set in that family to its `UnitDef`. `UnitRegistry._units_by_price_key` maps each price key to the priced `UnitDef`, and `unit_for_price_key(...)` is the public lookup boundary. `UnitRegistry._ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Join lookup unions two compatible dimension sets and reads the owning family's `units_by_dimension`. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
+The parsed graph owns relationship indexes that keep downstream checks simple. `UnitFamily.units_by_dimension` maps each dimension set in that family to its `UnitDef`, and `UnitFamily.find_join(...)` owns join lookup for units in that family. `UnitRegistry._units_by_price_key` maps each price key to the priced `UnitDef`, and `unit_for_price_key(...)` is the public lookup boundary. `UnitRegistry._ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
 
 Relationship predicates must not be public `UnitRegistry` static methods. Keep dimension-set helpers and compatibility checks as module-private implementation details, or use the existing decomposition helper for containment checks where that already expresses the needed relationship. Public relationship surface may be added later only when there is a caller-facing API need.
 
