@@ -154,6 +154,8 @@ Phase 1 does not infer missing usage values. Before computing leaves for a famil
 
 These checks are relationship-driven and use the parsed registry. They must not hardcode token names. They may ignore unpriced reported descendants when an explicit priced ancestor is present, preserving the existing behavior where `{input_tokens: 100, cache_read_tokens: 200}` can price a model that only has `input_mtok`.
 
+Decomposition owns these checks instead of delegating to `Usage.__getattr__(...)`. Direct usage reads and pricing have different safe-missing behavior: Python usage reads return `None` for unambiguous missing values, while pricing treats unambiguous missing priced units as zero and can ignore unpriced descendants when an explicit priced ancestor is available.
+
 Do not add cached decomposition plans, cached coefficients, or model-wide pricing-plan objects in Phase 1. Correctness comes from validation plus direct decomposition. Negative exclusive values raise user-facing errors that describe impossible usage relationships rather than Mobius inversion, leaves, coefficients, or posets.
 
 **`types.py` changes `Usage` and `ModelPrice` without changing public signatures.** _(implements "`Usage` becomes registry-aware and remains permissive for raw caller objects", "`ModelPrice` remains subclass-friendly and uses current legacy fields for storage")_
@@ -195,7 +197,7 @@ Direct construction is strict for registered externally reported usage keys and 
 For registered attribute reads:
 
 1. If the value was reported, return it directly without auditing descendants.
-2. If the value is missing and no positive reported related value could make it non-zero, return `None`, matching the old dataclass shape more closely than implicit zero.
+2. If the value is missing and no positive reported related value could make it non-zero, return `None`, matching the old dataclass shape more closely than implicit zero. The zero rule applies inside pricing decomposition for safely absent priced units, not to direct Python `Usage` attribute reads.
 3. If the value is missing and positive reported related values mean answering would require inferring an omitted ancestor or overlap, raise a user-facing missing-usage error.
 
 The missing-read check is registry-driven. A missing read is ambiguous when either a positive reported strict descendant of the requested unit exists, or the requested unit is the join of two positive reported compatible units that are incomparable with each other. A missing descendant of a reported ancestor is not ambiguous by itself; for example `Usage(input_tokens=100).cache_read_tokens` returns `None` rather than raising because missing more-specific usage is allowed to mean "not reported".
