@@ -306,7 +306,6 @@ class Usage:
                     and (unit := registry.units.get(reported_key)) is not None
                     and unit.family is requested_unit.family
                 ],
-                registry,
             )
             if not overlapping_keys:
                 return 0
@@ -325,7 +324,7 @@ class Usage:
 
 
 def _reported_overlap_keys_for_join(
-    requested_unit: UnitDef, reported_units: Sequence[UnitDef], registry: UnitRegistry
+    requested_unit: UnitDef, reported_units: Sequence[UnitDef]
 ) -> tuple[str, str] | None:
     from genai_prices.decompose import is_descendant_or_self
     from genai_prices.units import are_compatible
@@ -337,7 +336,7 @@ def _reported_overlap_keys_for_join(
                 continue
             if is_descendant_or_self(left, right) or is_descendant_or_self(right, left):
                 continue
-            if registry.find_join(left, right) is requested_unit:
+            if requested_unit.family.find_join(left, right) is requested_unit:
                 return left.usage_key, right.usage_key
 
     return None

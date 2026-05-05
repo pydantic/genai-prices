@@ -27,7 +27,7 @@ def validate_ancestor_coverage(priced_usage_keys: set[str], family: UnitFamily, 
             raise ValueError(f'Missing ancestor price for {usage_key}: {bad_keys}')
 
 
-def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, registry: UnitRegistry) -> None:
+def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None:
     family_priced_usage_keys = priced_usage_keys & family.units.keys()
     priced_units = _priced_units(family_priced_usage_keys, family)
 
@@ -36,7 +36,7 @@ def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, regi
             if not are_compatible(first_unit, second_unit):
                 continue
 
-            join = registry.find_join(first_unit, second_unit)
+            join = family.find_join(first_unit, second_unit)
             if join is None:
                 raise ValueError(
                     f'Missing registered join unit for priced units {first_unit.usage_key} and {second_unit.usage_key}'
@@ -62,7 +62,7 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
 
     for family, priced_usage_keys in usage_keys_by_family.items():
         validate_ancestor_coverage(priced_usage_keys, family, registry)
-        validate_join_coverage(priced_usage_keys, family, registry)
+        validate_join_coverage(priced_usage_keys, family)
 
 
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str] | frozenset[str]) -> None:

@@ -25,6 +25,13 @@ class UnitFamily:
     units: dict[str, UnitDef] = field(default_factory=dict)
     units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef] = field(default_factory=dict)
 
+    def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
+        """Return the most specific registered unit joining two family units, if present."""
+        if not are_compatible(a, b):
+            return None
+
+        return self.units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
+
 
 class UnitRegistry:
     families: dict[str, UnitFamily]
@@ -81,13 +88,6 @@ class UnitRegistry:
             )
 
         self._validate_interval_closure()
-
-    def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
-        """Return the most specific registered unit joining two compatible units, if present."""
-        if not are_compatible(a, b):
-            return None
-
-        return a.family.units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
 
     def unit_for_price_key(self, price_key: str) -> UnitDef:
         """Return the registered unit priced by price_key."""

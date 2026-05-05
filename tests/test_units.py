@@ -229,18 +229,20 @@ def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
 
 def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
     registry = UnitRegistry(load_units())
+    token_family = registry.families['tokens']
 
     assert (
-        registry.find_join(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
+        token_family.find_join(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
         is registry.units['cache_audio_read_tokens']
     )
 
 
 def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() -> None:
     registry = UnitRegistry(load_units())
+    token_family = registry.families['tokens']
 
     assert (
-        registry.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
+        token_family.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
         is registry.units['cache_audio_read_tokens']
     )
 
@@ -248,13 +250,20 @@ def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() ->
 def test_unit_registry_join_lookup_returns_none_for_incompatible_units() -> None:
     registry = UnitRegistry(load_units())
 
-    assert registry.find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
+    assert (
+        registry.families['tokens'].find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
+    )
 
 
 def test_unit_registry_join_lookup_returns_none_for_missing_compatible_join() -> None:
     registry = UnitRegistry(load_units())
 
-    assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
+    assert (
+        registry.families['tokens'].find_join(
+            registry.units['cache_write_tokens'], registry.units['input_audio_tokens']
+        )
+        is None
+    )
 
 
 def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
@@ -438,7 +447,12 @@ def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:
         }
     )
 
-    assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
+    assert (
+        registry.families['tokens'].find_join(
+            registry.units['cache_write_tokens'], registry.units['input_audio_tokens']
+        )
+        is None
+    )
 
 
 def test_collect_effective_model_price_keys_reads_base_fields() -> None:

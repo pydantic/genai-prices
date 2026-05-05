@@ -60,7 +60,6 @@ def test_validate_join_coverage_rejects_missing_join_price() -> None:
         validate_join_coverage(
             {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
             registry.families['tokens'],
-            registry,
         )
 
 
@@ -74,7 +73,6 @@ def test_validate_join_coverage_rejects_missing_registered_join_unit() -> None:
         validate_join_coverage(
             {'input_tokens', 'cache_write_tokens', 'input_audio_tokens'},
             registry.families['tokens'],
-            registry,
         )
 
 
@@ -84,7 +82,6 @@ def test_validate_join_coverage_accepts_priced_join() -> None:
     validate_join_coverage(
         {'input_tokens', 'cache_read_tokens', 'input_audio_tokens', 'cache_audio_read_tokens'},
         registry.families['tokens'],
-        registry,
     )
 
 
