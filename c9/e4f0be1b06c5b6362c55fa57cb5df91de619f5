@@ -1,0 +1,12 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "c9e4f0be1b06c5b6362c55fa57cb5df91de619f5",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    }
+  }
+}
