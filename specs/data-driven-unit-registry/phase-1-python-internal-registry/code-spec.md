@@ -193,7 +193,7 @@ class Usage:
     def __repr__(self) -> str: ...
 ```
 
-Direct construction is strict for registered externally reported usage keys and rejects unknown keyword names and non-reported pricing-only keys such as `requests`. `from_raw(...)` reads known externally reported usage keys from mappings or objects and ignores extras. Construction stores reported values only; it does not infer ancestors, normalize values, remember explicit-versus-inferred provenance, or reject contradictory registered values.
+Direct construction is strict for registered externally reported usage keys and rejects unknown keyword names and non-reported pricing-only keys such as `requests`. `from_raw(...)` reads known externally reported usage attributes from dataclasses, namespace objects, and other attribute objects while ignoring extras. It must not read values from mappings such as plain dictionaries because those were not accepted by Python `calc_price` before Phase 1. Construction stores reported values only; it does not infer ancestors, normalize values, remember explicit-versus-inferred provenance, or reject contradictory registered values.
 
 For registered attribute reads:
 
