@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Provider } from '../types'
 
-import { findProvider, updatePrices, waitForUpdate } from '../api'
+import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { getUnit } from '../units'
 
@@ -70,6 +70,33 @@ describe('provider activation', () => {
     expect(findProvider({ providerId: 'array-provider' })?.id).toBe('array-provider')
     expect(getUnit('input_tokens')).toBe(beforeInputUnit)
     expect(getUnit('requests').priceKey).toBe('requests_kcount')
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data)
+    })
+  })
+
+  it('activates providers with invalid model prices and rejects them at price time', async () => {
+    const provider = providerFixture('invalid-price-provider')
+    provider.models = [
+      {
+        id: 'bad-model',
+        match: { equals: 'bad-model' },
+        prices: {
+          cache_read_mtok: 0.1,
+        },
+      },
+    ]
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData([provider])
+    })
+
+    await expect(waitForUpdate()).resolves.toEqual([provider])
+    expect(findProvider({ providerId: 'invalid-price-provider' })?.id).toBe('invalid-price-provider')
+    expect(() => calcPrice({ cache_read_tokens: 100 }, 'bad-model', { providerId: 'invalid-price-provider' })).toThrow(
+      'Missing ancestor price key input_mtok for cache_read_mtok'
+    )
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
