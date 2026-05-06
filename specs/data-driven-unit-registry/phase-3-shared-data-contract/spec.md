@@ -18,6 +18,12 @@ There is still no separate remote runtime unit file or update URL. Runtime packa
 **The complete repo-defined registry starts here.** _(from "Unit definitions travel with the prices that depend on them")_
 `prices/units.yml` becomes the complete source for built-in repo-defined units, including the built-in token lattice needed by the shared pricing semantics. Full registry join-closedness is now a structural validation rule rather than a current-subset exception.
 
+**Dynamic public key names are validated for both runtimes.** _(from "The complete repo-defined registry starts here")_
+Usage keys become usage attributes and extractor destinations. Price keys become model-price attributes and provider YAML keys. Registry-defined keys must therefore be public, attribute-safe, and free of collisions with Python or JavaScript runtime behavior before they can travel in wrapped runtime payloads. Registry construction rejects private or dunder-like names, language keywords where relevant, prototype-like names, and names already owned by `Usage` or `ModelPrice`.
+
+**Reserved-name validation is not semantic unit-name whitelisting.** _(from "Dynamic public key names are validated for both runtimes")_
+The denylist can mention runtime method/property names and a small shared cross-language reserved set, but it must not hardcode commercial pricing concepts such as `input_tokens` or `input_mtok`.
+
 **Provider prices and extractor destinations validate against the same registry payload.** _(from "Unit definitions travel with the prices that depend on them")_
 Build/export validation constructs the registry from `prices/units.yml`, validates provider price keys, ancestor coverage, join coverage, and extractor destinations, then writes the wrapped payload. Fetched wrapped payloads are parsed and structurally checked at runtime, but their model prices are treated as prevalidated by the publisher.
 

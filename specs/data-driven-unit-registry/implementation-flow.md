@@ -36,6 +36,7 @@ Phase 3 modifies:
   -> prices/src/prices/prices_types.py
   -> prices/src/prices/build.py
   -> prices/src/prices/package_data.py
+  -> registry validation helpers
   -> packages/python/genai_prices/update_prices.py
   -> packages/python/genai_prices/types.py
   -> packages/python/genai_prices/units.py
@@ -43,7 +44,6 @@ Phase 3 modifies:
   -> generated JSON outputs and JSON schemas under prices/
 
 Phase 4 modifies:
-  -> registry validation helpers
   -> provider YAML schema generation
   -> packages/python/genai_prices/types.py
   -> packages/python/genai_prices/_cli_impl.py
@@ -72,7 +72,7 @@ prices/units.yml
        -> validate dimension-set uniqueness within each family
        -> validate interval closure
        -> in Phase 3+: validate full join-closedness
-       -> in Phase 4+: validate public dynamic key safety
+       -> in Phase 3+: validate public dynamic key safety
 ```
 
 Phases 1 and 2 intentionally construct a current-unit subset that may omit future join units, so full join-closedness is not enforced there. Price-level validation must reject any priced compatible pair whose join is absent before decomposition runs.
