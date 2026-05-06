@@ -83,6 +83,7 @@ export interface UnitFamily {
   id: string
   per: number
   units: Record<string, UnitDef>
+  unitsByDimension: Map<string, UnitDef>
 }
 
 export type ParsedFamilies = Record<string, UnitFamily>
