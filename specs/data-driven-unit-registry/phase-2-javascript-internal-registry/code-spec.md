@@ -18,10 +18,11 @@ Modify:
 - `packages/js/src/api.ts`
 - `packages/js/src/extractUsage.ts`
 - `packages/js/src/data.ts` (generated)
-- `packages/js/src/dataUnits.ts` (generated)
 - `prices/src/prices/package_data.py`
 
 Do not change `prices/data.json` or `prices/data_slim.json` into wrapped payloads in this phase.
+
+Also add generated startup data module `packages/js/src/dataUnits.ts`.
 
 **`types.ts` becomes registry-compatible for usage, prices, and units.** _(implements "JavaScript preserves its plain-object public usage contract")_
 Represent caller usage and model prices as open records:

@@ -22,6 +22,7 @@ Phase 2 creates:
   -> packages/js/src/usage.ts
   -> packages/js/src/decompose.ts
   -> packages/js/src/validation.ts
+  -> packages/js/src/dataUnits.ts (generated)
 
 Phase 2 modifies:
   -> packages/js/src/types.ts
@@ -104,9 +105,10 @@ Phase 1 and Phase 2 generate or embed language-native unit registry data for the
 
 ```text
 _get_registry()
-  -> import unit_families_data from generated data_units.py
+  -> if a remote registry has been installed, return it
+  -> otherwise import unit_families_data from generated data_units.py
   -> UnitRegistry(unit_families_data)
-  -> cache as the active global registry
+  -> cache as the bundled global registry
 
 get_snapshot()
   -> _bundled_snapshot()

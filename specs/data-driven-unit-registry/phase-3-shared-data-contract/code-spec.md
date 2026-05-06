@@ -166,7 +166,7 @@ def write_prices(
     """Write one wrapped prices payload."""
 ```
 
-`UpdatePrices.fetch()` and JavaScript runtime update code do not call this helper for every fetched payload. They parse the wrapper, construct/structurally validate the registry, parse providers, and treat fetched model prices as prevalidated by the publisher.
+`UpdatePrices.fetch()` and JavaScript runtime update code do not call this helper for every fetched payload. They parse the wrapper, construct and structurally validate the registry, install that registry as global runtime state, parse providers, and treat fetched model prices as prevalidated by the publisher.
 
 The helper name and boundary are intentional. Do not bury full price-level validation only inside a repo-local command that discovers YAML files and writes outputs. The reusable helper accepts already parsed providers plus raw `unit_families`, constructs and validates `UnitRegistry`, validates model price keys, resolves price keys to usage keys, checks ancestor and join coverage, validates extractor destinations, and returns the validated registry or raises.
 
@@ -189,7 +189,7 @@ def _set_registry(registry: UnitRegistry) -> None:
     """Replace the active global unit registry after trusted payload parsing."""
 ```
 
-This helper is private. It exists so bundled startup can use the generated registry and runtime update parsing can replace the global registry from trusted wrapped payloads. Replacement clears the `_get_registry()` cached value and any Phase 5 registry-keyed caches when those exist.
+This helper is private. Phase 3 must change `_get_registry()` from a purely cached bundled-registry constructor into an active-registry accessor: it returns the installed registry when `_set_registry(...)` has replaced the global registry, otherwise it returns the cached bundled registry built from generated `data_units.py`. Replacement stores the new registry as active global state and clears any Phase 5 registry-keyed caches when those exist. It must not simply clear `_get_registry()` and fall back to bundled unit data on the next lookup.
 
 **Runtime update paths install unit families globally.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
 Python `UpdatePrices.fetch()` parses `unit_families`, constructs `UnitRegistry(raw['unit_families'])`, installs that registry as the active global registry, parses `providers`, and returns `DataSnapshot(providers=...)`:
@@ -208,7 +208,7 @@ JavaScript `api.ts` handles runtime updates in this order:
 4. parse providers
 5. replace active provider data
 
-If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. After the new registry is structurally valid, it remains installed even if provider parsing or provider activation fails; in that case the previous provider data remains active. This intentionally treats trusted remote unit updates as global, compatible runtime state rather than provider-snapshot state. Runtime provider activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
+If wrapper parsing or structural registry validation fails, both active registry and active provider data remain unchanged. After the new registry is structurally valid, it remains installed even if provider parsing or provider activation fails; in that case the previous provider data remains active. This intentionally treats trusted remote unit updates as global, compatible runtime state rather than provider-snapshot state. Runtime provider activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
 
 `updatePrices()` passes both provider-data and unit-family activation callbacks through the storage factory:
 

@@ -20,9 +20,12 @@ Each registry construction gets a fresh opaque `object()`. Global registry repla
 Add runtime-private structures equivalent to:
 
 ```python
+import weakref
+
+
 @dataclass
 class PriceValidationRecord:
-    model_price: ModelPrice
+    model_price_ref: weakref.ReferenceType[ModelPrice]
     registry_validation_id: object
     fingerprint: frozenset[str]
 
@@ -30,7 +33,7 @@ class PriceValidationRecord:
 _price_validation_cache: dict[int, PriceValidationRecord]
 ```
 
-Records are keyed by `id(model_price)` and store an object reference to avoid id-reuse ambiguity. The cache is module-private runtime state, never serialized into generated data and never stored on `DataSnapshot`.
+Records are keyed by `id(model_price)` and store a weak reference so module-global caching does not keep transient model-price objects alive. Cache lookups must treat a dead weak reference or a weak reference to a different object as a miss, which also avoids id-reuse ambiguity. The cache is module-private runtime state, never serialized into generated data and never stored on `DataSnapshot`.
 
 **Python hot-path validation becomes cache-gated.** _(implements "Provider activation is not a bulk model-price validation boundary")_
 `ModelPrice.calc_price(...)` checks the module-global cache before running one-model validation. It skips validation only when the same model object, exact active registry `validation_id`, and current effective price-key fingerprint all match a cached record. Missing or stale cache records fall back to one-model validation and update the cache before pricing.
