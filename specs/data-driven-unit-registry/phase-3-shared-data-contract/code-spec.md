@@ -179,25 +179,36 @@ Add `_extra_prices: dict[str, Decimal | TieredPrices | None]` to base `ModelPric
 `__getattr__`, supported assignment, deletion, `is_free()`, string rendering, and effective price-key iteration must include both legacy fields and `_extra_prices`. Any `_extra_prices` key that is not registered in the validation registry is invalid. Declared subclass-only custom fields remain custom override state unless their names are also registered price keys.
 
 **Python pricing validates dynamic price data on use.** _(implements "Python base `ModelPrice` accepts registered non-hardcoded price keys", "Runtime validation caching still waits for Phase 5")_
-`set_custom_snapshot(snapshot)` does not perform model-price validation in Phase 3. Standard base `ModelPrice.calc_price(...)` validates candidate dynamic keys, ancestor coverage, and join coverage against the active snapshot registry every time before calculating against the selected model price. Misspelled dynamic keys and incomplete dynamic price sets therefore fail on use. Activation-time model-price validation and trust records remain Phase 5 work.
+`set_custom_snapshot(snapshot)` does not perform model-price validation in Phase 3. Standard base `ModelPrice.calc_price(...)` validates candidate dynamic keys, ancestor coverage, and join coverage against the active global registry every time before calculating against the selected model price. Misspelled dynamic keys and incomplete dynamic price sets therefore fail on use. Runtime validation caches remain Phase 5 work.
 
-**Runtime update paths parse wrapped payloads atomically.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
-Python `UpdatePrices.fetch()` parses `unit_families` and `providers`, constructs `UnitRegistry(raw['unit_families'])`, and returns `DataSnapshot(providers=..., unit_registry=...)`:
+**Python can replace the active global registry from trusted payloads.** _(implements "Unit definitions travel with the prices that depend on them")_
+Add a private runtime helper in `units.py` for installing a structurally valid registry as the active global registry:
+
+```python
+def _set_registry(registry: UnitRegistry) -> None:
+    """Replace the active global unit registry after trusted payload parsing."""
+```
+
+This helper is private. It exists so bundled startup can use the generated registry and runtime update parsing can replace the global registry from trusted wrapped payloads. Replacement clears the `_get_registry()` cached value and any Phase 5 registry-keyed caches when those exist.
+
+**Runtime update paths install unit families globally.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
+Python `UpdatePrices.fetch()` parses `unit_families`, constructs `UnitRegistry(raw['unit_families'])`, installs that registry as the active global registry, parses `providers`, and returns `DataSnapshot(providers=...)`:
 
 ```python
 class UpdatePrices:
     def fetch(self) -> DataSnapshot | None:
-        """Fetch wrapped data, parse unit_families and providers, and return a staged snapshot."""
+        """Fetch wrapped data, install unit_families globally, and return a provider snapshot."""
 ```
 
-JavaScript `api.ts` stages runtime updates in this order:
+JavaScript `api.ts` handles runtime updates in this order:
 
 1. parse wrapped JSON
 2. parse and structurally validate `unit_families`
-3. parse providers
-4. on success only, replace active unit families and active provider data
+3. replace active unit families
+4. parse providers
+5. replace active provider data
 
-If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. Runtime update activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
+If parsing or structural registry validation fails, both active registry and active provider data remain unchanged. After the new registry is structurally valid, it remains installed even if provider parsing or provider activation fails; in that case the previous provider data remains active. This intentionally treats trusted remote unit updates as global, compatible runtime state rather than provider-snapshot state. Runtime provider activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
 
 `updatePrices()` passes both provider-data and unit-family activation callbacks through the storage factory:
 
@@ -210,9 +221,9 @@ export interface StorageFactoryParams {
 }
 ```
 
-Checked-in JavaScript browser and node examples that cache provider data must cache and restore the wrapped payload shape, not a bare provider array, and parse families before calling both `setUnitFamilies(stagedFamilies)` and `setProviderData(...)`.
+Checked-in JavaScript browser and node examples that cache provider data must cache and restore the wrapped payload shape, not a bare provider array, and parse families before calling both `setUnitFamilies(parsedFamilies)` and `setProviderData(...)`.
 
-Generated Python and JavaScript package data remain pure data. They must not contain validation markers, trust flags, fingerprints, marker constructor arguments, decomposition plans, or cached coefficients. Runtime-private trust state starts in Phase 5.
+Generated Python and JavaScript package data remain pure data. They must not contain validation markers, trust flags, fingerprints, marker constructor arguments, decomposition plans, or cached coefficients. Runtime-private validation caches start in Phase 5.
 
 **Tests cover the wrapper and dynamic-key boundary.** _(implements "Phase 3 makes repo-defined units an end-to-end feature")_
-Add tests for wrapped full/slim payload schemas, Python and JavaScript runtime update parsing, generated package data exports, complete-registry join-closedness, build/export validation for prices and extractor destinations, base Python `ModelPrice` with a registered non-hardcoded key, rejection of misspelled dynamic keys during pricing, no Phase 3 activation-time model-price validation, and unchanged generated-output purity with no validation artifacts.
+Add tests for wrapped full/slim payload schemas, Python and JavaScript runtime update parsing, generated package data exports, complete-registry join-closedness, build/export validation for prices and extractor destinations, base Python `ModelPrice` with a registered non-hardcoded key, rejection of misspelled dynamic keys during pricing, no Phase 3 provider-activation model-price validation, global registry replacement from runtime payloads, and unchanged generated-output purity with no validation artifacts.

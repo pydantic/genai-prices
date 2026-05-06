@@ -25,4 +25,4 @@ Base `ModelPrice` already accepts dynamic registered price keys in Phase 3. Phas
 The CLI derives price labels and normalization display from unit metadata instead of hardcoded price-field maps. Existing output remains familiar for current units, and new registered units can appear without code changes.
 
 **Phase 4 does not add runtime validation performance state.** _(from "Phase 4 hardens the authoring and compatibility surfaces after the shared contract works")_
-Validation trust contexts, price-key fingerprints, dirty sets, and decomposition caches still wait for Phase 5.
+Validation caches, price-key fingerprints, and decomposition caches still wait for Phase 5.

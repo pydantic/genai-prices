@@ -1,6 +1,6 @@
 # Cross-Phase Implementation Flow
 
-This file is supporting detail for the phase-local code specs. It does not replace them as the source of truth. Its purpose is to preserve the cross-phase call relationships, trust boundaries, and runtime activation flow so an implementer can see how the phase-local skeletons fit together.
+This file is supporting detail for the phase-local code specs. It does not replace them as the source of truth. Its purpose is to preserve the cross-phase call relationships, trust boundaries, global registry update flow, and provider activation flow so an implementer can see how the phase-local skeletons fit together.
 
 ## File Ownership By Phase
 
@@ -14,7 +14,6 @@ Phase 1 creates:
 
 Phase 1 modifies:
   -> packages/python/genai_prices/types.py
-  -> packages/python/genai_prices/data_snapshot.py
   -> packages/python/genai_prices/data.py (generated)
   -> prices/src/prices/package_data.py
 
@@ -38,7 +37,7 @@ Phase 3 modifies:
   -> prices/src/prices/package_data.py
   -> packages/python/genai_prices/update_prices.py
   -> packages/python/genai_prices/types.py
-  -> packages/python/genai_prices/data_snapshot.py
+  -> packages/python/genai_prices/units.py
   -> packages/js/src/api.ts
   -> generated JSON outputs and JSON schemas under prices/
 
@@ -49,10 +48,9 @@ Phase 4 modifies:
   -> packages/python/genai_prices/_cli_impl.py
 
 Phase 5 modifies:
-  -> UnitRegistry validation identity state
-  -> Python DataSnapshot validation trust state
-  -> Python ModelPrice trust invalidation paths
-  -> JavaScript registry and validation trust helpers
+  -> UnitRegistry / active registry validation identity state
+  -> Python module-global validation caches
+  -> JavaScript registry and validation cache helpers
 ```
 
 The lists are ownership guides, not permission boundaries. If an implementation discovers an additional touched file, update the relevant phase code spec before or alongside the implementation.
@@ -100,41 +98,49 @@ package_data()
   -> generated runtime data is trusted because export validation succeeded first
 ```
 
-Phase 1 and Phase 2 generate or embed language-native unit registry data for the current hardcoded unit subset while keeping `prices/data.json` and `prices/data_slim.json` as provider arrays. Phase 3 is the payload-shape break. Phase 4 derives provider YAML schema/autocomplete from registry price keys and reported usage keys. Phase 5 adds runtime-private trust and fingerprint checks while keeping generated data free of validation markers, fingerprints, and caches.
+Phase 1 and Phase 2 generate or embed language-native unit registry data for the current hardcoded unit subset while keeping `prices/data.json` and `prices/data_slim.json` as provider arrays. Phase 3 is the payload-shape break. Phase 4 derives provider YAML schema/autocomplete from registry price keys and reported usage keys. Phase 5 adds runtime-private validation caches and fingerprint checks while keeping generated data free of validation markers, fingerprints, and caches.
 
 ## Python Bundled Startup
 
 ```text
+_get_registry()
+  -> import unit_families_data from generated data_units.py
+  -> UnitRegistry(unit_families_data)
+  -> cache as the active global registry
+
 get_snapshot()
   -> _bundled_snapshot()
        -> import providers from generated data.py
-       -> import unit_families_data from generated data_units.py
-       -> UnitRegistry(unit_families_data)
-       -> DataSnapshot(providers=..., unit_registry=..., from_auto_update=False)
+       -> DataSnapshot(providers=..., from_auto_update=False)
        -> do not validate every generated ModelPrice at import/startup
        -> do not precompute decomposition state
        -> do not require generated data.py or data_units.py to emit per-price validation markers
-       -> in Phase 5+: create runtime-private trusted-price context for this provider graph
 ```
 
-Generated package data is pure data. Runtime-private validation trust is created from loaded objects, not serialized into the generated files. The Python units-data module is separate so custom-provider code can borrow the default registry without importing the bundled provider list.
+Generated package data is pure data. Runtime-private validation caches are created from loaded objects, not serialized into the generated files. The Python units-data module is separate so custom-provider code can borrow the default registry without importing the bundled provider list.
 
-## Python Snapshot Activation
+## Python Runtime Updates and Provider Activation
 
 ```text
+UpdatePrices.fetch() after Phase 3 wrapped payloads
+  -> parse wrapped JSON
+  -> registry = UnitRegistry(parsed.unit_families)
+  -> install registry as the active global registry
+       -> clear Phase 5+ registry-keyed caches, if present
+  -> parse providers
+  -> return DataSnapshot(providers=..., from_auto_update=True)
+       -> if provider parsing fails after registry install, keep the new registry
+          and leave active providers unchanged
+
 set_custom_snapshot(snapshot)
   -> if snapshot is None: clear custom snapshot
-  -> validate the staged registry structure when needed
   -> in Phases 1-4: do not validate ModelPrice objects at activation time
   -> in Phases 1-4: candidate dynamic price keys, ancestor coverage, and join coverage are validated on use by ModelPrice.calc_price()
   -> validate extractor destinations when UsageExtractor objects are constructed, plus lifecycle boundaries that already own extractor validation for the current phase
-  -> in Phase 5+: validate missing, custom, changed, runtime-authored, stale, or otherwise untrusted ModelPrice objects before recording trust
-  -> in Phase 5+: record runtime-private validation state in the snapshot trust context
-  -> on success: activate snapshot as the active runtime snapshot
-  -> on failure: raise and keep the previous active snapshot
+  -> activate provider data as the active provider snapshot
 ```
 
-Activation is the boundary where staged runtime objects become active runtime state. Before Phase 5, it is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates. Phase 5 can add activation-time model-price validation only to seed runtime-private trust and skip repeated hot-path validation safely.
+Unit registry updates and provider snapshot activation are deliberately separate. Trusted remote unit families are global runtime state after structural registry validation succeeds. Provider activation is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates unless Phase 5 cache state safely covers that exact model price and active registry.
 
 ## Python Custom Price Flow
 
@@ -142,15 +148,13 @@ Activation is the boundary where staged runtime objects become active runtime st
 snapshot = get_snapshot() or an inactive snapshot returned from fetch()
   -> use lookup helpers to find providers/models on that snapshot
   -> mutate relevant ModelPrice objects for registered price keys as needed
-       -> in Phase 5+: mutation invalidates trust-context state for changed key sets
   -> if snapshot is inactive: set_custom_snapshot(snapshot)
        -> in Phases 1-4: activate without model-price validation
-       -> in Phase 5+: validate missing/custom/changed/stale/untrusted ModelPrice objects and record trust
        -> activate on success
   -> if snapshot is already active:
        -> supported mutations have already updated the active snapshot
        -> in Phases 1-4: changed prices are validated by the next standard base calc before pricing
-       -> in Phase 5+: changed key sets invalidate trust and are revalidated before trusted pricing
+       -> in Phase 5+: changed key sets miss the validation cache and revalidate before pricing
 ```
 
 Custom `ModelPrice` overrides receive the original usage object. The base `ModelPrice.calc_price()` wraps usage internally only for registry-driven pricing.
@@ -163,10 +167,10 @@ ModelInfo.calc_price(usage, provider, ...)
   -> model_price.calc_price(usage)
 
 ModelPrice.calc_price(usage)
-  -> registry = get_snapshot().unit_registry
+  -> registry = _get_registry()
   -> validate this ModelPrice against registry
        -> in Phases 1-4: always run this one-model validation before pricing
-       -> in Phase 5+: skip validation only when active trust covers this ModelPrice fingerprint
+       -> in Phase 5+: skip validation only when global cache covers this ModelPrice fingerprint and registry id
   -> smart_usage = Usage.from_raw(usage)
   -> resolve price keys to usage keys
   -> group priced units by family
@@ -196,21 +200,20 @@ generated dataUnits.ts
   -> do not validate every generated model price at module startup
   -> do not precompute decomposition state
   -> do not require generated data.ts or dataUnits.ts to emit per-price validation markers
-  -> in Phase 5+: create module-private trusted-price context for the active generated provider graph
+  -> in Phase 5+: create module-private validation caches for the active global registry
 
 runtime update
   -> parse wrapped JSON
-  -> stagedFamilies = parseFamilies(parsed.unit_families)
-  -> for fetched data-url update:
-       -> treat parsed provider data as prevalidated for stagedFamilies without full price validation
-  -> for user-provided staged data:
-       -> in Phases 1-4: parse structurally but do not validate model-price coverage at activation
-       -> in Phase 5+: validate missing, custom, changed, or otherwise untrusted model prices before recording trust
-  -> on success only:
-       -> setUnitFamilies(stagedFamilies)
-       -> setProviderData(parsed.providers)
-  -> on failure:
+  -> parsedFamilies = parseFamilies(parsed.unit_families)
+  -> setUnitFamilies(parsedFamilies)
+       -> clears Phase 5+ registry-keyed caches, if present
+  -> parse provider data
+  -> setProviderData(parsed.providers)
+       -> treat parsed provider data as prevalidated for parsedFamilies without full price validation
+  -> if family parsing fails:
        -> keep both active registry and providerData unchanged
+  -> if provider parsing fails after setUnitFamilies:
+       -> keep the new active registry and keep the previous providerData
 ```
 
 Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape after Phase 3, not a bare provider array.
