@@ -213,6 +213,20 @@ describe('Core Price Calculation Function', () => {
       ).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
     })
 
+    it('should reject explicit-only missing usage needed for pricing', () => {
+      expect(() =>
+        calcPrice(
+          {
+            input_audio_tokens: 100,
+          },
+          {
+            input_audio_mtok: 10,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Missing usage value for input_tokens with positive reported descendant input_audio_tokens')
+    })
+
     it('should ignore unpriced contradictory descendants when parent-only pricing is sufficient', () => {
       const result = calcPrice(
         {
