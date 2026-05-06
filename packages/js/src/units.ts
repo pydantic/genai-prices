@@ -73,6 +73,19 @@ export function getUnit(usageKey: string): UnitDef {
   throw new Error(`Unknown unit usage key: ${usageKey}`)
 }
 
+export function getUnitForPriceKey(priceKey: string): UnitDef {
+  for (const family of Object.values(activeFamilies)) {
+    for (const unit of Object.values(family.units)) {
+      if (unit.priceKey === priceKey) return unit
+    }
+  }
+  throw new Error(`Unknown unit price key: ${priceKey}`)
+}
+
+export function getUsageKeyForPriceKey(priceKey: string): string {
+  return getUnitForPriceKey(priceKey).usageKey
+}
+
 export function setUnitFamilies(families: null | ParsedFamilies): void {
   activeFamilies = families ?? generatedFamilies
 }

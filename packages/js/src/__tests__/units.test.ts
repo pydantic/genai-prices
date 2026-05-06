@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { RawFamiliesDict } from '../types'
 
 import { unitFamiliesData } from '../dataUnits'
-import { getActiveFamilies, getFamily, getUnit, parseFamilies, setUnitFamilies } from '../units'
+import { getActiveFamilies, getFamily, getUnit, getUnitForPriceKey, getUsageKeyForPriceKey, parseFamilies, setUnitFamilies } from '../units'
 
 describe('parseFamilies', () => {
   it('parses generated unit families into runtime objects', () => {
@@ -247,5 +247,18 @@ describe('active unit families', () => {
   it('raises specific errors for unknown family ids and usage keys', () => {
     expect(() => getFamily('imaginary')).toThrow('Unknown unit family: imaginary')
     expect(() => getUnit('imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
+  })
+
+  it('looks up generated price keys', () => {
+    setUnitFamilies(null)
+    expect(getUnitForPriceKey('input_mtok')).toBe(getUnit('input_tokens'))
+    expect(getUnitForPriceKey('output_mtok')).toBe(getUnit('output_tokens'))
+    expect(getUnitForPriceKey('requests_kcount')).toBe(getUnit('requests'))
+    expect(getUsageKeyForPriceKey('requests_kcount')).toBe('requests')
+  })
+
+  it('raises specific errors for unknown price keys', () => {
+    expect(() => getUnitForPriceKey('imaginary_mtok')).toThrow('Unknown unit price key: imaginary_mtok')
+    expect(() => getUsageKeyForPriceKey('imaginary_mtok')).toThrow('Unknown unit price key: imaginary_mtok')
   })
 })
