@@ -112,4 +112,31 @@ describe('getUsageValue', () => {
     expect(getUsageValue(usage, 'cache_read_tokens')).toBe(0)
     expect(usage).not.toHaveProperty('cache_read_tokens')
   })
+
+  it('raises for missing overlap joins with positive reported incomparable units', () => {
+    const usage = normalizeUsage({
+      cache_read_tokens: 60,
+      input_audio_tokens: 40,
+    })
+    expect(() => getUsageValue(usage, 'cache_audio_read_tokens')).toThrow(
+      'Missing usage value for cache_audio_read_tokens with positive reported overlap cache_read_tokens and input_audio_tokens'
+    )
+  })
+
+  it('returns stored overlap joins directly when present', () => {
+    const usage = normalizeUsage({
+      cache_audio_read_tokens: 10,
+      cache_read_tokens: 60,
+      input_audio_tokens: 40,
+    })
+    expect(getUsageValue(usage, 'cache_audio_read_tokens')).toBe(10)
+  })
+
+  it('returns zero when unrelated reported units do not imply the missing value', () => {
+    const usage = normalizeUsage({
+      input_audio_tokens: 40,
+      output_tokens: 50,
+    })
+    expect(getUsageValue(usage, 'cache_audio_read_tokens')).toBe(0)
+  })
 })
