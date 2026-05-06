@@ -3,7 +3,17 @@ import { describe, expect, it } from 'vitest'
 import type { RawFamiliesDict } from '../types'
 
 import { unitFamiliesData } from '../dataUnits'
-import { getActiveFamilies, getFamily, getUnit, getUnitForPriceKey, getUsageKeyForPriceKey, parseFamilies, setUnitFamilies } from '../units'
+import {
+  getActiveFamilies,
+  getAllPriceKeys,
+  getAllUsageKeys,
+  getFamily,
+  getUnit,
+  getUnitForPriceKey,
+  getUsageKeyForPriceKey,
+  parseFamilies,
+  setUnitFamilies,
+} from '../units'
 
 describe('parseFamilies', () => {
   it('parses generated unit families into runtime objects', () => {
@@ -260,5 +270,37 @@ describe('active unit families', () => {
   it('raises specific errors for unknown price keys', () => {
     expect(() => getUnitForPriceKey('imaginary_mtok')).toThrow('Unknown unit price key: imaginary_mtok')
     expect(() => getUsageKeyForPriceKey('imaginary_mtok')).toThrow('Unknown unit price key: imaginary_mtok')
+  })
+
+  it('returns the generated full usage-key set', () => {
+    setUnitFamilies(null)
+    expect(getAllUsageKeys()).toEqual(
+      new Set([
+        'cache_audio_read_tokens',
+        'cache_read_tokens',
+        'cache_write_tokens',
+        'input_audio_tokens',
+        'input_tokens',
+        'output_audio_tokens',
+        'output_tokens',
+        'requests',
+      ])
+    )
+  })
+
+  it('returns the generated full price-key set', () => {
+    setUnitFamilies(null)
+    expect(getAllPriceKeys()).toEqual(
+      new Set([
+        'cache_audio_read_mtok',
+        'cache_read_mtok',
+        'cache_write_mtok',
+        'input_audio_mtok',
+        'input_mtok',
+        'output_audio_mtok',
+        'output_mtok',
+        'requests_kcount',
+      ])
+    )
   })
 })

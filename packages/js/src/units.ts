@@ -65,6 +65,14 @@ export function getFamily(familyId: string): UnitFamily {
   return family
 }
 
+export function getAllPriceKeys(): Set<string> {
+  return new Set(Object.values(activeFamilies).flatMap((family) => Object.values(family.units).map((unit) => unit.priceKey)))
+}
+
+export function getAllUsageKeys(): Set<string> {
+  return new Set(Object.values(activeFamilies).flatMap((family) => Object.keys(family.units)))
+}
+
 export function getUnit(usageKey: string): UnitDef {
   for (const family of Object.values(activeFamilies)) {
     const unit = family.units[usageKey]
