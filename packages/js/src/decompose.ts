@@ -26,11 +26,32 @@ export function computeLeafValues(pricedUsageKeys: Set<string>, usage: Normalize
     }
 
     if (leafValue < 0) {
-      throw new Error(`Invalid usage data: computed negative usage for ${unit.usageKey}`)
+      throw new Error(negativeLeafErrorMessage(unit, pricedUnits, usage, leafValue))
     }
 
     leafValues[unit.usageKey] = leafValue
   }
 
   return leafValues
+}
+
+function negativeLeafErrorMessage(unit: UnitDef, pricedUnits: UnitDef[], usage: NormalizedUsage, leafValue: number): string {
+  const unitValue = getUsageValue(usage, unit.usageKey)
+  const descendantValues = pricedUnits
+    .filter((descendant) => descendant !== unit && isDescendantOrSelf(unit, descendant))
+    .map((descendant) => ({
+      unit: descendant,
+      value: getUsageValue(usage, descendant.usageKey),
+    }))
+    .filter(({ value }) => value > 0)
+
+  for (const descendant of descendantValues) {
+    if (descendant.value > unitValue) {
+      return `Invalid usage data: ${descendant.unit.usageKey} (${descendant.value.toString()}) cannot exceed ${unit.usageKey} (${unitValue.toString()})`
+    }
+  }
+
+  const descendantKeys = descendantValues.map(({ unit }) => unit.usageKey).join(', ')
+  const descendantTotal = unitValue - leafValue
+  return `Invalid usage data: more-specific usage for ${descendantKeys} totals ${descendantTotal.toString()}, which exceeds ${unit.usageKey} (${unitValue.toString()})`
 }

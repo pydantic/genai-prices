@@ -95,4 +95,34 @@ describe('computeLeafValues', () => {
       input_tokens: 100,
     })
   })
+
+  it('rejects direct descendants that exceed their parent', () => {
+    expect(() =>
+      computeLeafValues(
+        new Set(['cache_read_tokens', 'input_tokens']),
+        normalizeUsage({
+          cache_read_tokens: 200,
+          input_tokens: 100,
+        }),
+        getFamily('tokens')
+      )
+    ).toThrow('Invalid usage data: cache_read_tokens (200) cannot exceed input_tokens (100)')
+  })
+
+  it('rejects overlapping descendant totals that exceed their parent', () => {
+    expect(() =>
+      computeLeafValues(
+        new Set(['cache_audio_read_tokens', 'cache_read_tokens', 'input_audio_tokens', 'input_tokens']),
+        normalizeUsage({
+          cache_audio_read_tokens: 0,
+          cache_read_tokens: 80,
+          input_audio_tokens: 80,
+          input_tokens: 100,
+        }),
+        getFamily('tokens')
+      )
+    ).toThrow(
+      'Invalid usage data: more-specific usage for cache_read_tokens, input_audio_tokens totals 160, which exceeds input_tokens (100)'
+    )
+  })
 })
