@@ -105,8 +105,9 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok', totalInputTokens)
 
   let totalPrice = inputPrice + outputPrice
-  if (modelPrice.requests_kcount !== undefined) {
-    totalPrice += modelPrice.requests_kcount / 1000
+  const requestsKcount = modelPrice.requests_kcount as number | undefined
+  if (requestsKcount !== undefined) {
+    totalPrice += requestsKcount / 1000
   }
 
   return {

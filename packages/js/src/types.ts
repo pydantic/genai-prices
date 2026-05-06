@@ -1,12 +1,4 @@
-export interface Usage {
-  cache_audio_read_tokens?: number
-  cache_read_tokens?: number
-  cache_write_tokens?: number
-  input_audio_tokens?: number
-  input_tokens?: number
-  output_audio_tokens?: number
-  output_tokens?: number
-}
+export type Usage = Record<string, number | undefined>
 
 export interface Tier {
   price: number
@@ -24,16 +16,7 @@ export class TieredPrices {
   }
 }
 
-export interface ModelPrice {
-  cache_audio_read_mtok?: number | TieredPrices
-  cache_read_mtok?: number | TieredPrices
-  cache_write_mtok?: number | TieredPrices
-  input_audio_mtok?: number | TieredPrices
-  input_mtok?: number | TieredPrices
-  output_audio_mtok?: number | TieredPrices
-  output_mtok?: number | TieredPrices
-  requests_kcount?: number
-}
+export type ModelPrice = Record<string, number | TieredPrices | undefined>
 
 export interface ConditionalPrice {
   constraint?: StartDateConstraint | TimeOfDateConstraint
