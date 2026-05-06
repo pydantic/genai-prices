@@ -1,0 +1,62 @@
+import { describe, expect, it } from 'vitest'
+
+import { normalizeUsage } from '../usage'
+
+describe('normalizeUsage', () => {
+  it('normalizes current token keys from plain objects', () => {
+    expect(
+      normalizeUsage({
+        cache_read_tokens: 20,
+        input_tokens: 100,
+        output_tokens: 50,
+      })
+    ).toEqual({
+      cache_read_tokens: 20,
+      input_tokens: 100,
+      output_tokens: 50,
+    })
+  })
+
+  it('ignores unknown extras', () => {
+    expect(
+      normalizeUsage({
+        imaginary_tokens: 999,
+        input_tokens: 100,
+      })
+    ).toEqual({
+      input_tokens: 100,
+    })
+  })
+
+  it('skips pricing-only requests', () => {
+    expect(
+      normalizeUsage({
+        input_tokens: 100,
+        requests: 500,
+      })
+    ).toEqual({
+      input_tokens: 100,
+    })
+  })
+
+  it('preserves explicit zero values', () => {
+    expect(
+      normalizeUsage({
+        input_tokens: 0,
+      })
+    ).toEqual({
+      input_tokens: 0,
+    })
+  })
+
+  it('does not materialize missing keys or undefined values', () => {
+    const usage = normalizeUsage({
+      input_tokens: undefined,
+      output_tokens: 10,
+    })
+    expect(usage).toEqual({
+      output_tokens: 10,
+    })
+    expect(usage).not.toHaveProperty('input_tokens')
+  })
+})
