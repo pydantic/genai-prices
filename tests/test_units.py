@@ -859,10 +859,14 @@ def test_bundled_snapshot_lookup_helpers_still_work() -> None:
     assert model.id == 'gpt-4o-mini'
 
 
-def test_get_registry_returns_bundled_snapshot_registry() -> None:
-    snapshot = get_snapshot()
+def test_get_registry_returns_generated_unit_data_registry() -> None:
+    _get_registry.cache_clear()
+    registry = _get_registry()
 
-    assert _get_registry() is snapshot.unit_registry
+    assert isinstance(registry, UnitRegistry)
+    assert set(registry.families) == set(data_units.unit_families_data)
+    assert registry.unit_for_price_key('input_mtok').usage_key == 'input_tokens'
+    assert _get_registry() is registry
 
 
 def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> None:

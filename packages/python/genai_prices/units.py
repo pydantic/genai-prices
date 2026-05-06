@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from functools import cache
 from itertools import combinations
 from typing import Any, cast
 
@@ -135,11 +136,8 @@ def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
     return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
 
 
+@cache
 def _get_registry() -> UnitRegistry:  # pyright: ignore[reportUnusedFunction]
-    from genai_prices.data_snapshot import get_snapshot
+    from genai_prices.data_units import unit_families_data
 
-    registry = get_snapshot().unit_registry
-    if registry is None:
-        raise RuntimeError('Active data snapshot has no unit registry')
-
-    return registry
+    return UnitRegistry(unit_families_data)
