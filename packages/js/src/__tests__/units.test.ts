@@ -8,6 +8,7 @@ import {
   getAllPriceKeys,
   getAllUsageKeys,
   getFamily,
+  getReportedUsageKeys,
   getUnit,
   getUnitForPriceKey,
   getUsageKeyForPriceKey,
@@ -302,5 +303,22 @@ describe('active unit families', () => {
         'requests_kcount',
       ])
     )
+  })
+
+  it('returns externally reported usage keys without pricing-only requests', () => {
+    setUnitFamilies(null)
+    expect(getAllUsageKeys()).toContain('requests')
+    expect(getReportedUsageKeys()).toEqual(
+      new Set([
+        'cache_audio_read_tokens',
+        'cache_read_tokens',
+        'cache_write_tokens',
+        'input_audio_tokens',
+        'input_tokens',
+        'output_audio_tokens',
+        'output_tokens',
+      ])
+    )
+    expect(getReportedUsageKeys()).not.toContain('requests')
   })
 })

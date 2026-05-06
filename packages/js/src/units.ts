@@ -73,6 +73,10 @@ export function getAllUsageKeys(): Set<string> {
   return new Set(Object.values(activeFamilies).flatMap((family) => Object.keys(family.units)))
 }
 
+export function getReportedUsageKeys(): Set<string> {
+  return new Set([...getAllUsageKeys()].filter((usageKey) => usageKey !== 'requests'))
+}
+
 export function getUnit(usageKey: string): UnitDef {
   for (const family of Object.values(activeFamilies)) {
     const unit = family.units[usageKey]
