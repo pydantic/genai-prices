@@ -170,6 +170,34 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should preserve mixed cache/audio/request public pricing parity', () => {
+      const result = calcPrice(
+        {
+          cache_audio_read_tokens: 100,
+          cache_read_tokens: 400,
+          input_audio_tokens: 300,
+          input_tokens: 1000,
+          output_audio_tokens: 20,
+          output_tokens: 70,
+        },
+        {
+          cache_audio_read_mtok: 2.0,
+          cache_read_mtok: 2.0,
+          input_audio_mtok: 3.0,
+          input_mtok: 1.0,
+          output_audio_mtok: 20.0,
+          output_mtok: 10.0,
+          requests_kcount: 0.5,
+        }
+      )
+
+      const inputPrice = mtok(1.0, 400) + mtok(2.0, 300) + mtok(3.0, 200) + mtok(2.0, 100)
+      const outputPrice = mtok(10.0, 50) + mtok(20.0, 20)
+      expect(result.input_price).toBeCloseTo(inputPrice)
+      expect(result.output_price).toBeCloseTo(outputPrice)
+      expect(result.total_price).toBeCloseTo(inputPrice + outputPrice + 0.0005)
+    })
+
     it('should handle request-only pricing', () => {
       const result = calcPrice({}, { requests_kcount: 0.5 })
 
