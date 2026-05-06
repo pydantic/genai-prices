@@ -71,8 +71,10 @@ def test_remote_payloads_remain_provider_arrays():
 
 def test_python_unit_data_is_separate_from_provider_data():
     """Unit registry data is bundled separately from provider-heavy Python data."""
-    assert 'unit_families_data' not in genai_data.__all__
-    assert 'unit_families_data' in genai_data_units.__all__
+    assert genai_data.__all__ == ('providers',)
+    assert genai_data_units.__all__ == ('unit_families_data',)
+    assert not hasattr(genai_data, 'unit_families_data')
+    assert not hasattr(genai_data_units, 'providers')
     assert isinstance(genai_data_units.unit_families_data, dict)
 
 
