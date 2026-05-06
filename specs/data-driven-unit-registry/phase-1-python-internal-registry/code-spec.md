@@ -73,6 +73,9 @@ class UnitDef:
     family: UnitFamily
     dimensions: dict[str, str]
 
+    def is_compatible_with(self, other: UnitDef) -> bool:
+        """Return whether two units can overlap without conflicting dimensions."""
+
 
 @dataclass(eq=False)
 class UnitFamily:
@@ -80,26 +83,32 @@ class UnitFamily:
     per: int
     description: str
     units: dict[str, UnitDef]
+    units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef]
+
+    def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
+        """Return the most specific registered unit joining two family units, if present."""
 
 
 class UnitRegistry:
     families: dict[str, UnitFamily]
     units: dict[str, UnitDef]
-    price_keys: dict[str, str]
-    _units_by_dimension: dict[str, dict[frozenset[tuple[str, str]], UnitDef]]
+    _units_by_price_key: dict[str, UnitDef]
     _ancestor_usage_keys: dict[str, frozenset[str]]
 
     def __init__(self, raw_families: dict[str, dict] | None = None) -> None:
         """Parse raw families, validate structure, and fill indexes."""
 
-    @staticmethod
-    def are_compatible(a: UnitDef, b: UnitDef) -> bool:
-        """Return whether two units can overlap without conflicting dimensions."""
+    def unit_for_price_key(self, price_key: str) -> UnitDef:
+        """Return the registered unit priced by price_key."""
 ```
 
 `UnitRegistry.__init__(raw_families)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, fills indexes and back-references, and validates uniqueness plus interval closure. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. `UnitDef` and `UnitFamily` use `eq=False` because they form an object graph with back-references; identity equality keeps family objects hashable for grouping and avoids recursive value comparisons. The registry exposes no public mutation APIs in this phase.
 
-The registry owns two private relationship indexes that keep downstream checks simple. `_units_by_dimension` maps each family id and dimension set to its `UnitDef`. `_ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Join lookup unions two compatible dimension sets and reads `_units_by_dimension[family_id]`. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
+The parsed graph owns relationship indexes that keep downstream checks simple. `UnitFamily.units_by_dimension` maps each dimension set in that family to its `UnitDef`, and `UnitFamily.find_join(...)` owns join lookup for units in that family. `UnitRegistry._units_by_price_key` maps each price key to the priced `UnitDef`, and `unit_for_price_key(...)` is the public lookup boundary. `UnitRegistry._ancestor_usage_keys` maps each usage key to the registered ancestor usage keys in the same family. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
+
+Relationship predicates must not be public `UnitRegistry` static methods. Compatibility is a `UnitDef` method because it only needs the two unit definitions. Containment checks should use the existing decomposition helper where that already expresses the needed relationship. Public relationship surface may be added later only when there is a caller-facing API need.
+
+Internal helper modules such as `validation.py` and `decompose.py` do not define curated `__all__` exports in Phase 1. They are implementation modules rather than new public package surfaces.
 
 There is no `RawUnitDef` / `RawUnitFamily` runtime model layer in Python. Raw registry data stays as dictionaries until `UnitRegistry` constructs `UnitDef` and `UnitFamily`. `units.py` must remain pure enough for the build package to import: it must not import generated `data.py`, bundled snapshots, update machinery, or runtime global snapshot state.
 
@@ -116,11 +125,11 @@ Code that needs caller/extractor usage keys reads the registry and skips the exp
 Provide helpers equivalent to:
 
 ```python
-def validate_price_keys(price_keys: set[str], price_key_index: Mapping[str, str]) -> None: ...
+def validate_price_keys(price_keys: set[str], registry: UnitRegistry) -> None: ...
 def validate_ancestor_coverage(
     priced_usage_keys: set[str], family: UnitFamily, registry: UnitRegistry
 ) -> None: ...
-def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily, registry: UnitRegistry) -> None: ...
+def validate_join_coverage(priced_usage_keys: set[str], family: UnitFamily) -> None: ...
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None: ...
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str]) -> None: ...
 ```
@@ -184,7 +193,7 @@ class Usage:
     def __repr__(self) -> str: ...
 ```
 
-Direct construction is strict for registered externally reported usage keys and rejects unknown keyword names and non-reported pricing-only keys such as `requests`. `from_raw(...)` reads known externally reported usage keys from mappings or objects and ignores extras. Construction stores reported values only; it does not infer ancestors, normalize values, remember explicit-versus-inferred provenance, or reject contradictory registered values.
+Direct construction is strict for registered externally reported usage keys and rejects unknown keyword names and non-reported pricing-only keys such as `requests`. `from_raw(...)` reads known externally reported usage attributes from dataclasses, namespace objects, and other attribute objects while ignoring extras. It must not read values from mappings such as plain dictionaries because those were not accepted by Python `calc_price` before Phase 1. Construction stores reported values only; it does not infer ancestors, normalize values, remember explicit-versus-inferred provenance, or reject contradictory registered values.
 
 For registered attribute reads:
 
