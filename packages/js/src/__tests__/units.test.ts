@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { RawFamiliesDict } from '../types'
 
 import { unitFamiliesData } from '../dataUnits'
-import { getActiveFamilies, parseFamilies, setUnitFamilies } from '../units'
+import { getActiveFamilies, getFamily, getUnit, parseFamilies, setUnitFamilies } from '../units'
 
 describe('parseFamilies', () => {
   it('parses generated unit families into runtime objects', () => {
@@ -234,5 +234,18 @@ describe('active unit families', () => {
     setUnitFamilies(null)
     expect(getActiveFamilies()).toBe(generated)
     expect(getActiveFamilies().tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
+  })
+
+  it('looks up generated families and usage keys', () => {
+    setUnitFamilies(null)
+    expect(getFamily('tokens').per).toBe(1_000_000)
+    expect(getFamily('requests').per).toBe(1_000)
+    expect(getUnit('input_tokens')).toBe(getFamily('tokens').units.input_tokens)
+    expect(getUnit('requests')).toBe(getFamily('requests').units.requests)
+  })
+
+  it('raises specific errors for unknown family ids and usage keys', () => {
+    expect(() => getFamily('imaginary')).toThrow('Unknown unit family: imaginary')
+    expect(() => getUnit('imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
   })
 })

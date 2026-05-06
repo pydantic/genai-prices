@@ -57,6 +57,22 @@ export function getActiveFamilies(): ParsedFamilies {
   return activeFamilies
 }
 
+export function getFamily(familyId: string): UnitFamily {
+  const family = activeFamilies[familyId]
+  if (!family) {
+    throw new Error(`Unknown unit family: ${familyId}`)
+  }
+  return family
+}
+
+export function getUnit(usageKey: string): UnitDef {
+  for (const family of Object.values(activeFamilies)) {
+    const unit = family.units[usageKey]
+    if (unit) return unit
+  }
+  throw new Error(`Unknown unit usage key: ${usageKey}`)
+}
+
 export function setUnitFamilies(families: null | ParsedFamilies): void {
   activeFamilies = families ?? generatedFamilies
 }
