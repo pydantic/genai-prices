@@ -27,11 +27,22 @@ function setProviderData(data: ProviderDataPayload) {
   }
   if ('then' in data) {
     providerDataPromise = data
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    data.then((data) => {
-      if (data !== null) {
+      .then((data) => {
+        if (data === null) {
+          return providerData
+        }
+        validateExtractorDestinations(data)
         providerData = data
-      }
+        return data
+      })
+      .catch((error: unknown) => {
+        providerDataPromise = Promise.resolve(providerData)
+        throw error
+      })
+    // Attach a sink so callers are not required to observe failed background updates immediately.
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    providerDataPromise.catch(() => {
+      // handled by callers through waitForUpdate()
     })
   } else {
     validateExtractorDestinations(data)

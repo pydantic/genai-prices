@@ -29,6 +29,33 @@ describe('provider activation', () => {
       setProviderData(data)
     })
   })
+
+  it('validates asynchronous custom provider data before replacing active data', async () => {
+    const asyncProvider = providerFixture('async-provider')
+    updatePrices(({ setProviderData }) => {
+      setProviderData(Promise.resolve([asyncProvider]))
+    })
+
+    await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
+    expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(Promise.resolve(null))
+    })
+    await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
+    expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(Promise.resolve([providerFixture('invalid-async-provider', 'requests')]))
+    })
+    await expect(waitForUpdate()).rejects.toThrow('Invalid extractor destination for invalid-async-provider/default mapping 0: requests')
+    expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
+    await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data)
+    })
+  })
 })
 
 function providerFixture(providerId: string, dest = 'input_tokens'): Provider {
