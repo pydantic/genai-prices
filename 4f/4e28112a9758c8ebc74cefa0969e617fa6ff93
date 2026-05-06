@@ -1,0 +1,15 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "4f4e28112a9758c8ebc74cefa0969e617fa6ff93",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
