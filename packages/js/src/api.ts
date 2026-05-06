@@ -10,8 +10,11 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { validateExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
+
+validateExtractorDestinations(embeddedData)
 
 let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
