@@ -146,4 +146,29 @@ describe('parseFamilies', () => {
       })
     ).toThrow('Duplicate unit price key: image_count')
   })
+
+  it('rejects duplicate dimension sets in one family', () => {
+    expect(() =>
+      parseFamilies({
+        tokens: {
+          description: 'Token counts',
+          per: 1_000_000,
+          units: {
+            input_chars: {
+              dimensions: {
+                direction: 'input',
+              },
+              price_key: 'input_chars_mcount',
+            },
+            input_tokens: {
+              dimensions: {
+                direction: 'input',
+              },
+              price_key: 'input_mtok',
+            },
+          },
+        },
+      })
+    ).toThrow('Duplicate dimensions in unit family tokens: input_chars and input_tokens')
+  })
 })

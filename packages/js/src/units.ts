@@ -34,8 +34,13 @@ export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
         priceKey,
         usageKey,
       }
+      const dimensionSet = dimensionKey(unit.dimensions)
+      const existingUnit = family.unitsByDimension.get(dimensionSet)
+      if (existingUnit) {
+        throw new Error(`Duplicate dimensions in unit family ${familyId}: ${existingUnit.usageKey} and ${usageKey}`)
+      }
       family.units[usageKey] = unit
-      family.unitsByDimension.set(dimensionKey(unit.dimensions), unit)
+      family.unitsByDimension.set(dimensionSet, unit)
     }
   }
 
