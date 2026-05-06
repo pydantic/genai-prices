@@ -72,11 +72,11 @@ representation and asks for only the explicit values it needs:
 - If a requested value was reported, it is returned directly without checking
   other reported fields for contradictions.
 - If a requested registered value was not reported and no positive reported
-  related values could make it non-zero, the read returns zero in Phases 1
-  through 7 without materializing that zero as reported usage.
+  related values could make it non-zero, the read returns zero without
+  materializing that zero as reported usage.
 - If a requested registered value was not reported and positive reported related
   values mean answering would require inferring an omitted ancestor or overlap,
-  the read raises a user-facing missing-usage error in Phases 1 through 7.
+  the read raises a user-facing missing-usage error.
 - During pricing, decomposition asks for the selected priced usage keys through
   the same usage-read path. It can ignore unpriced usage keys it never needs to
   read, and it raises the usage-read error when a priced key is missing and
@@ -84,10 +84,8 @@ representation and asks for only the explicit values it needs:
 - After those priced values are read, decomposition raises if explicit reported
   priced values imply an impossible negative exclusive bucket.
 
-Demand-driven missing-value inference is Phase 8. Until then this document
-describes explicit-value decomposition only.
-
-For direct reads before Phase 8, a missing registered value is ambiguous when
+This document describes explicit-value decomposition only. For direct reads, a
+missing registered value is ambiguous when
 either a positive reported strict descendant of the requested unit exists, or
 the requested unit is the join of two positive reported compatible units that
 are incomparable with each other. A missing descendant of a reported ancestor

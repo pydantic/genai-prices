@@ -18,10 +18,11 @@ Modify:
 - `packages/js/src/api.ts`
 - `packages/js/src/extractUsage.ts`
 - `packages/js/src/data.ts` (generated)
-- `packages/js/src/dataUnits.ts` (generated)
 - `prices/src/prices/package_data.py`
 
 Do not change `prices/data.json` or `prices/data_slim.json` into wrapped payloads in this phase.
+
+Also add generated startup data module `packages/js/src/dataUnits.ts`.
 
 **`types.ts` becomes registry-compatible for usage, prices, and units.** _(implements "JavaScript preserves its plain-object public usage contract")_
 Represent caller usage and model prices as open records:
@@ -67,7 +68,7 @@ export interface UnitFamily {
 export type ParsedFamilies = Record<string, UnitFamily>
 ```
 
-Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string` so JavaScript can consume generated current-subset data and extractor outputs through registry-aware helpers. Phase 2 does not add authoritative extractor-destination validation to runtime updates or the remote authoring surface; that starts in Phase 3 when wrapped payload export validation owns providers and unit families together.
+Add raw and parsed unit-family types with usage keys as raw unit keys and `price_key` defaulting to the usage key. `UsageExtractorMapping.dest` becomes `string` so JavaScript can consume generated current-subset data and extractor outputs through registry-aware helpers. Because this widens the TypeScript surface, Phase 2 must validate every extractor destination against the active registry's externally reported usage keys before generated, local, or runtime-updated provider data becomes active.
 
 Public JavaScript callers still pass plain usage objects. The normalization step returns another plain object rather than a wrapper class. This preserves the existing call surface while allowing `calcPrice()`, decomposition, and extraction to share registry-aware reads internally.
 
@@ -122,7 +123,13 @@ Use the same semantics as Phase 1 Python and the shared [../algorithm](../algori
 Do not introduce cached decomposition plans or coefficients in this phase. Direct decomposition reads explicit values through `getUsageValue(...)`, treats missing priced units as zero only when the omission is unambiguous, ignores unpriced reported values when explicit priced ancestors make them unnecessary, and raises user-facing errors when pricing would require inferring a missing ancestor or overlap.
 
 **`validation.ts` mirrors Python's structural and price-level checks.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
-Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, model prices, and provider data. Extractor-destination validation helpers may exist for parity with Python and Phase 3 reuse, but Phase 2 only uses them in tests or local helper-level checks, not as an authoritative runtime-update gate. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Standard `calcPrice(...)` calls model-price validation every time before decomposition. Do not add activation-time model-price validation, validation marker APIs, registry validation ids, `WeakMap` trust state, or decomposition caches.
+Implement helpers for registry structure, interval closure, price-key validity, ancestor coverage, join coverage, model prices, provider data, and extractor destinations:
+
+```typescript
+export function validateExtractorDestinations(providerData: Provider[], families: ParsedFamilies): void
+```
+
+Extractor-destination validation rejects destinations that are not externally reported usage keys in the active parsed registry, including price keys, arbitrary strings, and pricing-only `requests`. Generated startup provider data, local provider data accepted through public package APIs, and provider-array runtime updates all pass through this validation before replacing active provider data. In Phase 2, join coverage must fail if the current-unit subset lacks a compatible pair's join. Standard `calcPrice(...)` calls model-price validation every time before decomposition. Do not add validation marker APIs, registry validation ids, `WeakMap` cache state, or decomposition caches.
 
 Validation iterates the current model's effective price keys and uses parsed registry indexes or relationship helpers. It must not repeatedly scan the whole registry for every model when direct indexes are available, and it must not hardcode ordinary unit names. The explicit `requests` exclusion is allowed for caller/extractor usage.
 
@@ -152,17 +159,17 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 8. normalize by `family.per`
 9. aggregate into the existing result shape
 
-Keep tiered-price semantics aligned with Python: tier selection reads `input_tokens` through `getUsageValue(...)`. A stored `input_tokens` total is used directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises until Phase 8 may add coherent missing-threshold inference.
+Keep tiered-price semantics aligned with Python: tier selection reads `input_tokens` through `getUsageValue(...)`. A stored `input_tokens` total is used directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises instead of guessing a threshold.
 
 Aggregation stays compatible with the current result shape. Costs from units whose dimensions include `{direction: input}` contribute to the existing input aggregate, units whose dimensions include `{direction: output}` contribute to the output aggregate, and families without a direction dimension such as `requests` contribute only to total.
 
-**`api.ts` and generated startup data remain provider-array compatible.** _(implements "The shared remote payload shape remains unchanged", "JavaScript unit data stays separate from generated provider data", "Runtime updates stay atomic for provider data and registry state")_
-Generated `data.ts` exports only current provider data. Generated `dataUnits.ts` exports current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `dataUnits.ts`, so code that supplies custom provider data can reuse the default registry without importing the bundled provider list.
+**`api.ts` and generated startup data remain provider-array compatible.** _(implements "The shared remote payload shape remains unchanged", "JavaScript unit data stays separate from generated provider data", "Runtime updates preserve the generated registry")_
+Generated `data.ts` exports only current provider data. Generated `dataUnits.ts` exports current-subset `unitFamiliesData`. Startup initializes the active parsed registry from `dataUnits.ts`, validates embedded provider extractor destinations against that registry, and then makes embedded provider data active. Code that supplies custom provider data can reuse the default registry without importing the bundled provider list.
 
-Runtime update URLs still return provider arrays. Phase 2 therefore keeps update parsing compatible with the existing provider-array payload and preserves the active generated registry while replacing provider data. Local staged provider data can be parsed and structurally checked against the active parsed registry, but Phase 2 does not reject a staged update for model-price coverage; standard pricing validates the selected model price on use and leaves activation-time model-price validation to Phase 5.
+Runtime update URLs still return provider arrays. Phase 2 therefore keeps update parsing compatible with the existing provider-array payload and preserves the active generated registry while replacing provider data. Local provider data and runtime update data are parsed and structurally checked against the active parsed registry, including extractor-destination validation, before they replace active provider data. If provider parsing or extractor-destination validation fails, keep the current provider data unchanged. Phase 2 still does not reject a provider update for model-price coverage; standard pricing validates the selected model price on use.
 
 **`extractUsage.ts` returns normalized plain usage without proving consistency.** _(implements "JavaScript preserves its plain-object public usage contract", "JavaScript behavior stays aligned with Python semantics")_
 Extractor output keys are registry usage keys, not fixed TypeScript unions. Extraction builds a plain object of counts, normalizes it through `normalizeUsage(...)`, and returns that normalized plain object. It does not prove provider-reported counts are mutually consistent. Contradictory registered usage values remain stored until `calcPrice(...)` needs to compute an affected priced bucket.
 
 **Tests prove JavaScript parity and cross-language alignment.** _(implements "Phase 2 brings JavaScript to the same internal model as Phase 1 Python")_
-Add JavaScript tests for current price parity, request pricing, usage normalization, unambiguous missing registered values returning zero without being materialized, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, provider-array runtime update compatibility, and alignment with the Python decomposition examples.
+Add JavaScript tests for current price parity, request pricing, usage normalization, unambiguous missing registered values returning zero without being materialized, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, contradictory usage interpreted only when needed, missing-join rejection, extractor output normalization, invalid extractor-destination rejection without replacing active provider data, provider-array runtime update compatibility, and alignment with the Python decomposition examples.

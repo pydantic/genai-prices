@@ -110,16 +110,17 @@ Relationship predicates must not be public `UnitRegistry` static methods. Compat
 
 Internal helper modules such as `validation.py` and `decompose.py` do not define curated `__all__` exports in Phase 1. They are implementation modules rather than new public package surfaces.
 
-There is no `RawUnitDef` / `RawUnitFamily` runtime model layer in Python. Raw registry data stays as dictionaries until `UnitRegistry` constructs `UnitDef` and `UnitFamily`. `units.py` must remain pure enough for the build package to import: it must not import generated `data.py`, bundled snapshots, update machinery, or runtime global snapshot state.
+There is no `RawUnitDef` / `RawUnitFamily` runtime model layer in Python. Raw registry data stays as dictionaries until `UnitRegistry` constructs `UnitDef` and `UnitFamily`. `units.py` must remain pure enough for the build package to import: registry model construction and validation helpers must not import generated `data.py`, provider snapshots, update machinery, or provider snapshot state.
 
 Add a single lazy module helper for active-registry access where needed:
 
 ```python
+@cache
 def _get_registry() -> UnitRegistry:
-    """Return get_snapshot().unit_registry via a lazy import."""
+    """Return the active global unit registry, built from bundled unit data."""
 ```
 
-Code that needs caller/extractor usage keys reads the registry and skips the explicit non-reported `requests` unit.
+`_get_registry()` lazily imports generated `data_units.py`, constructs `UnitRegistry(unit_families_data)`, and returns that module-global registry. It must not import generated provider `data.py` or call `get_snapshot()`. Code that needs caller/extractor usage keys reads this registry and skips the explicit non-reported `requests` unit.
 
 **`validation.py` centralizes price-level checks.** _(implements "Validation protects pricing semantics without runtime trust caching", "Full registry join-closedness starts in Phase 3")_
 Provide helpers equivalent to:
@@ -134,7 +135,7 @@ def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None: 
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str]) -> None: ...
 ```
 
-`validate_join_coverage(...)` must fail when a compatible priced pair's join unit is absent from the Phase 1 subset. Do not add trust markers, fingerprints, weak maps, dirty sets, or cache builders.
+`validate_join_coverage(...)` must fail when a compatible priced pair's join unit is absent from the Phase 1 subset. Do not add validation markers, fingerprints, weak maps, or cache builders.
 
 This module does not own raw registry structural checks such as dimension-set uniqueness, interval closure, or join-closedness; those stay in `UnitRegistry`. Ancestor and join validation helpers receive both the family under validation and the registry that owns the relationship indexes. Validation helpers work from model-priced units plus registry indexes and relationship helpers. They must not scan every registry unit for every model when direct indexes are available, and they must not hardcode ordinary usage or price key names. The only name-aware exception is excluding `requests` from caller/extractor usage.
 
@@ -238,7 +239,7 @@ class ModelPrice:
 
 The generic pricing flow is:
 
-1. read the active snapshot registry
+1. read the active global registry
 2. validate this model's effective current price-key set
 3. wrap raw usage through `Usage.from_raw(...)` for the base method only
 4. resolve price keys to usage keys and group by family
@@ -263,10 +264,10 @@ def calc_unit_price(
 
 The tier threshold remains the `input_tokens` total in Phase 1, read through `Usage.__getattr__(...)`. Stored `input_tokens` returns directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises through the usage-read path instead of inferring the threshold. If no configured price uses `TieredPrices`, pass a neutral threshold value because non-tiered prices ignore it. Families without a `direction` dimension contribute only to `total_price`; `input_price` and `output_price` are direction-filtered compatibility aggregates.
 
-Attribute assignment and deletion on `ModelPrice` do not run ancestor or join validation immediately. Phase 1 validates the final effective price-key set every time standard base `calc_price()` calculates against that `ModelPrice`. Snapshot activation does not perform model-price validation until Phase 5 adds runtime-private trust state. Subclass-only fields that are not registered price keys remain subclass-owned state and must not trigger registry validation.
+Attribute assignment and deletion on `ModelPrice` do not run ancestor or join validation immediately. Phase 1 validates the final effective price-key set every time standard base `calc_price()` calculates against that `ModelPrice`. Provider snapshot activation does not perform model-price validation. Subclass-only fields that are not registered price keys remain subclass-owned state and must not trigger registry validation.
 
 **Python runtime extractor destinations become registry strings without certifying consistency.** _(implements "`Usage` becomes registry-aware and remains permissive for raw caller objects")_
-`packages/python/genai_prices/types.py` `UsageExtractorMapping.dest` becomes a string destination that must name an externally reported registry usage key when validation has a registry context:
+`packages/python/genai_prices/types.py` `UsageExtractorMapping.dest` becomes a string destination that must name an externally reported registry usage key in the active global registry:
 
 ```python
 @dataclass
@@ -276,52 +277,48 @@ class UsageExtractorMapping:
     required: bool
 ```
 
-`UsageExtractor.__post_init__()` validates every mapping destination against externally reported usage keys before any response data is extracted. Runtime-created extractors validate against the active registry. Generated bundled provider-data import is a special construction context: `UsageExtractor.__post_init__` must validate against the bundled units-data module without importing the provider-heavy generated `data.py` through the active snapshot path.
+`UsageExtractor.__post_init__()` validates every mapping destination against externally reported usage keys before any response data is extracted. Runtime-created extractors validate against the active global registry. Generated bundled provider-data import can use the same active-registry helper because that helper imports only the small generated units-data module, not provider-heavy generated `data.py`.
 
 `UsageExtractor.extract(...)` accumulates extracted counts in `dict[str, int]` and returns `Usage(**values)`. Extraction does not mutate dataclass usage fields directly, does not target price keys, and does not target the non-reported `requests` unit. If a provider response contains contradictory registered usage counts, extraction still returns those reported values; contradictions become errors only when pricing needs to interpret affected priced buckets.
 
 Do not change `prices/src/prices/prices_types.py` `UsageField`, the build-time `UsageExtractorMapping.dest` annotation, or the generated provider/data JSON schema enum in Phase 1. Build/package-data validation still rejects invalid current provider extractor destinations after parsing. Registry-derived provider YAML schema/autocomplete is Phase 4 work.
 
-**`data_snapshot.py` carries a registry and preserves current snapshot workflows.** _(implements "`DataSnapshot` carries the Python registry but keeps current activation behavior")_
-Add `unit_registry: UnitRegistry | None = None` to `DataSnapshot`:
+**`data_snapshot.py` remains provider-only and preserves current snapshot workflows.** _(implements "`DataSnapshot` remains provider-only while the registry is global")_
+Do not add `unit_registry` to `DataSnapshot`:
 
 ```python
 @dataclass
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
-    unit_registry: UnitRegistry | None = None
     _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]]
     timestamp: datetime
-
-    def __post_init__(self) -> None:
-        """If unit_registry is None, borrow the active global snapshot registry."""
 ```
 
-`_bundled_snapshot()` imports generated `providers` from `data.py` and `unit_families_data` from the small generated `data_units.py`, builds `UnitRegistry(unit_families_data)`, and passes it explicitly:
+`_bundled_snapshot()` imports generated `providers` from `data.py` and returns the provider snapshot. The active unit registry is built lazily by `units.py` from the small generated `data_units.py`:
 
 ```python
 @cache
 def _bundled_snapshot() -> DataSnapshot:
-    """Build the bundled snapshot from generated providers and unit families."""
+    """Build the bundled provider snapshot from generated providers."""
 ```
 
-`set_custom_snapshot(snapshot)` keeps the public signature. For non-`None` snapshots, it installs the staged snapshot without model-price validation. Price-key validity, ancestor coverage, join coverage, and missing-join safety are checked by standard base `ModelPrice.calc_price()` every time it calculates against a selected model price. Activation-time model-price validation and any resulting trust records are deferred to Phase 5.
+`set_custom_snapshot(snapshot)` keeps the public signature. For non-`None` snapshots, it installs the provider snapshot without model-price validation. Price-key validity, ancestor coverage, join coverage, and missing-join safety are checked by standard base `ModelPrice.calc_price()` every time it calculates against a selected model price using the active global registry.
 
-`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their callable shape in Phase 1. Phase 1 does not add `self is get_snapshot()` execution guards; it relies on the ordinary active-global-snapshot workflow. `find_provider()`, `find_provider_model()`, and lookup caches remain pure lookup/staging helpers that work on inactive snapshots.
+`DataSnapshot.calc()` and `DataSnapshot.extract_usage()` keep their callable shape in Phase 1. `find_provider()`, `find_provider_model()`, and lookup caches remain pure lookup/staging helpers that work on inactive snapshots.
 
 **Build and package-data changes are Python-only and payload-preserving.** _(implements "The remote `data.json` and `data_slim.json` payloads remain provider arrays", "Python unit data stays separate from generated provider data")_
 Update `prices/src/prices/package_data.py` so generated Python `data.py` exports only providers, and generated Python `data_units.py` exports current-subset `unit_families_data`. Any build helper that validates or filters the current subset should reuse `genai_prices.units` and `genai_prices.validation`; do not duplicate registry relationship logic in the build package.
 
 Build/runtime sharing is intentional. The build package may import pure registry and validation helpers, but those helpers must not import generated package data or runtime globals. Tests should cover structural validation, price-key resolution, ancestor coverage, join coverage, and missing-join safety through the shared helpers.
 
-**The Phase 1 Python call flow stays active-snapshot based.** _(implements "`DataSnapshot` carries the Python registry but keeps current activation behavior", "`ModelPrice` remains subclass-friendly and uses current legacy fields for storage")_
+**The Phase 1 Python call flow reads the global registry.** _(implements "`DataSnapshot` remains provider-only while the registry is global", "`ModelPrice` remains subclass-friendly and uses current legacy fields for storage")_
 The pricing path is:
 
 ```text
 ModelInfo.calc_price(usage, provider, ...)
   -> selected ModelPrice.calc_price(usage)
-       -> read get_snapshot().unit_registry
+       -> read the active global registry
        -> validate this model price against the active registry
        -> smart_usage = Usage.from_raw(usage)
        -> resolve price keys to usage keys
@@ -337,5 +334,5 @@ ModelInfo.calc_price(usage, provider, ...)
 `__init__.py` does not gain new top-level exports in this phase. Existing top-level exports such as `Usage`, `calc_price`, `UpdatePrices`, wait helpers, and `__version__` stay where they are. `UnitRegistry`, `UnitFamily`, and `UnitDef` are available from `genai_prices.units` for introspection, not re-exported from the package root.
 
 **Tests prove entry-point preservation plus registry semantics.** _(implements "Phase 1 preserves supported entry points while changing unsafe internals")_
-Add focused Python tests for current price parity, current request pricing, `Usage` strict construction and permissive raw wrapping, unambiguous missing registered reads returning zero without becoming reported, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, inconsistent usage interpretation, ancestor and join validation, missing-join rejection for the current subset, custom `ModelPrice` subclass preservation, `DataSnapshot` registry defaults, and unchanged provider-array update parsing.
-Include coverage that an invalid staged/custom model price is not rejected by `set_custom_snapshot(...)` in Phase 1, but is rejected when standard base pricing calculates against that model price.
+Add focused Python tests for current price parity, current request pricing, `Usage` strict construction and permissive raw wrapping, unambiguous missing registered reads returning zero without becoming reported, ambiguous missing registered reads raising, explicit-only missing-usage pricing errors, inconsistent usage interpretation, ancestor and join validation, missing-join rejection for the current subset, custom `ModelPrice` subclass preservation, global registry startup from generated unit data, and unchanged provider-array update parsing.
+Include coverage that an invalid provider-snapshot or custom model price is not rejected by `set_custom_snapshot(...)` in Phase 1, but is rejected when standard base pricing calculates against that model price using the active global registry.

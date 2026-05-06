@@ -3,79 +3,63 @@
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
 **Previous phase:** [Phase 4 Polish and Compatibility Hardening](../phase-4-polish-compat-hardening/code-spec.md).
 
-**Phase 5 adds runtime-private performance state only.** _(implements "Phase 5 adds performance state after the data model is proven", "Performance optimizations must be behavior-preserving")_
-Do not change accepted data shapes, validation rules, decomposition semantics, generated payloads, or public API signatures. Add benchmarks for repeated `calc_price` and custom snapshot activation before introducing caches beyond validation trust.
+**Phase 5 adds runtime-private performance state only.** _(implements "Phase 5 adds benchmark-backed performance state after the data model is proven", "Performance optimizations must be behavior-preserving")_
+Do not change accepted data shapes, validation rules, decomposition semantics, generated payloads, or public API signatures. Add benchmarks for repeated `calc_price` before introducing validation or decomposition caches.
 
-**Python `UnitRegistry` gains an opaque validation identity.** _(implements "Runtime validation trust is snapshot- and registry-specific")_
-Add:
+**The active global registry has an opaque validation identity.** _(implements "Validation caching is global-registry-specific")_
+Add an identity to the active registry state:
 
 ```python
 class UnitRegistry:
     validation_id: object
 ```
 
-Each registry construction gets a fresh opaque `object()`. Trust checks compare this identity exactly.
+Each registry construction gets a fresh opaque `object()`. Global registry replacement installs a registry with a new identity and clears runtime-private caches that are keyed by the previous active registry.
 
-**Python `DataSnapshot` gains a runtime-private validation trust context.** _(implements "Runtime validation trust is snapshot- and registry-specific", "Generated outputs remain pure data")_
+**Python validation caching is module-global.** _(implements "Validation caching is global-registry-specific", "Fingerprint checks fail closed")_
 Add runtime-private structures equivalent to:
 
 ```python
+import weakref
+
+
 @dataclass
 class PriceValidationRecord:
-    model_price: ModelPrice
+    model_price_ref: weakref.ReferenceType[ModelPrice]
+    registry_validation_id: object
     fingerprint: frozenset[str]
 
 
-@dataclass
-class TrustedPriceValidationContext:
-    registry_validation_id: object
-    source_id: object
-    trusted_records: dict[int, PriceValidationRecord]
-    validated_records: dict[int, PriceValidationRecord]
-    dirty_model_price_ids: set[int]
-
-
-@dataclass
-class DataSnapshot:
-    _trusted_price_validation: TrustedPriceValidationContext | None = None
+_price_validation_cache: dict[int, PriceValidationRecord]
 ```
 
-Records are keyed by `id(model_price)` and store an object reference to avoid id-reuse ambiguity for the snapshot lifetime. The context is created by snapshot construction or activation, never serialized into generated data.
+Records are keyed by `id(model_price)` and store a weak reference so module-global caching does not keep transient model-price objects alive. Cache lookups must treat a dead weak reference or a weak reference to a different object as a miss, which also avoids id-reuse ambiguity. The cache is module-private runtime state, never serialized into generated data and never stored on `DataSnapshot`.
 
-**Python `ModelPrice` invalidates trust on effective key-set changes.** _(implements "Supported mutation paths invalidate trust when effective price keys change")_
-Add:
+**Python hot-path validation becomes cache-gated.** _(implements "Provider activation is not a bulk model-price validation boundary")_
+`ModelPrice.calc_price(...)` checks the module-global cache before running one-model validation. It skips validation only when the same model object, exact active registry `validation_id`, and current effective price-key fingerprint all match a cached record. Missing or stale cache records fall back to one-model validation and update the cache before pricing.
 
-```python
-class ModelPrice:
-    def invalidate_validation_trust(self) -> None:
-        """Notify runtime-private validation state after effective price-key additions/removals."""
-```
+`set_custom_snapshot(snapshot)` remains a provider-data activation function and does not need to bulk-validate model prices or seed validation cache records.
 
-Supported mutation paths that add or remove registered price keys call this hook. Assignment of a different value to an already-present key does not need structural invalidation. Direct mutation of private storage remains unsupported.
+**ModelPrice mutation does not need a validation transaction system.** _(implements "Fingerprint checks fail closed")_
+Supported mutation paths may clear the module-global validation cache for performance hygiene, but correctness must come from recomputing and comparing the current effective price-key fingerprint. Assignment of a different value to an already-present key keeps the same structural fingerprint. Direct mutation of private storage remains unsupported.
 
-**Python hot-path validation becomes trust-gated.** _(implements "Runtime validation trust is snapshot- and registry-specific")_
-`ModelPrice.calc_price(...)` checks the active snapshot trust context before running one-model validation. It skips validation only when the same model object, exact registry `validation_id`, and current effective price-key fingerprint all match a trusted record. Missing or stale trust falls back to one-model validation and updates runtime-private state before pricing.
-
-**Snapshot activation records trust for newly validated prices.** _(implements "Runtime validation trust is snapshot- and registry-specific")_
-`set_custom_snapshot(snapshot)` validates missing, stale, custom, changed, runtime-authored, or otherwise untrusted model prices. This is the first phase that performs model-price validation during snapshot activation; earlier phases validate the selected model price on every standard base pricing call. After all validation succeeds, it records validation trust in the snapshot context. If validation fails, the previous active snapshot and its trust context remain in place.
-
-**JavaScript registry and validation modules gain fail-closed trust helpers.** _(implements "JavaScript validation trust fails closed")_
+**JavaScript registry and validation modules gain fail-closed cache helpers.** _(implements "Validation caching is global-registry-specific", "Fingerprint checks fail closed")_
 Add helpers equivalent to:
 
 ```typescript
 export function getRegistryValidationId(): object
-export function hasModelPriceValidationTrust(modelPrice: ModelPrice, families: ParsedFamilies): boolean
+export function hasModelPriceValidationCache(modelPrice: ModelPrice, families: ParsedFamilies): boolean
 export function markModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): void
-export function invalidateModelPriceValidation(modelPrice: ModelPrice): void
+export function clearModelPriceValidationCache(): void
 ```
 
-`setUnitFamilies(...)` creates a fresh opaque validation id for each active parsed registry. Use module-private `WeakMap` / `WeakSet` state keyed by model price object, exact registry validation id, and effective price-key fingerprint. Because model prices are plain objects, every trust lookup recomputes and compares the fingerprint.
+`setUnitFamilies(...)` creates a fresh opaque validation id for each active parsed registry and clears module-private validation caches. Use `WeakMap` state keyed by model price object, exact registry validation id, and effective price-key fingerprint. Because model prices are plain objects, every cache lookup recomputes and compares the fingerprint.
 
 **Decomposition caches require benchmark evidence and exact keys.** _(implements "Decomposition caches are benchmark-gated")_
-If benchmarks justify caching decomposition coefficients, key caches by exact registry validation id plus the effective priced usage-key set. Do not serialize caches. Do not add caches that change error timing or user-facing decomposition behavior.
+If benchmarks justify caching decomposition coefficients, key caches by exact active registry validation id plus the effective priced usage-key set. Do not serialize caches. Do not add caches that change error timing or user-facing decomposition behavior.
 
 **Usage registry-key caches require exact registry identity.** _(implements "Usage registry-key lookups are a Phase 5 optimization target")_
-Benchmark the repeated active-registry lookups used by `Usage` construction, assignment, reads, and representation. If the cost is material, cache the reported usage key set and registry-order reported key tuple by exact `UnitRegistry.validation_id`. The cache must be invalidated by registry replacement and must preserve current `Usage` behavior for custom snapshots.
+Benchmark the repeated active-registry lookups used by `Usage` construction, assignment, reads, and representation. If the cost is material, cache the reported usage key set and registry-order reported key tuple by exact active registry `validation_id`. Registry replacement must clear or bypass stale cached key sets.
 
 **Tests and benchmarks prove no behavior drift.** _(implements "Performance optimizations must be behavior-preserving")_
-Add tests for trust hits, stale trust on registry changes, stale trust on key additions/removals, no stale trust on value-only changes, Python id-reuse protection, JavaScript fail-closed fingerprint mismatches, generated-output purity, and parity with Phase 4 behavior. Add benchmarks that justify any decomposition cache included in the phase.
+Add tests for cache hits, stale cache on registry replacement, stale cache on key additions/removals, no stale cache on value-only changes, Python id-reuse protection, JavaScript fail-closed fingerprint mismatches, generated-output purity, no `DataSnapshot` validation-cache state, and parity with Phase 4 behavior. Add benchmarks that justify any decomposition cache included in the phase.
