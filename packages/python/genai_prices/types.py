@@ -622,12 +622,6 @@ def _reported_usage_key_order() -> tuple[str, ...]:
 
 
 def _raw_usage_value(obj: object, key: str) -> int | None:
-    if isinstance(obj, Mapping):
-        value = cast(Mapping[str, object], obj).get(key)
-        if value is None:
-            return None
-        return cast(int, value)
-
     value = getattr(obj, key, None)
     if value is None:
         return None

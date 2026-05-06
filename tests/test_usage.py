@@ -112,10 +112,10 @@ def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
         assert repr(usage) == 'Usage(input_tokens=3, sausage_tokens=1, cheese_tokens=2)'
 
 
-def test_usage_from_raw_reads_known_mapping_keys() -> None:
+def test_usage_from_raw_ignores_mapping_keys() -> None:
     usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': 50})
 
-    assert usage == Usage(input_tokens=100, output_tokens=50)
+    assert usage == Usage()
 
 
 def test_usage_from_raw_reads_known_object_attributes() -> None:
@@ -136,13 +136,13 @@ def test_usage_from_raw_reads_known_dataclass_attributes() -> None:
 
 
 def test_usage_from_raw_ignores_unknown_extras() -> None:
-    usage = Usage.from_raw({'input_tokens': 100, 'sausage_tokens': 50})
+    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, sausage_tokens=50))
 
     assert usage == Usage(input_tokens=100)
 
 
 def test_usage_from_raw_skips_explicit_none_values() -> None:
-    usage = Usage.from_raw({'input_tokens': 100, 'output_tokens': None})
+    usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=None))
 
     assert usage == Usage(input_tokens=100)
 
