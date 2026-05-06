@@ -3,7 +3,7 @@ import type { UnitFamily } from './types'
 import { computeLeafValues } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
 import { getUnitForPriceKey } from './units'
-import { normalizeUsage } from './usage'
+import { getUsageValue, normalizeUsage } from './usage'
 import { validateModelPrice } from './validation'
 
 /**
@@ -55,7 +55,8 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   let totalOnlyPrice = 0
 
   const normalizedUsage = normalizeUsage(usage)
-  const totalInputTokens = normalizedUsage.input_tokens ?? 0
+  const hasTieredPrice = effectivePriceKeys.some((priceKey) => isTieredPrice(modelPrice[priceKey]))
+  const totalInputTokens = hasTieredPrice ? getUsageValue(normalizedUsage, 'input_tokens') : 0
   const groups = new Map<string, { family: UnitFamily; usageKeys: Set<string> }>()
 
   for (const priceKey of effectivePriceKeys) {
@@ -90,6 +91,10 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
     output_price: outputPrice,
     total_price: totalPrice,
   }
+}
+
+function isTieredPrice(price: number | TieredPrices | undefined): price is TieredPrices {
+  return typeof price === 'object'
 }
 
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
