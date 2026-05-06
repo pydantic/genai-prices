@@ -30,18 +30,16 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens:
   return (applicablePrice * tokens) / 1_000_000
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function calcMtokPrice(
-  price: number | TieredPrices | undefined,
-  tokens: number | undefined,
-  _field: string,
-  totalInputTokens: number
-): number {
-  if (price === undefined || tokens === undefined) return 0
+function calcUnitPrice(price: number | TieredPrices | undefined, count: number | undefined, totalInputTokens: number, per: number): number {
+  if (price === undefined || count === undefined) return 0
   if (typeof price === 'number') {
-    return (price * tokens) / 1_000_000
+    return (price * count) / per
   }
-  return calcTieredPrice(price, tokens, totalInputTokens)
+  return (calcTieredPrice(price, count, totalInputTokens) * 1_000_000) / per
+}
+
+function calcMtokPrice(price: number | TieredPrices | undefined, tokens: number | undefined, totalInputTokens: number): number {
+  return calcUnitPrice(price, tokens, totalInputTokens, 1_000_000)
 }
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
@@ -88,11 +86,11 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
     throw new Error('Uncached text input tokens cannot be negative')
   }
 
-  inputPrice += calcMtokPrice(modelPrice.input_mtok, pricedTextInputTokens, 'input_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, pricedCacheReadTokens, 'cache_read_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, pricedCacheWriteTokens, 'cache_write_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, pricedAudioInputTokens, 'input_audio_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, pricedCacheAudioReadTokens, 'cache_audio_read_mtok', totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.input_mtok, pricedTextInputTokens, totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, pricedCacheReadTokens, totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, pricedCacheWriteTokens, totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, pricedAudioInputTokens, totalInputTokens)
+  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, pricedCacheAudioReadTokens, totalInputTokens)
 
   let pricedTextOutputTokens = 0
   if (modelPrice.output_mtok !== undefined) {
@@ -101,8 +99,8 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   if (pricedTextOutputTokens < 0) {
     throw new Error('output_audio_tokens cannot be greater than output_tokens')
   }
-  outputPrice += calcMtokPrice(modelPrice.output_mtok, pricedTextOutputTokens, 'output_mtok', totalInputTokens)
-  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok', totalInputTokens)
+  outputPrice += calcMtokPrice(modelPrice.output_mtok, pricedTextOutputTokens, totalInputTokens)
+  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, totalInputTokens)
 
   let totalPrice = inputPrice + outputPrice
   const requestsKcount = modelPrice.requests_kcount as number | undefined
