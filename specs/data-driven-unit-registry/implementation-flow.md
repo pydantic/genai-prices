@@ -127,11 +127,12 @@ Generated package data is pure data. Runtime-private validation caches are creat
 UpdatePrices.fetch() after Phase 3 wrapped payloads
   -> parse wrapped JSON
   -> registry = UnitRegistry(parsed.unit_families)
+  -> previous_registry = active registry
   -> install registry as the active global registry
        -> clear Phase 5+ registry-keyed caches, if present
   -> parse providers
   -> return DataSnapshot(providers=..., from_auto_update=True)
-       -> if provider parsing fails after registry install, keep the new registry
+       -> if provider parsing or activation fails after registry install, restore previous_registry
           and leave active providers unchanged
 
 set_custom_snapshot(snapshot)
@@ -142,7 +143,7 @@ set_custom_snapshot(snapshot)
   -> activate provider data as the active provider snapshot
 ```
 
-Unit registry updates and provider snapshot activation are deliberately separate. Trusted remote unit families are global runtime state after structural registry validation succeeds. Provider activation is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates unless Phase 5 cache state safely covers that exact model price and active registry.
+Unit registry updates and provider snapshot activation are deliberately separate. Trusted remote unit families become global runtime state after structural registry validation succeeds and matching provider parsing or activation also succeeds. Provider activation is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates unless Phase 5 cache state safely covers that exact model price and active registry.
 
 ## Python Custom Price Flow
 
@@ -207,6 +208,7 @@ generated dataUnits.ts
 runtime update
   -> parse wrapped JSON
   -> parsedFamilies = parseFamilies(parsed.unit_families)
+  -> previousFamilies = active parsed families
   -> setUnitFamilies(parsedFamilies)
        -> clears Phase 5+ registry-keyed caches, if present
   -> parse provider data
@@ -214,8 +216,8 @@ runtime update
        -> treat parsed provider data as prevalidated for parsedFamilies without full price validation
   -> if family parsing fails:
        -> keep both active registry and providerData unchanged
-  -> if provider parsing fails after setUnitFamilies:
-       -> keep the new active registry and keep the previous providerData
+  -> if provider parsing or activation fails after setUnitFamilies:
+       -> restore previousFamilies and keep the previous providerData
 ```
 
 Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape after Phase 3, not a bare provider array.

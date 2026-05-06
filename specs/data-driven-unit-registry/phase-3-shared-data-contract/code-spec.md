@@ -192,7 +192,7 @@ def _set_registry(registry: UnitRegistry) -> None:
 This helper is private. Phase 3 must change `_get_registry()` from a purely cached bundled-registry constructor into an active-registry accessor: it returns the installed registry when `_set_registry(...)` has replaced the global registry, otherwise it returns the cached bundled registry built from generated `data_units.py`. Replacement stores the new registry as active global state and clears any Phase 5 registry-keyed caches when those exist. It must not simply clear `_get_registry()` and fall back to bundled unit data on the next lookup.
 
 **Runtime update paths install unit families globally.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
-Python `UpdatePrices.fetch()` parses `unit_families`, constructs `UnitRegistry(raw['unit_families'])`, installs that registry as the active global registry, parses `providers`, and returns `DataSnapshot(providers=...)`:
+Python `UpdatePrices.fetch()` parses `unit_families`, constructs `UnitRegistry(raw['unit_families'])`, saves the previously active registry, installs the candidate registry as the active global registry, parses `providers`, and returns `DataSnapshot(providers=...)`. If provider parsing fails after the candidate registry is installed, it restores the previous registry before surfacing the error:
 
 ```python
 class UpdatePrices:
@@ -204,11 +204,12 @@ JavaScript `api.ts` handles runtime updates in this order:
 
 1. parse wrapped JSON
 2. parse and structurally validate `unit_families`
-3. replace active unit families
-4. parse providers
-5. replace active provider data
+3. save the previously active unit families
+4. replace active unit families
+5. parse providers
+6. replace active provider data
 
-If wrapper parsing or structural registry validation fails, both active registry and active provider data remain unchanged. After the new registry is structurally valid, it remains installed even if provider parsing or provider activation fails; in that case the previous provider data remains active. This intentionally treats trusted remote unit updates as global, compatible runtime state rather than provider-snapshot state. Runtime provider activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
+If wrapper parsing or structural registry validation fails, both active registry and active provider data remain unchanged. If provider parsing or provider activation fails after the candidate registry is installed, restore the previous active registry and keep the previous provider data active. Runtime provider activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
 
 `updatePrices()` passes both provider-data and unit-family activation callbacks through the storage factory:
 
