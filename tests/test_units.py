@@ -910,6 +910,22 @@ def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
         set_custom_snapshot(None)
 
 
+def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
+    _get_registry.cache_clear()
+    registry = _get_registry()
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert _get_registry() is registry
+
+        set_custom_snapshot(None)
+        assert _get_registry() is registry
+    finally:
+        set_custom_snapshot(None)
+        _get_registry.cache_clear()
+
+
 def test_model_price_validation_runs_on_base_calc_not_snapshot_activation() -> None:
     snapshot = DataSnapshot(
         providers=[
