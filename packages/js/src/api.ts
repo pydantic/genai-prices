@@ -34,6 +34,7 @@ function setProviderData(data: ProviderDataPayload) {
       }
     })
   } else {
+    validateExtractorDestinations(data)
     providerDataPromise = Promise.resolve(data)
     providerData = data
   }
