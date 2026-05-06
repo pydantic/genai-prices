@@ -88,3 +88,23 @@ def test_python_unit_data_import_does_not_import_provider_data():
         capture_output=True,
         text=True,
     )
+
+
+def test_get_registry_does_not_import_provider_data():
+    """Building the active unit registry does not import the generated provider list."""
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            (
+                'import sys; '
+                'from genai_prices.units import _get_registry; '
+                '_get_registry.cache_clear(); '
+                '_get_registry(); '
+                "assert 'genai_prices.data' not in sys.modules"
+            ),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

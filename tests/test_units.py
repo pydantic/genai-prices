@@ -869,6 +869,20 @@ def test_get_registry_returns_generated_unit_data_registry() -> None:
     assert _get_registry() is registry
 
 
+def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fail_get_snapshot() -> None:
+        raise AssertionError('get_snapshot should not be called')
+
+    monkeypatch.setattr('genai_prices.data_snapshot.get_snapshot', fail_get_snapshot)
+    _get_registry.cache_clear()
+    try:
+        registry = _get_registry()
+    finally:
+        _get_registry.cache_clear()
+
+    assert isinstance(registry, UnitRegistry)
+
+
 def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> None:
     subprocess.run(
         [
