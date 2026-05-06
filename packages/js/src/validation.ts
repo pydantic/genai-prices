@@ -50,6 +50,13 @@ export function validateJoinCoverage(priceKeys: Iterable<string>, families: Pars
   }
 }
 
+export function validateModelPrice(priceKeys: Iterable<string>, families: ParsedFamilies = getActiveFamilies()): void {
+  const effectivePriceKeys = [...priceKeys]
+  validatePriceKeys(effectivePriceKeys, families)
+  validateAncestorCoverage(effectivePriceKeys, families)
+  validateJoinCoverage(effectivePriceKeys, families)
+}
+
 function dimensionKey(dimensions: Record<string, string>): string {
   return Object.entries(dimensions)
     .sort(([left], [right]) => left.localeCompare(right))

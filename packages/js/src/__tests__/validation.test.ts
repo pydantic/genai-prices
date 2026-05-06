@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { validateAncestorCoverage, validateJoinCoverage, validatePriceKeys } from '../validation'
+import { validateAncestorCoverage, validateJoinCoverage, validateModelPrice, validatePriceKeys } from '../validation'
 
 describe('validatePriceKeys', () => {
   it('accepts registered current price keys', () => {
@@ -47,5 +47,34 @@ describe('validateJoinCoverage', () => {
     expect(() => {
       validateJoinCoverage(['input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_audio_read_mtok'])
     }).not.toThrow()
+  })
+})
+
+describe('validateModelPrice', () => {
+  it('accepts valid current model price key sets', () => {
+    expect(() => {
+      validateModelPrice(['input_mtok', 'output_mtok', 'requests_kcount'])
+    }).not.toThrow()
+    expect(() => {
+      validateModelPrice(['input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_audio_read_mtok'])
+    }).not.toThrow()
+  })
+
+  it('rejects unknown price keys through the composed helper', () => {
+    expect(() => {
+      validateModelPrice(['inptu_mtok'])
+    }).toThrow('Unknown price key: inptu_mtok')
+  })
+
+  it('rejects missing ancestors through the composed helper', () => {
+    expect(() => {
+      validateModelPrice(['cache_read_mtok'])
+    }).toThrow('Missing ancestor price key input_mtok for cache_read_mtok')
+  })
+
+  it('rejects missing joins through the composed helper', () => {
+    expect(() => {
+      validateModelPrice(['input_mtok', 'cache_read_mtok', 'input_audio_mtok'])
+    }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
   })
 })
