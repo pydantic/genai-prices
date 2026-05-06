@@ -171,6 +171,16 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should handle request-only pricing', () => {
+      const result = calcPrice({}, { requests_kcount: 0.5 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.0005,
+      })
+    })
+
     it('should handle tiered pricing with threshold model', () => {
       const usage: Usage = {
         input_tokens: 150000, // 150k tokens

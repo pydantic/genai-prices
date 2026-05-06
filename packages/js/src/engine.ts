@@ -105,7 +105,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   let totalPrice = inputPrice + outputPrice
   const requestsKcount = modelPrice.requests_kcount as number | undefined
   if (requestsKcount !== undefined) {
-    totalPrice += requestsKcount / 1000
+    totalPrice += calcUnitPrice(requestsKcount, 1, totalInputTokens, 1_000)
   }
 
   return {
