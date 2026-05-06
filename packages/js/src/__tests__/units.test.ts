@@ -31,6 +31,10 @@ describe('parseFamilies', () => {
     expect(requestFamily.units.requests?.priceKey).toBe('requests_kcount')
   })
 
+  it('accepts the generated unit registry interval closure', () => {
+    expect(() => parseFamilies(unitFamiliesData)).not.toThrow()
+  })
+
   it('defaults missing price keys to the usage key', () => {
     const families = parseFamilies({
       widgets: {
@@ -170,5 +174,34 @@ describe('parseFamilies', () => {
         },
       })
     ).toThrow('Duplicate dimensions in unit family tokens: input_chars and input_tokens')
+  })
+
+  it('rejects missing intermediate dimensions between ancestors and descendants', () => {
+    expect(() =>
+      parseFamilies({
+        tokens: {
+          description: 'Token counts',
+          per: 1_000_000,
+          units: {
+            cache_audio_read_tokens: {
+              dimensions: {
+                cache: 'read',
+                direction: 'input',
+                modality: 'audio',
+              },
+              price_key: 'cache_audio_read_mtok',
+            },
+            input_tokens: {
+              dimensions: {
+                direction: 'input',
+              },
+              price_key: 'input_mtok',
+            },
+          },
+        },
+      })
+    ).toThrow(
+      'Missing intermediate unit dimensions in family tokens between input_tokens and cache_audio_read_tokens: cache=read, direction=input'
+    )
   })
 })

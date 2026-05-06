@@ -44,6 +44,7 @@ export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
     }
   }
 
+  validateIntervalClosure(parsed)
   return parsed
 }
 
@@ -52,4 +53,47 @@ function dimensionKey(dimensions: Record<string, string>): string {
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([key, value]) => `${key}=${value}`)
     .join('\0')
+}
+
+function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
+  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
+}
+
+function combinations<T>(items: T[], size: number): T[][] {
+  if (size === 0) return [[]]
+  if (items.length < size) return []
+
+  const [first, ...rest] = items
+  if (first === undefined) return []
+
+  return [...combinations(rest, size - 1).map((combo) => [first, ...combo]), ...combinations(rest, size)]
+}
+
+function validateIntervalClosure(families: ParsedFamilies): void {
+  for (const family of Object.values(families)) {
+    for (const ancestor of Object.values(family.units)) {
+      for (const descendant of Object.values(family.units)) {
+        if (ancestor === descendant || !isDimensionSubset(ancestor, descendant)) continue
+
+        const addedDimensions = Object.entries(descendant.dimensions)
+          .filter(([key, value]) => ancestor.dimensions[key] !== value)
+          .sort(([left], [right]) => left.localeCompare(right))
+
+        for (let size = 1; size < addedDimensions.length; size++) {
+          for (const addedSubset of combinations(addedDimensions, size)) {
+            const requiredDimensions = Object.fromEntries([...Object.entries(ancestor.dimensions), ...addedSubset])
+            if (family.unitsByDimension.has(dimensionKey(requiredDimensions))) continue
+
+            const missingDimensions = Object.entries(requiredDimensions)
+              .sort(([left], [right]) => left.localeCompare(right))
+              .map(([key, value]) => `${key}=${value}`)
+              .join(', ')
+            throw new Error(
+              `Missing intermediate unit dimensions in family ${family.id} between ${ancestor.usageKey} and ${descendant.usageKey}: ${missingDimensions}`
+            )
+          }
+        }
+      }
+    }
+  }
 }
