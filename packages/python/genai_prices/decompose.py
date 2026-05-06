@@ -23,7 +23,7 @@ def compute_leaf_values(priced_usage_keys: set[str], usage: object, family: Unit
             leaf_value += sign * _usage_value(usage, descendant.usage_key)
 
         if leaf_value < 0:
-            raise ValueError(f'Impossible usage data for {unit.usage_key}: computed negative count')
+            raise ValueError(_negative_leaf_error_message(unit, priced_units, usage, leaf_value))
 
         leaf_values[unit.usage_key] = leaf_value
 
@@ -33,3 +33,25 @@ def compute_leaf_values(priced_usage_keys: set[str], usage: object, family: Unit
 def _usage_value(usage: object, usage_key: str) -> int:
     raw_value = getattr(usage, usage_key, None)
     return 0 if raw_value is None else cast(int, raw_value)
+
+
+def _negative_leaf_error_message(unit: UnitDef, priced_units: list[UnitDef], usage: object, leaf_value: int) -> str:
+    unit_value = _usage_value(usage, unit.usage_key)
+    descendant_values = [
+        (descendant, value)
+        for descendant in priced_units
+        if descendant is not unit
+        and is_descendant_or_self(unit, descendant)
+        and (value := _usage_value(usage, descendant.usage_key)) > 0
+    ]
+
+    for descendant, value in descendant_values:
+        if value > unit_value:
+            return f'Invalid usage data: {descendant.usage_key} ({value}) cannot exceed {unit.usage_key} ({unit_value})'
+
+    descendant_keys = ', '.join(descendant.usage_key for descendant, _ in descendant_values)
+    descendant_total = unit_value - leaf_value
+    return (
+        f'Invalid usage data: more-specific usage for {descendant_keys} totals {descendant_total}, '
+        f'which exceeds {unit.usage_key} ({unit_value})'
+    )

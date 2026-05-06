@@ -93,9 +93,23 @@ def test_compute_leaf_values_ignores_unpriced_reported_descendants() -> None:
 def test_compute_leaf_values_rejects_negative_leaf_values() -> None:
     registry = UnitRegistry(load_units())
 
-    with pytest.raises(ValueError, match='Impossible usage data for input_tokens'):
+    with pytest.raises(ValueError, match='cache_read_tokens .* cannot exceed input_tokens'):
         compute_leaf_values(
             {'input_tokens', 'cache_read_tokens'},
             Usage(input_tokens=100, cache_read_tokens=200),
+            registry.families['tokens'],
+        )
+
+
+def test_compute_leaf_values_reports_overlapping_contradictions_in_usage_terms() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.raises(
+        ValueError,
+        match=('more-specific usage for cache_read_tokens, input_audio_tokens totals 160, which exceeds input_tokens'),
+    ):
+        compute_leaf_values(
+            {'input_tokens', 'cache_read_tokens', 'input_audio_tokens', 'cache_audio_read_tokens'},
+            Usage(input_tokens=100, cache_read_tokens=80, input_audio_tokens=80, cache_audio_read_tokens=0),
             registry.families['tokens'],
         )

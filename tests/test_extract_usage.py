@@ -450,7 +450,7 @@ def test_pricing_rejects_registered_contradictions_with_registry_message() -> No
 
     assert usage == Usage(input_tokens=50, input_audio_tokens=100)
     assert usage.input_tokens == 50
-    with pytest.raises(ValueError, match='Impossible usage data for input_tokens'):
+    with pytest.raises(ValueError, match='input_audio_tokens .* cannot exceed input_tokens'):
         ModelPrice(input_mtok=Decimal('1'), input_audio_mtok=Decimal('2')).calc_price(usage)
 
 
