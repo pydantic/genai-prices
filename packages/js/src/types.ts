@@ -80,6 +80,37 @@ export interface UsageExtractorMapping {
   path: ExtractPath
   required: boolean
 }
+
+export interface RawUnitData {
+  dimensions: Record<string, string>
+  price_key?: string
+}
+
+export interface RawFamilyData {
+  description: string
+  per: number
+  units: Record<string, RawUnitData>
+}
+
+export type RawFamiliesDict = Record<string, RawFamilyData>
+
+export interface UnitDef {
+  dimensions: Record<string, string>
+  family: UnitFamily
+  familyId: string
+  priceKey: string
+  usageKey: string
+}
+
+export interface UnitFamily {
+  description: string
+  id: string
+  per: number
+  units: Record<string, UnitDef>
+}
+
+export type ParsedFamilies = Record<string, UnitFamily>
+
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
