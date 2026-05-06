@@ -5,11 +5,10 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from types import SimpleNamespace
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 
-from genai_prices import data
-from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
 from genai_prices.types import Usage
 from genai_prices.units import UnitRegistry
 
@@ -17,11 +16,8 @@ from genai_prices.units import UnitRegistry
 @contextmanager
 def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
     registry = UnitRegistry(raw_families)
-    set_custom_snapshot(DataSnapshot(providers=data.providers, from_auto_update=False, unit_registry=registry))
-    try:
+    with patch('genai_prices.units._get_registry', return_value=registry):
         yield registry
-    finally:
-        set_custom_snapshot(None)
 
 
 def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:

@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 
@@ -55,11 +56,8 @@ def _custom_price_key_registry() -> UnitRegistry:
 @contextmanager
 def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
     registry = UnitRegistry(raw_families)
-    set_custom_snapshot(DataSnapshot(providers=data.providers, from_auto_update=False, unit_registry=registry))
-    try:
+    with patch('genai_prices.units._get_registry', return_value=registry):
         yield registry
-    finally:
-        set_custom_snapshot(None)
 
 
 def _usage_keys_by_family(groups: dict[UnitFamily, set[UnitDef]]) -> dict[str, set[str]]:
