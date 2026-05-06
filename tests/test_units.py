@@ -8,7 +8,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, fields
 from decimal import Decimal
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from unittest.mock import patch
 
 import pytest
@@ -838,9 +838,17 @@ def test_generated_python_unit_families_data_builds_registry() -> None:
     }
 
 
-def test_remote_payload_roots_remain_provider_arrays() -> None:
-    assert isinstance(json.loads(Path('prices/data.json').read_text()), list)
-    assert isinstance(json.loads(Path('prices/data_slim.json').read_text()), list)
+@pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
+def test_remote_payload_roots_remain_provider_arrays(filename: str) -> None:
+    payload_obj = json.loads(Path(filename).read_text())
+
+    assert isinstance(payload_obj, list)
+    payload = cast(list[object], payload_obj)
+    assert payload
+    assert all(isinstance(provider, dict) for provider in payload)
+    first_provider = cast(dict[str, object], payload[0])
+    assert 'providers' not in first_provider
+    assert 'unit_families' not in first_provider
 
 
 def test_data_snapshot_has_no_unit_registry_field() -> None:
