@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { RawFamiliesDict } from '../types'
 
 import { unitFamiliesData } from '../dataUnits'
-import { parseFamilies } from '../units'
+import { getActiveFamilies, parseFamilies, setUnitFamilies } from '../units'
 
 describe('parseFamilies', () => {
   it('parses generated unit families into runtime objects', () => {
@@ -203,5 +203,36 @@ describe('parseFamilies', () => {
     ).toThrow(
       'Missing intermediate unit dimensions in family tokens between input_tokens and cache_audio_read_tokens: cache=read, direction=input'
     )
+  })
+})
+
+describe('active unit families', () => {
+  it('initializes from generated unit data', () => {
+    const active = getActiveFamilies()
+    expect(active.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
+    expect(active.requests?.units.requests?.priceKey).toBe('requests_kcount')
+  })
+
+  it('sets custom parsed families and resets to generated families', () => {
+    const generated = getActiveFamilies()
+    const custom = parseFamilies({
+      widgets: {
+        description: 'Widget counts',
+        per: 1,
+        units: {
+          widgets: {
+            dimensions: {},
+          },
+        },
+      },
+    })
+
+    setUnitFamilies(custom)
+    expect(getActiveFamilies()).toBe(custom)
+    expect(getActiveFamilies().widgets?.units.widgets?.priceKey).toBe('widgets')
+
+    setUnitFamilies(null)
+    expect(getActiveFamilies()).toBe(generated)
+    expect(getActiveFamilies().tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
   })
 })

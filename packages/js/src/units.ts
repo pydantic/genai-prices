@@ -1,5 +1,10 @@
 import type { ParsedFamilies, RawFamiliesDict, UnitDef, UnitFamily } from './types'
 
+import { unitFamiliesData } from './dataUnits'
+
+const generatedFamilies = parseFamilies(unitFamiliesData)
+let activeFamilies = generatedFamilies
+
 export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
   const parsed: ParsedFamilies = {}
   const priceKeys = new Set<string>()
@@ -46,6 +51,14 @@ export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
 
   validateIntervalClosure(parsed)
   return parsed
+}
+
+export function getActiveFamilies(): ParsedFamilies {
+  return activeFamilies
+}
+
+export function setUnitFamilies(families: null | ParsedFamilies): void {
+  activeFamilies = families ?? generatedFamilies
 }
 
 function dimensionKey(dimensions: Record<string, string>): string {
