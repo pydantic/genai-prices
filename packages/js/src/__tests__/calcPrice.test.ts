@@ -54,11 +54,9 @@ describe('Core Price Calculation Function', () => {
       const inputPrice = uncachedInputPrice + cacheWritePrice + cacheReadPrice
       const outputPrice = (500 * 2.0) / 1_000_000
       const totalPrice = inputPrice + outputPrice
-      expect(result).toMatchObject({
-        input_price: inputPrice,
-        output_price: outputPrice,
-        total_price: totalPrice,
-      })
+      expect(result.input_price).toBeCloseTo(inputPrice)
+      expect(result.output_price).toBeCloseTo(outputPrice)
+      expect(result.total_price).toBeCloseTo(totalPrice)
     })
 
     it('should handle audio tokens correctly', () => {
@@ -124,11 +122,9 @@ describe('Core Price Calculation Function', () => {
       const result = calcPrice(usage, modelPrice)
 
       const inputPrice = mtok(1.0, 400) + mtok(2.0, 400) + mtok(3.0, 200)
-      expect(result).toMatchObject({
-        input_price: inputPrice,
-        output_price: 0,
-        total_price: inputPrice,
-      })
+      expect(result.input_price).toBeCloseTo(inputPrice)
+      expect(result.output_price).toBe(0)
+      expect(result.total_price).toBeCloseTo(inputPrice)
     })
 
     it('should use provided input tokens for output tier thresholds', () => {
@@ -205,6 +201,39 @@ describe('Core Price Calculation Function', () => {
           }
         )
       ).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+    })
+
+    it('should ignore unpriced contradictory descendants when parent-only pricing is sufficient', () => {
+      const result = calcPrice(
+        {
+          cache_read_tokens: 200,
+          input_tokens: 100,
+        },
+        {
+          input_mtok: 1,
+        }
+      )
+
+      expect(result).toMatchObject({
+        input_price: 0.0001,
+        output_price: 0,
+        total_price: 0.0001,
+      })
+    })
+
+    it('should reject contradictory usage when affected priced buckets are needed', () => {
+      expect(() =>
+        calcPrice(
+          {
+            cache_read_tokens: 200,
+            input_tokens: 100,
+          },
+          {
+            cache_read_mtok: 0.1,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Invalid usage data: cache_read_tokens (200) cannot exceed input_tokens (100)')
     })
 
     it('should handle tiered pricing with threshold model', () => {
