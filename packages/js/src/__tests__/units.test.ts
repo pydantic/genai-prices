@@ -115,4 +115,35 @@ describe('parseFamilies', () => {
       })
     ).toThrow('Duplicate unit usage key: seconds')
   })
+
+  it('rejects duplicate price keys across families', () => {
+    expect(() =>
+      parseFamilies({
+        images: {
+          description: 'Image counts',
+          per: 1,
+          units: {
+            input_images: {
+              dimensions: {
+                direction: 'input',
+              },
+              price_key: 'image_count',
+            },
+          },
+        },
+        video: {
+          description: 'Video counts',
+          per: 1,
+          units: {
+            input_frames: {
+              dimensions: {
+                direction: 'input',
+              },
+              price_key: 'image_count',
+            },
+          },
+        },
+      })
+    ).toThrow('Duplicate unit price key: image_count')
+  })
 })
