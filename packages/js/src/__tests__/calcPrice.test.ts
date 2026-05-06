@@ -180,6 +180,16 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should ignore caller-provided requests usage values', () => {
+      const result = calcPrice({ requests: 500 }, { requests_kcount: 0.5 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.0005,
+      })
+    })
+
     it('should reject missing ancestor prices before pricing', () => {
       expect(() => calcPrice({ cache_read_tokens: 100 }, { cache_read_mtok: 0.1 })).toThrow(
         'Missing ancestor price key input_mtok for cache_read_mtok'

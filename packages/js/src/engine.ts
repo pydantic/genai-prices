@@ -59,8 +59,6 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   const groups = new Map<string, { family: UnitFamily; usageKeys: Set<string> }>()
 
   for (const priceKey of effectivePriceKeys) {
-    if (priceKey === 'requests_kcount') continue
-
     const unit = getUnitForPriceKey(priceKey)
     const group = groups.get(unit.familyId) ?? { family: unit.family, usageKeys: new Set<string>() }
     group.usageKeys.add(unit.usageKey)
@@ -68,7 +66,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   }
 
   for (const { family, usageKeys } of groups.values()) {
-    const leafValues = computeLeafValues(usageKeys, normalizedUsage, family)
+    const leafValues = family.id === 'requests' ? { requests: 1 } : computeLeafValues(usageKeys, normalizedUsage, family)
     for (const [usageKey, count] of Object.entries(leafValues)) {
       const unit = family.units[usageKey]
       if (!unit) continue
@@ -85,11 +83,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
     }
   }
 
-  let totalPrice = inputPrice + outputPrice + totalOnlyPrice
-  const requestsKcount = modelPrice.requests_kcount as number | undefined
-  if (requestsKcount !== undefined) {
-    totalPrice += calcUnitPrice(requestsKcount, 1, totalInputTokens, 1_000)
-  }
+  const totalPrice = inputPrice + outputPrice + totalOnlyPrice
 
   return {
     input_price: inputPrice,
