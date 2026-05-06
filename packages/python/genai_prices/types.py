@@ -2,12 +2,10 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
-import sys
 from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from functools import cache
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
@@ -482,29 +480,8 @@ def _validate_usage_extractor_destinations(mappings: Sequence[UsageExtractorMapp
 
     validate_extractor_destinations(
         {mapping.dest for mapping in mappings},
-        _reported_usage_keys_for_extractor_construction(),
+        _reported_usage_keys(),
     )
-
-
-def _reported_usage_keys_for_extractor_construction() -> frozenset[str]:
-    data_module = sys.modules.get('genai_prices.data')
-    if data_module is not None and not hasattr(data_module, 'providers'):
-        # Generated data constructs UsageExtractor instances before data.providers
-        # is assigned. Reading the active snapshot here would re-enter that import,
-        # so validate constructor-time extractor destinations against bundled
-        # unit data directly. TODO Phase 5: replace this import-state probe with
-        # registry-identity keyed usage-key caches once those exist.
-        return _bundled_reported_usage_keys()
-
-    return _reported_usage_keys()
-
-
-@cache
-def _bundled_reported_usage_keys() -> frozenset[str]:
-    from genai_prices.data_units import unit_families_data
-    from genai_prices.units import UnitRegistry
-
-    return UnitRegistry(unit_families_data).reported_usage_keys()
 
 
 E = TypeVar('E')

@@ -9,6 +9,7 @@ from inline_snapshot import snapshot
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
 from genai_prices.types import ModelPrice, Provider, UsageExtractor, UsageExtractorMapping
+from genai_prices.units import UnitRegistry
 
 
 class MyMapping(Mapping[str, Any]):
@@ -374,6 +375,36 @@ def test_extractor_accumulates_by_destination_string() -> None:
     assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 100, 'cached_tokens': 25}}) == (
         'test-model',
         Usage(input_tokens=125),
+    )
+
+
+def test_runtime_extractor_uses_active_global_registry(monkeypatch: pytest.MonkeyPatch) -> None:
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'sausage_tokens': {
+                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
+                    },
+                },
+            },
+        }
+    )
+    monkeypatch.setattr('genai_prices.units._get_registry', lambda: registry)
+
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path='sausage_tokens', dest='sausage_tokens')],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'sausage_tokens': 7}}) == (
+        'test-model',
+        Usage(sausage_tokens=7),
     )
 
 
