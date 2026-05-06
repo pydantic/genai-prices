@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
-import { validateAncestorCoverage, validateJoinCoverage, validateModelPrice, validatePriceKeys } from '../validation'
+import type { Provider, UsageExtractorMapping } from '../types'
+
+import { data } from '../data'
+import {
+  validateAncestorCoverage,
+  validateExtractorDestinations,
+  validateJoinCoverage,
+  validateModelPrice,
+  validatePriceKeys,
+} from '../validation'
 
 describe('validatePriceKeys', () => {
   it('accepts registered current price keys', () => {
@@ -78,3 +87,51 @@ describe('validateModelPrice', () => {
     }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
   })
 })
+
+describe('validateExtractorDestinations', () => {
+  it('accepts current generated extractor destinations', () => {
+    expect(() => {
+      validateExtractorDestinations(data)
+    }).not.toThrow()
+  })
+
+  it('rejects price-key destinations', () => {
+    expect(() => {
+      validateExtractorDestinations([providerWithDestination('input_mtok')])
+    }).toThrow('Invalid extractor destination for test-provider/default mapping 0: input_mtok')
+  })
+
+  it('rejects arbitrary destinations', () => {
+    expect(() => {
+      validateExtractorDestinations([providerWithDestination('imaginary_tokens')])
+    }).toThrow('Invalid extractor destination for test-provider/default mapping 0: imaginary_tokens')
+  })
+
+  it('rejects pricing-only request destinations', () => {
+    expect(() => {
+      validateExtractorDestinations([providerWithDestination('requests')])
+    }).toThrow('Invalid extractor destination for test-provider/default mapping 0: requests')
+  })
+})
+
+function providerWithDestination(dest: string): Provider {
+  const mapping: UsageExtractorMapping = {
+    dest,
+    path: 'usage',
+    required: true,
+  }
+  return {
+    api_pattern: 'https://example.com',
+    extractors: [
+      {
+        api_flavor: 'default',
+        mappings: [mapping],
+        model_path: 'model',
+        root: 'usage',
+      },
+    ],
+    id: 'test-provider',
+    models: [],
+    name: 'Test Provider',
+  }
+}

@@ -1,4 +1,4 @@
-import type { ParsedFamilies, UnitDef } from './types'
+import type { ParsedFamilies, Provider, UnitDef } from './types'
 
 import { getActiveFamilies } from './units'
 
@@ -57,6 +57,22 @@ export function validateModelPrice(priceKeys: Iterable<string>, families: Parsed
   validateJoinCoverage(effectivePriceKeys, families)
 }
 
+export function validateExtractorDestinations(providerData: Provider[], families: ParsedFamilies = getActiveFamilies()): void {
+  const reportedUsageKeys = reportedUsageKeysForFamilies(families)
+
+  for (const provider of providerData) {
+    for (const extractor of provider.extractors ?? []) {
+      for (const [mappingIndex, mapping] of extractor.mappings.entries()) {
+        if (!reportedUsageKeys.has(mapping.dest)) {
+          throw new Error(
+            `Invalid extractor destination for ${provider.id}/${extractor.api_flavor} mapping ${mappingIndex.toString()}: ${mapping.dest}`
+          )
+        }
+      }
+    }
+  }
+}
+
 function dimensionKey(dimensions: Record<string, string>): string {
   return Object.entries(dimensions)
     .sort(([left], [right]) => left.localeCompare(right))
@@ -86,4 +102,8 @@ function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
 function isCompatible(left: UnitDef, right: UnitDef): boolean {
   if (left.family !== right.family) return false
   return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
+}
+
+function reportedUsageKeysForFamilies(families: ParsedFamilies): Set<string> {
+  return new Set(Object.values(families).flatMap((family) => Object.keys(family.units).filter((usageKey) => usageKey !== 'requests')))
 }
