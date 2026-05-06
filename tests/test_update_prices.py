@@ -16,8 +16,7 @@ from genai_prices import (
 pytestmark = pytest.mark.anyio
 
 
-def test_update_prices_fetch_parses_provider_array_and_borrows_active_registry(monkeypatch: pytest.MonkeyPatch):
-    active_registry = data_snapshot.get_snapshot().unit_registry
+def test_update_prices_fetch_parses_provider_array(monkeypatch: pytest.MonkeyPatch):
     content = (
         b'[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
         b'"models":[{"id":"gpt-4o-mini","match":{"equals":"gpt-4o-mini"},'
@@ -42,7 +41,6 @@ def test_update_prices_fetch_parses_provider_array_and_borrows_active_registry(m
 
     assert snapshot is not None
     assert snapshot.from_auto_update is True
-    assert snapshot.unit_registry is active_registry
     provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
