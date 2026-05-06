@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { validateAncestorCoverage, validatePriceKeys } from '../validation'
+import { validateAncestorCoverage, validateJoinCoverage, validatePriceKeys } from '../validation'
 
 describe('validatePriceKeys', () => {
   it('accepts registered current price keys', () => {
@@ -27,5 +27,25 @@ describe('validateAncestorCoverage', () => {
     expect(() => {
       validateAncestorCoverage(['cache_read_mtok'])
     }).toThrow('Missing ancestor price key input_mtok for cache_read_mtok')
+  })
+})
+
+describe('validateJoinCoverage', () => {
+  it('rejects compatible priced units when their registered join is not priced', () => {
+    expect(() => {
+      validateJoinCoverage(['input_mtok', 'cache_read_mtok', 'input_audio_mtok'])
+    }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+  })
+
+  it('rejects compatible priced units when their join is absent from the current registry', () => {
+    expect(() => {
+      validateJoinCoverage(['input_mtok', 'cache_write_mtok', 'input_audio_mtok'])
+    }).toThrow('Missing registered join unit for cache_write_mtok and input_audio_mtok')
+  })
+
+  it('accepts compatible priced units when the join is priced', () => {
+    expect(() => {
+      validateJoinCoverage(['input_mtok', 'cache_read_mtok', 'input_audio_mtok', 'cache_audio_read_mtok'])
+    }).not.toThrow()
   })
 })
