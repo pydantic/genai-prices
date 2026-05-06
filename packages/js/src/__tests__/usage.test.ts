@@ -87,4 +87,29 @@ describe('getUsageValue', () => {
   it('raises for unknown usage keys', () => {
     expect(() => getUsageValue({}, 'imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
   })
+
+  it('raises for missing ancestors with positive reported descendants', () => {
+    const usage = normalizeUsage({
+      input_audio_tokens: 100,
+    })
+    expect(() => getUsageValue(usage, 'input_tokens')).toThrow(
+      'Missing usage value for input_tokens with positive reported descendant input_audio_tokens'
+    )
+  })
+
+  it('returns stored ancestors directly even when descendants are contradictory', () => {
+    const usage = normalizeUsage({
+      input_audio_tokens: 200,
+      input_tokens: 100,
+    })
+    expect(getUsageValue(usage, 'input_tokens')).toBe(100)
+  })
+
+  it('returns zero for missing descendants of reported ancestors', () => {
+    const usage = normalizeUsage({
+      input_tokens: 100,
+    })
+    expect(getUsageValue(usage, 'cache_read_tokens')).toBe(0)
+    expect(usage).not.toHaveProperty('cache_read_tokens')
+  })
 })
