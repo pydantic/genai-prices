@@ -66,7 +66,7 @@ Phase 1 should avoid full-snapshot validation, full-registry scans, or precomput
 The bundled snapshot is built with an explicit registry from generated package data. A constructed `DataSnapshot` can default to the current global snapshot's registry for backward compatibility. `set_custom_snapshot` does not validate model prices in Phase 1; it installs the staged snapshot, and any price-key, ancestor, join, or missing-join error is raised when standard base pricing first calculates against the affected `ModelPrice`.
 
 **Inactive snapshots are staging objects.** _(from "`DataSnapshot` carries the Python registry but keeps current activation behavior")_
-Callers can fetch a snapshot, inspect providers and models, patch prices, and later activate it. Phase 1 does not try to make every inactive-snapshot execution path safe. Lookup-only helpers remain usable on inactive snapshots; explicit execution guards are Phase 7.
+Callers can fetch a snapshot, inspect providers and models, patch prices, and later activate it. Phase 1 does not try to make every inactive-snapshot execution path safe. Lookup-only helpers remain usable on inactive snapshots.
 
 **Generated and fetched price feeds are trusted at the publication boundary.** _(from "`DataSnapshot` carries the Python registry but keeps current activation behavior")_
 Generated bundled data is trusted because the build validated it. Fetched auto-update payloads remain trusted as prevalidated feeds once their payload shape and registry structure parse. Phase 1 does not bulk-revalidate or selectively revalidate model prices during activation, and it does not serialize trust markers into generated data. Use-time validation is deliberately repeated until Phase 5 adds runtime-private trust.

@@ -53,16 +53,6 @@ Phase 5 modifies:
   -> Python DataSnapshot validation trust state
   -> Python ModelPrice trust invalidation paths
   -> JavaScript registry and validation trust helpers
-
-Phase 6 modifies:
-  -> UnitRegistry mutation APIs
-  -> DataSnapshot unit-editing APIs
-  -> Python/JavaScript validation trust compatibility
-  -> JavaScript staged registry/provider activation helpers
-
-Phase 7 modifies:
-  -> Python DataSnapshot execution methods
-  -> Python ModelInfo.calc_price identity guard
 ```
 
 The lists are ownership guides, not permission boundaries. If an implementation discovers an additional touched file, update the relevant phase code spec before or alongside the implementation.
@@ -183,12 +173,10 @@ ModelPrice.calc_price(usage)
   -> for each family:
        -> if requests, use fixed leaf value {"requests": 1}
        -> otherwise compute decomposition from explicit smart_usage values
-       -> in Phases 1-7: raise when a missing ancestor or overlap would need inference
-       -> in Phase 8+: infer missing values only when uniquely determined
+       -> raise when a missing ancestor or overlap would need inference
   -> total_input_tokens = smart_usage.input_tokens only if a TieredPrices value is configured
        -> otherwise use a neutral threshold because non-tiered prices ignore it
-       -> in Phases 1-7: safe missing reads return zero; ambiguous missing reads raise
-       -> in Phase 8+: infer an ambiguous missing threshold only when uniquely determined
+       -> safe missing reads return zero; ambiguous missing reads raise
   -> for each priced usage-keyed unit:
        -> price = stored price at unit.price_key
        -> cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
@@ -196,7 +184,7 @@ ModelPrice.calc_price(usage)
   -> return input_price, output_price, total_price
 ```
 
-Tier selection reads `input_tokens` through the normal usage-read path before Phase 8. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts. If it is safely missing, the threshold is zero. Phase 8 may infer a missing threshold when descendant usage uniquely determines it.
+Tier selection reads `input_tokens` through the normal usage-read path. If `input_tokens` is stored, the runtime uses it directly for tier selection without auditing descendant counts. If it is safely missing, the threshold is zero. If it is ambiguously missing, pricing raises rather than guessing a threshold.
 
 ## JavaScript Runtime Activation
 

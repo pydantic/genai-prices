@@ -152,7 +152,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 8. normalize by `family.per`
 9. aggregate into the existing result shape
 
-Keep tiered-price semantics aligned with Python: tier selection reads `input_tokens` through `getUsageValue(...)`. A stored `input_tokens` total is used directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises until Phase 8 may add coherent missing-threshold inference.
+Keep tiered-price semantics aligned with Python: tier selection reads `input_tokens` through `getUsageValue(...)`. A stored `input_tokens` total is used directly, safely missing `input_tokens` returns zero and selects the base tier, and ambiguous missing `input_tokens` raises instead of guessing a threshold.
 
 Aggregation stays compatible with the current result shape. Costs from units whose dimensions include `{direction: input}` contribute to the existing input aggregate, units whose dimensions include `{direction: output}` contribute to the output aggregate, and families without a direction dimension such as `requests` contribute only to total.
 
