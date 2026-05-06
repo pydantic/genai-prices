@@ -2,6 +2,7 @@ import type { ParsedFamilies, RawFamiliesDict, UnitDef, UnitFamily } from './typ
 
 export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
   const parsed: ParsedFamilies = {}
+  const usageKeys = new Set<string>()
 
   for (const [familyId, rawFamily] of Object.entries(raw)) {
     const family: UnitFamily = {
@@ -14,6 +15,11 @@ export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
     parsed[familyId] = family
 
     for (const [usageKey, rawUnit] of Object.entries(rawFamily.units)) {
+      if (usageKeys.has(usageKey)) {
+        throw new Error(`Duplicate unit usage key: ${usageKey}`)
+      }
+      usageKeys.add(usageKey)
+
       const unit: UnitDef = {
         dimensions: { ...rawUnit.dimensions },
         family,

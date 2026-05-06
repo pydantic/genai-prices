@@ -86,4 +86,33 @@ describe('parseFamilies', () => {
       usageKey: 'billable_calls',
     })
   })
+
+  it('rejects duplicate usage keys across families', () => {
+    expect(() =>
+      parseFamilies({
+        audio: {
+          description: 'Audio counts',
+          per: 1,
+          units: {
+            seconds: {
+              dimensions: {
+                modality: 'audio',
+              },
+            },
+          },
+        },
+        video: {
+          description: 'Video counts',
+          per: 1,
+          units: {
+            seconds: {
+              dimensions: {
+                modality: 'video',
+              },
+            },
+          },
+        },
+      })
+    ).toThrow('Duplicate unit usage key: seconds')
+  })
 })
