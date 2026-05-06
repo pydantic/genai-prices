@@ -126,3 +126,39 @@ describe('computeLeafValues', () => {
     )
   })
 })
+
+describe('Python Phase 1 decomposition parity examples', () => {
+  it('matches the parent/child and cached-audio overlap examples', () => {
+    expect(
+      computeLeafValues(
+        new Set(['cache_read_tokens', 'input_tokens']),
+        normalizeUsage({
+          cache_read_tokens: 250,
+          input_tokens: 1_000,
+        }),
+        getFamily('tokens')
+      )
+    ).toEqual({
+      cache_read_tokens: 250,
+      input_tokens: 750,
+    })
+
+    expect(
+      computeLeafValues(
+        new Set(['cache_audio_read_tokens', 'cache_read_tokens', 'input_audio_tokens', 'input_tokens']),
+        normalizeUsage({
+          cache_audio_read_tokens: 100,
+          cache_read_tokens: 400,
+          input_audio_tokens: 300,
+          input_tokens: 1_000,
+        }),
+        getFamily('tokens')
+      )
+    ).toEqual({
+      cache_audio_read_tokens: 100,
+      cache_read_tokens: 300,
+      input_audio_tokens: 200,
+      input_tokens: 400,
+    })
+  })
+})
