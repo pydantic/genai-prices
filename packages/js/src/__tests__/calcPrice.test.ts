@@ -70,7 +70,9 @@ describe('Core Price Calculation Function', () => {
       }
       const modelPrice: ModelPrice = {
         input_audio_mtok: 10.0,
+        input_mtok: 1.0,
         output_audio_mtok: 20.0,
+        output_mtok: 2.0,
       }
 
       const result = calcPrice(usage, modelPrice)
@@ -113,6 +115,7 @@ describe('Core Price Calculation Function', () => {
         input_tokens: 1000,
       }
       const modelPrice: ModelPrice = {
+        cache_audio_read_mtok: 2.0,
         cache_read_mtok: 2.0,
         input_audio_mtok: 3.0,
         input_mtok: 1.0,
