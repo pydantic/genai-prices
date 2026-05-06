@@ -5,7 +5,7 @@ import subprocess
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -843,11 +843,11 @@ def test_remote_payload_roots_remain_provider_arrays() -> None:
     assert isinstance(json.loads(Path('prices/data_slim.json').read_text()), list)
 
 
-def test_bundled_snapshot_carries_unit_registry() -> None:
+def test_data_snapshot_has_no_unit_registry_field() -> None:
     snapshot = get_snapshot()
 
-    assert isinstance(snapshot.unit_registry, UnitRegistry)
-    assert set(snapshot.unit_registry.families) == {'tokens', 'requests'}
+    assert 'unit_registry' not in {field.name for field in fields(DataSnapshot)}
+    assert not hasattr(snapshot, 'unit_registry')
 
 
 def test_bundled_snapshot_lookup_helpers_still_work() -> None:
@@ -894,12 +894,10 @@ def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> Non
     )
 
 
-def test_custom_snapshots_default_to_active_registry() -> None:
-    active_registry = get_snapshot().unit_registry
-
+def test_custom_snapshots_do_not_borrow_active_registry() -> None:
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
-    assert snapshot.unit_registry is active_registry
+    assert not hasattr(snapshot, 'unit_registry')
 
 
 def test_set_custom_snapshot_does_not_validate_model_prices() -> None:

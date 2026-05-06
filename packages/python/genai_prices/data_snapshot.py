@@ -7,7 +7,6 @@ from functools import cache
 from typing import Any
 
 from . import types
-from .units import UnitRegistry
 
 __all__ = 'DataSnapshot', 'set_custom_snapshot'
 
@@ -24,12 +23,10 @@ def get_snapshot() -> DataSnapshot:
 @cache
 def _bundled_snapshot() -> DataSnapshot:
     from .data import providers
-    from .data_units import unit_families_data
 
     return DataSnapshot(
         providers=providers,
         from_auto_update=False,
-        unit_registry=UnitRegistry(unit_families_data),
     )
 
 
@@ -42,15 +39,10 @@ def set_custom_snapshot(snapshot: DataSnapshot | None):
 class DataSnapshot:
     providers: list[types.Provider]
     from_auto_update: bool
-    unit_registry: UnitRegistry | None = None
     _lookup_cache: dict[tuple[str | None, str | None, str], tuple[types.Provider, types.ModelInfo]] = field(
         default_factory=lambda: {}
     )
     timestamp: datetime = field(default_factory=datetime.now)
-
-    def __post_init__(self) -> None:
-        if self.unit_registry is None:
-            self.unit_registry = get_snapshot().unit_registry
 
     def active(self, ttl: timedelta) -> bool:
         """Check if the snapshot is "active" (e.g. hasn't expired) based on a time to live."""
