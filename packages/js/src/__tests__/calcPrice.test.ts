@@ -184,6 +184,29 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should reject missing ancestor prices before pricing', () => {
+      expect(() => calcPrice({ cache_read_tokens: 100 }, { cache_read_mtok: 0.1 })).toThrow(
+        'Missing ancestor price key input_mtok for cache_read_mtok'
+      )
+    })
+
+    it('should reject missing join prices before pricing', () => {
+      expect(() =>
+        calcPrice(
+          {
+            cache_read_tokens: 100,
+            input_audio_tokens: 100,
+            input_tokens: 200,
+          },
+          {
+            cache_read_mtok: 0.1,
+            input_audio_mtok: 10,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+    })
+
     it('should handle tiered pricing with threshold model', () => {
       const usage: Usage = {
         input_tokens: 150000, // 150k tokens

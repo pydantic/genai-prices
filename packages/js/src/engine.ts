@@ -1,4 +1,5 @@
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import { validateModelPrice } from './validation'
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
@@ -43,6 +44,12 @@ function calcMtokPrice(price: number | TieredPrices | undefined, tokens: number 
 }
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
+  validateModelPrice(
+    Object.entries(modelPrice)
+      .filter(([, price]) => price !== undefined)
+      .map(([priceKey]) => priceKey)
+  )
+
   let inputPrice = 0
   let outputPrice = 0
 
