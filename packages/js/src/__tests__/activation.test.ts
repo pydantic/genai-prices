@@ -4,6 +4,7 @@ import type { Provider } from '../types'
 
 import { findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
+import { getUnit } from '../units'
 
 describe('provider activation', () => {
   it('validates embedded provider data during startup and keeps it active', () => {
@@ -51,6 +52,24 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).rejects.toThrow('Invalid extractor destination for invalid-async-provider/default mapping 0: requests')
     expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
     await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data)
+    })
+  })
+
+  it('preserves provider-array update compatibility and the generated unit registry', async () => {
+    const beforeInputUnit = getUnit('input_tokens')
+    const arrayProvider = providerFixture('array-provider')
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData([arrayProvider])
+    })
+
+    await expect(waitForUpdate()).resolves.toEqual([arrayProvider])
+    expect(findProvider({ providerId: 'array-provider' })?.id).toBe('array-provider')
+    expect(getUnit('input_tokens')).toBe(beforeInputUnit)
+    expect(getUnit('requests').priceKey).toBe('requests_kcount')
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
