@@ -1,6 +1,6 @@
 import type { Usage } from './types'
 
-import { getReportedUsageKeys } from './units'
+import { getReportedUsageKeys, getUnit } from './units'
 
 export type NormalizedUsage = Usage
 
@@ -15,6 +15,11 @@ export function normalizeUsage(obj: unknown): NormalizedUsage {
     }
   }
   return usage
+}
+
+export function getUsageValue(usage: NormalizedUsage, usageKey: string): number {
+  getUnit(usageKey)
+  return usage[usageKey] ?? 0
 }
 
 function isPlainObject(obj: unknown): obj is Record<string, unknown> {

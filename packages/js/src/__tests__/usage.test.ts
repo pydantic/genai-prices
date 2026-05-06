@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { normalizeUsage } from '../usage'
+import { getUsageValue, normalizeUsage } from '../usage'
 
 describe('normalizeUsage', () => {
   it('normalizes current token keys from plain objects', () => {
@@ -58,5 +58,33 @@ describe('normalizeUsage', () => {
       output_tokens: 10,
     })
     expect(usage).not.toHaveProperty('input_tokens')
+  })
+})
+
+describe('getUsageValue', () => {
+  it('returns stored values', () => {
+    const usage = normalizeUsage({
+      input_tokens: 100,
+    })
+    expect(getUsageValue(usage, 'input_tokens')).toBe(100)
+  })
+
+  it('returns stored zero values', () => {
+    const usage = normalizeUsage({
+      input_tokens: 0,
+    })
+    expect(getUsageValue(usage, 'input_tokens')).toBe(0)
+  })
+
+  it('returns zero for missing registered values without materializing them', () => {
+    const usage = normalizeUsage({
+      output_tokens: 10,
+    })
+    expect(getUsageValue(usage, 'input_tokens')).toBe(0)
+    expect(usage).not.toHaveProperty('input_tokens')
+  })
+
+  it('raises for unknown usage keys', () => {
+    expect(() => getUsageValue({}, 'imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
   })
 })
