@@ -5596,6 +5596,25 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
             ),
             ModelInfo(
+                id='gpt-5.3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.3'),
+                        ClauseEquals(equals='gpt-5-3'),
+                        ClauseEquals(equals='gpt-5.3-chat'),
+                        ClauseEquals(equals='gpt-5.3-chat-latest'),
+                        ClauseEquals(equals='gpt-5-3-chat'),
+                        ClauseEquals(equals='gpt-5-3-chat-latest'),
+                    ]
+                ),
+                name='GPT-5.3 Chat',
+                description='GPT-5.3 Instant model used in ChatGPT',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-5.3-codex',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.3-codex'), ClauseEquals(equals='gpt-5-3-codex')]),
                 name='GPT-5.3-Codex',

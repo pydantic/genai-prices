@@ -9983,6 +9983,39 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.3',
+        name: 'GPT-5.3 Chat',
+        description: 'GPT-5.3 Instant model used in ChatGPT',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.3',
+            },
+            {
+              equals: 'gpt-5-3',
+            },
+            {
+              equals: 'gpt-5.3-chat',
+            },
+            {
+              equals: 'gpt-5.3-chat-latest',
+            },
+            {
+              equals: 'gpt-5-3-chat',
+            },
+            {
+              equals: 'gpt-5-3-chat-latest',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 1.75,
+          cache_read_mtok: 0.175,
+          output_mtok: 14,
+        },
+      },
+      {
         id: 'gpt-5.3-codex',
         name: 'GPT-5.3-Codex',
         description: 'The most capable agentic coding model',
