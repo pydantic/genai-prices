@@ -1,0 +1,23 @@
+uv.lock
+  ai_agent 364
+package-lock.json
+  ai_agent 7582
+packages/python/pyproject.toml
+  ai_agent 7
+packages/js/package.json
+  ai_agent 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "ed81c0cda450ed99731b8c6af0a3613257687b1e",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
