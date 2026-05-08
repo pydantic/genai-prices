@@ -1,6 +1,6 @@
 import type { UnitDef, Usage } from './types'
 
-import { getReportedUsageKeys, getUnit } from './units'
+import { dimensionKey, getReportedUsageKeys, getUnit, isCompatible, isDescendantOrSelf } from './units'
 
 export type NormalizedUsage = Usage
 
@@ -54,23 +54,6 @@ function isPlainObject(obj: unknown): obj is Record<string, unknown> {
   return typeof obj === 'object' && obj !== null && !Array.isArray(obj)
 }
 
-function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {
-  if (ancestor.family !== descendant.family) return false
-  return Object.entries(ancestor.dimensions).every(([key, value]) => descendant.dimensions[key] === value)
-}
-
-function dimensionKey(dimensions: Record<string, string>): string {
-  return Object.entries(dimensions)
-    .sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, value]) => `${key}=${value}`)
-    .join('\0')
-}
-
 function isComparable(left: UnitDef, right: UnitDef): boolean {
   return isDescendantOrSelf(left, right) || isDescendantOrSelf(right, left)
-}
-
-function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  if (left.family !== right.family) return false
-  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
 }
