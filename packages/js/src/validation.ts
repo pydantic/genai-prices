@@ -1,6 +1,6 @@
 import type { ParsedFamilies, Provider, UnitDef } from './types'
 
-import { getActiveFamilies } from './units'
+import { dimensionKey, getActiveFamilies, isCompatible, isDimensionSubset } from './units'
 
 export function validatePriceKeys(priceKeys: Iterable<string>, families: ParsedFamilies = getActiveFamilies()): void {
   const registeredPriceKeys = new Set(Object.values(families).flatMap((family) => Object.values(family.units).map((unit) => unit.priceKey)))
@@ -73,13 +73,6 @@ export function validateExtractorDestinations(providerData: Provider[], families
   }
 }
 
-function dimensionKey(dimensions: Record<string, string>): string {
-  return Object.entries(dimensions)
-    .sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, value]) => `${key}=${value}`)
-    .join('\0')
-}
-
 function getUnitsForPriceKeys(priceKeys: Set<string>, families: ParsedFamilies): UnitDef[] {
   const unitsByPriceKey = new Map<string, UnitDef>()
   for (const family of Object.values(families)) {
@@ -93,15 +86,6 @@ function getUnitsForPriceKeys(priceKeys: Set<string>, families: ParsedFamilies):
     if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
     return unit
   })
-}
-
-function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
-  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
-}
-
-function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  if (left.family !== right.family) return false
-  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
 }
 
 function reportedUsageKeysForFamilies(families: ParsedFamilies): Set<string> {
