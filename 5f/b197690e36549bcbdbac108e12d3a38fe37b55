@@ -1,0 +1,27 @@
+packages/js/src/validation.ts
+  s_e368004426df55::t_f2169b85468423 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "5fb197690e36549bcbdbac108e12d3a38fe37b55",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_e368004426df55": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "edde3cac-3b50-48a5-b629-aea086310ad2",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
