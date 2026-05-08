@@ -14,8 +14,6 @@ import { validateExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
-validateExtractorDestinations(embeddedData)
-
 let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
 let autoUpdateCb: (() => void) | null = null

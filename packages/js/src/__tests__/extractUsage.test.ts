@@ -220,55 +220,6 @@ describe('extractUsage', () => {
     })
   })
 
-  describe('extractor destination validation', () => {
-    it.each(['input_mtok', 'imaginary_tokens', 'requests'])('should reject invalid custom destination %s', (dest) => {
-      const provider: Provider = {
-        api_pattern: 'x',
-        extractors: [
-          {
-            api_flavor: 'default',
-            mappings: [
-              {
-                dest,
-                path: 'input_tokens',
-                required: true,
-              },
-            ],
-            model_path: 'model',
-            root: 'usage',
-          },
-        ],
-        id: 'test-provider',
-        models: [],
-        name: 'Test',
-      }
-
-      expect(() =>
-        extractUsage(provider, {
-          model: 'test-model',
-          usage: { input_tokens: 100 },
-        })
-      ).toThrow(`Invalid extractor destination for test-provider/default mapping 0: ${dest}`)
-    })
-
-    it('should reject invalid destinations before normalization could drop them', () => {
-      const provider = providerWithMappings([
-        {
-          dest: 'imaginary_tokens',
-          path: 'input_tokens',
-          required: true,
-        },
-      ])
-
-      expect(() =>
-        extractUsage(provider, {
-          model: 'test-model',
-          usage: { input_tokens: 100 },
-        })
-      ).toThrow('Invalid extractor destination for test-provider/default mapping 0: imaginary_tokens')
-    })
-  })
-
   describe('extractor normalization edge cases', () => {
     it('should leave unrelated response fields absent after normalization', () => {
       const provider = providerWithMappings([

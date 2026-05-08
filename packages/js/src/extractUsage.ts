@@ -1,7 +1,6 @@
 import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
 import { normalizeUsage } from './usage'
-import { validateExtractorDestinations } from './validation'
 
 interface ExtractedUsage {
   model: null | string
@@ -14,7 +13,6 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
-  validateExtractorDestinations([provider])
 
   const extractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
   if (!extractor) {
