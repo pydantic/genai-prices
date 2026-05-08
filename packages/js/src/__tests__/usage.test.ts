@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { setUnitFamilies, UnitRegistry } from '../units'
 import { getUsageValue, normalizeUsage } from '../usage'
 
 describe('normalizeUsage', () => {
@@ -58,6 +59,34 @@ describe('normalizeUsage', () => {
       output_tokens: 10,
     })
     expect(usage).not.toHaveProperty('input_tokens')
+  })
+
+  it('normalizes against the active registry reported usage keys', () => {
+    const registry = new UnitRegistry({
+      widgets: {
+        description: 'Widget counts',
+        per: 1,
+        units: {
+          widgets: {
+            dimensions: {},
+          },
+        },
+      },
+    })
+
+    try {
+      setUnitFamilies(registry)
+      expect(
+        normalizeUsage({
+          input_tokens: 100,
+          widgets: 7,
+        })
+      ).toEqual({
+        widgets: 7,
+      })
+    } finally {
+      setUnitFamilies(null)
+    }
   })
 })
 
@@ -138,5 +167,37 @@ describe('getUsageValue', () => {
       output_tokens: 50,
     })
     expect(getUsageValue(usage, 'cache_audio_read_tokens')).toBe(0)
+  })
+
+  it('reads values from the active registry indexes', () => {
+    const registry = new UnitRegistry({
+      widgets: {
+        description: 'Widget counts',
+        per: 1,
+        units: {
+          premium_widgets: {
+            dimensions: {
+              class: 'premium',
+            },
+          },
+          widgets: {
+            dimensions: {},
+          },
+        },
+      },
+    })
+
+    try {
+      setUnitFamilies(registry)
+      const usage = normalizeUsage({
+        premium_widgets: 3,
+        widgets: 10,
+      })
+
+      expect(getUsageValue(usage, 'widgets')).toBe(10)
+      expect(getUsageValue(usage, 'premium_widgets')).toBe(3)
+    } finally {
+      setUnitFamilies(null)
+    }
   })
 })
