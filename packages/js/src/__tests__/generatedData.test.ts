@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import * as providerDataModule from '../data'
 import { unitFamiliesData } from '../dataUnits'
+import { UnitRegistry } from '../units'
 
 describe('generated data split', () => {
   it('keeps generated provider data separate from generated unit data', () => {
@@ -32,5 +33,12 @@ describe('generated data split', () => {
     expect(requestsUnit).toBeDefined()
     if (!requestsUnit) throw new Error('Expected generated requests unit')
     expect(requestsUnit.price_key).toBe('requests_kcount')
+  })
+
+  it('constructs a runtime UnitRegistry from generated raw unit data', () => {
+    const registry = new UnitRegistry(unitFamiliesData)
+
+    expect(registry.units.get('input_tokens')?.priceKey).toBe('input_mtok')
+    expect(registry.unitsByPriceKey.get('requests_kcount')?.usageKey).toBe('requests')
   })
 })

@@ -5,6 +5,7 @@ import type { RawFamiliesDict } from '../types'
 import { unitFamiliesData } from '../dataUnits'
 import {
   getActiveFamilies,
+  getActiveRegistry,
   getAllPriceKeys,
   getAllUsageKeys,
   getFamily,
@@ -14,13 +15,14 @@ import {
   getUsageKeyForPriceKey,
   parseFamilies,
   setUnitFamilies,
+  UnitRegistry,
 } from '../units'
 
-describe('parseFamilies', () => {
-  it('parses generated unit families into runtime objects', () => {
-    const families = parseFamilies(unitFamiliesData)
-    const tokenFamily = families.tokens
-    const requestFamily = families.requests
+describe('UnitRegistry', () => {
+  it('constructs generated unit families into indexed runtime objects', () => {
+    const registry = new UnitRegistry(unitFamiliesData)
+    const tokenFamily = registry.families.tokens
+    const requestFamily = registry.families.requests
     expect(tokenFamily).toBeDefined()
     expect(requestFamily).toBeDefined()
     if (!tokenFamily || !requestFamily) throw new Error('Expected generated unit families')
@@ -40,14 +42,20 @@ describe('parseFamilies', () => {
       'output_tokens',
     ])
     expect(requestFamily.units.requests?.priceKey).toBe('requests_kcount')
+    expect(registry.units.get('input_tokens')).toBe(tokenFamily.units.input_tokens)
+    expect(registry.unitsByPriceKey.get('input_mtok')).toBe(tokenFamily.units.input_tokens)
+    expect(registry.allUsageKeys).toContain('input_tokens')
+    expect(registry.allPriceKeys).toContain('input_mtok')
+    expect(registry.reportedUsageKeys).toContain('input_tokens')
+    expect(registry.reportedUsageKeys).not.toContain('requests')
   })
 
   it('accepts the generated unit registry interval closure', () => {
-    expect(() => parseFamilies(unitFamiliesData)).not.toThrow()
+    expect(() => new UnitRegistry(unitFamiliesData)).not.toThrow()
   })
 
   it('defaults missing price keys to the usage key', () => {
-    const families = parseFamilies({
+    const registry = new UnitRegistry({
       widgets: {
         description: 'Widget counts',
         per: 1,
@@ -59,12 +67,13 @@ describe('parseFamilies', () => {
       },
     })
 
-    expect(families.widgets?.units.widgets?.priceKey).toBe('widgets')
+    expect(registry.families.widgets?.units.widgets?.priceKey).toBe('widgets')
+    expect(registry.unitsByPriceKey.get('widgets')).toBe(registry.units.get('widgets'))
   })
 
   it('links units back to their family and fills dimension lookup state', () => {
-    const families = parseFamilies(unitFamiliesData)
-    const tokenFamily = families.tokens
+    const registry = new UnitRegistry(unitFamiliesData)
+    const tokenFamily = registry.families.tokens
     expect(tokenFamily).toBeDefined()
     if (!tokenFamily) throw new Error('Expected generated token family')
 
@@ -77,7 +86,16 @@ describe('parseFamilies', () => {
     expect(tokenFamily.unitsByDimension.get('direction=input\0modality=audio')).toBe(inputAudio)
   })
 
-  it('keeps parsing independent of generated data fixtures', () => {
+  it('indexes ancestor usage keys', () => {
+    const registry = new UnitRegistry(unitFamiliesData)
+
+    expect(registry.ancestorUsageKeys('cache_audio_read_tokens')).toEqual(
+      new Set(['cache_read_tokens', 'input_audio_tokens', 'input_tokens'])
+    )
+    expect(registry.ancestorUsageKeysByUsageKey.get('requests')).toEqual(new Set())
+  })
+
+  it('keeps construction independent of generated data fixtures', () => {
     const raw: RawFamiliesDict = {
       calls: {
         description: 'Call counts',
@@ -93,7 +111,7 @@ describe('parseFamilies', () => {
       },
     }
 
-    const unit = parseFamilies(raw).calls?.units.billable_calls
+    const unit = new UnitRegistry(raw).families.calls?.units.billable_calls
     expect(unit).toMatchObject({
       dimensions: { class: 'billable' },
       familyId: 'calls',
@@ -103,129 +121,161 @@ describe('parseFamilies', () => {
   })
 
   it('rejects duplicate usage keys across families', () => {
-    expect(() =>
-      parseFamilies({
-        audio: {
-          description: 'Audio counts',
-          per: 1,
-          units: {
-            seconds: {
-              dimensions: {
-                modality: 'audio',
+    expect(
+      () =>
+        new UnitRegistry({
+          audio: {
+            description: 'Audio counts',
+            per: 1,
+            units: {
+              seconds: {
+                dimensions: {
+                  modality: 'audio',
+                },
               },
             },
           },
-        },
-        video: {
-          description: 'Video counts',
-          per: 1,
-          units: {
-            seconds: {
-              dimensions: {
-                modality: 'video',
+          video: {
+            description: 'Video counts',
+            per: 1,
+            units: {
+              seconds: {
+                dimensions: {
+                  modality: 'video',
+                },
               },
             },
           },
-        },
-      })
+        })
     ).toThrow('Duplicate unit usage key: seconds')
   })
 
   it('rejects duplicate price keys across families', () => {
-    expect(() =>
-      parseFamilies({
-        images: {
-          description: 'Image counts',
-          per: 1,
-          units: {
-            input_images: {
-              dimensions: {
-                direction: 'input',
+    expect(
+      () =>
+        new UnitRegistry({
+          images: {
+            description: 'Image counts',
+            per: 1,
+            units: {
+              input_images: {
+                dimensions: {
+                  direction: 'input',
+                },
+                price_key: 'image_count',
               },
-              price_key: 'image_count',
             },
           },
-        },
-        video: {
-          description: 'Video counts',
-          per: 1,
-          units: {
-            input_frames: {
-              dimensions: {
-                direction: 'input',
+          video: {
+            description: 'Video counts',
+            per: 1,
+            units: {
+              input_frames: {
+                dimensions: {
+                  direction: 'input',
+                },
+                price_key: 'image_count',
               },
-              price_key: 'image_count',
             },
           },
-        },
-      })
+        })
     ).toThrow('Duplicate unit price key: image_count')
   })
 
   it('rejects duplicate dimension sets in one family', () => {
-    expect(() =>
-      parseFamilies({
-        tokens: {
-          description: 'Token counts',
-          per: 1_000_000,
-          units: {
-            input_chars: {
-              dimensions: {
-                direction: 'input',
+    expect(
+      () =>
+        new UnitRegistry({
+          tokens: {
+            description: 'Token counts',
+            per: 1_000_000,
+            units: {
+              input_chars: {
+                dimensions: {
+                  direction: 'input',
+                },
+                price_key: 'input_chars_mcount',
               },
-              price_key: 'input_chars_mcount',
-            },
-            input_tokens: {
-              dimensions: {
-                direction: 'input',
+              input_tokens: {
+                dimensions: {
+                  direction: 'input',
+                },
+                price_key: 'input_mtok',
               },
-              price_key: 'input_mtok',
             },
           },
-        },
-      })
+        })
     ).toThrow('Duplicate dimensions in unit family tokens: input_chars and input_tokens')
   })
 
   it('rejects missing intermediate dimensions between ancestors and descendants', () => {
-    expect(() =>
-      parseFamilies({
-        tokens: {
-          description: 'Token counts',
-          per: 1_000_000,
-          units: {
-            cache_audio_read_tokens: {
-              dimensions: {
-                cache: 'read',
-                direction: 'input',
-                modality: 'audio',
+    expect(
+      () =>
+        new UnitRegistry({
+          tokens: {
+            description: 'Token counts',
+            per: 1_000_000,
+            units: {
+              cache_audio_read_tokens: {
+                dimensions: {
+                  cache: 'read',
+                  direction: 'input',
+                  modality: 'audio',
+                },
+                price_key: 'cache_audio_read_mtok',
               },
-              price_key: 'cache_audio_read_mtok',
-            },
-            input_tokens: {
-              dimensions: {
-                direction: 'input',
+              input_tokens: {
+                dimensions: {
+                  direction: 'input',
+                },
+                price_key: 'input_mtok',
               },
-              price_key: 'input_mtok',
             },
           },
-        },
-      })
+        })
     ).toThrow(
       'Missing intermediate unit dimensions in family tokens between input_tokens and cache_audio_read_tokens: cache=read, direction=input'
     )
+  })
+
+  it('keeps transitional parseFamilies compatibility', () => {
+    const families = parseFamilies(unitFamiliesData)
+
+    expect(families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
   })
 })
 
 describe('active unit families', () => {
   it('initializes from generated unit data', () => {
-    const active = getActiveFamilies()
-    expect(active.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
-    expect(active.requests?.units.requests?.priceKey).toBe('requests_kcount')
+    const active = getActiveRegistry()
+    expect(active.families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
+    expect(active.families.requests?.units.requests?.priceKey).toBe('requests_kcount')
   })
 
-  it('sets custom parsed families and resets to generated families', () => {
-    const generated = getActiveFamilies()
+  it('sets custom registries and resets to the generated registry', () => {
+    const generated = getActiveRegistry()
+    const custom = new UnitRegistry({
+      widgets: {
+        description: 'Widget counts',
+        per: 1,
+        units: {
+          widgets: {
+            dimensions: {},
+          },
+        },
+      },
+    })
+
+    setUnitFamilies(custom)
+    expect(getActiveRegistry()).toBe(custom)
+    expect(getActiveRegistry().families.widgets?.units.widgets?.priceKey).toBe('widgets')
+
+    setUnitFamilies(null)
+    expect(getActiveRegistry()).toBe(generated)
+    expect(getActiveRegistry().families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
+  })
+
+  it('keeps transitional parsed family activation compatibility', () => {
     const custom = parseFamilies({
       widgets: {
         description: 'Widget counts',
@@ -240,11 +290,9 @@ describe('active unit families', () => {
 
     setUnitFamilies(custom)
     expect(getActiveFamilies()).toBe(custom)
-    expect(getActiveFamilies().widgets?.units.widgets?.priceKey).toBe('widgets')
+    expect(getActiveRegistry().units.get('widgets')?.priceKey).toBe('widgets')
 
     setUnitFamilies(null)
-    expect(getActiveFamilies()).toBe(generated)
-    expect(getActiveFamilies().tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
   })
 
   it('looks up generated families and usage keys', () => {
