@@ -1,0 +1,27 @@
+packages/js/src/units.ts
+  s_e368004426df55::t_f1eaab4d33dd0b 105,112,116-122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "432bad21b50b76e9e1351f7db5ab137209d53654",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_e368004426df55": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "edde3cac-3b50-48a5-b629-aea086310ad2",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
