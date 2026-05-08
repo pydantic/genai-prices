@@ -81,7 +81,7 @@ Add raw unit-family types with usage keys as raw unit keys and `price_key` defau
 
 The JavaScript `UnitRegistry` class is internal to the package and mirrors Python's registry shape. It owns indexed parsed state rather than exposing a loose parsed-family dictionary. It must keep direct indexes for families, usage keys, price keys, all usage keys, all price keys, reported usage keys excluding `requests`, per-family dimension sets for join lookup, and an ancestor usage-key index equivalent to Python's `ancestor_usage_keys`.
 
-Public JavaScript callers still pass plain usage objects. The normalization step returns another plain object rather than a wrapper class. This preserves the existing call surface while allowing `calcPrice()`, decomposition, and extraction to share registry-aware reads internally.
+Public JavaScript callers still pass plain usage objects. Registry-aware reads operate on those objects directly rather than requiring a wrapper class. This preserves the existing call surface while allowing `calcPrice()`, decomposition, and extraction to share registry-aware reads internally.
 
 **`units.ts` parses generated unit family data and manages the active registry.** _(implements "The active JavaScript registry is limited to the current JavaScript unit surface")_
 Implement:
@@ -123,9 +123,11 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number
 
 `normalizeUsage(...)` reads `getActiveRegistry().reportedUsageKeys`, skips the pricing-only `requests` unit, ignores extras, and stores reported values only. `getUsageValue(...)` returns stored values directly, returns `0` for unambiguous missing registered values, and raises when a missing read would require inferring an omitted ancestor or overlap. It does not infer missing values, cache derived values, or store provenance.
 
+`calcPrice(...)` must pass caller usage directly into `getUsageValue(...)` and `computeLeafValues(...)`; it must not first call `normalizeUsage(...)` and silently drop caller-provided keys. `getUsageValue(...)` owns the registry-aware safety checks: after the fast path for a stored requested value, relationship and ambiguity scans skip usage entries whose keys are absent from the active registry. The pricing-only `requests` unit always reads as one request, regardless of any caller-provided `usage.requests` value.
+
 The missing-read check is registry-driven and mirrors Python: a missing read is ambiguous when either a positive reported strict descendant of the requested unit exists, or the requested unit is the join of two positive reported compatible units that are incomparable with each other. A missing descendant of a reported ancestor returns `0` rather than raising because missing more-specific usage is allowed to mean "not reported".
 
-`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `getUsageValue(...)` or `calcPrice(...)` must interpret affected usage.
+`normalizeUsage(...)` must not reject contradictory registered values because extractor output can faithfully report provider data even when that data is internally inconsistent. Contradictions become errors only when `getUsageValue(...)` or `calcPrice(...)` must interpret affected usage. It is not the trust boundary for pricing.
 
 **`decompose.ts` mirrors Python's dimension-driven decomposition.** _(implements "JavaScript validation mirrors Python's Phase 1 split")_
 Implement:
@@ -177,7 +179,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
 1. read the active `UnitRegistry`
 2. validate the current model price's effective registered price-key set
-3. normalize raw usage
+3. keep caller usage as a plain object without lossy normalization
 4. resolve price keys and group by family
 5. compute per-family leaf values with explicit-only missing-usage checks
 6. read `input_tokens` through `getUsageValue(...)` when a selected price uses `TieredPrices`
