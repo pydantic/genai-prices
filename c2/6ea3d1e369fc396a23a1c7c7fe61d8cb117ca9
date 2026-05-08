@@ -1,0 +1,27 @@
+specs/data-driven-unit-registry/phase-3-shared-data-contract/code-spec.md
+  s_61a814ec9e5ca9::t_02992aea681ac5 183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "c26ea3d1e369fc396a23a1c7c7fe61d8cb117ca9",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_61a814ec9e5ca9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "530a2571-16a9-4def-907c-8e6d325d7d3c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
