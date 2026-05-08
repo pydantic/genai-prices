@@ -1,0 +1,19 @@
+specs/data-driven-unit-registry/phase-2-javascript-internal-registry/code-spec.md
+  ai_agent 84,126-127,130,182
+specs/data-driven-unit-registry/phase-2-javascript-internal-registry/spec.md
+  ai_agent 18-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "1a3fee9e891d523909008e5294faef809ddfa009",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
