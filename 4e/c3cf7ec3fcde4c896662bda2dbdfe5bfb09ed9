@@ -1,0 +1,23 @@
+packages/js/src/__tests__/calcPrice.test.ts
+  ai_agent 6,222-261
+packages/js/src/usage.ts
+  ai_agent 24-25,31-34,41-42,79-81
+packages/js/src/__tests__/usage.test.ts
+  ai_agent 120-133
+packages/js/src/engine.ts
+  ai_agent 6,58,69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "4ec3cf7ec3fcde4c896662bda2dbdfe5bfb09ed9",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
