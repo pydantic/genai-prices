@@ -102,15 +102,24 @@ export function setUnitFamilies(families: null | ParsedFamilies): void {
   activeFamilies = families ?? generatedFamilies
 }
 
-function dimensionKey(dimensions: Record<string, string>): string {
+export function dimensionKey(dimensions: Record<string, string>): string {
   return Object.entries(dimensions)
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([key, value]) => `${key}=${value}`)
     .join('\0')
 }
 
-function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
+export function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
   return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
+}
+
+export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {
+  return ancestor.family === descendant.family && isDimensionSubset(ancestor, descendant)
+}
+
+export function isCompatible(left: UnitDef, right: UnitDef): boolean {
+  if (left.family !== right.family) return false
+  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
 }
 
 function combinations<T>(items: T[], size: number): T[][] {
