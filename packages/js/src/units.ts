@@ -1,4 +1,4 @@
-import type { ParsedFamilies, RawFamiliesDict, UnitDef, UnitFamily } from './types'
+import type { RawFamiliesDict, UnitDef, UnitFamily } from './types'
 
 import { unitFamiliesData } from './dataUnits'
 
@@ -6,7 +6,7 @@ export class UnitRegistry {
   allPriceKeys: Set<string>
   allUsageKeys: Set<string>
   ancestorUsageKeysByUsageKey: Map<string, Set<string>>
-  families: ParsedFamilies
+  families: Record<string, UnitFamily>
   reportedUsageKeys: Set<string>
   units: Map<string, UnitDef>
   unitsByPriceKey: Map<string, UnitDef>
@@ -95,16 +95,6 @@ export function getActiveRegistry(): UnitRegistry {
   return activeRegistry
 }
 
-// Transitional compatibility wrapper for modules not yet migrated to UnitRegistry.
-export function parseFamilies(raw: RawFamiliesDict): ParsedFamilies {
-  return new UnitRegistry(raw).families
-}
-
-// Transitional compatibility wrapper for modules not yet migrated to UnitRegistry.
-export function getActiveFamilies(): ParsedFamilies {
-  return activeRegistry.families
-}
-
 export function getFamily(familyId: string): UnitFamily {
   const family = activeRegistry.families[familyId]
   if (!family) {
@@ -119,10 +109,6 @@ export function getAllPriceKeys(): Set<string> {
 
 export function getAllUsageKeys(): Set<string> {
   return new Set(activeRegistry.allUsageKeys)
-}
-
-export function getReportedUsageKeys(): Set<string> {
-  return new Set(activeRegistry.reportedUsageKeys)
 }
 
 export function getUnit(usageKey: string): UnitDef {
@@ -141,13 +127,11 @@ export function getUsageKeyForPriceKey(priceKey: string): string {
   return getUnitForPriceKey(priceKey).usageKey
 }
 
-export function setUnitFamilies(registry: null | ParsedFamilies | UnitRegistry): void {
+export function setUnitFamilies(registry: null | UnitRegistry): void {
   if (registry === null) {
     activeRegistry = generatedRegistry
-  } else if (registry instanceof UnitRegistry) {
-    activeRegistry = registry
   } else {
-    activeRegistry = registryForParsedFamilies(registry)
+    activeRegistry = registry
   }
 }
 
@@ -181,7 +165,7 @@ function combinations<T>(items: T[], size: number): T[][] {
   return [...combinations(rest, size - 1).map((combo) => [first, ...combo]), ...combinations(rest, size)]
 }
 
-function validateIntervalClosure(families: ParsedFamilies): void {
+function validateIntervalClosure(families: Record<string, UnitFamily>): void {
   for (const family of Object.values(families)) {
     for (const ancestor of Object.values(family.units)) {
       for (const descendant of Object.values(family.units)) {
@@ -208,29 +192,4 @@ function validateIntervalClosure(families: ParsedFamilies): void {
       }
     }
   }
-}
-
-function registryForParsedFamilies(families: ParsedFamilies): UnitRegistry {
-  return Object.assign(Object.create(UnitRegistry.prototype) as UnitRegistry, {
-    allPriceKeys: new Set(Object.values(families).flatMap((family) => Object.values(family.units).map((unit) => unit.priceKey))),
-    allUsageKeys: new Set(Object.values(families).flatMap((family) => Object.keys(family.units))),
-    ancestorUsageKeysByUsageKey: new Map(
-      Object.values(families)
-        .flatMap((family) => Object.values(family.units))
-        .map((unit) => [
-          unit.usageKey,
-          new Set(
-            Object.values(unit.family.units)
-              .filter((maybeAncestor) => maybeAncestor !== unit && isDimensionSubset(maybeAncestor, unit))
-              .map((maybeAncestor) => maybeAncestor.usageKey)
-          ),
-        ])
-    ),
-    families,
-    reportedUsageKeys: new Set(
-      Object.values(families).flatMap((family) => Object.keys(family.units).filter((usageKey) => usageKey !== 'requests'))
-    ),
-    units: new Map(Object.values(families).flatMap((family) => Object.values(family.units).map((unit) => [unit.usageKey, unit]))),
-    unitsByPriceKey: new Map(Object.values(families).flatMap((family) => Object.values(family.units).map((unit) => [unit.priceKey, unit]))),
-  })
 }

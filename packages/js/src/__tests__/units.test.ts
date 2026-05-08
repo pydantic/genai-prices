@@ -4,16 +4,13 @@ import type { RawFamiliesDict } from '../types'
 
 import { unitFamiliesData } from '../dataUnits'
 import {
-  getActiveFamilies,
   getActiveRegistry,
   getAllPriceKeys,
   getAllUsageKeys,
   getFamily,
-  getReportedUsageKeys,
   getUnit,
   getUnitForPriceKey,
   getUsageKeyForPriceKey,
-  parseFamilies,
   setUnitFamilies,
   UnitRegistry,
 } from '../units'
@@ -237,15 +234,9 @@ describe('UnitRegistry', () => {
       'Missing intermediate unit dimensions in family tokens between input_tokens and cache_audio_read_tokens: cache=read, direction=input'
     )
   })
-
-  it('keeps transitional parseFamilies compatibility', () => {
-    const families = parseFamilies(unitFamiliesData)
-
-    expect(families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
-  })
 })
 
-describe('active unit families', () => {
+describe('active unit registry', () => {
   it('initializes from generated unit data', () => {
     const active = getActiveRegistry()
     expect(active.families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
@@ -273,26 +264,6 @@ describe('active unit families', () => {
     setUnitFamilies(null)
     expect(getActiveRegistry()).toBe(generated)
     expect(getActiveRegistry().families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
-  })
-
-  it('keeps transitional parsed family activation compatibility', () => {
-    const custom = parseFamilies({
-      widgets: {
-        description: 'Widget counts',
-        per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
-      },
-    })
-
-    setUnitFamilies(custom)
-    expect(getActiveFamilies()).toBe(custom)
-    expect(getActiveRegistry().units.get('widgets')?.priceKey).toBe('widgets')
-
-    setUnitFamilies(null)
   })
 
   it('looks up generated families and usage keys', () => {
@@ -356,7 +327,7 @@ describe('active unit families', () => {
   it('returns externally reported usage keys without pricing-only requests', () => {
     setUnitFamilies(null)
     expect(getAllUsageKeys()).toContain('requests')
-    expect(getReportedUsageKeys()).toEqual(
+    expect(getActiveRegistry().reportedUsageKeys).toEqual(
       new Set([
         'cache_audio_read_tokens',
         'cache_read_tokens',
@@ -367,6 +338,6 @@ describe('active unit families', () => {
         'output_tokens',
       ])
     )
-    expect(getReportedUsageKeys()).not.toContain('requests')
+    expect(getActiveRegistry().reportedUsageKeys).not.toContain('requests')
   })
 })

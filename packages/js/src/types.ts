@@ -86,8 +86,6 @@ export interface UnitFamily {
   unitsByDimension: Map<string, UnitDef>
 }
 
-export type ParsedFamilies = Record<string, UnitFamily>
-
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
