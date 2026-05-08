@@ -1,0 +1,30 @@
+specs/data-driven-unit-registry/phase-2-javascript-internal-registry/code-spec.md
+  s_e368004426df55::t_329012524b8d93 167
+  s_e368004426df55::t_8b6d470be03e1b 132
+specs/data-driven-unit-registry/phase-2-javascript-internal-registry/spec.md
+  s_e368004426df55::t_51a2df08b5aba7 24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "e4c643aa39f2d89c8c918d7b40457d09a2d533d4",
+  "prompts": {},
+  "humans": {
+    "h_bc896295f46a8b": {
+      "author": "Alex Hall"
+    },
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_e368004426df55": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "edde3cac-3b50-48a5-b629-aea086310ad2",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
