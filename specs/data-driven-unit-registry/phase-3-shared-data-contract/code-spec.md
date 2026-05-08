@@ -220,18 +220,35 @@ JavaScript `api.ts` handles runtime updates in this order:
 
 If wrapper parsing or structural registry validation fails, both active registry and active provider data remain unchanged. If provider parsing or provider activation fails after the candidate registry is installed, restore the previous active registry and keep the previous provider data active. Runtime provider activation does not perform model-price coverage validation in Phase 3; standard pricing validates the selected model price on use. Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape.
 
-`updatePrices()` passes both provider-data and unit-family activation callbacks through the storage factory:
+`updatePrices()` keeps a single public payload setter — `setProviderData` becomes wrapper-aware so existing user code that forwards the auto-update payload directly to `setProviderData(await response.json())` keeps working when the URL flips shape:
 
 ```typescript
+export interface WrappedProviderData {
+  unit_families: RawFamiliesDict
+  providers: Provider[]
+}
+
+export type ProviderDataValue = null | Provider[] | WrappedProviderData
+export type ProviderDataPayload = ProviderDataValue | Promise<ProviderDataValue>
+
 export interface StorageFactoryParams {
   onCalc: (cb: () => void) => void
   remoteDataUrl: string
   setProviderData: (data: ProviderDataPayload) => void
-  setUnitFamilies: (families: ParsedFamilies | null) => void
 }
 ```
 
-Checked-in JavaScript browser and node examples that cache provider data must cache and restore the wrapped payload shape, not a bare provider array, and parse families before calling both `setUnitFamilies(parsedFamilies)` and `setProviderData(...)`.
+Discrimination inside `setProviderData`:
+
+- `null` → no-op; previous state unchanged.
+- `Array.isArray(payload)` → legacy bare-list path; install providers, leave the active unit registry as-is.
+- Object containing `providers` and `unit_families` → wrapped path; build `new UnitRegistry(unit_families)` (this runs structural plus public-key-name-safety validation), capture the previously active registry, install the candidate via the internal state setter, install providers, restore the previous registry if provider parsing or activation fails.
+- Promise → chain the same discrimination; restore on failure.
+- Anything else → throw.
+
+Rename the existing internal state setter `units.ts::setUnitFamilies(UnitRegistry | null)` to `setActiveRegistry(...)` so its name does not suggest a public API. There is no public `setUnitFamilies`.
+
+Checked-in JavaScript browser and node examples need no behavior changes. They already forward parsed JSON to `setProviderData`, and the wrapper-aware setter handles bare-array (stale cache) and wrapped (fresh fetch) shapes transparently. Cache files evolve to the wrapped shape on the next refresh write. Pre-upgrade users were already on bundled units, so a stale bare-array cache leaves them on bundled units, which matches their pre-upgrade behavior.
 
 Generated Python and JavaScript package data remain pure data. They must not contain validation markers, trust flags, fingerprints, marker constructor arguments, decomposition plans, or cached coefficients. Runtime-private validation caches start in Phase 5.
 
