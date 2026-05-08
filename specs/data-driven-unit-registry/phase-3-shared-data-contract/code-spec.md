@@ -187,6 +187,8 @@ In `prices/src/prices/prices_types.py`, build-time `ModelPrice` no longer uses h
 **Python base `ModelPrice` gains dynamic price-key storage.** _(implements "Python base `ModelPrice` accepts registered non-hardcoded price keys")_
 Add `_extra_prices: dict[str, Decimal | TieredPrices | None]` to base `ModelPrice`. Its constructor accepts legacy fields plus candidate non-hardcoded price keys, stores candidates in `_extra_prices`, and defers acceptance/rejection until validation receives a registry.
 
+Dynamic price-key storage must work for provider data parsed through the runtime Pydantic boundary, not only for direct Python construction. `providers_schema.validate_json(...)` must preserve non-hardcoded model price keys from provider payloads into `ModelPrice._extra_prices`, with values validated/coerced the same way as legacy model price values. A post-decoration `__init__(**extras)` override is insufficient unless the Pydantic dataclass parsing path also routes unknown price-key properties into `_extra_prices`.
+
 `__getattr__`, supported assignment, deletion, `is_free()`, string rendering, and effective price-key iteration must include both legacy fields and `_extra_prices`. Any `_extra_prices` key that is not registered in the validation registry is invalid. Declared subclass-only custom fields remain custom override state unless their names are also registered price keys.
 
 **Python pricing validates dynamic price data on use.** _(implements "Python base `ModelPrice` accepts registered non-hardcoded price keys", "Runtime validation caching still waits for Phase 5")_
