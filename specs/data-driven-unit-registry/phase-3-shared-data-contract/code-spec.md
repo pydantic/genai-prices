@@ -198,11 +198,11 @@ Dynamic price-key storage must work for provider data parsed through the runtime
 Add a private runtime helper in `units.py` for installing a structurally valid registry as the active global registry:
 
 ```python
-def _set_registry(registry: UnitRegistry) -> None:
-    """Replace the active global unit registry after trusted payload parsing."""
+def _set_registry(registry: UnitRegistry | None) -> None:
+    """Replace the active global unit registry, or restore bundled units when passed None."""
 ```
 
-This helper is private. Phase 3 must change `_get_registry()` from a purely cached bundled-registry constructor into an active-registry accessor: it returns the installed registry when `_set_registry(...)` has replaced the global registry, otherwise it returns the cached bundled registry built from generated `data_units.py`. Replacement stores the new registry as active global state and clears any Phase 5 registry-keyed caches when those exist. It must not simply clear `_get_registry()` and fall back to bundled unit data on the next lookup.
+This helper is private. Phase 3 must change `_get_registry()` from a purely cached bundled-registry constructor into an active-registry accessor: it returns the installed registry when `_set_registry(...)` has replaced the global registry, otherwise it returns the cached bundled registry built from generated `data_units.py`. Replacement stores the new registry as active global state and clears any Phase 5 registry-keyed caches when those exist. Passing `None` resets the active registry back to the bundled registry. It must not simply clear `_get_registry()` and fall back to bundled unit data on the next lookup.
 
 **Runtime update paths install unit families globally.** _(implements "`data.json` and `data_slim.json` become wrapped top-level objects")_
 Python `UpdatePrices.fetch()` parses `unit_families`, constructs `UnitRegistry(raw['unit_families'])`, saves the previously active registry, installs the candidate registry as the active global registry, parses `providers`, and returns `DataSnapshot(providers=...)`. If provider parsing fails after the candidate registry is installed, it restores the previous registry before surfacing the error:
@@ -212,6 +212,8 @@ class UpdatePrices:
     def fetch(self) -> DataSnapshot | None:
         """Fetch wrapped data, install unit_families globally, and return a provider snapshot."""
 ```
+
+Python `UpdatePrices.stop()` keeps the current provider-snapshot behavior: stopping the updater clears the auto-updated provider snapshot and falls back to bundled provider data. Phase 3 must make the unit lifecycle match that provider lifecycle by calling `_set_registry(None)` when `stop()` clears the snapshot, so bundled providers are not left running against previously fetched unit families.
 
 JavaScript `api.ts` handles runtime updates in this order:
 
