@@ -4,7 +4,7 @@ import type { Provider } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
-import { getUnit } from '../units'
+import { getActiveRegistry, getUnit } from '../units'
 
 describe('provider activation', () => {
   it('validates embedded provider data during startup and keeps it active', () => {
@@ -59,6 +59,7 @@ describe('provider activation', () => {
   })
 
   it('preserves provider-array update compatibility and the generated unit registry', async () => {
+    const beforeRegistry = getActiveRegistry()
     const beforeInputUnit = getUnit('input_tokens')
     const arrayProvider = providerFixture('array-provider')
 
@@ -68,6 +69,7 @@ describe('provider activation', () => {
 
     await expect(waitForUpdate()).resolves.toEqual([arrayProvider])
     expect(findProvider({ providerId: 'array-provider' })?.id).toBe('array-provider')
+    expect(getActiveRegistry()).toBe(beforeRegistry)
     expect(getUnit('input_tokens')).toBe(beforeInputUnit)
     expect(getUnit('requests').priceKey).toBe('requests_kcount')
 

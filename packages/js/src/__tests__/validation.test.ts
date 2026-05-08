@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider, UsageExtractorMapping } from '../types'
 
 import { data } from '../data'
+import { UnitRegistry } from '../units'
 import {
   validateAncestorCoverage,
   validateExtractorDestinations,
@@ -22,6 +23,24 @@ describe('validatePriceKeys', () => {
     expect(() => {
       validatePriceKeys(['inptu_mtok'])
     }).toThrow('Unknown price key: inptu_mtok')
+  })
+
+  it('accepts price keys from an explicit registry argument', () => {
+    const registry = new UnitRegistry({
+      widgets: {
+        description: 'Widget counts',
+        per: 1,
+        units: {
+          widgets: {
+            dimensions: {},
+          },
+        },
+      },
+    })
+
+    expect(() => {
+      validatePriceKeys(['widgets'], registry)
+    }).not.toThrow()
   })
 })
 
@@ -111,6 +130,27 @@ describe('validateExtractorDestinations', () => {
     expect(() => {
       validateExtractorDestinations([providerWithDestination('requests')])
     }).toThrow('Invalid extractor destination for test-provider/default mapping 0: requests')
+  })
+
+  it('validates extractor destinations against an explicit registry argument', () => {
+    const registry = new UnitRegistry({
+      widgets: {
+        description: 'Widget counts',
+        per: 1,
+        units: {
+          widgets: {
+            dimensions: {},
+          },
+        },
+      },
+    })
+
+    expect(() => {
+      validateExtractorDestinations([providerWithDestination('widgets')], registry)
+    }).not.toThrow()
+    expect(() => {
+      validateExtractorDestinations([providerWithDestination('input_tokens')], registry)
+    }).toThrow('Invalid extractor destination for test-provider/default mapping 0: input_tokens')
   })
 })
 
