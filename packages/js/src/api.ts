@@ -37,11 +37,6 @@ function setProviderData(data: ProviderDataPayload) {
         providerDataPromise = Promise.resolve(providerData)
         throw error
       })
-    // Attach a sink so callers are not required to observe failed background updates immediately.
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    providerDataPromise.catch(() => {
-      // handled by callers through waitForUpdate()
-    })
   } else {
     validateExtractorDestinations(data)
     providerDataPromise = Promise.resolve(data)
