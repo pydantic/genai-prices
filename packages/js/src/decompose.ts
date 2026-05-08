@@ -1,12 +1,8 @@
 import type { UnitDef, UnitFamily } from './types'
 import type { NormalizedUsage } from './usage'
 
+import { isDescendantOrSelf } from './units'
 import { getUsageValue } from './usage'
-
-export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {
-  if (ancestor.family !== descendant.family) return false
-  return Object.entries(ancestor.dimensions).every(([key, value]) => descendant.dimensions[key] === value)
-}
 
 export function computeLeafValues(pricedUsageKeys: Set<string>, usage: NormalizedUsage, family: UnitFamily): Record<string, number> {
   const pricedUnits = [...pricedUsageKeys]

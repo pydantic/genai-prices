@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { computeLeafValues, isDescendantOrSelf } from '../decompose'
-import { getFamily, getUnit } from '../units'
+import { computeLeafValues } from '../decompose'
+import { getFamily, getUnit, isDescendantOrSelf } from '../units'
 import { normalizeUsage } from '../usage'
 
 describe('isDescendantOrSelf', () => {
