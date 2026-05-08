@@ -1,0 +1,9 @@
+specs/data-driven-unit-registry/phase-3-shared-data-contract/code-spec.md
+  ai_agent 149-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "76f6dc67d953769dbd5933efc2972eb06fa58ba8",
+  "prompts": {}
+}
