@@ -146,6 +146,8 @@ export const unitFamiliesData: RawFamiliesDict = { ... }
 
 Generated outputs contain raw unit and price data only. They must not contain validation markers, trust flags, fingerprints, or decomposition caches.
 
+For reviewable green commits, package-data readers may be made transition-compatible before the wrapped JSON files are regenerated: they can accept the current bare provider-list payload with a build-only `units.yml` fallback, and the new wrapped payload without that fallback. Once `data.json` is wrapped, remove the temporary bare-list path and any package-generation reload of `units.yml` in the follow-up cleanup.
+
 **Build/export validation becomes the publication trust boundary.** _(implements "Provider prices and extractor destinations validate against the same registry payload")_
 Expose and use a reusable helper:
 
