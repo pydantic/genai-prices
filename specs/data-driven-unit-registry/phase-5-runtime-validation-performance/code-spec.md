@@ -48,12 +48,12 @@ Add helpers equivalent to:
 
 ```typescript
 export function getRegistryValidationId(): object
-export function hasModelPriceValidationCache(modelPrice: ModelPrice, families: ParsedFamilies): boolean
-export function markModelPriceValidated(modelPrice: ModelPrice, families: ParsedFamilies): void
+export function hasModelPriceValidationCache(modelPrice: ModelPrice, registry: UnitRegistry): boolean
+export function markModelPriceValidated(modelPrice: ModelPrice, registry: UnitRegistry): void
 export function clearModelPriceValidationCache(): void
 ```
 
-`setUnitFamilies(...)` creates a fresh opaque validation id for each active parsed registry and clears module-private validation caches. Use `WeakMap` state keyed by model price object, exact registry validation id, and effective price-key fingerprint. Because model prices are plain objects, every cache lookup recomputes and compares the fingerprint.
+`setUnitFamilies(...)` creates a fresh opaque validation id for each active `UnitRegistry` and clears module-private validation caches. Use `WeakMap` state keyed by model price object, exact registry validation id, and effective price-key fingerprint. Because model prices are plain objects, every cache lookup recomputes and compares the fingerprint.
 
 **Decomposition caches require benchmark evidence and exact keys.** _(implements "Decomposition caches are benchmark-gated")_
 If benchmarks justify caching decomposition coefficients, key caches by exact active registry validation id plus the effective priced usage-key set. Do not serialize caches. Do not add caches that change error timing or user-facing decomposition behavior.
