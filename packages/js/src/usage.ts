@@ -21,19 +21,25 @@ export function normalizeUsage(obj: unknown): NormalizedUsage {
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number {
   const registry = getActiveRegistry()
   const requestedUnit = unitForUsageKey(registry, usageKey)
+  if (requestedUnit.familyId === 'requests') return 1
+
   const storedValue = usage[usageKey]
   if (storedValue !== undefined) return storedValue
 
   for (const [reportedUsageKey, reportedValue] of Object.entries(usage)) {
     if ((reportedValue ?? 0) <= 0) continue
-    if (reportedUsageKey !== usageKey && registry.ancestorUsageKeys(reportedUsageKey).has(usageKey)) {
+    const reportedUnit = unitForOptionalUsageKey(registry, reportedUsageKey)
+    if (!reportedUnit) continue
+
+    if (reportedUsageKey !== usageKey && registry.ancestorUsageKeys(reportedUnit.usageKey).has(usageKey)) {
       throw new Error(`Missing usage value for ${usageKey} with positive reported descendant ${reportedUsageKey}`)
     }
   }
 
   const positiveReportedUnits = Object.entries(usage)
     .filter(([, value]) => (value ?? 0) > 0)
-    .map(([reportedUsageKey]) => unitForUsageKey(registry, reportedUsageKey))
+    .map(([reportedUsageKey]) => unitForOptionalUsageKey(registry, reportedUsageKey))
+    .filter((unit): unit is UnitDef => unit !== undefined)
 
   for (let leftIndex = 0; leftIndex < positiveReportedUnits.length; leftIndex++) {
     for (let rightIndex = leftIndex + 1; rightIndex < positiveReportedUnits.length; rightIndex++) {
@@ -69,4 +75,8 @@ function unitForUsageKey(registry: UnitRegistry, usageKey: string): UnitDef {
     throw new Error(`Unknown unit usage key: ${usageKey}`)
   }
   return unit
+}
+
+function unitForOptionalUsageKey(registry: UnitRegistry, usageKey: string): undefined | UnitDef {
+  return registry.units.get(usageKey)
 }

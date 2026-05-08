@@ -117,6 +117,20 @@ describe('getUsageValue', () => {
     expect(() => getUsageValue({}, 'imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
   })
 
+  it('ignores unknown positive extras when checking missing registered values', () => {
+    const usage = {
+      imaginary_tokens: 999,
+      output_tokens: 10,
+    }
+
+    expect(getUsageValue(usage, 'input_tokens')).toBe(0)
+  })
+
+  it('returns one for pricing-only requests regardless of caller values', () => {
+    expect(getUsageValue({}, 'requests')).toBe(1)
+    expect(getUsageValue({ requests: 500 }, 'requests')).toBe(1)
+  })
+
   it('raises for missing ancestors with positive reported descendants', () => {
     const usage = normalizeUsage({
       input_audio_tokens: 100,

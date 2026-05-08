@@ -3,7 +3,7 @@ import type { UnitFamily } from './types'
 import { computeLeafValues } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
 import { getUnitForPriceKey } from './units'
-import { getUsageValue, normalizeUsage } from './usage'
+import { getUsageValue } from './usage'
 import { validateModelPrice } from './validation'
 
 /**
@@ -54,9 +54,8 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   let outputPrice = 0
   let totalOnlyPrice = 0
 
-  const normalizedUsage = normalizeUsage(usage)
   const hasTieredPrice = effectivePriceKeys.some((priceKey) => isTieredPrice(modelPrice[priceKey]))
-  const totalInputTokens = hasTieredPrice ? getUsageValue(normalizedUsage, 'input_tokens') : 0
+  const totalInputTokens = hasTieredPrice ? getUsageValue(usage, 'input_tokens') : 0
   const groups = new Map<string, { family: UnitFamily; usageKeys: Set<string> }>()
 
   for (const priceKey of effectivePriceKeys) {
@@ -67,7 +66,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   }
 
   for (const { family, usageKeys } of groups.values()) {
-    const leafValues = family.id === 'requests' ? { requests: 1 } : computeLeafValues(usageKeys, normalizedUsage, family)
+    const leafValues = family.id === 'requests' ? { requests: 1 } : computeLeafValues(usageKeys, usage, family)
     for (const [usageKey, count] of Object.entries(leafValues)) {
       const unit = family.units[usageKey]
       if (!unit) continue
