@@ -55,9 +55,9 @@ describe('Core Price Calculation Function', () => {
       const inputPrice = uncachedInputPrice + cacheWritePrice + cacheReadPrice
       const outputPrice = (500 * 2.0) / 1_000_000
       const totalPrice = inputPrice + outputPrice
-      expect(result.input_price).toBeCloseTo(inputPrice)
-      expect(result.output_price).toBeCloseTo(outputPrice)
-      expect(result.total_price).toBeCloseTo(totalPrice)
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBeCloseTo(outputPrice, 12)
+      expect(result.total_price).toBeCloseTo(totalPrice, 12)
     })
 
     it('should handle audio tokens correctly', () => {
@@ -123,9 +123,9 @@ describe('Core Price Calculation Function', () => {
       const result = calcPrice(usage, modelPrice)
 
       const inputPrice = mtok(1.0, 400) + mtok(2.0, 400) + mtok(3.0, 200)
-      expect(result.input_price).toBeCloseTo(inputPrice)
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
       expect(result.output_price).toBe(0)
-      expect(result.total_price).toBeCloseTo(inputPrice)
+      expect(result.total_price).toBeCloseTo(inputPrice, 12)
     })
 
     it('should use provided input tokens for output tier thresholds', () => {
@@ -194,9 +194,9 @@ describe('Core Price Calculation Function', () => {
 
       const inputPrice = mtok(1.0, 400) + mtok(2.0, 300) + mtok(3.0, 200) + mtok(2.0, 100)
       const outputPrice = mtok(10.0, 50) + mtok(20.0, 20)
-      expect(result.input_price).toBeCloseTo(inputPrice)
-      expect(result.output_price).toBeCloseTo(outputPrice)
-      expect(result.total_price).toBeCloseTo(inputPrice + outputPrice + 0.0005)
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBeCloseTo(outputPrice, 12)
+      expect(result.total_price).toBeCloseTo(inputPrice + outputPrice + 0.0005, 12)
     })
 
     it('should handle request-only pricing', () => {
