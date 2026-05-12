@@ -131,6 +131,28 @@ describe('getUsageValue', () => {
     expect(getUsageValue({ requests: 500 }, 'requests')).toBe(1)
   })
 
+  it('returns one for pricing-only requests when the active registry has no requests unit', () => {
+    const registry = new UnitRegistry({
+      tokens: {
+        description: 'Token counts',
+        per: 1_000_000,
+        units: {
+          input_tokens: {
+            dimensions: { direction: 'input' },
+            price_key: 'input_mtok',
+          },
+        },
+      },
+    })
+
+    try {
+      setActiveRegistry(registry)
+      expect(getUsageValue({}, 'requests')).toBe(1)
+    } finally {
+      setActiveRegistry(null)
+    }
+  })
+
   it('raises for missing ancestors with positive reported descendants', () => {
     const usage = normalizeUsage({
       input_audio_tokens: 100,

@@ -19,9 +19,9 @@ export function normalizeUsage(obj: unknown): NormalizedUsage {
 }
 
 export function getUsageValue(usage: NormalizedUsage, usageKey: string): number {
+  if (usageKey === 'requests') return 1
   const registry = getActiveRegistry()
   const requestedUnit = unitForUsageKey(registry, usageKey)
-  if (usageKey === 'requests') return 1
 
   const storedValue = usage[usageKey]
   if (storedValue !== undefined) return storedValue
