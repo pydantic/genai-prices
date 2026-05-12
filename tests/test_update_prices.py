@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import threading
 from decimal import Decimal
 
 import httpx
@@ -113,6 +114,56 @@ def test_update_prices_stop_restores_bundled_registry(monkeypatch: pytest.Monkey
         assert _get_registry() is bundled
         assert data_snapshot._custom_snapshot is None
     finally:
+        _set_registry(None)
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_registry(None)
+    bundled = _get_registry()
+    fetch_started = threading.Event()
+    allow_fetch_return = threading.Event()
+    stop_errors: list[BaseException] = []
+
+    class Response:
+        content = _wrapped_payload()
+
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(url: str, timeout: httpx.Timeout) -> Response:
+        assert url == 'https://example.test/prices.json'
+        assert timeout is not None
+        fetch_started.set()
+        assert allow_fetch_return.wait(timeout=5)
+        return Response()
+
+    def stop_update_prices(update_prices: UpdatePrices) -> None:
+        try:
+            update_prices.stop()
+        except BaseException as exc:
+            stop_errors.append(exc)
+
+    monkeypatch.setattr(httpx, 'get', fake_get)
+    update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=3600)
+    update_prices.start()
+    try:
+        assert fetch_started.wait(timeout=5)
+
+        stop_thread = threading.Thread(target=stop_update_prices, args=(update_prices,))
+        stop_thread.start()
+        assert update_prices._stop_event.wait(timeout=5)
+        allow_fetch_return.set()
+        stop_thread.join(timeout=5)
+
+        assert not stop_thread.is_alive()
+        if stop_errors:
+            raise stop_errors[0]
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        allow_fetch_return.set()
+        update_prices.stop()
         _set_registry(None)
         data_snapshot.set_custom_snapshot(None)
 

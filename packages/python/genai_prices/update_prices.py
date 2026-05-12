@@ -112,14 +112,14 @@ class UpdatePrices:
         global _global_update_prices
 
         _global_update_prices = None
-        data_snapshot.set_custom_snapshot(None)
-        from .units import _set_registry  # pyright: ignore[reportPrivateUsage]
-
-        _set_registry(None)
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
+        data_snapshot.set_custom_snapshot(None)
+        from .units import _set_registry  # pyright: ignore[reportPrivateUsage]
+
+        _set_registry(None)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
