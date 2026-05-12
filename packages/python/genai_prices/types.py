@@ -683,6 +683,10 @@ class CalcPrice(TypedDict):
 class ModelPrice:
     """Set of prices for using a model"""
 
+    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
+        default_factory=dict, repr=False, compare=False
+    )
+
     input_mtok: Decimal | TieredPrices | None = None
     """price in USD per million uncached text input/prompt token"""
 
@@ -703,6 +707,26 @@ class ModelPrice:
 
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
+
+    @pydantic.model_validator(mode='before')
+    @classmethod
+    def _store_unknown_price_keys(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
+
+        raw_data = cast(dict[str, Any], data)
+        declared_fields = _model_price_declared_fields_for(cls)
+        extra_prices: dict[str, Any] = {key: value for key, value in raw_data.items() if key not in declared_fields}
+        if not extra_prices:
+            return raw_data
+
+        model_price_data = dict(raw_data)
+        stored_extra_prices = dict(cast(dict[str, Any], model_price_data.get('_extra_prices') or {}))
+        stored_extra_prices.update(extra_prices)
+        model_price_data['_extra_prices'] = stored_extra_prices
+        for key in extra_prices:
+            model_price_data.pop(key)
+        return model_price_data
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
@@ -744,6 +768,8 @@ class ModelPrice:
     def __str__(self) -> str:
         parts: list[str] = []
         for field in dataclasses.fields(self):
+            if field.name == '_extra_prices':
+                continue
             value = getattr(self, field.name)
             if value is not None:
                 if field.name == 'requests_kcount':
@@ -758,19 +784,68 @@ class ModelPrice:
         return ', '.join(parts)
 
     def is_free(self) -> bool:
-        return all(_price_value_is_free(getattr(self, field.name)) for field in dataclasses.fields(self))
+        return all(
+            _price_value_is_free(getattr(self, field.name))
+            for field in dataclasses.fields(self)
+            if field.name != '_extra_prices'
+        )
 
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
-        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+        extra_prices = self.__dict__.get('_extra_prices', {})
+        if name in extra_prices:
+            return extra_prices[name]
 
-        try:
-            _get_registry().unit_for_price_key(name)
-        except KeyError:
-            pass
-        else:
+        if _is_registered_price_key(name):
             return None
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in _model_price_declared_fields_for(type(self)) or not _is_registered_price_key(name):
+            object.__setattr__(self, name, value)
+            return
+
+        self.__dict__.setdefault('_extra_prices', {})[name] = value
+
+    def __delattr__(self, name: str) -> None:
+        extra_prices = self.__dict__.get('_extra_prices', {})
+        if name in extra_prices:
+            del extra_prices[name]
+            return
+        if name not in _model_price_declared_fields_for(type(self)) and _is_registered_price_key(name):
+            raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+        object.__delattr__(self, name)
+
+
+_model_price_dataclass_init = ModelPrice.__init__
+
+
+def _model_price_init(self: ModelPrice, **kwargs: Any) -> None:
+    declared_fields = _model_price_declared_fields_for(ModelPrice)
+    extra_prices = dict(cast(dict[str, Decimal | TieredPrices | None], kwargs.pop('_extra_prices', {}) or {}))
+    declared_kwargs = {key: kwargs.pop(key) for key in tuple(kwargs) if key in declared_fields}
+    extra_prices.update(kwargs)
+
+    _model_price_dataclass_init(self, **declared_kwargs)
+    object.__setattr__(self, '_extra_prices', extra_prices)
+
+
+ModelPrice.__init__ = _model_price_init  # type: ignore[method-assign]
+
+
+def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:
+    return frozenset(field.name for field in dataclasses.fields(model_price_type))
+
+
+def _is_registered_price_key(name: str) -> bool:
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        _get_registry().unit_for_price_key(name)
+    except KeyError:
+        return False
+    else:
+        return True
 
 
 def calc_mtok_price(

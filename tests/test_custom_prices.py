@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal
@@ -192,3 +193,76 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     assert price.input_price == Decimal('1')
     assert price.output_price == Decimal('0')
     assert price.total_price == Decimal('7')
+
+
+def test_base_model_price_stores_dynamic_price_kwargs() -> None:
+    price = types.ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+    )
+
+    assert price.input_mtok == Decimal('1')
+    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.cache_image_read_mtok == Decimal('0.5')
+
+
+def test_provider_parsing_preserves_dynamic_model_price_keys() -> None:
+    providers = types.providers_schema.validate_json(
+        json.dumps(
+            [
+                {
+                    'id': 'testing',
+                    'name': 'Testing',
+                    'api_pattern': 'testing',
+                    'models': [
+                        {
+                            'id': 'model',
+                            'match': {'equals': 'model'},
+                            'prices': {
+                                'input_mtok': 1,
+                                'cache_image_read_mtok': 0.5,
+                            },
+                        }
+                    ],
+                }
+            ]
+        )
+    )
+
+    price = providers[0].models[0].prices
+    assert isinstance(price, types.ModelPrice)
+    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.cache_image_read_mtok == Decimal('0.5')
+
+
+def test_dynamic_model_price_assignment_and_deletion() -> None:
+    price = types.ModelPrice()
+
+    price.cache_image_read_mtok = Decimal('0.5')
+    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.cache_image_read_mtok == Decimal('0.5')
+
+    del price.cache_image_read_mtok
+    assert price._extra_prices == {}
+    assert price.cache_image_read_mtok is None
+
+
+def test_custom_model_price_constructor_still_accepts_declared_custom_fields() -> None:
+    price = CustomModelPrice(
+        input_mtok=Decimal('1'),
+        output_mtok=Decimal('2'),
+        sausage_price=Decimal('3'),
+    )
+
+    assert price.input_mtok == Decimal('1')
+    assert price.output_mtok == Decimal('2')
+    assert price.sausage_price == Decimal('3')
+
+
+def test_custom_model_price_constructor_defers_undeclared_dynamic_keys_to_phase_4() -> None:
+    with pytest.raises(TypeError, match='cache_image_read_mtok'):
+        CustomModelPrice(
+            input_mtok=Decimal('1'),
+            cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+            sausage_price=Decimal('3'),
+        )

@@ -162,7 +162,11 @@ def _collect_model_price_keys(model_price: object) -> set[str]:
         return declared_keys | extra_keys
 
     if dataclasses.is_dataclass(model_price):
-        return {field.name for field in dataclasses.fields(model_price) if getattr(model_price, field.name) is not None}
+        return {
+            field.name
+            for field in dataclasses.fields(model_price)
+            if field.name != '_extra_prices' and getattr(model_price, field.name) is not None
+        }
 
     raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')
 
