@@ -2556,6 +2556,46 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        id: 'deepseek-v4-flash',
+        name: 'DeepSeek V4 Flash',
+        description:
+          'DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              starts_with: 'deepseek-v4-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.0028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        description:
+          'DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              starts_with: 'deepseek-v4-pro',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount that is not reflected here.',
+        prices: {
+          input_mtok: 1.74,
+          cache_read_mtok: 0.0145,
+          output_mtok: 3.48,
+        },
+      },
     ],
   },
   {
@@ -18658,6 +18698,31 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.05,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4.3',
+        name: 'Grok 4.3',
+        description:
+          'Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling, and instruction following capabilities. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4.3',
+            },
+            {
+              equals: 'grok-4.3-latest',
+            },
+            {
+              equals: 'grok-latest',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.2,
+          output_mtok: 2.5,
         },
       },
       {
