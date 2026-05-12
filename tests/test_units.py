@@ -568,6 +568,15 @@ def test_model_price_getattr_does_not_change_string_rendering() -> None:
     assert str(ModelPrice(input_mtok=Decimal('1'))) == '$1/input MTok'
 
 
+def test_model_price_str_includes_dynamic_extras() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+    )
+
+    assert str(price) == '$1/input MTok, $0.5/cache image read MTok'
+
+
 def test_group_model_price_units_by_family_handles_token_prices() -> None:
     registry = UnitRegistry(load_units())
 

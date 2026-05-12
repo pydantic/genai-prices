@@ -766,16 +766,17 @@ class ModelPrice:
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
     def __str__(self) -> str:
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
         parts: list[str] = []
-        for field in dataclasses.fields(self):
-            if field.name == '_extra_prices':
-                continue
-            value = getattr(self, field.name)
+        for price_key in _iter_effective_model_price_keys(self, registry):
+            value = getattr(self, price_key)
             if value is not None:
-                if field.name == 'requests_kcount':
+                if price_key == 'requests_kcount':
                     parts.append(f'${value} / K requests')
                 else:
-                    name = field.name.replace('_mtok', '').replace('_', ' ')
+                    name = price_key.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):
                         parts.append(f'${value.base}/{name} MTok (+tiers)')
                     else:
