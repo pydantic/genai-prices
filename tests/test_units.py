@@ -920,6 +920,12 @@ def test_build_model_price_accepts_typed_extra_price_keys() -> None:
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
 
 
+def test_package_data_collects_runtime_model_price_extra_keys() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), _extra_prices={'hovercraft_mtok': Decimal('2')})
+
+    assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
+
+
 def test_build_model_price_extras_affect_is_free() -> None:
     assert not build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}).is_free()
     assert build_types.ModelPrice().is_free()
