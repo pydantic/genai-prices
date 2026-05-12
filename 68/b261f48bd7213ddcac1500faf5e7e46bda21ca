@@ -1,0 +1,14 @@
+prices/providers/google.yml
+  h_d9dd17644dded9 145-147,151-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "68b261f48bd7213ddcac1500faf5e7e46bda21ca",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
