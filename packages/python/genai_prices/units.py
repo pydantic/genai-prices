@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from functools import cache
 from itertools import combinations
 from typing import Any, cast
 
@@ -136,8 +135,28 @@ def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
     return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
 
 
-@cache
+_bundled_registry: UnitRegistry | None = None
+_active_registry: UnitRegistry | None = None
+
+
 def _get_registry() -> UnitRegistry:  # pyright: ignore[reportUnusedFunction]
+    global _bundled_registry
+
+    if _active_registry is not None:
+        return _active_registry
+
+    if _bundled_registry is not None:
+        return _bundled_registry
+
     from genai_prices.data_units import unit_families_data
 
-    return UnitRegistry(unit_families_data)
+    _bundled_registry = UnitRegistry(unit_families_data)
+    return _bundled_registry
+
+
+def _set_registry(registry: UnitRegistry | None) -> None:  # pyright: ignore[reportUnusedFunction]
+    """Replace the active global unit registry, or restore bundled units when passed None."""
+    global _active_registry
+
+    _active_registry = registry
+    # Phase 5 registry-keyed caches should be cleared here when they exist.

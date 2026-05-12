@@ -25,7 +25,7 @@ from genai_prices.types import (
     _compute_registry_priced_counts,
     _group_model_price_units_by_family,
 )
-from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry
+from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry, _set_registry
 from prices import package_data, prices_types as build_types
 
 from .unit_registry_helpers import load_units
@@ -868,7 +868,7 @@ def test_bundled_snapshot_lookup_helpers_still_work() -> None:
 
 
 def test_get_registry_returns_generated_unit_data_registry() -> None:
-    _get_registry.cache_clear()
+    _set_registry(None)
     registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
@@ -877,16 +877,28 @@ def test_get_registry_returns_generated_unit_data_registry() -> None:
     assert _get_registry() is registry
 
 
+def test_set_registry_swaps_and_restores_bundled_registry() -> None:
+    _set_registry(None)
+    bundled = _get_registry()
+    custom = _custom_price_key_registry()
+
+    try:
+        _set_registry(custom)
+        assert _get_registry() is custom
+
+        _set_registry(None)
+        assert _get_registry() is bundled
+    finally:
+        _set_registry(None)
+
+
 def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
     def fail_get_snapshot() -> None:
         raise AssertionError('get_snapshot should not be called')
 
     monkeypatch.setattr('genai_prices.data_snapshot.get_snapshot', fail_get_snapshot)
-    _get_registry.cache_clear()
-    try:
-        registry = _get_registry()
-    finally:
-        _get_registry.cache_clear()
+    _set_registry(None)
+    registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
 
@@ -919,7 +931,7 @@ def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
 
 
 def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
-    _get_registry.cache_clear()
+    _set_registry(None)
     registry = _get_registry()
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
@@ -931,7 +943,7 @@ def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
         assert _get_registry() is registry
     finally:
         set_custom_snapshot(None)
-        _get_registry.cache_clear()
+        _set_registry(None)
 
 
 def test_model_price_validation_runs_on_base_calc_not_snapshot_activation() -> None:

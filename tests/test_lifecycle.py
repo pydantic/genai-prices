@@ -101,7 +101,6 @@ def test_get_registry_does_not_import_provider_data():
             (
                 'import sys; '
                 'from genai_prices.units import _get_registry; '
-                '_get_registry.cache_clear(); '
                 '_get_registry(); '
                 "assert 'genai_prices.data' not in sys.modules"
             ),
