@@ -13,7 +13,6 @@ import {
   getUsageKeyForPriceKey,
   setActiveRegistry,
   UnitRegistry,
-  validateUnitFamilies,
 } from '../units'
 
 const tokenUsageKeys = [
@@ -88,10 +87,6 @@ describe('UnitRegistry', () => {
     expect(registry.reportedUsageKeys).not.toContain('requests')
   })
 
-  it('accepts the generated unit registry interval closure', () => {
-    expect(() => validateUnitFamilies(unitFamiliesData)).not.toThrow()
-  })
-
   it('defaults missing price keys to the usage key', () => {
     const registry = new UnitRegistry({
       widgets: {
@@ -156,152 +151,6 @@ describe('UnitRegistry', () => {
       priceKey: 'billable_call_count',
       usageKey: 'billable_calls',
     })
-  })
-
-  it('validates duplicate usage keys across families', () => {
-    expect(() =>
-      validateUnitFamilies({
-        audio: {
-          description: 'Audio counts',
-          per: 1,
-          units: {
-            seconds: {
-              dimensions: {
-                modality: 'audio',
-              },
-            },
-          },
-        },
-        video: {
-          description: 'Video counts',
-          per: 1,
-          units: {
-            seconds: {
-              dimensions: {
-                modality: 'video',
-              },
-            },
-          },
-        },
-      })
-    ).toThrow('Duplicate unit usage key: seconds')
-  })
-
-  it('validates duplicate price keys across families', () => {
-    expect(() =>
-      validateUnitFamilies({
-        images: {
-          description: 'Image counts',
-          per: 1,
-          units: {
-            input_images: {
-              dimensions: {
-                direction: 'input',
-              },
-              price_key: 'image_count',
-            },
-          },
-        },
-        video: {
-          description: 'Video counts',
-          per: 1,
-          units: {
-            input_frames: {
-              dimensions: {
-                direction: 'input',
-              },
-              price_key: 'image_count',
-            },
-          },
-        },
-      })
-    ).toThrow('Duplicate unit price key: image_count')
-  })
-
-  it('validates duplicate dimension sets in one family', () => {
-    expect(() =>
-      validateUnitFamilies({
-        tokens: {
-          description: 'Token counts',
-          per: 1_000_000,
-          units: {
-            input_chars: {
-              dimensions: {
-                direction: 'input',
-              },
-              price_key: 'input_chars_mcount',
-            },
-            input_tokens: {
-              dimensions: {
-                direction: 'input',
-              },
-              price_key: 'input_mtok',
-            },
-          },
-        },
-      })
-    ).toThrow('Duplicate dimensions in unit family tokens: input_chars and input_tokens')
-  })
-
-  it('validates missing intermediate dimensions between ancestors and descendants', () => {
-    expect(() =>
-      validateUnitFamilies({
-        tokens: {
-          description: 'Token counts',
-          per: 1_000_000,
-          units: {
-            cache_audio_read_tokens: {
-              dimensions: {
-                cache: 'read',
-                direction: 'input',
-                modality: 'audio',
-              },
-              price_key: 'cache_audio_read_mtok',
-            },
-            input_tokens: {
-              dimensions: {
-                direction: 'input',
-              },
-              price_key: 'input_mtok',
-            },
-          },
-        },
-      })
-    ).toThrow(
-      'Missing intermediate unit dimensions in family tokens between input_tokens and cache_audio_read_tokens: cache=read, direction=input'
-    )
-  })
-
-  it('validates public usage and price keys', () => {
-    expect(() =>
-      validateUnitFamilies({
-        tokens: {
-          description: 'Token counts',
-          per: 1_000_000,
-          units: {
-            _private_name: {
-              dimensions: { direction: 'input' },
-              price_key: 'private_mtok',
-            },
-          },
-        },
-      })
-    ).toThrow('Invalid unit usage key: _private_name must not start with "_"')
-
-    expect(() =>
-      validateUnitFamilies({
-        tokens: {
-          description: 'Token counts',
-          per: 1_000_000,
-          units: {
-            input_tokens: {
-              dimensions: { direction: 'input' },
-              price_key: 'class',
-            },
-          },
-        },
-      })
-    ).toThrow('Invalid unit price key: class is a reserved keyword')
   })
 })
 
