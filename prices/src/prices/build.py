@@ -58,28 +58,30 @@ def build():
         provider.exclude_removed()
     unit_families = load_unit_families()
     validate_export_payload(providers, unit_families)
-    write_prices(providers, 'data.json')
+    write_prices(providers, unit_families, 'data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, 'data_slim.json', slim=True)
+    write_prices(providers, unit_families, 'data_slim.json', slim=True)
 
 
-def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = False):
+def write_prices(providers: list[Provider], unit_families: dict[str, Any], prices_file: str, *, slim: bool = False):
     print('')
     prices_json_path = package_dir / prices_file
 
-    data_json_schema = providers_schema.json_schema(mode='serialization')
-    data_json_schema = simplify_json_schema(data_json_schema)
+    providers_json_schema = providers_schema.json_schema(mode='serialization')
+    providers_json_schema = simplify_json_schema(providers_json_schema)
 
     if slim:
         # delete Provider fields
-        data_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')
-        data_json_schema['$defs']['Provider']['properties'].pop('description')
-        data_json_schema['$defs']['Provider']['properties'].pop('price_comments')
+        providers_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')
+        providers_json_schema['$defs']['Provider']['properties'].pop('description')
+        providers_json_schema['$defs']['Provider']['properties'].pop('price_comments')
         # delete ModelInfo fields
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('name')
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('description')
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
+        providers_json_schema['$defs']['ModelInfo']['properties'].pop('name')
+        providers_json_schema['$defs']['ModelInfo']['properties'].pop('description')
+        providers_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
+
+    data_json_schema = _wrapped_prices_schema(providers_json_schema)
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
@@ -96,7 +98,14 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
             }
         }
 
-    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
+    provider_data = providers_schema.dump_python(
+        providers,
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        exclude=exclude,
+    )
+    json_data = pydantic_core.to_json({'unit_families': unit_families, 'providers': provider_data}) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:
@@ -128,6 +137,47 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
         f'Prices data file {prices_json_path.relative_to(root_dir)} {action} '
         f'({pretty_size(len(json_data))}, {pretty_size(gz_len)} gzipped)'
     )
+
+
+def _wrapped_prices_schema(providers_json_schema: dict[str, Any]) -> dict[str, Any]:
+    defs = providers_json_schema.pop('$defs', {})
+    return {
+        '$defs': defs,
+        'additionalProperties': False,
+        'properties': {
+            'unit_families': _unit_families_schema(),
+            'providers': providers_json_schema,
+        },
+        'required': ['unit_families', 'providers'],
+        'type': 'object',
+    }
+
+
+def _unit_families_schema() -> dict[str, Any]:
+    return {
+        'additionalProperties': {
+            'additionalProperties': False,
+            'properties': {
+                'per': {'type': 'integer'},
+                'description': {'type': 'string'},
+                'units': {
+                    'additionalProperties': {
+                        'additionalProperties': False,
+                        'properties': {
+                            'price_key': {'type': 'string'},
+                            'dimensions': {'additionalProperties': {'type': 'string'}, 'type': 'object'},
+                        },
+                        'required': ['dimensions'],
+                        'type': 'object',
+                    },
+                    'type': 'object',
+                },
+            },
+            'required': ['per', 'units'],
+            'type': 'object',
+        },
+        'type': 'object',
+    }
 
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:

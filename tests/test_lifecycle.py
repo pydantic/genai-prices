@@ -29,7 +29,7 @@ def test_deprecated_flag_in_data_json():
     from prices.utils import package_dir
 
     data_json_path = package_dir / 'data.json'
-    data = json.loads(data_json_path.read_bytes())
+    data = json.loads(data_json_path.read_bytes())['providers']
 
     deprecated_found = False
     non_deprecated_with_flag = False
@@ -50,23 +50,25 @@ def test_removed_field_not_in_data_json():
     from prices.utils import package_dir
 
     data_json_path = package_dir / 'data.json'
-    data = json.loads(data_json_path.read_bytes())
+    data = json.loads(data_json_path.read_bytes())['providers']
 
     for provider in data:
         for model in provider['models']:
             assert 'removed' not in model, f'removed field found in data.json for model {model["id"]}'
 
 
-def test_remote_payloads_remain_provider_arrays():
-    """Remote JSON payloads stay provider arrays."""
+def test_remote_payloads_are_wrapped_objects():
+    """Remote JSON payloads include unit families beside providers."""
     from prices.utils import package_dir
 
     for filename in ('data.json', 'data_slim.json'):
-        payload: list[object] = json.loads((package_dir / filename).read_bytes())
+        payload = json.loads((package_dir / filename).read_bytes())
 
-        assert isinstance(payload, list)
-        assert payload
-        assert all(isinstance(provider, dict) for provider in payload)
+        assert set(payload) == {'unit_families', 'providers'}
+        assert isinstance(payload['unit_families'], dict)
+        assert isinstance(payload['providers'], list)
+        assert payload['providers']
+        assert all(isinstance(provider, dict) for provider in payload['providers'])
 
 
 def test_python_unit_data_is_separate_from_provider_data():

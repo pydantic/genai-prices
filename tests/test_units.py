@@ -855,7 +855,7 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
         _ = cwd, check, stdout
         return subprocess.CompletedProcess(args, 0)
 
-    monkeypatch.setattr(package_data.subprocess, 'run', skip_prettier)
+    monkeypatch.setattr(subprocess, 'run', skip_prettier)
 
     def fail_load_unit_families() -> dict[str, Any]:
         raise AssertionError('wrapped package data should not read units.yml')
@@ -1105,16 +1105,17 @@ def test_generated_python_unit_families_data_builds_registry() -> None:
 
 
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
-def test_remote_payload_roots_remain_provider_arrays(filename: str) -> None:
+def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
     payload_obj = json.loads(Path(filename).read_text())
 
-    assert isinstance(payload_obj, list)
-    payload = cast(list[object], payload_obj)
-    assert payload
-    assert all(isinstance(provider, dict) for provider in payload)
-    first_provider = cast(dict[str, object], payload[0])
-    assert 'providers' not in first_provider
-    assert 'unit_families' not in first_provider
+    assert isinstance(payload_obj, dict)
+    payload = cast(dict[str, Any], payload_obj)
+    assert set(payload) == {'unit_families', 'providers'}
+    providers = cast(list[object], payload['providers'])
+    unit_families = cast(dict[str, Any], payload['unit_families'])
+    assert providers
+    assert all(isinstance(provider, dict) for provider in providers)
+    assert unit_families['tokens']['units']['cache_image_write_tokens']['price_key'] == 'cache_image_write_mtok'
 
 
 def test_data_snapshot_has_no_unit_registry_field() -> None:

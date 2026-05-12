@@ -757,8 +757,58 @@
       "type": "object"
     }
   },
-  "items": {
-    "$ref": "#/$defs/Provider"
+  "additionalProperties": false,
+  "properties": {
+    "unit_families": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "per": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          },
+          "units": {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "price_key": {
+                  "type": "string"
+                },
+                "dimensions": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              },
+              "required": [
+                "dimensions"
+              ],
+              "type": "object"
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "per",
+          "units"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "providers": {
+      "items": {
+        "$ref": "#/$defs/Provider"
+      },
+      "type": "array"
+    }
   },
-  "type": "array"
+  "required": [
+    "unit_families",
+    "providers"
+  ],
+  "type": "object"
 }
