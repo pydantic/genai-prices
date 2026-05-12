@@ -123,26 +123,26 @@ def test_model_price_is_free_rejects_non_zero_request_price() -> None:
 def test_model_price_is_free_rejects_non_zero_dynamic_extra() -> None:
     assert not ModelPrice(
         input_mtok=Decimal('0'),
-        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+        cache_image_read_mtok=Decimal('0.5'),
     ).is_free()
 
 
 def test_model_price_is_free_accepts_zero_dynamic_extra() -> None:
     assert ModelPrice(
         input_mtok=Decimal('0'),
-        cache_image_read_mtok=Decimal('0'),  # pyright: ignore[reportCallIssue]
+        cache_image_read_mtok=Decimal('0'),
     ).is_free()
 
 
 def test_calc_price_rejects_unregistered_dynamic_extra() -> None:
-    price = ModelPrice(hovercraft_mtok=Decimal('1'))  # pyright: ignore[reportCallIssue]
+    price = ModelPrice(hovercraft_mtok=Decimal('1'))
 
     with pytest.raises(ValueError, match='Unknown price key: hovercraft_mtok'):
         price.calc_price(Usage(input_tokens=1))
 
 
 def test_calc_price_rejects_dynamic_descendant_without_ancestors() -> None:
-    price = ModelPrice(cache_image_read_mtok=Decimal('1'))  # pyright: ignore[reportCallIssue]
+    price = ModelPrice(cache_image_read_mtok=Decimal('1'))
 
     with pytest.raises(ValueError, match='Missing ancestor price for cache_image_read_tokens'):
         price.calc_price(Usage(cache_image_read_tokens=1))
@@ -159,7 +159,7 @@ def test_set_custom_snapshot_does_not_validate_dynamic_model_prices() -> None:
                     ModelInfo(
                         id='bad-extra',
                         match=ClauseEquals('bad-extra'),
-                        prices=ModelPrice(hovercraft_mtok=Decimal('1')),  # pyright: ignore[reportCallIssue]
+                        prices=ModelPrice(hovercraft_mtok=Decimal('1')),
                     )
                 ],
             )

@@ -198,7 +198,7 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
 def test_base_model_price_stores_dynamic_price_kwargs() -> None:
     price = types.ModelPrice(
         input_mtok=Decimal('1'),
-        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+        cache_image_read_mtok=Decimal('0.5'),
     )
 
     assert price.input_mtok == Decimal('1')

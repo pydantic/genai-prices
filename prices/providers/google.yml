@@ -477,9 +477,12 @@ models:
     prices_checked: 2025-12-19
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at
       $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.
+      Unknown modality output tokens are assumed to be image tokens.
     prices:
       input_mtok: 2
       output_mtok: 120
+      output_image_mtok: 120
+      output_text_mtok: 12
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview

@@ -517,7 +517,7 @@ def test_collect_effective_model_price_keys_ignores_none_values() -> None:
 def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(
-        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+        cache_image_read_mtok=Decimal('0.5'),
     )
 
     assert _collect_effective_model_price_keys(price, registry) == {'cache_image_read_mtok'}
@@ -525,7 +525,7 @@ def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
 
 def test_collect_effective_model_price_keys_includes_unregistered_extras_for_validation() -> None:
     registry = UnitRegistry(load_units())
-    price = ModelPrice(hovercraft_mtok=Decimal('1'))  # pyright: ignore[reportCallIssue]
+    price = ModelPrice(hovercraft_mtok=Decimal('1'))
 
     assert _collect_effective_model_price_keys(price, registry) == {'hovercraft_mtok'}
 
@@ -575,7 +575,7 @@ def test_model_price_getattr_does_not_change_string_rendering() -> None:
 def test_model_price_str_includes_dynamic_extras() -> None:
     price = ModelPrice(
         input_mtok=Decimal('1'),
-        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+        cache_image_read_mtok=Decimal('0.5'),
     )
 
     assert str(price) == '$1/input MTok, $0.5/cache image read MTok'
@@ -963,6 +963,12 @@ def test_package_data_collects_runtime_model_price_extra_keys() -> None:
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
 
 
+def test_runtime_model_price_repr_preserves_dynamic_extra_keys() -> None:
+    price = ModelPrice(input_mtok=Decimal('2'), _extra_prices={'output_image_mtok': Decimal('120')})
+
+    assert repr(price) == "ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))"
+
+
 def test_runtime_model_price_schema_omits_internal_extra_storage() -> None:
     schema = data.providers_schema.json_schema()
 
@@ -1193,9 +1199,18 @@ def test_generated_python_unit_families_data_builds_registry() -> None:
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
 
 
+def test_generated_python_data_preserves_google_dynamic_output_prices() -> None:
+    google_provider = next(provider for provider in data.providers if provider.id == 'google')
+    model = next(model for model in google_provider.models if model.id == 'gemini-3-pro-image-preview')
+
+    assert isinstance(model.prices, ModelPrice)
+    assert model.prices.output_image_mtok == Decimal('120')
+    assert model.prices.output_text_mtok == Decimal('12')
+
+
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
 def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
-    payload_obj = json.loads(Path(filename).read_text())  # TODO same fix as in load_units
+    payload_obj = json.loads((Path(__file__).parent.parent / filename).read_text())
 
     assert isinstance(payload_obj, dict)
     payload = cast(dict[str, Any], payload_obj)

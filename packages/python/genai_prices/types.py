@@ -711,6 +711,32 @@ class ModelPrice:
         default_factory=dict, repr=False, compare=False
     )
 
+    def __init__(
+        self,
+        input_mtok: Decimal | TieredPrices | None = None,
+        cache_write_mtok: Decimal | TieredPrices | None = None,
+        cache_read_mtok: Decimal | TieredPrices | None = None,
+        output_mtok: Decimal | TieredPrices | None = None,
+        input_audio_mtok: Decimal | TieredPrices | None = None,
+        cache_audio_read_mtok: Decimal | TieredPrices | None = None,
+        output_audio_mtok: Decimal | TieredPrices | None = None,
+        requests_kcount: Decimal | None = None,
+        _extra_prices: Mapping[str, Decimal | TieredPrices | None] | None = None,
+        **extra_prices: Decimal | TieredPrices | None,
+    ) -> None:
+        object.__setattr__(self, 'input_mtok', input_mtok)
+        object.__setattr__(self, 'cache_write_mtok', cache_write_mtok)
+        object.__setattr__(self, 'cache_read_mtok', cache_read_mtok)
+        object.__setattr__(self, 'output_mtok', output_mtok)
+        object.__setattr__(self, 'input_audio_mtok', input_audio_mtok)
+        object.__setattr__(self, 'cache_audio_read_mtok', cache_audio_read_mtok)
+        object.__setattr__(self, 'output_audio_mtok', output_audio_mtok)
+        object.__setattr__(self, 'requests_kcount', requests_kcount)
+
+        dynamic_prices = dict(_extra_prices or {})
+        dynamic_prices.update(extra_prices)
+        object.__setattr__(self, '_extra_prices', dynamic_prices)
+
     @pydantic.model_validator(mode='before')
     @classmethod
     def _store_unknown_price_keys(cls, data: Any) -> Any:
@@ -751,6 +777,20 @@ class ModelPrice:
             ]
 
         return json_schema
+
+    def __repr__(self) -> str:
+        parts: list[str] = []
+        for field in dataclasses.fields(self):
+            if field.name == '_extra_prices':
+                continue
+            value = getattr(self, field.name)
+            if value is not None:
+                parts.append(f'{field.name}={value!r}')
+
+        if self._extra_prices:
+            parts.extend(f'{key}={value!r}' for key, value in self._extra_prices.items())
+
+        return f'{type(self).__name__}({", ".join(parts)})'
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
@@ -841,22 +881,6 @@ class ModelPrice:
         if name not in _model_price_declared_fields_for(type(self)) and _is_registered_price_key(name):
             raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
         object.__delattr__(self, name)
-
-
-_model_price_dataclass_init = ModelPrice.__init__
-
-
-def _model_price_init(self: ModelPrice, **kwargs: Any) -> None:
-    declared_fields = _model_price_declared_fields_for(ModelPrice)
-    extra_prices = dict(cast(dict[str, Any], kwargs.pop('_extra_prices', {}) or {}))
-    declared_kwargs = {key: kwargs.pop(key) for key in tuple(kwargs) if key in declared_fields}
-    extra_prices.update(kwargs)
-
-    _model_price_dataclass_init(self, **declared_kwargs)
-    object.__setattr__(self, '_extra_prices', extra_prices)
-
-
-ModelPrice.__init__ = _model_price_init  # type: ignore[method-assign]
 
 
 def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:

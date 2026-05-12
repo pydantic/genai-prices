@@ -3472,10 +3472,12 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
         prices: {
           input_mtok: 2,
           output_mtok: 120,
+          output_image_mtok: 120,
+          output_text_mtok: 12,
         },
       },
       {
