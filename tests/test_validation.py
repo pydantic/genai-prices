@@ -16,6 +16,30 @@ from genai_prices.validation import (
 from .unit_registry_helpers import load_units
 
 
+def _missing_write_audio_join_registry() -> UnitRegistry:
+    return UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'cache_write_tokens': {
+                        'price_key': 'cache_write_mtok',
+                        'dimensions': {'direction': 'input', 'cache': 'write'},
+                    },
+                    'input_audio_tokens': {
+                        'price_key': 'input_audio_mtok',
+                        'dimensions': {'direction': 'input', 'modality': 'audio'},
+                    },
+                },
+            },
+        }
+    )
+
+
 def test_validate_price_keys_accepts_current_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
@@ -64,7 +88,7 @@ def test_validate_join_coverage_rejects_missing_join_price() -> None:
 
 
 def test_validate_join_coverage_rejects_missing_registered_join_unit() -> None:
-    registry = UnitRegistry(load_units())
+    registry = _missing_write_audio_join_registry()
 
     with pytest.raises(
         ValueError,
@@ -116,7 +140,7 @@ def test_validate_model_price_rejects_required_join_prices() -> None:
 
 
 def test_validate_model_price_rejects_missing_join_units() -> None:
-    registry = UnitRegistry(load_units())
+    registry = _missing_write_audio_join_registry()
 
     with pytest.raises(
         ValueError,

@@ -16,6 +16,52 @@ import {
   validateUnitFamilies,
 } from '../units'
 
+const tokenUsageKeys = [
+  'input_tokens',
+  'output_tokens',
+  'cache_read_tokens',
+  'cache_write_tokens',
+  'input_text_tokens',
+  'output_text_tokens',
+  'cache_text_read_tokens',
+  'cache_text_write_tokens',
+  'input_audio_tokens',
+  'output_audio_tokens',
+  'cache_audio_read_tokens',
+  'cache_audio_write_tokens',
+  'input_image_tokens',
+  'output_image_tokens',
+  'cache_image_read_tokens',
+  'cache_image_write_tokens',
+  'input_video_tokens',
+  'output_video_tokens',
+  'cache_video_read_tokens',
+  'cache_video_write_tokens',
+]
+
+const tokenPriceKeys = [
+  'input_mtok',
+  'output_mtok',
+  'cache_read_mtok',
+  'cache_write_mtok',
+  'input_text_mtok',
+  'output_text_mtok',
+  'cache_text_read_mtok',
+  'cache_text_write_mtok',
+  'input_audio_mtok',
+  'output_audio_mtok',
+  'cache_audio_read_mtok',
+  'cache_audio_write_mtok',
+  'input_image_mtok',
+  'output_image_mtok',
+  'cache_image_read_mtok',
+  'cache_image_write_mtok',
+  'input_video_mtok',
+  'output_video_mtok',
+  'cache_video_read_mtok',
+  'cache_video_write_mtok',
+]
+
 describe('UnitRegistry', () => {
   it('constructs generated unit families into indexed runtime objects', () => {
     const registry = new UnitRegistry(unitFamiliesData)
@@ -30,18 +76,12 @@ describe('UnitRegistry', () => {
       id: 'tokens',
       per: 1_000_000,
     })
-    expect(Object.keys(tokenFamily.units)).toEqual([
-      'cache_audio_read_tokens',
-      'cache_read_tokens',
-      'cache_write_tokens',
-      'input_audio_tokens',
-      'input_tokens',
-      'output_audio_tokens',
-      'output_tokens',
-    ])
+    expect(new Set(Object.keys(tokenFamily.units))).toEqual(new Set(tokenUsageKeys))
     expect(requestFamily.units.requests?.priceKey).toBe('requests_kcount')
     expect(registry.units.get('input_tokens')).toBe(tokenFamily.units.input_tokens)
+    expect(registry.units.size).toBe(21)
     expect(registry.unitsByPriceKey.get('input_mtok')).toBe(tokenFamily.units.input_tokens)
+    expect(registry.unitsByPriceKey.get('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.allUsageKeys).toContain('input_tokens')
     expect(registry.allPriceKeys).toContain('input_mtok')
     expect(registry.reportedUsageKeys).toContain('input_tokens')
@@ -323,50 +363,18 @@ describe('active unit registry', () => {
 
   it('returns the generated full usage-key set', () => {
     setUnitFamilies(null)
-    expect(getAllUsageKeys()).toEqual(
-      new Set([
-        'cache_audio_read_tokens',
-        'cache_read_tokens',
-        'cache_write_tokens',
-        'input_audio_tokens',
-        'input_tokens',
-        'output_audio_tokens',
-        'output_tokens',
-        'requests',
-      ])
-    )
+    expect(getAllUsageKeys()).toEqual(new Set(['requests', ...tokenUsageKeys]))
   })
 
   it('returns the generated full price-key set', () => {
     setUnitFamilies(null)
-    expect(getAllPriceKeys()).toEqual(
-      new Set([
-        'cache_audio_read_mtok',
-        'cache_read_mtok',
-        'cache_write_mtok',
-        'input_audio_mtok',
-        'input_mtok',
-        'output_audio_mtok',
-        'output_mtok',
-        'requests_kcount',
-      ])
-    )
+    expect(getAllPriceKeys()).toEqual(new Set(['requests_kcount', ...tokenPriceKeys]))
   })
 
   it('returns externally reported usage keys without pricing-only requests', () => {
     setUnitFamilies(null)
     expect(getAllUsageKeys()).toContain('requests')
-    expect(getActiveRegistry().reportedUsageKeys).toEqual(
-      new Set([
-        'cache_audio_read_tokens',
-        'cache_read_tokens',
-        'cache_write_tokens',
-        'input_audio_tokens',
-        'input_tokens',
-        'output_audio_tokens',
-        'output_tokens',
-      ])
-    )
+    expect(getActiveRegistry().reportedUsageKeys).toEqual(new Set(tokenUsageKeys))
     expect(getActiveRegistry().reportedUsageKeys).not.toContain('requests')
   })
 })

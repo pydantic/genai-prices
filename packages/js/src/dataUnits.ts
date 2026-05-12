@@ -23,12 +23,68 @@ export const unitFamiliesData: RawFamiliesDict = {
         },
         price_key: 'cache_audio_read_mtok',
       },
+      cache_audio_write_tokens: {
+        dimensions: {
+          cache: 'write',
+          direction: 'input',
+          modality: 'audio',
+        },
+        price_key: 'cache_audio_write_mtok',
+      },
+      cache_image_read_tokens: {
+        dimensions: {
+          cache: 'read',
+          direction: 'input',
+          modality: 'image',
+        },
+        price_key: 'cache_image_read_mtok',
+      },
+      cache_image_write_tokens: {
+        dimensions: {
+          cache: 'write',
+          direction: 'input',
+          modality: 'image',
+        },
+        price_key: 'cache_image_write_mtok',
+      },
       cache_read_tokens: {
         dimensions: {
           cache: 'read',
           direction: 'input',
         },
         price_key: 'cache_read_mtok',
+      },
+      cache_text_read_tokens: {
+        dimensions: {
+          cache: 'read',
+          direction: 'input',
+          modality: 'text',
+        },
+        price_key: 'cache_text_read_mtok',
+      },
+      cache_text_write_tokens: {
+        dimensions: {
+          cache: 'write',
+          direction: 'input',
+          modality: 'text',
+        },
+        price_key: 'cache_text_write_mtok',
+      },
+      cache_video_read_tokens: {
+        dimensions: {
+          cache: 'read',
+          direction: 'input',
+          modality: 'video',
+        },
+        price_key: 'cache_video_read_mtok',
+      },
+      cache_video_write_tokens: {
+        dimensions: {
+          cache: 'write',
+          direction: 'input',
+          modality: 'video',
+        },
+        price_key: 'cache_video_write_mtok',
       },
       cache_write_tokens: {
         dimensions: {
@@ -44,11 +100,32 @@ export const unitFamiliesData: RawFamiliesDict = {
         },
         price_key: 'input_audio_mtok',
       },
+      input_image_tokens: {
+        dimensions: {
+          direction: 'input',
+          modality: 'image',
+        },
+        price_key: 'input_image_mtok',
+      },
+      input_text_tokens: {
+        dimensions: {
+          direction: 'input',
+          modality: 'text',
+        },
+        price_key: 'input_text_mtok',
+      },
       input_tokens: {
         dimensions: {
           direction: 'input',
         },
         price_key: 'input_mtok',
+      },
+      input_video_tokens: {
+        dimensions: {
+          direction: 'input',
+          modality: 'video',
+        },
+        price_key: 'input_video_mtok',
       },
       output_audio_tokens: {
         dimensions: {
@@ -57,11 +134,32 @@ export const unitFamiliesData: RawFamiliesDict = {
         },
         price_key: 'output_audio_mtok',
       },
+      output_image_tokens: {
+        dimensions: {
+          direction: 'output',
+          modality: 'image',
+        },
+        price_key: 'output_image_mtok',
+      },
+      output_text_tokens: {
+        dimensions: {
+          direction: 'output',
+          modality: 'text',
+        },
+        price_key: 'output_text_mtok',
+      },
       output_tokens: {
         dimensions: {
           direction: 'output',
         },
         price_key: 'output_mtok',
+      },
+      output_video_tokens: {
+        dimensions: {
+          direction: 'output',
+          modality: 'video',
+        },
+        price_key: 'output_video_mtok',
       },
     },
   },

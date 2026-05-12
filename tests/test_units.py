@@ -31,6 +31,52 @@ from prices.export_validation import validate_unit_families
 
 from .unit_registry_helpers import load_units
 
+TOKEN_USAGE_KEYS = {
+    'input_tokens',
+    'output_tokens',
+    'cache_read_tokens',
+    'cache_write_tokens',
+    'input_text_tokens',
+    'output_text_tokens',
+    'cache_text_read_tokens',
+    'cache_text_write_tokens',
+    'input_audio_tokens',
+    'output_audio_tokens',
+    'cache_audio_read_tokens',
+    'cache_audio_write_tokens',
+    'input_image_tokens',
+    'output_image_tokens',
+    'cache_image_read_tokens',
+    'cache_image_write_tokens',
+    'input_video_tokens',
+    'output_video_tokens',
+    'cache_video_read_tokens',
+    'cache_video_write_tokens',
+}
+
+TOKEN_PRICE_KEYS = {
+    'input_mtok',
+    'output_mtok',
+    'cache_read_mtok',
+    'cache_write_mtok',
+    'input_text_mtok',
+    'output_text_mtok',
+    'cache_text_read_mtok',
+    'cache_text_write_mtok',
+    'input_audio_mtok',
+    'output_audio_mtok',
+    'cache_audio_read_mtok',
+    'cache_audio_write_mtok',
+    'input_image_mtok',
+    'output_image_mtok',
+    'cache_image_read_mtok',
+    'cache_image_write_mtok',
+    'input_video_mtok',
+    'output_video_mtok',
+    'cache_video_read_mtok',
+    'cache_video_write_mtok',
+}
+
 
 def _custom_price_key_unit_families() -> dict[str, Any]:
     return {
@@ -106,24 +152,8 @@ def test_units_yml_defines_current_python_unit_surface() -> None:
 
     token_family = raw_families['tokens']
     assert token_family['per'] == 1_000_000
-    assert set(token_family['units']) == {
-        'input_tokens',
-        'output_tokens',
-        'cache_read_tokens',
-        'cache_write_tokens',
-        'input_audio_tokens',
-        'cache_audio_read_tokens',
-        'output_audio_tokens',
-    }
-    assert {unit['price_key'] for unit in token_family['units'].values()} == {
-        'input_mtok',
-        'output_mtok',
-        'cache_read_mtok',
-        'cache_write_mtok',
-        'input_audio_mtok',
-        'cache_audio_read_mtok',
-        'output_audio_mtok',
-    }
+    assert set(token_family['units']) == TOKEN_USAGE_KEYS
+    assert {unit['price_key'] for unit in token_family['units'].values()} == TOKEN_PRICE_KEYS
 
     request_family = raw_families['requests']
     assert request_family['per'] == 1_000
@@ -135,17 +165,10 @@ def test_unit_registry_constructs_current_units() -> None:
     registry = UnitRegistry(load_units())
 
     assert set(registry.families) == {'tokens', 'requests'}
-    assert set(registry.units) == {
-        'input_tokens',
-        'output_tokens',
-        'cache_read_tokens',
-        'cache_write_tokens',
-        'input_audio_tokens',
-        'cache_audio_read_tokens',
-        'output_audio_tokens',
-        'requests',
-    }
+    assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
+    assert len(registry.units) == 21
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
+    assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
     assert registry.unit_for_price_key('requests_kcount') is registry.units['requests']
 
 
@@ -254,31 +277,21 @@ def test_unit_registry_join_lookup_returns_none_for_incompatible_units() -> None
     )
 
 
-def test_unit_registry_join_lookup_returns_none_for_missing_compatible_join() -> None:
+def test_unit_registry_join_lookup_returns_registered_cache_write_overlap() -> None:
     registry = UnitRegistry(load_units())
 
     assert (
         registry.families['tokens'].find_join(
             registry.units['cache_write_tokens'], registry.units['input_audio_tokens']
         )
-        is None
+        is registry.units['cache_audio_write_tokens']
     )
 
 
 def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
     registry = UnitRegistry(load_units())
 
-    assert registry.reported_usage_keys() == frozenset(
-        {
-            'input_tokens',
-            'output_tokens',
-            'cache_read_tokens',
-            'cache_write_tokens',
-            'input_audio_tokens',
-            'cache_audio_read_tokens',
-            'output_audio_tokens',
-        }
-    )
+    assert registry.reported_usage_keys() == frozenset(TOKEN_USAGE_KEYS)
 
 
 def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> None:
@@ -743,7 +756,27 @@ def test_package_data_model_price_validation_rejects_required_joins() -> None:
 
 
 def test_package_data_model_price_validation_rejects_missing_join_units_for_conditional_prices() -> None:
-    registry = UnitRegistry(load_units())
+    registry = UnitRegistry(
+        {
+            'tokens': {
+                'per': 1_000_000,
+                'units': {
+                    'input_tokens': {
+                        'price_key': 'input_mtok',
+                        'dimensions': {'direction': 'input'},
+                    },
+                    'cache_write_tokens': {
+                        'price_key': 'cache_write_mtok',
+                        'dimensions': {'direction': 'input', 'cache': 'write'},
+                    },
+                    'input_audio_tokens': {
+                        'price_key': 'input_audio_mtok',
+                        'dimensions': {'direction': 'input', 'modality': 'audio'},
+                    },
+                },
+            },
+        }
+    )
     provider = _build_provider_prices(
         [
             build_types.ConditionalPrice(
@@ -853,16 +886,9 @@ def test_generated_python_unit_families_data_builds_registry() -> None:
     registry = UnitRegistry(data_units.unit_families_data)
 
     assert set(registry.families) == {'tokens', 'requests'}
-    assert set(registry.units) == {
-        'input_tokens',
-        'output_tokens',
-        'cache_read_tokens',
-        'cache_write_tokens',
-        'input_audio_tokens',
-        'cache_audio_read_tokens',
-        'output_audio_tokens',
-        'requests',
-    }
+    assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
+    assert len(registry.units) == 21
+    assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
 
 
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
