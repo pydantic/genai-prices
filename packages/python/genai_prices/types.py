@@ -686,10 +686,6 @@ class CalcPrice(TypedDict):
 class ModelPrice:
     """Set of prices for using a model"""
 
-    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
-        default_factory=dict, repr=False, compare=False
-    )
-
     input_mtok: Decimal | TieredPrices | None = None
     """price in USD per million uncached text input/prompt token"""
 
@@ -711,9 +707,15 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
 
+    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
+        default_factory=dict, repr=False, compare=False
+    )
+
     @pydantic.model_validator(mode='before')
     @classmethod
     def _store_unknown_price_keys(cls, data: Any) -> Any:
+        # providers_schema is a Pydantic TypeAdapter over stdlib dataclasses;
+        # Pydantic still invokes validators declared on those dataclasses.
         if not isinstance(data, dict):
             return data
 
@@ -736,6 +738,7 @@ class ModelPrice:
         cls, schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
     ) -> JsonSchemaValue:
         json_schema = handler(schema)
+        json_schema = handler.resolve_ref_schema(json_schema)
 
         properties = json_schema.get('properties')
         if isinstance(properties, dict):
@@ -845,7 +848,7 @@ _model_price_dataclass_init = ModelPrice.__init__
 
 def _model_price_init(self: ModelPrice, **kwargs: Any) -> None:
     declared_fields = _model_price_declared_fields_for(ModelPrice)
-    extra_prices = dict(cast(dict[str, Decimal | TieredPrices | None], kwargs.pop('_extra_prices', {}) or {}))
+    extra_prices = dict(cast(dict[str, Any], kwargs.pop('_extra_prices', {}) or {}))
     declared_kwargs = {key: kwargs.pop(key) for key in tuple(kwargs) if key in declared_fields}
     extra_prices.update(kwargs)
 
