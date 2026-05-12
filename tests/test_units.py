@@ -840,6 +840,18 @@ def test_package_data_accepts_valid_synthetic_extractor_destinations() -> None:
     package_data.validate_provider_extractor_destinations([provider], registry)
 
 
+def test_build_extractor_mapping_accepts_arbitrary_destinations_at_model_layer() -> None:
+    mapping = build_types.UsageExtractorMapping.model_validate({'path': 'value', 'dest': 'weird_unit'})
+
+    assert mapping.dest == 'weird_unit'
+
+
+def test_build_extractor_mapping_still_accepts_known_destinations() -> None:
+    mapping = build_types.UsageExtractorMapping.model_validate({'path': 'value', 'dest': 'input_tokens'})
+
+    assert mapping.dest == 'input_tokens'
+
+
 def test_package_data_extractor_validation_rejects_price_keys() -> None:
     registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
