@@ -27,7 +27,7 @@ from genai_prices.types import (
     _group_model_price_units_by_family,
 )
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry, _set_registry
-from prices import build as build_module, package_data, prices_types as build_types
+from prices import build as build_module, export_validation, package_data, prices_types as build_types
 from prices.export_validation import validate_export_payload, validate_unit_families
 
 from .unit_registry_helpers import load_units
@@ -723,6 +723,39 @@ tokens:
         package_data.load_unit_registry(build_module.load_unit_families())
 
 
+def test_package_data_load_unit_registry_delegates_to_export_validator(monkeypatch: pytest.MonkeyPatch) -> None:
+    raw_families: dict[str, Any] = {
+        'tokens': {
+            'per': 1_000_000,
+            'units': {},
+        }
+    }
+    expected_registry = UnitRegistry(raw_families)
+    calls: list[dict[str, Any]] = []
+
+    def validate(raw_unit_families: dict[str, Any]) -> UnitRegistry:
+        calls.append(raw_unit_families)
+        return expected_registry
+
+    monkeypatch.setattr(export_validation, 'validate_unit_families', validate)
+
+    assert package_data.load_unit_registry(raw_families) is expected_registry
+    assert calls == [raw_families]
+
+
+def test_runtime_packages_do_not_define_unit_family_publication_validators() -> None:
+    runtime_files = [
+        *Path('packages/python/genai_prices').glob('*.py'),
+        *Path('packages/js/src').glob('*.ts'),
+    ]
+    forbidden_terms = {'validate_unit_families', 'validateUnitFamilies'}
+    references = {
+        str(path): sorted(term for term in forbidden_terms if term in path.read_text()) for path in runtime_files
+    }
+
+    assert {path: terms for path, terms in references.items() if terms} == {}
+
+
 def test_package_generation_no_longer_reloads_units_yml() -> None:
     references = {
         path
@@ -1162,7 +1195,7 @@ def test_generated_python_unit_families_data_builds_registry() -> None:
 
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
 def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
-    payload_obj = json.loads(Path(filename).read_text())
+    payload_obj = json.loads(Path(filename).read_text())  # TODO same fix as in load_units
 
     assert isinstance(payload_obj, dict)
     payload = cast(dict[str, Any], payload_obj)
