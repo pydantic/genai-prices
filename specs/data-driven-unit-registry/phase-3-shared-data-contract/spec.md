@@ -19,7 +19,7 @@ There is still no separate remote runtime unit file or update URL. Runtime packa
 `prices/units.yml` becomes the complete source for built-in repo-defined units, including the built-in token lattice needed by the shared pricing semantics. Full registry join-closedness is now a build/export validation rule rather than a current-subset exception.
 
 **Dynamic public key names get lightweight build-time checks.** _(from "The complete repo-defined registry starts here")_
-Usage keys become usage attributes and extractor destinations. Price keys become model-price attributes and provider YAML keys. Registry-defined keys must therefore be public and attribute-safe before they can travel in wrapped runtime payloads. Build/export validation rejects obvious unsafe public names such as non-identifiers, private names, and language keywords where relevant.
+Usage keys become usage attributes and extractor destinations. Price keys become model-price attributes and provider YAML keys. Registry-defined keys must therefore be public and attribute-safe before they can travel in wrapped runtime payloads. Build/export validation rejects obvious unsafe public names such as names that are not JavaScript-compatible ASCII identifiers, private names, and JavaScript language keywords.
 
 **Reserved-name validation is not semantic unit-name whitelisting.** _(from "Dynamic public key names get lightweight build-time checks")_
 The denylist, if any, must stay tiny and generic. It must not hardcode commercial pricing concepts such as `input_tokens` or `input_mtok`, and it must not become a large cross-runtime collision system.

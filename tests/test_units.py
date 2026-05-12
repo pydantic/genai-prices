@@ -442,8 +442,12 @@ def test_validate_unit_families_accepts_bundled_units() -> None:
     [
         ('_private_name', 'private_mtok', "Invalid unit usage key: '_private_name' must not start"),
         ('class', 'class_mtok', "Invalid unit usage key: 'class' is a reserved keyword"),
+        ('function', 'function_mtok', "Invalid unit usage key: 'function' is a reserved keyword"),
+        ('café_tokens', 'cafe_mtok', "Invalid unit usage key: 'café_tokens' is not a public identifier"),
         ('valid_usage', '_private_name', "Invalid unit price key: '_private_name' must not start"),
         ('valid_usage', 'class', "Invalid unit price key: 'class' is a reserved keyword"),
+        ('valid_usage', 'function', "Invalid unit price key: 'function' is a reserved keyword"),
+        ('valid_usage', 'café_mtok', "Invalid unit price key: 'café_mtok' is not a public identifier"),
     ],
 )
 def test_validate_unit_families_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:

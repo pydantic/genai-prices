@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import keyword
+import re
 from collections.abc import Mapping
 from itertools import combinations
 from typing import Any, cast
@@ -10,6 +10,49 @@ from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 from .prices_types import Provider
 
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
+_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_$][A-Za-z0-9_$]*$')
+_RESERVED_KEYWORDS = frozenset(
+    {
+        'await',
+        'break',
+        'case',
+        'catch',
+        'class',
+        'const',
+        'continue',
+        'debugger',
+        'default',
+        'delete',
+        'do',
+        'else',
+        'enum',
+        'export',
+        'extends',
+        'false',
+        'finally',
+        'for',
+        'function',
+        'if',
+        'import',
+        'in',
+        'instanceof',
+        'new',
+        'null',
+        'return',
+        'super',
+        'switch',
+        'this',
+        'throw',
+        'true',
+        'try',
+        'typeof',
+        'var',
+        'void',
+        'while',
+        'with',
+        'yield',
+    }
+)
 
 
 def validate_unit_families(unit_families: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
@@ -55,9 +98,9 @@ def validate_export_payload(providers: list[Provider], unit_families: Mapping[st
 
 
 def _validate_public_key(kind: str, key: str) -> None:
-    if not key.isidentifier():
+    if not _PUBLIC_KEY_PATTERN.fullmatch(key):
         raise ValueError(f'Invalid unit {kind} key: {key!r} is not a public identifier')
-    if keyword.iskeyword(key):
+    if key in _RESERVED_KEYWORDS:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is a reserved keyword')
     if key.startswith('_'):
         raise ValueError(f'Invalid unit {kind} key: {key!r} must not start with "_"')
