@@ -785,11 +785,12 @@ class ModelPrice:
         return ', '.join(parts)
 
     def is_free(self) -> bool:
-        return all(
+        declared_prices_are_free = all(
             _price_value_is_free(getattr(self, field.name))
             for field in dataclasses.fields(self)
             if field.name != '_extra_prices'
         )
+        return declared_prices_are_free and all(_price_value_is_free(value) for value in self._extra_prices.values())
 
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
         extra_prices = self.__dict__.get('_extra_prices', {})

@@ -110,6 +110,20 @@ def test_model_price_is_free_rejects_non_zero_request_price() -> None:
     assert not ModelPrice(requests_kcount=Decimal('0.01')).is_free()
 
 
+def test_model_price_is_free_rejects_non_zero_dynamic_extra() -> None:
+    assert not ModelPrice(
+        input_mtok=Decimal('0'),
+        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+    ).is_free()
+
+
+def test_model_price_is_free_accepts_zero_dynamic_extra() -> None:
+    assert ModelPrice(
+        input_mtok=Decimal('0'),
+        cache_image_read_mtok=Decimal('0'),  # pyright: ignore[reportCallIssue]
+    ).is_free()
+
+
 def test_requests_kcount_prices():
     # request count defaults to 1
     price = calc_price(Usage(), model_ref='sonar', provider_id='perplexity')
