@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import subprocess
 import sys
@@ -757,6 +758,59 @@ def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.Mo
 
     with pytest.raises(ExportValidationError, match='sentinel export validation failure'):
         build_module.build()
+
+
+def test_package_python_data_accepts_wrapped_payload_without_units_yml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from genai_prices import types as runtime_types
+
+    unit_families = {
+        'tokens': {
+            'per': 1_000_000,
+            'description': 'Wrapped token counts',
+            'units': {
+                'input_tokens': {
+                    'price_key': 'input_mtok',
+                    'dimensions': {'direction': 'input'},
+                },
+            },
+        },
+    }
+    provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
+    payload = {
+        'unit_families': unit_families,
+        'providers': build_types.providers_schema.dump_python(
+            [provider],
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
+        ),
+    }
+    data_path = tmp_path / 'data.json'
+    data_path.write_text(json.dumps(payload))
+
+    py_package_dir = tmp_path / 'genai_prices'
+    py_package_dir.mkdir()
+    monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
+    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+
+    def skip_format_generated_python_data(_path: Path, *, post_process_provider_reprs: bool = False) -> None:
+        _ = post_process_provider_reprs
+
+    monkeypatch.setattr(package_data, '_format_generated_python_data', skip_format_generated_python_data)
+
+    def fail_load_unit_families() -> dict[str, Any]:
+        raise AssertionError('wrapped package data should not read units.yml')
+
+    monkeypatch.setattr(package_data, 'load_unit_families', fail_load_unit_families)
+
+    package_data.package_python_data(data_path)
+
+    assert (py_package_dir / 'data.py').exists()
+    unit_data_content = (py_package_dir / 'data_units.py').read_text()
+    generated_unit_families = ast.literal_eval(unit_data_content.split('unit_families_data: dict[str, Any] = ', 1)[1])
+    assert generated_unit_families == unit_families
 
 
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:

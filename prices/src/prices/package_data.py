@@ -29,10 +29,10 @@ def package_python_data(data_path: Path):
 
     from genai_prices.types import __file__ as genai_prices_file, providers_schema
 
-    unit_families = load_unit_families()
+    provider_data, unit_families = _load_package_payload(data_path)
     registry = load_unit_registry(unit_families)
     providers_schema.rebuild()
-    providers = providers_schema.validate_json(data_path.read_bytes())
+    providers = providers_schema.validate_python(provider_data)
     validate_provider_model_prices(providers, registry)
     validate_provider_extractor_destinations(providers, registry)
 
@@ -67,6 +67,16 @@ unit_families_data: dict[str, Any] = {unit_families!r}
     data_units_py.write_text(unit_data_content)
     _format_generated_python_data(data_units_py)
     print(f'Data successfully written to {data_units_py.relative_to(root_dir)}')
+
+
+def _load_package_payload(data_path: Path) -> tuple[Any, dict[str, Any]]:
+    payload = json.loads(data_path.read_bytes())
+    if isinstance(payload, dict) and 'unit_families' in payload and 'providers' in payload:
+        return cast(Any, payload['providers']), cast(dict[str, Any], payload['unit_families'])
+    if isinstance(payload, list):
+        return cast(Any, payload), load_unit_families()
+
+    raise ValueError(f'Expected {data_path} to contain Provider[] or {{unit_families, providers}}')
 
 
 def _format_generated_python_data(path: Path, *, post_process_provider_reprs: bool = False) -> None:
