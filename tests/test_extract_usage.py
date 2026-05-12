@@ -240,7 +240,9 @@ assert google_provider.extractors is not None
 
 def test_google():
     usage = google_provider.extract_usage(gemini_response_data)
-    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
+    assert usage == snapshot(
+        ('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162, input_text_tokens=75, output_text_tokens=18))
+    )
 
 
 gemini_response_data_caching = {
@@ -265,11 +267,14 @@ def test_google_caching():
     assert usage == snapshot(
         Usage(
             input_tokens=14152,
-            cache_read_tokens=12239,
             output_tokens=129,
+            cache_read_tokens=12239,
+            input_text_tokens=14002,
+            output_text_tokens=50,
+            cache_text_read_tokens=12110,
             input_audio_tokens=150,
-            cache_audio_read_tokens=129,
             output_audio_tokens=10,
+            cache_audio_read_tokens=129,
         ),
     )
     assert model is not None
@@ -282,11 +287,14 @@ def test_google_caching_public_extraction_parity():
     assert extracted_usage.usage == snapshot(
         Usage(
             input_tokens=14152,
-            cache_read_tokens=12239,
             output_tokens=129,
+            cache_read_tokens=12239,
+            input_text_tokens=14002,
+            output_text_tokens=50,
+            cache_text_read_tokens=12110,
             input_audio_tokens=150,
-            cache_audio_read_tokens=129,
             output_audio_tokens=10,
+            cache_audio_read_tokens=129,
         )
     )
     assert extracted_usage.model is not None
@@ -300,7 +308,7 @@ def test_google_caching_public_extraction_parity():
     )
 
 
-def test_google_extracts_image_and_video_token_details():
+def test_google_extracts_text_image_and_video_token_details():
     response_data = {
         'usageMetadata': {
             'promptTokenCount': 1_000,
@@ -331,6 +339,9 @@ def test_google_extracts_image_and_video_token_details():
             input_tokens=1_000,
             cache_read_tokens=300,
             output_tokens=500,
+            input_text_tokens=600,
+            cache_text_read_tokens=100,
+            output_text_tokens=300,
             input_image_tokens=250,
             input_video_tokens=150,
             cache_image_read_tokens=125,
@@ -358,7 +369,9 @@ gemini_response_data_thoughtless = {
 
 def test_gemini_response_thoughtless():
     usage = google_provider.extract_usage(gemini_response_data_thoughtless)
-    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18)))
+    assert usage == snapshot(
+        ('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=18, input_text_tokens=75, output_text_tokens=18))
+    )
 
 
 def test_bedrock():
@@ -497,7 +510,7 @@ def test_pricing_rejects_registered_contradictions_with_registry_message() -> No
 
 def test_accumulate_extracted_usage():
     extracted = extract_usage(gemini_response_data, provider_id='google')
-    assert extracted.usage == Usage(input_tokens=75, output_tokens=162)
+    assert extracted.usage == Usage(input_tokens=75, output_tokens=162, input_text_tokens=75, output_text_tokens=18)
     with pytest.raises(TypeError):
         _ = extracted + 1
     with pytest.raises(TypeError):
@@ -507,7 +520,12 @@ def test_accumulate_extracted_usage():
     with pytest.raises(ValueError):
         _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
     double_extracted = extracted + extracted
-    assert double_extracted.usage == Usage(input_tokens=75 * 2, output_tokens=162 * 2)
+    assert double_extracted.usage == Usage(
+        input_tokens=75 * 2,
+        output_tokens=162 * 2,
+        input_text_tokens=75 * 2,
+        output_text_tokens=18 * 2,
+    )
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20
     )
