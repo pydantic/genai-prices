@@ -3013,8 +3013,28 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'thoughtsTokenCount',
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
             path: 'toolUsePromptTokenCount',
             dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_text_tokens',
             required: false,
           },
         ],

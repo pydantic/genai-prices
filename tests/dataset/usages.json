@@ -1969,6 +1969,7 @@
         "usage": {
           "input_text_tokens": 1106,
           "input_tokens": 1106,
+          "output_text_tokens": 1089,
           "output_tokens": 1867
         }
       }
@@ -2004,7 +2005,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.000066",
-            "output_price": "0.27708",
+            "output_price": "0.219948",
             "provider_id": "google"
           }
         ],
@@ -2012,6 +2013,7 @@
           "input_text_tokens": 33,
           "input_tokens": 33,
           "output_image_tokens": 1120,
+          "output_text_tokens": 529,
           "output_tokens": 2309
         }
       }
@@ -2048,6 +2050,7 @@
         "usage": {
           "input_text_tokens": 8,
           "input_tokens": 8,
+          "output_text_tokens": 725,
           "output_tokens": 778
         }
       }
@@ -2414,7 +2417,7 @@
         "usage": {
           "input_text_tokens": 54,
           "input_tokens": 54,
-          "output_text_tokens": 141,
+          "output_text_tokens": 302,
           "output_tokens": 302
         }
       }
@@ -2591,6 +2594,7 @@
         "usage": {
           "input_text_tokens": 17,
           "input_tokens": 17,
+          "output_text_tokens": 332,
           "output_tokens": 533
         }
       }
@@ -2634,6 +2638,7 @@
         "usage": {
           "input_text_tokens": 209,
           "input_tokens": 209,
+          "output_text_tokens": 417,
           "output_tokens": 623
         }
       }
@@ -2848,6 +2853,7 @@
         "usage": {
           "input_text_tokens": 12,
           "input_tokens": 12,
+          "output_text_tokens": 130,
           "output_tokens": 154
         }
       }
@@ -2884,6 +2890,7 @@
         "usage": {
           "input_text_tokens": 8,
           "input_tokens": 8,
+          "output_text_tokens": 99,
           "output_tokens": 105
         }
       }
@@ -3219,6 +3226,7 @@
         "usage": {
           "input_text_tokens": 49,
           "input_tokens": 49,
+          "output_text_tokens": 264,
           "output_tokens": 276
         }
       }
@@ -3253,6 +3261,7 @@
         "usage": {
           "input_text_tokens": 80,
           "input_tokens": 80,
+          "output_text_tokens": 150,
           "output_tokens": 159
         }
       }
@@ -3377,6 +3386,7 @@
         "usage": {
           "input_text_tokens": 15,
           "input_tokens": 15,
+          "output_text_tokens": 275,
           "output_tokens": 283
         }
       }
@@ -3413,6 +3423,7 @@
         "usage": {
           "input_text_tokens": 9,
           "input_tokens": 9,
+          "output_text_tokens": 182,
           "output_tokens": 203
         }
       }
@@ -3449,6 +3460,7 @@
         "usage": {
           "input_text_tokens": 9,
           "input_tokens": 9,
+          "output_text_tokens": 342,
           "output_tokens": 363
         }
       }
@@ -3485,6 +3497,7 @@
         "usage": {
           "input_text_tokens": 26,
           "input_tokens": 26,
+          "output_text_tokens": 360,
           "output_tokens": 424
         }
       }
@@ -3748,6 +3761,7 @@
         "usage": {
           "input_text_tokens": 249,
           "input_tokens": 249,
+          "output_text_tokens": 620,
           "output_tokens": 860
         }
       }
@@ -3990,6 +4004,7 @@
         "usage": {
           "input_text_tokens": 107,
           "input_tokens": 107,
+          "output_text_tokens": 123,
           "output_tokens": 146
         }
       }
@@ -4075,6 +4090,7 @@
         "usage": {
           "input_text_tokens": 15,
           "input_tokens": 15,
+          "output_text_tokens": 1158,
           "output_tokens": 1335
         }
       }
@@ -4118,6 +4134,7 @@
         "usage": {
           "input_text_tokens": 39,
           "input_tokens": 39,
+          "output_text_tokens": 1177,
           "output_tokens": 1235
         }
       }
@@ -4196,6 +4213,7 @@
         "usage": {
           "input_text_tokens": 14,
           "input_tokens": 14,
+          "output_text_tokens": 181,
           "output_tokens": 197
         }
       }
@@ -4446,6 +4464,7 @@
         "usage": {
           "input_text_tokens": 219,
           "input_tokens": 219,
+          "output_text_tokens": 323,
           "output_tokens": 416
         }
       }
@@ -4530,6 +4549,7 @@
         "usage": {
           "input_text_tokens": 85,
           "input_tokens": 85,
+          "output_text_tokens": 32,
           "output_tokens": 45
         }
       }
@@ -4645,6 +4665,7 @@
         "usage": {
           "input_text_tokens": 23,
           "input_tokens": 23,
+          "output_text_tokens": 158,
           "output_tokens": 183
         }
       }
@@ -4681,6 +4702,7 @@
         "usage": {
           "input_text_tokens": 57,
           "input_tokens": 57,
+          "output_text_tokens": 124,
           "output_tokens": 139
         }
       }
@@ -4717,6 +4739,7 @@
         "usage": {
           "input_text_tokens": 109,
           "input_tokens": 109,
+          "output_text_tokens": 199,
           "output_tokens": 215
         }
       }
@@ -4753,6 +4776,7 @@
         "usage": {
           "input_text_tokens": 142,
           "input_tokens": 142,
+          "output_text_tokens": 97,
           "output_tokens": 98
         }
       }
@@ -4958,6 +4982,7 @@
         "usage": {
           "input_text_tokens": 12,
           "input_tokens": 12,
+          "output_text_tokens": 806,
           "output_tokens": 915
         }
       }
@@ -5086,6 +5111,7 @@
         "usage": {
           "input_text_tokens": 12,
           "input_tokens": 12,
+          "output_text_tokens": 448,
           "output_tokens": 461
         }
       }
@@ -5192,6 +5218,7 @@
         "usage": {
           "input_text_tokens": 29,
           "input_tokens": 29,
+          "output_text_tokens": 1001,
           "output_tokens": 1737
         }
       }
@@ -5228,6 +5255,7 @@
         "usage": {
           "input_text_tokens": 1280,
           "input_tokens": 1280,
+          "output_text_tokens": 1115,
           "output_tokens": 2073
         }
       }
@@ -5262,6 +5290,7 @@
         "usage": {
           "input_text_tokens": 123,
           "input_tokens": 123,
+          "output_text_tokens": 132,
           "output_tokens": 144
         }
       }
@@ -5296,6 +5325,7 @@
         "usage": {
           "input_text_tokens": 154,
           "input_tokens": 154,
+          "output_text_tokens": 153,
           "output_tokens": 166
         }
       }
@@ -5421,6 +5451,7 @@
         "usage": {
           "input_text_tokens": 10,
           "input_tokens": 10,
+          "output_text_tokens": 699,
           "output_tokens": 818
         }
       }
@@ -5505,6 +5536,7 @@
         "usage": {
           "input_text_tokens": 20,
           "input_tokens": 20,
+          "output_text_tokens": 183,
           "output_tokens": 199
         }
       }
@@ -5667,6 +5699,7 @@
         "usage": {
           "input_text_tokens": 2,
           "input_tokens": 2,
+          "output_text_tokens": 213,
           "output_tokens": 222
         }
       }
@@ -5703,6 +5736,7 @@
         "usage": {
           "input_text_tokens": 28,
           "input_tokens": 28,
+          "output_text_tokens": 108,
           "output_tokens": 126
         }
       }
@@ -9816,7 +9850,7 @@
         "usage": {
           "input_text_tokens": 13,
           "input_tokens": 13,
-          "output_text_tokens": 35,
+          "output_text_tokens": 66,
           "output_tokens": 66
         }
       }
@@ -10828,6 +10862,7 @@
         "usage": {
           "input_text_tokens": 9,
           "input_tokens": 9,
+          "output_text_tokens": 545,
           "output_tokens": 589
         }
       }
@@ -11006,6 +11041,7 @@
         "usage": {
           "input_text_tokens": 801,
           "input_tokens": 801,
+          "output_text_tokens": 794,
           "output_tokens": 2313
         }
       }
@@ -11166,6 +11202,7 @@
         "usage": {
           "input_text_tokens": 123,
           "input_tokens": 123,
+          "output_text_tokens": 318,
           "output_tokens": 330
         }
       }
@@ -11200,6 +11237,7 @@
         "usage": {
           "input_text_tokens": 154,
           "input_tokens": 154,
+          "output_text_tokens": 94,
           "output_tokens": 107
         }
       }
@@ -11236,6 +11274,7 @@
         "usage": {
           "input_text_tokens": 40,
           "input_tokens": 40,
+          "output_text_tokens": 65,
           "output_tokens": 84
         }
       }
@@ -11272,6 +11311,7 @@
         "usage": {
           "input_text_tokens": 164,
           "input_tokens": 164,
+          "output_text_tokens": 563,
           "output_tokens": 592
         }
       }
@@ -11610,6 +11650,7 @@
         "usage": {
           "input_text_tokens": 33,
           "input_tokens": 33,
+          "output_text_tokens": 64,
           "output_tokens": 74
         }
       }
@@ -11651,6 +11692,7 @@
           "input_image_tokens": 1107,
           "input_text_tokens": 78,
           "input_tokens": 1185,
+          "output_text_tokens": 381,
           "output_tokens": 552
         }
       }
@@ -32360,6 +32402,7 @@
         "usage": {
           "input_text_tokens": 383,
           "input_tokens": 383,
+          "output_text_tokens": 125,
           "output_tokens": 137
         }
       }
@@ -33533,6 +33576,7 @@
         "usage": {
           "input_text_tokens": 605,
           "input_tokens": 605,
+          "output_text_tokens": 154,
           "output_tokens": 168
         }
       }
@@ -43273,7 +43317,7 @@
         "usage": {
           "input_text_tokens": 7,
           "input_tokens": 7,
-          "output_text_tokens": 8,
+          "output_text_tokens": 61,
           "output_tokens": 61
         }
       }

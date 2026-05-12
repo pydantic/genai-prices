@@ -1720,7 +1720,17 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_text_tokens', required=False),
                     UsageExtractorMapping(path='toolUsePromptTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='output_text_tokens',
+                        required=False,
+                    ),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',

@@ -295,7 +295,7 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         input_text_tokens: 75,
         input_tokens: 75,
-        output_text_tokens: 18,
+        output_text_tokens: 162,
         output_tokens: 162,
       })
     })
@@ -331,8 +331,35 @@ describe('extractUsage', () => {
         input_audio_tokens: 150,
         input_text_tokens: 14002,
         input_tokens: 14152,
-        output_text_tokens: 50,
+        output_text_tokens: 119,
         output_tokens: 119,
+      })
+    })
+
+    it('should use tool-use modality details for text output', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          candidatesTokenCount: 3,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+          promptTokenCount: 10,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+          thoughtsTokenCount: 4,
+          toolUsePromptTokenCount: 25,
+          toolUsePromptTokensDetails: [
+            { modality: 'TEXT', tokenCount: 10 },
+            { modality: 'IMAGE', tokenCount: 15 },
+          ],
+        },
+      }
+      const { model, usage } = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_text_tokens: 10,
+        input_tokens: 10,
+        output_text_tokens: 17,
+        output_tokens: 32,
       })
     })
   })
