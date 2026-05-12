@@ -27,6 +27,7 @@ from genai_prices.types import (
 )
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry, _set_registry
 from prices import package_data, prices_types as build_types
+from prices.export_validation import validate_unit_families
 
 from .unit_registry_helpers import load_units
 
@@ -286,9 +287,9 @@ def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> No
     assert 'requests' not in registry.reported_usage_keys()
 
 
-def test_unit_registry_rejects_duplicate_usage_keys_across_families() -> None:
+def test_validate_unit_families_rejects_duplicate_usage_keys_across_families() -> None:
     with pytest.raises(ValueError, match='Duplicate unit usage key: input_tokens'):
-        UnitRegistry(
+        validate_unit_families(
             {
                 'tokens': {
                     'per': 1_000_000,
@@ -310,9 +311,9 @@ def test_unit_registry_rejects_duplicate_usage_keys_across_families() -> None:
         )
 
 
-def test_unit_registry_rejects_duplicate_price_keys() -> None:
+def test_validate_unit_families_rejects_duplicate_price_keys() -> None:
     with pytest.raises(ValueError, match='Duplicate unit price key: input_mtok'):
-        UnitRegistry(
+        validate_unit_families(
             {
                 'tokens': {
                     'per': 1_000_000,
@@ -331,12 +332,12 @@ def test_unit_registry_rejects_duplicate_price_keys() -> None:
         )
 
 
-def test_unit_registry_rejects_duplicate_dimension_sets_within_family() -> None:
+def test_validate_unit_families_rejects_duplicate_dimension_sets_within_family() -> None:
     with pytest.raises(
         ValueError,
         match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
     ):
-        UnitRegistry(
+        validate_unit_families(
             {
                 'tokens': {
                     'per': 1_000_000,
@@ -382,14 +383,14 @@ def test_unit_registry_allows_same_dimension_set_across_families() -> None:
     assert registry.units['input_tokens'].dimensions == registry.units['input_characters'].dimensions
 
 
-def test_unit_registry_rejects_skipped_intermediate_dimension_sets() -> None:
+def test_validate_unit_families_rejects_skipped_intermediate_dimension_sets() -> None:
     with pytest.raises(
         ValueError,
         match=(
             'Missing intermediate unit dimensions in family tokens between input_tokens and cache_video_read_tokens'
         ),
     ):
-        UnitRegistry(
+        validate_unit_families(
             {
                 'tokens': {
                     'per': 1_000_000,
@@ -412,14 +413,40 @@ def test_unit_registry_rejects_skipped_intermediate_dimension_sets() -> None:
         )
 
 
-def test_unit_registry_current_token_subset_satisfies_interval_closure() -> None:
-    registry = UnitRegistry(load_units())
+def test_validate_unit_families_accepts_bundled_units() -> None:
+    registry = validate_unit_families(load_units())
 
     assert registry.units['cache_audio_read_tokens'].dimensions == {
         'direction': 'input',
         'modality': 'audio',
         'cache': 'read',
     }
+
+
+@pytest.mark.parametrize(
+    ('usage_key', 'price_key', 'message'),
+    [
+        ('_private_name', 'private_mtok', "Invalid unit usage key: '_private_name' must not start"),
+        ('class', 'class_mtok', "Invalid unit usage key: 'class' is a reserved keyword"),
+        ('valid_usage', '_private_name', "Invalid unit price key: '_private_name' must not start"),
+        ('valid_usage', 'class', "Invalid unit price key: 'class' is a reserved keyword"),
+    ],
+)
+def test_validate_unit_families_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        validate_unit_families(
+            {
+                'tokens': {
+                    'per': 1_000_000,
+                    'units': {
+                        usage_key: {
+                            'price_key': price_key,
+                            'dimensions': {'direction': 'input'},
+                        },
+                    },
+                },
+            }
+        )
 
 
 def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:

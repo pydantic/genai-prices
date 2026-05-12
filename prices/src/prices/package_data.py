@@ -105,9 +105,9 @@ def load_unit_families() -> dict[str, Any]:
 
 
 def load_unit_registry(unit_families: dict[str, Any] | None = None) -> UnitRegistry:
-    from genai_prices.units import UnitRegistry
+    from prices.export_validation import validate_unit_families
 
-    return UnitRegistry(load_unit_families() if unit_families is None else unit_families)
+    return validate_unit_families(load_unit_families() if unit_families is None else unit_families)
 
 
 def validate_provider_model_prices(providers: Iterable[object], registry: UnitRegistry) -> None:

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from itertools import combinations
 from typing import Any, cast
 
 
@@ -61,9 +60,6 @@ class UnitRegistry:
 
             raw_units = cast(Mapping[str, Mapping[str, Any]], raw_family.get('units', {}))
             for usage_key, raw_unit in raw_units.items():
-                if usage_key in self.units:
-                    raise ValueError(f'Duplicate unit usage key: {usage_key}')
-
                 unit = UnitDef(
                     usage_key=usage_key,
                     price_key=cast(str, raw_unit.get('price_key', usage_key)),
@@ -71,14 +67,8 @@ class UnitRegistry:
                     family=family,
                     dimensions=dict(cast(Mapping[str, str], raw_unit.get('dimensions', {}))),
                 )
-                if unit.price_key in self._units_by_price_key:
-                    raise ValueError(f'Duplicate unit price key: {unit.price_key}')
 
                 dimension_set = _dimension_set(unit)
-                if existing_unit := family.units_by_dimension.get(dimension_set):
-                    raise ValueError(
-                        f'Duplicate dimensions in unit family {family_id}: {existing_unit.usage_key} and {usage_key}'
-                    )
 
                 family.units[usage_key] = unit
                 self.units[usage_key] = unit
@@ -92,8 +82,6 @@ class UnitRegistry:
                 if maybe_ancestor is not unit and _is_dimension_subset(maybe_ancestor, unit)
             )
 
-        self._validate_interval_closure()
-
     def unit_for_price_key(self, price_key: str) -> UnitDef:
         """Return the registered unit priced by price_key."""
         return self._units_by_price_key[price_key]
@@ -104,27 +92,6 @@ class UnitRegistry:
 
     def ancestor_usage_keys(self, usage_key: str) -> frozenset[str]:
         return self._ancestor_usage_keys[usage_key]
-
-    def _validate_interval_closure(self) -> None:
-        for family in self.families.values():
-            for ancestor in family.units.values():
-                for descendant in family.units.values():
-                    if ancestor is descendant or not _is_dimension_subset(ancestor, descendant):
-                        continue
-
-                    added_dimensions = descendant.dimensions.items() - ancestor.dimensions.items()
-                    for size in range(1, len(added_dimensions)):
-                        for added_subset in combinations(added_dimensions, size):
-                            required_dimensions = frozenset(ancestor.dimensions.items() | set(added_subset))
-                            if required_dimensions not in family.units_by_dimension:
-                                missing_dimensions = ', '.join(
-                                    f'{key}={value}' for key, value in sorted(required_dimensions)
-                                )
-                                raise ValueError(
-                                    f'Missing intermediate unit dimensions in family {family.id} '
-                                    f'between {ancestor.usage_key} and {descendant.usage_key}: '
-                                    f'{missing_dimensions}'
-                                )
 
 
 def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:

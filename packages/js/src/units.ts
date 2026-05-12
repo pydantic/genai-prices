@@ -31,15 +31,7 @@ export class UnitRegistry {
       this.families[familyId] = family
 
       for (const [usageKey, rawUnit] of Object.entries(rawFamily.units)) {
-        if (this.units.has(usageKey)) {
-          throw new Error(`Duplicate unit usage key: ${usageKey}`)
-        }
-
         const priceKey = rawUnit.price_key ?? usageKey
-        if (this.unitsByPriceKey.has(priceKey)) {
-          throw new Error(`Duplicate unit price key: ${priceKey}`)
-        }
-
         const unit: UnitDef = {
           dimensions: { ...rawUnit.dimensions },
           family,
@@ -48,10 +40,6 @@ export class UnitRegistry {
           usageKey,
         }
         const dimensionSet = dimensionKey(unit.dimensions)
-        const existingUnit = family.unitsByDimension.get(dimensionSet)
-        if (existingUnit) {
-          throw new Error(`Duplicate dimensions in unit family ${familyId}: ${existingUnit.usageKey} and ${usageKey}`)
-        }
 
         family.units[usageKey] = unit
         family.unitsByDimension.set(dimensionSet, unit)
@@ -75,8 +63,6 @@ export class UnitRegistry {
         this.reportedUsageKeys.add(usageKey)
       }
     }
-
-    validateIntervalClosure(this.families)
   }
 
   ancestorUsageKeys(usageKey: string): Set<string> {
@@ -85,6 +71,98 @@ export class UnitRegistry {
       throw new Error(`Unknown unit usage key: ${usageKey}`)
     }
     return new Set(ancestorUsageKeys)
+  }
+}
+
+const reservedPublicKeys = new Set(['__proto__', 'constructor', 'prototype'])
+const reservedKeywords = new Set([
+  'await',
+  'break',
+  'case',
+  'catch',
+  'class',
+  'const',
+  'continue',
+  'debugger',
+  'default',
+  'delete',
+  'do',
+  'else',
+  'enum',
+  'export',
+  'extends',
+  'false',
+  'finally',
+  'for',
+  'function',
+  'if',
+  'import',
+  'in',
+  'instanceof',
+  'new',
+  'null',
+  'return',
+  'super',
+  'switch',
+  'this',
+  'throw',
+  'true',
+  'try',
+  'typeof',
+  'var',
+  'void',
+  'while',
+  'with',
+  'yield',
+])
+
+export function validateUnitFamilies(raw: RawFamiliesDict): UnitRegistry {
+  const usageKeys = new Set<string>()
+  const priceKeys = new Set<string>()
+
+  for (const [familyId, rawFamily] of Object.entries(raw)) {
+    const dimensionSets = new Map<string, string>()
+
+    for (const [usageKey, rawUnit] of Object.entries(rawFamily.units)) {
+      validatePublicKey('usage', usageKey)
+      if (usageKeys.has(usageKey)) {
+        throw new Error(`Duplicate unit usage key: ${usageKey}`)
+      }
+      usageKeys.add(usageKey)
+
+      const priceKey = rawUnit.price_key ?? usageKey
+      validatePublicKey('price', priceKey)
+      if (priceKeys.has(priceKey)) {
+        throw new Error(`Duplicate unit price key: ${priceKey}`)
+      }
+      priceKeys.add(priceKey)
+
+      const dimensions = dimensionKey(rawUnit.dimensions)
+      const existingUnit = dimensionSets.get(dimensions)
+      if (existingUnit) {
+        throw new Error(`Duplicate dimensions in unit family ${familyId}: ${existingUnit} and ${usageKey}`)
+      }
+      dimensionSets.set(dimensions, usageKey)
+    }
+  }
+
+  const registry = new UnitRegistry(raw)
+  validateIntervalClosure(registry.families)
+  return registry
+}
+
+function validatePublicKey(kind: 'price' | 'usage', key: string): void {
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)) {
+    throw new Error(`Invalid unit ${kind} key: ${key} is not a public identifier`)
+  }
+  if (key.startsWith('_')) {
+    throw new Error(`Invalid unit ${kind} key: ${key} must not start with "_"`)
+  }
+  if (reservedKeywords.has(key)) {
+    throw new Error(`Invalid unit ${kind} key: ${key} is a reserved keyword`)
+  }
+  if (reservedPublicKeys.has(key)) {
+    throw new Error(`Invalid unit ${kind} key: ${key} is reserved`)
   }
 }
 
