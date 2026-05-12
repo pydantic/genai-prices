@@ -813,6 +813,65 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
     assert generated_unit_families == unit_families
 
 
+def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    unit_families = {
+        'tokens': {
+            'per': 1_000_000,
+            'description': 'Wrapped token counts',
+            'units': {
+                'input_tokens': {
+                    'price_key': 'input_mtok',
+                    'dimensions': {'direction': 'input'},
+                },
+            },
+        },
+    }
+    provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
+    payload = {
+        'unit_families': unit_families,
+        'providers': build_types.providers_schema.dump_python(
+            [provider],
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
+        ),
+    }
+    data_path = tmp_path / 'data.json'
+    data_path.write_text(json.dumps(payload))
+
+    js_src_dir = tmp_path / 'packages' / 'js' / 'src'
+    js_src_dir.mkdir(parents=True)
+    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+
+    def skip_prettier(
+        args: list[str],
+        *,
+        cwd: str | None = None,
+        check: bool = False,
+        stdout: int | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        _ = cwd, check, stdout
+        return subprocess.CompletedProcess(args, 0)
+
+    monkeypatch.setattr(package_data.subprocess, 'run', skip_prettier)
+
+    def fail_load_unit_families() -> dict[str, Any]:
+        raise AssertionError('wrapped package data should not read units.yml')
+
+    monkeypatch.setattr(package_data, 'load_unit_families', fail_load_unit_families)
+
+    package_data.package_ts_data(data_path)
+
+    assert (js_src_dir / 'data.ts').exists()
+    unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
+    generated_json = unit_data_content.split('export const unitFamiliesData: RawFamiliesDict = ', 1)[1].removesuffix(
+        ';\n'
+    )
+    assert json.loads(generated_json) == unit_families
+
+
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:
     price = build_types.ModelPrice.model_validate({'input_mtok': '1.0', 'cache_image_write_mtok': '0.5'})
 
