@@ -8,7 +8,6 @@ from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
-import ruamel.yaml
 from typing_extensions import TypeAlias
 
 from .prices_types import ModelPrice
@@ -73,10 +72,8 @@ def _load_package_payload(data_path: Path) -> tuple[Any, dict[str, Any]]:
     payload = json.loads(data_path.read_bytes())
     if isinstance(payload, dict) and 'unit_families' in payload and 'providers' in payload:
         return cast(Any, payload['providers']), cast(dict[str, Any], payload['unit_families'])
-    if isinstance(payload, list):
-        return cast(Any, payload), load_unit_families()
 
-    raise ValueError(f'Expected {data_path} to contain Provider[] or {{unit_families, providers}}')
+    raise ValueError(f'Expected {data_path} to contain {{unit_families, providers}}')
 
 
 def _format_generated_python_data(path: Path, *, post_process_provider_reprs: bool = False) -> None:
@@ -106,18 +103,10 @@ def _format_generated_python_data(path: Path, *, post_process_provider_reprs: bo
     )
 
 
-def load_unit_families() -> dict[str, Any]:
-    yaml = ruamel.yaml.YAML(typ='safe')
-    with (this_package_dir / 'units.yml').open() as f:
-        unit_families = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
-
-    return unit_families
-
-
-def load_unit_registry(unit_families: dict[str, Any] | None = None) -> UnitRegistry:
+def load_unit_registry(unit_families: dict[str, Any]) -> UnitRegistry:
     from prices.export_validation import validate_unit_families
 
-    return validate_unit_families(load_unit_families() if unit_families is None else unit_families)
+    return validate_unit_families(unit_families)
 
 
 def validate_provider_model_prices(providers: Iterable[object], registry: UnitRegistry) -> None:

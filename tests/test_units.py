@@ -27,7 +27,7 @@ from genai_prices.types import (
     _group_model_price_units_by_family,
 )
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry, _set_registry
-from prices import package_data, prices_types as build_types
+from prices import build as build_module, package_data, prices_types as build_types
 from prices.export_validation import validate_export_payload, validate_unit_families
 
 from .unit_registry_helpers import load_units
@@ -657,8 +657,8 @@ def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_on
     assert set(_compute_registry_priced_counts(grouped_units, Usage(input_tokens=100))) == {'requests'}
 
 
-def test_package_data_loads_unit_families() -> None:
-    assert set(package_data.load_unit_families()) == {'tokens', 'requests'}
+def test_build_loads_unit_families() -> None:
+    assert set(build_module.load_unit_families()) == {'tokens', 'requests'}
 
 
 def test_package_data_surfaces_registry_structural_errors(
@@ -678,13 +678,31 @@ tokens:
       dimensions: {direction: input}
 """
     )
-    monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'package_dir', tmp_path)
 
     with pytest.raises(
         ValueError,
         match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
     ):
-        package_data.load_unit_registry(package_data.load_unit_families())
+        package_data.load_unit_registry(build_module.load_unit_families())
+
+
+def test_package_generation_no_longer_reloads_units_yml() -> None:
+    references = {
+        path
+        for path in Path('prices/src/prices').glob('*.py')
+        if path.name != 'build.py' and 'units.yml' in path.read_text()
+    }
+
+    assert references == set()
+
+
+def test_package_payload_rejects_legacy_provider_arrays(tmp_path: Path) -> None:
+    data_path = tmp_path / 'data.json'
+    data_path.write_text('[]')
+
+    with pytest.raises(ValueError, match=r'Expected .* to contain \{unit_families, providers\}'):
+        package_data._load_package_payload(data_path)
 
 
 def test_package_data_accepts_valid_provider_model_prices() -> None:
@@ -800,11 +818,6 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
 
     monkeypatch.setattr(package_data, '_format_generated_python_data', skip_format_generated_python_data)
 
-    def fail_load_unit_families() -> dict[str, Any]:
-        raise AssertionError('wrapped package data should not read units.yml')
-
-    monkeypatch.setattr(package_data, 'load_unit_families', fail_load_unit_families)
-
     package_data.package_python_data(data_path)
 
     assert (py_package_dir / 'data.py').exists()
@@ -856,11 +869,6 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
         return subprocess.CompletedProcess(args, 0)
 
     monkeypatch.setattr(subprocess, 'run', skip_prettier)
-
-    def fail_load_unit_families() -> dict[str, Any]:
-        raise AssertionError('wrapped package data should not read units.yml')
-
-    monkeypatch.setattr(package_data, 'load_unit_families', fail_load_unit_families)
 
     package_data.package_ts_data(data_path)
 

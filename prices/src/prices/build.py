@@ -13,7 +13,6 @@ from pydantic import ValidationError
 from pydantic.main import IncEx
 
 from prices.export_validation import validate_export_payload
-from prices.package_data import load_unit_families
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
 
@@ -25,6 +24,13 @@ def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.Scalar
 
 yaml = ruamel.yaml.YAML(typ='safe')
 yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)  # pyright: ignore[reportUnknownMemberType]
+
+
+def load_unit_families() -> dict[str, Any]:
+    with (package_dir / 'units.yml').open() as f:
+        unit_families = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+
+    return unit_families
 
 
 def build():
