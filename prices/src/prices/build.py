@@ -5,18 +5,17 @@ import gzip
 import io
 from decimal import Decimal
 from operator import attrgetter
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
 import pydantic_core
 import ruamel.yaml
 from pydantic import ValidationError
 from pydantic.main import IncEx
 
+from prices.export_validation import validate_export_payload
+from prices.package_data import load_unit_families
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
-
-if TYPE_CHECKING:
-    from genai_prices.units import UnitRegistry
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -57,9 +56,8 @@ def build():
     providers.sort(key=attrgetter('id'))
     for provider in providers:
         provider.exclude_removed()
-    unit_registry = load_unit_registry()
-    validate_model_prices(providers, unit_registry)
-    validate_extractors(providers, unit_registry)
+    unit_families = load_unit_families()
+    validate_export_payload(providers, unit_families)
     write_prices(providers, 'data.json')
     for provider in providers:
         provider.exclude_free()
@@ -130,24 +128,6 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
         f'Prices data file {prices_json_path.relative_to(root_dir)} {action} '
         f'({pretty_size(len(json_data))}, {pretty_size(gz_len)} gzipped)'
     )
-
-
-def load_unit_registry() -> UnitRegistry:
-    from prices.package_data import load_unit_families, load_unit_registry as package_load_unit_registry
-
-    return package_load_unit_registry(load_unit_families())
-
-
-def validate_model_prices(providers: list[Provider], registry: UnitRegistry) -> None:
-    from prices.package_data import validate_provider_model_prices
-
-    validate_provider_model_prices(providers, registry)
-
-
-def validate_extractors(providers: list[Provider], registry: UnitRegistry) -> None:
-    from prices.package_data import validate_provider_extractor_destinations
-
-    validate_provider_extractor_destinations(providers, registry)
 
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:

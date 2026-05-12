@@ -744,6 +744,21 @@ def test_validate_export_payload_rejects_missing_dynamic_price_ancestor() -> Non
         validate_export_payload([provider], load_units())
 
 
+def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.MonkeyPatch) -> None:
+    from prices import build as build_module
+
+    class ExportValidationError(ValueError):
+        pass
+
+    def fail_export_validation(_providers: list[build_types.Provider], _unit_families: dict[str, Any]) -> UnitRegistry:
+        raise ExportValidationError('sentinel export validation failure')
+
+    monkeypatch.setattr(build_module, 'validate_export_payload', fail_export_validation)
+
+    with pytest.raises(ExportValidationError, match='sentinel export validation failure'):
+        build_module.build()
+
+
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:
     price = build_types.ModelPrice.model_validate({'input_mtok': '1.0', 'cache_image_write_mtok': '0.5'})
 
