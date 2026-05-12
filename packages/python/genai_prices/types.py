@@ -721,7 +721,6 @@ class ModelPrice:
         cache_audio_read_mtok: Decimal | TieredPrices | None = None,
         output_audio_mtok: Decimal | TieredPrices | None = None,
         requests_kcount: Decimal | None = None,
-        _extra_prices: Mapping[str, Decimal | TieredPrices | None] | None = None,
         **extra_prices: Decimal | TieredPrices | None,
     ) -> None:
         object.__setattr__(self, 'input_mtok', input_mtok)
@@ -733,7 +732,12 @@ class ModelPrice:
         object.__setattr__(self, 'output_audio_mtok', output_audio_mtok)
         object.__setattr__(self, 'requests_kcount', requests_kcount)
 
-        dynamic_prices = dict(_extra_prices or {})
+        raw_stored_prices = cast(Any, extra_prices).pop('_extra_prices', None)
+        dynamic_prices: dict[str, Decimal | TieredPrices | None] = {}
+        if raw_stored_prices is not None:
+            if not isinstance(raw_stored_prices, Mapping):
+                raise TypeError('_extra_prices must be a mapping')
+            dynamic_prices.update(cast(Mapping[str, Decimal | TieredPrices | None], raw_stored_prices))
         dynamic_prices.update(extra_prices)
         object.__setattr__(self, '_extra_prices', dynamic_prices)
 

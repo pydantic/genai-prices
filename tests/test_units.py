@@ -532,7 +532,7 @@ def test_collect_effective_model_price_keys_includes_unregistered_extras_for_val
 
 def test_collect_effective_model_price_keys_ignores_none_dynamic_extras() -> None:
     registry = UnitRegistry(load_units())
-    price = ModelPrice(_extra_prices={'cache_image_read_mtok': None})
+    price = ModelPrice(cache_image_read_mtok=None)
 
     assert _collect_effective_model_price_keys(price, registry) == set()
 
@@ -958,13 +958,13 @@ def test_build_model_price_accepts_typed_extra_price_keys() -> None:
 
 
 def test_package_data_collects_runtime_model_price_extra_keys() -> None:
-    price = ModelPrice(input_mtok=Decimal('1'), _extra_prices={'hovercraft_mtok': Decimal('2')})
+    price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
 
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
 
 
 def test_runtime_model_price_repr_preserves_dynamic_extra_keys() -> None:
-    price = ModelPrice(input_mtok=Decimal('2'), _extra_prices={'output_image_mtok': Decimal('120')})
+    price = ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))
 
     assert repr(price) == "ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))"
 
