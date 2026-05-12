@@ -1,0 +1,16 @@
+prices/providers/google.yml
+  h_d9dd17644dded9 480,484-485
+tests/unit_registry_helpers.py
+  h_d9dd17644dded9 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "4f027b851f24590c94f90356d20d24db91966850",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
