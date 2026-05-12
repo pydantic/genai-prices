@@ -56,12 +56,24 @@ describe('validateAncestorCoverage', () => {
       validateAncestorCoverage(['cache_read_mtok'])
     }).toThrow('Missing ancestor price key input_mtok for cache_read_mtok')
   })
+
+  it('rejects child prices from a single-pass iterable without registered ancestor prices', () => {
+    expect(() => {
+      validateAncestorCoverage(oneShotPriceKeys(['cache_read_mtok']))
+    }).toThrow('Missing ancestor price key input_mtok for cache_read_mtok')
+  })
 })
 
 describe('validateJoinCoverage', () => {
   it('rejects compatible priced units when their registered join is not priced', () => {
     expect(() => {
       validateJoinCoverage(['input_mtok', 'cache_read_mtok', 'input_audio_mtok'])
+    }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+  })
+
+  it('rejects compatible priced units from a single-pass iterable when their registered join is not priced', () => {
+    expect(() => {
+      validateJoinCoverage(oneShotPriceKeys(['input_mtok', 'cache_read_mtok', 'input_audio_mtok']))
     }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
   })
 
@@ -173,5 +185,16 @@ function providerWithDestination(dest: string): Provider {
     id: 'test-provider',
     models: [],
     name: 'Test Provider',
+  }
+}
+
+function oneShotPriceKeys(keys: string[]): Iterable<string> {
+  let used = false
+  return {
+    [Symbol.iterator]: () => {
+      if (used) return [][Symbol.iterator]()
+      used = true
+      return keys[Symbol.iterator]()
+    },
   }
 }

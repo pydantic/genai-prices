@@ -11,8 +11,9 @@ export function validatePriceKeys(priceKeys: Iterable<string>, registry: UnitReg
 }
 
 export function validateAncestorCoverage(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
-  validatePriceKeys(priceKeys, registry)
-  const pricedKeys = new Set(priceKeys)
+  const effectivePriceKeys = [...priceKeys]
+  validatePriceKeys(effectivePriceKeys, registry)
+  const pricedKeys = new Set(effectivePriceKeys)
   const pricedUnits = getUnitsForPriceKeys(pricedKeys, registry)
 
   for (const unit of pricedUnits) {
@@ -26,8 +27,9 @@ export function validateAncestorCoverage(priceKeys: Iterable<string>, registry: 
 }
 
 export function validateJoinCoverage(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
-  validatePriceKeys(priceKeys, registry)
-  const pricedKeys = new Set(priceKeys)
+  const effectivePriceKeys = [...priceKeys]
+  validatePriceKeys(effectivePriceKeys, registry)
+  const pricedKeys = new Set(effectivePriceKeys)
   const pricedUnits = getUnitsForPriceKeys(pricedKeys, registry)
 
   for (let leftIndex = 0; leftIndex < pricedUnits.length; leftIndex++) {
