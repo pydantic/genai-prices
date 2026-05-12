@@ -2012,12 +2012,17 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
-                id='gemini-3.1-flash-lite-preview',
-                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite-preview'),
-                name='Gemini 3.1 Flash Lite Preview',
+                id='gemini-3.1-flash-lite',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.1-flash-lite'),
+                        ClauseEquals(equals='gemini-3.1-flash-lite-preview'),
+                    ]
+                ),
+                name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
