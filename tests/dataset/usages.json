@@ -2005,6 +2005,7 @@
         ],
         "usage": {
           "input_tokens": 33,
+          "output_image_tokens": 1120,
           "output_tokens": 2309
         }
       }
@@ -2171,6 +2172,7 @@
         "usage": {
           "input_audio_tokens": 1475,
           "input_tokens": 4605,
+          "input_video_tokens": 3120,
           "output_tokens": 459
         }
       }
@@ -2285,6 +2287,7 @@
         ],
         "usage": {
           "input_tokens": 10,
+          "output_image_tokens": 1290,
           "output_tokens": 1304
         }
       }
@@ -2733,6 +2736,7 @@
         ],
         "usage": {
           "input_tokens": 270,
+          "input_video_tokens": 260,
           "output_tokens": 131
         }
       }
@@ -2933,6 +2937,7 @@
         "usage": {
           "input_audio_tokens": 1475,
           "input_tokens": 16824,
+          "input_video_tokens": 15340,
           "output_tokens": 60
         }
       }
@@ -2980,6 +2985,7 @@
         ],
         "usage": {
           "input_tokens": 268,
+          "input_video_tokens": 258,
           "output_tokens": 162
         }
       }
@@ -3025,6 +3031,7 @@
         ],
         "usage": {
           "input_tokens": 9,
+          "output_image_tokens": 1290,
           "output_tokens": 1295
         }
       }
@@ -3464,6 +3471,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 3354,
           "input_tokens": 3367,
           "output_tokens": 9
         }
@@ -3505,6 +3513,7 @@
         ],
         "usage": {
           "input_tokens": 17,
+          "output_image_tokens": 1290,
           "output_tokens": 1336
         }
       }
@@ -3548,6 +3557,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 1806,
           "input_tokens": 1817,
           "output_tokens": 5
         }
@@ -3715,6 +3725,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 2580,
           "input_tokens": 2589,
           "output_tokens": 33
         }
@@ -4186,6 +4197,7 @@
         ],
         "usage": {
           "input_tokens": 10,
+          "output_image_tokens": 1290,
           "output_tokens": 1303
         }
       }
@@ -4390,6 +4402,7 @@
         ],
         "usage": {
           "input_tokens": 1569,
+          "input_video_tokens": 1560,
           "output_tokens": 60
         }
       }
@@ -4884,6 +4897,7 @@
         ],
         "usage": {
           "input_tokens": 268,
+          "input_video_tokens": 258,
           "output_tokens": 139
         }
       }
@@ -5327,6 +5341,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 2580,
           "input_tokens": 2589,
           "output_tokens": 51
         }
@@ -10166,6 +10181,7 @@
         "usage": {
           "input_audio_tokens": 1475,
           "input_tokens": 16824,
+          "input_video_tokens": 15340,
           "output_tokens": 126
         }
       }
@@ -10435,6 +10451,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 2580,
           "input_tokens": 2589,
           "output_tokens": 40
         }
@@ -10481,6 +10498,7 @@
         ],
         "usage": {
           "input_tokens": 1569,
+          "input_video_tokens": 1560,
           "output_tokens": 53
         }
       }
@@ -10525,6 +10543,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 2580,
           "input_tokens": 2589,
           "output_tokens": 52
         }
@@ -11284,6 +11303,7 @@
         ],
         "usage": {
           "input_tokens": 270,
+          "input_video_tokens": 260,
           "output_tokens": 110
         }
       }
@@ -11437,6 +11457,7 @@
           }
         ],
         "usage": {
+          "input_image_tokens": 1107,
           "input_tokens": 1185,
           "output_tokens": 552
         }
