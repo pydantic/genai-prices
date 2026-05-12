@@ -934,6 +934,8 @@ def _compute_registry_priced_counts(grouped_units: Mapping[UnitFamily, set[UnitD
 
 def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
     for field in dataclasses.fields(model_price):
+        if field.name == '_extra_prices':
+            continue
         try:
             registry.unit_for_price_key(field.name)
         except KeyError:
@@ -941,6 +943,10 @@ def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegi
 
         if getattr(model_price, field.name) is not None:
             yield field.name
+
+    for price_key, value in model_price._extra_prices.items():  # pyright: ignore[reportPrivateUsage]
+        if value is not None:
+            yield price_key
 
 
 @dataclass

@@ -510,6 +510,29 @@ def test_collect_effective_model_price_keys_ignores_none_values() -> None:
     }
 
 
+def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
+    registry = UnitRegistry(load_units())
+    price = ModelPrice(
+        cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
+    )
+
+    assert _collect_effective_model_price_keys(price, registry) == {'cache_image_read_mtok'}
+
+
+def test_collect_effective_model_price_keys_includes_unregistered_extras_for_validation() -> None:
+    registry = UnitRegistry(load_units())
+    price = ModelPrice(hovercraft_mtok=Decimal('1'))  # pyright: ignore[reportCallIssue]
+
+    assert _collect_effective_model_price_keys(price, registry) == {'hovercraft_mtok'}
+
+
+def test_collect_effective_model_price_keys_ignores_none_dynamic_extras() -> None:
+    registry = UnitRegistry(load_units())
+    price = ModelPrice(_extra_prices={'cache_image_read_mtok': None})
+
+    assert _collect_effective_model_price_keys(price, registry) == set()
+
+
 def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -> None:
     registry = _custom_price_key_registry()
 
