@@ -6,7 +6,7 @@ import { calcPrice, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { setActiveRegistry } from '../units'
 
-describe('Phase 3 wrapped payload integration', () => {
+describe('wrapped payload integration', () => {
   it('calculates a dynamic price key from wrapped provider data', async () => {
     try {
       updatePrices(({ setProviderData }) => {
