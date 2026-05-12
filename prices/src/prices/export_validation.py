@@ -7,6 +7,8 @@ from typing import Any, cast
 
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
 
+from .prices_types import Provider
+
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
 
 
@@ -39,6 +41,16 @@ def validate_unit_families(unit_families: Mapping[str, Mapping[str, Any]]) -> Un
 
     registry = UnitRegistry(unit_families)
     _validate_interval_closure(registry)
+    return registry
+
+
+def validate_export_payload(providers: list[Provider], unit_families: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
+    """Validate registry structure, provider model prices, and extractor destinations before export."""
+    from prices.package_data import validate_provider_extractor_destinations, validate_provider_model_prices
+
+    registry = validate_unit_families(unit_families)
+    validate_provider_model_prices(providers, registry)
+    validate_provider_extractor_destinations(providers, registry)
     return registry
 
 

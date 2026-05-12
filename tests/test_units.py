@@ -27,7 +27,7 @@ from genai_prices.types import (
 )
 from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry, _set_registry
 from prices import package_data, prices_types as build_types
-from prices.export_validation import validate_unit_families
+from prices.export_validation import validate_export_payload, validate_unit_families
 
 from .unit_registry_helpers import load_units
 
@@ -693,6 +693,55 @@ def test_package_data_accepts_valid_provider_model_prices() -> None:
     )
 
     package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_validate_export_payload_returns_validated_unit_registry() -> None:
+    registry = validate_export_payload(
+        [_build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))],
+        load_units(),
+    )
+
+    assert isinstance(registry, UnitRegistry)
+    assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
+
+
+def test_validate_export_payload_rejects_unknown_price_key() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'hovercraft_mtok': '1'}),
+        model_id='unknown-extra-price',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/unknown-extra-price: Unknown price key: hovercraft_mtok',
+    ):
+        validate_export_payload([provider], load_units())
+
+
+def test_validate_export_payload_rejects_unknown_extractor_destination() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('imaginary_tokens')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: imaginary_tokens',
+    ):
+        validate_export_payload([provider], load_units())
+
+
+def test_validate_export_payload_rejects_missing_dynamic_price_ancestor() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'cache_image_write_mtok': '1'}),
+        model_id='missing-dynamic-ancestor',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-dynamic-ancestor: Missing ancestor price for cache_image_write_tokens',
+    ):
+        validate_export_payload([provider], load_units())
 
 
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:
