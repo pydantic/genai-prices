@@ -296,7 +296,16 @@
       "type": "object"
     },
     "ModelPrice": {
-      "additionalProperties": false,
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "$ref": "#/$defs/TieredPrices"
+          }
+        ]
+      },
       "description": "Set of prices for using a model",
       "properties": {
         "input_mtok": {

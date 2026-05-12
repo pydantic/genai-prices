@@ -9,6 +9,7 @@ from annotated_types import Gt, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
+    ConfigDict,
     Discriminator,
     Field,
     HttpUrl,
@@ -238,6 +239,10 @@ DollarPrice = Annotated[
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
+    model_config = ConfigDict(extra='allow')
+
+    __pydantic_extra__: dict[str, DollarPrice | TieredPrices] = Field(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
+
     input_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million uncached text input/prompt token"""
 
@@ -263,6 +268,9 @@ class ModelPrice(_Model):
         """Whether all values are zero or unset"""
         for field_name in self.__pydantic_fields__:
             if getattr(self, field_name):
+                return False
+        for value in (self.model_extra or {}).values():
+            if value is not None:
                 return False
         return True
 

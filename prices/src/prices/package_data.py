@@ -156,9 +156,11 @@ def _iter_model_prices(prices: object) -> Iterator[tuple[str, object]]:
 
 def _collect_model_price_keys(model_price: object) -> set[str]:
     if isinstance(model_price, ModelPrice):
-        return {
+        declared_keys = {
             field_name for field_name in model_price.__pydantic_fields__ if getattr(model_price, field_name) is not None
         }
+        extra_keys = {field_name for field_name, value in (model_price.model_extra or {}).items() if value is not None}
+        return declared_keys | extra_keys
 
     if dataclasses.is_dataclass(model_price):
         return {field.name for field in dataclasses.fields(model_price) if getattr(model_price, field.name) is not None}

@@ -695,6 +695,30 @@ def test_package_data_accepts_valid_provider_model_prices() -> None:
     package_data.validate_provider_model_prices([provider], registry)
 
 
+def test_build_model_price_accepts_typed_extra_price_keys() -> None:
+    price = build_types.ModelPrice.model_validate({'input_mtok': '1.0', 'cache_image_write_mtok': '0.5'})
+
+    assert price.input_mtok == Decimal('1.0')
+    assert price.model_extra == {'cache_image_write_mtok': Decimal('0.5')}
+    assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
+
+
+def test_build_model_price_extras_affect_is_free() -> None:
+    assert not build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}).is_free()
+    assert build_types.ModelPrice().is_free()
+
+
+def test_extras_only_paid_model_survives_slim_filtering() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}),
+        model_id='extras-only-paid',
+    )
+
+    provider.exclude_free()
+
+    assert [model.id for model in provider.models] == ['extras-only-paid']
+
+
 def test_package_data_validates_conditional_model_prices() -> None:
     registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
