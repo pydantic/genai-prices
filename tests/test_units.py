@@ -926,6 +926,12 @@ def test_package_data_collects_runtime_model_price_extra_keys() -> None:
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
 
 
+def test_runtime_model_price_schema_omits_internal_extra_storage() -> None:
+    schema = data.providers_schema.json_schema()
+
+    assert '_extra_prices' not in schema['$defs']['ModelPrice']['properties']
+
+
 def test_build_model_price_extras_affect_is_free() -> None:
     assert not build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}).is_free()
     assert build_types.ModelPrice().is_free()

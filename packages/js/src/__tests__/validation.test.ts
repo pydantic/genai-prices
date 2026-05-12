@@ -68,7 +68,7 @@ describe('validateJoinCoverage', () => {
   it('rejects compatible priced units when their join is absent from the current registry', () => {
     expect(() => {
       validateJoinCoverage(['input_mtok', 'cache_write_mtok', 'input_audio_mtok'])
-    }).toThrow('Missing registered join unit for cache_write_mtok and input_audio_mtok')
+    }).toThrow('Missing join price key cache_audio_write_mtok for cache_write_mtok and input_audio_mtok')
   })
 
   it('accepts compatible priced units when the join is priced', () => {

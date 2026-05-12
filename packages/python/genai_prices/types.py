@@ -9,6 +9,9 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
+from pydantic.annotated_handlers import GetJsonSchemaHandler
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import core_schema
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
@@ -727,6 +730,24 @@ class ModelPrice:
         for key in extra_prices:
             model_price_data.pop(key)
         return model_price_data
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        json_schema = handler(schema)
+
+        properties = json_schema.get('properties')
+        if isinstance(properties, dict):
+            cast(dict[str, Any], properties).pop('_extra_prices', None)
+
+        required = json_schema.get('required')
+        if isinstance(required, list):
+            json_schema['required'] = [
+                field_name for field_name in cast(list[str], required) if field_name != '_extra_prices'
+            ]
+
+        return json_schema
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
