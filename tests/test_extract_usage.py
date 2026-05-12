@@ -300,6 +300,47 @@ def test_google_caching_public_extraction_parity():
     )
 
 
+def test_google_extracts_image_and_video_token_details():
+    response_data = {
+        'usageMetadata': {
+            'promptTokenCount': 1_000,
+            'candidatesTokenCount': 500,
+            'cachedContentTokenCount': 300,
+            'promptTokensDetails': [
+                {'modality': 'TEXT', 'tokenCount': 600},
+                {'modality': 'IMAGE', 'tokenCount': 250},
+                {'modality': 'VIDEO', 'tokenCount': 150},
+            ],
+            'cacheTokensDetails': [
+                {'modality': 'TEXT', 'tokenCount': 100},
+                {'modality': 'IMAGE', 'tokenCount': 125},
+                {'modality': 'VIDEO', 'tokenCount': 75},
+            ],
+            'candidatesTokensDetails': [
+                {'modality': 'TEXT', 'tokenCount': 300},
+                {'modality': 'IMAGE', 'tokenCount': 125},
+                {'modality': 'VIDEO', 'tokenCount': 75},
+            ],
+        },
+        'modelVersion': 'gemini-2.5-flash',
+    }
+
+    assert google_provider.extract_usage(response_data) == (
+        'gemini-2.5-flash',
+        Usage(
+            input_tokens=1_000,
+            cache_read_tokens=300,
+            output_tokens=500,
+            input_image_tokens=250,
+            input_video_tokens=150,
+            cache_image_read_tokens=125,
+            cache_video_read_tokens=75,
+            output_image_tokens=125,
+            output_video_tokens=75,
+        ),
+    )
+
+
 gemini_response_data_thoughtless = {
     'usageMetadata': {
         'promptTokenCount': 75,
