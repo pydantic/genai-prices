@@ -142,8 +142,13 @@ export interface PriceDataStorage {
   set: (data: string) => Promise<void>
 }
 
-type OptionalProviders = null | Provider[]
-export type ProviderDataPayload = OptionalProviders | Promise<OptionalProviders>
+export interface WrappedProviderData {
+  providers: Provider[]
+  unit_families: RawFamiliesDict
+}
+
+export type ProviderDataValue = null | Provider[] | WrappedProviderData
+export type ProviderDataPayload = Promise<ProviderDataValue> | ProviderDataValue
 
 export interface StorageFactoryParams {
   onCalc: (cb: () => void) => void

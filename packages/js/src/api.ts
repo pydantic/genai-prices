@@ -3,13 +3,16 @@ import type {
   PriceOptions,
   Provider,
   ProviderDataPayload,
+  ProviderDataValue,
   ProviderFindOptions,
   StorageFactoryParams,
   Usage,
+  WrappedProviderData,
 } from './types'
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { getActiveRegistry, setActiveRegistry, UnitRegistry } from './units'
 import { validateExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
@@ -23,25 +26,49 @@ function setProviderData(data: ProviderDataPayload) {
   if (data === null) {
     return
   }
-  if ('then' in data) {
+  if (typeof data === 'object' && 'then' in data) {
     providerDataPromise = data
       .then((data) => {
         if (data === null) {
           return providerData
         }
-        validateExtractorDestinations(data)
-        providerData = data
-        return data
+        return activateProviderData(data)
       })
       .catch((error: unknown) => {
         providerDataPromise = Promise.resolve(providerData)
         throw error
       })
   } else {
-    validateExtractorDestinations(data)
-    providerDataPromise = Promise.resolve(data)
-    providerData = data
+    providerDataPromise = Promise.resolve(activateProviderData(data))
   }
+}
+
+function activateProviderData(data: Exclude<ProviderDataValue, null>): Provider[] {
+  if (Array.isArray(data)) {
+    validateExtractorDestinations(data)
+    providerData = data
+    return data
+  }
+
+  if (typeof data === 'object' && isWrappedProviderData(data)) {
+    const candidateRegistry = new UnitRegistry(data.unit_families)
+    const previousRegistry = getActiveRegistry()
+    setActiveRegistry(candidateRegistry)
+    try {
+      validateExtractorDestinations(data.providers)
+      providerData = data.providers
+      return data.providers
+    } catch (error) {
+      setActiveRegistry(previousRegistry)
+      throw error
+    }
+  }
+
+  throw new Error('Expected null, Provider[], or { unit_families, providers }')
+}
+
+function isWrappedProviderData(data: object): data is WrappedProviderData {
+  return 'providers' in data && 'unit_families' in data
 }
 
 function onCalc(cb: () => void) {
