@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { setUnitFamilies, UnitRegistry } from '../units'
+import { setActiveRegistry, UnitRegistry } from '../units'
 import { getUsageValue, normalizeUsage } from '../usage'
 
 describe('normalizeUsage', () => {
@@ -75,7 +75,7 @@ describe('normalizeUsage', () => {
     })
 
     try {
-      setUnitFamilies(registry)
+      setActiveRegistry(registry)
       expect(
         normalizeUsage({
           input_tokens: 100,
@@ -85,7 +85,7 @@ describe('normalizeUsage', () => {
         widgets: 7,
       })
     } finally {
-      setUnitFamilies(null)
+      setActiveRegistry(null)
     }
   })
 })
@@ -202,7 +202,7 @@ describe('getUsageValue', () => {
     })
 
     try {
-      setUnitFamilies(registry)
+      setActiveRegistry(registry)
       const usage = normalizeUsage({
         premium_widgets: 3,
         widgets: 10,
@@ -211,7 +211,7 @@ describe('getUsageValue', () => {
       expect(getUsageValue(usage, 'widgets')).toBe(10)
       expect(getUsageValue(usage, 'premium_widgets')).toBe(3)
     } finally {
-      setUnitFamilies(null)
+      setActiveRegistry(null)
     }
   })
 })

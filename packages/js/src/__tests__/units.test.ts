@@ -11,7 +11,7 @@ import {
   getUnit,
   getUnitForPriceKey,
   getUsageKeyForPriceKey,
-  setUnitFamilies,
+  setActiveRegistry,
   UnitRegistry,
   validateUnitFamilies,
 } from '../units'
@@ -326,17 +326,17 @@ describe('active unit registry', () => {
       },
     })
 
-    setUnitFamilies(custom)
+    setActiveRegistry(custom)
     expect(getActiveRegistry()).toBe(custom)
     expect(getActiveRegistry().families.widgets?.units.widgets?.priceKey).toBe('widgets')
 
-    setUnitFamilies(null)
+    setActiveRegistry(null)
     expect(getActiveRegistry()).toBe(generated)
     expect(getActiveRegistry().families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
   })
 
   it('looks up generated families and usage keys', () => {
-    setUnitFamilies(null)
+    setActiveRegistry(null)
     expect(getFamily('tokens').per).toBe(1_000_000)
     expect(getFamily('requests').per).toBe(1_000)
     expect(getUnit('input_tokens')).toBe(getFamily('tokens').units.input_tokens)
@@ -349,7 +349,7 @@ describe('active unit registry', () => {
   })
 
   it('looks up generated price keys', () => {
-    setUnitFamilies(null)
+    setActiveRegistry(null)
     expect(getUnitForPriceKey('input_mtok')).toBe(getUnit('input_tokens'))
     expect(getUnitForPriceKey('output_mtok')).toBe(getUnit('output_tokens'))
     expect(getUnitForPriceKey('requests_kcount')).toBe(getUnit('requests'))
@@ -362,17 +362,17 @@ describe('active unit registry', () => {
   })
 
   it('returns the generated full usage-key set', () => {
-    setUnitFamilies(null)
+    setActiveRegistry(null)
     expect(getAllUsageKeys()).toEqual(new Set(['requests', ...tokenUsageKeys]))
   })
 
   it('returns the generated full price-key set', () => {
-    setUnitFamilies(null)
+    setActiveRegistry(null)
     expect(getAllPriceKeys()).toEqual(new Set(['requests_kcount', ...tokenPriceKeys]))
   })
 
   it('returns externally reported usage keys without pricing-only requests', () => {
-    setUnitFamilies(null)
+    setActiveRegistry(null)
     expect(getAllUsageKeys()).toContain('requests')
     expect(getActiveRegistry().reportedUsageKeys).toEqual(new Set(tokenUsageKeys))
     expect(getActiveRegistry().reportedUsageKeys).not.toContain('requests')

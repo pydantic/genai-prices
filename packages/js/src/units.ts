@@ -205,7 +205,7 @@ export function getUsageKeyForPriceKey(priceKey: string): string {
   return getUnitForPriceKey(priceKey).usageKey
 }
 
-export function setUnitFamilies(registry: null | UnitRegistry): void {
+export function setActiveRegistry(registry: null | UnitRegistry): void {
   if (registry === null) {
     activeRegistry = generatedRegistry
   } else {

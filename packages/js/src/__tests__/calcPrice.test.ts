@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { ModelPrice, Usage } from '../types'
 
 import { calcPrice } from '../engine'
-import { setUnitFamilies, UnitRegistry } from '../units'
+import { setActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
 
@@ -238,7 +238,7 @@ describe('Core Price Calculation Function', () => {
       })
 
       try {
-        setUnitFamilies(registry)
+        setActiveRegistry(registry)
         const result = calcPrice(
           {
             ignored_telemetry_units: 999,
@@ -257,7 +257,7 @@ describe('Core Price Calculation Function', () => {
           total_price: 44,
         })
       } finally {
-        setUnitFamilies(null)
+        setActiveRegistry(null)
       }
     })
 
