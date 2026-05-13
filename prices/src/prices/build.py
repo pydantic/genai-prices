@@ -81,6 +81,11 @@ def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
     for unit in registry.units.values():
         model_price_properties.setdefault(unit.price_key, copy.deepcopy(additional_price_schema))
 
+    extractor_mapping_schema = cast(dict[str, Any], json_schema['$defs']['UsageExtractorMapping'])
+    extractor_mapping_properties = cast(dict[str, Any], extractor_mapping_schema['properties'])
+    dest_schema = cast(dict[str, Any], extractor_mapping_properties['dest'])
+    dest_schema['enum'] = sorted(registry.reported_usage_keys())
+
     return json_schema
 
 

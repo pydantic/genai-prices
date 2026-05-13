@@ -58,6 +58,32 @@ def test_provider_yaml_schema_includes_current_dynamic_registry_price_keys() -> 
     assert 'cache_image_read_mtok' in properties
 
 
+def test_provider_yaml_schema_suggests_extractor_dests_from_reported_registry_units() -> None:
+    schema = build_module._provider_yaml_schema(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+            'requests': {
+                'per': 1_000,
+                'price_key': 'requests_kcount',
+                'dimensions': {'family': 'requests'},
+            },
+        }
+    )
+
+    dest_schema = schema['$defs']['UsageExtractorMapping']['properties']['dest']
+    assert dest_schema['enum'] == ['input_tokens', 'sausage_tokens']
+    assert 'requests' not in dest_schema['enum']
+
+
 @pytest.mark.requires_latest_pydantic
 def test_package_schema():
     package_schema = simplify_json_schema(providers_schema.json_schema(schema_generator=CustomGenerateJsonSchema))

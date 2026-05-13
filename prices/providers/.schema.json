@@ -761,7 +761,29 @@
         "dest": {
           "description": "Destination field to store the extracted value.\n\nIf multiple mappings point to the same destination, the values are summed.",
           "title": "Dest",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "cache_audio_read_tokens",
+            "cache_audio_write_tokens",
+            "cache_image_read_tokens",
+            "cache_image_write_tokens",
+            "cache_read_tokens",
+            "cache_text_read_tokens",
+            "cache_text_write_tokens",
+            "cache_video_read_tokens",
+            "cache_video_write_tokens",
+            "cache_write_tokens",
+            "input_audio_tokens",
+            "input_image_tokens",
+            "input_text_tokens",
+            "input_tokens",
+            "input_video_tokens",
+            "output_audio_tokens",
+            "output_image_tokens",
+            "output_text_tokens",
+            "output_tokens",
+            "output_video_tokens"
+          ]
         },
         "required": {
           "default": true,
