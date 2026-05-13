@@ -24,6 +24,8 @@ from genai_prices._cli_impl import (
     _suggest_models,
 )
 from genai_prices.data import providers
+from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
+from genai_prices.data_units import unit_data
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
 from genai_prices.units import UnitRegistry, _set_registry
 
@@ -171,6 +173,44 @@ Context Window: 16,385
    Total Price: $0.0034
 
 """)
+    assert err == ''
+
+
+def test_calc_plain_model_prices_use_cli_formatter(capsys: pytest.CaptureFixture[str]):
+    custom_units = dict(unit_data)
+    custom_units['sausage_tokens'] = {
+        'per': 1_000_000,
+        'price_key': 'sausage_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+    }
+    _set_registry(UnitRegistry(custom_units))
+    set_custom_snapshot(
+        DataSnapshot(
+            providers=[
+                Provider(
+                    id='testing',
+                    name='Testing',
+                    api_pattern='testing',
+                    models=[
+                        ModelInfo(
+                            id='sausage',
+                            match=ClauseEquals('sausage'),
+                            prices=ModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')),
+                        )
+                    ],
+                )
+            ],
+            from_auto_update=False,
+        )
+    )
+    try:
+        assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'testing:sausage']) == 0
+        out, err = capsys.readouterr()
+    finally:
+        set_custom_snapshot(None)
+        _set_registry(None)
+
+    assert '  Model Prices: $1/input MTok, $2/input sausage MTok\n' in out
     assert err == ''
 
 

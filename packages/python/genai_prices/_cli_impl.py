@@ -339,7 +339,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
         output: list[tuple[str, str | None]] = [
             ('Provider', price_calc.provider.name),
             ('Model', price_calc.model.name or price_calc.model.id),
-            ('Model Prices', str(price_calc.model_price)),
+            ('Model Prices', _format_model_prices(price_calc.model_price, split_lines=False, use_color=False).plain),
             ('Context Window', f'{w:,d}' if w is not None else None),
             ('Input Price', f'${price_calc.input_price}'),
             ('Output Price', f'${price_calc.output_price}'),
