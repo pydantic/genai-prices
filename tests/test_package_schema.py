@@ -5,6 +5,7 @@ from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 from pydantic_core import core_schema, from_json
 
 from genai_prices.data import providers_schema
+from prices import build as build_module
 from prices.utils import package_dir as prices_package_dir, simplify_json_schema
 
 
@@ -25,6 +26,36 @@ def remove_ignored_fields(json_schema: Any):
     elif isinstance(json_schema, list):
         for item in cast(list[Any], json_schema):
             remove_ignored_fields(item)
+
+
+def test_provider_yaml_schema_suggests_registry_price_keys_from_units() -> None:
+    schema = build_module._provider_yaml_schema(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+        }
+    )
+
+    model_price_schema = schema['$defs']['ModelPrice']
+    properties = model_price_schema['properties']
+    assert properties['input_mtok']['description'] == 'price in USD per million uncached text input/prompt token'
+    assert properties['sausage_mtok'] == model_price_schema['additionalProperties']
+    assert isinstance(model_price_schema['additionalProperties'], dict)
+
+
+def test_provider_yaml_schema_includes_current_dynamic_registry_price_keys() -> None:
+    schema = build_module._provider_yaml_schema(build_module.load_units())
+
+    properties = schema['$defs']['ModelPrice']['properties']
+    assert 'cache_image_read_mtok' in properties
 
 
 @pytest.mark.requires_latest_pydantic
