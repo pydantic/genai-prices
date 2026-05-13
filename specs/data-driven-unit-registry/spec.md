@@ -58,7 +58,7 @@ Dimension assignments define containment. A unit is an ancestor of another unit 
 There is no separate declaration of allowed dimension keys or values. Structural validation decides whether the resulting graph is usable. A stricter optional dimension schema can be added later if typo protection becomes worth the extra authoring surface.
 
 **Registry-aware pricing decomposes usage by dimensions.** _(from "Dimensions define specificity and overlap", "Every usage value must land in exactly one pricing bucket")_
-For each model, only units with prices participate in decomposition. The runtime computes each priced unit's exclusive usage value from the dimension graph, multiplies by the stored price and the unit's `per`, and aggregates costs. The shared behavior is detailed in [algorithm](algorithm.md) and [examples](examples.md).
+For each model, only units with prices participate in decomposition. The runtime computes each priced unit's exclusive usage value from the dimension graph, multiplies it by the stored price, divides by the unit's `per`, and aggregates costs. The shared behavior is detailed in [algorithm](algorithm.md) and [examples](examples.md).
 
 **Only priced units become buckets.** _(from "Registry-aware pricing decomposes usage by dimensions")_
 If a model does not price a more-specific reported unit, that reported value remains inside the nearest priced ancestor when an explicit ancestor is available. Descendant-only reports do not become implicit parent totals; pricing raises rather than guessing when a required priced ancestor or overlap is omitted.
