@@ -14,10 +14,12 @@ runs. The current repo data does not price such a pair.
 
 ## Mobius Inversion on the Containment Poset
 
-The containment poset is defined by dimension set inclusion: unit A is an
-ancestor of unit B if A's dimensions are a subset of B's. Only priced units
-become cost buckets; unpriced reported usage keys are ignored unless they are
-needed to detect that a priced ancestor or overlap was omitted.
+The containment poset is defined by full dimension set inclusion: unit A is an
+ancestor of unit B if A's dimensions are a subset of B's. The required `family`
+dimension participates in that same comparison; units from different family
+dimension values are incompatible because their `family` values conflict. Only
+priced units become cost buckets; unpriced reported usage keys are ignored
+unless they are needed to detect that a priced ancestor or overlap was omitted.
 
 Descendant/ancestor relationships are determined by the full registry poset (dimension set inclusion), not just the priced subset. Only priced units participate in the sum, but the depth of each unit is its total number of dimensions regardless of what else is priced.
 
@@ -28,7 +30,7 @@ leaf(U) = sum over all priced descendants V of U (including U itself):
             (-1)^(depth(V) - depth(U)) * usage(V)
 ```
 
-where `depth(V)` = number of dimension assignments on V (e.g., unit `input_tokens` has 1: `{direction: input}`, unit `cache_audio_read_tokens` has 3: `{direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage key. In the tokens family, the least-specific units have one dimension (direction) — there is no zero-dimension root unit. The current `requests` unit is an explicit one-request-per-`Usage`-object pricing rule, not a usage-reported family that needs decomposition.
+where `depth(V)` = number of dimension assignments on V (e.g., unit `input_tokens` has 2: `{family: tokens, direction: input}`, unit `cache_audio_read_tokens` has 4: `{family: tokens, direction: input, modality: audio, cache: read}`), and `usage(V)` = the usage value looked up by V's usage key. Within one family dimension value, the required `family` assignment is shared by every comparable unit, so it does not change the inclusion-exclusion sign differences from the earlier family-object formulation. In the tokens family dimension value, the least-specific usage units have `family` plus one commercial dimension (`direction`) — there is no family-only token root unit. The current `requests` unit is an explicit one-request-per-`Usage`-object pricing rule, not caller-reported usage that needs decomposition.
 
 This is standard Mobius inversion on a product of flat lattices: each dimension is an independent categorical axis whose values are incomparable.
 
@@ -40,7 +42,7 @@ closed shapes where registry closure and price coverage give the formula the
 intermediate units and prices it relies on.
 
 It is wrong when a registry allows a specific unit without structurally
-important intermediate units. For example, if a family has `input_tokens`,
+important intermediate units. For example, if a family dimension value has `input_tokens`,
 `cache_read_tokens`, and `cache_video_read_tokens`, but no
 `input_video_tokens`, the full-depth formula would add `cache_video_read_tokens`
 back into the `input_tokens` catch-all. That is commercially wrong when cached

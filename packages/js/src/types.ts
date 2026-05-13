@@ -59,31 +59,17 @@ export interface UsageExtractorMapping {
 
 export interface RawUnitData {
   dimensions: Record<string, string>
+  per: number
   price_key?: string
 }
 
-export interface RawFamilyData {
-  description: string
-  per: number
-  units: Record<string, RawUnitData>
-}
-
-export type RawFamiliesDict = Record<string, RawFamilyData>
+export type RawUnitsDict = Record<string, RawUnitData>
 
 export interface UnitDef {
   dimensions: Record<string, string>
-  family: UnitFamily
-  familyId: string
+  per: number
   priceKey: string
   usageKey: string
-}
-
-export interface UnitFamily {
-  description: string
-  id: string
-  per: number
-  units: Record<string, UnitDef>
-  unitsByDimension: Map<string, UnitDef>
 }
 
 export interface UsageExtractor {
@@ -144,7 +130,7 @@ export interface PriceDataStorage {
 
 export interface WrappedProviderData {
   providers: Provider[]
-  unit_families: RawFamiliesDict
+  units: RawUnitsDict
 }
 
 export type ProviderDataValue = null | Provider[] | WrappedProviderData

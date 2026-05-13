@@ -48,28 +48,26 @@ def test_python_wrapped_payload_dynamic_price_key_flow(monkeypatch: pytest.Monke
 
 def _wrapped_payload() -> dict[str, object]:
     return {
-        'unit_families': {
-            'tokens': {
+        'units': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'description': 'Token counts',
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'cache_read_tokens': {
-                        'price_key': 'cache_read_mtok',
-                        'dimensions': {'direction': 'input', 'cache': 'read'},
-                    },
-                    'input_image_tokens': {
-                        'price_key': 'input_image_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'image'},
-                    },
-                    'cache_image_read_tokens': {
-                        'price_key': 'cache_image_read_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'image', 'cache': 'read'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_read_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_read_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+            },
+            'input_image_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_image_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image'},
+            },
+            'cache_image_read_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_image_read_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'cache': 'read'},
             },
         },
         'providers': [

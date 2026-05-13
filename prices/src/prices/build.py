@@ -26,11 +26,11 @@ yaml = ruamel.yaml.YAML(typ='safe')
 yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)  # pyright: ignore[reportUnknownMemberType]
 
 
-def load_unit_families() -> dict[str, Any]:
+def load_units() -> dict[str, Any]:
     with (package_dir / 'units.yml').open() as f:
-        unit_families = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+        units = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
 
-    return unit_families
+    return units
 
 
 def build():
@@ -62,15 +62,15 @@ def build():
     providers.sort(key=attrgetter('id'))
     for provider in providers:
         provider.exclude_removed()
-    unit_families = load_unit_families()
-    validate_export_payload(providers, unit_families)
-    write_prices(providers, unit_families, 'data.json')
+    units = load_units()
+    validate_export_payload(providers, units)
+    write_prices(providers, units, 'data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, unit_families, 'data_slim.json', slim=True)
+    write_prices(providers, units, 'data_slim.json', slim=True)
 
 
-def write_prices(providers: list[Provider], unit_families: dict[str, Any], prices_file: str, *, slim: bool = False):
+def write_prices(providers: list[Provider], units: dict[str, Any], prices_file: str, *, slim: bool = False):
     print('')
     prices_json_path = package_dir / prices_file
 
@@ -111,7 +111,7 @@ def write_prices(providers: list[Provider], unit_families: dict[str, Any], price
         exclude_none=True,
         exclude=exclude,
     )
-    json_data = pydantic_core.to_json({'unit_families': unit_families, 'providers': provider_data}) + b'\n'
+    json_data = pydantic_core.to_json({'units': units, 'providers': provider_data}) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:
@@ -151,35 +151,29 @@ def _wrapped_prices_schema(providers_json_schema: dict[str, Any]) -> dict[str, A
         '$defs': defs,
         'additionalProperties': False,
         'properties': {
-            'unit_families': _unit_families_schema(),
+            'units': _units_schema(),
             'providers': providers_json_schema,
         },
-        'required': ['unit_families', 'providers'],
+        'required': ['units', 'providers'],
         'type': 'object',
     }
 
 
-def _unit_families_schema() -> dict[str, Any]:
+def _units_schema() -> dict[str, Any]:
     return {
         'additionalProperties': {
             'additionalProperties': False,
             'properties': {
                 'per': {'type': 'integer'},
-                'description': {'type': 'string'},
-                'units': {
-                    'additionalProperties': {
-                        'additionalProperties': False,
-                        'properties': {
-                            'price_key': {'type': 'string'},
-                            'dimensions': {'additionalProperties': {'type': 'string'}, 'type': 'object'},
-                        },
-                        'required': ['dimensions'],
-                        'type': 'object',
-                    },
+                'price_key': {'type': 'string'},
+                'dimensions': {
+                    'additionalProperties': {'type': 'string'},
+                    'properties': {'family': {'type': 'string'}},
+                    'required': ['family'],
                     'type': 'object',
                 },
             },
-            'required': ['per', 'units'],
+            'required': ['per', 'dimensions'],
             'type': 'object',
         },
         'type': 'object',

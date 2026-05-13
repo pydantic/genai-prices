@@ -28,13 +28,8 @@ describe('validatePriceKeys', () => {
   it('accepts price keys from an explicit registry argument', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
@@ -147,13 +142,8 @@ describe('validateExtractorDestinations', () => {
   it('validates extractor destinations against an explicit registry argument', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 

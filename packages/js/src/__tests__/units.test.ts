@@ -1,13 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import type { RawFamiliesDict } from '../types'
+import type { RawUnitsDict } from '../types'
 
-import { unitFamiliesData } from '../dataUnits'
+import { unitData } from '../dataUnits'
 import {
   getActiveRegistry,
   getAllPriceKeys,
   getAllUsageKeys,
-  getFamily,
   getUnit,
   getUnitForPriceKey,
   getUsageKeyForPriceKey,
@@ -62,24 +61,13 @@ const tokenPriceKeys = [
 ]
 
 describe('UnitRegistry', () => {
-  it('constructs generated unit families into indexed runtime objects', () => {
-    const registry = new UnitRegistry(unitFamiliesData)
-    const tokenFamily = registry.families.tokens
-    const requestFamily = registry.families.requests
-    expect(tokenFamily).toBeDefined()
-    expect(requestFamily).toBeDefined()
-    if (!tokenFamily || !requestFamily) throw new Error('Expected generated unit families')
+  it('constructs generated flat units into indexed runtime objects', () => {
+    const registry = new UnitRegistry(unitData)
 
-    expect(tokenFamily).toMatchObject({
-      description: 'Token counts',
-      id: 'tokens',
-      per: 1_000_000,
-    })
-    expect(new Set(Object.keys(tokenFamily.units))).toEqual(new Set(tokenUsageKeys))
-    expect(requestFamily.units.requests?.priceKey).toBe('requests_kcount')
-    expect(registry.units.get('input_tokens')).toBe(tokenFamily.units.input_tokens)
+    expect(new Set(tokenUsageKeys.map((usageKey) => registry.units.get(usageKey)?.usageKey))).toEqual(new Set(tokenUsageKeys))
+    expect(registry.units.get('requests')?.priceKey).toBe('requests_kcount')
     expect(registry.units.size).toBe(21)
-    expect(registry.unitsByPriceKey.get('input_mtok')).toBe(tokenFamily.units.input_tokens)
+    expect(registry.unitsByPriceKey.get('input_mtok')).toBe(registry.units.get('input_tokens'))
     expect(registry.unitsByPriceKey.get('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.allUsageKeys).toContain('input_tokens')
     expect(registry.allPriceKeys).toContain('input_mtok')
@@ -90,37 +78,28 @@ describe('UnitRegistry', () => {
   it('defaults missing price keys to the usage key', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
-    expect(registry.families.widgets?.units.widgets?.priceKey).toBe('widgets')
+    expect(registry.units.get('widgets')?.priceKey).toBe('widgets')
     expect(registry.unitsByPriceKey.get('widgets')).toBe(registry.units.get('widgets'))
   })
 
-  it('links units back to their family and fills dimension lookup state', () => {
-    const registry = new UnitRegistry(unitFamiliesData)
-    const tokenFamily = registry.families.tokens
-    expect(tokenFamily).toBeDefined()
-    if (!tokenFamily) throw new Error('Expected generated token family')
-
-    const inputAudio = tokenFamily.units.input_audio_tokens
+  it('indexes units by full dimension set', () => {
+    const registry = new UnitRegistry(unitData)
+    const inputAudio = registry.units.get('input_audio_tokens')
     expect(inputAudio).toBeDefined()
     if (!inputAudio) throw new Error('Expected input_audio_tokens')
 
-    expect(inputAudio.family).toBe(tokenFamily)
-    expect(inputAudio.familyId).toBe('tokens')
-    expect(tokenFamily.unitsByDimension.get('direction=input\0modality=audio')).toBe(inputAudio)
+    expect(inputAudio.dimensions.family).toBe('tokens')
+    expect(inputAudio.per).toBe(1_000_000)
+    expect(registry.unitsByDimension.get('direction=input\0family=tokens\0modality=audio')).toBe(inputAudio)
   })
 
   it('indexes ancestor usage keys', () => {
-    const registry = new UnitRegistry(unitFamiliesData)
+    const registry = new UnitRegistry(unitData)
 
     expect(registry.ancestorUsageKeys('cache_audio_read_tokens')).toEqual(
       new Set(['cache_read_tokens', 'input_audio_tokens', 'input_tokens'])
@@ -129,25 +108,21 @@ describe('UnitRegistry', () => {
   })
 
   it('keeps construction independent of generated data fixtures', () => {
-    const raw: RawFamiliesDict = {
-      calls: {
-        description: 'Call counts',
-        per: 100,
-        units: {
-          billable_calls: {
-            dimensions: {
-              class: 'billable',
-            },
-            price_key: 'billable_call_count',
-          },
+    const raw: RawUnitsDict = {
+      billable_calls: {
+        dimensions: {
+          class: 'billable',
+          family: 'calls',
         },
+        per: 100,
+        price_key: 'billable_call_count',
       },
     }
 
-    const unit = new UnitRegistry(raw).families.calls?.units.billable_calls
+    const unit = new UnitRegistry(raw).units.get('billable_calls')
     expect(unit).toMatchObject({
-      dimensions: { class: 'billable' },
-      familyId: 'calls',
+      dimensions: { class: 'billable', family: 'calls' },
+      per: 100,
       priceKey: 'billable_call_count',
       usageKey: 'billable_calls',
     })
@@ -157,43 +132,37 @@ describe('UnitRegistry', () => {
 describe('active unit registry', () => {
   it('initializes from generated unit data', () => {
     const active = getActiveRegistry()
-    expect(active.families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
-    expect(active.families.requests?.units.requests?.priceKey).toBe('requests_kcount')
+    expect(active.units.get('input_tokens')?.priceKey).toBe('input_mtok')
+    expect(active.units.get('requests')?.priceKey).toBe('requests_kcount')
   })
 
   it('sets custom registries and resets to the generated registry', () => {
     const generated = getActiveRegistry()
     const custom = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
     setActiveRegistry(custom)
     expect(getActiveRegistry()).toBe(custom)
-    expect(getActiveRegistry().families.widgets?.units.widgets?.priceKey).toBe('widgets')
+    expect(getActiveRegistry().units.get('widgets')?.priceKey).toBe('widgets')
 
     setActiveRegistry(null)
     expect(getActiveRegistry()).toBe(generated)
-    expect(getActiveRegistry().families.tokens?.units.input_tokens?.priceKey).toBe('input_mtok')
+    expect(getActiveRegistry().units.get('input_tokens')?.priceKey).toBe('input_mtok')
   })
 
-  it('looks up generated families and usage keys', () => {
+  it('looks up generated units', () => {
     setActiveRegistry(null)
-    expect(getFamily('tokens').per).toBe(1_000_000)
-    expect(getFamily('requests').per).toBe(1_000)
-    expect(getUnit('input_tokens')).toBe(getFamily('tokens').units.input_tokens)
-    expect(getUnit('requests')).toBe(getFamily('requests').units.requests)
+    expect(getUnit('input_tokens').per).toBe(1_000_000)
+    expect(getUnit('requests').per).toBe(1_000)
+    expect(getUnit('input_tokens')).toBe(getActiveRegistry().units.get('input_tokens'))
+    expect(getUnit('requests')).toBe(getActiveRegistry().units.get('requests'))
   })
 
-  it('raises specific errors for unknown family ids and usage keys', () => {
-    expect(() => getFamily('imaginary')).toThrow('Unknown unit family: imaginary')
+  it('raises specific errors for unknown usage keys', () => {
     expect(() => getUnit('imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
   })
 

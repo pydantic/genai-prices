@@ -169,10 +169,10 @@ class UpdatePrices:
         r = httpx.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         raw_payload = json.loads(r.content)
-        if not isinstance(raw_payload, dict) or 'unit_families' not in raw_payload or 'providers' not in raw_payload:
-            raise ValueError('Expected fetched prices payload to contain unit_families and providers')
+        if not isinstance(raw_payload, dict) or 'units' not in raw_payload or 'providers' not in raw_payload:
+            raise ValueError('Expected fetched prices payload to contain units and providers')
 
-        candidate_registry = UnitRegistry(cast(dict[str, Any], raw_payload['unit_families']))
+        candidate_registry = UnitRegistry(cast(dict[str, Any], raw_payload['units']))
         previous_registry = _get_registry()
         _set_registry(candidate_registry)
         try:

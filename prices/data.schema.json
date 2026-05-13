@@ -759,41 +759,34 @@
   },
   "additionalProperties": false,
   "properties": {
-    "unit_families": {
+    "units": {
       "additionalProperties": {
         "additionalProperties": false,
         "properties": {
           "per": {
             "type": "integer"
           },
-          "description": {
+          "price_key": {
             "type": "string"
           },
-          "units": {
+          "dimensions": {
             "additionalProperties": {
-              "additionalProperties": false,
-              "properties": {
-                "price_key": {
-                  "type": "string"
-                },
-                "dimensions": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "type": "object"
-                }
-              },
-              "required": [
-                "dimensions"
-              ],
-              "type": "object"
+              "type": "string"
             },
+            "properties": {
+              "family": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "family"
+            ],
             "type": "object"
           }
         },
         "required": [
           "per",
-          "units"
+          "dimensions"
         ],
         "type": "object"
       },
@@ -807,7 +800,7 @@
     }
   },
   "required": [
-    "unit_families",
+    "units",
     "providers"
   ],
   "type": "object"

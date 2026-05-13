@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import * as providerDataModule from '../data'
-import { unitFamiliesData } from '../dataUnits'
+import { unitData } from '../dataUnits'
 import { UnitRegistry } from '../units'
 
 const tokenUsageKeys = [
@@ -31,27 +31,18 @@ describe('generated data split', () => {
   it('keeps generated provider data separate from generated unit data', () => {
     expect(providerDataModule).toHaveProperty('data')
     expect(providerDataModule.data.length).toBeGreaterThan(0)
-    expect(providerDataModule).not.toHaveProperty('unitFamiliesData')
+    expect(providerDataModule).not.toHaveProperty('unitData')
   })
 
-  it('exposes current JavaScript unit families without the provider list', () => {
-    expect(new Set(Object.keys(unitFamiliesData))).toEqual(new Set(['requests', 'tokens']))
-    const tokenFamily = unitFamiliesData.tokens
-    const requestFamily = unitFamiliesData.requests
-    expect(tokenFamily).toBeDefined()
-    expect(requestFamily).toBeDefined()
-    if (!tokenFamily || !requestFamily) throw new Error('Expected generated token and request families')
-
-    expect(new Set(Object.keys(tokenFamily.units))).toEqual(new Set(tokenUsageKeys))
-    expect(new Set(Object.keys(requestFamily.units))).toEqual(new Set(['requests']))
-    const requestsUnit = requestFamily.units.requests
-    expect(requestsUnit).toBeDefined()
-    if (!requestsUnit) throw new Error('Expected generated requests unit')
-    expect(requestsUnit.price_key).toBe('requests_kcount')
+  it('exposes current JavaScript units without the provider list', () => {
+    expect(new Set(Object.keys(unitData))).toEqual(new Set(['requests', ...tokenUsageKeys]))
+    expect(new Set(tokenUsageKeys.map((usageKey) => unitData[usageKey]?.dimensions.family))).toEqual(new Set(['tokens']))
+    expect(unitData.requests?.dimensions.family).toBe('requests')
+    expect(unitData.requests?.price_key).toBe('requests_kcount')
   })
 
   it('constructs a runtime UnitRegistry from generated raw unit data', () => {
-    const registry = new UnitRegistry(unitFamiliesData)
+    const registry = new UnitRegistry(unitData)
 
     expect(registry.units.get('input_tokens')?.priceKey).toBe('input_mtok')
     expect(registry.units.size).toBe(21)

@@ -472,17 +472,14 @@ def test_extractor_accumulates_by_destination_string() -> None:
 def test_runtime_extractor_uses_active_global_registry(monkeypatch: pytest.MonkeyPatch) -> None:
     registry = UnitRegistry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'sausage_tokens': {
-                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
             },
         }
     )

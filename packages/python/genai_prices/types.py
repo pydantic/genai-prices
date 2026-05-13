@@ -15,7 +15,7 @@ from pydantic_core import core_schema
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
-    from genai_prices.units import UnitDef, UnitFamily, UnitRegistry
+    from genai_prices.units import UnitDef, UnitRegistry
 
 __all__ = (
     'ProviderID',
@@ -303,9 +303,7 @@ class Usage:
                 [
                     unit
                     for reported_key, value in self._values.items()
-                    if value > 0
-                    and (unit := registry.units.get(reported_key)) is not None
-                    and unit.family is requested_unit.family
+                    if value > 0 and (unit := registry.units.get(reported_key)) is not None
                 ],
             )
             if not overlapping_keys:
@@ -336,7 +334,7 @@ def _reported_overlap_keys_for_join(
                 continue
             if is_descendant_or_self(left, right) or is_descendant_or_self(right, left):
                 continue
-            if requested_unit.family.find_join(left, right) is requested_unit:
+            if requested_unit.dimensions == {**left.dimensions, **right.dimensions}:
                 return left.usage_key, right.usage_key
 
     return None
@@ -805,8 +803,8 @@ class ModelPrice:
         validate_model_price(_collect_effective_model_price_keys(self, registry), registry)
 
         usage_data = Usage.from_raw(usage)
-        grouped_units = _group_model_price_units_by_family(self, registry)
-        priced_counts = _compute_registry_priced_counts(grouped_units, usage_data)
+        priced_units = _collect_model_price_units(self, registry)
+        priced_counts = _compute_registry_priced_counts(priced_units, usage_data)
 
         input_price = Decimal(0)
         output_price = Decimal(0)
@@ -815,21 +813,20 @@ class ModelPrice:
         # tiered pricing actually needs the threshold.
         total_input_tokens = usage_data.input_tokens if _model_price_uses_tiered_prices(self, registry) else 0
 
-        for family, units in grouped_units.items():
-            for unit in units:
-                unit_price = calc_unit_price(
-                    getattr(self, unit.price_key),
-                    priced_counts[unit.usage_key],
-                    total_input_tokens,
-                    family.per,
-                )
-                total_price += unit_price
+        for unit in priced_units:
+            unit_price = calc_unit_price(
+                getattr(self, unit.price_key),
+                priced_counts[unit.usage_key],
+                total_input_tokens,
+                unit.per,
+            )
+            total_price += unit_price
 
-                direction = unit.dimensions.get('direction')
-                if direction == 'input':
-                    input_price += unit_price
-                elif direction == 'output':
-                    output_price += unit_price
+            direction = unit.dimensions.get('direction')
+            if direction == 'input':
+                input_price += unit_price
+            elif direction == 'output':
+                output_price += unit_price
 
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
@@ -921,7 +918,7 @@ def calc_mtok_price(
 def calc_unit_price(
     price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: int, per: int
 ) -> Decimal:
-    """Calculate the price for a unit count normalized by the unit family's ``per`` value."""
+    """Calculate the price for a unit count normalized by the unit's ``per`` value."""
     if price is None or count is None:
         return Decimal(0)
 
@@ -961,27 +958,21 @@ def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegis
     )
 
 
-def _group_model_price_units_by_family(
-    model_price: ModelPrice, registry: UnitRegistry
-) -> dict[UnitFamily, set[UnitDef]]:
-    groups: dict[UnitFamily, set[UnitDef]] = {}
-    for price_key in _iter_effective_model_price_keys(model_price, registry):
-        unit = registry.unit_for_price_key(price_key)
-        groups.setdefault(unit.family, set()).add(unit)
-
-    return groups
+def _collect_model_price_units(model_price: ModelPrice, registry: UnitRegistry) -> tuple[UnitDef, ...]:
+    return tuple(
+        registry.unit_for_price_key(price_key) for price_key in _iter_effective_model_price_keys(model_price, registry)
+    )
 
 
-def _compute_registry_priced_counts(grouped_units: Mapping[UnitFamily, set[UnitDef]], usage: Usage) -> dict[str, int]:
+def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usage) -> dict[str, int]:
     from genai_prices.decompose import compute_leaf_values
 
     counts: dict[str, int] = {}
-    for family, units in grouped_units.items():
-        usage_keys = {unit.usage_key for unit in units}
-        if family.id == 'requests':
-            counts.update({usage_key: 1 for usage_key in usage_keys})
-        else:
-            counts.update(compute_leaf_values(usage_keys, usage, family))
+    priced_units_by_usage_key = {unit.usage_key: unit for unit in priced_units if unit.usage_key != 'requests'}
+    if priced_units_by_usage_key:
+        counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key))
+    if any(unit.usage_key == 'requests' for unit in priced_units):
+        counts['requests'] = 1
 
     return counts
 

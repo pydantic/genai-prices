@@ -58,14 +58,14 @@ def test_removed_field_not_in_data_json():
 
 
 def test_remote_payloads_are_wrapped_objects():
-    """Remote JSON payloads include unit families beside providers."""
+    """Remote JSON payloads include unit definitions beside providers."""
     from prices.utils import package_dir
 
     for filename in ('data.json', 'data_slim.json'):
         payload = json.loads((package_dir / filename).read_bytes())
 
-        assert set(payload) == {'unit_families', 'providers'}
-        assert isinstance(payload['unit_families'], dict)
+        assert set(payload) == {'units', 'providers'}
+        assert isinstance(payload['units'], dict)
         assert isinstance(payload['providers'], list)
         assert payload['providers']
         assert all(isinstance(provider, dict) for provider in payload['providers'])
@@ -74,10 +74,10 @@ def test_remote_payloads_are_wrapped_objects():
 def test_python_unit_data_is_separate_from_provider_data():
     """Unit registry data is bundled separately from provider-heavy Python data."""
     assert genai_data.__all__ == ('providers',)
-    assert genai_data_units.__all__ == ('unit_families_data',)
-    assert not hasattr(genai_data, 'unit_families_data')
+    assert genai_data_units.__all__ == ('unit_data',)
+    assert not hasattr(genai_data, 'unit_data')
     assert not hasattr(genai_data_units, 'providers')
-    assert isinstance(genai_data_units.unit_families_data, dict)
+    assert isinstance(genai_data_units.unit_data, dict)
 
 
 def test_python_unit_data_import_does_not_import_provider_data():
