@@ -22,6 +22,8 @@ requests:
 
 `price_key` defaults to the usage key when omitted. `per` is duplicated on every unit, and build/export validation requires one `per` value per `dimensions.family` value. The built-in token registry includes the complete repo-defined lattice needed for input/output, cache read/write, and modality overlaps where those concepts make sense; nonsensical combinations such as output cache reads are not added. `requests` remains the only pricing-only built-in unit and represents one request per pricing calculation.
 
+Built-in token symmetry is a data choice, not a validation law. Future family dimension values do not need every dimension value to have the same shape; they only need to satisfy the structural rules for the units they actually define.
+
 **Runtime registries own parsed graph indexes.** _(implements "The registry is the source of unit truth")_
 Python `genai_prices.units` and JavaScript `units.ts` define `UnitDef` plus `UnitRegistry`. Registry construction promotes raw usage keys into parsed units, defaults missing price keys, validates uniqueness and structural closure, and fills direct indexes for usage keys, price keys, full dimension sets, ancestor usage keys, joins, all usage keys, all price keys, and externally reported usage keys. `family` is an ordinary dimension, so units from different families are incompatible by ordinary dimension conflict.
 
