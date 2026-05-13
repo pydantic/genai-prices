@@ -544,6 +544,33 @@ def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
+def test_model_price_subclass_declared_custom_fields_stay_out_of_extra_prices() -> None:
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_price: Decimal | None = None
+
+    price = CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('3'))
+
+    assert price.sausage_price == Decimal('3')
+    assert price._extra_prices == {}
+
+
+def test_model_price_subclass_declared_registered_fields_stay_out_of_extra_prices() -> None:
+    registry = _custom_price_key_registry()
+
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_mtok: Decimal | None = None
+        sausage_price: Decimal | None = None
+
+    price = CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'), sausage_price=Decimal('3'))
+
+    assert price.sausage_mtok == Decimal('2')
+    assert price.sausage_price == Decimal('3')
+    assert price._extra_prices == {}
+    assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
+
+
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
     with _active_registry(_custom_price_key_units()):
         assert ModelPrice().sausage_mtok is None
