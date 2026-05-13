@@ -635,31 +635,56 @@ def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_c
 
 def _format_model_prices(model_price: ModelPrice, *, split_lines: bool, use_color: bool) -> Text:
     parts = Text()
-    for field in dataclasses.fields(model_price):
-        value = getattr(model_price, field.name)
+    for unit in _iter_model_price_units(model_price):
+        value = getattr(model_price, unit.price_key)
         if value is None:
             continue
         if parts:
             parts.append('\n' if split_lines else ', ')
 
-        style = _PRICE_STYLES.get(field.name) if use_color else None
-        if field.name == 'requests_kcount':
-            if style:
-                parts.append(f'${value} / K requests', style=style)
-            else:
-                parts.append(f'${value} / K requests')
-            continue
-
-        name = field.name.replace('_mtok', '').replace('_', ' ')
-        if isinstance(value, TieredPrices):
-            text = f'${value.base}/{name} MTok (+tiers)'
-        else:
-            text = f'${value}/{name} MTok'
+        style = _PRICE_STYLES.get(unit.price_key) if use_color else None
+        text = _format_model_price_line(value, unit)
         if style:
             parts.append(text, style=style)
         else:
             parts.append(text)
     return parts
+
+
+def _iter_model_price_units(model_price: ModelPrice) -> list[UnitDef]:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    units: list[UnitDef] = []
+    seen_price_keys: set[str] = set()
+    for field in dataclasses.fields(model_price):
+        if field.name == '_extra_prices' or getattr(model_price, field.name) is None:
+            continue
+        try:
+            unit = registry.unit_for_price_key(field.name)
+        except KeyError:
+            continue
+
+        units.append(unit)
+        seen_price_keys.add(unit.price_key)
+
+    for unit in registry.units.values():
+        if unit.price_key in seen_price_keys or getattr(model_price, unit.price_key) is None:
+            continue
+        units.append(unit)
+        seen_price_keys.add(unit.price_key)
+
+    return units
+
+
+def _format_model_price_line(value: object, unit: UnitDef) -> str:
+    base_value = value.base if isinstance(value, TieredPrices) else value
+    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
+    unit_name = _unit_display_name(unit).lower()
+    per_label = _unit_per_label(unit)
+    if unit.dimensions.get('family') == 'requests':
+        return f'${base_value} / {per_label} {unit_name}{suffix}'
+    return f'${base_value}/{unit_name} {per_label}{suffix}'
 
 
 def _render_calc_error(

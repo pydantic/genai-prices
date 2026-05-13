@@ -4,6 +4,7 @@ import dataclasses
 import io
 from collections.abc import Callable
 from datetime import datetime, timezone
+from decimal import Decimal
 
 import pytest
 from dirty_equals import IsStr
@@ -14,6 +15,7 @@ import genai_prices._cli as cli_module
 from genai_prices import update_prices
 from genai_prices._cli import cli_logic
 from genai_prices._cli_impl import (
+    _format_model_prices,
     _parse_cli,
     _price_field_label,
     _render_calc_error,
@@ -430,6 +432,50 @@ def test_price_field_label_uses_custom_registry_metadata() -> None:
         assert _price_field_label('sausage_mtok') == 'Input Sausage/MTok'
     finally:
         _set_registry(None)
+
+
+def test_format_model_prices_uses_bundled_registry_metadata() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_read_mtok=Decimal('0.5'),
+        requests_kcount=Decimal('12'),
+    )
+
+    assert _format_model_prices(price, split_lines=False, use_color=False).plain == (
+        '$1/input MTok, $0.5/cache read MTok, $12 / K requests'
+    )
+
+
+def test_format_model_prices_preserves_tier_text() -> None:
+    price = ModelPrice(input_mtok=TieredPrices(base=Decimal('1'), tiers=[]))
+
+    assert _format_model_prices(price, split_lines=False, use_color=False).plain == '$1/input MTok (+tiers)'
+
+
+def test_format_model_prices_uses_custom_registry_metadata() -> None:
+    _set_registry(
+        UnitRegistry(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'sausage_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'sausage_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+                },
+            }
+        )
+    )
+    try:
+        price = ModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'))
+        formatted = _format_model_prices(price, split_lines=True, use_color=False)
+    finally:
+        _set_registry(None)
+
+    assert formatted.plain == '$1/input MTok\n$2/input sausage MTok'
 
 
 def test_split_model_price_columns_no_fields():
