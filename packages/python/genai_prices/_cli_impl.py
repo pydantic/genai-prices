@@ -31,6 +31,7 @@ from rich_argparse import RichHelpFormatter
 
 from . import Usage, __version__, calc_price, update_prices
 from .types import ModelPrice, PriceCalculation, Provider, TieredPrices
+from .units import UnitDef
 
 PROGRAM_NAME = 'genai-prices'
 _PROVIDER_COLORS = (
@@ -565,17 +566,54 @@ def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -
 
 
 def _price_field_label(field_name: str) -> str:
-    labels = {
-        'input_mtok': 'Input/MTok',
-        'cache_write_mtok': 'Cache Write/MTok',
-        'cache_read_mtok': 'Cache Read/MTok',
-        'output_mtok': 'Output/MTok',
-        'input_audio_mtok': 'Input Audio/MTok',
-        'cache_audio_read_mtok': 'Cache Audio Read/MTok',
-        'output_audio_mtok': 'Output Audio/MTok',
-        'requests_kcount': 'Requests/K',
-    }
-    return labels.get(field_name, field_name.replace('_mtok', '').replace('_', ' ').title())
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        unit = _get_registry().unit_for_price_key(field_name)
+    except KeyError:
+        return field_name.replace('_mtok', '').replace('_', ' ').title()
+
+    return f'{_unit_display_name(unit)}/{_unit_per_label(unit)}'
+
+
+def _unit_display_name(unit: UnitDef) -> str:
+    dimensions = unit.dimensions
+    cache = dimensions.get('cache')
+    direction = dimensions.get('direction')
+    modality = dimensions.get('modality')
+    parts: list[str]
+    if dimensions.get('family') == 'requests':
+        parts = ['requests']
+    elif cache is not None:
+        parts = ['cache']
+        if modality is not None:
+            parts.append(modality)
+        parts.append(cache)
+    else:
+        parts = []
+        if direction is not None:
+            parts.append(direction)
+        if modality is not None:
+            parts.append(modality)
+
+    handled_dimensions = {'family', 'direction', 'modality', 'cache'}
+    parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
+    if not parts:
+        parts.append(unit.usage_key)
+    return ' '.join(part.replace('_', ' ').title() for part in parts)
+
+
+def _unit_per_label(unit: UnitDef) -> str:
+    family = unit.dimensions.get('family')
+    if family == 'tokens' and unit.per == 1_000_000:
+        return 'MTok'
+    if family == 'requests' and unit.per == 1_000:
+        return 'K'
+    if unit.per == 1_000_000:
+        return 'M'
+    if unit.per == 1_000:
+        return 'K'
+    return str(unit.per)
 
 
 def _price_field_header_style(field_name: str) -> str:

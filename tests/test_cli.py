@@ -13,9 +13,16 @@ from rich.console import Console
 import genai_prices._cli as cli_module
 from genai_prices import update_prices
 from genai_prices._cli import cli_logic
-from genai_prices._cli_impl import _parse_cli, _render_calc_error, _should_split_model_price_columns, _suggest_models
+from genai_prices._cli_impl import (
+    _parse_cli,
+    _price_field_label,
+    _render_calc_error,
+    _should_split_model_price_columns,
+    _suggest_models,
+)
 from genai_prices.data import providers
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
+from genai_prices.units import UnitRegistry, _set_registry
 
 
 def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str] | None = None) -> str:
@@ -398,6 +405,31 @@ def test_calc_table_split_columns_rich_prices(monkeypatch: pytest.MonkeyPatch, c
     assert '(+tiers)' in out
     assert 'Requests/K' in out
     assert err == ''
+
+
+def test_price_field_label_uses_bundled_registry_metadata() -> None:
+    assert _price_field_label('input_mtok') == 'Input/MTok'
+    assert _price_field_label('cache_read_mtok') == 'Cache Read/MTok'
+    assert _price_field_label('cache_audio_read_mtok') == 'Cache Audio Read/MTok'
+    assert _price_field_label('requests_kcount') == 'Requests/K'
+
+
+def test_price_field_label_uses_custom_registry_metadata() -> None:
+    _set_registry(
+        UnitRegistry(
+            {
+                'sausage_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'sausage_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+                }
+            }
+        )
+    )
+    try:
+        assert _price_field_label('sausage_mtok') == 'Input Sausage/MTok'
+    finally:
+        _set_registry(None)
 
 
 def test_split_model_price_columns_no_fields():
