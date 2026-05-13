@@ -1,14 +1,18 @@
-import type { UnitDef, UnitFamily } from './types'
+import type { UnitDef } from './types'
 import type { NormalizedUsage } from './usage'
 
 import { isDescendantOrSelf } from './units'
 import { getUsageValue } from './usage'
 
-export function computeLeafValues(pricedUsageKeys: Set<string>, usage: NormalizedUsage, family: UnitFamily): Record<string, number> {
+export function computeLeafValues(
+  pricedUsageKeys: Set<string>,
+  usage: NormalizedUsage,
+  unitsByUsageKey: Map<string, UnitDef>
+): Record<string, number> {
   const pricedUnits = [...pricedUsageKeys]
-    .filter((usageKey) => family.units[usageKey] !== undefined)
+    .filter((usageKey) => unitsByUsageKey.has(usageKey))
     .sort()
-    .map((usageKey) => family.units[usageKey])
+    .map((usageKey) => unitsByUsageKey.get(usageKey))
     .filter((unit): unit is UnitDef => unit !== undefined)
   const leafValues: Record<string, number> = {}
 

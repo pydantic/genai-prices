@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { computeLeafValues } from '../decompose'
-import { getFamily, getUnit, isDescendantOrSelf } from '../units'
+import { getActiveRegistry, getUnit, isDescendantOrSelf } from '../units'
 import { normalizeUsage } from '../usage'
 
 describe('isDescendantOrSelf', () => {
@@ -37,7 +37,7 @@ describe('computeLeafValues', () => {
           cache_read_tokens: 250,
           input_tokens: 1_000,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toEqual({
       cache_read_tokens: 250,
@@ -55,7 +55,7 @@ describe('computeLeafValues', () => {
           input_audio_tokens: 300,
           input_tokens: 1_000,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toEqual({
       cache_audio_read_tokens: 100,
@@ -73,7 +73,7 @@ describe('computeLeafValues', () => {
           output_audio_tokens: 200,
           output_tokens: 700,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toEqual({
       output_audio_tokens: 200,
@@ -89,7 +89,7 @@ describe('computeLeafValues', () => {
           cache_read_tokens: 80,
           input_tokens: 100,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toEqual({
       input_tokens: 100,
@@ -104,7 +104,7 @@ describe('computeLeafValues', () => {
           cache_read_tokens: 200,
           input_tokens: 100,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toThrow('Invalid usage data: cache_read_tokens (200) cannot exceed input_tokens (100)')
   })
@@ -119,7 +119,7 @@ describe('computeLeafValues', () => {
           input_audio_tokens: 80,
           input_tokens: 100,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toThrow(
       'Invalid usage data: more-specific usage for cache_read_tokens, input_audio_tokens totals 160, which exceeds input_tokens (100)'
@@ -136,7 +136,7 @@ describe('Python Phase 1 decomposition parity examples', () => {
           cache_read_tokens: 250,
           input_tokens: 1_000,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toEqual({
       cache_read_tokens: 250,
@@ -152,7 +152,7 @@ describe('Python Phase 1 decomposition parity examples', () => {
           input_audio_tokens: 300,
           input_tokens: 1_000,
         }),
-        getFamily('tokens')
+        getActiveRegistry().units
       )
     ).toEqual({
       cache_audio_read_tokens: 100,

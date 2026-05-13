@@ -28,13 +28,8 @@ describe('validatePriceKeys', () => {
   it('accepts price keys from an explicit registry argument', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
@@ -56,6 +51,12 @@ describe('validateAncestorCoverage', () => {
       validateAncestorCoverage(['cache_read_mtok'])
     }).toThrow('Missing ancestor price key input_mtok for cache_read_mtok')
   })
+
+  it('rejects child prices from a single-pass iterable without registered ancestor prices', () => {
+    expect(() => {
+      validateAncestorCoverage(oneShotPriceKeys(['cache_read_mtok']))
+    }).toThrow('Missing ancestor price key input_mtok for cache_read_mtok')
+  })
 })
 
 describe('validateJoinCoverage', () => {
@@ -65,10 +66,16 @@ describe('validateJoinCoverage', () => {
     }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
   })
 
+  it('rejects compatible priced units from a single-pass iterable when their registered join is not priced', () => {
+    expect(() => {
+      validateJoinCoverage(oneShotPriceKeys(['input_mtok', 'cache_read_mtok', 'input_audio_mtok']))
+    }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+  })
+
   it('rejects compatible priced units when their join is absent from the current registry', () => {
     expect(() => {
       validateJoinCoverage(['input_mtok', 'cache_write_mtok', 'input_audio_mtok'])
-    }).toThrow('Missing registered join unit for cache_write_mtok and input_audio_mtok')
+    }).toThrow('Missing join price key cache_audio_write_mtok for cache_write_mtok and input_audio_mtok')
   })
 
   it('accepts compatible priced units when the join is priced', () => {
@@ -135,13 +142,8 @@ describe('validateExtractorDestinations', () => {
   it('validates extractor destinations against an explicit registry argument', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
@@ -173,5 +175,16 @@ function providerWithDestination(dest: string): Provider {
     id: 'test-provider',
     models: [],
     name: 'Test Provider',
+  }
+}
+
+function oneShotPriceKeys(keys: string[]): Iterable<string> {
+  let used = false
+  return {
+    [Symbol.iterator]: () => {
+      if (used) return [][Symbol.iterator]()
+      used = true
+      return keys[Symbol.iterator]()
+    },
   }
 }

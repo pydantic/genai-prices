@@ -5,7 +5,17 @@ import pytest
 from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
-from genai_prices.types import ModelPrice, Tier, TieredPrices, calc_mtok_price, calc_unit_price
+from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
+from genai_prices.types import (
+    ClauseEquals,
+    ModelInfo,
+    ModelPrice,
+    Provider,
+    Tier,
+    TieredPrices,
+    calc_mtok_price,
+    calc_unit_price,
+)
 
 pytestmark = pytest.mark.anyio
 
@@ -108,6 +118,60 @@ def test_model_price_is_free_checks_tiered_prices() -> None:
 
 def test_model_price_is_free_rejects_non_zero_request_price() -> None:
     assert not ModelPrice(requests_kcount=Decimal('0.01')).is_free()
+
+
+def test_model_price_is_free_rejects_non_zero_dynamic_extra() -> None:
+    assert not ModelPrice(
+        input_mtok=Decimal('0'),
+        cache_image_read_mtok=Decimal('0.5'),
+    ).is_free()
+
+
+def test_model_price_is_free_accepts_zero_dynamic_extra() -> None:
+    assert ModelPrice(
+        input_mtok=Decimal('0'),
+        cache_image_read_mtok=Decimal('0'),
+    ).is_free()
+
+
+def test_calc_price_rejects_unregistered_dynamic_extra() -> None:
+    price = ModelPrice(hovercraft_mtok=Decimal('1'))
+
+    with pytest.raises(ValueError, match='Unknown price key: hovercraft_mtok'):
+        price.calc_price(Usage(input_tokens=1))
+
+
+def test_calc_price_rejects_dynamic_descendant_without_ancestors() -> None:
+    price = ModelPrice(cache_image_read_mtok=Decimal('1'))
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_image_read_tokens'):
+        price.calc_price(Usage(cache_image_read_tokens=1))
+
+
+def test_set_custom_snapshot_does_not_validate_dynamic_model_prices() -> None:
+    snapshot = DataSnapshot(
+        providers=[
+            Provider(
+                id='testing',
+                name='Testing',
+                api_pattern='testing',
+                models=[
+                    ModelInfo(
+                        id='bad-extra',
+                        match=ClauseEquals('bad-extra'),
+                        prices=ModelPrice(hovercraft_mtok=Decimal('1')),
+                    )
+                ],
+            )
+        ],
+        from_auto_update=False,
+    )
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+    finally:
+        set_custom_snapshot(None)
 
 
 def test_requests_kcount_prices():

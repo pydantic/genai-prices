@@ -1,10 +1,12 @@
 from __future__ import annotations as _annotations
 
 import asyncio
+import json
 import logging
 import threading
 from dataclasses import dataclass, field
 from time import time
+from typing import Any, cast
 
 import httpx
 
@@ -110,11 +112,14 @@ class UpdatePrices:
         global _global_update_prices
 
         _global_update_prices = None
-        data_snapshot.set_custom_snapshot(None)
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
+        data_snapshot.set_custom_snapshot(None)
+        from .units import _set_registry  # pyright: ignore[reportPrivateUsage]
+
+        _set_registry(None)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
@@ -159,7 +164,21 @@ class UpdatePrices:
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
         from . import data
+        from .units import UnitRegistry, _get_registry, _set_registry  # pyright: ignore[reportPrivateUsage]
 
         r = httpx.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
-        return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)
+        raw_payload = json.loads(r.content)
+        if not isinstance(raw_payload, dict) or 'units' not in raw_payload or 'providers' not in raw_payload:
+            raise ValueError('Expected fetched prices payload to contain units and providers')
+
+        candidate_registry = UnitRegistry(cast(dict[str, Any], raw_payload['units']))
+        previous_registry = _get_registry()
+        _set_registry(candidate_registry)
+        try:
+            providers = data.providers_schema.validate_python(raw_payload['providers'])
+        except Exception:
+            _set_registry(previous_registry)
+            raise
+
+        return data_snapshot.DataSnapshot(providers, from_auto_update=True)

@@ -1613,10 +1613,55 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'cacheTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='cache_text_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
                             'tokenCount',
                         ],
                         dest='cache_audio_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='cache_image_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='cache_image_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='cache_video_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'promptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='input_text_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
@@ -1630,6 +1675,42 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(
                         path=[
+                            'promptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'promptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'promptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='input_video_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='output_text_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
                             'candidatesTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
                             'tokenCount',
@@ -1637,9 +1718,82 @@ providers: list[Provider] = [
                         dest='output_audio_tokens',
                         required=False,
                     ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='output_video_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_text_tokens', required=False),
                     UsageExtractorMapping(path='toolUsePromptTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='output_text_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='output_audio_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='output_video_tokens',
+                        required=False,
+                    ),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',
@@ -1983,8 +2137,8 @@ providers: list[Provider] = [
                 name='Gemini 3 Pro Image Preview',
                 description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.',
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('120')),
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('120'), output_text_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',

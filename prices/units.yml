@@ -1,33 +1,84 @@
-tokens:
+input_tokens:
   per: 1_000_000
-  description: Token counts
-  units:
-    input_tokens:
-      price_key: input_mtok
-      dimensions: { direction: input }
-    output_tokens:
-      price_key: output_mtok
-      dimensions: { direction: output }
-    cache_read_tokens:
-      price_key: cache_read_mtok
-      dimensions: { direction: input, cache: read }
-    cache_write_tokens:
-      price_key: cache_write_mtok
-      dimensions: { direction: input, cache: write }
-    input_audio_tokens:
-      price_key: input_audio_mtok
-      dimensions: { direction: input, modality: audio }
-    cache_audio_read_tokens:
-      price_key: cache_audio_read_mtok
-      dimensions: { direction: input, modality: audio, cache: read }
-    output_audio_tokens:
-      price_key: output_audio_mtok
-      dimensions: { direction: output, modality: audio }
-
+  price_key: input_mtok
+  dimensions: { family: tokens, direction: input }
+output_tokens:
+  per: 1_000_000
+  price_key: output_mtok
+  dimensions: { family: tokens, direction: output }
+cache_read_tokens:
+  per: 1_000_000
+  price_key: cache_read_mtok
+  dimensions: { family: tokens, direction: input, cache: read }
+cache_write_tokens:
+  per: 1_000_000
+  price_key: cache_write_mtok
+  dimensions: { family: tokens, direction: input, cache: write }
+input_text_tokens:
+  per: 1_000_000
+  price_key: input_text_mtok
+  dimensions: { family: tokens, direction: input, modality: text }
+output_text_tokens:
+  per: 1_000_000
+  price_key: output_text_mtok
+  dimensions: { family: tokens, direction: output, modality: text }
+cache_text_read_tokens:
+  per: 1_000_000
+  price_key: cache_text_read_mtok
+  dimensions: { family: tokens, direction: input, modality: text, cache: read }
+cache_text_write_tokens:
+  per: 1_000_000
+  price_key: cache_text_write_mtok
+  dimensions: { family: tokens, direction: input, modality: text, cache: write }
+input_audio_tokens:
+  per: 1_000_000
+  price_key: input_audio_mtok
+  dimensions: { family: tokens, direction: input, modality: audio }
+output_audio_tokens:
+  per: 1_000_000
+  price_key: output_audio_mtok
+  dimensions: { family: tokens, direction: output, modality: audio }
+cache_audio_read_tokens:
+  per: 1_000_000
+  price_key: cache_audio_read_mtok
+  dimensions: { family: tokens, direction: input, modality: audio, cache: read }
+cache_audio_write_tokens:
+  per: 1_000_000
+  price_key: cache_audio_write_mtok
+  dimensions: { family: tokens, direction: input, modality: audio, cache: write }
+input_image_tokens:
+  per: 1_000_000
+  price_key: input_image_mtok
+  dimensions: { family: tokens, direction: input, modality: image }
+output_image_tokens:
+  per: 1_000_000
+  price_key: output_image_mtok
+  dimensions: { family: tokens, direction: output, modality: image }
+cache_image_read_tokens:
+  per: 1_000_000
+  price_key: cache_image_read_mtok
+  dimensions: { family: tokens, direction: input, modality: image, cache: read }
+cache_image_write_tokens:
+  per: 1_000_000
+  price_key: cache_image_write_mtok
+  dimensions: { family: tokens, direction: input, modality: image, cache: write }
+input_video_tokens:
+  per: 1_000_000
+  price_key: input_video_mtok
+  dimensions: { family: tokens, direction: input, modality: video }
+output_video_tokens:
+  per: 1_000_000
+  price_key: output_video_mtok
+  dimensions: { family: tokens, direction: output, modality: video }
+cache_video_read_tokens:
+  per: 1_000_000
+  price_key: cache_video_read_mtok
+  dimensions: { family: tokens, direction: input, modality: video, cache: read }
+cache_video_write_tokens:
+  per: 1_000_000
+  price_key: cache_video_write_mtok
+  dimensions: { family: tokens, direction: input, modality: video, cache: write }
 requests:
   per: 1_000
-  description: "Request counts. Explicit special case: one per Usage object passed to calc_price; not caller-supplied Usage."
-  units:
-    requests:
-      price_key: requests_kcount
-      dimensions: {}
+  price_key: requests_kcount
+  dimensions: { family: requests }

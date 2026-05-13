@@ -6,5 +6,5 @@ import ruamel.yaml
 
 def load_units() -> dict[str, Any]:
     yaml = ruamel.yaml.YAML(typ='safe')
-    with Path('prices/units.yml').open() as f:
+    with (Path(__file__).parent.parent / 'prices/units.yml').open() as f:
         return cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]

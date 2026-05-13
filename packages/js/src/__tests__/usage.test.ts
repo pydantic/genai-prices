@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { setUnitFamilies, UnitRegistry } from '../units'
+import { setActiveRegistry, UnitRegistry } from '../units'
 import { getUsageValue, normalizeUsage } from '../usage'
 
 describe('normalizeUsage', () => {
@@ -64,18 +64,13 @@ describe('normalizeUsage', () => {
   it('normalizes against the active registry reported usage keys', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
     try {
-      setUnitFamilies(registry)
+      setActiveRegistry(registry)
       expect(
         normalizeUsage({
           input_tokens: 100,
@@ -85,7 +80,7 @@ describe('normalizeUsage', () => {
         widgets: 7,
       })
     } finally {
-      setUnitFamilies(null)
+      setActiveRegistry(null)
     }
   })
 })
@@ -129,6 +124,23 @@ describe('getUsageValue', () => {
   it('returns one for pricing-only requests regardless of caller values', () => {
     expect(getUsageValue({}, 'requests')).toBe(1)
     expect(getUsageValue({ requests: 500 }, 'requests')).toBe(1)
+  })
+
+  it('returns one for pricing-only requests when the active registry has no requests unit', () => {
+    const registry = new UnitRegistry({
+      input_tokens: {
+        dimensions: { direction: 'input', family: 'tokens' },
+        per: 1_000_000,
+        price_key: 'input_mtok',
+      },
+    })
+
+    try {
+      setActiveRegistry(registry)
+      expect(getUsageValue({}, 'requests')).toBe(1)
+    } finally {
+      setActiveRegistry(null)
+    }
   })
 
   it('raises for missing ancestors with positive reported descendants', () => {
@@ -185,24 +197,23 @@ describe('getUsageValue', () => {
 
   it('reads values from the active registry indexes', () => {
     const registry = new UnitRegistry({
-      widgets: {
-        description: 'Widget counts',
-        per: 1,
-        units: {
-          premium_widgets: {
-            dimensions: {
-              class: 'premium',
-            },
-          },
-          widgets: {
-            dimensions: {},
-          },
+      premium_widgets: {
+        dimensions: {
+          class: 'premium',
+          family: 'widgets',
         },
+        per: 1,
+      },
+      widgets: {
+        dimensions: {
+          family: 'widgets',
+        },
+        per: 1,
       },
     })
 
     try {
-      setUnitFamilies(registry)
+      setActiveRegistry(registry)
       const usage = normalizeUsage({
         premium_widgets: 3,
         widgets: 10,
@@ -211,7 +222,7 @@ describe('getUsageValue', () => {
       expect(getUsageValue(usage, 'widgets')).toBe(10)
       expect(getUsageValue(usage, 'premium_widgets')).toBe(3)
     } finally {
-      setUnitFamilies(null)
+      setActiveRegistry(null)
     }
   })
 })

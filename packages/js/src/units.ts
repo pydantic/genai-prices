@@ -1,72 +1,46 @@
-import type { RawFamiliesDict, UnitDef, UnitFamily } from './types'
+import type { RawUnitsDict, UnitDef } from './types'
 
-import { unitFamiliesData } from './dataUnits'
+import { unitData } from './dataUnits'
 
 export class UnitRegistry {
   allPriceKeys: Set<string>
   allUsageKeys: Set<string>
   ancestorUsageKeysByUsageKey: Map<string, Set<string>>
-  families: Record<string, UnitFamily>
   reportedUsageKeys: Set<string>
   units: Map<string, UnitDef>
+  unitsByDimension: Map<string, UnitDef>
   unitsByPriceKey: Map<string, UnitDef>
 
-  constructor(raw: RawFamiliesDict) {
+  constructor(raw: RawUnitsDict) {
     this.ancestorUsageKeysByUsageKey = new Map()
     this.allPriceKeys = new Set()
     this.allUsageKeys = new Set()
-    this.families = {}
     this.reportedUsageKeys = new Set()
     this.units = new Map()
+    this.unitsByDimension = new Map()
     this.unitsByPriceKey = new Map()
 
-    for (const [familyId, rawFamily] of Object.entries(raw)) {
-      const family: UnitFamily = {
-        description: rawFamily.description,
-        id: familyId,
-        per: rawFamily.per,
-        units: {},
-        unitsByDimension: new Map(),
+    for (const [usageKey, rawUnit] of Object.entries(raw)) {
+      const priceKey = rawUnit.price_key ?? usageKey
+      const unit: UnitDef = {
+        dimensions: { ...rawUnit.dimensions },
+        per: rawUnit.per,
+        priceKey,
+        usageKey,
       }
-      this.families[familyId] = family
 
-      for (const [usageKey, rawUnit] of Object.entries(rawFamily.units)) {
-        if (this.units.has(usageKey)) {
-          throw new Error(`Duplicate unit usage key: ${usageKey}`)
-        }
-
-        const priceKey = rawUnit.price_key ?? usageKey
-        if (this.unitsByPriceKey.has(priceKey)) {
-          throw new Error(`Duplicate unit price key: ${priceKey}`)
-        }
-
-        const unit: UnitDef = {
-          dimensions: { ...rawUnit.dimensions },
-          family,
-          familyId,
-          priceKey,
-          usageKey,
-        }
-        const dimensionSet = dimensionKey(unit.dimensions)
-        const existingUnit = family.unitsByDimension.get(dimensionSet)
-        if (existingUnit) {
-          throw new Error(`Duplicate dimensions in unit family ${familyId}: ${existingUnit.usageKey} and ${usageKey}`)
-        }
-
-        family.units[usageKey] = unit
-        family.unitsByDimension.set(dimensionSet, unit)
-        this.allPriceKeys.add(priceKey)
-        this.allUsageKeys.add(usageKey)
-        this.units.set(usageKey, unit)
-        this.unitsByPriceKey.set(priceKey, unit)
-      }
+      this.allPriceKeys.add(priceKey)
+      this.allUsageKeys.add(usageKey)
+      this.units.set(usageKey, unit)
+      this.unitsByPriceKey.set(priceKey, unit)
+      this.unitsByDimension.set(dimensionKey(unit.dimensions), unit)
     }
 
     for (const [usageKey, unit] of this.units) {
       this.ancestorUsageKeysByUsageKey.set(
         usageKey,
         new Set(
-          Object.values(unit.family.units)
+          [...this.units.values()]
             .filter((maybeAncestor) => maybeAncestor !== unit && isDimensionSubset(maybeAncestor, unit))
             .map((maybeAncestor) => maybeAncestor.usageKey)
         )
@@ -75,8 +49,6 @@ export class UnitRegistry {
         this.reportedUsageKeys.add(usageKey)
       }
     }
-
-    validateIntervalClosure(this.families)
   }
 
   ancestorUsageKeys(usageKey: string): Set<string> {
@@ -86,21 +58,18 @@ export class UnitRegistry {
     }
     return new Set(ancestorUsageKeys)
   }
+
+  findJoin(left: UnitDef, right: UnitDef): undefined | UnitDef {
+    if (!isCompatible(left, right)) return undefined
+    return this.unitsByDimension.get(dimensionKey({ ...left.dimensions, ...right.dimensions }))
+  }
 }
 
-const generatedRegistry = new UnitRegistry(unitFamiliesData)
+const generatedRegistry = new UnitRegistry(unitData)
 let activeRegistry = generatedRegistry
 
 export function getActiveRegistry(): UnitRegistry {
   return activeRegistry
-}
-
-export function getFamily(familyId: string): UnitFamily {
-  const family = activeRegistry.families[familyId]
-  if (!family) {
-    throw new Error(`Unknown unit family: ${familyId}`)
-  }
-  return family
 }
 
 export function getAllPriceKeys(): Set<string> {
@@ -127,7 +96,7 @@ export function getUsageKeyForPriceKey(priceKey: string): string {
   return getUnitForPriceKey(priceKey).usageKey
 }
 
-export function setUnitFamilies(registry: null | UnitRegistry): void {
+export function setActiveRegistry(registry: null | UnitRegistry): void {
   if (registry === null) {
     activeRegistry = generatedRegistry
   } else {
@@ -147,49 +116,9 @@ export function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolea
 }
 
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {
-  return ancestor.family === descendant.family && isDimensionSubset(ancestor, descendant)
+  return isDimensionSubset(ancestor, descendant)
 }
 
 export function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  if (left.family !== right.family) return false
   return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
-}
-
-function combinations<T>(items: T[], size: number): T[][] {
-  if (size === 0) return [[]]
-  if (items.length < size) return []
-
-  const [first, ...rest] = items
-  if (first === undefined) return []
-
-  return [...combinations(rest, size - 1).map((combo) => [first, ...combo]), ...combinations(rest, size)]
-}
-
-function validateIntervalClosure(families: Record<string, UnitFamily>): void {
-  for (const family of Object.values(families)) {
-    for (const ancestor of Object.values(family.units)) {
-      for (const descendant of Object.values(family.units)) {
-        if (ancestor === descendant || !isDimensionSubset(ancestor, descendant)) continue
-
-        const addedDimensions = Object.entries(descendant.dimensions)
-          .filter(([key, value]) => ancestor.dimensions[key] !== value)
-          .sort(([left], [right]) => left.localeCompare(right))
-
-        for (let size = 1; size < addedDimensions.length; size++) {
-          for (const addedSubset of combinations(addedDimensions, size)) {
-            const requiredDimensions = Object.fromEntries([...Object.entries(ancestor.dimensions), ...addedSubset])
-            if (family.unitsByDimension.has(dimensionKey(requiredDimensions))) continue
-
-            const missingDimensions = Object.entries(requiredDimensions)
-              .sort(([left], [right]) => left.localeCompare(right))
-              .map(([key, value]) => `${key}=${value}`)
-              .join(', ')
-            throw new Error(
-              `Missing intermediate unit dimensions in family ${family.id} between ${ancestor.usageKey} and ${descendant.usageKey}: ${missingDimensions}`
-            )
-          }
-        }
-      }
-    }
-  }
 }

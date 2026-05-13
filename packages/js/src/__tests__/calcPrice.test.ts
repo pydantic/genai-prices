@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { ModelPrice, Usage } from '../types'
 
 import { calcPrice } from '../engine'
-import { setUnitFamilies, UnitRegistry } from '../units'
+import { setActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
 
@@ -221,24 +221,23 @@ describe('Core Price Calculation Function', () => {
 
     it('should price custom active-registry usage from the original caller object', () => {
       const registry = new UnitRegistry({
-        widgets: {
-          description: 'Widget counts',
-          per: 1,
-          units: {
-            premium_widgets: {
-              dimensions: {
-                class: 'premium',
-              },
-            },
-            widgets: {
-              dimensions: {},
-            },
+        premium_widgets: {
+          dimensions: {
+            class: 'premium',
+            family: 'widgets',
           },
+          per: 1,
+        },
+        widgets: {
+          dimensions: {
+            family: 'widgets',
+          },
+          per: 1,
         },
       })
 
       try {
-        setUnitFamilies(registry)
+        setActiveRegistry(registry)
         const result = calcPrice(
           {
             ignored_telemetry_units: 999,
@@ -257,7 +256,7 @@ describe('Core Price Calculation Function', () => {
           total_price: 44,
         })
       } finally {
-        setUnitFamilies(null)
+        setActiveRegistry(null)
       }
     })
 

@@ -5,18 +5,16 @@ import gzip
 import io
 from decimal import Decimal
 from operator import attrgetter
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
 import pydantic_core
 import ruamel.yaml
 from pydantic import ValidationError
 from pydantic.main import IncEx
 
+from prices.export_validation import validate_export_payload
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
-
-if TYPE_CHECKING:
-    from genai_prices.units import UnitRegistry
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -26,6 +24,13 @@ def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.Scalar
 
 yaml = ruamel.yaml.YAML(typ='safe')
 yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)  # pyright: ignore[reportUnknownMemberType]
+
+
+def load_units() -> dict[str, Any]:
+    with (package_dir / 'units.yml').open() as f:
+        units = cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+
+    return units
 
 
 def build():
@@ -57,31 +62,32 @@ def build():
     providers.sort(key=attrgetter('id'))
     for provider in providers:
         provider.exclude_removed()
-    unit_registry = load_unit_registry()
-    validate_model_prices(providers, unit_registry)
-    validate_extractors(providers, unit_registry)
-    write_prices(providers, 'data.json')
+    units = load_units()
+    validate_export_payload(providers, units)
+    write_prices(providers, units, 'data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, 'data_slim.json', slim=True)
+    write_prices(providers, units, 'data_slim.json', slim=True)
 
 
-def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = False):
+def write_prices(providers: list[Provider], units: dict[str, Any], prices_file: str, *, slim: bool = False):
     print('')
     prices_json_path = package_dir / prices_file
 
-    data_json_schema = providers_schema.json_schema(mode='serialization')
-    data_json_schema = simplify_json_schema(data_json_schema)
+    providers_json_schema = providers_schema.json_schema(mode='serialization')
+    providers_json_schema = simplify_json_schema(providers_json_schema)
 
     if slim:
         # delete Provider fields
-        data_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')
-        data_json_schema['$defs']['Provider']['properties'].pop('description')
-        data_json_schema['$defs']['Provider']['properties'].pop('price_comments')
+        providers_json_schema['$defs']['Provider']['properties'].pop('pricing_urls')
+        providers_json_schema['$defs']['Provider']['properties'].pop('description')
+        providers_json_schema['$defs']['Provider']['properties'].pop('price_comments')
         # delete ModelInfo fields
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('name')
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('description')
-        data_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
+        providers_json_schema['$defs']['ModelInfo']['properties'].pop('name')
+        providers_json_schema['$defs']['ModelInfo']['properties'].pop('description')
+        providers_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
+
+    data_json_schema = _wrapped_prices_schema(providers_json_schema)
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
@@ -98,7 +104,14 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
             }
         }
 
-    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
+    provider_data = providers_schema.dump_python(
+        providers,
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        exclude=exclude,
+    )
+    json_data = pydantic_core.to_json({'units': units, 'providers': provider_data}) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:
@@ -132,22 +145,39 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
     )
 
 
-def load_unit_registry() -> UnitRegistry:
-    from prices.package_data import load_unit_families, load_unit_registry as package_load_unit_registry
+def _wrapped_prices_schema(providers_json_schema: dict[str, Any]) -> dict[str, Any]:
+    defs = providers_json_schema.pop('$defs', {})
+    return {
+        '$defs': defs,
+        'additionalProperties': False,
+        'properties': {
+            'units': _units_schema(),
+            'providers': providers_json_schema,
+        },
+        'required': ['units', 'providers'],
+        'type': 'object',
+    }
 
-    return package_load_unit_registry(load_unit_families())
 
-
-def validate_model_prices(providers: list[Provider], registry: UnitRegistry) -> None:
-    from prices.package_data import validate_provider_model_prices
-
-    validate_provider_model_prices(providers, registry)
-
-
-def validate_extractors(providers: list[Provider], registry: UnitRegistry) -> None:
-    from prices.package_data import validate_provider_extractor_destinations
-
-    validate_provider_extractor_destinations(providers, registry)
+def _units_schema() -> dict[str, Any]:
+    return {
+        'additionalProperties': {
+            'additionalProperties': False,
+            'properties': {
+                'per': {'type': 'integer'},
+                'price_key': {'type': 'string'},
+                'dimensions': {
+                    'additionalProperties': {'type': 'string'},
+                    'properties': {'family': {'type': 'string'}},
+                    'required': ['family'],
+                    'type': 'object',
+                },
+            },
+            'required': ['per', 'dimensions'],
+            'type': 'object',
+        },
+        'type': 'object',
+    }
 
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:
