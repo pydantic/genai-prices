@@ -18,7 +18,7 @@ Phases 1 through 4 validate model prices on use before every standard base prici
 Adding or removing effective registered price keys makes prior validation stale. Setting a different value for an already-present key does not structurally require invalidation because ancestor and join coverage depend on keys, not values. Python and JavaScript should both compare the current effective price-key fingerprint before using a cached validation result.
 
 **Generated outputs remain pure data.** _(from "Performance optimizations must be behavior-preserving")_
-`data.json`, `data_slim.json`, Python `data.py`, Python `data_units.py`, JavaScript `data.ts`, and JavaScript `dataUnits.ts` contain units, providers, and raw price values only. They must not contain validation markers, trust flags, price-key fingerprints, decomposition coefficients, or cached plans.
+`data.json`, `data_slim.json`, Python `data.py`, Python `data_units.py`, JavaScript `data.ts`, and JavaScript `dataUnits.ts` contain unit families, providers, and raw price values only. They must not contain validation markers, trust flags, price-key fingerprints, decomposition coefficients, or cached plans.
 
 **Decomposition caches are benchmark-gated.** _(from "Performance optimizations must be behavior-preserving")_
 Cached decomposition coefficients or plans are allowed only if benchmarks show direct decomposition remains material after validation caching is in place. Any cache key must include the exact active global registry identity and the model's effective priced usage-key set.
