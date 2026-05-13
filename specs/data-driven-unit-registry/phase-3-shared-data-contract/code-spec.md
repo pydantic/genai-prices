@@ -67,6 +67,8 @@ Implement this helper only in Python build tooling, currently `prices/src/prices
 **Generated package data reads wrapped payloads and emits split modules.** _(implements "Unit definitions travel with the prices that depend on them")_
 Update `prices/src/prices/package_data.py` so Python and JavaScript package data generation reads wrapped `data.json`, splits `providers` and `units`, and emits providers separately from unit definitions:
 
+Python provider parsing during package generation installs the in-memory registry built from the same wrapped payload while rebuilding and validating the Pydantic provider schema, then resets the active registry in a `finally` block. This avoids validating provider prices and extractor destinations against stale bundled `data_units.py` while regenerating those files.
+
 ```python
 def package_data() -> None: ...
 def package_python_data(data_path: Path) -> None: ...

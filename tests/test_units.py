@@ -841,6 +841,44 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
     assert generated_units == units
 
 
+def test_package_python_data_clears_active_registry_if_schema_rebuild_fails(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from genai_prices import types as runtime_types
+
+    class RebuildError(RuntimeError):
+        pass
+
+    _set_registry(None)
+    units = {
+        'transient_tokens': {
+            'per': 1_000_000,
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient'},
+        },
+    }
+    payload: dict[str, Any] = {'units': units, 'providers': []}
+    data_path = tmp_path / 'data.json'
+    data_path.write_text(json.dumps(payload))
+
+    py_package_dir = tmp_path / 'genai_prices'
+    py_package_dir.mkdir()
+    monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
+
+    def fail_rebuild() -> None:
+        raise RebuildError('sentinel rebuild failure')
+
+    monkeypatch.setattr(runtime_types.providers_schema, 'rebuild', fail_rebuild)
+
+    try:
+        with pytest.raises(RebuildError, match='sentinel rebuild failure'):
+            package_data.package_python_data(data_path)
+
+        assert 'transient_tokens' not in _get_registry().units
+    finally:
+        _set_registry(None)
+
+
 def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

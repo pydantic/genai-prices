@@ -32,8 +32,8 @@ def package_python_data(data_path: Path):
     provider_data, units = _load_package_payload(data_path)
     registry = load_unit_registry(units)
     _set_registry(registry)
-    providers_schema.rebuild()
     try:
+        providers_schema.rebuild()
         providers = providers_schema.validate_python(provider_data)
         validate_provider_model_prices(providers, registry)
         validate_provider_extractor_destinations(providers, registry)
