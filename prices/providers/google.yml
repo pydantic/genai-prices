@@ -62,7 +62,7 @@ extractors:
         dest: output_tokens
         required: false
       - path: toolUsePromptTokenCount
-        dest: output_tokens
+        dest: input_tokens
         required: false
   # https://github.com/anthropics/anthropic-sdk-python/blob/v0.62.0/src/anthropic/types/usage.py#L12
   - root: usage

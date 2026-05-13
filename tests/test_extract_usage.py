@@ -222,10 +222,11 @@ gemini_response_data = {
     'usageMetadata': {
         'promptTokenCount': 75,
         'candidatesTokenCount': 18,
-        'totalTokenCount': 237,
+        'totalTokenCount': 262,
         'trafficType': 'ON_DEMAND',
         'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 75}],
         'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 18}],
+        'toolUsePromptTokenCount': 25,
         'thoughtsTokenCount': 144,
     },
     'modelVersion': 'gemini-2.5-flash',
@@ -239,7 +240,7 @@ assert google_provider.extractors is not None
 
 def test_google():
     usage = google_provider.extract_usage(gemini_response_data)
-    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
+    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=100, output_tokens=162)))
 
 
 gemini_response_data_caching = {
