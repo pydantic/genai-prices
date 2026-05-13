@@ -8,7 +8,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
-from genai_prices.types import ModelPrice, Provider, UsageExtractor, UsageExtractorMapping
+from genai_prices.types import ArrayMatch, ClauseEquals, ModelPrice, Provider, UsageExtractor, UsageExtractorMapping
 from genai_prices.units import UnitRegistry
 
 
@@ -236,6 +236,63 @@ gemini_response_data = {
 google_provider = next(provider for provider in providers if provider.id == 'google')
 assert google_provider.name == 'Google'
 assert google_provider.extractors is not None
+
+
+def test_google_modality_detail_extractor_mappings_are_symmetric():
+    google_extractors = google_provider.extractors
+    assert google_extractors is not None
+    google_extractor = next(extractor for extractor in google_extractors if extractor.api_flavor == 'default')
+    expected = {
+        'promptTokensDetails': {
+            'TEXT': 'input_text_tokens',
+            'AUDIO': 'input_audio_tokens',
+            'IMAGE': 'input_image_tokens',
+            'DOCUMENT': 'input_image_tokens',
+            'VIDEO': 'input_video_tokens',
+        },
+        'cacheTokensDetails': {
+            'TEXT': 'cache_text_read_tokens',
+            'AUDIO': 'cache_audio_read_tokens',
+            'IMAGE': 'cache_image_read_tokens',
+            'DOCUMENT': 'cache_image_read_tokens',
+            'VIDEO': 'cache_video_read_tokens',
+        },
+        'candidatesTokensDetails': {
+            'TEXT': 'output_text_tokens',
+            'AUDIO': 'output_audio_tokens',
+            'IMAGE': 'output_image_tokens',
+            'DOCUMENT': 'output_image_tokens',
+            'VIDEO': 'output_video_tokens',
+        },
+        'toolUsePromptTokensDetails': {
+            'TEXT': 'output_text_tokens',
+            'AUDIO': 'output_audio_tokens',
+            'IMAGE': 'output_image_tokens',
+            'DOCUMENT': 'output_image_tokens',
+            'VIDEO': 'output_video_tokens',
+        },
+    }
+    actual: dict[str, dict[str, str]] = {array_name: {} for array_name in expected}
+
+    for mapping in google_extractor.mappings:
+        path = mapping.path
+        if isinstance(path, str) or len(path) != 3:
+            continue
+        array_name, array_match, leaf = path
+        if not (
+            isinstance(array_name, str)
+            and array_name in actual
+            and isinstance(array_match, ArrayMatch)
+            and isinstance(array_match.match, ClauseEquals)
+            and leaf == 'tokenCount'
+        ):
+            continue
+        actual[array_name][array_match.match.equals] = mapping.dest
+
+    assert actual == expected
+    assert {frozenset(mapping.keys()) for mapping in actual.values()} == {
+        frozenset({'TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO'})
+    }
 
 
 def test_google():
