@@ -637,7 +637,6 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 120
-      output_image_mtok: 120
       output_text_mtok: 12
 
   - id: gemini-3-pro-preview

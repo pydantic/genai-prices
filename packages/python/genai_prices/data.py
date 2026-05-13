@@ -2138,12 +2138,7 @@ providers: list[Provider] = [
                 description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2'),
-                    output_mtok=Decimal('120'),
-                    output_image_mtok=Decimal('120'),
-                    output_text_mtok=Decimal('12'),
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('120'), output_text_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',

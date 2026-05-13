@@ -3736,7 +3736,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 120,
-          output_image_mtok: 120,
           output_text_mtok: 12,
         },
       },

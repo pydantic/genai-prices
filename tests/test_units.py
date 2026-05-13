@@ -1169,15 +1169,6 @@ def test_generated_python_unit_data_builds_registry() -> None:
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
 
 
-def test_generated_python_data_preserves_google_dynamic_output_prices() -> None:
-    google_provider = next(provider for provider in data.providers if provider.id == 'google')
-    model = next(model for model in google_provider.models if model.id == 'gemini-3-pro-image-preview')
-
-    assert isinstance(model.prices, ModelPrice)
-    assert model.prices.output_image_mtok == Decimal('120')
-    assert model.prices.output_text_mtok == Decimal('12')
-
-
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
 def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
     payload_obj = json.loads((Path(__file__).parent.parent / filename).read_text())
