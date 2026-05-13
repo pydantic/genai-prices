@@ -352,7 +352,7 @@ def test_google_extracts_text_image_and_video_token_details():
     )
 
 
-def test_google_extracts_tool_use_text_from_modality_details():
+def test_google_extracts_tool_use_modalities_from_details():
     response_data = {
         'usageMetadata': {
             'promptTokenCount': 10,
@@ -363,7 +363,9 @@ def test_google_extracts_tool_use_text_from_modality_details():
             'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 3}],
             'toolUsePromptTokensDetails': [
                 {'modality': 'TEXT', 'tokenCount': 10},
-                {'modality': 'IMAGE', 'tokenCount': 15},
+                {'modality': 'AUDIO', 'tokenCount': 5},
+                {'modality': 'IMAGE', 'tokenCount': 7},
+                {'modality': 'VIDEO', 'tokenCount': 3},
             ],
         },
         'modelVersion': 'gemini-2.5-flash',
@@ -376,6 +378,9 @@ def test_google_extracts_tool_use_text_from_modality_details():
             output_tokens=32,
             input_text_tokens=10,
             output_text_tokens=17,
+            output_audio_tokens=5,
+            output_image_tokens=7,
+            output_video_tokens=3,
         ),
     )
 

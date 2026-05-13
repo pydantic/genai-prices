@@ -1731,6 +1731,33 @@ providers: list[Provider] = [
                         dest='output_text_tokens',
                         required=False,
                     ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='output_audio_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='output_video_tokens',
+                        required=False,
+                    ),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',

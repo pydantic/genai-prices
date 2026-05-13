@@ -336,7 +336,7 @@ describe('extractUsage', () => {
       })
     })
 
-    it('should use tool-use modality details for text output', () => {
+    it('should use tool-use modality details for output modalities', () => {
       const responseData = {
         modelVersion: 'gemini-2.5-flash',
         usageMetadata: {
@@ -348,7 +348,9 @@ describe('extractUsage', () => {
           toolUsePromptTokenCount: 25,
           toolUsePromptTokensDetails: [
             { modality: 'TEXT', tokenCount: 10 },
-            { modality: 'IMAGE', tokenCount: 15 },
+            { modality: 'AUDIO', tokenCount: 5 },
+            { modality: 'IMAGE', tokenCount: 7 },
+            { modality: 'VIDEO', tokenCount: 3 },
           ],
         },
       }
@@ -358,8 +360,11 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         input_text_tokens: 10,
         input_tokens: 10,
+        output_audio_tokens: 5,
+        output_image_tokens: 7,
         output_text_tokens: 17,
         output_tokens: 32,
+        output_video_tokens: 3,
       })
     })
   })
