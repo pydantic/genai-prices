@@ -1,7 +1,7 @@
 import re
 from collections.abc import Mapping, Sequence
 from decimal import Decimal
-from typing import Any
+from typing import Any, Union
 
 import pytest
 from inline_snapshot import snapshot
@@ -242,6 +242,26 @@ def test_google_default_extractor_mappings_are_complete():
     google_extractors = google_provider.extractors
     assert google_extractors is not None
     google_extractor = next(extractor for extractor in google_extractors if extractor.api_flavor == 'default')
+
+    actual = {_google_extractor_mapping_signature(mapping) for mapping in google_extractor.mappings}
+
+    assert actual == _google_default_extractor_expected_signatures()
+
+
+def _google_default_extractor_expected_signatures() -> set[tuple[tuple[str, ...], str, bool]]:
+    scalar_signatures = {
+        (path, dest, False)
+        for path, dest in (
+            (('promptTokenCount',), 'input_tokens'),
+            (('cachedContentTokenCount',), 'cache_read_tokens'),
+            (('candidatesTokenCount',), 'output_tokens'),
+            (('thoughtsTokenCount',), 'output_tokens'),
+            (('thoughtsTokenCount',), 'output_text_tokens'),
+            (('toolUsePromptTokenCount',), 'output_tokens'),
+        )
+    }
+
+    # These four Google detail arrays have the same modality shape; only the usage direction changes.
     detail_arrays = {
         'promptTokensDetails': 'input',
         'cacheTokensDetails': 'cache_read',
@@ -249,29 +269,21 @@ def test_google_default_extractor_mappings_are_complete():
         'toolUsePromptTokensDetails': 'output',
     }
     modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
-    scalar_mappings = (
-        (('promptTokenCount',), 'input_tokens'),
-        (('cachedContentTokenCount',), 'cache_read_tokens'),
-        (('candidatesTokenCount',), 'output_tokens'),
-        (('thoughtsTokenCount',), 'output_tokens'),
-        (('thoughtsTokenCount',), 'output_text_tokens'),
-        (('toolUsePromptTokenCount',), 'output_tokens'),
-    )
-    expected = {(path, dest, False) for path, dest in scalar_mappings} | {
+
+    detail_signatures = {
         ((array_name, modality, 'tokenCount'), _google_modality_detail_dest(direction, modality), False)
         for array_name, direction in detail_arrays.items()
         for modality in modalities
     }
-    actual = {_google_extractor_mapping_signature(mapping) for mapping in google_extractor.mappings}
 
-    assert actual == expected
+    return scalar_signatures | detail_signatures
 
 
 def _google_extractor_mapping_signature(mapping: UsageExtractorMapping) -> tuple[tuple[str, ...], str, bool]:
     return _google_extractor_path_signature(mapping.path), mapping.dest, mapping.required
 
 
-def _google_extractor_path_signature(path: str | Sequence[str | ArrayMatch]) -> tuple[str, ...]:
+def _google_extractor_path_signature(path: Union[str, Sequence[Union[str, ArrayMatch]]]) -> tuple[str, ...]:
     if isinstance(path, str):
         return (path,)
     assert len(path) == 3
@@ -284,6 +296,7 @@ def _google_extractor_path_signature(path: str | Sequence[str | ArrayMatch]) -> 
 
 
 def _google_modality_detail_dest(direction: str, modality: str) -> str:
+    # Google can report DOCUMENT in ModalityTokenCount, but PDF/page tokens are image-priced.
     usage_modality = 'image' if modality == 'DOCUMENT' else modality.lower()
     if direction == 'cache_read':
         return f'cache_{usage_modality}_read_tokens'
