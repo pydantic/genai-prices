@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 
-@dataclass(eq=False)
+@dataclass
 class UnitDef:
     usage_key: str
     price_key: str

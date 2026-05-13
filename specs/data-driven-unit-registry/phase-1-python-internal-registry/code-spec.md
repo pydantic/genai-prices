@@ -64,7 +64,7 @@ Usage keys are raw unit dict keys. `price_key` defaults to the usage key when om
 Use one runtime model for unit definitions plus an indexed registry:
 
 ```python
-@dataclass(eq=False)
+@dataclass
 class UnitDef:
     usage_key: str
     price_key: str
@@ -91,7 +91,7 @@ class UnitRegistry:
         """Return the most specific registered unit joining two compatible units, if present."""
 ```
 
-`UnitRegistry.__init__(raw_units)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, copies each unit's duplicated `per`, and fills indexes. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. `UnitDef` uses `eq=False` so unit objects remain identity handles for relationship checks. The registry exposes no public mutation APIs in this phase.
+`UnitRegistry.__init__(raw_units)` parses raw dicts, promotes raw unit keys into `usage_key`, defaults `price_key` to `usage_key`, copies each unit's duplicated `per`, and fills indexes. It skips full join-closedness for the current-unit subset but exposes relationship helpers so price-level validation can reject priced pairs whose join is missing. The registry exposes no public mutation APIs in this phase.
 
 The parsed graph owns relationship indexes that keep downstream checks simple. `UnitRegistry._units_by_dimension` maps each full dimension set to its `UnitDef`, and `UnitRegistry.find_join(...)` owns join lookup by full dimension union. `UnitRegistry._units_by_price_key` maps each price key to the priced `UnitDef`, and `unit_for_price_key(...)` is the public lookup boundary. `UnitRegistry._ancestor_usage_keys` maps each usage key to the registered ancestor usage keys whose full dimension sets are subsets of that unit. Validation is written against model-priced units plus these indexes, not by scanning every registry unit for every model.
 
