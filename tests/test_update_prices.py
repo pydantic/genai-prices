@@ -20,19 +20,17 @@ from genai_prices.units import _get_registry, _set_registry
 pytestmark = pytest.mark.anyio
 
 
-def _wrapped_payload(*, providers_json: str | None = None, unit_families_json: str | None = None) -> bytes:
+def _wrapped_payload(*, providers_json: str | None = None, units_json: str | None = None) -> bytes:
     providers_json = providers_json or (
         '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
         '"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
         '"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
     )
-    unit_families_json = unit_families_json or (
-        '{"tokens":{"per":1000000,"units":{'
-        '"input_tokens":{"price_key":"input_mtok","dimensions":{"direction":"input"}},'
-        '"output_tokens":{"price_key":"output_mtok","dimensions":{"direction":"output"}}'
-        '}}}'
+    units_json = units_json or (
+        '{"input_tokens":{"per":1000000,"price_key":"input_mtok","dimensions":{"family":"tokens","direction":"input"}},'
+        '"output_tokens":{"per":1000000,"price_key":"output_mtok","dimensions":{"family":"tokens","direction":"output"}}}'
     )
-    return f'{{"unit_families":{unit_families_json},"providers":{providers_json}}}'.encode()
+    return f'{{"units":{units_json},"providers":{providers_json}}}'.encode()
 
 
 def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes) -> None:

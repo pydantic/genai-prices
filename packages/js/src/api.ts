@@ -51,7 +51,7 @@ function activateProviderData(data: Exclude<ProviderDataValue, null>): Provider[
   }
 
   if (typeof data === 'object' && isWrappedProviderData(data)) {
-    const candidateRegistry = new UnitRegistry(data.unit_families)
+    const candidateRegistry = new UnitRegistry(data.units)
     const previousRegistry = getActiveRegistry()
     setActiveRegistry(candidateRegistry)
     try {
@@ -64,11 +64,11 @@ function activateProviderData(data: Exclude<ProviderDataValue, null>): Provider[
     }
   }
 
-  throw new Error('Expected null, Provider[], or { unit_families, providers }')
+  throw new Error('Expected null, Provider[], or { units, providers }')
 }
 
 function isWrappedProviderData(data: object): data is WrappedProviderData {
-  return 'providers' in data && 'unit_families' in data
+  return 'providers' in data && 'units' in data
 }
 
 function onCalc(cb: () => void) {

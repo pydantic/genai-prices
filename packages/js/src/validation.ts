@@ -1,6 +1,6 @@
 import type { Provider, UnitDef } from './types'
 
-import { dimensionKey, getActiveRegistry, isCompatible, UnitRegistry } from './units'
+import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
 export function validatePriceKeys(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
   for (const priceKey of priceKeys) {
@@ -38,8 +38,7 @@ export function validateJoinCoverage(priceKeys: Iterable<string>, registry: Unit
       const right = pricedUnits[rightIndex]
       if (!left || !right || !isCompatible(left, right)) continue
 
-      const joinDimensions = { ...left.dimensions, ...right.dimensions }
-      const joinUnit = left.family.unitsByDimension.get(dimensionKey(joinDimensions))
+      const joinUnit = registry.findJoin(left, right)
       if (!joinUnit) {
         throw new Error(`Missing registered join unit for ${left.priceKey} and ${right.priceKey}`)
       }

@@ -26,9 +26,9 @@ from genai_prices.types import (
     _compute_registry_priced_counts,
     _group_model_price_units_by_family,
 )
-from genai_prices.units import UnitDef, UnitFamily, UnitRegistry, _get_registry, _set_registry
+from genai_prices.units import UnitDef, UnitRegistry, _get_registry, _set_registry
 from prices import build as build_module, export_validation, package_data, prices_types as build_types
-from prices.export_validation import validate_export_payload, validate_unit_families
+from prices.export_validation import validate_export_payload, validate_units
 
 from .unit_registry_helpers import load_units
 
@@ -79,37 +79,34 @@ TOKEN_PRICE_KEYS = {
 }
 
 
-def _custom_price_key_unit_families() -> dict[str, Any]:
+def _custom_price_key_units() -> dict[str, Any]:
     return {
-        'tokens': {
+        'input_tokens': {
             'per': 1_000_000,
-            'units': {
-                'input_tokens': {
-                    'price_key': 'input_mtok',
-                    'dimensions': {'direction': 'input'},
-                },
-                'sausage_tokens': {
-                    'price_key': 'sausage_mtok',
-                    'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
-                },
-            },
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        },
+        'sausage_tokens': {
+            'per': 1_000_000,
+            'price_key': 'sausage_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
         },
     }
 
 
 def _custom_price_key_registry() -> UnitRegistry:
-    return UnitRegistry(_custom_price_key_unit_families())
+    return UnitRegistry(_custom_price_key_units())
 
 
 @contextmanager
-def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
-    registry = UnitRegistry(raw_families)
+def _active_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
+    registry = UnitRegistry(raw_units)
     with patch('genai_prices.units._get_registry', return_value=registry):
         yield registry
 
 
-def _usage_keys_by_family(groups: dict[UnitFamily, set[UnitDef]]) -> dict[str, set[str]]:
-    return {family.id: {unit.usage_key for unit in units} for family, units in groups.items()}
+def _usage_keys_by_family(groups: dict[str, set[UnitDef]]) -> dict[str, set[str]]:
+    return {family_value: {unit.usage_key for unit in units} for family_value, units in groups.items()}
 
 
 def _build_provider_prices(
@@ -147,25 +144,25 @@ def _build_extractor_mapping(path: str, dest: str, *, required: bool = True) -> 
 
 
 def test_units_yml_defines_current_python_unit_surface() -> None:
-    raw_families = load_units()
+    raw_units = load_units()
 
-    assert set(raw_families) == {'tokens', 'requests'}
+    assert set(raw_units) == TOKEN_USAGE_KEYS | {'requests'}
 
-    token_family = raw_families['tokens']
-    assert token_family['per'] == 1_000_000
-    assert set(token_family['units']) == TOKEN_USAGE_KEYS
-    assert {unit['price_key'] for unit in token_family['units'].values()} == TOKEN_PRICE_KEYS
+    token_units = {usage_key: raw_units[usage_key] for usage_key in TOKEN_USAGE_KEYS}
+    assert {unit['per'] for unit in token_units.values()} == {1_000_000}
+    assert {unit['dimensions']['family'] for unit in token_units.values()} == {'tokens'}
+    assert {unit['price_key'] for unit in token_units.values()} == TOKEN_PRICE_KEYS
 
-    request_family = raw_families['requests']
-    assert request_family['per'] == 1_000
-    assert set(request_family['units']) == {'requests'}
-    assert request_family['units']['requests']['price_key'] == 'requests_kcount'
+    request_unit = raw_units['requests']
+    assert request_unit['per'] == 1_000
+    assert request_unit['dimensions'] == {'family': 'requests'}
+    assert request_unit['price_key'] == 'requests_kcount'
 
 
 def test_unit_registry_constructs_current_units() -> None:
     registry = UnitRegistry(load_units())
 
-    assert set(registry.families) == {'tokens', 'requests'}
+    assert registry.family_values() == frozenset({'tokens', 'requests'})
     assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
     assert len(registry.units) == 21
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
@@ -173,28 +170,22 @@ def test_unit_registry_constructs_current_units() -> None:
     assert registry.unit_for_price_key('requests_kcount') is registry.units['requests']
 
 
-def test_unit_registry_sets_family_and_unit_backrefs() -> None:
+def test_unit_registry_sets_unit_per_and_family_dimension() -> None:
     registry = UnitRegistry(load_units())
 
-    token_family = registry.families['tokens']
     input_unit = registry.units['input_tokens']
 
-    assert input_unit.family is token_family
-    assert input_unit.family_id == 'tokens'
-    assert token_family.units['input_tokens'] is input_unit
-    assert token_family.per == 1_000_000
+    assert input_unit.family_value == 'tokens'
+    assert input_unit.per == 1_000_000
+    assert registry.units_for_family('tokens')['input_tokens'] is input_unit
 
 
 def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
     registry = UnitRegistry(
         {
-            'characters': {
+            'input_characters': {
                 'per': 1_000,
-                'units': {
-                    'input_characters': {
-                        'dimensions': {'direction': 'input'},
-                    },
-                },
+                'dimensions': {'family': 'characters', 'direction': 'input'},
             },
         }
     )
@@ -206,11 +197,14 @@ def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
 def test_unit_registry_indexes_units_by_dimension_set() -> None:
     registry = UnitRegistry(load_units())
 
-    token_units_by_dimension = registry.families['tokens'].units_by_dimension
+    token_units_by_dimension = registry._units_by_dimension_by_family['tokens']
 
-    assert token_units_by_dimension[frozenset({('direction', 'input')})] is registry.units['input_tokens']
     assert (
-        token_units_by_dimension[frozenset({('direction', 'input'), ('modality', 'audio')})]
+        token_units_by_dimension[frozenset({('family', 'tokens'), ('direction', 'input')})]
+        is registry.units['input_tokens']
+    )
+    assert (
+        token_units_by_dimension[frozenset({('family', 'tokens'), ('direction', 'input'), ('modality', 'audio')})]
         is registry.units['input_audio_tokens']
     )
 
@@ -252,20 +246,18 @@ def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
 
 def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
     registry = UnitRegistry(load_units())
-    token_family = registry.families['tokens']
 
     assert (
-        token_family.find_join(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
+        registry.find_join(registry.units['cache_read_tokens'], registry.units['input_audio_tokens'])
         is registry.units['cache_audio_read_tokens']
     )
 
 
 def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() -> None:
     registry = UnitRegistry(load_units())
-    token_family = registry.families['tokens']
 
     assert (
-        token_family.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
+        registry.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
         is registry.units['cache_audio_read_tokens']
     )
 
@@ -273,18 +265,14 @@ def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() ->
 def test_unit_registry_join_lookup_returns_none_for_incompatible_units() -> None:
     registry = UnitRegistry(load_units())
 
-    assert (
-        registry.families['tokens'].find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
-    )
+    assert registry.find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
 
 
 def test_unit_registry_join_lookup_returns_registered_cache_write_overlap() -> None:
     registry = UnitRegistry(load_units())
 
     assert (
-        registry.families['tokens'].find_join(
-            registry.units['cache_write_tokens'], registry.units['input_audio_tokens']
-        )
+        registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens'])
         is registry.units['cache_audio_write_tokens']
     )
 
@@ -301,70 +289,70 @@ def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> No
     assert 'requests' not in registry.reported_usage_keys()
 
 
-def test_validate_unit_families_rejects_duplicate_usage_keys_across_families() -> None:
-    with pytest.raises(ValueError, match='Duplicate unit usage key: input_tokens'):
-        validate_unit_families(
+def test_validate_units_rejects_missing_family_dimension() -> None:
+    with pytest.raises(ValueError, match='Missing required family dimension for unit input_tokens'):
+        validate_units(
             {
-                'tokens': {
+                'input_tokens': {
                     'per': 1_000_000,
-                    'units': {
-                        'input_tokens': {
-                            'dimensions': {'direction': 'input'},
-                        },
-                    },
+                    'dimensions': {'direction': 'input'},
                 },
-                'characters': {
+            }
+        )
+
+
+def test_validate_units_rejects_inconsistent_per_within_family_dimension() -> None:
+    with pytest.raises(ValueError, match='Inconsistent per for family dimension tokens'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'output_tokens': {
                     'per': 1_000,
-                    'units': {
-                        'input_tokens': {
-                            'dimensions': {'direction': 'input'},
-                        },
-                    },
+                    'price_key': 'output_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'output'},
                 },
             }
         )
 
 
-def test_validate_unit_families_rejects_duplicate_price_keys() -> None:
+def test_validate_units_rejects_duplicate_price_keys() -> None:
     with pytest.raises(ValueError, match='Duplicate unit price key: input_mtok'):
-        validate_unit_families(
+        validate_units(
             {
-                'tokens': {
+                'input_tokens': {
                     'per': 1_000_000,
-                    'units': {
-                        'input_tokens': {
-                            'price_key': 'input_mtok',
-                            'dimensions': {'direction': 'input'},
-                        },
-                        'input_audio_tokens': {
-                            'price_key': 'input_mtok',
-                            'dimensions': {'direction': 'input', 'modality': 'audio'},
-                        },
-                    },
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'input_audio_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
                 },
             }
         )
 
 
-def test_validate_unit_families_rejects_duplicate_dimension_sets_within_family() -> None:
+def test_validate_units_rejects_duplicate_dimension_sets_within_family_dimension() -> None:
     with pytest.raises(
         ValueError,
-        match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
+        match='Duplicate dimensions in family dimension tokens: input_tokens and prompt_tokens',
     ):
-        validate_unit_families(
+        validate_units(
             {
-                'tokens': {
+                'input_tokens': {
                     'per': 1_000_000,
-                    'units': {
-                        'input_tokens': {
-                            'price_key': 'input_mtok',
-                            'dimensions': {'direction': 'input'},
-                        },
-                        'prompt_tokens': {
-                            'price_key': 'prompt_mtok',
-                            'dimensions': {'direction': 'input'},
-                        },
-                    },
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'prompt_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'prompt_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
                 },
             }
         )
@@ -373,64 +361,59 @@ def test_validate_unit_families_rejects_duplicate_dimension_sets_within_family()
 def test_unit_registry_allows_same_dimension_set_across_families() -> None:
     registry = UnitRegistry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
             },
-            'characters': {
+            'input_characters': {
                 'per': 1_000,
-                'units': {
-                    'input_characters': {
-                        'price_key': 'input_kchar',
-                        'dimensions': {'direction': 'input'},
-                    },
-                },
+                'price_key': 'input_kchar',
+                'dimensions': {'family': 'characters', 'direction': 'input'},
             },
         }
     )
 
-    assert registry.units['input_tokens'].dimensions == registry.units['input_characters'].dimensions
+    assert (
+        registry.units['input_tokens'].dimensions['direction']
+        == registry.units['input_characters'].dimensions['direction']
+    )
+    assert registry.units['input_tokens'].family_value != registry.units['input_characters'].family_value
 
 
-def test_validate_unit_families_rejects_skipped_intermediate_dimension_sets() -> None:
+def test_validate_units_rejects_skipped_intermediate_dimension_sets() -> None:
     with pytest.raises(
         ValueError,
         match=(
-            'Missing intermediate unit dimensions in family tokens between input_tokens and cache_video_read_tokens'
+            'Missing intermediate unit dimensions in family dimension tokens between input_tokens and cache_video_read_tokens'
         ),
     ):
-        validate_unit_families(
+        validate_units(
             {
-                'tokens': {
+                'input_tokens': {
                     'per': 1_000_000,
-                    'units': {
-                        'input_tokens': {
-                            'price_key': 'input_mtok',
-                            'dimensions': {'direction': 'input'},
-                        },
-                        'cache_read_tokens': {
-                            'price_key': 'cache_read_mtok',
-                            'dimensions': {'direction': 'input', 'cache': 'read'},
-                        },
-                        'cache_video_read_tokens': {
-                            'price_key': 'cache_video_read_mtok',
-                            'dimensions': {'direction': 'input', 'modality': 'video', 'cache': 'read'},
-                        },
-                    },
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'cache_read_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_read_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+                },
+                'cache_video_read_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_video_read_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
                 },
             }
         )
 
 
-def test_validate_unit_families_accepts_bundled_units() -> None:
-    registry = validate_unit_families(load_units())
+def test_validate_units_accepts_bundled_units() -> None:
+    registry = validate_units(load_units())
 
     assert registry.units['cache_audio_read_tokens'].dimensions == {
+        'family': 'tokens',
         'direction': 'input',
         'modality': 'audio',
         'cache': 'read',
@@ -450,18 +433,14 @@ def test_validate_unit_families_accepts_bundled_units() -> None:
         ('valid_usage', 'café_mtok', "Invalid unit price key: 'café_mtok' is not a public identifier"),
     ],
 )
-def test_validate_unit_families_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
+def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
     with pytest.raises(ValueError, match=message):
-        validate_unit_families(
+        validate_units(
             {
-                'tokens': {
+                usage_key: {
                     'per': 1_000_000,
-                    'units': {
-                        usage_key: {
-                            'price_key': price_key,
-                            'dimensions': {'direction': 'input'},
-                        },
-                    },
+                    'price_key': price_key,
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
                 },
             }
         )
@@ -470,32 +449,25 @@ def test_validate_unit_families_rejects_unsafe_public_keys(usage_key: str, price
 def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:
     registry = UnitRegistry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'cache_write_tokens': {
-                        'price_key': 'cache_write_mtok',
-                        'dimensions': {'direction': 'input', 'cache': 'write'},
-                    },
-                    'input_audio_tokens': {
-                        'price_key': 'input_audio_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'audio'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_write_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+            },
+            'input_audio_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_audio_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
             },
         }
     )
 
-    assert (
-        registry.families['tokens'].find_join(
-            registry.units['cache_write_tokens'], registry.units['input_audio_tokens']
-        )
-        is None
-    )
+    assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
 
 
 def test_collect_effective_model_price_keys_reads_base_fields() -> None:
@@ -551,7 +523,7 @@ def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
-    with _active_registry(_custom_price_key_unit_families()):
+    with _active_registry(_custom_price_key_units()):
         assert ModelPrice().sausage_mtok is None
 
 
@@ -606,7 +578,7 @@ def test_group_model_price_units_by_family_handles_mixed_families_in_field_order
         ModelPrice(input_mtok=Decimal('1'), requests_kcount=Decimal('2')), registry
     )
 
-    assert list(groups) == [registry.families['tokens'], registry.families['requests']]
+    assert list(groups) == ['tokens', 'requests']
     assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens'}, 'requests': {'requests'}}
 
 
@@ -635,7 +607,7 @@ def test_group_model_price_units_by_family_handles_registered_custom_fields() ->
         CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')), registry
     )
 
-    assert list(groups) == [registry.families['tokens']]
+    assert list(groups) == ['tokens']
     assert _usage_keys_by_family(groups) == {'tokens': {'input_tokens', 'sausage_tokens'}}
 
 
@@ -693,8 +665,8 @@ def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_on
     assert set(_compute_registry_priced_counts(grouped_units, Usage(input_tokens=100))) == {'requests'}
 
 
-def test_build_loads_unit_families() -> None:
-    assert set(build_module.load_unit_families()) == {'tokens', 'requests'}
+def test_build_loads_units() -> None:
+    assert set(build_module.load_units()) == TOKEN_USAGE_KEYS | {'requests'}
 
 
 def test_package_data_surfaces_registry_structural_errors(
@@ -703,52 +675,51 @@ def test_package_data_surfaces_registry_structural_errors(
 ) -> None:
     (tmp_path / 'units.yml').write_text(
         """\
-tokens:
+input_tokens:
   per: 1_000_000
-  units:
-    input_tokens:
-      price_key: input_mtok
-      dimensions: {direction: input}
-    prompt_tokens:
-      price_key: prompt_mtok
-      dimensions: {direction: input}
+  price_key: input_mtok
+  dimensions: {family: tokens, direction: input}
+prompt_tokens:
+  per: 1_000_000
+  price_key: prompt_mtok
+  dimensions: {family: tokens, direction: input}
 """
     )
     monkeypatch.setattr(build_module, 'package_dir', tmp_path)
 
     with pytest.raises(
         ValueError,
-        match='Duplicate dimensions in unit family tokens: input_tokens and prompt_tokens',
+        match='Duplicate dimensions in family dimension tokens: input_tokens and prompt_tokens',
     ):
-        package_data.load_unit_registry(build_module.load_unit_families())
+        package_data.load_unit_registry(build_module.load_units())
 
 
 def test_package_data_load_unit_registry_delegates_to_export_validator(monkeypatch: pytest.MonkeyPatch) -> None:
-    raw_families: dict[str, Any] = {
-        'tokens': {
+    raw_units: dict[str, Any] = {
+        'widgets': {
             'per': 1_000_000,
-            'units': {},
+            'dimensions': {'family': 'widgets'},
         }
     }
-    expected_registry = UnitRegistry(raw_families)
+    expected_registry = UnitRegistry(raw_units)
     calls: list[dict[str, Any]] = []
 
-    def validate(raw_unit_families: dict[str, Any]) -> UnitRegistry:
-        calls.append(raw_unit_families)
+    def validate(raw_units_arg: dict[str, Any]) -> UnitRegistry:
+        calls.append(raw_units_arg)
         return expected_registry
 
-    monkeypatch.setattr(export_validation, 'validate_unit_families', validate)
+    monkeypatch.setattr(export_validation, 'validate_units', validate)
 
-    assert package_data.load_unit_registry(raw_families) is expected_registry
-    assert calls == [raw_families]
+    assert package_data.load_unit_registry(raw_units) is expected_registry
+    assert calls == [raw_units]
 
 
-def test_runtime_packages_do_not_define_unit_family_publication_validators() -> None:
+def test_runtime_packages_do_not_define_unit_publication_validators() -> None:
     runtime_files = [
         *Path('packages/python/genai_prices').glob('*.py'),
         *Path('packages/js/src').glob('*.ts'),
     ]
-    forbidden_terms = {'validate_unit_families', 'validateUnitFamilies'}
+    forbidden_terms = {'validate_units', 'validateUnits'}
     references = {
         str(path): sorted(term for term in forbidden_terms if term in path.read_text()) for path in runtime_files
     }
@@ -770,7 +741,7 @@ def test_package_payload_rejects_legacy_provider_arrays(tmp_path: Path) -> None:
     data_path = tmp_path / 'data.json'
     data_path.write_text('[]')
 
-    with pytest.raises(ValueError, match=r'Expected .* to contain \{unit_families, providers\}'):
+    with pytest.raises(ValueError, match=r'Expected .* to contain \{units, providers\}'):
         package_data._load_package_payload(data_path)
 
 
@@ -838,7 +809,7 @@ def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.Mo
     class ExportValidationError(ValueError):
         pass
 
-    def fail_export_validation(_providers: list[build_types.Provider], _unit_families: dict[str, Any]) -> UnitRegistry:
+    def fail_export_validation(_providers: list[build_types.Provider], _units: dict[str, Any]) -> UnitRegistry:
         raise ExportValidationError('sentinel export validation failure')
 
     monkeypatch.setattr(build_module, 'validate_export_payload', fail_export_validation)
@@ -852,21 +823,16 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
 ) -> None:
     from genai_prices import types as runtime_types
 
-    unit_families = {
-        'tokens': {
+    units = {
+        'input_tokens': {
             'per': 1_000_000,
-            'description': 'Wrapped token counts',
-            'units': {
-                'input_tokens': {
-                    'price_key': 'input_mtok',
-                    'dimensions': {'direction': 'input'},
-                },
-            },
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
     payload = {
-        'unit_families': unit_families,
+        'units': units,
         'providers': build_types.providers_schema.dump_python(
             [provider],
             mode='json',
@@ -891,28 +857,23 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
 
     assert (py_package_dir / 'data.py').exists()
     unit_data_content = (py_package_dir / 'data_units.py').read_text()
-    generated_unit_families = ast.literal_eval(unit_data_content.split('unit_families_data: dict[str, Any] = ', 1)[1])
-    assert generated_unit_families == unit_families
+    generated_units = ast.literal_eval(unit_data_content.split('unit_data: dict[str, Any] = ', 1)[1])
+    assert generated_units == units
 
 
 def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    unit_families = {
-        'tokens': {
+    units = {
+        'input_tokens': {
             'per': 1_000_000,
-            'description': 'Wrapped token counts',
-            'units': {
-                'input_tokens': {
-                    'price_key': 'input_mtok',
-                    'dimensions': {'direction': 'input'},
-                },
-            },
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
     payload = {
-        'unit_families': unit_families,
+        'units': units,
         'providers': build_types.providers_schema.dump_python(
             [provider],
             mode='json',
@@ -943,10 +904,8 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
 
     assert (js_src_dir / 'data.ts').exists()
     unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
-    generated_json = unit_data_content.split('export const unitFamiliesData: RawFamiliesDict = ', 1)[1].removesuffix(
-        ';\n'
-    )
-    assert json.loads(generated_json) == unit_families
+    generated_json = unit_data_content.split('export const unitData: RawUnitsDict = ', 1)[1].removesuffix(';\n')
+    assert json.loads(generated_json) == units
 
 
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:
@@ -1003,14 +962,10 @@ def test_package_data_validates_conditional_model_prices() -> None:
 def test_package_data_model_price_validation_rejects_unknown_price_keys() -> None:
     registry = UnitRegistry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
             },
         }
     )
@@ -1054,22 +1009,20 @@ def test_package_data_model_price_validation_rejects_required_joins() -> None:
 def test_package_data_model_price_validation_rejects_missing_join_units_for_conditional_prices() -> None:
     registry = UnitRegistry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'cache_write_tokens': {
-                        'price_key': 'cache_write_mtok',
-                        'dimensions': {'direction': 'input', 'cache': 'write'},
-                    },
-                    'input_audio_tokens': {
-                        'price_key': 'input_audio_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'audio'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_write_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+            },
+            'input_audio_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_audio_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
             },
         }
     )
@@ -1190,10 +1143,10 @@ def test_package_data_extractor_validation_reports_multiple_invalid_destinations
         package_data.validate_provider_extractor_destinations([provider], registry)
 
 
-def test_generated_python_unit_families_data_builds_registry() -> None:
-    registry = UnitRegistry(data_units.unit_families_data)
+def test_generated_python_unit_data_builds_registry() -> None:
+    registry = UnitRegistry(data_units.unit_data)
 
-    assert set(registry.families) == {'tokens', 'requests'}
+    assert registry.family_values() == frozenset({'tokens', 'requests'})
     assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
     assert len(registry.units) == 21
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
@@ -1214,12 +1167,13 @@ def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
 
     assert isinstance(payload_obj, dict)
     payload = cast(dict[str, Any], payload_obj)
-    assert set(payload) == {'unit_families', 'providers'}
+    assert set(payload) == {'units', 'providers'}
     providers = cast(list[object], payload['providers'])
-    unit_families = cast(dict[str, Any], payload['unit_families'])
+    units = cast(dict[str, Any], payload['units'])
     assert providers
     assert all(isinstance(provider, dict) for provider in providers)
-    assert unit_families['tokens']['units']['cache_image_write_tokens']['price_key'] == 'cache_image_write_mtok'
+    assert units['cache_image_write_tokens']['price_key'] == 'cache_image_write_mtok'
+    assert units['cache_image_write_tokens']['dimensions']['family'] == 'tokens'
 
 
 def test_data_snapshot_has_no_unit_registry_field() -> None:
@@ -1243,7 +1197,7 @@ def test_get_registry_returns_generated_unit_data_registry() -> None:
     registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
-    assert set(registry.families) == set(data_units.unit_families_data)
+    assert set(registry.units) == set(data_units.unit_data)
     assert registry.unit_for_price_key('input_mtok').usage_key == 'input_tokens'
     assert _get_registry() is registry
 
@@ -1279,7 +1233,10 @@ def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> Non
         [
             sys.executable,
             '-c',
-            ("from genai_prices.units import UnitRegistry; UnitRegistry({'tokens': {'per': 1, 'units': {}}})"),
+            (
+                'from genai_prices.units import UnitRegistry; '
+                "UnitRegistry({'widgets': {'per': 1, 'dimensions': {'family': 'widgets'}}})"
+            ),
         ],
         check=True,
     )

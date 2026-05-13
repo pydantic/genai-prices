@@ -19,22 +19,20 @@ from .unit_registry_helpers import load_units
 def _missing_write_audio_join_registry() -> UnitRegistry:
     return UnitRegistry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'cache_write_tokens': {
-                        'price_key': 'cache_write_mtok',
-                        'dimensions': {'direction': 'input', 'cache': 'write'},
-                    },
-                    'input_audio_tokens': {
-                        'price_key': 'input_audio_mtok',
-                        'dimensions': {'direction': 'input', 'modality': 'audio'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_write_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+            },
+            'input_audio_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_audio_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
             },
         }
     )
@@ -58,7 +56,6 @@ def test_validate_ancestor_coverage_accepts_parent_child_pricing() -> None:
 
     validate_ancestor_coverage(
         {'input_tokens', 'cache_read_tokens'},
-        registry.families['tokens'],
         registry,
     )
 
@@ -69,7 +66,6 @@ def test_validate_ancestor_coverage_rejects_missing_ancestor_price() -> None:
     with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
         validate_ancestor_coverage(
             {'cache_read_tokens'},
-            registry.families['tokens'],
             registry,
         )
 
@@ -83,7 +79,7 @@ def test_validate_join_coverage_rejects_missing_join_price() -> None:
     ):
         validate_join_coverage(
             {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'},
-            registry.families['tokens'],
+            registry,
         )
 
 
@@ -96,7 +92,7 @@ def test_validate_join_coverage_rejects_missing_registered_join_unit() -> None:
     ):
         validate_join_coverage(
             {'input_tokens', 'cache_write_tokens', 'input_audio_tokens'},
-            registry.families['tokens'],
+            registry,
         )
 
 
@@ -105,7 +101,7 @@ def test_validate_join_coverage_accepts_priced_join() -> None:
 
     validate_join_coverage(
         {'input_tokens', 'cache_read_tokens', 'input_audio_tokens', 'cache_audio_read_tokens'},
-        registry.families['tokens'],
+        registry,
     )
 
 
@@ -150,7 +146,7 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
 
 
 def test_bundled_provider_model_prices_pass_registry_validation() -> None:
-    registry = UnitRegistry(data_units.unit_families_data)
+    registry = UnitRegistry(data_units.unit_data)
     failures: list[str] = []
 
     for provider in data.providers:

@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import cast
 
-from genai_prices.units import UnitDef, UnitFamily
+from genai_prices.units import UnitDef
 
 
 def is_descendant_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
-    return ancestor.family is descendant.family and ancestor.dimensions.items() <= descendant.dimensions.items()
+    return ancestor.dimensions.items() <= descendant.dimensions.items()
 
 
-def compute_leaf_values(priced_usage_keys: set[str], usage: object, family: UnitFamily) -> dict[str, int]:
-    priced_units = [family.units[usage_key] for usage_key in sorted(priced_usage_keys & family.units.keys())]
+def compute_leaf_values(
+    priced_usage_keys: set[str], usage: object, units_by_usage_key: Mapping[str, UnitDef]
+) -> dict[str, int]:
+    priced_units = [
+        units_by_usage_key[usage_key] for usage_key in sorted(priced_usage_keys & units_by_usage_key.keys())
+    ]
     leaf_values: dict[str, int] = {}
 
     for unit in priced_units:

@@ -60,28 +60,26 @@ function wrappedPayload(): WrappedProviderData {
         name: 'Testing',
       },
     ],
-    unit_families: {
-      tokens: {
-        description: 'Token counts',
+    units: {
+      cache_image_read_tokens: {
+        dimensions: { cache: 'read', direction: 'input', family: 'tokens', modality: 'image' },
         per: 1_000_000,
-        units: {
-          cache_image_read_tokens: {
-            dimensions: { cache: 'read', direction: 'input', modality: 'image' },
-            price_key: 'cache_image_read_mtok',
-          },
-          cache_read_tokens: {
-            dimensions: { cache: 'read', direction: 'input' },
-            price_key: 'cache_read_mtok',
-          },
-          input_image_tokens: {
-            dimensions: { direction: 'input', modality: 'image' },
-            price_key: 'input_image_mtok',
-          },
-          input_tokens: {
-            dimensions: { direction: 'input' },
-            price_key: 'input_mtok',
-          },
-        },
+        price_key: 'cache_image_read_mtok',
+      },
+      cache_read_tokens: {
+        dimensions: { cache: 'read', direction: 'input', family: 'tokens' },
+        per: 1_000_000,
+        price_key: 'cache_read_mtok',
+      },
+      input_image_tokens: {
+        dimensions: { direction: 'input', family: 'tokens', modality: 'image' },
+        per: 1_000_000,
+        price_key: 'input_image_mtok',
+      },
+      input_tokens: {
+        dimensions: { direction: 'input', family: 'tokens' },
+        per: 1_000_000,
+        price_key: 'input_mtok',
       },
     },
   }

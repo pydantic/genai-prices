@@ -64,13 +64,8 @@ describe('normalizeUsage', () => {
   it('normalizes against the active registry reported usage keys', () => {
     const registry = new UnitRegistry({
       widgets: {
-        description: 'Widget counts',
+        dimensions: { family: 'widgets' },
         per: 1,
-        units: {
-          widgets: {
-            dimensions: {},
-          },
-        },
       },
     })
 
@@ -133,15 +128,10 @@ describe('getUsageValue', () => {
 
   it('returns one for pricing-only requests when the active registry has no requests unit', () => {
     const registry = new UnitRegistry({
-      tokens: {
-        description: 'Token counts',
+      input_tokens: {
+        dimensions: { direction: 'input', family: 'tokens' },
         per: 1_000_000,
-        units: {
-          input_tokens: {
-            dimensions: { direction: 'input' },
-            price_key: 'input_mtok',
-          },
-        },
+        price_key: 'input_mtok',
       },
     })
 
@@ -207,19 +197,18 @@ describe('getUsageValue', () => {
 
   it('reads values from the active registry indexes', () => {
     const registry = new UnitRegistry({
-      widgets: {
-        description: 'Widget counts',
-        per: 1,
-        units: {
-          premium_widgets: {
-            dimensions: {
-              class: 'premium',
-            },
-          },
-          widgets: {
-            dimensions: {},
-          },
+      premium_widgets: {
+        dimensions: {
+          class: 'premium',
+          family: 'widgets',
         },
+        per: 1,
+      },
+      widgets: {
+        dimensions: {
+          family: 'widgets',
+        },
+        per: 1,
       },
     })
 

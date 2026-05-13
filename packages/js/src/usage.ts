@@ -1,6 +1,6 @@
 import type { UnitDef, Usage } from './types'
 
-import { dimensionKey, getActiveRegistry, isCompatible, UnitRegistry } from './units'
+import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
 export type NormalizedUsage = Usage
 
@@ -47,8 +47,7 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number 
       const right = positiveReportedUnits[rightIndex]
       if (!left || !right || !isCompatible(left, right) || isComparable(registry, left, right)) continue
 
-      const joinDimensions = { ...left.dimensions, ...right.dimensions }
-      if (left.family.unitsByDimension.get(dimensionKey(joinDimensions)) === requestedUnit) {
+      if (registry.findJoin(left, right) === requestedUnit) {
         throw new Error(`Missing usage value for ${usageKey} with positive reported overlap ${left.usageKey} and ${right.usageKey}`)
       }
     }

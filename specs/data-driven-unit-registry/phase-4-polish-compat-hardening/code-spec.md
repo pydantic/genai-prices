@@ -11,7 +11,7 @@ Update schema generation so provider YAML price keys come from `registry.price_k
 
 Keep the authoring schema aligned with the built-in naming patterns in the registry, but do not move those patterns into validation code. The schema is regenerated from the registry when units change. It may expose autocomplete for names such as `cache_audio_read_mtok` and `cache_image_read_mtok` because those are registry price keys, not because the schema generator knows token modality concepts.
 
-Add repo data regression tests that walk the built-in `tokens` family from `prices/units.yml` and assert that token usage keys, price keys, non-cached modality names, and cached modality names follow the documented built-in conventions. Keep these tests scoped to repo-authored built-in token data; production registry validation must not enforce token-specific semantic naming rules for arbitrary families.
+Add repo data regression tests that walk units whose `dimensions.family` value is `tokens` in `prices/units.yml` and assert that token usage keys, price keys, non-cached modality names, and cached modality names follow the documented built-in conventions. Keep these tests scoped to repo-authored built-in token data; production registry validation must not enforce token-specific semantic naming rules for arbitrary family dimension values.
 
 **Add Python dataclass-subclass dynamic price-key constructor support.** _(implements "Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs")_
 Introduce constructor interception around `ModelPrice` subclasses, for example with `ModelPriceMeta`, so undeclared candidate dynamic price-key kwargs are split before a generated dataclass subclass `__init__` receives them. The normal subclass constructor receives declared subclass fields. Captured dynamic price keys are stored in base `_extra_prices` and validated later against the active global registry.
@@ -24,7 +24,7 @@ Update `_cli_impl.py` so price-field collection iterates each `ModelPrice` objec
 Concretely:
 
 - `_collect_model_price_fields()` iterates stored/effective price keys from each `ModelPrice` instead of `dataclasses.fields(ModelPrice)`.
-- `_price_field_label()` derives labels from `UnitDef`, `UnitFamily.description`, and `UnitFamily.per` instead of a hardcoded field-name map.
+- `_price_field_label()` derives labels from `UnitDef.dimensions` and `UnitDef.per` instead of a hardcoded field-name map.
 - `_format_model_price_value()` and `_format_model_prices()` iterate registry-backed price keys and format values generically.
 
 The CLI may keep compatibility aliases and familiar labels for existing units, but new registered units must appear without adding new hardcoded price-field branches.

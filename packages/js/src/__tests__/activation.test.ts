@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Provider, RawFamiliesDict, WrappedProviderData } from '../types'
+import type { Provider, RawUnitsDict, WrappedProviderData } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
@@ -78,7 +78,7 @@ describe('provider activation', () => {
     })
   })
 
-  it('activates wrapped provider data and unit families synchronously', async () => {
+  it('activates wrapped provider data and units synchronously', async () => {
     const beforeRegistry = getActiveRegistry()
     const wrappedProvider = providerFixture('wrapped-provider')
 
@@ -100,7 +100,7 @@ describe('provider activation', () => {
     }
   })
 
-  it('activates wrapped provider data and unit families asynchronously', async () => {
+  it('activates wrapped provider data and units asynchronously', async () => {
     const wrappedProvider = providerFixture('async-wrapped-provider')
 
     try {
@@ -140,7 +140,7 @@ describe('provider activation', () => {
   })
 
   it('keeps active registry unchanged when provider data is null', () => {
-    const customRegistry = new UnitRegistry(wrappedUnitFamilies)
+    const customRegistry = new UnitRegistry(wrappedUnits)
     setActiveRegistry(customRegistry)
 
     try {
@@ -159,7 +159,7 @@ describe('provider activation', () => {
       updatePrices(({ setProviderData }) => {
         setProviderData('garbage' as unknown as WrappedProviderData)
       })
-    }).toThrow('Expected null, Provider[], or { unit_families, providers }')
+    }).toThrow('Expected null, Provider[], or { units, providers }')
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
@@ -217,22 +217,17 @@ function providerFixture(providerId: string, dest = 'input_tokens'): Provider {
   }
 }
 
-const wrappedUnitFamilies: RawFamiliesDict = {
-  tokens: {
-    description: 'Wrapped token counts',
+const wrappedUnits: RawUnitsDict = {
+  input_tokens: {
+    dimensions: { direction: 'input', family: 'tokens' },
     per: 1_000_000,
-    units: {
-      input_tokens: {
-        dimensions: { direction: 'input' },
-        price_key: 'input_mtok',
-      },
-    },
+    price_key: 'input_mtok',
   },
 }
 
 function wrappedProviderData(providers: Provider[]): WrappedProviderData {
   return {
     providers,
-    unit_families: wrappedUnitFamilies,
+    units: wrappedUnits,
   }
 }
