@@ -15,6 +15,7 @@ import genai_prices._cli as cli_module
 from genai_prices import update_prices
 from genai_prices._cli import cli_logic
 from genai_prices._cli_impl import (
+    _format_model_price_value,
     _format_model_prices,
     _parse_cli,
     _price_field_label,
@@ -476,6 +477,40 @@ def test_format_model_prices_uses_custom_registry_metadata() -> None:
         _set_registry(None)
 
     assert formatted.plain == '$1/input MTok\n$2/input sausage MTok'
+
+
+def test_format_model_price_value_uses_registry_backed_fields() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), requests_kcount=Decimal('12'))
+
+    assert _format_model_price_value(price, 'input_mtok', use_color=False).plain == '$1'
+    assert _format_model_price_value(price, 'requests_kcount', use_color=False).plain == '$12'
+
+
+def test_format_model_price_value_preserves_tier_text() -> None:
+    price = ModelPrice(input_mtok=TieredPrices(base=Decimal('1'), tiers=[]))
+
+    assert _format_model_price_value(price, 'input_mtok', use_color=False).plain == '$1 (+tiers)'
+
+
+def test_format_model_price_value_uses_custom_registry_metadata() -> None:
+    _set_registry(
+        UnitRegistry(
+            {
+                'sausage_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'sausage_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+                }
+            }
+        )
+    )
+    try:
+        price = ModelPrice(sausage_mtok=Decimal('2'))
+        formatted = _format_model_price_value(price, 'sausage_mtok', use_color=False)
+    finally:
+        _set_registry(None)
+
+    assert formatted.plain == '$2'
 
 
 def test_split_model_price_columns_no_fields():

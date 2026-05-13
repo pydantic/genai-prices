@@ -622,12 +622,11 @@ def _price_field_header_style(field_name: str) -> str:
 
 
 def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_color: bool) -> Text:
-    value = getattr(model_price, field_name)
+    unit = _unit_for_price_key(field_name)
+    value = getattr(model_price, unit.price_key if unit is not None else field_name, None)
     style = _PRICE_STYLES.get(field_name) if use_color else None
     if value is None:
         return Text('')
-    if field_name == 'requests_kcount':
-        return Text(f'${value}', style=style) if style else Text(f'${value}')
     if isinstance(value, TieredPrices):
         return Text(f'${value.base} (+tiers)', style=style) if style else Text(f'${value.base} (+tiers)')
     return Text(f'${value}', style=style) if style else Text(f'${value}')
@@ -685,6 +684,15 @@ def _format_model_price_line(value: object, unit: UnitDef) -> str:
     if unit.dimensions.get('family') == 'requests':
         return f'${base_value} / {per_label} {unit_name}{suffix}'
     return f'${base_value}/{unit_name} {per_label}{suffix}'
+
+
+def _unit_for_price_key(price_key: str) -> UnitDef | None:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        return _get_registry().unit_for_price_key(price_key)
+    except KeyError:
+        return None
 
 
 def _render_calc_error(
