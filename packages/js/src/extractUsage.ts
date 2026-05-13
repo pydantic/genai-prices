@@ -1,5 +1,6 @@
 import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
+import { normalizeUsage } from './usage'
 
 interface ExtractedUsage {
   model: null | string
@@ -42,7 +43,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`No usage information found at ${JSON.stringify(extractor.root)}`)
   }
 
-  return { model, usage }
+  return { model, usage: normalizeUsage(usage) }
 }
 
 function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (ArrayMatch | string)[]): T

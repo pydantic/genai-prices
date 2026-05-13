@@ -10,7 +10,7 @@ Generated provider YAML schemas derive allowed price keys and extractor destinat
 
 **Authoring names should remain pattern-matchable.** _(from "Provider YAML authoring gets registry-derived autocomplete")_
 The built-in token registry should keep consistent names that authors can infer from nearby examples. Cached modality token names follow the existing `cache_{modality}_{op}` pattern, non-cached modality names follow `{direction}_{modality}`, price keys use `_mtok`, and usage keys use `_tokens`. Schema generation helps authors discover those names, but validation still comes from registry data rather than a handwritten naming convention table.
-Phase 4 adds data regression tests for these built-in token naming conventions. Those tests protect repo-authored token data; they do not become runtime validation rules for arbitrary families.
+Phase 4 adds data regression tests for these built-in token naming conventions. Those tests protect repo-authored token data; they do not become runtime validation rules for arbitrary family dimension values.
 
 **Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs.** _(from "Phase 4 hardens the authoring and compatibility surfaces after the shared contract works")_
 Base `ModelPrice` already accepts dynamic registered price keys in Phase 3. Phase 4 extends that compatibility to common `@dataclass` subclasses by intercepting undeclared candidate dynamic price-key kwargs before the generated dataclass constructor rejects them.

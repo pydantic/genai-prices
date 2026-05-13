@@ -2829,12 +2829,87 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_text_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'AUDIO',
                 },
               },
               'tokenCount',
             ],
             dest: 'cache_audio_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_video_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_text_tokens',
             required: false,
           },
           {
@@ -2854,6 +2929,66 @@ export const data: Provider[] = [
           },
           {
             path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_video_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: [
               'candidatesTokensDetails',
               {
                 type: 'array-match',
@@ -2868,6 +3003,51 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_video_tokens',
+            required: false,
+          },
+          {
             path: 'candidatesTokenCount',
             dest: 'output_tokens',
             required: false,
@@ -2878,8 +3058,88 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'thoughtsTokenCount',
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
             path: 'toolUsePromptTokenCount',
             dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_video_tokens',
             required: false,
           },
         ],
@@ -3472,10 +3732,11 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
         prices: {
           input_mtok: 2,
           output_mtok: 120,
+          output_text_mtok: 12,
         },
       },
       {

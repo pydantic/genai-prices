@@ -96,7 +96,7 @@ describe('dataset', () => {
             }
           }
           for (const key of Object.keys(extracted.usage)) {
-            const k = key as keyof Usage
+            const k = key
             expect(extractedUsage[k]).toBe(extracted.usage[k])
           }
         }

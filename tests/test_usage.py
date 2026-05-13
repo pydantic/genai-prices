@@ -14,8 +14,8 @@ from genai_prices.units import UnitRegistry
 
 
 @contextmanager
-def _active_registry(raw_families: dict[str, Any]) -> Iterator[UnitRegistry]:
-    registry = UnitRegistry(raw_families)
+def _active_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
+    registry = UnitRegistry(raw_units)
     with patch('genai_prices.units._get_registry', return_value=registry):
         yield registry
 
@@ -86,20 +86,18 @@ def test_usage_repr_uses_registry_order() -> None:
 def test_usage_repr_orders_extra_registered_keys_by_registry_order() -> None:
     with _active_registry(
         {
-            'tokens': {
+            'input_tokens': {
                 'per': 1_000_000,
-                'units': {
-                    'input_tokens': {
-                        'price_key': 'input_mtok',
-                        'dimensions': {'direction': 'input'},
-                    },
-                    'sausage_tokens': {
-                        'dimensions': {'direction': 'input', 'ingredient': 'sausage'},
-                    },
-                    'cheese_tokens': {
-                        'dimensions': {'direction': 'input', 'ingredient': 'cheese'},
-                    },
-                },
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+            'cheese_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'cheese'},
             },
         }
     ):

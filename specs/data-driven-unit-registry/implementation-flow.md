@@ -60,16 +60,17 @@ The lists are ownership guides, not permission boundaries. If an implementation 
 
 ```text
 prices/units.yml
-  -> build.py loads raw family dict
-  -> UnitRegistry(raw_families)
-       -> create UnitFamily shells
+  -> build.py loads raw unit dict
+  -> validate_units(raw_units)
+       -> require dimensions.family on every unit
+       -> require one per value per family dimension value
+  -> UnitRegistry(raw_units)
        -> create UnitDef objects
-       -> fill families / units / price_keys indexes
-       -> fill family references on units
+       -> fill units / price_keys indexes
        -> fill dimension-set and ancestor indexes
        -> validate usage-key uniqueness
        -> validate price-key uniqueness
-       -> validate dimension-set uniqueness within each family
+       -> validate full dimension-set uniqueness
        -> validate interval closure
        -> in Phase 3+: validate full join-closedness
        -> in Phase 3+: validate public dynamic key safety
@@ -83,7 +84,7 @@ Phases 1 and 2 intentionally construct a current-unit subset that may omit futur
 Phase 3 target:
 build()
   -> load prices/units.yml
-  -> registry = UnitRegistry(unit_families)
+  -> registry = validate_units(units)
   -> load provider YAML files
   -> validate model price keys
   -> resolve price keys to usage keys
@@ -94,8 +95,8 @@ build()
 
 package_data()
   -> read wrapped data.json
-  -> package_python_data(): emit providers + unit_families_data in separate generated Python modules
-  -> package_ts_data(): emit data + unitFamiliesData in separate generated JavaScript modules
+  -> package_python_data(): emit providers + unit_data in separate generated Python modules
+  -> package_ts_data(): emit data + unitData in separate generated JavaScript modules
   -> generated runtime data is trusted because export validation succeeded first
 ```
 
@@ -106,8 +107,8 @@ Phase 1 and Phase 2 generate or embed language-native unit registry data for the
 ```text
 _get_registry()
   -> if a remote registry has been installed, return it
-  -> otherwise import unit_families_data from generated data_units.py
-  -> UnitRegistry(unit_families_data)
+  -> otherwise import unit_data from generated data_units.py
+  -> UnitRegistry(unit_data)
   -> cache as the bundled global registry
 
 get_snapshot()
@@ -126,7 +127,7 @@ Generated package data is pure data. Runtime-private validation caches are creat
 ```text
 UpdatePrices.fetch() after Phase 3 wrapped payloads
   -> parse wrapped JSON
-  -> registry = UnitRegistry(parsed.unit_families)
+  -> registry = UnitRegistry(parsed.units)
   -> previous_registry = active registry
   -> install registry as the active global registry
        -> clear Phase 5+ registry-keyed caches, if present
@@ -143,7 +144,7 @@ set_custom_snapshot(snapshot)
   -> activate provider data as the active provider snapshot
 ```
 
-Unit registry updates and provider snapshot activation are deliberately separate. Trusted remote unit families become global runtime state after structural registry validation succeeds and matching provider parsing or activation also succeeds. Provider activation is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates unless Phase 5 cache state safely covers that exact model price and active registry.
+Unit registry updates and provider snapshot activation are deliberately separate. Trusted remote units become global runtime state after registry construction succeeds and matching provider parsing or activation also succeeds. Provider activation is not a model-price validation boundary; standard base pricing validates the selected model price every time it calculates unless Phase 5 cache state safely covers that exact model price and active registry.
 
 ## Python Custom Price Flow
 
@@ -176,17 +177,16 @@ ModelPrice.calc_price(usage)
        -> in Phase 5+: skip validation only when global cache covers this ModelPrice fingerprint and registry id
   -> smart_usage = Usage.from_raw(usage)
   -> resolve price keys to usage keys
-  -> group priced units by family
-  -> for each family:
-       -> if requests, use fixed leaf value {"requests": 1}
-       -> otherwise compute decomposition from explicit smart_usage values
+  -> collect priced units
+  -> if requests is priced, use fixed leaf value {"requests": 1}
+  -> compute decomposition for all other priced units from explicit smart_usage values
        -> raise when a missing ancestor or overlap would need inference
   -> total_input_tokens = smart_usage.input_tokens only if a TieredPrices value is configured
        -> otherwise use a neutral threshold because non-tiered prices ignore it
        -> safe missing reads return zero; ambiguous missing reads raise
   -> for each priced usage-keyed unit:
        -> price = stored price at unit.price_key
-       -> cost = calc_unit_price(price, leaf_count, total_input_tokens, family.per)
+       -> cost = calc_unit_price(price, leaf_count, total_input_tokens, unit.per)
        -> aggregate by direction
   -> return input_price, output_price, total_price
 ```
@@ -199,7 +199,7 @@ Tier selection reads `input_tokens` through the normal usage-read path. If `inpu
 generated data.ts
   -> data bootstraps providerData
 generated dataUnits.ts
-  -> unitFamiliesData bootstraps units.ts
+  -> unitData bootstraps units.ts
   -> do not validate every generated model price at module startup
   -> do not precompute decomposition state
   -> do not require generated data.ts or dataUnits.ts to emit per-price validation markers
@@ -207,17 +207,17 @@ generated dataUnits.ts
 
 runtime update
   -> parse wrapped JSON
-  -> parsedFamilies = parseFamilies(parsed.unit_families)
-  -> previousFamilies = active parsed families
-  -> setUnitFamilies(parsedFamilies)
+  -> candidateRegistry = new UnitRegistry(parsed.units)
+  -> previousRegistry = active registry
+  -> setActiveRegistry(candidateRegistry)
        -> clears Phase 5+ registry-keyed caches, if present
   -> parse provider data
   -> setProviderData(parsed.providers)
-       -> treat parsed provider data as prevalidated for parsedFamilies without full price validation
-  -> if family parsing fails:
+       -> treat parsed provider data as prevalidated for candidateRegistry without full price validation
+  -> if registry construction fails:
        -> keep both active registry and providerData unchanged
-  -> if provider parsing or activation fails after setUnitFamilies:
-       -> restore previousFamilies and keep the previous providerData
+  -> if provider parsing or activation fails after setActiveRegistry:
+       -> restore previousRegistry and keep the previous providerData
 ```
 
 Checked-in JavaScript examples that cache provider data must cache and restore the wrapped payload shape after Phase 3, not a bare provider array.
