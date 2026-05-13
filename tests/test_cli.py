@@ -15,6 +15,7 @@ import genai_prices._cli as cli_module
 from genai_prices import update_prices
 from genai_prices._cli import cli_logic
 from genai_prices._cli_impl import (
+    _collect_model_price_fields,
     _format_model_price_value,
     _format_model_prices,
     _parse_cli,
@@ -26,7 +27,7 @@ from genai_prices._cli_impl import (
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
 from genai_prices.data_units import unit_data
-from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
+from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, PriceCalculation, Provider, TieredPrices
 from genai_prices.units import UnitRegistry, _set_registry
 
 
@@ -46,6 +47,20 @@ def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str
 
 def _has_tiered_prices(model_price: ModelPrice) -> bool:
     return any(isinstance(getattr(model_price, field.name), TieredPrices) for field in dataclasses.fields(model_price))
+
+
+def _price_calculation(model_price: ModelPrice) -> PriceCalculation:
+    provider = Provider(id='testing', name='Testing', api_pattern='testing', models=[])
+    model = ModelInfo(id='model', match=ClauseEquals('model'), prices=model_price)
+    return PriceCalculation(
+        input_price=Decimal('0'),
+        output_price=Decimal('0'),
+        total_price=Decimal('0'),
+        model=model,
+        provider=provider,
+        model_price=model_price,
+        auto_update_timestamp=None,
+    )
 
 
 def test_version(capsys: pytest.CaptureFixture[str]):
@@ -551,6 +566,74 @@ def test_format_model_price_value_uses_custom_registry_metadata() -> None:
         _set_registry(None)
 
     assert formatted.plain == '$2'
+
+
+def test_collect_model_price_fields_uses_effective_registry_order() -> None:
+    _set_registry(
+        UnitRegistry(
+            {
+                'sausage_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'sausage_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+                },
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+    )
+    try:
+        price = ModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'))
+        fields = _collect_model_price_fields([_price_calculation(price)])
+    finally:
+        _set_registry(None)
+
+    assert fields == ['sausage_mtok', 'input_mtok']
+
+
+def test_calc_table_split_columns_includes_dynamic_price_column(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    custom_units = dict(unit_data)
+    custom_units['sausage_tokens'] = {
+        'per': 1_000_000,
+        'price_key': 'sausage_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+    }
+    _set_registry(UnitRegistry(custom_units))
+    set_custom_snapshot(
+        DataSnapshot(
+            providers=[
+                Provider(
+                    id='testing',
+                    name='Testing',
+                    api_pattern='testing',
+                    models=[
+                        ModelInfo(
+                            id='sausage',
+                            match=ClauseEquals('sausage'),
+                            prices=ModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')),
+                        )
+                    ],
+                )
+            ],
+            from_auto_update=False,
+        )
+    )
+    monkeypatch.setenv('COLUMNS', '240')
+    try:
+        assert cli_logic(['calc', '--no-color', '--table', '--input-tokens', '1000', 'testing:sausage']) == 0
+        out, err = capsys.readouterr()
+    finally:
+        set_custom_snapshot(None)
+        _set_registry(None)
+
+    assert 'Input Sausage/MTok' in out
+    assert '$2' in out
+    assert err == ''
 
 
 def test_split_model_price_columns_no_fields():

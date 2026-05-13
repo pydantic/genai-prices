@@ -5,7 +5,7 @@ import dataclasses
 import difflib
 import hashlib
 import sys
-from collections.abc import Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from datetime import datetime
 from typing import Any, cast
 
@@ -540,12 +540,29 @@ def _format_calc_label(key: str, *, use_color: bool) -> Text:
 
 
 def _collect_model_price_fields(results: Sequence[PriceCalculation]) -> list[str]:
-    ordered_fields = [field.name for field in dataclasses.fields(ModelPrice)]
-    present_fields: list[str] = []
-    for field_name in ordered_fields:
-        if any(getattr(result.model_price, field_name) is not None for result in results):
-            present_fields.append(field_name)
-    return present_fields
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    present_fields: set[str] = set()
+    for result in results:
+        for unit in registry.units.values():
+            if getattr(result.model_price, unit.price_key) is not None:
+                present_fields.add(unit.price_key)
+
+    ordered_fields = [unit.price_key for unit in registry.units.values() if unit.price_key in present_fields]
+    for result in results:
+        for field_name, value in _iter_extra_model_price_items(result.model_price):
+            if value is not None and field_name not in present_fields:
+                ordered_fields.append(field_name)
+                present_fields.add(field_name)
+    return ordered_fields
+
+
+def _iter_extra_model_price_items(model_price: ModelPrice) -> Iterable[tuple[str, object]]:
+    extra_prices = getattr(model_price, '_extra_prices', {})
+    if not isinstance(extra_prices, Mapping):
+        return ()
+    return cast(Mapping[str, object], extra_prices).items()
 
 
 def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -> bool:
