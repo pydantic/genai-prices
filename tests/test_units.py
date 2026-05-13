@@ -155,6 +155,30 @@ def test_units_yml_defines_current_python_unit_surface() -> None:
     assert request_unit['price_key'] == 'requests_kcount'
 
 
+def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
+    raw_units = load_units()
+
+    for usage_key, unit in raw_units.items():
+        dimensions = unit['dimensions']
+        if dimensions['family'] != 'tokens':
+            continue
+
+        price_key = unit['price_key']
+        assert usage_key.endswith('_tokens')
+        assert price_key.endswith('_mtok')
+
+        direction = dimensions['direction']
+        cache = dimensions.get('cache')
+        modality = dimensions.get('modality')
+        if cache is None:
+            expected_stem = f'{direction}_{modality}' if modality is not None else direction
+        else:
+            expected_stem = f'cache_{modality}_{cache}' if modality is not None else f'cache_{cache}'
+
+        assert usage_key == f'{expected_stem}_tokens'
+        assert price_key == f'{expected_stem}_mtok'
+
+
 def test_unit_registry_constructs_current_units() -> None:
     registry = UnitRegistry(load_units())
 
