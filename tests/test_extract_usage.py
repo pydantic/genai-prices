@@ -237,6 +237,8 @@ google_provider = next(provider for provider in providers if provider.id == 'goo
 assert google_provider.name == 'Google'
 assert google_provider.extractors is not None
 
+GoogleExtractorMappingSignature = tuple[tuple[str, ...], str, bool]
+
 
 def test_google_default_extractor_mappings_are_complete():
     google_extractors = google_provider.extractors
@@ -248,38 +250,48 @@ def test_google_default_extractor_mappings_are_complete():
     assert actual == _google_default_extractor_expected_signatures()
 
 
-def _google_default_extractor_expected_signatures() -> set[tuple[tuple[str, ...], str, bool]]:
-    scalar_signatures = {
-        (path, dest, False)
-        for path, dest in (
-            (('promptTokenCount',), 'input_tokens'),
-            (('cachedContentTokenCount',), 'cache_read_tokens'),
-            (('candidatesTokenCount',), 'output_tokens'),
-            (('thoughtsTokenCount',), 'output_tokens'),
-            (('thoughtsTokenCount',), 'output_text_tokens'),
-            (('toolUsePromptTokenCount',), 'output_tokens'),
-        )
+def _google_default_extractor_expected_signatures() -> set[GoogleExtractorMappingSignature]:
+    return _google_scalar_extractor_signatures() | _google_modality_detail_extractor_signatures()
+
+
+def _google_scalar_extractor_signatures() -> set[GoogleExtractorMappingSignature]:
+    # Aggregate counters. Thinking tokens are also text output; tool-use prompt tokens are split by modality below.
+    return {
+        _google_optional_extractor_mapping('promptTokenCount', 'input_tokens'),
+        _google_optional_extractor_mapping('cachedContentTokenCount', 'cache_read_tokens'),
+        _google_optional_extractor_mapping('candidatesTokenCount', 'output_tokens'),
+        _google_optional_extractor_mapping('thoughtsTokenCount', 'output_tokens'),
+        _google_optional_extractor_mapping('thoughtsTokenCount', 'output_text_tokens'),
+        _google_optional_extractor_mapping('toolUsePromptTokenCount', 'output_tokens'),
     }
 
-    # These four Google detail arrays have the same modality shape; only the usage direction changes.
-    detail_arrays = {
-        'promptTokensDetails': 'input',
-        'cacheTokensDetails': 'cache_read',
-        'candidatesTokensDetails': 'output',
-        'toolUsePromptTokensDetails': 'output',
-    }
+
+def _google_modality_detail_extractor_signatures() -> set[GoogleExtractorMappingSignature]:
+    # Each Google modality detail array has the same modality shape; only the destination prefix changes.
+    detail_sources = (
+        ('promptTokensDetails', 'input'),
+        ('cacheTokensDetails', 'cache_read'),
+        ('candidatesTokensDetails', 'output'),
+        ('toolUsePromptTokensDetails', 'output'),
+    )
     modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
 
-    detail_signatures = {
-        ((array_name, modality, 'tokenCount'), _google_modality_detail_dest(direction, modality), False)
-        for array_name, direction in detail_arrays.items()
+    return {
+        _google_optional_extractor_mapping(
+            (array_name, modality, 'tokenCount'),
+            _google_modality_detail_dest(destination_prefix, modality),
+        )
+        for array_name, destination_prefix in detail_sources
         for modality in modalities
     }
 
-    return scalar_signatures | detail_signatures
+
+def _google_optional_extractor_mapping(path: Union[str, tuple[str, ...]], dest: str) -> GoogleExtractorMappingSignature:
+    path_tuple = (path,) if isinstance(path, str) else path
+    return path_tuple, dest, False
 
 
-def _google_extractor_mapping_signature(mapping: UsageExtractorMapping) -> tuple[tuple[str, ...], str, bool]:
+def _google_extractor_mapping_signature(mapping: UsageExtractorMapping) -> GoogleExtractorMappingSignature:
     return _google_extractor_path_signature(mapping.path), mapping.dest, mapping.required
 
 
