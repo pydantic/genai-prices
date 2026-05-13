@@ -2874,6 +2874,21 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'VIDEO',
                 },
               },
@@ -2934,6 +2949,21 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'VIDEO',
                 },
               },
@@ -2980,6 +3010,21 @@ export const data: Provider[] = [
                 field: 'modality',
                 match: {
                   equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
                 },
               },
               'tokenCount',
@@ -3060,6 +3105,21 @@ export const data: Provider[] = [
                 field: 'modality',
                 match: {
                   equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
                 },
               },
               'tokenCount',

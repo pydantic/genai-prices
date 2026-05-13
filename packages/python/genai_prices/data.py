@@ -1640,6 +1640,15 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'cacheTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='cache_image_read_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'cacheTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
                             'tokenCount',
                         ],
@@ -1668,6 +1677,15 @@ providers: list[Provider] = [
                         path=[
                             'promptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'promptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
                             'tokenCount',
                         ],
                         dest='input_image_tokens',
@@ -1712,6 +1730,15 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'candidatesTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'candidatesTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
                             'tokenCount',
                         ],
@@ -1744,6 +1771,15 @@ providers: list[Provider] = [
                         path=[
                             'toolUsePromptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='output_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
                             'tokenCount',
                         ],
                         dest='output_image_tokens',
