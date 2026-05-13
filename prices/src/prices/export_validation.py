@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import keyword
 import re
 from collections.abc import Mapping
 from itertools import combinations
@@ -10,8 +11,8 @@ from genai_prices.units import UnitDef, UnitRegistry
 from .prices_types import Provider
 
 _RESERVED_PUBLIC_KEYS = frozenset({'__proto__', 'constructor', 'prototype'})
-_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_$][A-Za-z0-9_$]*$')
-_RESERVED_KEYWORDS = frozenset(
+_PUBLIC_KEY_PATTERN = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+_JAVASCRIPT_KEYWORDS = frozenset(
     {
         'await',
         'break',
@@ -53,6 +54,7 @@ _RESERVED_KEYWORDS = frozenset(
         'yield',
     }
 )
+_RESERVED_KEYWORDS = frozenset(keyword.kwlist) | _JAVASCRIPT_KEYWORDS
 
 
 def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
