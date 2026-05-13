@@ -25,6 +25,8 @@ requests:
 **Runtime registries own parsed graph indexes.** _(implements "The registry is the source of unit truth")_
 Python `genai_prices.units` and JavaScript `units.ts` define `UnitDef` plus `UnitRegistry`. Registry construction promotes raw usage keys into parsed units, defaults missing price keys, validates uniqueness and structural closure, and fills direct indexes for usage keys, price keys, full dimension sets, ancestor usage keys, joins, all usage keys, all price keys, and externally reported usage keys. `family` is an ordinary dimension, so units from different families are incompatible by ordinary dimension conflict.
 
+Structural closure has two separate checks. For interval closure, if unit `A` is an ancestor of unit `B`, every dimension set formed by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` must also exist as a unit. For join-closedness, two units are compatible when they have no conflicting value for the same dimension key; their join is the union of both dimension sets and must exist in the complete registry.
+
 Do not generate source-code fields into handwritten runtime modules. Generated package files may contain raw unit data, but behavior belongs in runtime lookups against `UnitRegistry`.
 
 **Build/export validation is reusable and authoritative.** _(implements "Publication validation is the trust boundary")_

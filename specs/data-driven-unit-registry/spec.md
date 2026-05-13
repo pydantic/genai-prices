@@ -111,6 +111,8 @@ If a model prices two compatible overlapping units, it must price their intersec
 **Registry interval closure and join-closedness are distinct.** _(from "Validation exists to protect pricing semantics")_
 Interval closure says comparable units cannot skip structurally important intermediate dimension sets. Join-closedness says compatible overlapping units must have an explicit intersection unit in the registry. Price join coverage then says a model that prices overlapping parents must price that intersection.
 
+For interval closure, if unit `A` is an ancestor of unit `B`, every dimension set formed by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` must also exist as a unit. For join-closedness, two units are compatible when they have no conflicting value for the same dimension key; their join is the union of both dimension sets and must exist in the complete registry.
+
 **Extractor destinations are externally reported usage keys.** _(from "Units are data, not code", "Derive, don't duplicate")_
 Extractor mappings target usage keys that can be reported by provider APIs. They do not target price keys, arbitrary strings, or pricing-only units such as `requests`.
 
