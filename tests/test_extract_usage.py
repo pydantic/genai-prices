@@ -241,10 +241,21 @@ GoogleExtractorMappingSignature = tuple[tuple[str, ...], str, bool]
 
 
 class GoogleUsageMetadataSource(NamedTuple):
-    count_path: str
+    count_stem: str
     count_destinations: tuple[str, ...]
-    detail_path: Optional[str] = None
     detail_direction: Optional[str] = None
+    detail_stem: Optional[str] = None
+
+    @property
+    def count_path(self) -> str:
+        return f'{self.count_stem}TokenCount'
+
+    @property
+    def detail_path(self) -> Optional[str]:
+        if self.detail_direction is None:
+            return None
+        detail_stem = self.detail_stem or self.count_stem
+        return f'{detail_stem}TokensDetails'
 
 
 def test_google_default_extractor_mappings_are_complete():
@@ -258,19 +269,16 @@ def test_google_default_extractor_mappings_are_complete():
 
 
 def _google_default_extractor_expected_signatures() -> set[GoogleExtractorMappingSignature]:
-    # Each row ties one aggregate Google counter to its modality detail array, when Google exposes one.
+    # Google names aggregate counts as <stem>TokenCount and modality arrays as <stem>TokensDetails.
+    # Cache is the naming exception: cachedContentTokenCount has cacheTokensDetails.
     sources = (
-        GoogleUsageMetadataSource('promptTokenCount', ('input_tokens',), 'promptTokensDetails', 'input'),
-        GoogleUsageMetadataSource(
-            'cachedContentTokenCount', ('cache_read_tokens',), 'cacheTokensDetails', 'cache_read'
-        ),
-        GoogleUsageMetadataSource('candidatesTokenCount', ('output_tokens',), 'candidatesTokensDetails', 'output'),
+        GoogleUsageMetadataSource('prompt', ('input_tokens',), 'input'),
+        GoogleUsageMetadataSource('cachedContent', ('cache_read_tokens',), 'cache_read', detail_stem='cache'),
+        GoogleUsageMetadataSource('candidates', ('output_tokens',), 'output'),
         # Thinking tokens have no detail array, but Google prices them as text output.
-        GoogleUsageMetadataSource('thoughtsTokenCount', ('output_tokens', 'output_text_tokens')),
+        GoogleUsageMetadataSource('thoughts', ('output_tokens', 'output_text_tokens')),
         # Tool-use prompt tokens have an aggregate output count plus their own modality breakdown.
-        GoogleUsageMetadataSource(
-            'toolUsePromptTokenCount', ('output_tokens',), 'toolUsePromptTokensDetails', 'output'
-        ),
+        GoogleUsageMetadataSource('toolUsePrompt', ('output_tokens',), 'output'),
     )
 
     signatures: set[GoogleExtractorMappingSignature] = set()
