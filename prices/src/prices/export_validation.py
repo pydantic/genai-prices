@@ -92,6 +92,7 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
 
     registry = UnitRegistry(raw_units)
     _validate_interval_closure(registry)
+    _validate_join_closedness(registry)
     return registry
 
 
@@ -135,6 +136,20 @@ def _validate_interval_closure(registry: UnitRegistry) -> None:
                         f'Missing intermediate unit dimensions between {ancestor.usage_key} and '
                         f'{descendant.usage_key}: {missing_dimensions}'
                     )
+
+
+def _validate_join_closedness(registry: UnitRegistry) -> None:
+    units_by_dimension = registry._units_by_dimension  # pyright: ignore[reportPrivateUsage]
+    for a, b in combinations(registry.units.values(), 2):
+        if not a.is_compatible_with(b):
+            continue
+
+        required_dimensions = frozenset(a.dimensions.items() | b.dimensions.items())
+        if required_dimensions in units_by_dimension:
+            continue
+
+        missing_dimensions = ', '.join(f'{key}={value}' for key, value in sorted(required_dimensions))
+        raise ValueError(f'Missing join unit dimensions between {a.usage_key} and {b.usage_key}: {missing_dimensions}')
 
 
 def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:

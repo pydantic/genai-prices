@@ -401,6 +401,32 @@ def test_validate_units_rejects_skipped_intermediate_dimension_sets() -> None:
         )
 
 
+def test_validate_units_rejects_compatible_pair_with_missing_join() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Missing join unit dimensions between cache_write_tokens and input_audio_tokens',
+    ):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'cache_write_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_write_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+                },
+                'input_audio_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_audio_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+                },
+            }
+        )
+
+
 def test_validate_units_accepts_bundled_units() -> None:
     registry = validate_units(load_units())
 
