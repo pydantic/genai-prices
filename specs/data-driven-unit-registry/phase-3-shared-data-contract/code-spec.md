@@ -51,7 +51,7 @@ requests:
   dimensions: { family: requests }
 ```
 
-Every unit must declare `dimensions.family`. Build/export validation requires all units with the same family value to repeat the same `per`, rejects duplicate full dimension sets, and validates full join-closedness. Runtime registry code treats `family` as an ordinary dimension; it does not need family-specific indexes or decomposition groups. The Phase 1/2 missing-join exception is removed for complete published registries.
+Every unit must declare `dimensions.family`. Build/export validation requires all units with the same family value to repeat the same `per`, rejects duplicate full dimension sets, and validates full join-closedness. Runtime registry code treats `family` as an ordinary dimension. The Phase 1/2 missing-join exception is removed for complete published registries.
 
 `UnitRegistry` remains the runtime index builder for trusted bundled or fetched unit data. Unit-only publication validation belongs in the Python build/export pipeline, not in runtime startup or runtime update paths.
 
