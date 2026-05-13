@@ -242,35 +242,16 @@ def test_google_modality_detail_extractor_mappings_are_symmetric():
     google_extractors = google_provider.extractors
     assert google_extractors is not None
     google_extractor = next(extractor for extractor in google_extractors if extractor.api_flavor == 'default')
+    detail_arrays = {
+        'promptTokensDetails': 'input',
+        'cacheTokensDetails': 'cache_read',
+        'candidatesTokensDetails': 'output',
+        'toolUsePromptTokensDetails': 'output',
+    }
+    modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
     expected = {
-        'promptTokensDetails': {
-            'TEXT': 'input_text_tokens',
-            'AUDIO': 'input_audio_tokens',
-            'IMAGE': 'input_image_tokens',
-            'DOCUMENT': 'input_image_tokens',
-            'VIDEO': 'input_video_tokens',
-        },
-        'cacheTokensDetails': {
-            'TEXT': 'cache_text_read_tokens',
-            'AUDIO': 'cache_audio_read_tokens',
-            'IMAGE': 'cache_image_read_tokens',
-            'DOCUMENT': 'cache_image_read_tokens',
-            'VIDEO': 'cache_video_read_tokens',
-        },
-        'candidatesTokensDetails': {
-            'TEXT': 'output_text_tokens',
-            'AUDIO': 'output_audio_tokens',
-            'IMAGE': 'output_image_tokens',
-            'DOCUMENT': 'output_image_tokens',
-            'VIDEO': 'output_video_tokens',
-        },
-        'toolUsePromptTokensDetails': {
-            'TEXT': 'output_text_tokens',
-            'AUDIO': 'output_audio_tokens',
-            'IMAGE': 'output_image_tokens',
-            'DOCUMENT': 'output_image_tokens',
-            'VIDEO': 'output_video_tokens',
-        },
+        array_name: {modality: _google_modality_detail_dest(direction, modality) for modality in modalities}
+        for array_name, direction in detail_arrays.items()
     }
     actual: dict[str, dict[str, str]] = {array_name: {} for array_name in expected}
 
@@ -290,9 +271,13 @@ def test_google_modality_detail_extractor_mappings_are_symmetric():
         actual[array_name][array_match.match.equals] = mapping.dest
 
     assert actual == expected
-    assert {frozenset(mapping.keys()) for mapping in actual.values()} == {
-        frozenset({'TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO'})
-    }
+
+
+def _google_modality_detail_dest(direction: str, modality: str) -> str:
+    usage_modality = 'image' if modality == 'DOCUMENT' else modality.lower()
+    if direction == 'cache_read':
+        return f'cache_{usage_modality}_read_tokens'
+    return f'{direction}_{usage_modality}_tokens'
 
 
 def test_google():
