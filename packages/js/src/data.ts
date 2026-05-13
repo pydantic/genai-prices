@@ -3539,15 +3539,15 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'gemini-3.1-flash-lite-preview',
-        name: 'Gemini 3.1 Flash Lite Preview',
+        id: 'gemini-3.1-flash-lite',
+        name: 'Gemini 3.1 Flash Lite',
         description:
           "Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          starts_with: 'gemini-3.1-flash-lite-preview',
+          starts_with: 'gemini-3.1-flash-lite',
         },
         context_window: 1000000,
-        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
