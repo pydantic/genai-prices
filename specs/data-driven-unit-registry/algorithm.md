@@ -6,12 +6,6 @@ registry and price-coverage rules in the prose spec: registry interval closure,
 registry join-closedness, price ancestor coverage, and price join coverage.
 Those rules reject sparse shapes that would make this formula silently wrong.
 
-The Phase 1 and Phase 2 current-unit subsets are delivery exceptions: they may
-omit future join units so those units do not become public before the shared
-data contract can carry them in Phase 3. In those subsets, price validation must
-reject any priced compatible pair whose join unit is absent before this formula
-runs. The current repo data does not price such a pair.
-
 ## Mobius Inversion on the Containment Poset
 
 The containment poset is defined by full dimension set inclusion: unit A is an
@@ -58,12 +52,9 @@ as ordinary input tokens, the model repeats the numeric price explicitly. That
 duplication is intentional; it keeps the registry and price data structurally
 complete and lets the full-depth formula remain the general runtime rule.
 
-Before the complete Phase 3 registry, the current-unit subset handles this by
-forbidding priced sets that need a missing join. For example,
-`cache_write_tokens` and `input_audio_tokens` are compatible, but the subset
-does not expose `cache_audio_write_tokens`; a model price that includes both
-`cache_write_mtok` and `input_audio_mtok` must fail validation rather than be
-priced with the full-depth formula.
+The complete registry handles this by requiring the structurally important
+intermediate units and by rejecting priced sets that lack required joins before
+decomposition runs.
 
 ## Usage Value Reads
 

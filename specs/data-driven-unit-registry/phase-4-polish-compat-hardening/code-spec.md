@@ -1,9 +1,9 @@
 # Code Spec: Phase 4 Polish and Compatibility Hardening
 
 **This implements the prose spec in [spec](spec.md), which is the primary source of truth.**
-**Previous phase:** [Phase 3 Shared Data Contract and Base Dynamic Price Keys](../phase-3-shared-data-contract/code-spec.md).
+**Previous phase:** [Phase 3 Core Registry and Shared Data Contract](../phase-3-shared-data-contract/code-spec.md).
 
-**Phase 4 adds polish without changing accepted pricing semantics.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the shared contract works")_
+**Phase 4 adds polish without changing accepted pricing semantics.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the core works")_
 Modify existing schema, CLI, and Python `ModelPrice` code. Do not change the wrapped payload shape, decomposition behavior, public key-name safety validation, price validation rules, or public API signatures established by Phase 3.
 
 **Generate provider YAML schemas from the registry.** _(implements "Provider YAML authoring gets registry-derived autocomplete")_
@@ -29,5 +29,5 @@ Concretely:
 
 The CLI may keep compatibility aliases and familiar labels for existing units, but new registered units must appear without adding new hardcoded price-field branches.
 
-**Tests cover hardening boundaries.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the shared contract works")_
+**Tests cover hardening boundaries.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the core works")_
 Add tests for built-in token naming convention regressions, generated provider schema price-key and extractor-destination suggestions, dataclass subclass constructor handling for undeclared dynamic price keys plus declared custom fields, and CLI display of both legacy and newly registered price keys.
