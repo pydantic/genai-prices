@@ -571,6 +571,34 @@ def test_model_price_subclass_declared_registered_fields_stay_out_of_extra_price
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
+def test_model_price_dataclass_subclass_accepts_undeclared_registered_dynamic_kwargs() -> None:
+    with _active_registry(_custom_price_key_units()) as registry:
+
+        @dataclass
+        class CustomModelPrice(ModelPrice):
+            sausage_price: Decimal | None = None
+
+        price = CustomModelPrice(
+            input_mtok=Decimal('1'),
+            sausage_mtok=Decimal('2'),
+            sausage_price=Decimal('3'),
+        )
+
+    assert price.input_mtok == Decimal('1')
+    assert price.sausage_price == Decimal('3')
+    assert price._extra_prices == {'sausage_mtok': Decimal('2')}
+    assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
+
+
+def test_model_price_dataclass_subclass_rejects_undeclared_unregistered_kwargs() -> None:
+    @dataclass
+    class CustomModelPrice(ModelPrice):
+        sausage_price: Decimal | None = None
+
+    with pytest.raises(TypeError, match='hovercraft_mtok'):
+        CustomModelPrice(hovercraft_mtok=Decimal('2'))
+
+
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
     with _active_registry(_custom_price_key_units()):
         assert ModelPrice().sausage_mtok is None

@@ -259,10 +259,13 @@ def test_custom_model_price_constructor_still_accepts_declared_custom_fields() -
     assert price.sausage_price == Decimal('3')
 
 
-def test_custom_model_price_constructor_defers_undeclared_dynamic_keys_to_phase_4() -> None:
-    with pytest.raises(TypeError, match='cache_image_read_mtok'):
-        CustomModelPrice(
-            input_mtok=Decimal('1'),
-            cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
-            sausage_price=Decimal('3'),
-        )
+def test_custom_model_price_constructor_accepts_undeclared_dynamic_keys() -> None:
+    price = CustomModelPrice(
+        input_mtok=Decimal('1'),
+        cache_image_read_mtok=Decimal('0.5'),
+        sausage_price=Decimal('3'),
+    )
+
+    assert price.input_mtok == Decimal('1')
+    assert price.sausage_price == Decimal('3')
+    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}

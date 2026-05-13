@@ -680,8 +680,28 @@ class CalcPrice(TypedDict):
     total_price: Decimal
 
 
+class ModelPriceMeta(type):
+    def __call__(cls: ModelPriceMeta, *args: Any, **kwargs: Any) -> ModelPrice:
+        model_price_type = cast(type[ModelPrice], cls)
+        if model_price_type is ModelPrice or not dataclasses.is_dataclass(model_price_type):
+            return cast(ModelPrice, type.__call__(cls, *args, **kwargs))
+
+        declared_fields = _model_price_declared_fields_for(model_price_type)
+        dynamic_prices = {
+            key: kwargs.pop(key)
+            for key in tuple(kwargs)
+            if key not in declared_fields and _is_registered_price_key(key)
+        }
+        instance = cast(ModelPrice, type.__call__(cls, *args, **kwargs))
+        if dynamic_prices:
+            extra_prices = dict(getattr(instance, '_extra_prices', {}))
+            extra_prices.update(dynamic_prices)
+            object.__setattr__(instance, '_extra_prices', extra_prices)
+        return instance
+
+
 @dataclass
-class ModelPrice:
+class ModelPrice(metaclass=ModelPriceMeta):
     """Set of prices for using a model"""
 
     input_mtok: Decimal | TieredPrices | None = None
