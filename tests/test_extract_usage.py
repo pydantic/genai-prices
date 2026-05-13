@@ -1,5 +1,5 @@
 import re
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from typing import Any
 
@@ -238,7 +238,7 @@ assert google_provider.name == 'Google'
 assert google_provider.extractors is not None
 
 
-def test_google_modality_detail_extractor_mappings_are_symmetric():
+def test_google_default_extractor_mappings_are_complete():
     google_extractors = google_provider.extractors
     assert google_extractors is not None
     google_extractor = next(extractor for extractor in google_extractors if extractor.api_flavor == 'default')
@@ -249,28 +249,38 @@ def test_google_modality_detail_extractor_mappings_are_symmetric():
         'toolUsePromptTokensDetails': 'output',
     }
     modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
-    expected = {
-        array_name: {modality: _google_modality_detail_dest(direction, modality) for modality in modalities}
+    scalar_mappings = (
+        (('promptTokenCount',), 'input_tokens'),
+        (('cachedContentTokenCount',), 'cache_read_tokens'),
+        (('candidatesTokenCount',), 'output_tokens'),
+        (('thoughtsTokenCount',), 'output_tokens'),
+        (('thoughtsTokenCount',), 'output_text_tokens'),
+        (('toolUsePromptTokenCount',), 'output_tokens'),
+    )
+    expected = {(path, dest, False) for path, dest in scalar_mappings} | {
+        ((array_name, modality, 'tokenCount'), _google_modality_detail_dest(direction, modality), False)
         for array_name, direction in detail_arrays.items()
+        for modality in modalities
     }
-    actual: dict[str, dict[str, str]] = {array_name: {} for array_name in expected}
-
-    for mapping in google_extractor.mappings:
-        path = mapping.path
-        if isinstance(path, str) or len(path) != 3:
-            continue
-        array_name, array_match, leaf = path
-        if not (
-            isinstance(array_name, str)
-            and array_name in actual
-            and isinstance(array_match, ArrayMatch)
-            and isinstance(array_match.match, ClauseEquals)
-            and leaf == 'tokenCount'
-        ):
-            continue
-        actual[array_name][array_match.match.equals] = mapping.dest
+    actual = {_google_extractor_mapping_signature(mapping) for mapping in google_extractor.mappings}
 
     assert actual == expected
+
+
+def _google_extractor_mapping_signature(mapping: UsageExtractorMapping) -> tuple[tuple[str, ...], str, bool]:
+    return _google_extractor_path_signature(mapping.path), mapping.dest, mapping.required
+
+
+def _google_extractor_path_signature(path: str | Sequence[str | ArrayMatch]) -> tuple[str, ...]:
+    if isinstance(path, str):
+        return (path,)
+    assert len(path) == 3
+    array_name, array_match, leaf = path
+    assert isinstance(array_name, str)
+    assert isinstance(array_match, ArrayMatch)
+    assert isinstance(array_match.match, ClauseEquals)
+    assert isinstance(leaf, str)
+    return array_name, array_match.match.equals, leaf
 
 
 def _google_modality_detail_dest(direction: str, modality: str) -> str:
