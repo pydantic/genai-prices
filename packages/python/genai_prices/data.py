@@ -2013,12 +2013,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.1-flash-lite',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='gemini-3.1-flash-lite'),
-                        ClauseEquals(equals='gemini-3.1-flash-lite-preview'),
-                    ]
-                ),
+                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite'),
                 name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
