@@ -205,7 +205,7 @@ Discrimination inside `setProviderData`:
 - Promise → chain the same discrimination; restore on failure.
 - Anything else → throw.
 
-Rename the existing internal state setter `units.ts::setUnitFamilies(UnitRegistry | null)` to `setActiveRegistry(...)` so its name does not suggest a public API. There is no public `setUnitFamilies`.
+Use the internal state setter `units.ts::setActiveRegistry(UnitRegistry | null)` for wrapped payload activation. There is no public registry setter.
 
 Checked-in JavaScript browser and node examples need no behavior changes. They already forward parsed JSON to `setProviderData`, and the wrapper-aware setter handles bare-array (stale cache) and wrapped (fresh fetch) shapes transparently. Cache files evolve to the wrapped shape on the next refresh write. Pre-upgrade users were already on bundled units, so a stale bare-array cache leaves them on bundled units, which matches their pre-upgrade behavior.
 

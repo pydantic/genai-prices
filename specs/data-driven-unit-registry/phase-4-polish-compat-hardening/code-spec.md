@@ -19,7 +19,7 @@ Introduce constructor interception around `ModelPrice` subclasses, for example w
 Preserve existing behavior for declared custom subclass fields such as `sausage_price`: they remain subclass-owned custom state unless the registry also declares them as price keys.
 
 **Make CLI price display registry-driven.** _(implements "CLI price presentation becomes registry-driven")_
-Update `_cli_impl.py` so price-field collection iterates each `ModelPrice` object's effective stored price keys, labels derive from unit metadata and family normalization, and formatting does not depend on a hardcoded dataclass-field list. Existing CLI flags and output for current units should remain compatible.
+Update `_cli_impl.py` so price-field collection iterates each `ModelPrice` object's effective stored price keys, labels derive from unit dimensions and each unit's `per` normalization, and formatting does not depend on a hardcoded dataclass-field list. Existing CLI flags and output for current units should remain compatible.
 
 Concretely:
 
