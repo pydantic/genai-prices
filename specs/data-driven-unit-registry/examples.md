@@ -25,10 +25,9 @@ Audio tokens are much more expensive than text. The catch-all unit `input_tokens
     input_mtok: 5
     input_image_mtok: 8
     output_mtok: 32
-    output_image_mtok: 32
 ```
 
-Catch-all convention: unit `input_tokens` priced by `input_mtok` is text since there's no `input_text_mtok`. Unit `output_tokens` priced by `output_mtok` and unit `output_image_tokens` priced by `output_image_mtok` are the same price because image is the default output modality. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_tokens` catch-all at $32/M — the image-rate catch-all. The `output_image_tokens` leaf is 0 (no `output_image_tokens` reported).
+Catch-all convention: unit `input_tokens` priced by `input_mtok` is text since there's no `input_text_mtok`. Unit `output_tokens` priced by `output_mtok` is the image/unknown-output catch-all because image is the default output modality. Do not duplicate `output_image_mtok` when it has the same rate as `output_mtok`; add a child output price only when that modality has a different rate or when an overlap join needs an explicit price. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_tokens` catch-all at $32/M.
 
 ## Multimodal Input — Google Gemini 2.5 Pro
 
@@ -54,14 +53,12 @@ Separate rates per modality. The catch-all unit `input_tokens` priced by `input_
 - id: hypothetical-image-model
   prices:
     input_mtok: 5
-    input_image_mtok: 5
     input_text_mtok: 2
     output_mtok: 20
-    output_image_mtok: 20
     output_text_mtok: 10
 ```
 
-Image is the default modality. Someone sending `input_tokens: 1000` with no breakdown pays the image rate ($5). Someone sending `input_tokens: 1000` and `input_text_tokens: 300` gets 300 at text ($2) and 700 at image ($5).
+Image is the default modality. The ancestor prices are the image/unknown-modality catch-alls, and only text is priced as an exception. Someone sending `input_tokens: 1000` with no breakdown pays the image rate ($5). Someone sending `input_tokens: 1000` and `input_text_tokens: 300` gets 300 at text ($2) and 700 at the input catch-all rate ($5). The same pattern applies to output: `output_text_tokens` gets the text rate, while the remaining `output_tokens` leaf gets the image/unknown-output rate.
 
 ## Transcription — OpenAI
 
