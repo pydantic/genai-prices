@@ -1,7 +1,7 @@
 import re
 from collections.abc import Mapping, Sequence
 from decimal import Decimal
-from typing import Any, Union
+from typing import Any, NamedTuple, Optional, Union
 
 import pytest
 from inline_snapshot import snapshot
@@ -240,6 +240,13 @@ assert google_provider.extractors is not None
 GoogleExtractorMappingSignature = tuple[tuple[str, ...], str, bool]
 
 
+class GoogleUsageMetadataSource(NamedTuple):
+    count_path: str
+    count_destinations: tuple[str, ...]
+    detail_path: Optional[str] = None
+    detail_direction: Optional[str] = None
+
+
 def test_google_default_extractor_mappings_are_complete():
     google_extractors = google_provider.extractors
     assert google_extractors is not None
@@ -251,37 +258,45 @@ def test_google_default_extractor_mappings_are_complete():
 
 
 def _google_default_extractor_expected_signatures() -> set[GoogleExtractorMappingSignature]:
-    return _google_scalar_extractor_signatures() | _google_modality_detail_extractor_signatures()
+    # Each row ties one aggregate Google counter to its modality detail array, when Google exposes one.
+    sources = (
+        GoogleUsageMetadataSource('promptTokenCount', ('input_tokens',), 'promptTokensDetails', 'input'),
+        GoogleUsageMetadataSource(
+            'cachedContentTokenCount', ('cache_read_tokens',), 'cacheTokensDetails', 'cache_read'
+        ),
+        GoogleUsageMetadataSource('candidatesTokenCount', ('output_tokens',), 'candidatesTokensDetails', 'output'),
+        # Thinking tokens have no detail array, but Google prices them as text output.
+        GoogleUsageMetadataSource('thoughtsTokenCount', ('output_tokens', 'output_text_tokens')),
+        # Tool-use prompt tokens have an aggregate output count plus their own modality breakdown.
+        GoogleUsageMetadataSource(
+            'toolUsePromptTokenCount', ('output_tokens',), 'toolUsePromptTokensDetails', 'output'
+        ),
+    )
+
+    signatures: set[GoogleExtractorMappingSignature] = set()
+    for source in sources:
+        signatures.update(_google_count_signatures(source))
+        signatures.update(_google_detail_signatures(source))
+    return signatures
 
 
-def _google_scalar_extractor_signatures() -> set[GoogleExtractorMappingSignature]:
-    # Aggregate counters. Thinking tokens are also text output; tool-use prompt tokens are split by modality below.
+def _google_count_signatures(source: GoogleUsageMetadataSource) -> set[GoogleExtractorMappingSignature]:
     return {
-        _google_optional_extractor_mapping('promptTokenCount', 'input_tokens'),
-        _google_optional_extractor_mapping('cachedContentTokenCount', 'cache_read_tokens'),
-        _google_optional_extractor_mapping('candidatesTokenCount', 'output_tokens'),
-        _google_optional_extractor_mapping('thoughtsTokenCount', 'output_tokens'),
-        _google_optional_extractor_mapping('thoughtsTokenCount', 'output_text_tokens'),
-        _google_optional_extractor_mapping('toolUsePromptTokenCount', 'output_tokens'),
+        _google_optional_extractor_mapping(source.count_path, destination) for destination in source.count_destinations
     }
 
 
-def _google_modality_detail_extractor_signatures() -> set[GoogleExtractorMappingSignature]:
-    # Each Google modality detail array has the same modality shape; only the destination prefix changes.
-    detail_sources = (
-        ('promptTokensDetails', 'input'),
-        ('cacheTokensDetails', 'cache_read'),
-        ('candidatesTokensDetails', 'output'),
-        ('toolUsePromptTokensDetails', 'output'),
-    )
-    modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
+def _google_detail_signatures(source: GoogleUsageMetadataSource) -> set[GoogleExtractorMappingSignature]:
+    if source.detail_path is None:
+        return set()
 
+    assert source.detail_direction is not None
+    modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
     return {
         _google_optional_extractor_mapping(
-            (array_name, modality, 'tokenCount'),
-            _google_modality_detail_dest(destination_prefix, modality),
+            (source.detail_path, modality, 'tokenCount'),
+            _google_modality_detail_dest(source.detail_direction, modality),
         )
-        for array_name, destination_prefix in detail_sources
         for modality in modalities
     }
 
