@@ -2386,14 +2386,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000054",
-            "output_price": "0.0001208",
+            "input_price": "0.0000215",
+            "output_price": "0.0000564",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 54,
-          "output_tokens": 302
+          "input_tokens": 215,
+          "output_tokens": 141
         }
       }
     ],
@@ -2555,14 +2555,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00002125",
-            "output_price": "0.00533",
+            "input_price": "0.00017",
+            "output_price": "0.00414",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 17,
-          "output_tokens": 533
+          "input_tokens": 136,
+          "output_tokens": 414
         }
       }
     ],
@@ -2597,14 +2597,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00026125",
-            "output_price": "0.00623",
+            "input_price": "0.00061875",
+            "output_price": "0.00337",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 209,
-          "output_tokens": 623
+          "input_tokens": 495,
+          "output_tokens": 337
         }
       }
     ],
@@ -3664,14 +3664,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00031125",
-            "output_price": "0.0086",
+            "input_price": "0.00071",
+            "output_price": "0.00541",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 249,
-          "output_tokens": 860
+          "input_tokens": 568,
+          "output_tokens": 541
         }
       }
     ],
@@ -3982,14 +3982,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00001875",
-            "output_price": "0.01335",
+            "input_price": "0.0008625",
+            "output_price": "0.0066",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 15,
-          "output_tokens": 1335
+          "input_tokens": 690,
+          "output_tokens": 660
         }
       }
     ],
@@ -4024,14 +4024,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00004875",
-            "output_price": "0.01235",
+            "input_price": "0.000845",
+            "output_price": "0.00598",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 39,
-          "output_tokens": 1235
+          "input_tokens": 676,
+          "output_tokens": 598
         }
       }
     ],
@@ -9658,14 +9658,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000013",
-            "output_price": "0.0000264",
+            "input_price": "0.0000044",
+            "output_price": "0.000014",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 13,
-          "output_tokens": 66
+          "input_tokens": 44,
+          "output_tokens": 35
         }
       }
     ],
