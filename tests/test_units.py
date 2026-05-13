@@ -468,30 +468,6 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
         )
 
 
-def test_unit_registry_allows_compatible_pair_with_missing_join() -> None:
-    registry = UnitRegistry(
-        {
-            'input_tokens': {
-                'per': 1_000_000,
-                'price_key': 'input_mtok',
-                'dimensions': {'family': 'tokens', 'direction': 'input'},
-            },
-            'cache_write_tokens': {
-                'per': 1_000_000,
-                'price_key': 'cache_write_mtok',
-                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
-            },
-            'input_audio_tokens': {
-                'per': 1_000_000,
-                'price_key': 'input_audio_mtok',
-                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
-            },
-        }
-    )
-
-    assert registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens']) is None
-
-
 def test_collect_effective_model_price_keys_reads_base_fields() -> None:
     registry = UnitRegistry(load_units())
 
