@@ -1,6 +1,6 @@
 import { computeLeafValues } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
-import { getActiveRegistry, getUnitForPriceKey, unitFamilyValue } from './units'
+import { getActiveRegistry, getUnitForPriceKey } from './units'
 import { getUsageValue } from './usage'
 import { validateModelPrice } from './validation'
 
@@ -54,33 +54,23 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
 
   const hasTieredPrice = effectivePriceKeys.some((priceKey) => isTieredPrice(modelPrice[priceKey]))
   const totalInputTokens = hasTieredPrice ? getUsageValue(usage, 'input_tokens') : 0
-  const groups = new Map<string, Set<string>>()
-
-  for (const priceKey of effectivePriceKeys) {
-    const unit = getUnitForPriceKey(priceKey)
-    const familyValue = unitFamilyValue(unit)
-    const group = groups.get(familyValue) ?? new Set<string>()
-    group.add(unit.usageKey)
-    groups.set(familyValue, group)
+  const registry = getActiveRegistry()
+  const pricedUnits = effectivePriceKeys.map((priceKey) => getUnitForPriceKey(priceKey))
+  const pricedUsageKeys = new Set(pricedUnits.filter((unit) => unit.usageKey !== 'requests').map((unit) => unit.usageKey))
+  const leafValues = computeLeafValues(pricedUsageKeys, usage, registry.units)
+  if (pricedUnits.some((unit) => unit.usageKey === 'requests')) {
+    leafValues.requests = 1
   }
 
-  const registry = getActiveRegistry()
-  for (const [familyValue, usageKeys] of groups) {
-    const leafValues =
-      familyValue === 'requests' ? { requests: 1 } : computeLeafValues(usageKeys, usage, registry.unitsForFamily(familyValue))
-    for (const [usageKey, count] of Object.entries(leafValues)) {
-      const unit = registry.units.get(usageKey)
-      if (!unit) continue
-
-      const price = modelPrice[unit.priceKey]
-      const unitPrice = calcUnitPrice(price, count, totalInputTokens, unit.per)
-      if (unit.dimensions.direction === 'input') {
-        inputPrice += unitPrice
-      } else if (unit.dimensions.direction === 'output') {
-        outputPrice += unitPrice
-      } else {
-        totalOnlyPrice += unitPrice
-      }
+  for (const unit of pricedUnits) {
+    const price = modelPrice[unit.priceKey]
+    const unitPrice = calcUnitPrice(price, leafValues[unit.usageKey] ?? 0, totalInputTokens, unit.per)
+    if (unit.dimensions.direction === 'input') {
+      inputPrice += unitPrice
+    } else if (unit.dimensions.direction === 'output') {
+      outputPrice += unitPrice
+    } else {
+      totalOnlyPrice += unitPrice
     }
   }
 

@@ -67,10 +67,10 @@ prices/units.yml
   -> UnitRegistry(raw_units)
        -> create UnitDef objects
        -> fill units / price_keys indexes
-       -> fill family-dimension, dimension-set, and ancestor indexes
+       -> fill dimension-set and ancestor indexes
        -> validate usage-key uniqueness
        -> validate price-key uniqueness
-       -> validate dimension-set uniqueness within each family dimension value
+       -> validate full dimension-set uniqueness
        -> validate interval closure
        -> in Phase 3+: validate full join-closedness
        -> in Phase 3+: validate public dynamic key safety
@@ -177,10 +177,9 @@ ModelPrice.calc_price(usage)
        -> in Phase 5+: skip validation only when global cache covers this ModelPrice fingerprint and registry id
   -> smart_usage = Usage.from_raw(usage)
   -> resolve price keys to usage keys
-  -> group priced units by family
-  -> for each family:
-       -> if requests, use fixed leaf value {"requests": 1}
-       -> otherwise compute decomposition from explicit smart_usage values
+  -> collect priced units
+  -> if requests is priced, use fixed leaf value {"requests": 1}
+  -> compute decomposition for all other priced units from explicit smart_usage values
        -> raise when a missing ancestor or overlap would need inference
   -> total_input_tokens = smart_usage.input_tokens only if a TieredPrices value is configured
        -> otherwise use a neutral threshold because non-tiered prices ignore it

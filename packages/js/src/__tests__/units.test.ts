@@ -63,14 +63,11 @@ const tokenPriceKeys = [
 describe('UnitRegistry', () => {
   it('constructs generated flat units into indexed runtime objects', () => {
     const registry = new UnitRegistry(unitData)
-    const tokenUnits = registry.unitsForFamily('tokens')
-    const requestUnits = registry.unitsForFamily('requests')
 
-    expect(new Set(tokenUnits.keys())).toEqual(new Set(tokenUsageKeys))
-    expect(requestUnits.get('requests')?.priceKey).toBe('requests_kcount')
-    expect(registry.units.get('input_tokens')).toBe(tokenUnits.get('input_tokens'))
+    expect(new Set(tokenUsageKeys.map((usageKey) => registry.units.get(usageKey)?.usageKey))).toEqual(new Set(tokenUsageKeys))
+    expect(registry.units.get('requests')?.priceKey).toBe('requests_kcount')
     expect(registry.units.size).toBe(21)
-    expect(registry.unitsByPriceKey.get('input_mtok')).toBe(tokenUnits.get('input_tokens'))
+    expect(registry.unitsByPriceKey.get('input_mtok')).toBe(registry.units.get('input_tokens'))
     expect(registry.unitsByPriceKey.get('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.allUsageKeys).toContain('input_tokens')
     expect(registry.allPriceKeys).toContain('input_mtok')
@@ -90,7 +87,7 @@ describe('UnitRegistry', () => {
     expect(registry.unitsByPriceKey.get('widgets')).toBe(registry.units.get('widgets'))
   })
 
-  it('indexes units by family dimension and dimension set', () => {
+  it('indexes units by full dimension set', () => {
     const registry = new UnitRegistry(unitData)
     const inputAudio = registry.units.get('input_audio_tokens')
     expect(inputAudio).toBeDefined()
@@ -98,7 +95,7 @@ describe('UnitRegistry', () => {
 
     expect(inputAudio.dimensions.family).toBe('tokens')
     expect(inputAudio.per).toBe(1_000_000)
-    expect(registry.unitsByDimensionByFamily.get('tokens')?.get('direction=input\0family=tokens\0modality=audio')).toBe(inputAudio)
+    expect(registry.unitsByDimension.get('direction=input\0family=tokens\0modality=audio')).toBe(inputAudio)
   })
 
   it('indexes ancestor usage keys', () => {
@@ -161,12 +158,11 @@ describe('active unit registry', () => {
     setActiveRegistry(null)
     expect(getUnit('input_tokens').per).toBe(1_000_000)
     expect(getUnit('requests').per).toBe(1_000)
-    expect(getUnit('input_tokens')).toBe(getActiveRegistry().unitsForFamily('tokens').get('input_tokens'))
-    expect(getUnit('requests')).toBe(getActiveRegistry().unitsForFamily('requests').get('requests'))
+    expect(getUnit('input_tokens')).toBe(getActiveRegistry().units.get('input_tokens'))
+    expect(getUnit('requests')).toBe(getActiveRegistry().units.get('requests'))
   })
 
-  it('raises specific errors for unknown family dimensions and usage keys', () => {
-    expect(() => getActiveRegistry().unitsForFamily('imaginary')).toThrow('Unknown unit family dimension: imaginary')
+  it('raises specific errors for unknown usage keys', () => {
     expect(() => getUnit('imaginary_tokens')).toThrow('Unknown unit usage key: imaginary_tokens')
   })
 

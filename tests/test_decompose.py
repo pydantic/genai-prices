@@ -46,7 +46,7 @@ def test_compute_leaf_values_handles_parent_child_decomposition() -> None:
     assert compute_leaf_values(
         {'input_tokens', 'cache_read_tokens'},
         Usage(input_tokens=1_000, cache_read_tokens=250),
-        registry.units_for_family('tokens'),
+        registry.units,
     ) == {'cache_read_tokens': 250, 'input_tokens': 750}
 
 
@@ -61,7 +61,7 @@ def test_compute_leaf_values_handles_cached_audio_overlap() -> None:
             input_audio_tokens=300,
             cache_audio_read_tokens=100,
         ),
-        registry.units_for_family('tokens'),
+        registry.units,
     ) == {
         'cache_audio_read_tokens': 100,
         'cache_read_tokens': 300,
@@ -76,7 +76,7 @@ def test_compute_leaf_values_handles_output_audio_decomposition() -> None:
     assert compute_leaf_values(
         {'output_tokens', 'output_audio_tokens'},
         Usage(output_tokens=700, output_audio_tokens=200),
-        registry.units_for_family('tokens'),
+        registry.units,
     ) == {'output_audio_tokens': 200, 'output_tokens': 500}
 
 
@@ -86,7 +86,7 @@ def test_compute_leaf_values_ignores_unpriced_reported_descendants() -> None:
     assert compute_leaf_values(
         {'input_tokens'},
         Usage(input_tokens=100, cache_read_tokens=80),
-        registry.units_for_family('tokens'),
+        registry.units,
     ) == {'input_tokens': 100}
 
 
@@ -97,7 +97,7 @@ def test_compute_leaf_values_rejects_negative_leaf_values() -> None:
         compute_leaf_values(
             {'input_tokens', 'cache_read_tokens'},
             Usage(input_tokens=100, cache_read_tokens=200),
-            registry.units_for_family('tokens'),
+            registry.units,
         )
 
 
@@ -111,5 +111,5 @@ def test_compute_leaf_values_reports_overlapping_contradictions_in_usage_terms()
         compute_leaf_values(
             {'input_tokens', 'cache_read_tokens', 'input_audio_tokens', 'cache_audio_read_tokens'},
             Usage(input_tokens=100, cache_read_tokens=80, input_audio_tokens=80, cache_audio_read_tokens=0),
-            registry.units_for_family('tokens'),
+            registry.units,
         )

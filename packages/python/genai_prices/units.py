@@ -12,10 +12,6 @@ class UnitDef:
     per: int
     dimensions: dict[str, str]
 
-    @property
-    def family_value(self) -> str:
-        return self.dimensions['family']
-
     def is_compatible_with(self, other: UnitDef) -> bool:
         """Return whether two units can overlap without conflicting dimensions."""
         return all(other.dimensions.get(key, value) == value for key, value in self.dimensions.items())
@@ -24,19 +20,16 @@ class UnitDef:
 class UnitRegistry:
     units: dict[str, UnitDef]
     _units_by_price_key: dict[str, UnitDef]
+    _units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef]
     _ancestor_usage_keys: dict[str, frozenset[str]]
-    _usage_keys_by_family: dict[str, frozenset[str]]
-    _units_by_dimension_by_family: dict[str, dict[frozenset[tuple[str, str]], UnitDef]]
 
     def __init__(self, raw_units: Mapping[str, Mapping[str, Any]] | None = None) -> None:
         """Parse raw unit dictionaries into indexed runtime objects."""
         self.units = {}
         self._units_by_price_key = {}
+        self._units_by_dimension = {}
         self._ancestor_usage_keys = {}
-        self._usage_keys_by_family = {}
-        self._units_by_dimension_by_family = {}
 
-        usage_keys_by_family: dict[str, set[str]] = {}
         for usage_key, raw_unit in (raw_units or {}).items():
             dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
             unit = UnitDef(
@@ -47,20 +40,15 @@ class UnitRegistry:
             )
 
             dimension_set = _dimension_set(unit)
-            family_value = unit.family_value
 
             self.units[usage_key] = unit
             self._units_by_price_key[unit.price_key] = unit
-            usage_keys_by_family.setdefault(family_value, set()).add(usage_key)
-            self._units_by_dimension_by_family.setdefault(family_value, {})[dimension_set] = unit
+            self._units_by_dimension[dimension_set] = unit
 
-        self._usage_keys_by_family = {
-            family_value: frozenset(usage_keys) for family_value, usage_keys in usage_keys_by_family.items()
-        }
         for usage_key, unit in self.units.items():
             self._ancestor_usage_keys[usage_key] = frozenset(
                 maybe_ancestor.usage_key
-                for maybe_ancestor in self.units_for_family(unit.family_value).values()
+                for maybe_ancestor in self.units.values()
                 if maybe_ancestor is not unit and _is_dimension_subset(maybe_ancestor, unit)
             )
 
@@ -75,28 +63,12 @@ class UnitRegistry:
     def ancestor_usage_keys(self, usage_key: str) -> frozenset[str]:
         return self._ancestor_usage_keys[usage_key]
 
-    def family_values(self) -> frozenset[str]:
-        return frozenset(self._usage_keys_by_family)
-
-    def usage_keys_for_family(self, family_value: str) -> frozenset[str]:
-        return self._usage_keys_by_family[family_value]
-
-    def units_for_family(self, family_value: str) -> dict[str, UnitDef]:
-        usage_keys = self._usage_keys_by_family[family_value]
-        return {usage_key: self.units[usage_key] for usage_key in usage_keys}
-
     def find_join(self, a: UnitDef, b: UnitDef) -> UnitDef | None:
         """Return the most specific registered unit joining two compatible units, if present."""
         if not a.is_compatible_with(b):
             return None
 
-        family_value = a.family_value
-        if family_value != b.family_value:
-            return None
-
-        return self._units_by_dimension_by_family[family_value].get(
-            frozenset(a.dimensions.items() | b.dimensions.items())
-        )
+        return self._units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
 
 
 def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:

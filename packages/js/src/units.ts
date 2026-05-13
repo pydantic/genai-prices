@@ -8,8 +8,7 @@ export class UnitRegistry {
   ancestorUsageKeysByUsageKey: Map<string, Set<string>>
   reportedUsageKeys: Set<string>
   units: Map<string, UnitDef>
-  unitsByDimensionByFamily: Map<string, Map<string, UnitDef>>
-  unitsByFamily: Map<string, Map<string, UnitDef>>
+  unitsByDimension: Map<string, UnitDef>
   unitsByPriceKey: Map<string, UnitDef>
 
   constructor(raw: RawUnitsDict) {
@@ -18,8 +17,7 @@ export class UnitRegistry {
     this.allUsageKeys = new Set()
     this.reportedUsageKeys = new Set()
     this.units = new Map()
-    this.unitsByDimensionByFamily = new Map()
-    this.unitsByFamily = new Map()
+    this.unitsByDimension = new Map()
     this.unitsByPriceKey = new Map()
 
     for (const [usageKey, rawUnit] of Object.entries(raw)) {
@@ -30,21 +28,19 @@ export class UnitRegistry {
         priceKey,
         usageKey,
       }
-      const familyValue = unitFamilyValue(unit)
 
       this.allPriceKeys.add(priceKey)
       this.allUsageKeys.add(usageKey)
       this.units.set(usageKey, unit)
       this.unitsByPriceKey.set(priceKey, unit)
-      getOrCreateMap(this.unitsByFamily, familyValue).set(usageKey, unit)
-      getOrCreateMap(this.unitsByDimensionByFamily, familyValue).set(dimensionKey(unit.dimensions), unit)
+      this.unitsByDimension.set(dimensionKey(unit.dimensions), unit)
     }
 
     for (const [usageKey, unit] of this.units) {
       this.ancestorUsageKeysByUsageKey.set(
         usageKey,
         new Set(
-          [...this.unitsForFamily(unitFamilyValue(unit)).values()]
+          [...this.units.values()]
             .filter((maybeAncestor) => maybeAncestor !== unit && isDimensionSubset(maybeAncestor, unit))
             .map((maybeAncestor) => maybeAncestor.usageKey)
         )
@@ -63,23 +59,9 @@ export class UnitRegistry {
     return new Set(ancestorUsageKeys)
   }
 
-  familyValues(): Set<string> {
-    return new Set(this.unitsByFamily.keys())
-  }
-
   findJoin(left: UnitDef, right: UnitDef): undefined | UnitDef {
     if (!isCompatible(left, right)) return undefined
-    const familyValue = unitFamilyValue(left)
-    if (familyValue !== unitFamilyValue(right)) return undefined
-    return this.unitsByDimensionByFamily.get(familyValue)?.get(dimensionKey({ ...left.dimensions, ...right.dimensions }))
-  }
-
-  unitsForFamily(familyValue: string): Map<string, UnitDef> {
-    const units = this.unitsByFamily.get(familyValue)
-    if (!units) {
-      throw new Error(`Unknown unit family dimension: ${familyValue}`)
-    }
-    return new Map(units)
+    return this.unitsByDimension.get(dimensionKey({ ...left.dimensions, ...right.dimensions }))
   }
 }
 
@@ -139,20 +121,4 @@ export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): bool
 
 export function isCompatible(left: UnitDef, right: UnitDef): boolean {
   return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
-}
-
-export function unitFamilyValue(unit: UnitDef): string {
-  const familyValue = unit.dimensions.family
-  if (familyValue === undefined) {
-    throw new Error(`Unit ${unit.usageKey} is missing required family dimension`)
-  }
-  return familyValue
-}
-
-function getOrCreateMap<K, V>(outer: Map<string, Map<K, V>>, key: string): Map<K, V> {
-  const existing = outer.get(key)
-  if (existing) return existing
-  const created = new Map<K, V>()
-  outer.set(key, created)
-  return created
 }

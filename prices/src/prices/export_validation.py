@@ -59,7 +59,7 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
     """Validate publishable flat unit data and return the indexed registry."""
     price_keys: set[str] = set()
     per_by_family: dict[str, int] = {}
-    dimension_sets_by_family: dict[str, dict[frozenset[tuple[str, str]], str]] = {}
+    dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
 
     for usage_key, raw_unit in raw_units.items():
         _validate_public_key('usage', usage_key)
@@ -86,11 +86,8 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
             )
 
         dimension_set = frozenset(dimensions.items())
-        dimension_sets = dimension_sets_by_family.setdefault(family_value, {})
         if existing_usage_key := dimension_sets.get(dimension_set):
-            raise ValueError(
-                f'Duplicate dimensions in family dimension {family_value}: {existing_usage_key} and {usage_key}'
-            )
+            raise ValueError(f'Duplicate unit dimensions: {existing_usage_key} and {usage_key}')
         dimension_sets[dimension_set] = usage_key
 
     registry = UnitRegistry(raw_units)
@@ -120,15 +117,9 @@ def _validate_public_key(kind: str, key: str) -> None:
 
 
 def _validate_interval_closure(registry: UnitRegistry) -> None:
-    for family_value in registry.family_values():
-        _validate_family_interval_closure(family_value, registry)
-
-
-def _validate_family_interval_closure(family_value: str, registry: UnitRegistry) -> None:
-    units = registry.units_for_family(family_value)
-    units_by_dimension = registry._units_by_dimension_by_family[family_value]  # pyright: ignore[reportPrivateUsage]
-    for ancestor in units.values():
-        for descendant in units.values():
+    units_by_dimension = registry._units_by_dimension  # pyright: ignore[reportPrivateUsage]
+    for ancestor in registry.units.values():
+        for descendant in registry.units.values():
             if ancestor is descendant or not _is_dimension_subset(ancestor, descendant):
                 continue
 
@@ -141,9 +132,8 @@ def _validate_family_interval_closure(family_value: str, registry: UnitRegistry)
 
                     missing_dimensions = ', '.join(f'{key}={value}' for key, value in sorted(required_dimensions))
                     raise ValueError(
-                        f'Missing intermediate unit dimensions in family dimension {family_value} '
-                        f'between {ancestor.usage_key} and {descendant.usage_key}: '
-                        f'{missing_dimensions}'
+                        f'Missing intermediate unit dimensions between {ancestor.usage_key} and '
+                        f'{descendant.usage_key}: {missing_dimensions}'
                     )
 
 

@@ -45,14 +45,9 @@ def _priced_units(priced_usage_keys: set[str], registry: UnitRegistry) -> list[U
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
     validate_price_keys(price_keys, registry)
 
-    usage_keys_by_family: dict[str, set[str]] = {}
-    for price_key in price_keys:
-        unit = registry.unit_for_price_key(price_key)
-        usage_keys_by_family.setdefault(unit.family_value, set()).add(unit.usage_key)
-
-    for priced_usage_keys in usage_keys_by_family.values():
-        validate_ancestor_coverage(priced_usage_keys, registry)
-        validate_join_coverage(priced_usage_keys, registry)
+    priced_usage_keys = {registry.unit_for_price_key(price_key).usage_key for price_key in price_keys}
+    validate_ancestor_coverage(priced_usage_keys, registry)
+    validate_join_coverage(priced_usage_keys, registry)
 
 
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str] | frozenset[str]) -> None:
