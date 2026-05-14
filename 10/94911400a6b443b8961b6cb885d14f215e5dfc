@@ -1,0 +1,19 @@
+prices/src/prices/export_validation.py
+  s_5fb465e046afde::t_f7b33c9a453a72 63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "1094911400a6b443b8961b6cb885d14f215e5dfc",
+  "prompts": {},
+  "sessions": {
+    "s_5fb465e046afde": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e2237-9992-7363-9f5f-84cd0bd04046",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
