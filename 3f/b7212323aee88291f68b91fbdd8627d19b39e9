@@ -1,0 +1,21 @@
+packages/js/src/__tests__/extractUsage.test.ts
+  s_f81d81968d0b85::t_8c285546466f24 4
+packages/python/genai_prices/update_prices.py
+  s_f81d81968d0b85::t_8c285546466f24 117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "3fb7212323aee88291f68b91fbdd8627d19b39e9",
+  "prompts": {},
+  "sessions": {
+    "s_f81d81968d0b85": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e2203-a536-7953-be24-3a76ed200eaa",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
