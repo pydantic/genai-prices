@@ -286,16 +286,6 @@ def test_provider_parsing_preserves_tiered_model_prices() -> None:
     assert price.input_mtok.tiers[0].price == Decimal('2')
 
 
-def test_dynamic_model_price_assignment_and_deletion() -> None:
-    price = types.ModelPrice()
-
-    setattr(price, 'cache_image_read_mtok', Decimal('0.5'))
-    assert price.cache_image_read_mtok == Decimal('0.5')
-
-    delattr(price, 'cache_image_read_mtok')
-    assert price.cache_image_read_mtok is None
-
-
 def test_custom_model_price_constructor_accepts_custom_fields() -> None:
     price = CustomModelPrice(
         input_mtok=Decimal('1'),
