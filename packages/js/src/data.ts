@@ -2879,7 +2879,7 @@ export const data: Provider[] = [
           },
           {
             path: 'toolUsePromptTokenCount',
-            dest: 'output_tokens',
+            dest: 'input_tokens',
             required: false,
           },
         ],
