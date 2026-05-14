@@ -25,7 +25,7 @@ def package_data():
 def package_python_data(data_path: Path):
     """Prep python package data."""
 
-    from genai_prices.types import __file__ as genai_prices_file, providers_schema
+    from genai_prices import types as runtime_types
     from genai_prices.units import _set_registry  # pyright: ignore[reportPrivateUsage]
 
     provider_data, units = _load_package_payload(data_path)
@@ -35,8 +35,7 @@ def package_python_data(data_path: Path):
         build_providers = build_providers_schema.validate_python(provider_data)
         validate_provider_model_prices(build_providers, registry)
         validate_provider_extractor_destinations(build_providers, registry)
-        providers_schema.rebuild()
-        providers = providers_schema.validate_python(provider_data)
+        providers = runtime_types._providers_from_raw(provider_data)  # pyright: ignore[reportPrivateUsage]
     finally:
         _set_registry(None)
 
@@ -61,7 +60,7 @@ __all__ = ('unit_data',)
 unit_data: dict[str, Any] = {units!r}
 '''
 
-    py_package_dir = Path(genai_prices_file).parent
+    py_package_dir = Path(runtime_types.__file__).parent
     data_py = py_package_dir / 'data.py'
     data_py.write_text(provider_data_content)
     _format_generated_python_data(data_py, post_process_provider_reprs=True)

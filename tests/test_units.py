@@ -6,7 +6,7 @@ import subprocess
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
-from dataclasses import dataclass, fields
+from dataclasses import fields
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
@@ -542,25 +542,22 @@ def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
     assert _collect_effective_model_price_keys(price, registry) == set()
 
 
-def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -> None:
+def test_collect_effective_model_price_keys_reads_registered_subclass_attrs() -> None:
     registry = _custom_price_key_registry()
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_mtok: Decimal | None = None
-        sausage_price: Decimal | None = None
+        pass
 
     price = CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'), sausage_price=Decimal('3'))
 
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
-def test_model_price_subclass_declared_custom_fields_are_not_price_keys() -> None:
+def test_model_price_subclass_custom_attrs_are_not_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_price: Decimal | None = None
+        pass
 
     price = CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('3'))
 
@@ -569,47 +566,17 @@ def test_model_price_subclass_declared_custom_fields_are_not_price_keys() -> Non
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok'}
 
 
-def test_model_price_subclass_declared_registered_fields_are_price_keys() -> None:
+def test_model_price_subclass_registered_attrs_are_price_keys() -> None:
     registry = _custom_price_key_registry()
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_mtok: Decimal | None = None
-        sausage_price: Decimal | None = None
+        pass
 
     price = CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'), sausage_price=Decimal('3'))
 
     assert price.sausage_mtok == Decimal('2')
     assert price.sausage_price == Decimal('3')
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
-
-
-def test_model_price_dataclass_subclass_accepts_undeclared_registered_dynamic_kwargs() -> None:
-    with _active_registry(_custom_price_key_units()) as registry:
-
-        @dataclass
-        class CustomModelPrice(ModelPrice):
-            sausage_price: Decimal | None = None
-
-        price = CustomModelPrice(
-            input_mtok=Decimal('1'),
-            sausage_mtok=Decimal('2'),
-            sausage_price=Decimal('3'),
-        )
-
-    assert price.input_mtok == Decimal('1')
-    assert price.sausage_price == Decimal('3')
-    assert price.sausage_mtok == Decimal('2')
-    assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
-
-
-def test_model_price_dataclass_subclass_rejects_undeclared_unregistered_kwargs() -> None:
-    @dataclass
-    class CustomModelPrice(ModelPrice):
-        sausage_price: Decimal | None = None
-
-    with pytest.raises(TypeError, match='hovercraft_mtok'):
-        CustomModelPrice(hovercraft_mtok=Decimal('2'))
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
@@ -623,9 +590,8 @@ def test_model_price_getattr_rejects_unknown_attributes() -> None:
 
 
 def test_model_price_getattr_preserves_subclass_only_fields() -> None:
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_price: Decimal | None = None
+        pass
 
     assert CustomModelPrice(sausage_price=Decimal('3')).sausage_price == Decimal('3')
 
@@ -670,9 +636,8 @@ def test_collect_model_price_units_handles_mixed_units_in_field_order() -> None:
 def test_collect_model_price_units_ignores_subclass_only_fields() -> None:
     registry = UnitRegistry(load_units())
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_price: Decimal | None = None
+        pass
 
     units = _collect_model_price_units(CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('2')), registry)
 
@@ -682,9 +647,8 @@ def test_collect_model_price_units_ignores_subclass_only_fields() -> None:
 def test_collect_model_price_units_handles_registered_custom_fields() -> None:
     registry = _custom_price_key_registry()
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_mtok: Decimal | None = None
+        pass
 
     units = _collect_model_price_units(CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')), registry)
 
@@ -939,12 +903,12 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
     assert generated_units == units
 
 
-def test_package_python_data_clears_active_registry_if_schema_rebuild_fails(
+def test_package_python_data_clears_active_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     from genai_prices import types as runtime_types
 
-    class RebuildError(RuntimeError):
+    class RuntimeProviderValidationError(RuntimeError):
         pass
 
     _set_registry(None)
@@ -963,13 +927,13 @@ def test_package_python_data_clears_active_registry_if_schema_rebuild_fails(
     py_package_dir.mkdir()
     monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
 
-    def fail_rebuild() -> None:
-        raise RebuildError('sentinel rebuild failure')
+    def fail_runtime_provider_validation(_provider_data: Any) -> list[runtime_types.Provider]:
+        raise RuntimeProviderValidationError('sentinel runtime provider validation failure')
 
-    monkeypatch.setattr(runtime_types.providers_schema, 'rebuild', fail_rebuild)
+    monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
 
     try:
-        with pytest.raises(RebuildError, match='sentinel rebuild failure'):
+        with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
             package_data.package_python_data(data_path)
 
         assert 'transient_tokens' not in _get_registry().units

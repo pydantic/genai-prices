@@ -9,7 +9,6 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
-from pydantic_core import core_schema
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
@@ -39,7 +38,6 @@ __all__ = (
     'ClauseAnd',
     'MatchLogic',
     'ArrayMatch',
-    'providers_schema',
 )
 
 
@@ -678,65 +676,18 @@ class CalcPrice(TypedDict):
     total_price: Decimal
 
 
-class ModelPriceMeta(type):
-    """Let dataclass subclasses accept dynamic registry-backed price kwargs."""
-
-    def __call__(cls: ModelPriceMeta, *args: Any, **kwargs: Any) -> ModelPrice:
-        model_price_type = cast(type[ModelPrice], cls)
-        if model_price_type is ModelPrice or not dataclasses.is_dataclass(model_price_type):
-            return cast(ModelPrice, type.__call__(cls, *args, **kwargs))
-
-        declared_fields = _model_price_declared_fields_for(model_price_type)
-        dynamic_prices = _pop_dynamic_price_kwargs(kwargs, declared_fields)
-        instance = cast(ModelPrice, type.__call__(cls, *args, **kwargs))
-        for key, value in dynamic_prices.items():
-            object.__setattr__(instance, key, value)
-        return instance
-
-
-@dataclass(eq=False, repr=False)
-class ModelPrice(metaclass=ModelPriceMeta):
+class ModelPrice:
     """Set of prices for using a model"""
 
     def __init__(
         self,
-        prices: Mapping[str, Decimal | TieredPrices | None] | None = None,
         **price_kwargs: Decimal | TieredPrices | None,
     ) -> None:
-        if prices is not None:
-            price_kwargs = {**prices, **price_kwargs}
         for key, value in price_kwargs.items():
             object.__setattr__(self, key, value)
 
-    @classmethod
-    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> core_schema.CoreSchema:
-        def validate_mapping(value: dict[str, Decimal | TieredPrices | None]) -> ModelPrice:
-            return cls(**cast(Any, value))
-
-        price_value_schema = handler.generate_schema(Union[Decimal, TieredPrices, None])
-        price_mapping_schema = core_schema.dict_schema(core_schema.str_schema(), price_value_schema)
-        return core_schema.union_schema(
-            [
-                core_schema.is_instance_schema(cls),
-                core_schema.no_info_after_validator_function(validate_mapping, price_mapping_schema),
-            ],
-            serialization=core_schema.plain_serializer_function_ser_schema(
-                _model_price_to_mapping, return_schema=price_mapping_schema
-            ),
-        )
-
     def __repr__(self) -> str:
-        parts: list[str] = []
-        declared_fields = _model_price_declared_fields_for(type(self))
-        for field in _model_price_fields_for(type(self)):
-            value = getattr(self, field.name)
-            if value is not None:
-                parts.append(f'{field.name}={value!r}')
-
-        for key, value in self.__dict__.items():
-            if key not in declared_fields and value is not None:
-                parts.append(f'{key}={value!r}')
-
+        parts = [f'{key}={value!r}' for key, value in self.__dict__.items() if value is not None]
         return f'{type(self).__name__}({", ".join(parts)})'
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
@@ -807,28 +758,6 @@ class ModelPrice(metaclass=ModelPriceMeta):
         if name not in self.__dict__ and _is_registered_price_key(name):
             raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
         object.__delattr__(self, name)
-
-
-def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:
-    return frozenset(field.name for field in _model_price_fields_for(model_price_type))
-
-
-def _model_price_fields_for(model_price_type: type[ModelPrice]) -> tuple[dataclasses.Field[Any], ...]:
-    if not dataclasses.is_dataclass(model_price_type):
-        return ()
-    return dataclasses.fields(model_price_type)
-
-
-def _pop_dynamic_price_kwargs(
-    kwargs: dict[str, Any], declared_fields: frozenset[str]
-) -> dict[str, Decimal | TieredPrices | None]:
-    return {
-        key: kwargs.pop(key) for key in tuple(kwargs) if key not in declared_fields and _is_registered_price_key(key)
-    }
-
-
-def _model_price_to_mapping(model_price: ModelPrice) -> dict[str, Decimal | TieredPrices]:
-    return {key: value for key, value in model_price.__dict__.items() if not key.startswith('_') and value is not None}
 
 
 def _is_registered_price_key(name: str) -> bool:
@@ -924,12 +853,11 @@ def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistr
 
 
 def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[tuple[str, object]]:
-    declared_fields = _model_price_declared_fields_for(type(model_price))
     registry_price_keys = {unit.price_key for unit in registry.units.values()}
     for key, value in model_price.__dict__.items():
         if key.startswith('_'):
             continue
-        if key in declared_fields and key not in registry_price_keys:
+        if type(model_price) is not ModelPrice and key not in registry_price_keys:
             continue
         yield key, value
 
@@ -1063,4 +991,40 @@ class ClauseAnd:
         return all(clause.is_match(text) for clause in self.and_)
 
 
-providers_schema = pydantic.TypeAdapter(list[Provider], config=pydantic.ConfigDict(defer_build=True))
+_model_price_mapping_schema = pydantic.TypeAdapter(dict[str, Union[Decimal, TieredPrices, None]])
+_providers_schema = pydantic.TypeAdapter(
+    list[Provider], config=pydantic.ConfigDict(defer_build=True, arbitrary_types_allowed=True)
+)
+
+
+def _providers_from_raw(raw_providers: Any) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+    return _providers_schema.validate_python(_normalize_model_prices(raw_providers))
+
+
+def _normalize_model_prices(value: Any) -> Any:
+    if isinstance(value, list):
+        return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    if not isinstance(value, Mapping):
+        return value
+
+    normalized: dict[str, Any] = {}
+    raw_mapping = cast(Mapping[str, Any], value)
+    for key, raw_value in raw_mapping.items():
+        if key == 'prices':
+            normalized[key] = _normalize_prices_field(raw_value)
+        else:
+            normalized[key] = _normalize_model_prices(raw_value)
+    return normalized
+
+
+def _normalize_prices_field(value: Any) -> ModelPrice | list[Any]:
+    if isinstance(value, list):
+        return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    return _model_price_from_raw(value)
+
+
+def _model_price_from_raw(value: Any) -> ModelPrice:
+    if isinstance(value, ModelPrice):
+        return value
+    prices = _model_price_mapping_schema.validate_python(value)
+    return ModelPrice(**cast(Any, prices))

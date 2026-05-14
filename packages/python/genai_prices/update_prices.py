@@ -164,7 +164,7 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
-        from . import data
+        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
         from .units import UnitRegistry, _get_registry, _set_registry  # pyright: ignore[reportPrivateUsage]
 
         r = httpx.get(self.url, timeout=self.request_timeout)
@@ -179,7 +179,7 @@ class UpdatePrices:
         previous_registry = _get_registry()
         _set_registry(candidate_registry)
         try:
-            providers = data.providers_schema.validate_python(raw_payload['providers'])
+            providers = _providers_from_raw(raw_payload['providers'])
         except Exception:
             _set_registry(previous_registry)
             raise
