@@ -45,8 +45,8 @@ def _google_default_extractor_expected_signatures() -> set[GoogleExtractorMappin
         GoogleUsageMetadataSource('candidates', ('output_tokens',), 'output'),
         # Thinking tokens have no detail array, but Google prices them as text output.
         GoogleUsageMetadataSource('thoughts', ('output_tokens', 'output_text_tokens')),
-        # Tool-use prompt tokens have an aggregate output count plus their own modality breakdown.
-        GoogleUsageMetadataSource('toolUsePrompt', ('output_tokens',), 'output'),
+        # Tool-use prompt tokens are additional prompt/input context, including their modality breakdown.
+        GoogleUsageMetadataSource('toolUsePrompt', ('input_tokens',), 'input'),
     )
 
     signatures: set[GoogleExtractorMappingSignature] = set()
