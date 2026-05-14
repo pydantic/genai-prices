@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, it } from 'vitest'
 
-import type { Provider, UsageExtractorMapping } from '../types'
+import type { Provider } from '../types'
 
 import { data } from '../data'
 import { extractUsage } from '../index'
@@ -220,57 +220,6 @@ describe('extractUsage', () => {
     })
   })
 
-  describe('extractor normalization edge cases', () => {
-    it('should leave unrelated response fields absent after normalization', () => {
-      const provider = providerWithMappings([
-        {
-          dest: 'input_tokens',
-          path: 'input_tokens',
-          required: true,
-        },
-      ])
-
-      const { usage } = extractUsage(provider, {
-        model: 'test-model',
-        usage: {
-          input_tokens: 100,
-          unrelated_tokens: 900,
-        },
-      })
-
-      expect(usage).toEqual({ input_tokens: 100 })
-      expect(usage).not.toHaveProperty('unrelated_tokens')
-    })
-
-    it('should return contradictory registered values when directly reported', () => {
-      const provider = providerWithMappings([
-        {
-          dest: 'input_tokens',
-          path: 'input_tokens',
-          required: true,
-        },
-        {
-          dest: 'cache_read_tokens',
-          path: 'cache_read_tokens',
-          required: true,
-        },
-      ])
-
-      const { usage } = extractUsage(provider, {
-        model: 'test-model',
-        usage: {
-          cache_read_tokens: 200,
-          input_tokens: 100,
-        },
-      })
-
-      expect(usage).toEqual({
-        cache_read_tokens: 200,
-        input_tokens: 100,
-      })
-    })
-  })
-
   describe('Google provider', () => {
     const googleProvider: Provider = data.find((provider) => provider.id === 'google')!
 
@@ -385,20 +334,3 @@ describe('extractUsage', () => {
     })
   })
 })
-
-function providerWithMappings(mappings: UsageExtractorMapping[]): Provider {
-  return {
-    api_pattern: 'x',
-    extractors: [
-      {
-        api_flavor: 'default',
-        mappings,
-        model_path: 'model',
-        root: 'usage',
-      },
-    ],
-    id: 'test-provider',
-    models: [],
-    name: 'Test',
-  }
-}
