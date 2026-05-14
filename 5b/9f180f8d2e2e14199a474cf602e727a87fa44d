@@ -1,0 +1,19 @@
+prices/src/prices/package_data.py
+  s_87ce7408a7cb27::t_7d7c34d66e84f3 12,35-37,126,161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "5b9f180f8d2e2e14199a474cf602e727a87fa44d",
+  "prompts": {},
+  "sessions": {
+    "s_87ce7408a7cb27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e26e6-755d-7de1-b475-1c92f2592196",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
