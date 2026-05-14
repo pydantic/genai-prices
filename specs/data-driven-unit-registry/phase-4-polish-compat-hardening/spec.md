@@ -15,6 +15,9 @@ Phase 4 adds data regression tests for these built-in token naming conventions. 
 **Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs.** _(from "Phase 4 hardens the authoring and compatibility surfaces after the core works")_
 Base `ModelPrice` already accepts dynamic registered price keys in Phase 3. Phase 4 extends that compatibility to common `@dataclass` subclasses by intercepting undeclared candidate dynamic price-key kwargs before the generated dataclass constructor rejects them.
 
+**Old and new price keys use the same runtime surface.** _(from "Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs")_
+Legacy price keys such as `input_mtok` remain accepted as constructor kwargs and readable/writable attributes, but they should not stay as special declared dataclass fields. Registry-defined old and new keys should behave the same for construction, attribute access, validation, calculation, string formatting, and CLI display. Dataclass introspection and constructor-signature IDE hints are allowed to lose the legacy price-key list because newly registered keys could not be represented there anyway.
+
 **CLI price presentation becomes registry-driven.** _(from "Phase 4 hardens the authoring and compatibility surfaces after the core works")_
 The CLI derives price labels and normalization display from unit metadata instead of hardcoded price-field maps. Existing output remains familiar for current units, and new registered units can appear without code changes.
 
