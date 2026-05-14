@@ -73,7 +73,7 @@ Registered attribute reads return stored values directly, return zero for safe m
 `Usage` does not preserve fixed-field dataclass introspection such as `dataclasses.asdict(...)`; construction, attribute reads, equality, representation, addition, raw wrapping, and field mutation are the supported compatibility surface.
 
 **Python `ModelPrice` prices through the active registry.** _(implements "Python keeps compatibility while accepting dynamic price keys", "Complete price data is required before pricing")_
-Keep legacy dataclass fields for existing price keys and add `_extra_prices` for candidate non-hardcoded price keys. Base construction, runtime provider parsing, assignment, deletion, `__getattr__`, `is_free()`, string rendering, and effective price-key iteration must include both legacy fields and dynamic extra prices. Every non-`None` `_extra_prices` key participates in validation, including misspellings.
+Keep legacy dataclass fields for existing price keys and add `_extra_prices` for candidate non-hardcoded price keys. Base construction, runtime provider parsing, assignment, deletion, `__getattr__`, string rendering, and effective price-key iteration must include both legacy fields and dynamic extra prices. Every non-`None` `_extra_prices` key participates in validation, including misspellings.
 
 Base `ModelPrice.calc_price(usage)`:
 

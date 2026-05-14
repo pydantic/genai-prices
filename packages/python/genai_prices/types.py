@@ -869,14 +869,6 @@ class ModelPrice(metaclass=ModelPriceMeta):
 
         return ', '.join(parts)
 
-    def is_free(self) -> bool:
-        declared_prices_are_free = all(
-            _price_value_is_free(getattr(self, field.name))
-            for field in dataclasses.fields(self)
-            if field.name != '_extra_prices'
-        )
-        return declared_prices_are_free and all(_price_value_is_free(value) for value in self._extra_prices.values())
-
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
         extra_prices = self.__dict__.get('_extra_prices', {})
         if name in extra_prices:
@@ -955,16 +947,6 @@ def calc_unit_price(
     else:
         unit_price = price * count
     return unit_price / per
-
-
-def _price_value_is_free(value: object) -> bool:
-    if value is None:
-        return True
-    if isinstance(value, TieredPrices):
-        return value.base == 0 and all(tier.price == 0 for tier in value.tiers)
-    if isinstance(value, Decimal):
-        return value == 0
-    return not value
 
 
 def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> set[str]:
