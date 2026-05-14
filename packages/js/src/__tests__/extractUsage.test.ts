@@ -234,7 +234,8 @@ describe('extractUsage', () => {
           promptTokenCount: 75,
           promptTokensDetails: [{ modality: 'TEXT', tokenCount: 75 }],
           thoughtsTokenCount: 144,
-          totalTokenCount: 237,
+          toolUsePromptTokenCount: 25,
+          totalTokenCount: 262,
           trafficType: 'ON_DEMAND',
         },
       }
@@ -243,7 +244,7 @@ describe('extractUsage', () => {
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
         input_text_tokens: 75,
-        input_tokens: 75,
+        input_tokens: 100,
         output_text_tokens: 162,
         output_tokens: 162,
       })
@@ -285,7 +286,7 @@ describe('extractUsage', () => {
       })
     })
 
-    it('should use tool-use modality details for output modalities', () => {
+    it('should use tool-use prompt modality details for input modalities', () => {
       const responseData = {
         modelVersion: 'gemini-2.5-flash',
         usageMetadata: {
@@ -308,13 +309,13 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
-        input_text_tokens: 10,
-        input_tokens: 10,
-        output_audio_tokens: 5,
-        output_image_tokens: 9,
-        output_text_tokens: 17,
-        output_tokens: 32,
-        output_video_tokens: 3,
+        input_audio_tokens: 5,
+        input_image_tokens: 9,
+        input_text_tokens: 20,
+        input_tokens: 35,
+        input_video_tokens: 3,
+        output_text_tokens: 7,
+        output_tokens: 7,
       })
     })
   })

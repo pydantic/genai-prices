@@ -377,6 +377,12 @@ describe('Core Price Calculation Function', () => {
         usage: {} as Usage,
       },
       {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+        modelPrice: {} as ModelPrice,
+        name: 'absent prices',
+        usage: { input_tokens: 1000, output_tokens: 500 } as Usage,
+      },
+      {
         expected: { input_price: 0.001, output_price: 0, total_price: 0.001 },
         modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
         name: 'mixed zero and defined tokens',

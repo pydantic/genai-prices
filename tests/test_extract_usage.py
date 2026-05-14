@@ -223,10 +223,11 @@ gemini_response_data = {
     'usageMetadata': {
         'promptTokenCount': 75,
         'candidatesTokenCount': 18,
-        'totalTokenCount': 237,
+        'totalTokenCount': 262,
         'trafficType': 'ON_DEMAND',
         'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 75}],
         'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 18}],
+        'toolUsePromptTokenCount': 25,
         'thoughtsTokenCount': 144,
     },
     'modelVersion': 'gemini-2.5-flash',
@@ -241,7 +242,7 @@ assert google_provider.extractors is not None
 def test_google():
     usage = google_provider.extract_usage(gemini_response_data)
     assert usage == snapshot(
-        ('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162, input_text_tokens=75, output_text_tokens=162))
+        ('gemini-2.5-flash', Usage(input_tokens=100, output_tokens=162, input_text_tokens=75, output_text_tokens=162))
     )
 
 
@@ -378,13 +379,13 @@ def test_google_extracts_tool_use_modalities_from_details():
     assert google_provider.extract_usage(response_data) == (
         'gemini-2.5-flash',
         Usage(
-            input_tokens=10,
-            output_tokens=32,
-            input_text_tokens=10,
-            output_text_tokens=17,
-            output_audio_tokens=5,
-            output_image_tokens=9,
-            output_video_tokens=3,
+            input_tokens=35,
+            output_tokens=7,
+            input_text_tokens=20,
+            output_text_tokens=7,
+            input_audio_tokens=5,
+            input_image_tokens=9,
+            input_video_tokens=3,
         ),
     )
 
@@ -544,7 +545,7 @@ def test_pricing_rejects_registered_contradictions_with_registry_message() -> No
 
 def test_accumulate_extracted_usage():
     extracted = extract_usage(gemini_response_data, provider_id='google')
-    assert extracted.usage == Usage(input_tokens=75, output_tokens=162, input_text_tokens=75, output_text_tokens=162)
+    assert extracted.usage == Usage(input_tokens=100, output_tokens=162, input_text_tokens=75, output_text_tokens=162)
     with pytest.raises(TypeError):
         _ = extracted + 1
     with pytest.raises(TypeError):
@@ -555,7 +556,7 @@ def test_accumulate_extracted_usage():
         _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(
-        input_tokens=75 * 2,
+        input_tokens=100 * 2,
         output_tokens=162 * 2,
         input_text_tokens=75 * 2,
         output_text_tokens=162 * 2,
