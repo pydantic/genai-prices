@@ -1012,10 +1012,6 @@ def _normalize_model_prices(value: Any) -> Any:
 def _normalize_prices_field(value: Any) -> ModelPrice | list[Any]:
     if isinstance(value, list):
         return [_normalize_model_prices(item) for item in cast(list[Any], value)]
-    return _model_price_from_raw(value)
-
-
-def _model_price_from_raw(value: Any) -> ModelPrice:
     if isinstance(value, ModelPrice):
         return value
     prices = _model_price_mapping_schema.validate_python(value)
