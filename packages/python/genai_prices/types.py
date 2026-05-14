@@ -980,19 +980,23 @@ def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usag
 
 
 def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
-    for field in dataclasses.fields(model_price):
+    yielded_price_keys: set[str] = set()
+    for field in dataclasses.fields(ModelPrice):
         if field.name == '_extra_prices':
             continue
-        try:
-            registry.unit_for_price_key(field.name)
-        except KeyError:
-            continue
-
         if getattr(model_price, field.name) is not None:
+            yielded_price_keys.add(field.name)
             yield field.name
 
+    for price_key in registry._units_by_price_key:  # pyright: ignore[reportPrivateUsage]
+        if price_key in yielded_price_keys:
+            continue
+        if getattr(model_price, price_key) is not None:
+            yielded_price_keys.add(price_key)
+            yield price_key
+
     for price_key, value in model_price._extra_prices.items():  # pyright: ignore[reportPrivateUsage]
-        if value is not None:
+        if value is not None and price_key not in yielded_price_keys:
             yield price_key
 
 
