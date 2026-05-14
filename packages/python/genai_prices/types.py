@@ -751,14 +751,6 @@ class ModelPrice:
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
-    def __setattr__(self, name: str, value: Any) -> None:
-        object.__setattr__(self, name, value)
-
-    def __delattr__(self, name: str) -> None:
-        if name not in self.__dict__ and _is_registered_price_key(name):
-            raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
-        object.__delattr__(self, name)
-
 
 def _is_registered_price_key(name: str) -> bool:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]

@@ -289,10 +289,10 @@ def test_provider_parsing_preserves_tiered_model_prices() -> None:
 def test_dynamic_model_price_assignment_and_deletion() -> None:
     price = types.ModelPrice()
 
-    price.cache_image_read_mtok = Decimal('0.5')
+    setattr(price, 'cache_image_read_mtok', Decimal('0.5'))
     assert price.cache_image_read_mtok == Decimal('0.5')
 
-    del price.cache_image_read_mtok
+    delattr(price, 'cache_image_read_mtok')
     assert price.cache_image_read_mtok is None
 
 
