@@ -831,11 +831,11 @@ def _model_price_to_mapping(model_price: ModelPrice) -> dict[str, Decimal | Tier
     return {key: value for key, value in model_price.__dict__.items() if not key.startswith('_') and value is not None}
 
 
-def _is_registered_price_key(name: str, registry: UnitRegistry | None = None) -> bool:
+def _is_registered_price_key(name: str) -> bool:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
     try:
-        (registry or _get_registry()).unit_for_price_key(name)
+        _get_registry().unit_for_price_key(name)
     except KeyError:
         return False
     else:
@@ -925,10 +925,11 @@ def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistr
 
 def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[tuple[str, object]]:
     declared_fields = _model_price_declared_fields_for(type(model_price))
+    registry_price_keys = {unit.price_key for unit in registry.units.values()}
     for key, value in model_price.__dict__.items():
         if key.startswith('_'):
             continue
-        if key in declared_fields and not _is_registered_price_key(key, registry):
+        if key in declared_fields and key not in registry_price_keys:
             continue
         yield key, value
 
