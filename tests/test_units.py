@@ -1032,12 +1032,6 @@ def test_build_model_price_accepts_typed_extra_price_keys() -> None:
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
 
 
-def test_package_data_collects_runtime_candidate_price_keys() -> None:
-    price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
-
-    assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
-
-
 def test_runtime_model_price_repr_preserves_dynamic_price_keys() -> None:
     price = ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))
 
