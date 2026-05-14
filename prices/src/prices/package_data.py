@@ -123,7 +123,7 @@ def validate_provider_model_prices(providers: Iterable[object], registry: UnitRe
             model_id = cast(str, getattr(model, 'id'))
             for label, model_price in _iter_model_prices(getattr(model, 'prices')):
                 try:
-                    validate_model_price(_collect_model_price_keys(model_price), registry)
+                    validate_model_price(_collect_model_price_keys(model_price, registry), registry)
                 except ValueError as exc:
                     raise ValueError(f'Invalid model price for {provider_id}/{model_id}{label}: {exc}') from exc
 
@@ -158,7 +158,7 @@ def _iter_model_prices(prices: object) -> Iterator[tuple[str, object]]:
         yield '', prices
 
 
-def _collect_model_price_keys(model_price: object) -> set[str]:
+def _collect_model_price_keys(model_price: object, registry: UnitRegistry | None = None) -> set[str]:
     if isinstance(model_price, ModelPrice):
         declared_keys = {
             field_name for field_name in model_price.__pydantic_fields__ if getattr(model_price, field_name) is not None
@@ -167,17 +167,30 @@ def _collect_model_price_keys(model_price: object) -> set[str]:
         return declared_keys | extra_keys
 
     if dataclasses.is_dataclass(model_price):
+        declared_fields = {field.name for field in dataclasses.fields(model_price)}
         declared_keys = {
             field.name
             for field in dataclasses.fields(model_price)
-            if field.name != '_extra_prices' and getattr(model_price, field.name) is not None
+            if (registry is None or _registry_has_price_key(registry, field.name))
+            and getattr(model_price, field.name) is not None
         }
         extra_keys = {
-            field_name for field_name, value in getattr(model_price, '_extra_prices', {}).items() if value is not None
+            field_name
+            for field_name, value in vars(model_price).items()
+            if field_name not in declared_fields and not field_name.startswith('_') and value is not None
         }
         return declared_keys | extra_keys
 
     raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')
+
+
+def _registry_has_price_key(registry: UnitRegistry, price_key: str) -> bool:
+    try:
+        registry.unit_for_price_key(price_key)
+    except KeyError:
+        return False
+    else:
+        return True
 
 
 def package_ts_data(data_path: Path):

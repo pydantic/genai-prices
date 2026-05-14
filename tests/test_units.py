@@ -517,6 +517,17 @@ def test_collect_effective_model_price_keys_reads_registered_dynamic_keys() -> N
     assert _collect_effective_model_price_keys(price, registry) == {'cache_image_read_mtok'}
 
 
+def test_model_price_stores_dynamic_prices_as_attributes() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'))
+
+    assert price.__dict__ == {'input_mtok': Decimal('1')}
+    assert '_extra_prices' not in price.__dict__
+
+
+def test_model_price_equality_does_not_ignore_dynamic_prices() -> None:
+    assert ModelPrice(input_mtok=Decimal('1')) != ModelPrice(output_mtok=Decimal('1'))
+
+
 def test_collect_effective_model_price_keys_includes_unregistered_candidates_for_validation() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(hovercraft_mtok=Decimal('1'))
