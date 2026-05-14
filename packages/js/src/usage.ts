@@ -12,7 +12,7 @@ export function normalizeUsage(obj: unknown): NormalizedUsage {
   for (const usageKey of registry.reportedUsageKeys) {
     const value = obj[usageKey]
     if (typeof value === 'number') {
-      usage[usageKey] = value
+      usage[usageKey] = validateUsageValue(usageKey, value)
     }
   }
   return usage
@@ -23,13 +23,14 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number 
   const registry = getActiveRegistry()
   const requestedUnit = unitForUsageKey(registry, usageKey)
 
-  const storedValue = usage[usageKey]
+  const storedValue = validateOptionalUsageValue(usageKey, usage[usageKey])
   if (storedValue !== undefined) return storedValue
 
-  for (const [reportedUsageKey, reportedValue] of Object.entries(usage)) {
-    if ((reportedValue ?? 0) <= 0) continue
+  for (const [reportedUsageKey, rawReportedValue] of Object.entries(usage)) {
     const reportedUnit = unitForOptionalUsageKey(registry, reportedUsageKey)
     if (!reportedUnit) continue
+    const reportedValue = validateOptionalUsageValue(reportedUsageKey, rawReportedValue)
+    if ((reportedValue ?? 0) <= 0) continue
 
     if (reportedUsageKey !== usageKey && registry.ancestorUsageKeys(reportedUnit.usageKey).has(usageKey)) {
       throw new Error(`Missing usage value for ${usageKey} with positive reported descendant ${reportedUsageKey}`)
@@ -37,8 +38,12 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number 
   }
 
   const positiveReportedUnits = Object.entries(usage)
-    .filter(([, value]) => (value ?? 0) > 0)
-    .map(([reportedUsageKey]) => unitForOptionalUsageKey(registry, reportedUsageKey))
+    .map(([reportedUsageKey, rawValue]) => {
+      const unit = unitForOptionalUsageKey(registry, reportedUsageKey)
+      if (!unit) return undefined
+      const value = validateOptionalUsageValue(reportedUsageKey, rawValue)
+      return (value ?? 0) > 0 ? unit : undefined
+    })
     .filter((unit): unit is UnitDef => unit !== undefined)
 
   for (let leftIndex = 0; leftIndex < positiveReportedUnits.length; leftIndex++) {
@@ -54,6 +59,21 @@ export function getUsageValue(usage: NormalizedUsage, usageKey: string): number 
   }
 
   return 0
+}
+
+function validateOptionalUsageValue(usageKey: string, value: unknown): number | undefined {
+  if (value === undefined) return undefined
+  if (typeof value !== 'number') {
+    throw new Error(`Invalid usage value for ${usageKey}: expected a finite non-negative number`)
+  }
+  return validateUsageValue(usageKey, value)
+}
+
+function validateUsageValue(usageKey: string, value: number): number {
+  if (!Number.isFinite(value) || value < 0) {
+    throw new Error(`Invalid usage value for ${usageKey}: expected a finite non-negative number`)
+  }
+  return value
 }
 
 function isPlainObject(obj: unknown): obj is Record<string, unknown> {
