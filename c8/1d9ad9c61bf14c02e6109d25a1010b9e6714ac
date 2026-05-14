@@ -1,0 +1,19 @@
+tests/test_custom_prices.py
+  s_5fb465e046afde::t_2306aa48a8e29e 272
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "c81d9ad9c61bf14c02e6109d25a1010b9e6714ac",
+  "prompts": {},
+  "sessions": {
+    "s_5fb465e046afde": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e2237-9992-7363-9f5f-84cd0bd04046",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
