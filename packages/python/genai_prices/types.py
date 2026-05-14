@@ -860,7 +860,7 @@ def _validate_model_price_value(value: Any) -> Decimal | TieredPrices | None:
     global _model_price_value_adapter
 
     if _model_price_value_adapter is None:
-        _model_price_value_adapter = pydantic.TypeAdapter(Decimal | TieredPrices | None)
+        _model_price_value_adapter = pydantic.TypeAdapter(Union[Decimal, TieredPrices, None])
     return _model_price_value_adapter.validate_python(value)
 
 
