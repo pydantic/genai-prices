@@ -269,3 +269,4 @@ def test_custom_model_price_constructor_accepts_undeclared_dynamic_keys() -> Non
     assert price.input_mtok == Decimal('1')
     assert price.sausage_price == Decimal('3')
     assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.cache_image_read_mtok == Decimal('0.5')
