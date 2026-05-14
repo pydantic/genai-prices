@@ -4,7 +4,7 @@ import dataclasses
 import json
 import re
 import subprocess
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
@@ -176,6 +176,12 @@ def _collect_model_price_keys(model_price: object) -> set[str]:
             field_name for field_name, value in getattr(model_price, '_extra_prices', {}).items() if value is not None
         }
         return declared_keys | extra_keys
+
+    extra_prices = getattr(model_price, '_extra_prices', None)
+    if isinstance(extra_prices, Mapping):
+        return {
+            field_name for field_name, value in cast(Mapping[str, object], extra_prices).items() if value is not None
+        }
 
     raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')
 

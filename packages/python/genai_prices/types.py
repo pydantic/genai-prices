@@ -9,6 +9,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
+from pydantic_core import core_schema
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
@@ -678,72 +679,55 @@ class CalcPrice(TypedDict):
 
 
 class ModelPriceMeta(type):
+    """Let dataclass subclasses accept dynamic registry-backed price kwargs."""
+
     def __call__(cls: ModelPriceMeta, *args: Any, **kwargs: Any) -> ModelPrice:
         model_price_type = cast(type[ModelPrice], cls)
         if model_price_type is ModelPrice or not dataclasses.is_dataclass(model_price_type):
             return cast(ModelPrice, type.__call__(cls, *args, **kwargs))
 
         declared_fields = _model_price_declared_fields_for(model_price_type)
-        dynamic_prices = {
-            key: kwargs.pop(key)
-            for key in tuple(kwargs)
-            if key not in declared_fields and _is_registered_price_key(key)
-        }
+        stored_prices = kwargs.pop('_extra_prices', None)
+        dynamic_prices = _pop_dynamic_price_kwargs(kwargs, declared_fields)
         instance = cast(ModelPrice, type.__call__(cls, *args, **kwargs))
-        if dynamic_prices:
-            extra_prices = dict(getattr(instance, '_extra_prices', {}))
-            extra_prices.update(dynamic_prices)
-            object.__setattr__(instance, '_extra_prices', extra_prices)
+        extra_prices = dict(instance.__dict__.get('_extra_prices', {}))
+        extra_prices.update(_model_price_mapping_from_constructor(stored_prices))
+        extra_prices.update(dynamic_prices)
+        object.__setattr__(instance, '_extra_prices', extra_prices)
         return instance
 
 
-@dataclass
 class ModelPrice(metaclass=ModelPriceMeta):
     """Set of prices for using a model"""
 
-    # The active registry is the price-key list; legacy keys and future keys use
-    # the same internal storage so dataclass introspection is not misleading.
-    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
-        default_factory=dict, repr=False, compare=False
-    )
+    _extra_prices: dict[str, Decimal | TieredPrices | None]
 
     def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
         raw_stored_prices = cast(Any, prices).pop('_extra_prices', None)
-        dynamic_prices: dict[str, Decimal | TieredPrices | None] = {}
-        if raw_stored_prices is not None:
-            if not isinstance(raw_stored_prices, Mapping):
-                raise TypeError('_extra_prices must be a mapping')
-            dynamic_prices.update(cast(Mapping[str, Decimal | TieredPrices | None], raw_stored_prices))
-        dynamic_prices.update(prices)
-        object.__setattr__(self, '_extra_prices', dynamic_prices)
+        stored_prices = _model_price_mapping_from_constructor(raw_stored_prices)
+        stored_prices.update(prices)
+        object.__setattr__(self, '_extra_prices', stored_prices)
 
-    @pydantic.model_validator(mode='before')
     @classmethod
-    def _store_unknown_price_keys(cls, data: Any) -> Any:
-        # providers_schema is a Pydantic TypeAdapter over stdlib dataclasses;
-        # Pydantic still invokes validators declared on those dataclasses.
-        if not isinstance(data, dict):
+    def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> core_schema.CoreSchema:
+        return core_schema.no_info_plain_validator_function(cls._validate)
+
+    @classmethod
+    def _validate(cls, data: Any) -> ModelPrice:
+        if isinstance(data, cls):
             return data
 
-        raw_data = cast(dict[str, Any], data)
-        declared_fields = _model_price_declared_fields_for(cls)
-        extra_prices: dict[str, Any] = {key: value for key, value in raw_data.items() if key not in declared_fields}
-        if not extra_prices:
-            return raw_data
+        if not isinstance(data, Mapping):
+            raise ValueError('ModelPrice must be a mapping')
 
-        model_price_data = dict(raw_data)
-        stored_extra_prices = dict(cast(dict[str, Any], model_price_data.get('_extra_prices') or {}))
-        stored_extra_prices.update(extra_prices)
-        model_price_data['_extra_prices'] = stored_extra_prices
-        for key in extra_prices:
-            model_price_data.pop(key)
-        return model_price_data
+        try:
+            return cls(**_validate_model_price_data(cast(Mapping[str, Any], data)))
+        except TypeError as exc:
+            raise ValueError(str(exc)) from exc
 
     def __repr__(self) -> str:
         parts: list[str] = []
-        for field in dataclasses.fields(self):
-            if field.name == '_extra_prices':
-                continue
+        for field in _model_price_fields_for(type(self)):
             value = getattr(self, field.name)
             if value is not None:
                 parts.append(f'{field.name}={value!r}')
@@ -836,7 +820,48 @@ class ModelPrice(metaclass=ModelPriceMeta):
 
 
 def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:
-    return frozenset(field.name for field in dataclasses.fields(model_price_type))
+    return frozenset(field.name for field in _model_price_fields_for(model_price_type))
+
+
+def _model_price_fields_for(model_price_type: type[ModelPrice]) -> tuple[dataclasses.Field[Any], ...]:
+    if not dataclasses.is_dataclass(model_price_type):
+        return ()
+    return dataclasses.fields(model_price_type)
+
+
+def _pop_dynamic_price_kwargs(
+    kwargs: dict[str, Any], declared_fields: frozenset[str]
+) -> dict[str, Decimal | TieredPrices | None]:
+    return {
+        key: kwargs.pop(key) for key in tuple(kwargs) if key not in declared_fields and _is_registered_price_key(key)
+    }
+
+
+def _model_price_mapping_from_constructor(data: Any) -> dict[str, Decimal | TieredPrices | None]:
+    if data is None:
+        return {}
+    if not isinstance(data, Mapping):
+        raise TypeError('_extra_prices must be a mapping')
+    return dict(cast(Mapping[str, Decimal | TieredPrices | None], data))
+
+
+def _validate_model_price_data(data: Mapping[str, Any]) -> dict[str, Decimal | TieredPrices | None]:
+    prices = _model_price_mapping_from_constructor(data.get('_extra_prices'))
+    for key, value in data.items():
+        if key != '_extra_prices':
+            prices[key] = _validate_model_price_value(value)
+    return prices
+
+
+_model_price_value_adapter: pydantic.TypeAdapter[Decimal | TieredPrices | None] | None = None
+
+
+def _validate_model_price_value(value: Any) -> Decimal | TieredPrices | None:
+    global _model_price_value_adapter
+
+    if _model_price_value_adapter is None:
+        _model_price_value_adapter = pydantic.TypeAdapter(Decimal | TieredPrices | None)
+    return _model_price_value_adapter.validate_python(value)
 
 
 def _is_registered_price_key(name: str) -> bool:

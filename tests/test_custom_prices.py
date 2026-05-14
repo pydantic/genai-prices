@@ -234,6 +234,38 @@ def test_provider_parsing_preserves_dynamic_model_price_keys() -> None:
     assert price.cache_image_read_mtok == Decimal('0.5')
 
 
+def test_provider_parsing_preserves_tiered_model_prices() -> None:
+    providers = types.providers_schema.validate_json(
+        json.dumps(
+            [
+                {
+                    'id': 'testing',
+                    'name': 'Testing',
+                    'api_pattern': 'testing',
+                    'models': [
+                        {
+                            'id': 'model',
+                            'match': {'equals': 'model'},
+                            'prices': {
+                                'input_mtok': {
+                                    'base': 1,
+                                    'tiers': [{'start': 100_000, 'price': 2}],
+                                },
+                            },
+                        }
+                    ],
+                }
+            ]
+        )
+    )
+
+    price = providers[0].models[0].prices
+    assert isinstance(price, types.ModelPrice)
+    assert isinstance(price.input_mtok, types.TieredPrices)
+    assert price.input_mtok.base == Decimal('1')
+    assert price.input_mtok.tiers[0].price == Decimal('2')
+
+
 def test_dynamic_model_price_assignment_and_deletion() -> None:
     price = types.ModelPrice()
 
