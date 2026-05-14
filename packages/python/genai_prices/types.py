@@ -710,12 +710,15 @@ class ModelPrice(metaclass=ModelPriceMeta):
 
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: Any, handler: Any) -> core_schema.CoreSchema:
+        def validate_mapping(value: dict[str, Decimal | TieredPrices | None]) -> ModelPrice:
+            return cls(**cast(Any, value))
+
         price_value_schema = handler.generate_schema(Union[Decimal, TieredPrices, None])
         price_mapping_schema = core_schema.dict_schema(core_schema.str_schema(), price_value_schema)
         return core_schema.union_schema(
             [
                 core_schema.is_instance_schema(cls),
-                core_schema.no_info_after_validator_function(cls, price_mapping_schema),
+                core_schema.no_info_after_validator_function(validate_mapping, price_mapping_schema),
             ],
             serialization=core_schema.plain_serializer_function_ser_schema(
                 _model_price_to_mapping, return_schema=price_mapping_schema

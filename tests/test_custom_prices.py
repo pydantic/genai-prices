@@ -5,6 +5,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal
 
+import pydantic
 import pytest
 from inline_snapshot import snapshot
 
@@ -298,3 +299,13 @@ def test_custom_model_price_constructor_accepts_undeclared_dynamic_keys() -> Non
     assert price.input_mtok == Decimal('1')
     assert price.sausage_price == Decimal('3')
     assert price.cache_image_read_mtok == Decimal('0.5')
+
+
+def test_custom_model_price_pydantic_mapping_uses_keyword_prices() -> None:
+    price = pydantic.TypeAdapter(CustomModelPrice).validate_python(
+        {'input_mtok': 1, 'cache_image_read_mtok': 0.5, 'sausage_price': 3}
+    )
+
+    assert price.input_mtok == Decimal('1')
+    assert price.cache_image_read_mtok == Decimal('0.5')
+    assert price.sausage_price == Decimal('3')
