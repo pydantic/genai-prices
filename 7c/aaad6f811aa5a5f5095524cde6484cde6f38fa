@@ -1,0 +1,23 @@
+specs/data-driven-unit-registry/phase-4-polish-compat-hardening/code-spec.md
+  s_87ce7408a7cb27::t_d26d35c8cbb37f 16-17,19,21-23,37
+specs/data-driven-unit-registry/phase-4-polish-compat-hardening/spec.md
+  s_87ce7408a7cb27::t_b5a4aa5c17cc2d 15-16,18-22
+specs/data-driven-unit-registry/spec.md
+  s_87ce7408a7cb27::t_6340957ccd9961 144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "7caaad6f811aa5a5f5095524cde6484cde6f38fa",
+  "prompts": {},
+  "sessions": {
+    "s_87ce7408a7cb27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e26e6-755d-7de1-b475-1c92f2592196",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
