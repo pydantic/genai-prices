@@ -1,0 +1,19 @@
+packages/python/genai_prices/types.py
+  s_87ce7408a7cb27::t_b7257968ffbf58 834,838,931
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "ffbe0377fcd351968fee9d6f6c5ccc7e4a0527a6",
+  "prompts": {},
+  "sessions": {
+    "s_87ce7408a7cb27": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e26e6-755d-7de1-b475-1c92f2592196",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
