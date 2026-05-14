@@ -38,7 +38,7 @@ The following providers are currently supported:
 - [Microsoft Azure](prices/providers/azure.yml) - 21 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
 - [Cohere](prices/providers/cohere.yml) - 6 models
-- [Deepseek](prices/providers/deepseek.yml) - 2 models
+- [Deepseek](prices/providers/deepseek.yml) - 4 models
 - [Fireworks](prices/providers/fireworks.yml) - 13 models
 - [Google](prices/providers/google.yml) - 33 models
 - [Groq](prices/providers/groq.yml) - 29 models
@@ -61,7 +61,7 @@ The following providers are currently supported:
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
-- [X AI](prices/providers/x_ai.yml) - 12 models
+- [X AI](prices/providers/x_ai.yml) - 13 models
 
 [comment]: <> (providers-end)
 

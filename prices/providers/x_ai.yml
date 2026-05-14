@@ -212,6 +212,24 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 0.5
 
+  - id: grok-4.3
+    name: Grok 4.3
+    description: >-
+      Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling,
+      and instruction following capabilities. Supports text and image inputs with text outputs, function
+      calling, structured outputs, and reasoning.
+    match:
+      or:
+        - equals: grok-4.3
+        - equals: grok-4.3-latest
+        - equals: grok-latest
+    context_window: 1000000
+    prices_checked: 2026-05-12
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.2
+      output_mtok: 2.5
+
   - id: grok-code-fast-1
     name: Grok Code Fast 1
     description: >-
