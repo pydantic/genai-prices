@@ -141,7 +141,7 @@ There is no top-level code spec. Use the phase-local prose spec plus the matchin
 [Phase 3: Core Registry and Shared Data Contract](phase-3-shared-data-contract/spec.md) ([code spec](phase-3-shared-data-contract/code-spec.md)) covers Python registry-backed pricing, JavaScript registry-backed pricing, wrapped `units` plus `providers` payloads, dynamic registered price keys, and use-time validation before Phase 5.
 
 **Phase 4 hardens authoring and compatibility surfaces.** _(from "Phase order is the review contract")_
-[Phase 4: Polish and Compatibility Hardening](phase-4-polish-compat-hardening/spec.md) ([code spec](phase-4-polish-compat-hardening/code-spec.md)) adds generated provider-YAML schema/autocomplete, registry-driven CLI price presentation, and Python dataclass-subclass dynamic price-key constructor support.
+[Phase 4: Polish and Compatibility Hardening](phase-4-polish-compat-hardening/spec.md) ([code spec](phase-4-polish-compat-hardening/code-spec.md)) adds generated provider-YAML schema/autocomplete, registry-driven CLI price presentation, and simpler Python runtime `ModelPrice` storage plus internal raw-provider normalization.
 
 **Phase 5 adds runtime validation performance optimizations.** _(from "Phase order is the review contract")_
 [Phase 5: Runtime Validation Performance Optimization](phase-5-runtime-validation-performance/spec.md) ([code spec](phase-5-runtime-validation-performance/code-spec.md)) adds benchmark-backed global validation caches and any benchmark-backed decomposition caches without changing accepted data shapes, validation rules, decomposition semantics, generated payloads, or public API behavior.
