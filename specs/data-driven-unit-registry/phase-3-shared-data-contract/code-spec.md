@@ -92,7 +92,7 @@ Base `ModelPrice.calc_price(usage)`:
 **Python snapshots remain provider-only while units are global.** _(implements "The active runtime registry is global")_
 `DataSnapshot` does not gain a unit registry field. Bundled provider snapshots load generated providers from `data.py`; the bundled registry loads generated unit data from `data_units.py`. `set_custom_snapshot(snapshot)` keeps its public signature and does not bulk-validate model prices. Standard base pricing validates the selected model price on use.
 
-`UpdatePrices.fetch()` parses wrapped JSON, builds `UnitRegistry(raw["units"])` as trusted published data, saves the previous active registry, installs the candidate registry, parses providers into a `DataSnapshot`, and restores the previous registry if provider parsing or activation fails. `UpdatePrices.stop()` resets the active registry to bundled units when it clears the auto-updated provider snapshot.
+`UpdatePrices.fetch()` parses wrapped JSON, builds `UnitRegistry(raw["units"])` as trusted published data, saves the previous active registry, installs the candidate registry, parses providers into a `DataSnapshot`, and restores the previous registry if provider parsing or activation fails. It does not compare fetched units against bundled or previously fetched units, because published registry evolution is expected to be compatible and additive in practice. `UpdatePrices.stop()` resets the active registry to bundled units when it clears the auto-updated provider snapshot.
 
 **Python extractor destinations are registry usage keys.** _(implements "Extractor destinations are externally reported usage keys")_
 Runtime `UsageExtractorMapping.dest` is `str`. `UsageExtractor` construction validates every destination against externally reported usage keys from the active registry, rejecting price keys, arbitrary strings, and pricing-only `requests`. Extraction accumulates counts by usage key and returns `Usage(**values)`. It does not certify that provider usage counts are internally coherent.
@@ -118,7 +118,7 @@ export interface UsageExtractorMapping {
 `calcPrice(usage, modelPrice)` follows the same registry-driven flow as Python: validate effective price keys, decompose non-`requests` priced units, read `input_tokens` for tiered prices through `getUsageValue(...)`, price `requests` explicitly, normalize by `per`, and aggregate into the existing JavaScript result shape.
 
 **JavaScript runtime updates are wrapper-aware.** _(implements "The active runtime registry is global", "JavaScript keeps plain-object usage and provider APIs")_
-`api.ts` parses wrapped payloads by building `new UnitRegistry(units)`, saving the previous active registry, installing the candidate, parsing providers, and restoring the previous registry if provider activation fails. `setProviderData` remains the single public setter and accepts:
+`api.ts` parses wrapped payloads by building `new UnitRegistry(units)`, saving the previous active registry, installing the candidate, parsing providers, and restoring the previous registry if provider activation fails. It does not enforce registry-history compatibility or attach an exact registry to each provider snapshot; a newer compatible registry may contain additional units that older provider data ignores. `setProviderData` remains the single public setter and accepts:
 
 - `null` as a no-op
 - a legacy bare provider array, which updates providers and leaves the active registry unchanged

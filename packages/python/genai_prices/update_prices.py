@@ -173,6 +173,8 @@ class UpdatePrices:
         if not isinstance(raw_payload, dict) or 'units' not in raw_payload or 'providers' not in raw_payload:
             raise ValueError('Expected fetched prices payload to contain units and providers')
 
+        # Published unit data is trusted to evolve compatibly. We only need rollback
+        # if this payload's providers fail to parse; no registry-history diff is enforced.
         candidate_registry = UnitRegistry(cast(dict[str, Any], raw_payload['units']))
         previous_registry = _get_registry()
         _set_registry(candidate_registry)

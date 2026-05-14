@@ -90,7 +90,13 @@ The checked-in source for built-in units is `prices/units.yml`. Runtime packages
 **There is one active runtime unit registry.** _(from "There is one source registry and no standalone runtime units artifact", "Public API signatures remain stable")_
 Runtime code reads unit definitions from a process-global registry. Trusted remote update payloads can replace the global registry while the matching provider data is parsed or activated; failed provider parsing or activation restores the previous registry.
 
-**Validation is split by lifecycle boundary.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into indexed runtime objects")_
+**Registry evolution is trusted to be compatible.** _(from "There is one active runtime unit registry", "Unit definitions must travel with prices")_
+Changes to `prices/units.yml` are expected to be safe across published versions. Maintainers should add units or make compatible updates that preserve the meaning of existing usage keys, price keys, dimensions, and normalization factors for existing provider data. A newer registry may contain units that older provider data does not use; that is harmless because pricing only considers the selected model's priced units.
+
+**No lifecycle enforces registry-history compatibility.** _(from "Registry evolution is trusted to be compatible")_
+Build/export validation and runtime activation validate the current payload shape and provider references; they do not compare the registry to previous releases, enforce append-only diffs, reject deletions as a versioning policy, or pin each `DataSnapshot` to the exact registry object active when it was parsed. Destructive registry changes are an authoring mistake to avoid in `prices/units.yml`, not a build-time or runtime compatibility mechanism.
+
+**Validation is split by lifecycle boundary.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into indexed runtime objects", "No lifecycle enforces registry-history compatibility")_
 Build/export validation validates structural unit rules, provider model prices, and extractor destinations before publishing generated data. Runtime registry construction parses and indexes trusted unit data; it does not repeat publication-time unit validation for bundled or fetched payloads. Runtime fetches install trusted units, then parse provider data. Standard pricing validates the selected model price before use until Phase 5 adds safe runtime caches.
 
 **ModelPrice construction stays context-free.** _(from "Validation is split by lifecycle boundary", "Manual custom pricing remains supported")_

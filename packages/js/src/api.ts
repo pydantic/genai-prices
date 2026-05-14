@@ -51,6 +51,8 @@ function activateProviderData(data: Exclude<ProviderDataValue, null>): Provider[
   }
 
   if (typeof data === 'object' && isWrappedProviderData(data)) {
+    // Published unit data is trusted to evolve compatibly. We only roll back if
+    // this payload's providers fail activation; no registry-history diff is enforced.
     const candidateRegistry = new UnitRegistry(data.units)
     const previousRegistry = getActiveRegistry()
     setActiveRegistry(candidateRegistry)
