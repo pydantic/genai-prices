@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Provider, RawUnitsDict, WrappedProviderData } from '../types'
+import type { Provider, ProviderDataValue, RawUnitsDict, WrappedProviderData } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
@@ -52,6 +52,40 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).rejects.toThrow('Invalid extractor destination for invalid-async-provider/default mapping 0: requests')
     expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
     await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data)
+    })
+  })
+
+  it('does not let a stale rejected async update hide a newer in-flight update', async () => {
+    let rejectStale!: (error: Error) => void
+    let resolveNewer!: (data: ProviderDataValue) => void
+    const staleUpdate = new Promise<ProviderDataValue>((_resolve, reject) => {
+      rejectStale = reject
+    })
+    const newerUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveNewer = resolve
+    })
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(staleUpdate)
+    })
+    const stalePromise = waitForUpdate()
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(newerUpdate)
+    })
+    const newerPromise = waitForUpdate()
+
+    rejectStale(new Error('stale update failed'))
+    await expect(stalePromise).rejects.toThrow('stale update failed')
+    expect(waitForUpdate()).toBe(newerPromise)
+
+    const newerProvider = providerFixture('newer-provider')
+    resolveNewer([newerProvider])
+    await expect(newerPromise).resolves.toEqual([newerProvider])
+    expect(findProvider({ providerId: 'newer-provider' })?.id).toBe('newer-provider')
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)

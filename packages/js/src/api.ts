@@ -27,7 +27,7 @@ function setProviderData(data: ProviderDataPayload) {
     return
   }
   if (typeof data === 'object' && 'then' in data) {
-    providerDataPromise = data
+    const updatePromise = data
       .then((data) => {
         if (data === null) {
           return providerData
@@ -35,9 +35,12 @@ function setProviderData(data: ProviderDataPayload) {
         return activateProviderData(data)
       })
       .catch((error: unknown) => {
-        providerDataPromise = Promise.resolve(providerData)
+        if (providerDataPromise === updatePromise) {
+          providerDataPromise = Promise.resolve(providerData)
+        }
         throw error
       })
+    providerDataPromise = updatePromise
   } else {
     providerDataPromise = Promise.resolve(activateProviderData(data))
   }
