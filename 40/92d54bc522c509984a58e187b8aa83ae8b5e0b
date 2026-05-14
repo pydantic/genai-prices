@@ -1,0 +1,29 @@
+packages/python/genai_prices/update_prices.py
+  s_5fb465e046afde::t_d2f235d6e4aaa1 176-177
+specs/data-driven-unit-registry/phase-3-shared-data-contract/spec.md
+  s_5fb465e046afde::t_d2f235d6e4aaa1 26-29
+specs/data-driven-unit-registry/spec.md
+  s_5fb465e046afde::t_d2f235d6e4aaa1 93-99
+prices/src/prices/export_validation.py
+  s_5fb465e046afde::t_4215658d131674 62-63
+packages/js/src/api.ts
+  s_5fb465e046afde::t_d2f235d6e4aaa1 54-55
+specs/data-driven-unit-registry/phase-3-shared-data-contract/code-spec.md
+  s_5fb465e046afde::t_d2f235d6e4aaa1 95,121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "4092d54bc522c509984a58e187b8aa83ae8b5e0b",
+  "prompts": {},
+  "sessions": {
+    "s_5fb465e046afde": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e2237-9992-7363-9f5f-84cd0bd04046",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
