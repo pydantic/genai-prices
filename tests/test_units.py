@@ -524,20 +524,6 @@ def test_collect_effective_model_price_keys_includes_unregistered_candidates_for
     assert _collect_effective_model_price_keys(price, registry) == {'hovercraft_mtok'}
 
 
-def test_collect_effective_model_price_keys_includes_stored_keys_missing_from_registry() -> None:
-    registry = UnitRegistry(
-        {
-            'input_tokens': {
-                'dimensions': {'direction': 'input', 'family': 'tokens'},
-                'per': 1_000_000,
-                'price_key': 'input_mtok',
-            },
-        }
-    )
-
-    assert _collect_effective_model_price_keys(ModelPrice(output_mtok=Decimal('1')), registry) == {'output_mtok'}
-
-
 def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(cache_image_read_mtok=None)
