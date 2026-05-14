@@ -842,11 +842,14 @@ def _model_price_mapping_from_constructor(data: Any) -> dict[str, Decimal | Tier
         return {}
     if not isinstance(data, Mapping):
         raise TypeError('_extra_prices must be a mapping')
-    return dict(cast(Mapping[str, Decimal | TieredPrices | None], data))
+    return dict(cast(Mapping[str, Union[Decimal, TieredPrices, None]], data))
 
 
 def _validate_model_price_data(data: Mapping[str, Any]) -> dict[str, Decimal | TieredPrices | None]:
-    prices = _model_price_mapping_from_constructor(data.get('_extra_prices'))
+    prices = {
+        key: _validate_model_price_value(value)
+        for key, value in _model_price_mapping_from_constructor(data.get('_extra_prices')).items()
+    }
     for key, value in data.items():
         if key != '_extra_prices':
             prices[key] = _validate_model_price_value(value)
