@@ -1,0 +1,19 @@
+tests/test_google_extractors.py
+  s_f81d81968d0b85::t_448ffc81e55af6 48-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "a90aed3d9f4d2410ac3e2b7fff44c3676765741c",
+  "prompts": {},
+  "sessions": {
+    "s_f81d81968d0b85": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e2203-a536-7953-be24-3a76ed200eaa",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
