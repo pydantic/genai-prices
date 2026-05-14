@@ -950,42 +950,7 @@ def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegi
 
 
 def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[UnitDef]:
-    units = (unit for unit in registry.units.values() if getattr(model_price, unit.price_key) is not None)
-    yield from sorted(units, key=_model_price_unit_sort_key)
-
-
-def _model_price_unit_sort_key(unit: UnitDef) -> tuple[int, int, str, int, int, tuple[tuple[str, str], ...], str]:
-    dimensions = unit.dimensions
-    family_rank = 1 if dimensions.get('family') == 'requests' else 0
-    modality = dimensions.get('modality')
-    modality_rank = 0 if modality is None else 1
-    direction = dimensions.get('direction')
-    if direction == 'input':
-        direction_rank = 0
-    elif direction == 'output':
-        direction_rank = 1
-    else:
-        direction_rank = 2
-    cache = dimensions.get('cache')
-    if cache is None:
-        cache_rank = 0
-    elif cache == 'write':
-        cache_rank = 1
-    elif cache == 'read':
-        cache_rank = 2
-    else:
-        cache_rank = 3
-    handled_dimensions = {'family', 'modality', 'direction', 'cache'}
-    other_dimensions = tuple(sorted((key, value) for key, value in dimensions.items() if key not in handled_dimensions))
-    return (
-        family_rank,
-        modality_rank,
-        modality or '',
-        direction_rank,
-        cache_rank,
-        other_dimensions,
-        unit.usage_key,
-    )
+    yield from (unit for unit in registry.units.values() if getattr(model_price, unit.price_key) is not None)
 
 
 @dataclass
