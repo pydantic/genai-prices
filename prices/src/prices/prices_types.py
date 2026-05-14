@@ -15,10 +15,10 @@ from pydantic import (
     PlainSerializer,
     Tag,
     TypeAdapter,
+    ValidationInfo,
     WithJsonSchema,
     field_validator,
 )
-from pydantic_core.core_schema import FieldValidationInfo
 from typing_extensions import Literal
 
 from .utils import check_unique
@@ -201,7 +201,7 @@ class ModelInfo(_Model):
 
     @field_validator('prices_checked', mode='after')
     @classmethod
-    def validate_prices_checked(cls, prices_checked: date | None, info: FieldValidationInfo) -> date | None:
+    def validate_prices_checked(cls, prices_checked: date | None, info: ValidationInfo) -> date | None:
         if prices_checked is not None and info.data.get('price_discrepancies'):
             raise ValueError('`price_discrepancies` should be removed when `prices_checked` is set')
         return prices_checked
