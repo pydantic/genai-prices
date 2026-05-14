@@ -492,7 +492,7 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
         )
 
 
-def test_collect_effective_model_price_keys_reads_base_fields() -> None:
+def test_collect_effective_model_price_keys_reads_base_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
     assert _collect_effective_model_price_keys(
@@ -508,7 +508,7 @@ def test_collect_effective_model_price_keys_ignores_none_values() -> None:
     }
 
 
-def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
+def test_collect_effective_model_price_keys_reads_registered_dynamic_keys() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(
         cache_image_read_mtok=Decimal('0.5'),
@@ -517,14 +517,14 @@ def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
     assert _collect_effective_model_price_keys(price, registry) == {'cache_image_read_mtok'}
 
 
-def test_collect_effective_model_price_keys_includes_unregistered_extras_for_validation() -> None:
+def test_collect_effective_model_price_keys_includes_unregistered_candidates_for_validation() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(hovercraft_mtok=Decimal('1'))
 
     assert _collect_effective_model_price_keys(price, registry) == {'hovercraft_mtok'}
 
 
-def test_collect_effective_model_price_keys_includes_builtin_fields_missing_from_registry() -> None:
+def test_collect_effective_model_price_keys_includes_stored_keys_missing_from_registry() -> None:
     registry = UnitRegistry(
         {
             'input_tokens': {
@@ -538,7 +538,7 @@ def test_collect_effective_model_price_keys_includes_builtin_fields_missing_from
     assert _collect_effective_model_price_keys(ModelPrice(output_mtok=Decimal('1')), registry) == {'output_mtok'}
 
 
-def test_collect_effective_model_price_keys_ignores_none_dynamic_extras() -> None:
+def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(cache_image_read_mtok=None)
 
@@ -558,18 +558,21 @@ def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
-def test_model_price_subclass_declared_custom_fields_stay_out_of_extra_prices() -> None:
+def test_model_price_subclass_declared_custom_fields_are_not_price_keys() -> None:
+    registry = UnitRegistry(load_units())
+
     @dataclass
     class CustomModelPrice(ModelPrice):
         sausage_price: Decimal | None = None
 
     price = CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('3'))
 
+    assert price.input_mtok == Decimal('1')
     assert price.sausage_price == Decimal('3')
-    assert price._extra_prices == {}
+    assert _collect_effective_model_price_keys(price, registry) == {'input_mtok'}
 
 
-def test_model_price_subclass_declared_registered_fields_stay_out_of_extra_prices() -> None:
+def test_model_price_subclass_declared_registered_fields_are_price_keys() -> None:
     registry = _custom_price_key_registry()
 
     @dataclass
@@ -581,7 +584,6 @@ def test_model_price_subclass_declared_registered_fields_stay_out_of_extra_price
 
     assert price.sausage_mtok == Decimal('2')
     assert price.sausage_price == Decimal('3')
-    assert price._extra_prices == {}
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
@@ -600,7 +602,7 @@ def test_model_price_dataclass_subclass_accepts_undeclared_registered_dynamic_kw
 
     assert price.input_mtok == Decimal('1')
     assert price.sausage_price == Decimal('3')
-    assert price._extra_prices == {'sausage_mtok': Decimal('2')}
+    assert price.sausage_mtok == Decimal('2')
     assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
@@ -1033,22 +1035,16 @@ def test_build_model_price_accepts_typed_extra_price_keys() -> None:
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
 
 
-def test_package_data_collects_runtime_model_price_extra_keys() -> None:
+def test_package_data_collects_runtime_candidate_price_keys() -> None:
     price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
 
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
 
 
-def test_runtime_model_price_repr_preserves_dynamic_extra_keys() -> None:
+def test_runtime_model_price_repr_preserves_dynamic_price_keys() -> None:
     price = ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))
 
     assert repr(price) == "ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))"
-
-
-def test_runtime_model_price_schema_omits_internal_extra_storage() -> None:
-    schema = data.providers_schema.json_schema()
-
-    assert '_extra_prices' not in schema['$defs']['ModelPrice']['properties']
 
 
 def test_build_model_price_extras_affect_is_free() -> None:

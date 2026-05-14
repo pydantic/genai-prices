@@ -704,59 +704,20 @@ class ModelPriceMeta(type):
 class ModelPrice(metaclass=ModelPriceMeta):
     """Set of prices for using a model"""
 
-    input_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million uncached text input/prompt token"""
-
-    cache_write_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million tokens written to the cache"""
-    cache_read_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million tokens read from the cache"""
-
-    output_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million output/completion tokens"""
-
-    input_audio_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million audio input tokens"""
-    cache_audio_read_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million audio tokens read from the cache"""
-    output_audio_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million output audio tokens"""
-
-    requests_kcount: Decimal | None = None
-    """price in USD per thousand requests"""
-
+    # The active registry is the price-key list; legacy keys and future keys use
+    # the same internal storage so dataclass introspection is not misleading.
     _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
         default_factory=dict, repr=False, compare=False
     )
 
-    def __init__(
-        self,
-        input_mtok: Decimal | TieredPrices | None = None,
-        cache_write_mtok: Decimal | TieredPrices | None = None,
-        cache_read_mtok: Decimal | TieredPrices | None = None,
-        output_mtok: Decimal | TieredPrices | None = None,
-        input_audio_mtok: Decimal | TieredPrices | None = None,
-        cache_audio_read_mtok: Decimal | TieredPrices | None = None,
-        output_audio_mtok: Decimal | TieredPrices | None = None,
-        requests_kcount: Decimal | None = None,
-        **extra_prices: Decimal | TieredPrices | None,
-    ) -> None:
-        object.__setattr__(self, 'input_mtok', input_mtok)
-        object.__setattr__(self, 'cache_write_mtok', cache_write_mtok)
-        object.__setattr__(self, 'cache_read_mtok', cache_read_mtok)
-        object.__setattr__(self, 'output_mtok', output_mtok)
-        object.__setattr__(self, 'input_audio_mtok', input_audio_mtok)
-        object.__setattr__(self, 'cache_audio_read_mtok', cache_audio_read_mtok)
-        object.__setattr__(self, 'output_audio_mtok', output_audio_mtok)
-        object.__setattr__(self, 'requests_kcount', requests_kcount)
-
-        raw_stored_prices = cast(Any, extra_prices).pop('_extra_prices', None)
+    def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
+        raw_stored_prices = cast(Any, prices).pop('_extra_prices', None)
         dynamic_prices: dict[str, Decimal | TieredPrices | None] = {}
         if raw_stored_prices is not None:
             if not isinstance(raw_stored_prices, Mapping):
                 raise TypeError('_extra_prices must be a mapping')
             dynamic_prices.update(cast(Mapping[str, Decimal | TieredPrices | None], raw_stored_prices))
-        dynamic_prices.update(extra_prices)
+        dynamic_prices.update(prices)
         object.__setattr__(self, '_extra_prices', dynamic_prices)
 
     @pydantic.model_validator(mode='before')
@@ -961,9 +922,7 @@ def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegis
 
 
 def _collect_model_price_units(model_price: ModelPrice, registry: UnitRegistry) -> tuple[UnitDef, ...]:
-    return tuple(
-        registry.unit_for_price_key(price_key) for price_key in _iter_effective_model_price_keys(model_price, registry)
-    )
+    return tuple(_iter_priced_registered_units(model_price, registry))
 
 
 def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usage) -> dict[str, int]:
@@ -981,23 +940,52 @@ def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usag
 
 def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
     yielded_price_keys: set[str] = set()
-    for field in dataclasses.fields(ModelPrice):
-        if field.name == '_extra_prices':
-            continue
-        if getattr(model_price, field.name) is not None:
-            yielded_price_keys.add(field.name)
-            yield field.name
-
-    for price_key in registry._units_by_price_key:  # pyright: ignore[reportPrivateUsage]
-        if price_key in yielded_price_keys:
-            continue
-        if getattr(model_price, price_key) is not None:
-            yielded_price_keys.add(price_key)
-            yield price_key
+    for unit in _iter_priced_registered_units(model_price, registry):
+        yielded_price_keys.add(unit.price_key)
+        yield unit.price_key
 
     for price_key, value in model_price._extra_prices.items():  # pyright: ignore[reportPrivateUsage]
         if value is not None and price_key not in yielded_price_keys:
             yield price_key
+
+
+def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[UnitDef]:
+    units = (unit for unit in registry.units.values() if getattr(model_price, unit.price_key) is not None)
+    yield from sorted(units, key=_model_price_unit_sort_key)
+
+
+def _model_price_unit_sort_key(unit: UnitDef) -> tuple[int, int, str, int, int, tuple[tuple[str, str], ...], str]:
+    dimensions = unit.dimensions
+    family_rank = 1 if dimensions.get('family') == 'requests' else 0
+    modality = dimensions.get('modality')
+    modality_rank = 0 if modality is None else 1
+    direction = dimensions.get('direction')
+    if direction == 'input':
+        direction_rank = 0
+    elif direction == 'output':
+        direction_rank = 1
+    else:
+        direction_rank = 2
+    cache = dimensions.get('cache')
+    if cache is None:
+        cache_rank = 0
+    elif cache == 'write':
+        cache_rank = 1
+    elif cache == 'read':
+        cache_rank = 2
+    else:
+        cache_rank = 3
+    handled_dimensions = {'family', 'modality', 'direction', 'cache'}
+    other_dimensions = tuple(sorted((key, value) for key, value in dimensions.items() if key not in handled_dimensions))
+    return (
+        family_rank,
+        modality_rank,
+        modality or '',
+        direction_rank,
+        cache_rank,
+        other_dimensions,
+        unit.usage_key,
+    )
 
 
 @dataclass

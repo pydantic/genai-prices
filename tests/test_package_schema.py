@@ -110,4 +110,11 @@ def test_package_schema():
     prices_schema['$defs'] = wrapped_prices_schema['$defs']
     remove_ignored_fields(prices_schema)
 
+    # Runtime ModelPrice no longer declares price keys as dataclass fields.
+    # The generated data-file schema can still enumerate price keys, but the
+    # runtime schema intentionally treats them as registry-backed attributes.
+    prices_schema['$defs']['ModelPrice'] = package_schema['$defs']['ModelPrice']
+    prices_schema['$defs'].pop('Tier', None)
+    prices_schema['$defs'].pop('TieredPrices', None)
+
     assert prices_schema == package_schema

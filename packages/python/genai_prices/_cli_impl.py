@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import dataclasses
 import difflib
 import hashlib
 import sys
@@ -30,7 +29,13 @@ from rich.text import Text
 from rich_argparse import RichHelpFormatter
 
 from . import Usage, __version__, calc_price, update_prices
-from .types import ModelPrice, PriceCalculation, Provider, TieredPrices
+from .types import (
+    ModelPrice,
+    PriceCalculation,
+    Provider,
+    TieredPrices,
+    _iter_priced_registered_units,  # pyright: ignore[reportPrivateUsage]
+)
 from .units import UnitDef
 
 PROGRAM_NAME = 'genai-prices'
@@ -671,26 +676,7 @@ def _iter_model_price_units(model_price: ModelPrice) -> list[UnitDef]:
     from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
     registry = _get_registry()
-    units: list[UnitDef] = []
-    seen_price_keys: set[str] = set()
-    for field in dataclasses.fields(model_price):
-        if field.name == '_extra_prices' or getattr(model_price, field.name) is None:
-            continue
-        try:
-            unit = registry.unit_for_price_key(field.name)
-        except KeyError:
-            continue
-
-        units.append(unit)
-        seen_price_keys.add(unit.price_key)
-
-    for unit in registry.units.values():
-        if unit.price_key in seen_price_keys or getattr(model_price, unit.price_key) is None:
-            continue
-        units.append(unit)
-        seen_price_keys.add(unit.price_key)
-
-    return units
+    return list(_iter_priced_registered_units(model_price, registry))
 
 
 def _format_model_price_line(value: object, unit: UnitDef) -> str:

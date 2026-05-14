@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import dataclasses
 import io
 from collections.abc import Callable
 from datetime import datetime, timezone
@@ -46,7 +45,8 @@ def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str
 
 
 def _has_tiered_prices(model_price: ModelPrice) -> bool:
-    return any(isinstance(getattr(model_price, field.name), TieredPrices) for field in dataclasses.fields(model_price))
+    fields = _collect_model_price_fields([_price_calculation(model_price)])
+    return any(isinstance(getattr(model_price, field_name), TieredPrices) for field_name in fields)
 
 
 def _price_calculation(model_price: ModelPrice) -> PriceCalculation:

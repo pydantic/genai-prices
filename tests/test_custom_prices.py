@@ -195,14 +195,13 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     assert price.total_price == Decimal('7')
 
 
-def test_base_model_price_stores_dynamic_price_kwargs() -> None:
+def test_base_model_price_accepts_registry_price_kwargs() -> None:
     price = types.ModelPrice(
         input_mtok=Decimal('1'),
         cache_image_read_mtok=Decimal('0.5'),
     )
 
     assert price.input_mtok == Decimal('1')
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
     assert price.cache_image_read_mtok == Decimal('0.5')
 
 
@@ -231,7 +230,7 @@ def test_provider_parsing_preserves_dynamic_model_price_keys() -> None:
 
     price = providers[0].models[0].prices
     assert isinstance(price, types.ModelPrice)
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.input_mtok == Decimal('1')
     assert price.cache_image_read_mtok == Decimal('0.5')
 
 
@@ -239,11 +238,9 @@ def test_dynamic_model_price_assignment_and_deletion() -> None:
     price = types.ModelPrice()
 
     price.cache_image_read_mtok = Decimal('0.5')
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
     assert price.cache_image_read_mtok == Decimal('0.5')
 
     del price.cache_image_read_mtok
-    assert price._extra_prices == {}
     assert price.cache_image_read_mtok is None
 
 
@@ -268,5 +265,4 @@ def test_custom_model_price_constructor_accepts_undeclared_dynamic_keys() -> Non
 
     assert price.input_mtok == Decimal('1')
     assert price.sausage_price == Decimal('3')
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
     assert price.cache_image_read_mtok == Decimal('0.5')
