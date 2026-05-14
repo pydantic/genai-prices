@@ -9,6 +9,7 @@ from annotated_types import Gt, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
+    ConfigDict,
     Discriminator,
     Field,
     HttpUrl,
@@ -121,23 +122,12 @@ class Provider(_Model):
         self.models[:] = [model for model in self.models if not model.is_free()]
 
 
-UsageField = Literal[
-    'input_tokens',
-    'cache_write_tokens',
-    'cache_read_tokens',
-    'output_tokens',
-    'input_audio_tokens',
-    'cache_audio_read_tokens',
-    'output_audio_tokens',
-]
-
-
 class UsageExtractorMapping(_Model):
     """Mappings from used to build usage."""
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField
+    dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -238,6 +228,10 @@ DollarPrice = Annotated[
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
+    model_config = ConfigDict(extra='allow')
+
+    __pydantic_extra__: dict[str, DollarPrice | TieredPrices] = Field(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
+
     input_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million uncached text input/prompt token"""
 
@@ -263,6 +257,9 @@ class ModelPrice(_Model):
         """Whether all values are zero or unset"""
         for field_name in self.__pydantic_fields__:
             if getattr(self, field_name):
+                return False
+        for value in (self.model_extra or {}).values():
+            if value is not None:
                 return False
         return True
 

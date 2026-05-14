@@ -2,14 +2,20 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
+from pydantic.annotated_handlers import GetJsonSchemaHandler
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import core_schema
 from typing_extensions import TypedDict, TypeGuard
+
+if TYPE_CHECKING:
+    from genai_prices.units import UnitDef, UnitRegistry
 
 __all__ = (
     'ProviderID',
@@ -188,82 +194,150 @@ class ExtractedUsage:
         return self + other
 
 
-class AbstractUsage(Protocol):
-    """Abstract definition of data about token usage for a single LLM call."""
-
-    @property
-    def input_tokens(self) -> int | None:
-        """Total number of input/prompt tokens.
-
-        Note this should INCLUDE both uncached and cached tokens.
-        """
-
-    @property
-    def cache_write_tokens(self) -> int | None:
-        """Number of tokens written to the cache."""
-
-    @property
-    def cache_read_tokens(self) -> int | None:
-        """Number of tokens read from the cache.
-
-        For many models this is described as just "cached tokens".
-        """
-
-    @property
-    def output_tokens(self) -> int | None:
-        """Number of output/completion tokens."""
-
-    @property
-    def input_audio_tokens(self) -> int | None:
-        """Number of audio input tokens."""
-
-    @property
-    def cache_audio_read_tokens(self) -> int | None:
-        """Number of audio tokens read from the cache."""
-
-    @property
-    def output_audio_tokens(self) -> int | None:
-        """Number of output audio tokens."""
+AbstractUsage = object
 
 
-@dataclass
 class Usage:
-    """Simple implementation of `AbstractUsage` as a dataclass."""
+    """Simple token usage container."""
 
-    input_tokens: int | None = None
-    """Number of input/prompt tokens."""
+    _values: dict[str, int]
 
-    cache_write_tokens: int | None = None
-    """Number of tokens written to the cache."""
-    cache_read_tokens: int | None = None
-    """Number of tokens read from the cache."""
+    def __init__(self, **kwargs: int | None) -> None:
+        object.__setattr__(self, '_values', {})
+        reported_usage_keys = _reported_usage_keys()
+        unknown_keys = kwargs.keys() - reported_usage_keys
+        if unknown_keys:
+            bad_keys = ', '.join(sorted(unknown_keys))
+            raise ValueError(f'Unknown usage key: {bad_keys}')
 
-    output_tokens: int | None = None
-    """Number of output/completion tokens."""
+        self._store_values(kwargs)
 
-    input_audio_tokens: int | None = None
-    """Number of audio input tokens."""
-    cache_audio_read_tokens: int | None = None
-    """Number of audio tokens read from the cache."""
-    output_audio_tokens: int | None = None
-    """Number of output audio tokens."""
+    @classmethod
+    def from_raw(cls, obj: object) -> Usage:
+        if isinstance(obj, Usage):
+            return obj
+
+        values: dict[str, int] = {}
+        for key in _reported_usage_keys():
+            value = _raw_usage_value(obj, key)
+            if value is not None:
+                values[key] = value
+
+        return cls(**values)
+
+    def __setattr__(self, name: str, value: int | None) -> None:
+        if name == '_values':
+            object.__setattr__(self, name, value)
+        elif name in _reported_usage_keys():
+            self._store_values({name: value})
+        else:
+            object.__setattr__(self, name, value)
+
+    def __getattr__(self, name: str) -> int:
+        if name in _reported_usage_keys():
+            if name in self._values:
+                return self._values[name]
+
+            return self._infer_missing_value(name)
+
+        raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+
+    def _store_values(self, values: Mapping[str, int | None]) -> None:
+        for key, value in values.items():
+            if value is None:
+                self._values.pop(key, None)
+            else:
+                self._values[key] = value
+
+    def reported_value(self, usage_key: str) -> int:
+        return self._values.get(usage_key, 0)
 
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
             return NotImplemented
 
-        def _add_option(a: int | None, b: int | None) -> int | None:
-            return None if a is b is None else (a or 0) + (b or 0)
-
         return Usage(
             **{
-                field.name: _add_option(getattr(self, field.name), getattr(other, field.name))
-                for field in dataclasses.fields(self)
+                key: self._values.get(key, 0) + other._values.get(key, 0)
+                for key in self._values.keys() | other._values.keys()
             }
         )
 
-    def __radd__(self, other: Usage) -> Usage:
-        return self + other
+    def __radd__(self, other: Usage | int) -> Usage:
+        if other == 0:
+            return self
+        if isinstance(other, Usage):
+            return other + self
+        return NotImplemented
+
+    def __eq__(self, other: object) -> Any:
+        if not isinstance(other, Usage):
+            return NotImplemented
+
+        return self._values == other._values
+
+    def __repr__(self) -> str:
+        values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
+        return f'Usage({values})'
+
+    def _ordered_values(self) -> list[tuple[str, int]]:
+        return [(key, self._values[key]) for key in _reported_usage_key_order() if key in self._values]
+
+    def _infer_missing_value(self, usage_key: str) -> int:
+        from genai_prices.decompose import is_descendant_or_self
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
+        requested_unit = registry.units[usage_key]
+        descendant_keys = [
+            unit.usage_key
+            for reported_key, value in self._values.items()
+            if value > 0
+            and (unit := registry.units.get(reported_key)) is not None
+            and unit is not requested_unit
+            and is_descendant_or_self(requested_unit, unit)
+        ]
+        if not descendant_keys:
+            overlapping_keys = _reported_overlap_keys_for_join(
+                requested_unit,
+                [
+                    unit
+                    for reported_key, value in self._values.items()
+                    if value > 0 and (unit := registry.units.get(reported_key)) is not None
+                ],
+            )
+            if not overlapping_keys:
+                return 0
+
+            reported_keys = ', '.join(overlapping_keys)
+            raise ValueError(
+                f'Missing usage for {usage_key}: reported overlapping usage keys {reported_keys} '
+                f'require explicit {usage_key}'
+            )
+
+        reported_keys = ', '.join(sorted(descendant_keys))
+        raise ValueError(
+            f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
+            f'require explicit {usage_key}'
+        )
+
+
+def _reported_overlap_keys_for_join(
+    requested_unit: UnitDef, reported_units: Sequence[UnitDef]
+) -> tuple[str, str] | None:
+    from genai_prices.decompose import is_descendant_or_self
+
+    sorted_units = sorted(reported_units, key=lambda unit: unit.usage_key)
+    for index, left in enumerate(sorted_units):
+        for right in sorted_units[index + 1 :]:
+            if not left.is_compatible_with(right):
+                continue
+            if is_descendant_or_self(left, right) or is_descendant_or_self(right, left):
+                continue
+            if requested_unit.dimensions == {**left.dimensions, **right.dimensions}:
+                return left.usage_key, right.usage_key
+
+    return None
 
 
 @dataclass
@@ -339,24 +413,13 @@ class Provider:
         return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
 
 
-UsageField = Literal[
-    'input_tokens',
-    'cache_write_tokens',
-    'cache_read_tokens',
-    'output_tokens',
-    'input_audio_tokens',
-    'cache_audio_read_tokens',
-    'output_audio_tokens',
-]
-
-
 @dataclass
 class UsageExtractorMapping:
     """Mappings from used to build usage."""
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField
+    dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -378,6 +441,9 @@ class UsageExtractor:
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
 
+    def __post_init__(self) -> None:
+        _validate_usage_extractor_destinations(self.mappings)
+
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
 
@@ -398,17 +464,25 @@ class UsageExtractor:
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
 
-        usage = Usage()
+        values: dict[str, int] = {}
         values_set = False
         for mapping in self.mappings:
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
-                current_value = getattr(usage, mapping.dest) or 0
-                setattr(usage, mapping.dest, current_value + value)
+                values[mapping.dest] = values.get(mapping.dest, 0) + value
                 values_set = True
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
-        return model_name, usage
+        return model_name, Usage(**values)
+
+
+def _validate_usage_extractor_destinations(mappings: Sequence[UsageExtractorMapping]) -> None:
+    from genai_prices.validation import validate_extractor_destinations
+
+    validate_extractor_destinations(
+        {mapping.dest for mapping in mappings},
+        _reported_usage_keys(),
+    )
 
 
 E = TypeVar('E')
@@ -507,6 +581,29 @@ def _dot_path(data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | 
 
 def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
+
+
+def _reported_usage_keys() -> frozenset[str]:
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    # Phase 5 should benchmark/cache this active-registry key set and the
+    # corresponding registry-order tuple once registry validation identities exist.
+    return _get_registry().reported_usage_keys()
+
+
+def _reported_usage_key_order() -> tuple[str, ...]:
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    reported_keys = registry.reported_usage_keys()
+    return tuple(key for key in registry.units if key in reported_keys)
+
+
+def _raw_usage_value(obj: object, key: str) -> int | None:
+    value = getattr(obj, key, None)
+    if value is None:
+        return None
+    return cast(int, value)
 
 
 @dataclass
@@ -608,124 +705,198 @@ class ModelPrice:
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
 
+    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
+        default_factory=dict, repr=False, compare=False
+    )
+
+    def __init__(
+        self,
+        input_mtok: Decimal | TieredPrices | None = None,
+        cache_write_mtok: Decimal | TieredPrices | None = None,
+        cache_read_mtok: Decimal | TieredPrices | None = None,
+        output_mtok: Decimal | TieredPrices | None = None,
+        input_audio_mtok: Decimal | TieredPrices | None = None,
+        cache_audio_read_mtok: Decimal | TieredPrices | None = None,
+        output_audio_mtok: Decimal | TieredPrices | None = None,
+        requests_kcount: Decimal | None = None,
+        **extra_prices: Decimal | TieredPrices | None,
+    ) -> None:
+        object.__setattr__(self, 'input_mtok', input_mtok)
+        object.__setattr__(self, 'cache_write_mtok', cache_write_mtok)
+        object.__setattr__(self, 'cache_read_mtok', cache_read_mtok)
+        object.__setattr__(self, 'output_mtok', output_mtok)
+        object.__setattr__(self, 'input_audio_mtok', input_audio_mtok)
+        object.__setattr__(self, 'cache_audio_read_mtok', cache_audio_read_mtok)
+        object.__setattr__(self, 'output_audio_mtok', output_audio_mtok)
+        object.__setattr__(self, 'requests_kcount', requests_kcount)
+
+        raw_stored_prices = cast(Any, extra_prices).pop('_extra_prices', None)
+        dynamic_prices: dict[str, Decimal | TieredPrices | None] = {}
+        if raw_stored_prices is not None:
+            if not isinstance(raw_stored_prices, Mapping):
+                raise TypeError('_extra_prices must be a mapping')
+            dynamic_prices.update(cast(Mapping[str, Decimal | TieredPrices | None], raw_stored_prices))
+        dynamic_prices.update(extra_prices)
+        object.__setattr__(self, '_extra_prices', dynamic_prices)
+
+    @pydantic.model_validator(mode='before')
+    @classmethod
+    def _store_unknown_price_keys(cls, data: Any) -> Any:
+        # providers_schema is a Pydantic TypeAdapter over stdlib dataclasses;
+        # Pydantic still invokes validators declared on those dataclasses.
+        if not isinstance(data, dict):
+            return data
+
+        raw_data = cast(dict[str, Any], data)
+        declared_fields = _model_price_declared_fields_for(cls)
+        extra_prices: dict[str, Any] = {key: value for key, value in raw_data.items() if key not in declared_fields}
+        if not extra_prices:
+            return raw_data
+
+        model_price_data = dict(raw_data)
+        stored_extra_prices = dict(cast(dict[str, Any], model_price_data.get('_extra_prices') or {}))
+        stored_extra_prices.update(extra_prices)
+        model_price_data['_extra_prices'] = stored_extra_prices
+        for key in extra_prices:
+            model_price_data.pop(key)
+        return model_price_data
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        json_schema = handler(schema)
+        json_schema = handler.resolve_ref_schema(json_schema)
+
+        properties = json_schema.get('properties')
+        if isinstance(properties, dict):
+            cast(dict[str, Any], properties).pop('_extra_prices', None)
+
+        required = json_schema.get('required')
+        if isinstance(required, list):
+            json_schema['required'] = [
+                field_name for field_name in cast(list[str], required) if field_name != '_extra_prices'
+            ]
+
+        return json_schema
+
+    def __repr__(self) -> str:
+        parts: list[str] = []
+        for field in dataclasses.fields(self):
+            if field.name == '_extra_prices':
+                continue
+            value = getattr(self, field.name)
+            if value is not None:
+                parts.append(f'{field.name}={value!r}')
+
+        if self._extra_prices:
+            parts.extend(f'{key}={value!r}' for key, value in self._extra_prices.items())
+
+        return f'{type(self).__name__}({", ".join(parts)})'
+
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+        from genai_prices.validation import validate_model_price
+
+        registry = _get_registry()
+        validate_model_price(_collect_effective_model_price_keys(self, registry), registry)
+
+        usage_data = Usage.from_raw(usage)
+        priced_units = _collect_model_price_units(self, registry)
+        priced_counts = _compute_registry_priced_counts(priced_units, usage_data)
+
         input_price = Decimal(0)
         output_price = Decimal(0)
+        total_price = Decimal(0)
+        # Reading input_tokens can trigger lazy inference errors; only do it when
+        # tiered pricing actually needs the threshold.
+        total_input_tokens = usage_data.input_tokens if _model_price_uses_tiered_prices(self, registry) else 0
 
-        # Calculate total input tokens for tier determination
-        total_input_tokens = usage.input_tokens or 0
-
-        cache_read_tokens = usage.cache_read_tokens or 0
-        cache_write_tokens = usage.cache_write_tokens or 0
-        cache_audio_read_tokens = usage.cache_audio_read_tokens or 0
-        input_audio_tokens = usage.input_audio_tokens or 0
-        output_audio_tokens = usage.output_audio_tokens or 0
-
-        # Provider usage fields can be inclusive parent/child buckets rather than disjoint buckets.
-        # For example, Google can report:
-        #
-        #   input_tokens=1_000
-        #   cache_read_tokens=400
-        #   input_audio_tokens=300
-        #   cache_audio_read_tokens=100
-        #
-        # The 100 cached audio tokens are included in all three ancestor buckets:
-        # input_tokens, cache_read_tokens, and input_audio_tokens. Pricing must charge
-        # each physical token once, using the most specific available priced bucket and
-        # falling back to a parent bucket only when the child bucket has no price.
-        #
-        # With all prices present, the disjoint priced buckets are:
-        #
-        #   input_mtok: 400 tokens
-        #   cache_read_mtok: 300 tokens
-        #   input_audio_mtok: 200 tokens
-        #   cache_audio_read_mtok: 100 tokens
-        #
-        # If cache_audio_read_mtok is missing but cache_read_mtok exists, cached audio
-        # falls back to cache_read_mtok. That keeps it out of input_audio_mtok so it is
-        # not double charged:
-        #
-        #   input_mtok: 400 tokens
-        #   cache_read_mtok: 400 tokens
-        #   input_audio_mtok: 200 tokens
-        #   cache_audio_read_mtok: 0 tokens
-        priced_cache_audio_read_tokens = cache_audio_read_tokens if self.cache_audio_read_mtok is not None else 0
-        cache_audio_read_tokens_priced_as_cache_read = (
-            cache_audio_read_tokens if self.cache_audio_read_mtok is None and self.cache_read_mtok is not None else 0
-        )
-
-        priced_audio_input_tokens = 0
-        if self.input_audio_mtok is not None:
-            priced_audio_input_tokens = (
-                input_audio_tokens - priced_cache_audio_read_tokens - cache_audio_read_tokens_priced_as_cache_read
+        for unit in priced_units:
+            unit_price = calc_unit_price(
+                getattr(self, unit.price_key),
+                priced_counts[unit.usage_key],
+                total_input_tokens,
+                unit.per,
             )
+            total_price += unit_price
 
-        if priced_audio_input_tokens < 0:
-            raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
-
-        priced_cache_read_tokens = 0
-        if self.cache_read_mtok is not None:
-            priced_cache_read_tokens = cache_read_tokens - priced_cache_audio_read_tokens
-
-        if priced_cache_read_tokens < 0:
-            raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-
-        priced_cache_write_tokens = cache_write_tokens if self.cache_write_mtok is not None else 0
-
-        priced_text_input_tokens = 0
-        if self.input_mtok is not None:
-            priced_text_input_tokens = (
-                total_input_tokens
-                - priced_cache_read_tokens
-                - priced_cache_write_tokens
-                - priced_audio_input_tokens
-                - priced_cache_audio_read_tokens
-            )
-
-        if priced_text_input_tokens < 0:
-            raise ValueError('Uncached text input tokens cannot be negative')
-
-        input_price += calc_mtok_price(self.input_mtok, priced_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_write_mtok, priced_cache_write_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_read_mtok, priced_cache_read_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.input_audio_mtok, priced_audio_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_audio_read_mtok, priced_cache_audio_read_tokens, total_input_tokens)
-
-        priced_text_output_tokens = 0
-        if self.output_mtok is not None:
-            priced_text_output_tokens = (usage.output_tokens or 0) - (
-                output_audio_tokens if self.output_audio_mtok is not None else 0
-            )
-
-        if priced_text_output_tokens < 0:
-            raise ValueError('output_audio_tokens cannot be greater than output_tokens')
-
-        output_price += calc_mtok_price(self.output_mtok, priced_text_output_tokens, total_input_tokens)
-        output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens, total_input_tokens)
-
-        total_price = input_price + output_price
-
-        if self.requests_kcount is not None:
-            total_price += self.requests_kcount / 1000
+            direction = unit.dimensions.get('direction')
+            if direction == 'input':
+                input_price += unit_price
+            elif direction == 'output':
+                output_price += unit_price
 
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
     def __str__(self) -> str:
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
         parts: list[str] = []
-        for field in dataclasses.fields(self):
-            value = getattr(self, field.name)
+        for price_key in _iter_effective_model_price_keys(self, registry):
+            value = getattr(self, price_key)
             if value is not None:
-                if field.name == 'requests_kcount':
+                if price_key == 'requests_kcount':
                     parts.append(f'${value} / K requests')
                 else:
-                    name = field.name.replace('_mtok', '').replace('_', ' ')
+                    name = price_key.replace('_mtok', '').replace('_', ' ')
                     if isinstance(value, TieredPrices):
                         parts.append(f'${value.base}/{name} MTok (+tiers)')
                     else:
                         parts.append(f'${value}/{name} MTok')
 
         return ', '.join(parts)
+
+    def is_free(self) -> bool:
+        declared_prices_are_free = all(
+            _price_value_is_free(getattr(self, field.name))
+            for field in dataclasses.fields(self)
+            if field.name != '_extra_prices'
+        )
+        return declared_prices_are_free and all(_price_value_is_free(value) for value in self._extra_prices.values())
+
+    def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
+        extra_prices = self.__dict__.get('_extra_prices', {})
+        if name in extra_prices:
+            return extra_prices[name]
+
+        if _is_registered_price_key(name):
+            return None
+
+        raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in _model_price_declared_fields_for(type(self)) or not _is_registered_price_key(name):
+            object.__setattr__(self, name, value)
+            return
+
+        self.__dict__.setdefault('_extra_prices', {})[name] = value
+
+    def __delattr__(self, name: str) -> None:
+        extra_prices = self.__dict__.get('_extra_prices', {})
+        if name in extra_prices:
+            del extra_prices[name]
+            return
+        if name not in _model_price_declared_fields_for(type(self)) and _is_registered_price_key(name):
+            raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
+        object.__delattr__(self, name)
+
+
+def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:
+    return frozenset(field.name for field in dataclasses.fields(model_price_type))
+
+
+def _is_registered_price_key(name: str) -> bool:
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        _get_registry().unit_for_price_key(name)
+    except KeyError:
+        return False
+    else:
+        return True
 
 
 def calc_mtok_price(
@@ -741,22 +912,86 @@ def calc_mtok_price(
         token_count: Number of tokens of this specific type to price
         total_input_tokens: Total input tokens for tier determination (used only for tiered pricing)
     """
-    if field_mtok is None or token_count is None:
+    return calc_unit_price(field_mtok, token_count, total_input_tokens, 1_000_000)
+
+
+def calc_unit_price(
+    price: Decimal | TieredPrices | None, count: int | None, total_input_tokens: int, per: int
+) -> Decimal:
+    """Calculate the price for a unit count normalized by the unit's ``per`` value."""
+    if price is None or count is None:
         return Decimal(0)
 
-    if isinstance(field_mtok, TieredPrices):
+    if isinstance(price, TieredPrices):
         # Threshold-based pricing: tier is determined by total_input_tokens
         # Find the highest tier that applies based on total input tokens
         # When total_input_tokens is 0, no tier condition is met, so base rate is used
-        applicable_price = field_mtok.base
-        for tier in reversed(field_mtok.tiers):
+        applicable_price = price.base
+        for tier in reversed(price.tiers):
             if total_input_tokens > tier.start:
                 applicable_price = tier.price
                 break
-        price = applicable_price * token_count
+        unit_price = applicable_price * count
     else:
-        price = field_mtok * token_count
-    return price / 1_000_000
+        unit_price = price * count
+    return unit_price / per
+
+
+def _price_value_is_free(value: object) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, TieredPrices):
+        return value.base == 0 and all(tier.price == 0 for tier in value.tiers)
+    if isinstance(value, Decimal):
+        return value == 0
+    return not value
+
+
+def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> set[str]:
+    return set(_iter_effective_model_price_keys(model_price, registry))
+
+
+def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegistry) -> bool:
+    return any(
+        isinstance(getattr(model_price, price_key), TieredPrices)
+        for price_key in _iter_effective_model_price_keys(model_price, registry)
+    )
+
+
+def _collect_model_price_units(model_price: ModelPrice, registry: UnitRegistry) -> tuple[UnitDef, ...]:
+    return tuple(
+        registry.unit_for_price_key(price_key) for price_key in _iter_effective_model_price_keys(model_price, registry)
+    )
+
+
+def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usage) -> dict[str, int]:
+    from genai_prices.decompose import compute_leaf_values
+
+    counts: dict[str, int] = {}
+    priced_units_by_usage_key = {unit.usage_key: unit for unit in priced_units if unit.usage_key != 'requests'}
+    if priced_units_by_usage_key:
+        counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key))
+    if any(unit.usage_key == 'requests' for unit in priced_units):
+        counts['requests'] = 1
+
+    return counts
+
+
+def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
+    for field in dataclasses.fields(model_price):
+        if field.name == '_extra_prices':
+            continue
+        try:
+            registry.unit_for_price_key(field.name)
+        except KeyError:
+            continue
+
+        if getattr(model_price, field.name) is not None:
+            yield field.name
+
+    for price_key, value in model_price._extra_prices.items():  # pyright: ignore[reportPrivateUsage]
+        if value is not None:
+            yield price_key
 
 
 @dataclass

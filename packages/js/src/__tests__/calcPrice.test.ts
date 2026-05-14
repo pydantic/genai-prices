@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { ModelPrice, Usage } from '../types'
 
 import { calcPrice } from '../engine'
+import { setActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
 
@@ -54,11 +55,9 @@ describe('Core Price Calculation Function', () => {
       const inputPrice = uncachedInputPrice + cacheWritePrice + cacheReadPrice
       const outputPrice = (500 * 2.0) / 1_000_000
       const totalPrice = inputPrice + outputPrice
-      expect(result).toMatchObject({
-        input_price: inputPrice,
-        output_price: outputPrice,
-        total_price: totalPrice,
-      })
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBeCloseTo(outputPrice, 12)
+      expect(result.total_price).toBeCloseTo(totalPrice, 12)
     })
 
     it('should handle audio tokens correctly', () => {
@@ -70,7 +69,9 @@ describe('Core Price Calculation Function', () => {
       }
       const modelPrice: ModelPrice = {
         input_audio_mtok: 10.0,
+        input_mtok: 1.0,
         output_audio_mtok: 20.0,
+        output_mtok: 2.0,
       }
 
       const result = calcPrice(usage, modelPrice)
@@ -113,6 +114,7 @@ describe('Core Price Calculation Function', () => {
         input_tokens: 1000,
       }
       const modelPrice: ModelPrice = {
+        cache_audio_read_mtok: 2.0,
         cache_read_mtok: 2.0,
         input_audio_mtok: 3.0,
         input_mtok: 1.0,
@@ -121,11 +123,9 @@ describe('Core Price Calculation Function', () => {
       const result = calcPrice(usage, modelPrice)
 
       const inputPrice = mtok(1.0, 400) + mtok(2.0, 400) + mtok(3.0, 200)
-      expect(result).toMatchObject({
-        input_price: inputPrice,
-        output_price: 0,
-        total_price: inputPrice,
-      })
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBe(0)
+      expect(result.total_price).toBeCloseTo(inputPrice, 12)
     })
 
     it('should use provided input tokens for output tier thresholds', () => {
@@ -171,6 +171,165 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should preserve mixed cache/audio/request public pricing parity', () => {
+      const result = calcPrice(
+        {
+          cache_audio_read_tokens: 100,
+          cache_read_tokens: 400,
+          input_audio_tokens: 300,
+          input_tokens: 1000,
+          output_audio_tokens: 20,
+          output_tokens: 70,
+        },
+        {
+          cache_audio_read_mtok: 2.0,
+          cache_read_mtok: 2.0,
+          input_audio_mtok: 3.0,
+          input_mtok: 1.0,
+          output_audio_mtok: 20.0,
+          output_mtok: 10.0,
+          requests_kcount: 0.5,
+        }
+      )
+
+      const inputPrice = mtok(1.0, 400) + mtok(2.0, 300) + mtok(3.0, 200) + mtok(2.0, 100)
+      const outputPrice = mtok(10.0, 50) + mtok(20.0, 20)
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBeCloseTo(outputPrice, 12)
+      expect(result.total_price).toBeCloseTo(inputPrice + outputPrice + 0.0005, 12)
+    })
+
+    it('should handle request-only pricing', () => {
+      const result = calcPrice({}, { requests_kcount: 0.5 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.0005,
+      })
+    })
+
+    it('should ignore caller-provided requests usage values', () => {
+      const result = calcPrice({ requests: 500 }, { requests_kcount: 0.5 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.0005,
+      })
+    })
+
+    it('should price custom active-registry usage from the original caller object', () => {
+      const registry = new UnitRegistry({
+        premium_widgets: {
+          dimensions: {
+            class: 'premium',
+            family: 'widgets',
+          },
+          per: 1,
+        },
+        widgets: {
+          dimensions: {
+            family: 'widgets',
+          },
+          per: 1,
+        },
+      })
+
+      try {
+        setActiveRegistry(registry)
+        const result = calcPrice(
+          {
+            ignored_telemetry_units: 999,
+            premium_widgets: 3,
+            widgets: 10,
+          },
+          {
+            premium_widgets: 10,
+            widgets: 2,
+          }
+        )
+
+        expect(result).toMatchObject({
+          input_price: 0,
+          output_price: 0,
+          total_price: 44,
+        })
+      } finally {
+        setActiveRegistry(null)
+      }
+    })
+
+    it('should reject missing ancestor prices before pricing', () => {
+      expect(() => calcPrice({ cache_read_tokens: 100 }, { cache_read_mtok: 0.1 })).toThrow(
+        'Missing ancestor price key input_mtok for cache_read_mtok'
+      )
+    })
+
+    it('should reject missing join prices before pricing', () => {
+      expect(() =>
+        calcPrice(
+          {
+            cache_read_tokens: 100,
+            input_audio_tokens: 100,
+            input_tokens: 200,
+          },
+          {
+            cache_read_mtok: 0.1,
+            input_audio_mtok: 10,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+    })
+
+    it('should reject explicit-only missing usage needed for pricing', () => {
+      expect(() =>
+        calcPrice(
+          {
+            input_audio_tokens: 100,
+          },
+          {
+            input_audio_mtok: 10,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Missing usage value for input_tokens with positive reported descendant input_audio_tokens')
+    })
+
+    it('should ignore unpriced contradictory descendants when parent-only pricing is sufficient', () => {
+      const result = calcPrice(
+        {
+          cache_read_tokens: 200,
+          input_tokens: 100,
+        },
+        {
+          input_mtok: 1,
+        }
+      )
+
+      expect(result).toMatchObject({
+        input_price: 0.0001,
+        output_price: 0,
+        total_price: 0.0001,
+      })
+    })
+
+    it('should reject contradictory usage when affected priced buckets are needed', () => {
+      expect(() =>
+        calcPrice(
+          {
+            cache_read_tokens: 200,
+            input_tokens: 100,
+          },
+          {
+            cache_read_mtok: 0.1,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Invalid usage data: cache_read_tokens (200) cannot exceed input_tokens (100)')
+    })
+
     it('should handle tiered pricing with threshold model', () => {
       const usage: Usage = {
         input_tokens: 150000, // 150k tokens
@@ -199,6 +358,12 @@ describe('Core Price Calculation Function', () => {
     })
 
     it.each([
+      {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+        modelPrice: {} as ModelPrice,
+        name: 'absent prices',
+        usage: { input_tokens: 1000, output_tokens: 500 } as Usage,
+      },
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
         modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,

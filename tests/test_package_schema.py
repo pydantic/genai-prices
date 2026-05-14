@@ -45,8 +45,12 @@ def test_package_schema():
     package_schema['$defs']['ClauseRegex']['properties']['regex']['format'] = 'regex'
 
     prices_schema_path = prices_package_dir / 'data.schema.json'
-    prices_schema = from_json(prices_schema_path.read_bytes())
+    wrapped_prices_schema = from_json(prices_schema_path.read_bytes())
+    assert wrapped_prices_schema['required'] == ['units', 'providers']
+    assert set(wrapped_prices_schema['properties']) == {'units', 'providers'}
 
+    prices_schema = wrapped_prices_schema['properties']['providers']
+    prices_schema['$defs'] = wrapped_prices_schema['$defs']
     remove_ignored_fields(prices_schema)
 
     assert prices_schema == package_schema

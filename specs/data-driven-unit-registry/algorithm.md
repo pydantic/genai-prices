@@ -87,7 +87,7 @@ that read-time zero is not stored as reported usage.
 
 ## Two-way example
 
-Priced: `input_tokens` (1 dimension, price key `input_mtok`), `cache_read_tokens` (2 dimensions, price key `cache_read_mtok`).
+Priced: `input_tokens` (2 dimensions, price key `input_mtok`), `cache_read_tokens` (3 dimensions, price key `cache_read_mtok`).
 
 ```
 leaf(input_tokens)      = usage(input_tokens) - usage(cache_read_tokens)
@@ -96,7 +96,7 @@ leaf(cache_read_tokens) = usage(cache_read_tokens)
 
 ## Three-way overlap
 
-Priced: `input_tokens` (1 dim), `cache_read_tokens` (2 dims), `input_audio_tokens` (2 dims), `cache_audio_read_tokens` (3 dims). Their price keys are `input_mtok`, `cache_read_mtok`, `input_audio_mtok`, and `cache_audio_read_mtok`.
+Priced: `input_tokens` (2 dims), `cache_read_tokens` (3 dims), `input_audio_tokens` (3 dims), `cache_audio_read_tokens` (4 dims). Their price keys are `input_mtok`, `cache_read_mtok`, `input_audio_mtok`, and `cache_audio_read_mtok`.
 
 ```
 leaf(input_tokens)            = input_tokens - cache_read_tokens - input_audio_tokens + cache_audio_read_tokens

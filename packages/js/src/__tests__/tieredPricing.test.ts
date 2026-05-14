@@ -107,6 +107,72 @@ describe('Threshold-based Tiered Pricing', () => {
     })
   })
 
+  describe('Registry usage-read threshold semantics', () => {
+    it('should use stored input_tokens for tier selection', () => {
+      const result = calcPrice(
+        {
+          input_tokens: 150000,
+          output_tokens: 10000,
+        },
+        {
+          output_mtok: {
+            base: 1.0,
+            tiers: [{ price: 2.0, start: 100000 }],
+          },
+        }
+      )
+
+      expect(result.output_price).toBe(0.02)
+    })
+
+    it('should use the base tier when input_tokens is safely missing', () => {
+      const result = calcPrice(
+        {
+          output_tokens: 10000,
+        },
+        {
+          output_mtok: {
+            base: 1.0,
+            tiers: [{ price: 2.0, start: 100000 }],
+          },
+        }
+      )
+
+      expect(result.output_price).toBe(0.01)
+    })
+
+    it('should reject ambiguous missing input_tokens for tiered prices', () => {
+      expect(() =>
+        calcPrice(
+          {
+            input_audio_tokens: 150000,
+            output_tokens: 10000,
+          },
+          {
+            output_mtok: {
+              base: 1.0,
+              tiers: [{ price: 2.0, start: 100000 }],
+            },
+          }
+        )
+      ).toThrow('Missing usage value for input_tokens with positive reported descendant input_audio_tokens')
+    })
+
+    it('should not read input_tokens for non-tiered output-only prices', () => {
+      const result = calcPrice(
+        {
+          input_audio_tokens: 150000,
+          output_tokens: 10000,
+        },
+        {
+          output_mtok: 1.0,
+        }
+      )
+
+      expect(result.output_price).toBe(0.01)
+    })
+  })
+
   describe('Comprehensive multi-tier pricing model', () => {
     /**
      * Mock multi-tier model with different tier structures for input vs output:

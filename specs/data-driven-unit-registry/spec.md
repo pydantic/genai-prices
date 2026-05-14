@@ -58,7 +58,7 @@ Dimension assignments define containment. A unit is an ancestor of another unit 
 There is no separate declaration of allowed dimension keys or values. Structural validation decides whether the resulting graph is usable. A stricter optional dimension schema can be added later if typo protection becomes worth the extra authoring surface.
 
 **Registry-aware pricing decomposes usage by dimensions.** _(from "Dimensions define specificity and overlap", "Every usage value must land in exactly one pricing bucket")_
-For each model, only units with prices participate in decomposition. The runtime computes each priced unit's exclusive usage value from the dimension graph, multiplies by the stored price and the unit's `per`, and aggregates costs. The shared behavior is detailed in [algorithm](algorithm.md) and [examples](examples.md).
+For each model, only units with prices participate in decomposition. The runtime computes each priced unit's exclusive usage value from the dimension graph, multiplies it by the stored price, divides by the unit's `per`, and aggregates costs. The shared behavior is detailed in [algorithm](algorithm.md) and [examples](examples.md).
 
 **Only priced units become buckets.** _(from "Registry-aware pricing decomposes usage by dimensions")_
 If a model does not price a more-specific reported unit, that reported value remains inside the nearest priced ancestor when an explicit ancestor is available. Descendant-only reports do not become implicit parent totals; pricing raises rather than guessing when a required priced ancestor or overlap is omitted.
@@ -91,7 +91,7 @@ The checked-in source for built-in units is `prices/units.yml`. Runtime packages
 Runtime code reads unit definitions from a process-global registry. Trusted remote update payloads can replace the global registry while the matching provider data is parsed or activated; failed provider parsing or activation restores the previous registry.
 
 **Validation is split by lifecycle boundary.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into indexed runtime objects")_
-Registry construction validates structural unit rules. Build/export validation validates provider model prices and extractor destinations before publishing generated data. Runtime fetches structurally parse and install trusted units, then parse provider data. Standard pricing validates the selected model price before use until Phase 5 adds safe runtime caches.
+Build/export validation validates structural unit rules, provider model prices, and extractor destinations before publishing generated data. Runtime registry construction parses and indexes trusted unit data; it does not repeat publication-time unit validation for bundled or fetched payloads. Runtime fetches install trusted units, then parse provider data. Standard pricing validates the selected model price before use until Phase 5 adds safe runtime caches.
 
 **ModelPrice construction stays context-free.** _(from "Validation is split by lifecycle boundary", "Manual custom pricing remains supported")_
 Constructing a `ModelPrice` does not validate price keys, ancestor coverage, or join coverage because construction can happen before the relevant global registry is installed. Candidate dynamic price keys are accepted into model-price storage and accepted or rejected later at build/export or one-model validation time.

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, expect, it } from 'vitest'
 
-import type { Provider } from '../types'
+import type { Provider, UsageExtractorMapping } from '../types'
 
 import { data } from '../data'
 import { extractUsage } from '../index'
@@ -220,6 +220,57 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('extractor normalization edge cases', () => {
+    it('should leave unrelated response fields absent after normalization', () => {
+      const provider = providerWithMappings([
+        {
+          dest: 'input_tokens',
+          path: 'input_tokens',
+          required: true,
+        },
+      ])
+
+      const { usage } = extractUsage(provider, {
+        model: 'test-model',
+        usage: {
+          input_tokens: 100,
+          unrelated_tokens: 900,
+        },
+      })
+
+      expect(usage).toEqual({ input_tokens: 100 })
+      expect(usage).not.toHaveProperty('unrelated_tokens')
+    })
+
+    it('should return contradictory registered values when directly reported', () => {
+      const provider = providerWithMappings([
+        {
+          dest: 'input_tokens',
+          path: 'input_tokens',
+          required: true,
+        },
+        {
+          dest: 'cache_read_tokens',
+          path: 'cache_read_tokens',
+          required: true,
+        },
+      ])
+
+      const { usage } = extractUsage(provider, {
+        model: 'test-model',
+        usage: {
+          cache_read_tokens: 200,
+          input_tokens: 100,
+        },
+      })
+
+      expect(usage).toEqual({
+        cache_read_tokens: 200,
+        input_tokens: 100,
+      })
+    })
+  })
+
   describe('Google provider', () => {
     const googleProvider: Provider = data.find((provider) => provider.id === 'google')!
 
@@ -243,7 +294,9 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
+        input_text_tokens: 75,
         input_tokens: 100,
+        output_text_tokens: 162,
         output_tokens: 162,
       })
     })
@@ -275,9 +328,45 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         cache_audio_read_tokens: 129,
         cache_read_tokens: 12239,
+        cache_text_read_tokens: 12110,
         input_audio_tokens: 150,
+        input_text_tokens: 14002,
         input_tokens: 14152,
+        output_text_tokens: 119,
         output_tokens: 119,
+      })
+    })
+
+    it('should use tool-use prompt modality details for input modalities', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          candidatesTokenCount: 3,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+          promptTokenCount: 10,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+          thoughtsTokenCount: 4,
+          toolUsePromptTokenCount: 25,
+          toolUsePromptTokensDetails: [
+            { modality: 'TEXT', tokenCount: 10 },
+            { modality: 'AUDIO', tokenCount: 5 },
+            { modality: 'IMAGE', tokenCount: 7 },
+            { modality: 'DOCUMENT', tokenCount: 2 },
+            { modality: 'VIDEO', tokenCount: 3 },
+          ],
+        },
+      }
+      const { model, usage } = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_audio_tokens: 5,
+        input_image_tokens: 9,
+        input_text_tokens: 20,
+        input_tokens: 35,
+        input_video_tokens: 3,
+        output_text_tokens: 7,
+        output_tokens: 7,
       })
     })
   })
@@ -297,3 +386,20 @@ describe('extractUsage', () => {
     })
   })
 })
+
+function providerWithMappings(mappings: UsageExtractorMapping[]): Provider {
+  return {
+    api_pattern: 'x',
+    extractors: [
+      {
+        api_flavor: 'default',
+        mappings,
+        model_path: 'model',
+        root: 'usage',
+      },
+    ],
+    id: 'test-provider',
+    models: [],
+    name: 'Test',
+  }
+}
