@@ -1,0 +1,19 @@
+prices/providers/google.yml
+  s_f81d81968d0b85::t_5676b4609e704b 176,185,194,203,212,221,683-684,689,691-692
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "145455c7edf9d55c86b93521c680a301c9e813af",
+  "prompts": {},
+  "sessions": {
+    "s_f81d81968d0b85": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e2203-a536-7953-be24-3a76ed200eaa",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
