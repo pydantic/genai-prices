@@ -222,10 +222,11 @@ gemini_response_data = {
     'usageMetadata': {
         'promptTokenCount': 75,
         'candidatesTokenCount': 18,
-        'totalTokenCount': 237,
+        'totalTokenCount': 262,
         'trafficType': 'ON_DEMAND',
         'promptTokensDetails': [{'modality': 'TEXT', 'tokenCount': 75}],
         'candidatesTokensDetails': [{'modality': 'TEXT', 'tokenCount': 18}],
+        'toolUsePromptTokenCount': 25,
         'thoughtsTokenCount': 144,
     },
     'modelVersion': 'gemini-2.5-flash',
@@ -239,7 +240,7 @@ assert google_provider.extractors is not None
 
 def test_google():
     usage = google_provider.extract_usage(gemini_response_data)
-    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=75, output_tokens=162)))
+    assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=100, output_tokens=162)))
 
 
 gemini_response_data_caching = {
@@ -416,7 +417,7 @@ def test_extractor_stores_registered_contradictions_until_pricing_interprets_the
 
 def test_accumulate_extracted_usage():
     extracted = extract_usage(gemini_response_data, provider_id='google')
-    assert extracted.usage == Usage(input_tokens=75, output_tokens=162)
+    assert extracted.usage == Usage(input_tokens=100, output_tokens=162)
     with pytest.raises(TypeError):
         _ = extracted + 1
     with pytest.raises(TypeError):
@@ -426,7 +427,7 @@ def test_accumulate_extracted_usage():
     with pytest.raises(ValueError):
         _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
     double_extracted = extracted + extracted
-    assert double_extracted.usage == Usage(input_tokens=75 * 2, output_tokens=162 * 2)
+    assert double_extracted.usage == Usage(input_tokens=100 * 2, output_tokens=162 * 2)
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20
     )

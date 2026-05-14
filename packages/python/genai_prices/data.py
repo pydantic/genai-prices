@@ -1639,7 +1639,7 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
-                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tokens', required=False),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',
@@ -2012,12 +2012,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
-                id='gemini-3.1-flash-lite-preview',
-                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite-preview'),
-                name='Gemini 3.1 Flash Lite Preview',
+                id='gemini-3.1-flash-lite',
+                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite'),
+                name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
@@ -5594,6 +5594,25 @@ providers: list[Provider] = [
                 description='Version of GPT-5.2 that produces smarter and more precise responses.',
                 context_window=400000,
                 prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
+            ),
+            ModelInfo(
+                id='gpt-5.3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.3'),
+                        ClauseEquals(equals='gpt-5-3'),
+                        ClauseEquals(equals='gpt-5.3-chat'),
+                        ClauseEquals(equals='gpt-5.3-chat-latest'),
+                        ClauseEquals(equals='gpt-5-3-chat'),
+                        ClauseEquals(equals='gpt-5-3-chat-latest'),
+                    ]
+                ),
+                name='GPT-5.3 Chat',
+                description='GPT-5.3 Instant model used in ChatGPT',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                ),
             ),
             ModelInfo(
                 id='gpt-5.3-codex',

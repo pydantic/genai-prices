@@ -110,11 +110,12 @@ class UpdatePrices:
         global _global_update_prices
 
         _global_update_prices = None
-        data_snapshot.set_custom_snapshot(None)
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
+        # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
+        data_snapshot.set_custom_snapshot(None)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None

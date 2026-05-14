@@ -234,7 +234,8 @@ describe('extractUsage', () => {
           promptTokenCount: 75,
           promptTokensDetails: [{ modality: 'TEXT', tokenCount: 75 }],
           thoughtsTokenCount: 144,
-          totalTokenCount: 237,
+          toolUsePromptTokenCount: 25,
+          totalTokenCount: 262,
           trafficType: 'ON_DEMAND',
         },
       }
@@ -242,7 +243,7 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
-        input_tokens: 75,
+        input_tokens: 100,
         output_tokens: 162,
       })
     })
