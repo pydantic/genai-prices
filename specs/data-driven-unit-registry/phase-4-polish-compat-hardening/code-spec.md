@@ -13,10 +13,14 @@ Keep the authoring schema aligned with the built-in naming patterns in the regis
 
 Add repo data regression tests that walk units whose `dimensions.family` value is `tokens` in `prices/units.yml` and assert that token usage keys, price keys, non-cached modality names, and cached modality names follow the documented built-in conventions. Keep these tests scoped to repo-authored built-in token data; production registry validation must not enforce token-specific semantic naming rules for arbitrary family dimension values.
 
-**Add Python dataclass-subclass dynamic price-key constructor support.** _(implements "Python dataclass subclasses can accept undeclared registered dynamic price-key kwargs")_
-Introduce constructor interception around `ModelPrice` subclasses, for example with `ModelPriceMeta`, so undeclared candidate dynamic price-key kwargs are split before a generated dataclass subclass `__init__` receives them. The normal subclass constructor receives declared subclass fields. Captured dynamic price keys are stored in base `_extra_prices` and validated later against the active global registry.
+**Simplify Python `ModelPrice` runtime storage and parsing.** _(implements "Python `ModelPrice` uses one direct runtime storage model", "Runtime provider parsing is an internal normalization step")_
+Make runtime `ModelPrice` a plain class that accepts arbitrary `**price_kwargs` and stores them directly as public instance attributes. Do not use a metaclass, stdlib dataclass fields, Pydantic core-schema customization, or a hidden `_extra_prices` mapping for price storage.
 
-Preserve existing behavior for declared custom subclass fields such as `sausage_price`: they remain subclass-owned custom state unless the registry also declares them as price keys.
+Keep `__getattr__` for absent registered price keys so existing reads such as `model_price.input_mtok` still return `None` when the active registry knows the key and no value is stored. Normal Python attribute assignment and deletion do not need custom runtime hooks.
+
+Runtime raw-provider parsing should be explicit and internal. Replace runtime `providers_schema` use with a helper that recursively normalizes provider payloads, converts each price mapping into a `ModelPrice` after validating `dict[str, Decimal | TieredPrices | None]`, and then validates the surrounding provider dataclasses with Pydantic using `arbitrary_types_allowed=True`. `UpdatePrices.fetch()` and package-data generation use that helper; build-time provider YAML schema generation continues to use the build-time Pydantic models.
+
+Custom `ModelPrice` subclasses remain supported for overriding `calc_price()` and owning custom state. They are not required to support generated dataclass constructors accepting undeclared dynamic price-key kwargs. Effective price-key collection should include stored candidate keys on base `ModelPrice` for later validation, while subclass-owned custom attributes remain custom state unless their names are registered price keys in the active registry.
 
 **Make CLI price display registry-driven.** _(implements "CLI price presentation becomes registry-driven")_
 Update `_cli_impl.py` so price-field collection iterates each `ModelPrice` object's effective stored price keys, labels derive from unit dimensions and each unit's `per` normalization, and formatting does not depend on a hardcoded dataclass-field list. Existing CLI flags and output for current units should remain compatible.
@@ -30,4 +34,4 @@ Concretely:
 The CLI may keep compatibility aliases and familiar labels for existing units, but new registered units must appear without adding new hardcoded price-field branches.
 
 **Tests cover hardening boundaries.** _(implements "Phase 4 hardens the authoring and compatibility surfaces after the core works")_
-Add tests for built-in token naming convention regressions, generated provider schema price-key and extractor-destination suggestions, dataclass subclass constructor handling for undeclared dynamic price keys plus declared custom fields, and CLI display of both legacy and newly registered price keys.
+Add tests for built-in token naming convention regressions, generated provider schema price-key and extractor-destination suggestions, direct runtime `ModelPrice` attribute storage, raw provider normalization of flat and tiered dynamic price keys, custom `ModelPrice` override behavior, and CLI display of both legacy and newly registered price keys.

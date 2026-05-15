@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import argparse
-import dataclasses
 import difflib
 import hashlib
 import sys
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from typing import Any, cast
 
@@ -30,7 +29,15 @@ from rich.text import Text
 from rich_argparse import RichHelpFormatter
 
 from . import Usage, __version__, calc_price, update_prices
-from .types import ModelPrice, PriceCalculation, Provider, TieredPrices
+from .types import (
+    ModelPrice,
+    PriceCalculation,
+    Provider,
+    TieredPrices,
+    _iter_model_price_attr_items,  # pyright: ignore[reportPrivateUsage]
+    _iter_priced_registered_units,  # pyright: ignore[reportPrivateUsage]
+)
+from .units import UnitDef
 
 PROGRAM_NAME = 'genai-prices'
 _PROVIDER_COLORS = (
@@ -338,7 +345,7 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
         output: list[tuple[str, str | None]] = [
             ('Provider', price_calc.provider.name),
             ('Model', price_calc.model.name or price_calc.model.id),
-            ('Model Prices', str(price_calc.model_price)),
+            ('Model Prices', _format_model_prices(price_calc.model_price, split_lines=False, use_color=False).plain),
             ('Context Window', f'{w:,d}' if w is not None else None),
             ('Input Price', f'${price_calc.input_price}'),
             ('Output Price', f'${price_calc.output_price}'),
@@ -539,12 +546,28 @@ def _format_calc_label(key: str, *, use_color: bool) -> Text:
 
 
 def _collect_model_price_fields(results: Sequence[PriceCalculation]) -> list[str]:
-    ordered_fields = [field.name for field in dataclasses.fields(ModelPrice)]
-    present_fields: list[str] = []
-    for field_name in ordered_fields:
-        if any(getattr(result.model_price, field_name) is not None for result in results):
-            present_fields.append(field_name)
-    return present_fields
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    present_fields: set[str] = set()
+    for result in results:
+        for unit in registry.units.values():
+            if getattr(result.model_price, unit.price_key) is not None:
+                present_fields.add(unit.price_key)
+
+    ordered_fields = [unit.price_key for unit in registry.units.values() if unit.price_key in present_fields]
+    for result in results:
+        for field_name, value in _iter_extra_model_price_items(result.model_price):
+            if value is not None and field_name not in present_fields:
+                ordered_fields.append(field_name)
+                present_fields.add(field_name)
+    return ordered_fields
+
+
+def _iter_extra_model_price_items(model_price: ModelPrice) -> Iterable[tuple[str, object]]:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    return _iter_model_price_attr_items(model_price, _get_registry())
 
 
 def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -> bool:
@@ -565,17 +588,54 @@ def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -
 
 
 def _price_field_label(field_name: str) -> str:
-    labels = {
-        'input_mtok': 'Input/MTok',
-        'cache_write_mtok': 'Cache Write/MTok',
-        'cache_read_mtok': 'Cache Read/MTok',
-        'output_mtok': 'Output/MTok',
-        'input_audio_mtok': 'Input Audio/MTok',
-        'cache_audio_read_mtok': 'Cache Audio Read/MTok',
-        'output_audio_mtok': 'Output Audio/MTok',
-        'requests_kcount': 'Requests/K',
-    }
-    return labels.get(field_name, field_name.replace('_mtok', '').replace('_', ' ').title())
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        unit = _get_registry().unit_for_price_key(field_name)
+    except KeyError:
+        return field_name.replace('_mtok', '').replace('_', ' ').title()
+
+    return f'{_unit_display_name(unit)}/{_unit_per_label(unit)}'
+
+
+def _unit_display_name(unit: UnitDef) -> str:
+    dimensions = unit.dimensions
+    cache = dimensions.get('cache')
+    direction = dimensions.get('direction')
+    modality = dimensions.get('modality')
+    parts: list[str]
+    if dimensions.get('family') == 'requests':
+        parts = ['requests']
+    elif cache is not None:
+        parts = ['cache']
+        if modality is not None:
+            parts.append(modality)
+        parts.append(cache)
+    else:
+        parts = []
+        if direction is not None:
+            parts.append(direction)
+        if modality is not None:
+            parts.append(modality)
+
+    handled_dimensions = {'family', 'direction', 'modality', 'cache'}
+    parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
+    if not parts:
+        parts.append(unit.usage_key)
+    return ' '.join(part.replace('_', ' ').title() for part in parts)
+
+
+def _unit_per_label(unit: UnitDef) -> str:
+    family = unit.dimensions.get('family')
+    if family == 'tokens' and unit.per == 1_000_000:
+        return 'MTok'
+    if family == 'requests' and unit.per == 1_000:
+        return 'K'
+    if unit.per == 1_000_000:
+        return 'M'
+    if unit.per == 1_000:
+        return 'K'
+    return str(unit.per)
 
 
 def _price_field_header_style(field_name: str) -> str:
@@ -584,12 +644,11 @@ def _price_field_header_style(field_name: str) -> str:
 
 
 def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_color: bool) -> Text:
-    value = getattr(model_price, field_name)
+    unit = _unit_for_price_key(field_name)
+    value = getattr(model_price, unit.price_key if unit is not None else field_name, None)
     style = _PRICE_STYLES.get(field_name) if use_color else None
     if value is None:
         return Text('')
-    if field_name == 'requests_kcount':
-        return Text(f'${value}', style=style) if style else Text(f'${value}')
     if isinstance(value, TieredPrices):
         return Text(f'${value.base} (+tiers)', style=style) if style else Text(f'${value.base} (+tiers)')
     return Text(f'${value}', style=style) if style else Text(f'${value}')
@@ -597,31 +656,46 @@ def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_c
 
 def _format_model_prices(model_price: ModelPrice, *, split_lines: bool, use_color: bool) -> Text:
     parts = Text()
-    for field in dataclasses.fields(model_price):
-        value = getattr(model_price, field.name)
+    for unit in _iter_model_price_units(model_price):
+        value = getattr(model_price, unit.price_key)
         if value is None:
             continue
         if parts:
             parts.append('\n' if split_lines else ', ')
 
-        style = _PRICE_STYLES.get(field.name) if use_color else None
-        if field.name == 'requests_kcount':
-            if style:
-                parts.append(f'${value} / K requests', style=style)
-            else:
-                parts.append(f'${value} / K requests')
-            continue
-
-        name = field.name.replace('_mtok', '').replace('_', ' ')
-        if isinstance(value, TieredPrices):
-            text = f'${value.base}/{name} MTok (+tiers)'
-        else:
-            text = f'${value}/{name} MTok'
+        style = _PRICE_STYLES.get(unit.price_key) if use_color else None
+        text = _format_model_price_line(value, unit)
         if style:
             parts.append(text, style=style)
         else:
             parts.append(text)
     return parts
+
+
+def _iter_model_price_units(model_price: ModelPrice) -> list[UnitDef]:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = _get_registry()
+    return list(_iter_priced_registered_units(model_price, registry))
+
+
+def _format_model_price_line(value: object, unit: UnitDef) -> str:
+    base_value = value.base if isinstance(value, TieredPrices) else value
+    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
+    unit_name = _unit_display_name(unit).lower()
+    per_label = _unit_per_label(unit)
+    if unit.dimensions.get('family') == 'requests':
+        return f'${base_value} / {per_label} {unit_name}{suffix}'
+    return f'${base_value}/{unit_name} {per_label}{suffix}'
+
+
+def _unit_for_price_key(price_key: str) -> UnitDef | None:
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    try:
+        return _get_registry().unit_for_price_key(price_key)
+    except KeyError:
+        return None
 
 
 def _render_calc_error(

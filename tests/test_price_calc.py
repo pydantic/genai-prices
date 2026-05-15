@@ -97,43 +97,6 @@ def test_model_price_str_tiered_prices_include_dollar_prefix():
     assert str(model_price) == '$2.5/input MTok (+tiers)'
 
 
-def test_model_price_is_free_when_empty() -> None:
-    assert ModelPrice().is_free()
-
-
-def test_model_price_is_free_with_zero_decimal_prices() -> None:
-    assert ModelPrice(input_mtok=Decimal(0), requests_kcount=Decimal(0)).is_free()
-
-
-def test_model_price_is_free_rejects_non_zero_token_price() -> None:
-    assert not ModelPrice(input_mtok=Decimal('0.01')).is_free()
-
-
-def test_model_price_is_free_checks_tiered_prices() -> None:
-    assert ModelPrice(input_mtok=TieredPrices(base=Decimal(0), tiers=[Tier(start=100, price=Decimal(0))])).is_free()
-    assert not ModelPrice(
-        input_mtok=TieredPrices(base=Decimal(0), tiers=[Tier(start=100, price=Decimal('1'))])
-    ).is_free()
-
-
-def test_model_price_is_free_rejects_non_zero_request_price() -> None:
-    assert not ModelPrice(requests_kcount=Decimal('0.01')).is_free()
-
-
-def test_model_price_is_free_rejects_non_zero_dynamic_extra() -> None:
-    assert not ModelPrice(
-        input_mtok=Decimal('0'),
-        cache_image_read_mtok=Decimal('0.5'),
-    ).is_free()
-
-
-def test_model_price_is_free_accepts_zero_dynamic_extra() -> None:
-    assert ModelPrice(
-        input_mtok=Decimal('0'),
-        cache_image_read_mtok=Decimal('0'),
-    ).is_free()
-
-
 def test_calc_price_rejects_unregistered_dynamic_extra() -> None:
     price = ModelPrice(hovercraft_mtok=Decimal('1'))
 

@@ -23,7 +23,10 @@ A model can price only registered price keys. Priced units must include required
 **The active runtime registry is global.** _(from "The shared payload is a wrapped object")_
 Package startup builds the global registry from generated language-native unit data. Runtime updates build a candidate registry from fetched `units`, install it while the matching providers are parsed or activated, and restore the previous registry if provider activation fails. `DataSnapshot` remains provider data only.
 
-**Publication validation is the trust boundary.** _(from "The shared payload is a wrapped object", "Complete price data is required before pricing")_
+**Registry changes are expected to be safe.** _(from "The active runtime registry is global")_
+Published registry changes are maintained responsibly: units are added, or existing unit metadata is updated only when the existing usage key and price key keep the same meaning for provider data already in circulation. Runtime code can therefore price older providers against a newer registry that contains additional unused units. Neither build/export validation nor runtime activation needs to enforce append-only history, reject deletions as a versioning policy, or make snapshots carry the exact registry active when they were parsed.
+
+**Publication validation is the trust boundary.** _(from "The shared payload is a wrapped object", "Complete price data is required before pricing", "Registry changes are expected to be safe")_
 Build/export validation constructs the registry, validates unit structure, public key safety, provider price keys, ancestor coverage, join coverage, and extractor destinations before publishing payloads. Bundled and fetched runtime data are treated as trusted publisher output; standard pricing still validates the selected model price on use until Phase 5 adds cache-gated validation.
 
 **Registered public keys must be safe runtime names.** _(from "Publication validation is the trust boundary")_

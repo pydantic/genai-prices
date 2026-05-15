@@ -50,6 +50,16 @@ describe('normalizeUsage', () => {
     })
   })
 
+  it('rejects invalid numeric values for registered usage keys', () => {
+    for (const value of [Number.NaN, Number.POSITIVE_INFINITY, -1]) {
+      expect(() =>
+        normalizeUsage({
+          input_tokens: value,
+        })
+      ).toThrow('Invalid usage value for input_tokens: expected a finite non-negative number')
+    }
+  })
+
   it('does not materialize missing keys or undefined values', () => {
     const usage = normalizeUsage({
       input_tokens: undefined,
@@ -91,6 +101,15 @@ describe('getUsageValue', () => {
       input_tokens: 100,
     })
     expect(getUsageValue(usage, 'input_tokens')).toBe(100)
+  })
+
+  it('rejects invalid stored values when reading registered usage keys', () => {
+    expect(() => getUsageValue({ input_tokens: Number.NaN }, 'input_tokens')).toThrow(
+      'Invalid usage value for input_tokens: expected a finite non-negative number'
+    )
+    expect(() => getUsageValue({ input_audio_tokens: -1 }, 'input_tokens')).toThrow(
+      'Invalid usage value for input_audio_tokens: expected a finite non-negative number'
+    )
   })
 
   it('returns stored zero values', () => {

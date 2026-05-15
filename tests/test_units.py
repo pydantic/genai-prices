@@ -6,7 +6,7 @@ import subprocess
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
-from dataclasses import dataclass, fields
+from dataclasses import fields
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
@@ -153,6 +153,30 @@ def test_units_yml_defines_current_python_unit_surface() -> None:
     assert request_unit['per'] == 1_000
     assert request_unit['dimensions'] == {'family': 'requests'}
     assert request_unit['price_key'] == 'requests_kcount'
+
+
+def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
+    raw_units = load_units()
+
+    for usage_key, unit in raw_units.items():
+        dimensions = unit['dimensions']
+        if dimensions['family'] != 'tokens':
+            continue
+
+        price_key = unit['price_key']
+        assert usage_key.endswith('_tokens')
+        assert price_key.endswith('_mtok')
+
+        direction = dimensions['direction']
+        cache = dimensions.get('cache')
+        modality = dimensions.get('modality')
+        if cache is None:
+            expected_stem = f'{direction}_{modality}' if modality is not None else direction
+        else:
+            expected_stem = f'cache_{modality}_{cache}' if modality is not None else f'cache_{cache}'
+
+        assert usage_key == f'{expected_stem}_tokens'
+        assert price_key == f'{expected_stem}_mtok'
 
 
 def test_unit_registry_constructs_current_units() -> None:
@@ -468,7 +492,7 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
         )
 
 
-def test_collect_effective_model_price_keys_reads_base_fields() -> None:
+def test_collect_effective_model_price_keys_reads_base_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
     assert _collect_effective_model_price_keys(
@@ -484,7 +508,7 @@ def test_collect_effective_model_price_keys_ignores_none_values() -> None:
     }
 
 
-def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
+def test_collect_effective_model_price_keys_reads_registered_dynamic_keys() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(
         cache_image_read_mtok=Decimal('0.5'),
@@ -493,31 +517,25 @@ def test_collect_effective_model_price_keys_reads_dynamic_extras() -> None:
     assert _collect_effective_model_price_keys(price, registry) == {'cache_image_read_mtok'}
 
 
-def test_collect_effective_model_price_keys_includes_unregistered_extras_for_validation() -> None:
+def test_model_price_stores_dynamic_prices_as_attributes() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'))
+
+    assert price.__dict__ == {'input_mtok': Decimal('1')}
+    assert '_extra_prices' not in price.__dict__
+
+
+def test_collect_effective_model_price_keys_includes_unregistered_candidates_for_validation() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(hovercraft_mtok=Decimal('1'))
 
     assert _collect_effective_model_price_keys(price, registry) == {'hovercraft_mtok'}
 
 
-def test_collect_effective_model_price_keys_ignores_none_dynamic_extras() -> None:
+def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
     registry = UnitRegistry(load_units())
     price = ModelPrice(cache_image_read_mtok=None)
 
     assert _collect_effective_model_price_keys(price, registry) == set()
-
-
-def test_collect_effective_model_price_keys_reads_registered_subclass_fields() -> None:
-    registry = _custom_price_key_registry()
-
-    @dataclass
-    class CustomModelPrice(ModelPrice):
-        sausage_mtok: Decimal | None = None
-        sausage_price: Decimal | None = None
-
-    price = CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'), sausage_price=Decimal('3'))
-
-    assert _collect_effective_model_price_keys(price, registry) == {'input_mtok', 'sausage_mtok'}
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
@@ -531,9 +549,8 @@ def test_model_price_getattr_rejects_unknown_attributes() -> None:
 
 
 def test_model_price_getattr_preserves_subclass_only_fields() -> None:
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_price: Decimal | None = None
+        pass
 
     assert CustomModelPrice(sausage_price=Decimal('3')).sausage_price == Decimal('3')
 
@@ -578,9 +595,8 @@ def test_collect_model_price_units_handles_mixed_units_in_field_order() -> None:
 def test_collect_model_price_units_ignores_subclass_only_fields() -> None:
     registry = UnitRegistry(load_units())
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_price: Decimal | None = None
+        pass
 
     units = _collect_model_price_units(CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('2')), registry)
 
@@ -590,9 +606,8 @@ def test_collect_model_price_units_ignores_subclass_only_fields() -> None:
 def test_collect_model_price_units_handles_registered_custom_fields() -> None:
     registry = _custom_price_key_registry()
 
-    @dataclass
     class CustomModelPrice(ModelPrice):
-        sausage_mtok: Decimal | None = None
+        pass
 
     units = _collect_model_price_units(CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')), registry)
 
@@ -847,12 +862,12 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
     assert generated_units == units
 
 
-def test_package_python_data_clears_active_registry_if_schema_rebuild_fails(
+def test_package_python_data_clears_active_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     from genai_prices import types as runtime_types
 
-    class RebuildError(RuntimeError):
+    class RuntimeProviderValidationError(RuntimeError):
         pass
 
     _set_registry(None)
@@ -871,13 +886,13 @@ def test_package_python_data_clears_active_registry_if_schema_rebuild_fails(
     py_package_dir.mkdir()
     monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
 
-    def fail_rebuild() -> None:
-        raise RebuildError('sentinel rebuild failure')
+    def fail_runtime_provider_validation(_provider_data: Any) -> list[runtime_types.Provider]:
+        raise RuntimeProviderValidationError('sentinel runtime provider validation failure')
 
-    monkeypatch.setattr(runtime_types.providers_schema, 'rebuild', fail_rebuild)
+    monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
 
     try:
-        with pytest.raises(RebuildError, match='sentinel rebuild failure'):
+        with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
             package_data.package_python_data(data_path)
 
         assert 'transient_tokens' not in _get_registry().units
@@ -940,22 +955,10 @@ def test_build_model_price_accepts_typed_extra_price_keys() -> None:
     assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
 
 
-def test_package_data_collects_runtime_model_price_extra_keys() -> None:
-    price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
-
-    assert package_data._collect_model_price_keys(price) == {'input_mtok', 'hovercraft_mtok'}
-
-
-def test_runtime_model_price_repr_preserves_dynamic_extra_keys() -> None:
+def test_runtime_model_price_repr_preserves_dynamic_price_keys() -> None:
     price = ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))
 
     assert repr(price) == "ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))"
-
-
-def test_runtime_model_price_schema_omits_internal_extra_storage() -> None:
-    schema = data.providers_schema.json_schema()
-
-    assert '_extra_prices' not in schema['$defs']['ModelPrice']['properties']
 
 
 def test_build_model_price_extras_affect_is_free() -> None:

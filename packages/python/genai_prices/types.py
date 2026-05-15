@@ -9,9 +9,6 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
 
 import pydantic
-from pydantic.annotated_handlers import GetJsonSchemaHandler
-from pydantic.json_schema import JsonSchemaValue
-from pydantic_core import core_schema
 from typing_extensions import TypedDict, TypeGuard
 
 if TYPE_CHECKING:
@@ -41,7 +38,6 @@ __all__ = (
     'ClauseAnd',
     'MatchLogic',
     'ArrayMatch',
-    'providers_schema',
 )
 
 
@@ -680,118 +676,18 @@ class CalcPrice(TypedDict):
     total_price: Decimal
 
 
-@dataclass
 class ModelPrice:
     """Set of prices for using a model"""
 
-    input_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million uncached text input/prompt token"""
-
-    cache_write_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million tokens written to the cache"""
-    cache_read_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million tokens read from the cache"""
-
-    output_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million output/completion tokens"""
-
-    input_audio_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million audio input tokens"""
-    cache_audio_read_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million audio tokens read from the cache"""
-    output_audio_mtok: Decimal | TieredPrices | None = None
-    """price in USD per million output audio tokens"""
-
-    requests_kcount: Decimal | None = None
-    """price in USD per thousand requests"""
-
-    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
-        default_factory=dict, repr=False, compare=False
-    )
-
     def __init__(
         self,
-        input_mtok: Decimal | TieredPrices | None = None,
-        cache_write_mtok: Decimal | TieredPrices | None = None,
-        cache_read_mtok: Decimal | TieredPrices | None = None,
-        output_mtok: Decimal | TieredPrices | None = None,
-        input_audio_mtok: Decimal | TieredPrices | None = None,
-        cache_audio_read_mtok: Decimal | TieredPrices | None = None,
-        output_audio_mtok: Decimal | TieredPrices | None = None,
-        requests_kcount: Decimal | None = None,
-        **extra_prices: Decimal | TieredPrices | None,
+        **price_kwargs: Decimal | TieredPrices | None,
     ) -> None:
-        object.__setattr__(self, 'input_mtok', input_mtok)
-        object.__setattr__(self, 'cache_write_mtok', cache_write_mtok)
-        object.__setattr__(self, 'cache_read_mtok', cache_read_mtok)
-        object.__setattr__(self, 'output_mtok', output_mtok)
-        object.__setattr__(self, 'input_audio_mtok', input_audio_mtok)
-        object.__setattr__(self, 'cache_audio_read_mtok', cache_audio_read_mtok)
-        object.__setattr__(self, 'output_audio_mtok', output_audio_mtok)
-        object.__setattr__(self, 'requests_kcount', requests_kcount)
-
-        raw_stored_prices = cast(Any, extra_prices).pop('_extra_prices', None)
-        dynamic_prices: dict[str, Decimal | TieredPrices | None] = {}
-        if raw_stored_prices is not None:
-            if not isinstance(raw_stored_prices, Mapping):
-                raise TypeError('_extra_prices must be a mapping')
-            dynamic_prices.update(cast(Mapping[str, Decimal | TieredPrices | None], raw_stored_prices))
-        dynamic_prices.update(extra_prices)
-        object.__setattr__(self, '_extra_prices', dynamic_prices)
-
-    @pydantic.model_validator(mode='before')
-    @classmethod
-    def _store_unknown_price_keys(cls, data: Any) -> Any:
-        # providers_schema is a Pydantic TypeAdapter over stdlib dataclasses;
-        # Pydantic still invokes validators declared on those dataclasses.
-        if not isinstance(data, dict):
-            return data
-
-        raw_data = cast(dict[str, Any], data)
-        declared_fields = _model_price_declared_fields_for(cls)
-        extra_prices: dict[str, Any] = {key: value for key, value in raw_data.items() if key not in declared_fields}
-        if not extra_prices:
-            return raw_data
-
-        model_price_data = dict(raw_data)
-        stored_extra_prices = dict(cast(dict[str, Any], model_price_data.get('_extra_prices') or {}))
-        stored_extra_prices.update(extra_prices)
-        model_price_data['_extra_prices'] = stored_extra_prices
-        for key in extra_prices:
-            model_price_data.pop(key)
-        return model_price_data
-
-    @classmethod
-    def __get_pydantic_json_schema__(
-        cls, schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
-    ) -> JsonSchemaValue:
-        json_schema = handler(schema)
-        json_schema = handler.resolve_ref_schema(json_schema)
-
-        properties = json_schema.get('properties')
-        if isinstance(properties, dict):
-            cast(dict[str, Any], properties).pop('_extra_prices', None)
-
-        required = json_schema.get('required')
-        if isinstance(required, list):
-            json_schema['required'] = [
-                field_name for field_name in cast(list[str], required) if field_name != '_extra_prices'
-            ]
-
-        return json_schema
+        for key, value in price_kwargs.items():
+            object.__setattr__(self, key, value)
 
     def __repr__(self) -> str:
-        parts: list[str] = []
-        for field in dataclasses.fields(self):
-            if field.name == '_extra_prices':
-                continue
-            value = getattr(self, field.name)
-            if value is not None:
-                parts.append(f'{field.name}={value!r}')
-
-        if self._extra_prices:
-            parts.extend(f'{key}={value!r}' for key, value in self._extra_prices.items())
-
+        parts = [f'{key}={value!r}' for key, value in self.__dict__.items() if value is not None]
         return f'{type(self).__name__}({", ".join(parts)})'
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
@@ -849,43 +745,11 @@ class ModelPrice:
 
         return ', '.join(parts)
 
-    def is_free(self) -> bool:
-        declared_prices_are_free = all(
-            _price_value_is_free(getattr(self, field.name))
-            for field in dataclasses.fields(self)
-            if field.name != '_extra_prices'
-        )
-        return declared_prices_are_free and all(_price_value_is_free(value) for value in self._extra_prices.values())
-
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
-        extra_prices = self.__dict__.get('_extra_prices', {})
-        if name in extra_prices:
-            return extra_prices[name]
-
         if _is_registered_price_key(name):
             return None
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
-
-    def __setattr__(self, name: str, value: Any) -> None:
-        if name in _model_price_declared_fields_for(type(self)) or not _is_registered_price_key(name):
-            object.__setattr__(self, name, value)
-            return
-
-        self.__dict__.setdefault('_extra_prices', {})[name] = value
-
-    def __delattr__(self, name: str) -> None:
-        extra_prices = self.__dict__.get('_extra_prices', {})
-        if name in extra_prices:
-            del extra_prices[name]
-            return
-        if name not in _model_price_declared_fields_for(type(self)) and _is_registered_price_key(name):
-            raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
-        object.__delattr__(self, name)
-
-
-def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:
-    return frozenset(field.name for field in dataclasses.fields(model_price_type))
 
 
 def _is_registered_price_key(name: str) -> bool:
@@ -937,16 +801,6 @@ def calc_unit_price(
     return unit_price / per
 
 
-def _price_value_is_free(value: object) -> bool:
-    if value is None:
-        return True
-    if isinstance(value, TieredPrices):
-        return value.base == 0 and all(tier.price == 0 for tier in value.tiers)
-    if isinstance(value, Decimal):
-        return value == 0
-    return not value
-
-
 def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> set[str]:
     return set(_iter_effective_model_price_keys(model_price, registry))
 
@@ -959,9 +813,7 @@ def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegis
 
 
 def _collect_model_price_units(model_price: ModelPrice, registry: UnitRegistry) -> tuple[UnitDef, ...]:
-    return tuple(
-        registry.unit_for_price_key(price_key) for price_key in _iter_effective_model_price_keys(model_price, registry)
-    )
+    return tuple(_iter_priced_registered_units(model_price, registry))
 
 
 def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usage) -> dict[str, int]:
@@ -978,20 +830,28 @@ def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usag
 
 
 def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[str]:
-    for field in dataclasses.fields(model_price):
-        if field.name == '_extra_prices':
-            continue
-        try:
-            registry.unit_for_price_key(field.name)
-        except KeyError:
-            continue
+    yielded_price_keys: set[str] = set()
+    for unit in _iter_priced_registered_units(model_price, registry):
+        yielded_price_keys.add(unit.price_key)
+        yield unit.price_key
 
-        if getattr(model_price, field.name) is not None:
-            yield field.name
-
-    for price_key, value in model_price._extra_prices.items():  # pyright: ignore[reportPrivateUsage]
-        if value is not None:
+    for price_key, value in _iter_model_price_attr_items(model_price, registry):
+        if value is not None and price_key not in yielded_price_keys:
             yield price_key
+
+
+def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[UnitDef]:
+    yield from (unit for unit in registry.units.values() if getattr(model_price, unit.price_key) is not None)
+
+
+def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[tuple[str, object]]:
+    registry_price_keys = {unit.price_key for unit in registry.units.values()}
+    for key, value in model_price.__dict__.items():
+        if key.startswith('_'):
+            continue
+        if type(model_price) is not ModelPrice and key not in registry_price_keys:
+            continue
+        yield key, value
 
 
 @dataclass
@@ -1123,4 +983,36 @@ class ClauseAnd:
         return all(clause.is_match(text) for clause in self.and_)
 
 
-providers_schema = pydantic.TypeAdapter(list[Provider], config=pydantic.ConfigDict(defer_build=True))
+_model_price_mapping_schema = pydantic.TypeAdapter(dict[str, Union[Decimal, TieredPrices, None]])
+_providers_schema = pydantic.TypeAdapter(
+    list[Provider], config=pydantic.ConfigDict(defer_build=True, arbitrary_types_allowed=True)
+)
+
+
+def _providers_from_raw(raw_providers: Any) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+    return _providers_schema.validate_python(_normalize_model_prices(raw_providers))
+
+
+def _normalize_model_prices(value: Any) -> Any:
+    if isinstance(value, list):
+        return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    if not isinstance(value, Mapping):
+        return value
+
+    normalized: dict[str, Any] = {}
+    raw_mapping = cast(Mapping[str, Any], value)
+    for key, raw_value in raw_mapping.items():
+        if key == 'prices':
+            normalized[key] = _normalize_prices_field(raw_value)
+        else:
+            normalized[key] = _normalize_model_prices(raw_value)
+    return normalized
+
+
+def _normalize_prices_field(value: Any) -> ModelPrice | list[Any]:
+    if isinstance(value, list):
+        return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    if isinstance(value, ModelPrice):
+        return value
+    prices = _model_price_mapping_schema.validate_python(value)
+    return ModelPrice(**cast(Any, prices))

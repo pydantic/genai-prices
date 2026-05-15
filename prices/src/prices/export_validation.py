@@ -59,6 +59,8 @@ _RESERVED_KEYWORDS = frozenset(keyword.kwlist) | _JAVASCRIPT_KEYWORDS
 
 def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
     """Validate publishable flat unit data and return the indexed registry."""
+    # This validates the current registry only. Cross-release compatibility of
+    # source unit data is a maintainer responsibility, not a build-time diff check.
     price_keys: set[str] = set()
     per_by_family: dict[str, int] = {}
     dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
