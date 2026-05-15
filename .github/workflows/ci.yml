@@ -180,4 +180,5 @@ jobs:
           version_pattern: '"version": *"(?P<version>.+?)"'
 
       - run: npm ci
+      - run: npm run build --workspace=packages/js
       - run: npm publish --workspace=packages/js
