@@ -4,7 +4,7 @@ import argparse
 import difflib
 import hashlib
 import sys
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from typing import Any, cast
 
@@ -34,6 +34,7 @@ from .types import (
     PriceCalculation,
     Provider,
     TieredPrices,
+    _iter_model_price_attr_items,  # pyright: ignore[reportPrivateUsage]
     _iter_priced_registered_units,  # pyright: ignore[reportPrivateUsage]
 )
 from .units import UnitDef
@@ -564,10 +565,9 @@ def _collect_model_price_fields(results: Sequence[PriceCalculation]) -> list[str
 
 
 def _iter_extra_model_price_items(model_price: ModelPrice) -> Iterable[tuple[str, object]]:
-    extra_prices = getattr(model_price, '_extra_prices', {})
-    if not isinstance(extra_prices, Mapping):
-        return ()
-    return cast(Mapping[str, object], extra_prices).items()
+    from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    return _iter_model_price_attr_items(model_price, _get_registry())
 
 
 def _should_split_model_price_columns(console: Console, fields: Sequence[str]) -> bool:

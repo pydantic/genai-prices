@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import dataclasses
 import json
 import re
 import subprocess
@@ -10,7 +9,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 from typing_extensions import TypeAlias
 
-from .prices_types import ModelPrice
+from .prices_types import ModelPrice, providers_schema as build_providers_schema
 from .utils import package_dir as this_package_dir, root_dir
 
 if TYPE_CHECKING:
@@ -26,17 +25,17 @@ def package_data():
 def package_python_data(data_path: Path):
     """Prep python package data."""
 
-    from genai_prices.types import __file__ as genai_prices_file, providers_schema
+    from genai_prices import types as runtime_types
     from genai_prices.units import _set_registry  # pyright: ignore[reportPrivateUsage]
 
     provider_data, units = _load_package_payload(data_path)
     registry = load_unit_registry(units)
     _set_registry(registry)
     try:
-        providers_schema.rebuild()
-        providers = providers_schema.validate_python(provider_data)
-        validate_provider_model_prices(providers, registry)
-        validate_provider_extractor_destinations(providers, registry)
+        build_providers = build_providers_schema.validate_python(provider_data)
+        validate_provider_model_prices(build_providers, registry)
+        validate_provider_extractor_destinations(build_providers, registry)
+        providers = runtime_types._providers_from_raw(provider_data)  # pyright: ignore[reportPrivateUsage]
     finally:
         _set_registry(None)
 
@@ -61,7 +60,7 @@ __all__ = ('unit_data',)
 unit_data: dict[str, Any] = {units!r}
 '''
 
-    py_package_dir = Path(genai_prices_file).parent
+    py_package_dir = Path(runtime_types.__file__).parent
     data_py = py_package_dir / 'data.py'
     data_py.write_text(provider_data_content)
     _format_generated_python_data(data_py, post_process_provider_reprs=True)
@@ -164,17 +163,6 @@ def _collect_model_price_keys(model_price: object) -> set[str]:
             field_name for field_name in model_price.__pydantic_fields__ if getattr(model_price, field_name) is not None
         }
         extra_keys = {field_name for field_name, value in (model_price.model_extra or {}).items() if value is not None}
-        return declared_keys | extra_keys
-
-    if dataclasses.is_dataclass(model_price):
-        declared_keys = {
-            field.name
-            for field in dataclasses.fields(model_price)
-            if field.name != '_extra_prices' and getattr(model_price, field.name) is not None
-        }
-        extra_keys = {
-            field_name for field_name, value in getattr(model_price, '_extra_prices', {}).items() if value is not None
-        }
         return declared_keys | extra_keys
 
     raise TypeError(f'Unsupported model price type: {type(model_price).__name__}')

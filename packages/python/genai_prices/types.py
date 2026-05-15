@@ -38,7 +38,6 @@ __all__ = (
     'ClauseAnd',
     'MatchLogic',
     'ArrayMatch',
-    'providers_schema',
 )
 
 
@@ -677,80 +676,18 @@ class CalcPrice(TypedDict):
     total_price: Decimal
 
 
-class ModelPriceMeta(type):
-    def __call__(cls: ModelPriceMeta, *args: Any, **kwargs: Any) -> ModelPrice:
-        model_price_type = cast(type[ModelPrice], cls)
-        if model_price_type is ModelPrice or not dataclasses.is_dataclass(model_price_type):
-            return cast(ModelPrice, type.__call__(cls, *args, **kwargs))
-
-        declared_fields = _model_price_declared_fields_for(model_price_type)
-        dynamic_prices = {
-            key: kwargs.pop(key)
-            for key in tuple(kwargs)
-            if key not in declared_fields and _is_registered_price_key(key)
-        }
-        instance = cast(ModelPrice, type.__call__(cls, *args, **kwargs))
-        if dynamic_prices:
-            extra_prices = dict(getattr(instance, '_extra_prices', {}))
-            extra_prices.update(dynamic_prices)
-            object.__setattr__(instance, '_extra_prices', extra_prices)
-        return instance
-
-
-@dataclass
-class ModelPrice(metaclass=ModelPriceMeta):
+class ModelPrice:
     """Set of prices for using a model"""
 
-    # The active registry is the price-key list; legacy keys and future keys use
-    # the same internal storage so dataclass introspection is not misleading.
-    _extra_prices: dict[str, Decimal | TieredPrices | None] = dataclasses.field(
-        default_factory=dict, repr=False, compare=False
-    )
-
-    def __init__(self, **prices: Decimal | TieredPrices | None) -> None:
-        raw_stored_prices = cast(Any, prices).pop('_extra_prices', None)
-        dynamic_prices: dict[str, Decimal | TieredPrices | None] = {}
-        if raw_stored_prices is not None:
-            if not isinstance(raw_stored_prices, Mapping):
-                raise TypeError('_extra_prices must be a mapping')
-            dynamic_prices.update(cast(Mapping[str, Decimal | TieredPrices | None], raw_stored_prices))
-        dynamic_prices.update(prices)
-        object.__setattr__(self, '_extra_prices', dynamic_prices)
-
-    @pydantic.model_validator(mode='before')
-    @classmethod
-    def _store_unknown_price_keys(cls, data: Any) -> Any:
-        # providers_schema is a Pydantic TypeAdapter over stdlib dataclasses;
-        # Pydantic still invokes validators declared on those dataclasses.
-        if not isinstance(data, dict):
-            return data
-
-        raw_data = cast(dict[str, Any], data)
-        declared_fields = _model_price_declared_fields_for(cls)
-        extra_prices: dict[str, Any] = {key: value for key, value in raw_data.items() if key not in declared_fields}
-        if not extra_prices:
-            return raw_data
-
-        model_price_data = dict(raw_data)
-        stored_extra_prices = dict(cast(dict[str, Any], model_price_data.get('_extra_prices') or {}))
-        stored_extra_prices.update(extra_prices)
-        model_price_data['_extra_prices'] = stored_extra_prices
-        for key in extra_prices:
-            model_price_data.pop(key)
-        return model_price_data
+    def __init__(
+        self,
+        **price_kwargs: Decimal | TieredPrices | None,
+    ) -> None:
+        for key, value in price_kwargs.items():
+            object.__setattr__(self, key, value)
 
     def __repr__(self) -> str:
-        parts: list[str] = []
-        for field in dataclasses.fields(self):
-            if field.name == '_extra_prices':
-                continue
-            value = getattr(self, field.name)
-            if value is not None:
-                parts.append(f'{field.name}={value!r}')
-
-        if self._extra_prices:
-            parts.extend(f'{key}={value!r}' for key, value in self._extra_prices.items())
-
+        parts = [f'{key}={value!r}' for key, value in self.__dict__.items() if value is not None]
         return f'{type(self).__name__}({", ".join(parts)})'
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
@@ -809,34 +746,10 @@ class ModelPrice(metaclass=ModelPriceMeta):
         return ', '.join(parts)
 
     def __getattr__(self, name: str) -> Decimal | TieredPrices | None:
-        extra_prices = self.__dict__.get('_extra_prices', {})
-        if name in extra_prices:
-            return extra_prices[name]
-
         if _is_registered_price_key(name):
             return None
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
-
-    def __setattr__(self, name: str, value: Any) -> None:
-        if name in _model_price_declared_fields_for(type(self)) or not _is_registered_price_key(name):
-            object.__setattr__(self, name, value)
-            return
-
-        self.__dict__.setdefault('_extra_prices', {})[name] = value
-
-    def __delattr__(self, name: str) -> None:
-        extra_prices = self.__dict__.get('_extra_prices', {})
-        if name in extra_prices:
-            del extra_prices[name]
-            return
-        if name not in _model_price_declared_fields_for(type(self)) and _is_registered_price_key(name):
-            raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
-        object.__delattr__(self, name)
-
-
-def _model_price_declared_fields_for(model_price_type: type[ModelPrice]) -> frozenset[str]:
-    return frozenset(field.name for field in dataclasses.fields(model_price_type))
 
 
 def _is_registered_price_key(name: str) -> bool:
@@ -922,13 +835,23 @@ def _iter_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegi
         yielded_price_keys.add(unit.price_key)
         yield unit.price_key
 
-    for price_key, value in model_price._extra_prices.items():  # pyright: ignore[reportPrivateUsage]
+    for price_key, value in _iter_model_price_attr_items(model_price, registry):
         if value is not None and price_key not in yielded_price_keys:
             yield price_key
 
 
 def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[UnitDef]:
     yield from (unit for unit in registry.units.values() if getattr(model_price, unit.price_key) is not None)
+
+
+def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[tuple[str, object]]:
+    registry_price_keys = {unit.price_key for unit in registry.units.values()}
+    for key, value in model_price.__dict__.items():
+        if key.startswith('_'):
+            continue
+        if type(model_price) is not ModelPrice and key not in registry_price_keys:
+            continue
+        yield key, value
 
 
 @dataclass
@@ -1060,4 +983,36 @@ class ClauseAnd:
         return all(clause.is_match(text) for clause in self.and_)
 
 
-providers_schema = pydantic.TypeAdapter(list[Provider], config=pydantic.ConfigDict(defer_build=True))
+_model_price_mapping_schema = pydantic.TypeAdapter(dict[str, Union[Decimal, TieredPrices, None]])
+_providers_schema = pydantic.TypeAdapter(
+    list[Provider], config=pydantic.ConfigDict(defer_build=True, arbitrary_types_allowed=True)
+)
+
+
+def _providers_from_raw(raw_providers: Any) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+    return _providers_schema.validate_python(_normalize_model_prices(raw_providers))
+
+
+def _normalize_model_prices(value: Any) -> Any:
+    if isinstance(value, list):
+        return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    if not isinstance(value, Mapping):
+        return value
+
+    normalized: dict[str, Any] = {}
+    raw_mapping = cast(Mapping[str, Any], value)
+    for key, raw_value in raw_mapping.items():
+        if key == 'prices':
+            normalized[key] = _normalize_prices_field(raw_value)
+        else:
+            normalized[key] = _normalize_model_prices(raw_value)
+    return normalized
+
+
+def _normalize_prices_field(value: Any) -> ModelPrice | list[Any]:
+    if isinstance(value, list):
+        return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    if isinstance(value, ModelPrice):
+        return value
+    prices = _model_price_mapping_schema.validate_python(value)
+    return ModelPrice(**cast(Any, prices))
