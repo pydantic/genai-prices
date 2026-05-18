@@ -10236,10 +10236,16 @@ export const data: Provider[] = [
               equals: 'gpt-5.5-2026-04-23',
             },
             {
+              equals: 'gpt-5.5-2026-04-24',
+            },
+            {
               equals: 'gpt-5-5',
             },
             {
               equals: 'gpt-5-5-2026-04-23',
+            },
+            {
+              equals: 'gpt-5-5-2026-04-24',
             },
             {
               equals: 'gpt-5.5-chat',
