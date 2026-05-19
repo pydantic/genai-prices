@@ -2059,6 +2059,23 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-3.5-flash',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-3.5-flash'), ClauseStartsWith(starts_with='gemini-3.5-flash')]
+                ),
+                name='Gemini 3.5 Flash',
+                description="Google's most intelligent model built for speed, combining frontier intelligence with superior search and grounding.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('9'),
+                    input_audio_mtok=Decimal('1.5'),
+                    cache_audio_read_mtok=Decimal('0.15'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-embedding-001',
                 match=ClauseEquals(equals='gemini-embedding-001'),
                 prices=ModelPrice(input_mtok=Decimal('0.15')),
