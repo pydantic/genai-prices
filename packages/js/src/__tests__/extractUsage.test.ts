@@ -174,6 +174,52 @@ describe('extractUsage', () => {
     ])('should throw error for invalid data: %j', (responseData, expectedError) => {
       expect(() => extractUsage(anthropicProvider, responseData)).toThrow(expectedError)
     })
+
+    it('should throw when a required nested path has the wrong intermediate shape', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [{ dest: 'input_tokens', path: ['totals', 'input_tokens'], required: true }],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(() => extractUsage(provider, { model: 'test-model', usage: { totals: 1 } })).toThrow(
+        'Expected `usage.totals` value to be a mapping, got number'
+      )
+    })
+
+    it('should skip optional nested paths with the wrong intermediate shape', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [
+              { dest: 'input_tokens', path: ['totals', 'input_tokens'], required: false },
+              { dest: 'output_tokens', path: 'output_tokens', required: true },
+            ],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(extractUsage(provider, { model: 'test-model', usage: { output_tokens: 2, totals: 1 } })).toEqual({
+        model: 'test-model',
+        usage: { output_tokens: 2 },
+      })
+    })
   })
 
   describe('apiFlavor handling', () => {
