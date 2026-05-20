@@ -1,0 +1,23 @@
+pyproject.toml
+  s_c922f620f5d696::t_5ed7942600ca01 80
+.github/workflows/after-ci.yml
+  s_c922f620f5d696::t_5ed7942600ca01 35
+.github/workflows/ci.yml
+  s_c922f620f5d696::t_5ed7942600ca01 98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "76be64b56bb20278464b3f0c80665789f9205f9c",
+  "prompts": {},
+  "sessions": {
+    "s_c922f620f5d696": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e46f9-7e05-7bf1-8e4a-a646abba926f",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
