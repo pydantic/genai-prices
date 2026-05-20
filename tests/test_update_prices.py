@@ -1,6 +1,7 @@
 import concurrent.futures
 import threading
 from decimal import Decimal
+from time import monotonic, sleep
 
 import httpx
 import pytest
@@ -22,6 +23,19 @@ PROVIDER_ARRAY_PAYLOAD = (
     b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
     b'"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
 )
+
+
+class NullUpdatePrices(UpdatePrices):
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        return None
+
+
+class CountingNullUpdatePrices(UpdatePrices):
+    count = 0
+
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        self.count += 1
+        return None
 
 
 def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
@@ -101,6 +115,33 @@ async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
         assert price.total_price == snapshot(Decimal('0.0035'))
         assert price.provider.id == snapshot('openai')
         assert price.auto_update_timestamp is not None
+
+
+def test_wait_prices_updated_sync_without_active_updater():
+    assert wait_prices_updated_sync(timeout=0) is False
+
+
+def test_update_prices_start_waits_and_rejects_second_start():
+    update_prices = NullUpdatePrices(update_interval=3600)
+    update_prices.start(wait=True)
+    try:
+        assert data_snapshot._custom_snapshot is None
+        with pytest.raises(RuntimeError, match='UpdatePrices background task already started'):
+            update_prices.start()
+    finally:
+        update_prices.stop()
+
+
+def test_update_prices_continues_after_interval_until_stopped():
+    update_prices = CountingNullUpdatePrices(update_interval=0.001)
+    update_prices.start(wait=True)
+    try:
+        deadline = monotonic() + 1
+        while update_prices.count < 2 and monotonic() < deadline:
+            sleep(0.01)
+        assert update_prices.count >= 2
+    finally:
+        update_prices.stop()
 
 
 def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:

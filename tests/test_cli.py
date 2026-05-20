@@ -333,6 +333,14 @@ def test_calc_provider_suggestions(capsys: pytest.CaptureFixture[str]):
     assert 'Did you mean provider: openai' in err
 
 
+def test_calc_unknown_provider_without_suggestions(capsys: pytest.CaptureFixture[str]):
+    assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'zzzzzz:gpt-4o']) == 1
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert 'Error:' in err
+    assert 'Did you mean provider:' not in err
+
+
 def test_calc_model_suggestions(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'openai:gpt-4o0']) == 1
     out, err = capsys.readouterr()
@@ -345,6 +353,15 @@ def test_calc_provider_suggestions_rich_color(capsys: pytest.CaptureFixture[str]
     out, err = capsys.readouterr()
     assert out == ''
     assert 'Did you mean provider:' in err
+
+
+def test_calc_provider_suggestions_rich_color_multiple(capsys: pytest.CaptureFixture[str]):
+    assert cli_logic(['calc', '--input-tokens', '1000', 'coher:gpt-4o']) == 1
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert 'Did you mean provider:' in err
+    assert 'cohere' in err
+    assert 'together' in err
 
 
 def test_calc_provider_suggestions_rich_no_color(capsys: pytest.CaptureFixture[str]):
@@ -373,6 +390,22 @@ def test_calc_requests_kcount_rich(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['calc', '--input-tokens', '1000', model_ref]) == 0
     out, err = capsys.readouterr()
     assert 'K requests' in out
+    assert err == ''
+
+
+def test_calc_requests_kcount_no_color(capsys: pytest.CaptureFixture[str]):
+    model_ref = _find_model_ref(lambda price: price.requests_kcount is not None)
+    assert cli_logic(['calc', '--no-color', '--input-tokens', '1000', model_ref]) == 0
+    out, err = capsys.readouterr()
+    assert 'K requests' in out
+    assert err == ''
+
+
+def test_calc_tiered_prices_no_color(capsys: pytest.CaptureFixture[str]):
+    model_ref = _find_model_ref(_has_tiered_prices)
+    assert cli_logic(['calc', '--no-color', '--input-tokens', '1000', model_ref]) == 0
+    out, err = capsys.readouterr()
+    assert '(+tiers)' in out
     assert err == ''
 
 

@@ -84,7 +84,7 @@ class ArrayMatch:
 
     def extract(self, items: Sequence[Any]) -> Mapping[str, Any] | None:
         for item in items:
-            if _is_mapping(item) and (item_field := item.get(self.field)):  # pragma: no branch
+            if _is_mapping(item) and (item_field := item.get(self.field)):
                 if self.match.is_match(item_field):
                     return item
 
@@ -102,7 +102,7 @@ class PriceCalculation:
     model_price: ModelPrice
     auto_update_timestamp: datetime | None
 
-    def __repr__(self) -> str:  # pragma: no cover
+    def __repr__(self) -> str:
         return (
             'PriceCalculation('
             f'input_price={self.input_price!r}, '
@@ -170,7 +170,7 @@ class ExtractedUsage:
             raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
 
         providers_match = self.provider and other.provider and other.provider.id == self.provider.id
-        if not providers_match:  # pragma: no cover
+        if not providers_match:
             raise ValueError(
                 f'Cannot add {other} to {self}, providers do not match {other.provider} != {self.provider}'
             )
@@ -247,7 +247,7 @@ class Usage:
     """Number of output audio tokens."""
 
     def __add__(self, other: Usage | Any) -> Usage:
-        if not isinstance(other, Usage):  # pragma: no cover
+        if not isinstance(other, Usage):
             return NotImplemented
 
         def _add_option(a: int | None, b: int | None) -> int | None:
@@ -260,7 +260,7 @@ class Usage:
             }
         )
 
-    def __radd__(self, other: Usage) -> Usage:  # pragma: no cover
+    def __radd__(self, other: Usage) -> Usage:
         return self + other
 
 
@@ -391,7 +391,7 @@ class UsageExtractor:
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
-        if isinstance(root, str):  # pragma: no branch
+        if isinstance(root, str):
             root = [root]
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
@@ -442,7 +442,7 @@ def _extract_path(
         error_path.append(step)
         if isinstance(step, ArrayMatch):
             if not _is_sequence(data):
-                if required:  # pragma: no cover
+                if required:
                     raise ValueError(
                         f'Expected `{_dot_path(data_path, error_path)}` value to be a sequence, got {_type_name(data)}'
                     )
@@ -450,17 +450,17 @@ def _extract_path(
                     return None
             if extracted_data := step.extract(data):
                 data = extracted_data
-            elif required:  # pragma: no cover
+            elif required:
                 raise ValueError(f'Unable to find item at `{_dot_path(data_path, error_path)}`')
             else:
                 return None
         else:
             if not _expect_mapping(data, required, data_path, error_path):
-                return None  # pragma: no cover
+                return None
             try:
                 data = data[step]
             except KeyError as e:
-                if required:  # pragma: no cover
+                if required:
                     raise ValueError(f'Missing value at `{_dot_path(data_path, error_path)}`') from e
                 else:
                     return None
@@ -554,7 +554,7 @@ class ModelInfo:
             for conditional_price in reversed(self.prices):
                 if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
                     return conditional_price.prices
-            return self.prices[0].prices  # pragma: no cover
+            return self.prices[0].prices
 
     def calc_price(
         self,
@@ -667,14 +667,14 @@ class ModelPrice:
                 input_audio_tokens - priced_cache_audio_read_tokens - cache_audio_read_tokens_priced_as_cache_read
             )
 
-        if priced_audio_input_tokens < 0:  # pragma: no cover
+        if priced_audio_input_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
 
         priced_cache_read_tokens = 0
         if self.cache_read_mtok is not None:
             priced_cache_read_tokens = cache_read_tokens - priced_cache_audio_read_tokens
 
-        if priced_cache_read_tokens < 0:  # pragma: no cover
+        if priced_cache_read_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
 
         priced_cache_write_tokens = cache_write_tokens if self.cache_write_mtok is not None else 0
@@ -689,7 +689,7 @@ class ModelPrice:
                 - priced_cache_audio_read_tokens
             )
 
-        if priced_text_input_tokens < 0:  # pragma: no cover
+        if priced_text_input_tokens < 0:
             raise ValueError('Uncached text input tokens cannot be negative')
 
         input_price += calc_mtok_price(self.input_mtok, priced_text_input_tokens, total_input_tokens)
@@ -704,7 +704,7 @@ class ModelPrice:
                 output_audio_tokens if self.output_audio_mtok is not None else 0
             )
 
-        if priced_text_output_tokens < 0:  # pragma: no cover
+        if priced_text_output_tokens < 0:
             raise ValueError('output_audio_tokens cannot be greater than output_tokens')
 
         output_price += calc_mtok_price(self.output_mtok, priced_text_output_tokens, total_input_tokens)

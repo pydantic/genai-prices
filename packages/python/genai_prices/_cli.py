@@ -622,12 +622,12 @@ def _format_model_prices(model_price: ModelPrice, *, split_lines: bool, use_colo
             if style:
                 parts.append(f'${value} / K requests', style=style)
             else:
-                parts.append(f'${value} / K requests')  # pragma: no cover
+                parts.append(f'${value} / K requests')
             continue
 
         name = field.name.replace('_mtok', '').replace('_', ' ')
         if isinstance(value, TieredPrices):
-            text = f'${value.base}/{name} MTok (+tiers)'  # pragma: no cover
+            text = f'${value.base}/{name} MTok (+tiers)'
         else:
             text = f'${value}/{name} MTok'
         if style:
@@ -658,7 +658,7 @@ def _render_calc_error(
     provider_ids = {provider.id for provider in providers}
     if provider_id and provider_id not in provider_ids:
         provider_suggestions = _suggest_values(provider_id, sorted(provider_ids))
-        if provider_suggestions:  # pragma: no branch
+        if provider_suggestions:
             if plain:
                 line = f'Did you mean provider: {", ".join(provider_suggestions)}'
                 print(line, file=sys.stderr)
@@ -711,7 +711,7 @@ def _suggest_values_case_insensitive(value: str, candidates: list[str]) -> list[
 def _format_provider_suggestions(suggestions: list[str]) -> Text:
     parts = Text()
     for index, suggestion in enumerate(suggestions):
-        if index:  # pragma: no cover
+        if index:
             parts.append(', ')
         parts.append(suggestion, style=_provider_style(suggestion))
     return parts

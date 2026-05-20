@@ -1,7 +1,18 @@
+from datetime import date, datetime
 from decimal import Decimal
 
+import pytest
+
 from genai_prices import Usage
-from genai_prices.types import ModelPrice, Tier, TieredPrices
+from genai_prices.types import (
+    ClauseEquals,
+    ConditionalPrice,
+    ModelInfo,
+    ModelPrice,
+    StartDateConstraint,
+    Tier,
+    TieredPrices,
+)
 
 MILLION = Decimal(1_000_000)
 THOUSAND = Decimal(1_000)
@@ -26,6 +37,55 @@ def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
         'output_price': expected_output,
         'total_price': expected_input + expected_output,
     }
+
+
+def test_model_info_uses_first_conditional_price_when_none_are_active() -> None:
+    model = ModelInfo(
+        id='future-model',
+        match=ClauseEquals('future-model'),
+        prices=[
+            ConditionalPrice(
+                constraint=StartDateConstraint(start_date=date(2030, 1, 1)),
+                prices=ModelPrice(input_mtok=Decimal('1')),
+            ),
+            ConditionalPrice(
+                constraint=StartDateConstraint(start_date=date(2031, 1, 1)),
+                prices=ModelPrice(input_mtok=Decimal('2')),
+            ),
+        ],
+    )
+
+    assert model.get_prices(datetime(2029, 1, 1)).input_mtok == Decimal('1')
+
+
+@pytest.mark.parametrize(
+    'model_price,usage,message',
+    [
+        (
+            ModelPrice(input_audio_mtok=Decimal('1'), cache_audio_read_mtok=Decimal('1')),
+            Usage(input_audio_tokens=1, cache_audio_read_tokens=2),
+            'cache_audio_read_tokens cannot be greater than input_audio_tokens',
+        ),
+        (
+            ModelPrice(cache_read_mtok=Decimal('1'), cache_audio_read_mtok=Decimal('1')),
+            Usage(cache_read_tokens=1, cache_audio_read_tokens=2),
+            'cache_audio_read_tokens cannot be greater than cache_read_tokens',
+        ),
+        (
+            ModelPrice(input_mtok=Decimal('1'), cache_write_mtok=Decimal('1')),
+            Usage(input_tokens=1, cache_write_tokens=2),
+            'Uncached text input tokens cannot be negative',
+        ),
+        (
+            ModelPrice(output_mtok=Decimal('1'), output_audio_mtok=Decimal('1')),
+            Usage(output_tokens=1, output_audio_tokens=2),
+            'output_audio_tokens cannot be greater than output_tokens',
+        ),
+    ],
+)
+def test_model_price_rejects_impossible_overlapping_usage(model_price: ModelPrice, usage: Usage, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        model_price.calc_price(usage)
 
 
 def test_standard_price_parity_handles_simple_input_output_tokens() -> None:
