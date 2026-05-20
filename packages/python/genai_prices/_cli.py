@@ -15,9 +15,6 @@ from pydantic.fields import FieldInfo
 from . import Usage, __version__, calc_price, update_prices
 from .types import ModelPrice, PriceCalculation, Provider, TieredPrices
 
-PROGRAM_NAME = 'genai-prices'
-_OPTIONAL_CLI_PACKAGES = {'pydantic_settings', 'rich', 'rich_argparse'}
-
 try:
     from pydantic_settings import (
         BaseSettings,
@@ -38,7 +35,7 @@ try:
     from rich_argparse import RichHelpFormatter
 except ModuleNotFoundError as exc:
     package = (exc.name or '').split('.')[0]
-    if package in _OPTIONAL_CLI_PACKAGES:
+    if package in {'pydantic_settings', 'rich', 'rich_argparse'}:
         print(
             f'Optional CLI dependency {package!r} is not installed. '
             'Install CLI extras with: pip install "genai-prices[cli]"',
@@ -46,6 +43,8 @@ except ModuleNotFoundError as exc:
         )
         raise SystemExit(1) from None
     raise
+
+PROGRAM_NAME = 'genai-prices'
 
 _PROVIDER_COLORS = (
     'steel_blue1',
