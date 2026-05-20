@@ -19,6 +19,13 @@ PROGRAM_NAME = 'genai-prices'
 _OPTIONAL_CLI_PACKAGES = {'pydantic_settings', 'rich', 'rich_argparse'}
 
 
+def _missing_cli_dependency_message(package: str) -> str:
+    return (
+        f'Optional CLI dependency {package!r} is not installed. '
+        'Install CLI extras with: pip install "genai-prices[cli]"'
+    )
+
+
 try:
     from pydantic_settings import (
         BaseSettings,
@@ -40,11 +47,7 @@ try:
 except ModuleNotFoundError as exc:
     package = (exc.name or '').split('.')[0]
     if package in _OPTIONAL_CLI_PACKAGES:
-        print(
-            f'Optional CLI dependency {package!r} is not installed. '
-            'Install CLI extras with: pip install "genai-prices[cli]"',
-            file=sys.stderr,
-        )
+        print(_missing_cli_dependency_message(package), file=sys.stderr)
         raise SystemExit(1) from None
     raise
 

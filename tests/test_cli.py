@@ -80,6 +80,12 @@ def test_parse_cli_none(monkeypatch: pytest.MonkeyPatch):
     assert cli.version is True
 
 
+def test_missing_optional_cli_dependency_message():
+    assert cli_module._missing_cli_dependency_message('rich') == (
+        'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"'
+    )
+
+
 def test_cli_import_exits_for_missing_optional_dependency():
     package_path = Path(__file__).parents[1] / 'packages' / 'python'
     code = f"""
