@@ -1,0 +1,21 @@
+packages/python/genai_prices/_cli.py
+  s_44afa7e5fc6f9f::t_538c8357d2ad5b 3-6,9-45,49-90,92-97,101-242,247,252-268,270-735
+tests/cli_missing_dependency_import.py
+  s_44afa7e5fc6f9f::t_538c8357d2ad5b 1-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "c2be200ca54445081780d560d2aa278d8a4af035",
+  "prompts": {},
+  "sessions": {
+    "s_44afa7e5fc6f9f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e4629-a491-74d2-891b-647dcfe28b74",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
