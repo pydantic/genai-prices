@@ -2,8 +2,7 @@ import json
 import re
 import subprocess
 from pathlib import Path
-
-from typing_extensions import TypeAlias
+from typing import TypeAlias
 
 from .utils import package_dir as this_package_dir, root_dir
 
