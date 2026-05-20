@@ -1,0 +1,26 @@
+tests/test_cli.py
+  s_44afa7e5fc6f9f::t_fec59fd75a62b3 88,97-99
+  s_44afa7e5fc6f9f::t_efab7d3d96fdaf 75-87,89-96,100-108
+tests/test_extract_usage.py
+  s_44afa7e5fc6f9f::t_7cc599831195c9 11-19
+  s_44afa7e5fc6f9f::t_fe18c4f7051223 193-204,234-257
+tests/test_price_calc.py
+  s_44afa7e5fc6f9f::t_02e63ba372265a 309-339,341-342
+  s_44afa7e5fc6f9f::t_fec59fd75a62b3 340
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "fd3e6b93cad75253590525d4436f5be3dd108c59",
+  "prompts": {},
+  "sessions": {
+    "s_44afa7e5fc6f9f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e4629-a491-74d2-891b-647dcfe28b74",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
