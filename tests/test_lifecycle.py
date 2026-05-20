@@ -36,7 +36,7 @@ def test_deprecated_flag_in_data_json():
             if model.get('deprecated') is True:
                 deprecated_found = True
             elif 'deprecated' in model:
-                non_deprecated_with_flag = True  # pragma: no cover
+                non_deprecated_with_flag = True
 
     assert deprecated_found, 'Expected at least one model with deprecated=true in data.json'
     assert not non_deprecated_with_flag, 'Non-deprecated models should not have the deprecated key in data.json'

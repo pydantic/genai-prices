@@ -34,10 +34,10 @@ def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str
             prices = model.get_prices(now)
             if predicate(prices):
                 model_ref = f'{provider.id}:{model.id}'
-                if model_ref in exclude:  # pragma: no cover
+                if model_ref in exclude:
                     continue
                 return model_ref
-    raise AssertionError('No matching model found')  # pragma: no cover
+    raise AssertionError('No matching model found')
 
 
 def _has_tiered_prices(model_price: ModelPrice) -> bool:

@@ -67,7 +67,6 @@ markers = [
 include = [
     # "prices/src/prices/**/*.py",
     "packages/python/**/*.py",
-    "tests/**/*.py",
 ]
 branch = true
 

@@ -123,7 +123,7 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
     def stop_update_prices(update_prices: UpdatePrices) -> None:
         try:
             update_prices.stop()
-        except BaseException as exc:  # pragma: no cover
+        except BaseException as exc:
             stop_errors.append(exc)
 
     monkeypatch.setattr(httpx, 'get', fake_get)
@@ -140,7 +140,7 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
 
         assert not stop_thread.is_alive()
         if stop_errors:
-            raise stop_errors[0]  # pragma: no cover
+            raise stop_errors[0]
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()
