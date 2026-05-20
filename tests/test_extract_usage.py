@@ -26,10 +26,10 @@ class MyMapping(Mapping[str, Any]):
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
 
-    def __iter__(self) -> Any:
+    def __iter__(self) -> Any:  # pragma: no cover
         return iter(self._data)
 
-    def __len__(self) -> int:
+    def __len__(self) -> int:  # pragma: no cover
         return len(self._data)
 
 

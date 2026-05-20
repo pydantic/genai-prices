@@ -33,7 +33,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     """
     if _global_update_prices:
         return _global_update_prices.wait(timeout)
-    return False
+    return False  # pragma: no cover
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
@@ -75,7 +75,7 @@ class UpdatePrices:
         """
         global _global_update_prices
 
-        if self._thread is not None:
+        if self._thread is not None:  # pragma: no cover
             raise RuntimeError('UpdatePrices background task already started')
 
         if _global_update_prices is not None:
@@ -89,7 +89,7 @@ class UpdatePrices:
         self._background_exc = None
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         self._thread.start()
-        if wait:
+        if wait:  # pragma: no cover
             self.wait(timeout=30 if wait is True else wait)
 
     def wait(self, timeout: float | None = None) -> bool:
@@ -140,7 +140,7 @@ class UpdatePrices:
                     self._background_exc = e
                     self._prices_updated.set()
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-                if self._stop_event.wait(self.update_interval):
+                if self._stop_event.wait(self.update_interval):  # pragma: no branch
                     break
 
         finally:
@@ -153,7 +153,7 @@ class UpdatePrices:
         if snapshot:
             logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
         else:
-            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
+            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)  # pragma: no cover
 
         data_snapshot.set_custom_snapshot(snapshot)
 

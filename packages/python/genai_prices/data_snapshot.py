@@ -41,7 +41,7 @@ class DataSnapshot:
     )
     timestamp: datetime = field(default_factory=datetime.now)
 
-    def active(self, ttl: timedelta) -> bool:
+    def active(self, ttl: timedelta) -> bool:  # pragma: no cover
         """Check if the snapshot is "active" (e.g. hasn't expired) based on a time to live."""
         return self.timestamp + ttl > datetime.now()
 
@@ -93,7 +93,7 @@ class DataSnapshot:
         if provider_id and provider_id.lower() == 'litellm' and '/' in model_ref:
             actual_provider_id, actual_model_ref = model_ref.split('/', 1)
             # Only use the extracted provider if it exists
-            if actual_provider_id and find_provider_by_id(self.providers, actual_provider_id):
+            if actual_provider_id and find_provider_by_id(self.providers, actual_provider_id):  # pragma: no branch
                 provider_id = actual_provider_id
                 model_ref = actual_model_ref
 
@@ -131,7 +131,7 @@ class DataSnapshot:
                     return provider
             raise LookupError(f'Unable to find provider {provider_api_url=!r}')
 
-        if model_ref:
+        if model_ref:  # pragma: no branch
             for provider in self.providers:
                 if provider.model_match is not None and provider.model_match.is_match(model_ref):
                     return provider

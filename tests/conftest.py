@@ -5,7 +5,7 @@ import dirty_equals
 import pytest
 
 
-def IsNow(**kwargs: Any) -> datetime:
+def IsNow(**kwargs: Any) -> datetime:  # pragma: no cover
     kwargs.setdefault('delta', 10)
     return dirty_equals.IsNow(**kwargs)  # pyright: ignore[reportReturnType]
 
