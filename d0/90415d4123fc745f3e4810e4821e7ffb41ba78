@@ -1,0 +1,21 @@
+tests/test_cli.py
+  s_44afa7e5fc6f9f::t_19e01ef634ebbf 85,87-89
+tests/cli_missing_dependency_import.py
+  s_44afa7e5fc6f9f::t_2a6582ea3a0297 1-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "d090415d4123fc745f3e4810e4821e7ffb41ba78",
+  "prompts": {},
+  "sessions": {
+    "s_44afa7e5fc6f9f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e4629-a491-74d2-891b-647dcfe28b74",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
