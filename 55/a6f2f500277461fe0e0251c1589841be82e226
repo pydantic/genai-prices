@@ -1,0 +1,38 @@
+packages/python/genai_prices/types.py
+  s_c922f620f5d696::t_69e86b984954bb 87,105,173,263,394,445,453,459,463,557
+  s_c922f620f5d696::t_53aee8cb615eb4 250
+packages/python/genai_prices/update_prices.py
+  s_c922f620f5d696::t_69e86b984954bb 36,78,92,143,156
+tests/test_update_prices.py
+  s_c922f620f5d696::t_d99d32972a041c 126,143
+tests/test_cli.py
+  s_c922f620f5d696::t_d99d32972a041c 37,40
+packages/python/genai_prices/data_snapshot.py
+  s_c922f620f5d696::t_69e86b984954bb 44,96,134
+tests/test_custom_prices.py
+  s_c922f620f5d696::t_d99d32972a041c 21
+packages/python/genai_prices/_cli.py
+  s_c922f620f5d696::t_69e86b984954bb 36,121,276-277,625,630,661,714,735
+tests/test_lifecycle.py
+  s_c922f620f5d696::t_d99d32972a041c 39
+tests/test_extract_usage.py
+  s_c922f620f5d696::t_d99d32972a041c 29,32
+tests/conftest.py
+  s_c922f620f5d696::t_d99d32972a041c 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "55a6f2f500277461fe0e0251c1589841be82e226",
+  "prompts": {},
+  "sessions": {
+    "s_c922f620f5d696": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e46f9-7e05-7bf1-8e4a-a646abba926f",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
