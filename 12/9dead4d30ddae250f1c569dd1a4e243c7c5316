@@ -1,0 +1,42 @@
+uv.lock
+  ai_agent 3,7-8,71,176,298,325,355,357,469-470,473-483,1033-1035
+CLAUDE.md
+  s_160b5289181e6e::t_26c77c9236a1d3 91
+packages/python/pyproject.toml
+  s_160b5289181e6e::t_26c77c9236a1d3 11
+prices/src/prices/prices_types.py
+  s_160b5289181e6e::t_dfaa349b277d03 6,233
+  s_160b5289181e6e::t_0389434ac9ee0d 400-406
+  s_160b5289181e6e::t_fada1c204d703d 427
+.github/workflows/ci.yml
+  s_160b5289181e6e::t_26c77c9236a1d3 46
+prices/pyproject.toml
+  s_160b5289181e6e::t_26c77c9236a1d3 12
+Makefile
+  s_160b5289181e6e::t_26c77c9236a1d3 108
+pyproject.toml
+  s_160b5289181e6e::t_26c77c9236a1d3 7,37
+packages/python/genai_prices/types.py
+  s_160b5289181e6e::t_0389434ac9ee0d 49-55
+  s_160b5289181e6e::t_fada1c204d703d 12
+  s_160b5289181e6e::t_dfaa349b277d03 9,92
+  s_160b5289181e6e::t_26c77c9236a1d3 802,804-805
+prices/src/prices/package_data.py
+  s_160b5289181e6e::t_fada1c204d703d 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "129dead4d30ddae250f1c569dd1a4e243c7c5316",
+  "prompts": {},
+  "sessions": {
+    "s_160b5289181e6e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e45f3-277c-7a31-9085-38cd09bf8c90",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
