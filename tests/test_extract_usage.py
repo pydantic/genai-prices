@@ -1,5 +1,4 @@
 import re
-from collections.abc import Mapping
 from decimal import Decimal
 from typing import Any
 
@@ -19,18 +18,8 @@ from genai_prices.types import (
 )
 
 
-class MyMapping(Mapping[str, Any]):
-    def __init__(self, **data: Any):
-        self._data = data
-
-    def __getitem__(self, key: str) -> Any:
-        return self._data[key]
-
-    def __iter__(self) -> Any:
-        return iter(self._data)
-
-    def __len__(self) -> int:
-        return len(self._data)
+class MyMapping(dict[str, Any]):
+    pass
 
 
 @pytest.mark.parametrize(

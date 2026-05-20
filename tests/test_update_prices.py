@@ -1,3 +1,4 @@
+import concurrent.futures
 import threading
 from decimal import Decimal
 
@@ -105,7 +106,6 @@ async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
 def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
-    stop_errors: list[BaseException] = []
 
     class Response:
         content = PROVIDER_ARRAY_PAYLOAD
@@ -120,27 +120,17 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
         assert allow_fetch_return.wait(timeout=5)
         return Response()
 
-    def stop_update_prices(update_prices: UpdatePrices) -> None:
-        try:
-            update_prices.stop()
-        except BaseException as exc:
-            stop_errors.append(exc)
-
     monkeypatch.setattr(httpx, 'get', fake_get)
     update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=3600)
     update_prices.start()
     try:
         assert fetch_started.wait(timeout=5)
 
-        stop_thread = threading.Thread(target=stop_update_prices, args=(update_prices,))
-        stop_thread.start()
-        assert update_prices._stop_event.wait(timeout=5)
-        allow_fetch_return.set()
-        stop_thread.join(timeout=5)
-
-        assert not stop_thread.is_alive()
-        if stop_errors:
-            raise stop_errors[0]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            stop_future = executor.submit(update_prices.stop)
+            assert update_prices._stop_event.wait(timeout=5)
+            allow_fetch_return.set()
+            stop_future.result(timeout=5)
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()

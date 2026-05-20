@@ -4,7 +4,7 @@ import dataclasses
 import io
 import subprocess
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,18 +26,14 @@ from genai_prices.data import providers
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
 
 
-def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str] | None = None) -> str:
-    exclude = exclude or set()
+def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: Collection[str] = frozenset()) -> str:
     now = datetime.now(timezone.utc)
-    for provider in providers:
-        for model in provider.models:
-            prices = model.get_prices(now)
-            if predicate(prices):
-                model_ref = f'{provider.id}:{model.id}'
-                if model_ref in exclude:
-                    continue
-                return model_ref
-    raise AssertionError('No matching model found')
+    return next(
+        f'{provider.id}:{model.id}'
+        for provider in providers
+        for model in provider.models
+        if predicate(model.get_prices(now)) and f'{provider.id}:{model.id}' not in exclude
+    )
 
 
 def _has_tiered_prices(model_price: ModelPrice) -> bool:
