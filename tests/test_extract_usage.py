@@ -247,14 +247,29 @@ def test_usage_extractor_errors_when_optional_mappings_find_no_usage_values():
         extractor.extract({'model': 'test-model', 'usage': {}})
 
 
-def test_usage_extractor_errors_when_nested_optional_path_has_wrong_type():
+def test_usage_extractor_errors_when_required_nested_path_has_wrong_type():
     extractor = UsageExtractor(
         root='usage',
-        mappings=[UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens', required=False)],
+        mappings=[UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens')],
     )
 
     with pytest.raises(ValueError, match='Expected `usage.totals` value to be a dict, got int'):
         extractor.extract({'model': 'test-model', 'usage': {'totals': 1}})
+
+
+def test_usage_extractor_skips_optional_nested_path_with_wrong_type():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'totals': 1, 'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
 
 
 def test_no_flavors():
