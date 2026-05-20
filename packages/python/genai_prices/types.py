@@ -6,10 +6,10 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
+from typing import Annotated, Any, Literal, Protocol, TypeGuard, TypeVar, cast, overload
 
 import pydantic
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypedDict
 
 __all__ = (
     'ProviderID',
@@ -46,15 +46,13 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 MatchLogic = Annotated[
-    Union[
-        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
-        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
-        Annotated['ClauseContains', pydantic.Tag('contains')],
-        Annotated['ClauseRegex', pydantic.Tag('regex')],
-        Annotated['ClauseEquals', pydantic.Tag('equals')],
-        Annotated['ClauseOr', pydantic.Tag('or')],
-        Annotated['ClauseAnd', pydantic.Tag('and')],
-    ],
+    Annotated['ClauseStartsWith', pydantic.Tag('starts_with')]
+    | Annotated['ClauseEndsWith', pydantic.Tag('ends_with')]
+    | Annotated['ClauseContains', pydantic.Tag('contains')]
+    | Annotated['ClauseRegex', pydantic.Tag('regex')]
+    | Annotated['ClauseEquals', pydantic.Tag('equals')]
+    | Annotated['ClauseOr', pydantic.Tag('or')]
+    | Annotated['ClauseAnd', pydantic.Tag('and')],
     pydantic.Discriminator(clause_discriminator),
 ]
 
@@ -91,7 +89,7 @@ class ArrayMatch:
                     return item
 
 
-ExtractPath = Union[str, Sequence[Union[str, ArrayMatch]]]
+ExtractPath = str | Sequence[str | ArrayMatch]
 
 
 @dataclass(repr=False)
@@ -801,11 +799,10 @@ class ConditionalPrice:
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
 
-    prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
-    """Prices for this condition.
+    _: dataclasses.KW_ONLY
 
-    This field is really required, the default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
-    """
+    prices: ModelPrice
+    """Prices for this condition."""
 
 
 @dataclass
