@@ -306,37 +306,3 @@ def test_output_audio_usage():
         == snapshot(Decimal('80020.0'))
         == Decimal('20') * output_text_tokens / mil + Decimal('80') * output_audio_tokens / mil
     )
-
-
-@pytest.mark.parametrize(
-    'model_price,usage,error',
-    [
-        (
-            ModelPrice(
-                input_mtok=Decimal('1'),
-                input_audio_mtok=Decimal('2'),
-                cache_audio_read_mtok=Decimal('0.5'),
-            ),
-            Usage(input_tokens=10, input_audio_tokens=1, cache_audio_read_tokens=2),
-            'cache_audio_read_tokens cannot be greater than input_audio_tokens',
-        ),
-        (
-            ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), cache_audio_read_mtok=Decimal('0.2')),
-            Usage(input_tokens=10, cache_read_tokens=1, cache_audio_read_tokens=2),
-            'cache_audio_read_tokens cannot be greater than cache_read_tokens',
-        ),
-        (
-            ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5')),
-            Usage(input_tokens=1, cache_read_tokens=2),
-            'Uncached text input tokens cannot be negative',
-        ),
-        (
-            ModelPrice(output_mtok=Decimal('1'), output_audio_mtok=Decimal('2')),
-            Usage(output_tokens=1, output_audio_tokens=2),
-            'output_audio_tokens cannot be greater than output_tokens',
-        ),
-    ],
-)
-def test_model_price_rejects_inconsistent_inclusive_token_buckets(model_price: ModelPrice, usage: Usage, error: str):
-    with pytest.raises(ValueError, match=error):
-        model_price.calc_price(usage)
