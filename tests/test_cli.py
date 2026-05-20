@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import dataclasses
 import io
+import subprocess
+import sys
 from collections.abc import Callable
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pytest
 from dirty_equals import IsStr
@@ -12,8 +15,13 @@ from rich.console import Console
 
 import genai_prices._cli as cli_module
 from genai_prices import update_prices
-from genai_prices._cli import cli_logic
-from genai_prices._cli_impl import _parse_cli, _render_calc_error, _should_split_model_price_columns, _suggest_models
+from genai_prices._cli import (
+    _parse_cli,
+    _render_calc_error,
+    _should_split_model_price_columns,
+    _suggest_models,
+    cli_logic,
+)
 from genai_prices.data import providers
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
 
@@ -72,68 +80,18 @@ def test_parse_cli_none(monkeypatch: pytest.MonkeyPatch):
     assert cli.version is True
 
 
-def test_load_impl_missing_optional_cli_dependency(monkeypatch: pytest.MonkeyPatch):
-    cli_module._load_impl.cache_clear()
+def test_cli_import_exits_for_missing_optional_dependency():
+    package_path = Path(__file__).parents[1] / 'packages' / 'python'
+    script_path = Path(__file__).with_name('cli_missing_dependency_import.py')
 
-    def missing_impl(module_name: str) -> None:
-        assert module_name == 'genai_prices._cli_impl'
-        raise ModuleNotFoundError("No module named 'rich'", name='rich')
-
-    monkeypatch.setattr(cli_module, 'import_module', missing_impl)
-
-    with pytest.raises(RuntimeError) as exc_info:
-        cli_module._load_impl()
-
-    assert str(exc_info.value) == (
-        'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"'
+    result = subprocess.run(
+        [sys.executable, str(script_path), str(package_path)], capture_output=True, text=True, check=False
     )
-    cli_module._load_impl.cache_clear()
-
-
-def test_load_impl_reraises_unexpected_missing_dependency(monkeypatch: pytest.MonkeyPatch):
-    cli_module._load_impl.cache_clear()
-
-    def missing_impl(_module_name: str) -> None:
-        raise ModuleNotFoundError(
-            "No module named 'missing_transitive_dependency'", name='missing_transitive_dependency'
-        )
-
-    monkeypatch.setattr(cli_module, 'import_module', missing_impl)
-
-    with pytest.raises(ModuleNotFoundError, match='missing_transitive_dependency'):
-        cli_module._load_impl()
-
-    cli_module._load_impl.cache_clear()
-
-
-def test_cli_logic_missing_optional_cli_deps(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
-    def missing_impl() -> None:
-        raise RuntimeError(
-            'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"'
-        )
-
-    monkeypatch.setattr(cli_module, '_load_impl', missing_impl)
-
-    assert cli_module.cli_logic(['--version']) == 1
-    out, err = capsys.readouterr()
-    assert out == ''
-    assert 'Install CLI extras with: pip install "genai-prices[cli]"' in err
-
-
-def test_cli_entrypoint_missing_optional_cli_deps(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
-    def missing_impl() -> None:
-        raise RuntimeError(
-            'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"'
-        )
-
-    monkeypatch.setattr(cli_module, '_load_impl', missing_impl)
-
-    with pytest.raises(SystemExit, match='1'):
-        cli_module.cli()
-
-    out, err = capsys.readouterr()
-    assert out == ''
-    assert 'Install CLI extras with: pip install "genai-prices[cli]"' in err
+    assert result.returncode == 1
+    assert result.stdout == ''
+    assert result.stderr == (
+        'Optional CLI dependency \'rich\' is not installed. Install CLI extras with: pip install "genai-prices[cli]"\n'
+    )
 
 
 def test_render_calc_error_escapes_rich_markup_in_message():
