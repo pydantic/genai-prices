@@ -82,24 +82,11 @@ def test_parse_cli_none(monkeypatch: pytest.MonkeyPatch):
 
 def test_cli_import_exits_for_missing_optional_dependency():
     package_path = Path(__file__).parents[1] / 'packages' / 'python'
-    code = f"""
-import importlib.abc
-import sys
+    script_path = Path(__file__).with_name('cli_missing_dependency_import.py')
 
-sys.path.insert(0, {str(package_path)!r})
-
-class BlockRich(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path, target=None):
-        if fullname == 'rich':
-            raise ModuleNotFoundError("No module named 'rich'", name='rich')
-        return None
-
-sys.meta_path.insert(0, BlockRich())
-
-import genai_prices._cli
-"""
-
-    result = subprocess.run([sys.executable, '-c', code], capture_output=True, text=True, check=False)
+    result = subprocess.run(
+        [sys.executable, str(script_path), str(package_path)], capture_output=True, text=True, check=False
+    )
     assert result.returncode == 1
     assert result.stdout == ''
     assert result.stderr == (
