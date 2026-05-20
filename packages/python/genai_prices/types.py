@@ -455,10 +455,8 @@ def _extract_path(
             else:
                 return None
         else:
-            if not _is_mapping(data):
-                raise ValueError(
-                    f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}'
-                )
+            if not _expect_mapping(data, required, data_path, error_path):
+                return None
             try:
                 data = data[step]
             except KeyError as e:
@@ -470,8 +468,8 @@ def _extract_path(
     if data is None and not required:
         return None
 
-    if not _is_mapping(data):
-        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
+    if not _expect_mapping(data, required, data_path, error_path):
+        return None
 
     try:
         value = data[last]
@@ -489,6 +487,16 @@ def _extract_path(
             raise ValueError(
                 f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
             )
+
+
+def _expect_mapping(
+    data: Any, required: bool, data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | ArrayMatch]
+) -> TypeGuard[Mapping[str, Any]]:
+    if _is_mapping(data):
+        return True
+    if required:
+        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
+    return False
 
 
 def _is_mapping(item: Any) -> TypeGuard[Mapping[str, Any]]:
@@ -659,14 +667,14 @@ class ModelPrice:
                 input_audio_tokens - priced_cache_audio_read_tokens - cache_audio_read_tokens_priced_as_cache_read
             )
 
-        if priced_audio_input_tokens < 0:
+        if priced_audio_input_tokens < 0:  # pragma: no cover
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
 
         priced_cache_read_tokens = 0
         if self.cache_read_mtok is not None:
             priced_cache_read_tokens = cache_read_tokens - priced_cache_audio_read_tokens
 
-        if priced_cache_read_tokens < 0:
+        if priced_cache_read_tokens < 0:  # pragma: no cover
             raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
 
         priced_cache_write_tokens = cache_write_tokens if self.cache_write_mtok is not None else 0
@@ -681,7 +689,7 @@ class ModelPrice:
                 - priced_cache_audio_read_tokens
             )
 
-        if priced_text_input_tokens < 0:
+        if priced_text_input_tokens < 0:  # pragma: no cover
             raise ValueError('Uncached text input tokens cannot be negative')
 
         input_price += calc_mtok_price(self.input_mtok, priced_text_input_tokens, total_input_tokens)
@@ -696,7 +704,7 @@ class ModelPrice:
                 output_audio_tokens if self.output_audio_mtok is not None else 0
             )
 
-        if priced_text_output_tokens < 0:
+        if priced_text_output_tokens < 0:  # pragma: no cover
             raise ValueError('output_audio_tokens cannot be greater than output_tokens')
 
         output_price += calc_mtok_price(self.output_mtok, priced_text_output_tokens, total_input_tokens)

@@ -8,7 +8,15 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
-from genai_prices.types import ModelPrice, Provider, UsageExtractor, UsageExtractorMapping
+from genai_prices.types import (
+    ArrayMatch,
+    ClauseEquals,
+    ExtractedUsage,
+    ModelPrice,
+    Provider,
+    UsageExtractor,
+    UsageExtractorMapping,
+)
 
 
 class MyMapping(Mapping[str, Any]):
@@ -182,6 +190,18 @@ def test_openrouter_chat_cache_write_tokens():
     assert extracted_usage_by_url.usage == extracted_usage.usage
 
 
+def test_extracted_usage_calc_price_requires_model():
+    extracted_usage = ExtractedUsage(
+        usage=Usage(input_tokens=1),
+        model=None,
+        provider=Provider(id='test', name='Test', api_pattern='test'),
+        auto_update_timestamp=None,
+    )
+
+    with pytest.raises(ValueError, match='No model reference found in response data and model not provided'):
+        extracted_usage.calc_price()
+
+
 @pytest.mark.parametrize(
     'response_data,error',
     [
@@ -209,6 +229,47 @@ def test_extract_usage_error(response_data: Any, error: str):
         provider.extract_usage(response_data)
 
     assert str(exc_info.value) == error
+
+
+def test_usage_extractor_errors_when_optional_mappings_find_no_usage_values():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(
+                path=[ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'tokenCount'],
+                dest='input_audio_tokens',
+                required=False,
+            )
+        ],
+    )
+
+    with pytest.raises(ValueError, match='No usage information found at usage'):
+        extractor.extract({'model': 'test-model', 'usage': {}})
+
+
+def test_usage_extractor_errors_when_required_nested_path_has_wrong_type():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Expected `usage.totals` value to be a dict, got int'):
+        extractor.extract({'model': 'test-model', 'usage': {'totals': 1}})
+
+
+def test_usage_extractor_skips_optional_nested_path_with_wrong_type():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'totals': 1, 'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
 
 
 def test_no_flavors():
