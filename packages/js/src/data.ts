@@ -650,7 +650,14 @@ export const data: Provider[] = [
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
     api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
     provider_match: {
-      contains: 'bedrock',
+      or: [
+        {
+          contains: 'bedrock',
+        },
+        {
+          contains: 'amazon',
+        },
+      ],
     },
     extractors: [
       {

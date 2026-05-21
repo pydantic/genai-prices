@@ -403,7 +403,7 @@ providers: list[Provider] = [
         name='AWS Bedrock',
         api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
-        provider_match=ClauseContains(contains='bedrock'),
+        provider_match=ClauseOr(or_=[ClauseContains(contains='bedrock'), ClauseContains(contains='amazon')]),
         extractors=[
             UsageExtractor(
                 root='usage',
