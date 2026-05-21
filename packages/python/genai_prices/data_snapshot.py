@@ -13,6 +13,8 @@ __all__ = 'DataSnapshot', 'set_custom_snapshot'
 # snapshot set by UpdatePrices, or manually by the user
 _custom_snapshot: DataSnapshot | None = None
 
+_COMPACT_DATE_MODEL_REF_RE = re.compile(r'(?P<prefix>.*-)(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})$')
+
 
 def get_snapshot() -> DataSnapshot:
     if _custom_snapshot is not None:
@@ -30,6 +32,10 @@ def _bundled_snapshot() -> DataSnapshot:
 def set_custom_snapshot(snapshot: DataSnapshot | None):
     global _custom_snapshot
     _custom_snapshot = snapshot
+
+
+def _normalize_compact_date_model_ref(model_ref: str) -> str:
+    return _COMPACT_DATE_MODEL_REF_RE.sub(r'\g<prefix>\g<year>-\g<month>-\g<day>', model_ref)
 
 
 @dataclass
@@ -109,8 +115,15 @@ class DataSnapshot:
         if model := provider.find_model(model_ref, all_providers=self.providers):
             self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
             return ret
-        else:
-            raise LookupError(f'Unable to find model with {model_ref=!r} in {provider.id}')
+
+        normalized_model_ref = _normalize_compact_date_model_ref(model_ref)
+        if normalized_model_ref != model_ref and (
+            model := provider.find_model(normalized_model_ref, all_providers=self.providers)
+        ):
+            self._lookup_cache[(provider_id, provider_api_url, model_ref)] = ret = provider, model
+            return ret
+
+        raise LookupError(f'Unable to find model with {model_ref=!r} in {provider.id}')
 
     def find_provider(
         self,
