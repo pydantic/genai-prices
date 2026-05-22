@@ -2,7 +2,7 @@ from operator import attrgetter
 from pathlib import Path
 from typing import Any, cast
 
-import httpx
+import httpx2
 from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
@@ -41,7 +41,7 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
 
 
 def main():
-    models = httpx.get('https://router.huggingface.co/v1/models').json()['data']
+    models = httpx2.get('https://router.huggingface.co/v1/models').json()['data']
 
     providers = {p['provider'] for model in models for p in model['providers']}
     providers_dir = Path(__file__).parent / '../../providers'

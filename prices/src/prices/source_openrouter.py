@@ -5,7 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Literal
 
-import httpx
+import httpx2
 from pydantic import BaseModel
 
 from . import source_prices
@@ -88,7 +88,7 @@ class OpenRouterResponse(BaseModel):
 
 def main(mode: Literal['metadata', 'prices']):  # noqa: C901
     """Update provider prices and metadata based on OpenRouter API."""
-    r = httpx.get('https://openrouter.ai/api/v1/models')
+    r = httpx2.get('https://openrouter.ai/api/v1/models')
     r.raise_for_status()
 
     or_response = OpenRouterResponse.model_validate_json(r.content)
