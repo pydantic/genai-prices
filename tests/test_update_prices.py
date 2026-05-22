@@ -1,5 +1,7 @@
+import concurrent.futures
 import threading
 from decimal import Decimal
+from time import monotonic, sleep
 
 import httpx
 import pytest
@@ -21,6 +23,19 @@ PROVIDER_ARRAY_PAYLOAD = (
     b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
     b'"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
 )
+
+
+class NullUpdatePrices(UpdatePrices):
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        return None
+
+
+class CountingNullUpdatePrices(UpdatePrices):
+    count = 0
+
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        self.count += 1
+        return None
 
 
 def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
@@ -102,10 +117,36 @@ async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
         assert price.auto_update_timestamp is not None
 
 
+def test_wait_prices_updated_sync_without_active_updater():
+    assert wait_prices_updated_sync(timeout=0) is False
+
+
+def test_update_prices_start_waits_and_rejects_second_start():
+    update_prices = NullUpdatePrices(update_interval=3600)
+    update_prices.start(wait=True)
+    try:
+        assert data_snapshot._custom_snapshot is None
+        with pytest.raises(RuntimeError, match='UpdatePrices background task already started'):
+            update_prices.start()
+    finally:
+        update_prices.stop()
+
+
+def test_update_prices_continues_after_interval_until_stopped():
+    update_prices = CountingNullUpdatePrices(update_interval=0.001)
+    update_prices.start(wait=True)
+    try:
+        deadline = monotonic() + 1
+        while update_prices.count < 2 and monotonic() < deadline:
+            sleep(0.01)
+        assert update_prices.count >= 2
+    finally:
+        update_prices.stop()
+
+
 def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
-    stop_errors: list[BaseException] = []
 
     class Response:
         content = PROVIDER_ARRAY_PAYLOAD
@@ -120,27 +161,17 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
         assert allow_fetch_return.wait(timeout=5)
         return Response()
 
-    def stop_update_prices(update_prices: UpdatePrices) -> None:
-        try:
-            update_prices.stop()
-        except BaseException as exc:
-            stop_errors.append(exc)
-
     monkeypatch.setattr(httpx, 'get', fake_get)
     update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=3600)
     update_prices.start()
     try:
         assert fetch_started.wait(timeout=5)
 
-        stop_thread = threading.Thread(target=stop_update_prices, args=(update_prices,))
-        stop_thread.start()
-        assert update_prices._stop_event.wait(timeout=5)
-        allow_fetch_return.set()
-        stop_thread.join(timeout=5)
-
-        assert not stop_thread.is_alive()
-        if stop_errors:
-            raise stop_errors[0]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            stop_future = executor.submit(update_prices.stop)
+            assert update_prices._stop_event.wait(timeout=5)
+            allow_fetch_return.set()
+            stop_future.result(timeout=5)
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()

@@ -1,10 +1,11 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import pytest
 from inline_snapshot import snapshot
 
 from genai_prices.data import providers
-from genai_prices.data_snapshot import find_provider_by_id
+from genai_prices.data_snapshot import DataSnapshot, find_provider_by_id
 
 mark_xfail_todo = pytest.mark.xfail(reason='todo')
 
@@ -616,8 +617,6 @@ def test_azure_fallback_to_openai_real_data():
 
 def test_litellm_provider_id():
     """Test that litellm provider_id works by extracting actual provider from model name prefix."""
-    from genai_prices.data_snapshot import DataSnapshot
-
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
 
     # Test with prefixed model names - should extract provider from prefix
@@ -637,3 +636,26 @@ def test_litellm_provider_id():
     provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing/gpt-4o'"):
+        snapshot.find_provider_model('missing/gpt-4o', None, 'litellm', None)
+
+
+def test_snapshot_active_uses_ttl():
+    snapshot = DataSnapshot(
+        providers=providers, from_auto_update=False, timestamp=datetime.now() - timedelta(seconds=5)
+    )
+
+    assert snapshot.active(timedelta(seconds=10)) is True
+    assert snapshot.active(timedelta(seconds=1)) is False
+
+
+def test_find_provider_requires_some_lookup_input():
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    with pytest.raises(LookupError, match='Unable to find provider with model matching None'):
+        snapshot.find_provider(None, None, None)

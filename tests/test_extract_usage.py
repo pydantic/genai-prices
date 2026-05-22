@@ -1,5 +1,4 @@
 import re
-from collections.abc import Mapping
 from decimal import Decimal
 from typing import Any
 
@@ -19,18 +18,8 @@ from genai_prices.types import (
 )
 
 
-class MyMapping(Mapping[str, Any]):
-    def __init__(self, **data: Any):
-        self._data = data
-
-    def __getitem__(self, key: str) -> Any:
-        return self._data[key]
-
-    def __iter__(self) -> Any:
-        return iter(self._data)
-
-    def __len__(self) -> int:
-        return len(self._data)
+class MyMapping(dict[str, Any]):
+    pass
 
 
 @pytest.mark.parametrize(
@@ -257,6 +246,36 @@ def test_usage_extractor_errors_when_required_nested_path_has_wrong_type():
         extractor.extract({'model': 'test-model', 'usage': {'totals': 1}})
 
 
+def test_usage_extractor_errors_when_required_array_match_path_has_wrong_type():
+    extractor = UsageExtractor(
+        root=['usage', ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'data'],
+        mappings=[UsageExtractorMapping(path='tokenCount', dest='input_audio_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Expected .* value to be a sequence, got dict'):
+        extractor.extract({'model': 'test-model', 'usage': {'modality': 'AUDIO', 'tokenCount': 1}})
+
+
+def test_usage_extractor_errors_when_required_array_match_finds_no_item():
+    extractor = UsageExtractor(
+        root=['usage', ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'data'],
+        mappings=[UsageExtractorMapping(path='tokenCount', dest='input_audio_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Unable to find item at .*'):
+        extractor.extract({'model': 'test-model', 'usage': [{'modality': 'TEXT', 'data': {'tokenCount': 1}}]})
+
+
+def test_usage_extractor_errors_when_required_nested_key_is_missing():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Missing value at `usage.totals`'):
+        extractor.extract({'model': 'test-model', 'usage': {}})
+
+
 def test_usage_extractor_skips_optional_nested_path_with_wrong_type():
     extractor = UsageExtractor(
         root='usage',
@@ -269,6 +288,48 @@ def test_usage_extractor_skips_optional_nested_path_with_wrong_type():
     assert extractor.extract({'model': 'test-model', 'usage': {'totals': 1, 'output_tokens': 2}}) == (
         'test-model',
         Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_skips_optional_nested_path_with_missing_parent():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_skips_optional_nested_path_after_wrong_type_parent():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['totals', 'nested', 'input_tokens'], dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'totals': 1, 'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_accepts_sequence_root_path():
+    extractor = UsageExtractor(
+        root=['outer', 'usage'],
+        mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens')],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'outer': {'usage': {'input_tokens': 3}}}) == (
+        'test-model',
+        Usage(input_tokens=3),
     )
 
 
@@ -445,6 +506,23 @@ def test_extractor_accumulates_repeated_destination_string_with_zero_values() ->
     )
 
 
+def test_array_match_skips_non_mapping_items_before_match() -> None:
+    extractor = UsageExtractor(
+        root=['usage', ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'data'],
+        mappings=[UsageExtractorMapping(path='tokenCount', dest='input_audio_tokens')],
+    )
+
+    assert extractor.extract(
+        {
+            'model': 'test-model',
+            'usage': [None, {'modality': None}, {'modality': 'AUDIO', 'data': {'tokenCount': 9}}],
+        }
+    ) == (
+        'test-model',
+        Usage(input_audio_tokens=9),
+    )
+
+
 def test_extractor_ignores_unknown_response_extras() -> None:
     extractor = UsageExtractor(
         root='usage',
@@ -487,12 +565,24 @@ def test_accumulate_extracted_usage():
         _ = extracted + None
     with pytest.raises(ValueError):
         _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
+    with pytest.raises(ValueError, match='providers do not match'):
+        _ = extracted + ExtractedUsage(
+            usage=Usage(input_tokens=1),
+            model=extracted.model,
+            provider=Provider(id='other', name='Other', api_pattern='https://other.example'),
+            auto_update_timestamp=None,
+        )
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(input_tokens=100 * 2, output_tokens=162 * 2)
+    assert repr(double_extracted).startswith('ExtractedUsage(')
+    assert repr(double_extracted.calc_price()).startswith('PriceCalculation(')
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20
     )
     assert Usage(input_audio_tokens=10) + Usage(input_tokens=10) == Usage(input_audio_tokens=10, input_tokens=10)
+    assert Usage(input_tokens=1).__radd__(Usage(output_tokens=2)) == Usage(input_tokens=1, output_tokens=2)
+    with pytest.raises(TypeError):
+        _ = Usage() + 1
 
 
 def test_xai_native():
