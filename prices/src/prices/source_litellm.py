@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-import httpx
+import httpx2
 from pydantic import BaseModel, OnErrorOmit, TypeAdapter
 
 from . import source_prices
@@ -52,7 +52,7 @@ lookup_provider = {
 def get_litellm_prices():
     """Get prices from LiteLLM code."""
     url = 'https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json'
-    r = httpx.get(url)
+    r = httpx2.get(url)
     r.raise_for_status()
     response_data = lite_llm_response_schema.validate_json(r.content)
 
