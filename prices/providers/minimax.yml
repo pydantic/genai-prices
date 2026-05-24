@@ -52,24 +52,10 @@ models:
       or:
         - equals: MiniMax-M2
         - equals: minimax-m2
-    context_window: 204800
-    prices_checked: "2026-05-23"
-    prices:
-      input_mtok: 0.30
-      cache_read_mtok: 0.03
-      cache_write_mtok: 0.375
-      output_mtok: 1.20
-
-  - id: MiniMax-M2.1
-    name: MiniMax M2.1
-    description: >-
-      MiniMax M2.1 (legacy), a multimodal language model with 204,800 token
-      context window. Supports deep thinking, function calling, and context
-      caching.
-    match:
-      or:
         - equals: MiniMax-M2.1
         - equals: minimax-m2.1
+        - equals: MiniMax-M2.5
+        - equals: minimax-m2.5
     context_window: 204800
     prices_checked: "2026-05-23"
     prices:
@@ -93,23 +79,6 @@ models:
       cache_read_mtok: 0.03
       cache_write_mtok: 0.375
       output_mtok: 2.40
-
-  - id: MiniMax-M2.5
-    name: MiniMax M2.5
-    description: >-
-      MiniMax M2.5, a multimodal language model with 204,800 token context
-      window. Optimized for code generation and complex tasks.
-    match:
-      or:
-        - equals: MiniMax-M2.5
-        - equals: minimax-m2.5
-    context_window: 204800
-    prices_checked: "2026-05-23"
-    prices:
-      input_mtok: 0.30
-      cache_read_mtok: 0.03
-      cache_write_mtok: 0.375
-      output_mtok: 1.20
 
   - id: MiniMax-M2.5-highspeed
     name: MiniMax M2.5 Highspeed
