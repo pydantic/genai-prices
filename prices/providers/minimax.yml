@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=.schema.json
+name: MiniMax
+id: minimax
+pricing_urls:
+  - https://platform.minimaxi.com/docs/guides/pricing-paygo.md
+api_pattern: 'https://api\.minimax(i)?\.(?:com|io)'
+price_comments: >-
+  Prices sourced from MiniMax pay-as-you-go pricing (CNY), converted to USD at
+  1 USD = 7.25 CNY (May 2026). Native CNY prices: M2.7/M2.5/M2.1/M2 standard
+  input 2.1¥/M, output 8.4¥/M; highspeed variants input 4.2¥/M, output 16.8¥/M.
+  Cache write is 2.625¥/M for all models. Cache read for M2.7 is 0.42¥/M;
+  all other models 0.21¥/M.
+model_match:
+  or:
+    - starts_with: "MiniMax-M"
+    - starts_with: "minimax-m"
+extractors:
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+models:
+  - id: MiniMax-M2
+    name: MiniMax M2
+    description: >-
+      MiniMax M2, a multimodal language model with 204,800 token context window.
+    match:
+      or:
+        - equals: MiniMax-M2
+        - equals: minimax-m2
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.290
+      cache_read_mtok: 0.029
+      cache_write_mtok: 0.362
+      output_mtok: 1.159
+
+  - id: MiniMax-M2.1
+    name: MiniMax M2.1
+    description: >-
+      MiniMax M2.1, a multimodal language model with 204,800 token context window.
+      Supports deep thinking, function calling, and context caching.
+    match:
+      or:
+        - equals: MiniMax-M2.1
+        - equals: minimax-m2.1
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.290
+      cache_read_mtok: 0.029
+      cache_write_mtok: 0.362
+      output_mtok: 1.159
+
+  - id: MiniMax-M2.1-highspeed
+    name: MiniMax M2.1 Highspeed
+    description: >-
+      MiniMax M2.1 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.1-highspeed"
+        - contains: "m2.1-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.579
+      cache_read_mtok: 0.029
+      cache_write_mtok: 0.362
+      output_mtok: 2.317
+
+  - id: MiniMax-M2.5
+    name: MiniMax M2.5
+    description: >-
+      MiniMax M2.5, a multimodal language model with 204,800 token context window.
+      Supports deep thinking, function calling, and context caching.
+    match:
+      or:
+        - equals: MiniMax-M2.5
+        - equals: minimax-m2.5
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.290
+      cache_read_mtok: 0.029
+      cache_write_mtok: 0.362
+      output_mtok: 1.159
+
+  - id: MiniMax-M2.5-highspeed
+    name: MiniMax M2.5 Highspeed
+    description: >-
+      MiniMax M2.5 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.5-highspeed"
+        - contains: "m2.5-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.579
+      cache_read_mtok: 0.029
+      cache_write_mtok: 0.362
+      output_mtok: 2.317
+
+  - id: MiniMax-M2.7
+    name: MiniMax M2.7
+    description: >-
+      MiniMax M2.7, a multimodal language model with 204,800 token context window.
+      Supports deep thinking, function calling, and context caching.
+    match:
+      or:
+        - equals: MiniMax-M2.7
+        - equals: minimax-m2.7
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.290
+      cache_read_mtok: 0.058
+      cache_write_mtok: 0.362
+      output_mtok: 1.159
+
+  - id: MiniMax-M2.7-highspeed
+    name: MiniMax M2.7 Highspeed
+    description: >-
+      MiniMax M2.7 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.7-highspeed"
+        - contains: "m2.7-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.579
+      cache_read_mtok: 0.058
+      cache_write_mtok: 0.362
+      output_mtok: 2.317
