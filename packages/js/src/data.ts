@@ -650,7 +650,14 @@ export const data: Provider[] = [
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
     api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
     provider_match: {
-      contains: 'bedrock',
+      or: [
+        {
+          contains: 'bedrock',
+        },
+        {
+          contains: 'amazon',
+        },
+      ],
     },
     extractors: [
       {
@@ -2556,6 +2563,46 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        id: 'deepseek-v4-flash',
+        name: 'DeepSeek V4 Flash',
+        description:
+          'DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              starts_with: 'deepseek-v4-flash',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.0028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        description:
+          'DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+        match: {
+          or: [
+            {
+              starts_with: 'deepseek-v4-pro',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount that is not reflected here.',
+        prices: {
+          input_mtok: 1.74,
+          cache_read_mtok: 0.0145,
+          output_mtok: 3.48,
+        },
+      },
     ],
   },
   {
@@ -2879,7 +2926,7 @@ export const data: Provider[] = [
           },
           {
             path: 'toolUsePromptTokenCount',
-            dest: 'output_tokens',
+            dest: 'input_tokens',
             required: false,
           },
         ],
@@ -3266,17 +3313,10 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: {
-            base: 0.025,
-            tiers: [
-              {
-                start: 1000000,
-                price: 0.175,
-              },
-            ],
-          },
+          cache_read_mtok: 0.025,
           output_mtok: 0.4,
           input_audio_mtok: 0.7,
+          cache_audio_read_mtok: 0.175,
         },
       },
       {
@@ -3546,15 +3586,15 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'gemini-3.1-flash-lite-preview',
-        name: 'Gemini 3.1 Flash Lite Preview',
+        id: 'gemini-3.1-flash-lite',
+        name: 'Gemini 3.1 Flash Lite',
         description:
           "Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          starts_with: 'gemini-3.1-flash-lite-preview',
+          starts_with: 'gemini-3.1-flash-lite',
         },
         context_window: 1000000,
-        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -3599,6 +3639,23 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gemini-3.5-flash',
+        name: 'Gemini 3.5 Flash',
+        description:
+          "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+        match: {
+          starts_with: 'gemini-3.5-flash',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.15,
+          output_mtok: 9,
         },
       },
       {
@@ -9573,6 +9630,7 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         prices: {
+          input_mtok: 2.5,
           output_mtok: 10,
           input_audio_mtok: 2.5,
         },
@@ -9624,6 +9682,7 @@ export const data: Provider[] = [
           starts_with: 'gpt-4o-mini-audio',
         },
         prices: {
+          input_mtok: 0.15,
           output_mtok: 0.6,
           input_audio_mtok: 0.15,
         },
@@ -9660,6 +9719,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.6,
+          output_mtok: 12,
           output_audio_mtok: 12,
         },
       },
@@ -9987,6 +10047,39 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.3',
+        name: 'GPT-5.3 Chat',
+        description: 'GPT-5.3 Instant model used in ChatGPT',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.3',
+            },
+            {
+              equals: 'gpt-5-3',
+            },
+            {
+              equals: 'gpt-5.3-chat',
+            },
+            {
+              equals: 'gpt-5.3-chat-latest',
+            },
+            {
+              equals: 'gpt-5-3-chat',
+            },
+            {
+              equals: 'gpt-5-3-chat-latest',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 1.75,
+          cache_read_mtok: 0.175,
+          output_mtok: 14,
+        },
+      },
+      {
         id: 'gpt-5.3-codex',
         name: 'GPT-5.3-Codex',
         description: 'The most capable agentic coding model',
@@ -10152,6 +10245,83 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'gpt-5.5',
+        name: 'GPT-5.5',
+        description: 'The best model for coding and agentic tasks across industries',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.5',
+            },
+            {
+              equals: 'gpt-5.5-2026-04-23',
+            },
+            {
+              equals: 'gpt-5.5-2026-04-24',
+            },
+            {
+              equals: 'gpt-5-5',
+            },
+            {
+              equals: 'gpt-5-5-2026-04-23',
+            },
+            {
+              equals: 'gpt-5-5-2026-04-24',
+            },
+            {
+              equals: 'gpt-5.5-chat',
+            },
+            {
+              equals: 'gpt-5.5-chat-latest',
+            },
+            {
+              equals: 'gpt-5-5-chat',
+            },
+            {
+              equals: 'gpt-5-5-chat-latest',
+            },
+            {
+              equals: 'gpt-5.5-codex',
+            },
+            {
+              equals: 'gpt-5-5-codex',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 0.5,
+          output_mtok: 30,
+        },
+      },
+      {
+        id: 'gpt-5.5-pro',
+        name: 'GPT-5.5 Pro',
+        description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.5-pro',
+            },
+            {
+              equals: 'gpt-5.5-pro-2026-04-23',
+            },
+            {
+              equals: 'gpt-5-5-pro',
+            },
+            {
+              equals: 'gpt-5-5-pro-2026-04-23',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 30,
+          output_mtok: 180,
         },
       },
       {
@@ -10479,6 +10649,45 @@ export const data: Provider[] = [
     name: 'OpenRouter',
     pricing_urls: ['https://openrouter.ai/models'],
     api_pattern: 'https://(api\\.)?openrouter\\.ai',
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: '01-ai/yi-large',
@@ -11971,6 +12180,19 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-v3-base:free',
         },
         prices: {},
+      },
+      {
+        id: 'deepseek/deepseek-v3.2',
+        name: 'DeepSeek V3.2',
+        match: {
+          equals: 'deepseek/deepseek-v3.2',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.252,
+          cache_read_mtok: 0.0252,
+          output_mtok: 0.378,
+        },
       },
       {
         id: 'deepseek/deepseek-v3.2-exp',
@@ -18506,6 +18728,31 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.05,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'grok-4.3',
+        name: 'Grok 4.3',
+        description:
+          'Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling, and instruction following capabilities. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.',
+        match: {
+          or: [
+            {
+              equals: 'grok-4.3',
+            },
+            {
+              equals: 'grok-4.3-latest',
+            },
+            {
+              equals: 'grok-latest',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.2,
+          output_mtok: 2.5,
         },
       },
       {

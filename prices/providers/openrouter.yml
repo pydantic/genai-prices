@@ -6,6 +6,28 @@ pricing_urls:
 api_pattern: 'https://(api\.)?openrouter\.ai'
 # we don't include description here since there are so many models, you can see descriptions at
 # https://openrouter.ai/api/v1/models which this data is based on
+extractors:
+  # https://openrouter.ai/docs/api-reference/overview#response-usage
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [prompt_tokens_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [completion_tokens_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
 models:
   - id: 01-ai/yi-large
     match:
@@ -974,6 +996,17 @@ models:
     match:
       equals: "deepseek/deepseek-v3-base:free"
     prices: {}
+
+  - id: deepseek/deepseek-v3.2
+    name: DeepSeek V3.2
+    match:
+      equals: deepseek/deepseek-v3.2
+    context_window: 131072
+    prices:
+      input_mtok: 0.252
+      cache_read_mtok: 0.0252
+      output_mtok: 0.378
+    prices_checked: 2026-04-29
 
   - id: deepseek/deepseek-v3.2-exp
     name: DeepSeek V3.2 Experimental

@@ -2386,14 +2386,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000054",
-            "output_price": "0.0001208",
+            "input_price": "0.0000215",
+            "output_price": "0.0000564",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 54,
-          "output_tokens": 302
+          "input_tokens": 215,
+          "output_tokens": 141
         }
       }
     ],
@@ -2555,14 +2555,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00002125",
-            "output_price": "0.00533",
+            "input_price": "0.00017",
+            "output_price": "0.00414",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 17,
-          "output_tokens": 533
+          "input_tokens": 136,
+          "output_tokens": 414
         }
       }
     ],
@@ -2597,14 +2597,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00026125",
-            "output_price": "0.00623",
+            "input_price": "0.00061875",
+            "output_price": "0.00337",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 209,
-          "output_tokens": 623
+          "input_tokens": 495,
+          "output_tokens": 337
         }
       }
     ],
@@ -3664,14 +3664,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00031125",
-            "output_price": "0.0086",
+            "input_price": "0.00071",
+            "output_price": "0.00541",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 249,
-          "output_tokens": 860
+          "input_tokens": 568,
+          "output_tokens": 541
         }
       }
     ],
@@ -3982,14 +3982,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00001875",
-            "output_price": "0.01335",
+            "input_price": "0.0008625",
+            "output_price": "0.0066",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 15,
-          "output_tokens": 1335
+          "input_tokens": 690,
+          "output_tokens": 660
         }
       }
     ],
@@ -4024,14 +4024,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00004875",
-            "output_price": "0.01235",
+            "input_price": "0.000845",
+            "output_price": "0.00598",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 39,
-          "output_tokens": 1235
+          "input_tokens": 676,
+          "output_tokens": 598
         }
       }
     ],
@@ -5677,6 +5677,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -5807,6 +5811,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000002",
+            "output_price": "0.00003",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -5946,6 +5956,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001025",
+            "output_price": "0.002914",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -6076,6 +6092,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000129",
+            "output_price": "0.00603",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -6212,6 +6234,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00000425",
+            "output_price": "0.00303",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -6364,6 +6392,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000425",
+            "output_price": "0.004354",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -6494,6 +6528,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000268",
+            "output_price": "0.0000258",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -6637,6 +6677,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000031",
+            "output_price": "0.0000084",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -6774,6 +6820,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000096",
+            "output_price": "0.00490175",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -9606,14 +9658,14 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.0000013",
-            "output_price": "0.0000264",
+            "input_price": "0.0000044",
+            "output_price": "0.000014",
             "provider_id": "google"
           }
         ],
         "usage": {
-          "input_tokens": 13,
-          "output_tokens": 66
+          "input_tokens": 44,
+          "output_tokens": 35
         }
       }
     ],
@@ -11815,6 +11867,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -11968,6 +12024,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -12102,6 +12162,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -12246,6 +12310,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0053375",
+            "output_price": "0.0000343",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -12380,6 +12450,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -12524,6 +12598,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001883",
+            "output_price": "0.0000105",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -12658,6 +12738,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -12806,6 +12890,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -12940,6 +13028,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -13082,6 +13174,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -13218,6 +13314,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -13365,6 +13465,12 @@
             "input_price": "0.00006",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00006",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -13516,6 +13622,10 @@
             "input_price": "0.0000121",
             "output_price": "0.0035596",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -13728,6 +13838,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -13876,6 +13990,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0010472",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -14088,6 +14206,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -14239,6 +14363,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00023",
+            "output_price": "0.00015",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -14378,6 +14508,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00004375",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -14510,6 +14646,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000825",
+            "output_price": "0.00006",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -14660,6 +14802,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -14770,7 +14916,7 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.0001725",
+            "input_price": "0.0002025",
             "output_price": "0.00072",
             "provider_id": "azure"
           },
@@ -14824,9 +14970,13 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001725",
+            "input_price": "0.0002025",
             "output_price": "0.00072",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -14843,13 +14993,13 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "azure"
           },
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "openai"
           }
@@ -14971,6 +15121,10 @@
             "input_price": "0.0006",
             "output_price": "0.0015",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -15125,6 +15279,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -15273,6 +15433,12 @@
             "input_price": "0.0001125",
             "output_price": "0.00026",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001125",
+            "output_price": "0.00026",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -15427,6 +15593,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -15575,6 +15745,10 @@
             "input_price": "0.00002",
             "output_price": "0.000024",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -15729,6 +15903,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -15877,6 +16055,12 @@
             "input_price": "0.0007025",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0007025",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -16031,6 +16215,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0007775",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -16179,6 +16369,12 @@
             "input_price": "0.000115",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000115",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -16333,6 +16529,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0012575",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -16472,6 +16674,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -16621,6 +16827,12 @@
             "input_price": "0.0000012",
             "output_price": "0.000006",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000012",
+            "output_price": "0.000006",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -16775,6 +16987,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00017",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -16923,6 +17141,12 @@
             "input_price": "0.0002225",
             "output_price": "0.00036",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0002225",
+            "output_price": "0.00036",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -17135,6 +17359,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -17286,6 +17514,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0027975",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -17428,6 +17662,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -17563,6 +17801,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -17710,6 +17952,12 @@
             "input_price": "0.0002725",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0002725",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -17864,6 +18112,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000325",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -18012,6 +18266,12 @@
             "input_price": "0.0005875",
             "output_price": "0.00016",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0005875",
+            "output_price": "0.00016",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -18166,6 +18426,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006825",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -18314,6 +18580,12 @@
             "input_price": "0.000735",
             "output_price": "0.00021",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000735",
+            "output_price": "0.00021",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -18468,6 +18740,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00002",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -18616,6 +18894,12 @@
             "input_price": "0.000105",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -18770,6 +19054,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001575",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -18918,6 +19208,12 @@
             "input_price": "0.0041975",
             "output_price": "0.00025",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0041975",
+            "output_price": "0.00025",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -19072,6 +19368,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -19211,6 +19511,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -19358,6 +19662,10 @@
             "input_price": "0.0000515",
             "output_price": "0.0000024",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -19512,6 +19820,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000115",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -19660,6 +19974,12 @@
             "input_price": "0.0029625",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0029625",
+            "output_price": "0.00009",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -19814,6 +20134,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00007",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -19965,6 +20291,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005875",
+            "output_price": "0.00013",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -20113,6 +20445,12 @@
             "input_price": "0.000033",
             "output_price": "0.0009328",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000033",
+            "output_price": "0.0009328",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -20347,6 +20685,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0000156",
+            "output_price": "0.0000096",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -20495,6 +20839,12 @@
             "input_price": "0.00001935",
             "output_price": "0.0000054",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00001935",
+            "output_price": "0.0000054",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -20649,6 +20999,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -20797,6 +21151,12 @@
             "input_price": "0.0004",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -20951,6 +21311,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004525",
+            "output_price": "0.00025",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -21061,7 +21427,7 @@
         "extractors": [
           {
             "api_flavor": "chat",
-            "input_price": "0.00011",
+            "input_price": "0.00016",
             "output_price": "0.00009",
             "provider_id": "azure"
           },
@@ -21115,9 +21481,13 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00011",
+            "input_price": "0.00016",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -21134,13 +21504,13 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "azure"
           },
           {
             "api_flavor": "embeddings",
-            "input_price": "0.0",
+            "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "openai"
           }
@@ -22092,6 +22462,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -22224,6 +22598,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -22417,6 +22795,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -26719,6 +27101,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -26876,6 +27262,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000708",
+            "output_price": "0.0000174",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -27014,6 +27406,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000021",
+            "output_price": "0.0005656",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -27157,6 +27555,12 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000524",
+            "output_price": "0.000636",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -27307,6 +27711,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -27443,6 +27851,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -27591,6 +28003,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -27736,6 +28152,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -27878,6 +28298,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -28038,6 +28462,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000712",
+            "output_price": "0.0000188",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -28172,6 +28602,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -28332,6 +28766,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001132",
+            "output_price": "0.0000098",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -28489,6 +28929,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00001276",
+            "output_price": "0.0000192",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -28629,6 +29075,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -28776,6 +29226,12 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -28927,6 +29383,12 @@
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00019",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -29081,6 +29543,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -29229,6 +29697,12 @@
             "input_price": "0.0001175",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001175",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -29383,6 +29857,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002175",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -29531,6 +30011,12 @@
             "input_price": "0.00029",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00029",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -29685,6 +30171,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000095",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -29833,6 +30325,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -29987,6 +30485,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -30135,6 +30639,12 @@
             "input_price": "0.0003325",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00019",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -30289,6 +30799,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -30437,6 +30953,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -30591,6 +31113,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -30739,6 +31267,12 @@
             "input_price": "0.000105",
             "output_price": "0.00013",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -30893,6 +31427,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001675",
+            "output_price": "0.00009",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -31041,6 +31581,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -31195,6 +31741,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -31346,6 +31898,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -31494,6 +32052,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -31718,6 +32282,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0007625",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -31866,6 +32436,12 @@
             "input_price": "0.00363",
             "output_price": "0.00029",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00363",
+            "output_price": "0.00029",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -32020,6 +32596,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -32168,6 +32750,12 @@
             "input_price": "0.00056",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00056",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -32322,6 +32910,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005075",
+            "output_price": "0.00015",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -32470,6 +33064,12 @@
             "input_price": "0.000625",
             "output_price": "0.00015",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000625",
+            "output_price": "0.00015",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -32624,6 +33224,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0006925",
+            "output_price": "0.00022",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -32722,7 +33328,7 @@
         "extractors": [
           {
             "api_flavor": "default",
-            "input_price": "0.00082125",
+            "input_price": "0.00100125",
             "output_price": "0.00005",
             "provider_id": "google"
           }
@@ -32846,6 +33452,12 @@
             "input_price": "0.0004875",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004875",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -33000,6 +33612,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0033875",
+            "output_price": "0.00024",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -33148,6 +33766,12 @@
             "input_price": "0.0008575",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0008575",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -33302,6 +33926,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000935",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -33450,6 +34080,12 @@
             "input_price": "0.00067",
             "output_price": "0.00018",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00067",
+            "output_price": "0.00018",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -33604,6 +34240,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00075",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -33752,6 +34394,12 @@
             "input_price": "0.0007625",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0007625",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -33906,6 +34554,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00083",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -34054,6 +34708,12 @@
             "input_price": "0.0004875",
             "output_price": "0.00019",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004875",
+            "output_price": "0.00019",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -34208,6 +34868,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0005675",
+            "output_price": "0.00013",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -34356,6 +35022,12 @@
             "input_price": "0.0004775",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004775",
+            "output_price": "0.00012",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -34510,6 +35182,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00333",
+            "output_price": "0.00019",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -34658,6 +35336,12 @@
             "input_price": "0.0004875",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004875",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -34812,6 +35496,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000555",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -34960,6 +35650,12 @@
             "input_price": "0.000475",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000475",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -35114,6 +35810,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0033225",
+            "output_price": "0.00015",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -35262,6 +35964,12 @@
             "input_price": "0.000485",
             "output_price": "0.00018",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000485",
+            "output_price": "0.00018",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -35416,6 +36124,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000585",
+            "output_price": "0.00019",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -35564,6 +36278,12 @@
             "input_price": "0.0004825",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0004825",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -35718,6 +36438,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00053",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -35866,6 +36592,12 @@
             "input_price": "0.0001125",
             "output_price": "0.00015",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001125",
+            "output_price": "0.00015",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -36020,6 +36752,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -36171,6 +36909,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -36319,6 +37063,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -36540,6 +37290,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -36688,6 +37444,12 @@
             "input_price": "0.0001675",
             "output_price": "0.00009",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001675",
+            "output_price": "0.00009",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -36842,6 +37604,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001175",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -36990,6 +37758,12 @@
             "input_price": "0.0002175",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0002175",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -37144,6 +37918,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00029",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -37292,6 +38072,12 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -37446,6 +38232,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00019",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -37594,6 +38386,12 @@
             "input_price": "0.000105",
             "output_price": "0.00013",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000105",
+            "output_price": "0.00013",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -37748,6 +38546,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -37896,6 +38700,12 @@
             "input_price": "0.000095",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000095",
+            "output_price": "0.00011",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -38050,6 +38860,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0004525",
+            "output_price": "0.00034",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -38201,6 +39017,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0023125",
+            "output_price": "0.00085",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -38349,6 +39171,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -38585,6 +39413,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -38758,6 +39590,10 @@
             "input_price": "0.0000341",
             "output_price": "0.0020548",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -38964,6 +39800,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -39108,6 +39948,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -39262,6 +40108,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -39410,6 +40262,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -39564,6 +40422,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -39712,6 +40576,12 @@
             "input_price": "0.0001175",
             "output_price": "0.00017",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001175",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -39866,6 +40736,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0002175",
+            "output_price": "0.00017",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -40014,6 +40890,12 @@
             "input_price": "0.00029",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00029",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -40168,6 +41050,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -40316,6 +41204,12 @@
             "input_price": "0.00008",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.00008",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -40470,6 +41364,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0001275",
+            "output_price": "0.0001",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -40621,6 +41521,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -40769,6 +41675,12 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -40923,6 +41835,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.0002",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -41071,6 +41989,12 @@
             "input_price": "0.0001775",
             "output_price": "0.00046",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0001775",
+            "output_price": "0.00046",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -41225,6 +42149,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.0003325",
+            "output_price": "0.00022",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -41376,6 +42306,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -41524,6 +42460,12 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00008",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -41719,6 +42661,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000035",
+            "output_price": "0.00009",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -41858,6 +42806,12 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0",
+            "output_price": "0",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -41994,6 +42948,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",
@@ -42194,6 +43152,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
@@ -42365,6 +43327,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "chat",

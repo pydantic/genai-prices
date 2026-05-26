@@ -4,7 +4,7 @@ version = "0"
 description = "Database of prices for calling LLM models."
 readme = "README.md"
 authors = [{ name = "Samuel Colvin", email = "samuel@pydantic.dev" }]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 # Do not publish this package to PyPI
 classifiers = ["Private :: do not release"]
 dependencies = []
@@ -34,7 +34,7 @@ members = ["prices", "packages/python"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py310"
 include = ["prices/src/**/*.py", "packages/python/**/*.py", "tests/**/*.py"]
 
 [tool.ruff.lint]

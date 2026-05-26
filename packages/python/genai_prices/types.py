@@ -6,10 +6,10 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import Annotated, Any, Literal, Protocol, TypeVar, Union, cast, overload
+from typing import Annotated, Any, Literal, Protocol, TypeGuard, TypeVar, cast, overload
 
 import pydantic
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypedDict
 
 __all__ = (
     'ProviderID',
@@ -46,15 +46,13 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 MatchLogic = Annotated[
-    Union[
-        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
-        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
-        Annotated['ClauseContains', pydantic.Tag('contains')],
-        Annotated['ClauseRegex', pydantic.Tag('regex')],
-        Annotated['ClauseEquals', pydantic.Tag('equals')],
-        Annotated['ClauseOr', pydantic.Tag('or')],
-        Annotated['ClauseAnd', pydantic.Tag('and')],
-    ],
+    Annotated['ClauseStartsWith', pydantic.Tag('starts_with')]
+    | Annotated['ClauseEndsWith', pydantic.Tag('ends_with')]
+    | Annotated['ClauseContains', pydantic.Tag('contains')]
+    | Annotated['ClauseRegex', pydantic.Tag('regex')]
+    | Annotated['ClauseEquals', pydantic.Tag('equals')]
+    | Annotated['ClauseOr', pydantic.Tag('or')]
+    | Annotated['ClauseAnd', pydantic.Tag('and')],
     pydantic.Discriminator(clause_discriminator),
 ]
 
@@ -91,7 +89,7 @@ class ArrayMatch:
                     return item
 
 
-ExtractPath = Union[str, Sequence[Union[str, ArrayMatch]]]
+ExtractPath = str | Sequence[str | ArrayMatch]
 
 
 @dataclass(repr=False)
@@ -304,7 +302,7 @@ class Provider:
                 return model
         if self.fallback_model_providers and all_providers:
             for provider_id in self.fallback_model_providers:
-                provider = next(p for p in all_providers if p.id == provider_id)
+                provider = next((p for p in all_providers if p.id == provider_id), None)
                 if provider:
                     # don't pass all_providers when falling back, so we can only have one step of fallback
                     if model := provider.find_model(model_ref):
@@ -457,10 +455,8 @@ def _extract_path(
             else:
                 return None
         else:
-            if not _is_mapping(data):
-                raise ValueError(
-                    f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}'
-                )
+            if not _expect_mapping(data, required, data_path, error_path):
+                return None
             try:
                 data = data[step]
             except KeyError as e:
@@ -472,8 +468,8 @@ def _extract_path(
     if data is None and not required:
         return None
 
-    if not _is_mapping(data):
-        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
+    if not _expect_mapping(data, required, data_path, error_path):
+        return None
 
     try:
         value = data[last]
@@ -491,6 +487,16 @@ def _extract_path(
             raise ValueError(
                 f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
             )
+
+
+def _expect_mapping(
+    data: Any, required: bool, data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | ArrayMatch]
+) -> TypeGuard[Mapping[str, Any]]:
+    if _is_mapping(data):
+        return True
+    if required:
+        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
+    return False
 
 
 def _is_mapping(item: Any) -> TypeGuard[Mapping[str, Any]]:
@@ -616,39 +622,92 @@ class ModelPrice:
         # Calculate total input tokens for tier determination
         total_input_tokens = usage.input_tokens or 0
 
-        uncached_audio_input_tokens = usage.input_audio_tokens or 0
-        if cache_audio_read_tokens := (usage.cache_audio_read_tokens or 0):
-            uncached_audio_input_tokens -= cache_audio_read_tokens
+        cache_read_tokens = usage.cache_read_tokens or 0
+        cache_write_tokens = usage.cache_write_tokens or 0
+        cache_audio_read_tokens = usage.cache_audio_read_tokens or 0
+        input_audio_tokens = usage.input_audio_tokens or 0
+        output_audio_tokens = usage.output_audio_tokens or 0
 
-        if uncached_audio_input_tokens < 0:
+        # Provider usage fields can be inclusive parent/child buckets rather than disjoint buckets.
+        # For example, Google can report:
+        #
+        #   input_tokens=1_000
+        #   cache_read_tokens=400
+        #   input_audio_tokens=300
+        #   cache_audio_read_tokens=100
+        #
+        # The 100 cached audio tokens are included in all three ancestor buckets:
+        # input_tokens, cache_read_tokens, and input_audio_tokens. Pricing must charge
+        # each physical token once, using the most specific available priced bucket and
+        # falling back to a parent bucket only when the child bucket has no price.
+        #
+        # With all prices present, the disjoint priced buckets are:
+        #
+        #   input_mtok: 400 tokens
+        #   cache_read_mtok: 300 tokens
+        #   input_audio_mtok: 200 tokens
+        #   cache_audio_read_mtok: 100 tokens
+        #
+        # If cache_audio_read_mtok is missing but cache_read_mtok exists, cached audio
+        # falls back to cache_read_mtok. That keeps it out of input_audio_mtok so it is
+        # not double charged:
+        #
+        #   input_mtok: 400 tokens
+        #   cache_read_mtok: 400 tokens
+        #   input_audio_mtok: 200 tokens
+        #   cache_audio_read_mtok: 0 tokens
+        priced_cache_audio_read_tokens = cache_audio_read_tokens if self.cache_audio_read_mtok is not None else 0
+        cache_audio_read_tokens_priced_as_cache_read = (
+            cache_audio_read_tokens if self.cache_audio_read_mtok is None and self.cache_read_mtok is not None else 0
+        )
+
+        priced_audio_input_tokens = 0
+        if self.input_audio_mtok is not None:
+            priced_audio_input_tokens = (
+                input_audio_tokens - priced_cache_audio_read_tokens - cache_audio_read_tokens_priced_as_cache_read
+            )
+
+        if priced_audio_input_tokens < 0:  # pragma: no cover
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
-        input_price += calc_mtok_price(self.input_audio_mtok, uncached_audio_input_tokens, total_input_tokens)
 
-        uncached_text_input_tokens = usage.input_tokens or 0
-        uncached_text_input_tokens -= uncached_audio_input_tokens
-        if cache_write_tokens := usage.cache_write_tokens:
-            uncached_text_input_tokens -= cache_write_tokens
-        if cache_read_tokens := usage.cache_read_tokens:
-            uncached_text_input_tokens -= cache_read_tokens
+        priced_cache_read_tokens = 0
+        if self.cache_read_mtok is not None:
+            priced_cache_read_tokens = cache_read_tokens - priced_cache_audio_read_tokens
 
-        if uncached_text_input_tokens < 0:
-            raise ValueError('Uncached text input tokens cannot be negative')
-        input_price += calc_mtok_price(self.input_mtok, uncached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_write_mtok, usage.cache_write_tokens, total_input_tokens)
-
-        cached_text_input_tokens = usage.cache_read_tokens or 0
-        cached_text_input_tokens -= cache_audio_read_tokens
-
-        if cached_text_input_tokens < 0:
+        if priced_cache_read_tokens < 0:  # pragma: no cover
             raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-        input_price += calc_mtok_price(self.cache_read_mtok, cached_text_input_tokens, total_input_tokens)
-        input_price += calc_mtok_price(self.cache_audio_read_mtok, usage.cache_audio_read_tokens, total_input_tokens)
 
-        text_output_tokens = usage.output_tokens or 0
-        text_output_tokens -= usage.output_audio_tokens or 0
-        if text_output_tokens < 0:
+        priced_cache_write_tokens = cache_write_tokens if self.cache_write_mtok is not None else 0
+
+        priced_text_input_tokens = 0
+        if self.input_mtok is not None:
+            priced_text_input_tokens = (
+                total_input_tokens
+                - priced_cache_read_tokens
+                - priced_cache_write_tokens
+                - priced_audio_input_tokens
+                - priced_cache_audio_read_tokens
+            )
+
+        if priced_text_input_tokens < 0:  # pragma: no cover
+            raise ValueError('Uncached text input tokens cannot be negative')
+
+        input_price += calc_mtok_price(self.input_mtok, priced_text_input_tokens, total_input_tokens)
+        input_price += calc_mtok_price(self.cache_write_mtok, priced_cache_write_tokens, total_input_tokens)
+        input_price += calc_mtok_price(self.cache_read_mtok, priced_cache_read_tokens, total_input_tokens)
+        input_price += calc_mtok_price(self.input_audio_mtok, priced_audio_input_tokens, total_input_tokens)
+        input_price += calc_mtok_price(self.cache_audio_read_mtok, priced_cache_audio_read_tokens, total_input_tokens)
+
+        priced_text_output_tokens = 0
+        if self.output_mtok is not None:
+            priced_text_output_tokens = (usage.output_tokens or 0) - (
+                output_audio_tokens if self.output_audio_mtok is not None else 0
+            )
+
+        if priced_text_output_tokens < 0:  # pragma: no cover
             raise ValueError('output_audio_tokens cannot be greater than output_tokens')
-        output_price += calc_mtok_price(self.output_mtok, text_output_tokens, total_input_tokens)
+
+        output_price += calc_mtok_price(self.output_mtok, priced_text_output_tokens, total_input_tokens)
         output_price += calc_mtok_price(self.output_audio_mtok, usage.output_audio_tokens, total_input_tokens)
 
         total_price = input_price + output_price
@@ -748,11 +807,10 @@ class ConditionalPrice:
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
 
-    prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
-    """Prices for this condition.
+    _: dataclasses.KW_ONLY
 
-    This field is really required, the default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
-    """
+    prices: ModelPrice
+    """Prices for this condition."""
 
 
 @dataclass

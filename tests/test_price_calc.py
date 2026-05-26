@@ -56,6 +56,20 @@ def test_sync_success_with_model_regex():
     assert price.provider.id == snapshot('openai')
 
 
+def test_openrouter_deepseek_v32_price():
+    price = calc_price(
+        Usage(input_tokens=2_000_000, output_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref='deepseek/deepseek-v3.2',
+        provider_id='openrouter',
+    )
+
+    assert price.input_price == snapshot(Decimal('0.2772'))
+    assert price.output_price == snapshot(Decimal('0.3780'))
+    assert price.total_price == snapshot(Decimal('0.6552'))
+    assert price.model.name == snapshot('DeepSeek V3.2')
+    assert price.provider.id == snapshot('openrouter')
+
+
 def test_tiered_prices():
     price = calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
     # Google uses threshold-based pricing: if context > 128K, ALL tokens charged at tier price

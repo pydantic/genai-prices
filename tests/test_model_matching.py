@@ -263,6 +263,7 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai.chat', 'o3-mini-2025-01-31', snapshot(('openai', 'o3-mini'))),
     ('openai.chat', 'o3-mini', snapshot(('openai', 'o3-mini'))),
     ('openrouter', 'deepseek/deepseek-chat-v3-0324', snapshot(('openrouter', 'deepseek/deepseek-chat-v3-0324'))),
+    ('openrouter', 'deepseek/deepseek-v3.2', snapshot(('openrouter', 'deepseek/deepseek-v3.2'))),
     pytest.param('nebius', 'nebius/deepseek-ai/DeepSeek-R1-0528', None, marks=mark_xfail_todo),
     pytest.param('nebius', 'llama-3.1-8b-instant', None, marks=mark_xfail_todo),
     pytest.param('litellm', 'gpt-4o-mini-2024-07-18', None, marks=mark_xfail_todo),
@@ -492,6 +493,21 @@ def test_fallback_when_model_not_found_directly():
     # Should return None for non-existent model
     non_existent = main_provider.find_model('non-existent', all_providers=all_providers)
     assert non_existent is None
+
+
+def test_missing_fallback_provider_returns_none():
+    """Test that a missing fallback provider is ignored."""
+    from genai_prices.types import Provider
+
+    main_provider = Provider(
+        id='main-provider',
+        name='Main Provider',
+        api_pattern='main.example.com',
+        fallback_model_providers=['missing-provider'],
+        models=[],
+    )
+
+    assert main_provider.find_model('missing-model', all_providers=[main_provider]) is None
 
 
 def test_prioritize_direct_match_over_fallback():

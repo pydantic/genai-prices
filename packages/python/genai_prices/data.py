@@ -403,7 +403,7 @@ providers: list[Provider] = [
         name='AWS Bedrock',
         api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
-        provider_match=ClauseContains(contains='bedrock'),
+        provider_match=ClauseOr(or_=[ClauseContains(contains='bedrock'), ClauseContains(contains='amazon')]),
         extractors=[
             UsageExtractor(
                 root='usage',
@@ -1447,6 +1447,27 @@ providers: list[Provider] = [
                     ),
                 ],
             ),
+            ModelInfo(
+                id='deepseek-v4-flash',
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='deepseek-v4-flash')]),
+                name='DeepSeek V4 Flash',
+                description='DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.0028'), output_mtok=Decimal('0.28')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4-pro',
+                match=ClauseOr(or_=[ClauseStartsWith(starts_with='deepseek-v4-pro')]),
+                name='DeepSeek V4 Pro',
+                description='DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
+                context_window=1000000,
+                price_comments='Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount that is not reflected here.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.0145'), output_mtok=Decimal('3.48')
+                ),
+            ),
         ],
     ),
     Provider(
@@ -1639,7 +1660,7 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
-                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tokens', required=False),
                 ],
                 api_flavor='default',
                 model_path='modelVersion',
@@ -1855,11 +1876,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.025'), tiers=[Tier(start=1000000, price=Decimal('0.175'))]
-                    ),
+                    cache_read_mtok=Decimal('0.025'),
                     output_mtok=Decimal('0.4'),
                     input_audio_mtok=Decimal('0.7'),
+                    cache_audio_read_mtok=Decimal('0.175'),
                 ),
             ),
             ModelInfo(
@@ -2013,12 +2033,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
-                id='gemini-3.1-flash-lite-preview',
-                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite-preview'),
-                name='Gemini 3.1 Flash Lite Preview',
+                id='gemini-3.1-flash-lite',
+                match=ClauseStartsWith(starts_with='gemini-3.1-flash-lite'),
+                name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Preview model - pricing may change before becoming stable.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
@@ -2037,6 +2057,15 @@ providers: list[Provider] = [
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
                     output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
                 ),
+            ),
+            ModelInfo(
+                id='gemini-3.5-flash',
+                match=ClauseStartsWith(starts_with='gemini-3.5-flash'),
+                name='Gemini 3.5 Flash',
+                description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
+                prices=ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9')),
             ),
             ModelInfo(
                 id='gemini-embedding-001',
@@ -5365,7 +5394,9 @@ providers: list[Provider] = [
                 name='gpt 4o audio preview',
                 description='Audio model for gpt-4o',
                 context_window=128000,
-                prices=ModelPrice(output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini',
@@ -5395,7 +5426,9 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
                 name='gpt 4o mini audio preview',
                 description='Audio model for gpt-4o mini',
-                prices=ModelPrice(output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-mini-realtime-preview',
@@ -5417,7 +5450,9 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-mini-tts',
                 match=ClauseEquals(equals='gpt-4o-mini-tts'),
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_audio_mtok=Decimal('12')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), output_mtok=Decimal('12'), output_audio_mtok=Decimal('12')
+                ),
             ),
             ModelInfo(
                 id='gpt-4o-realtime-preview',
@@ -5591,6 +5626,25 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
             ),
             ModelInfo(
+                id='gpt-5.3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.3'),
+                        ClauseEquals(equals='gpt-5-3'),
+                        ClauseEquals(equals='gpt-5.3-chat'),
+                        ClauseEquals(equals='gpt-5.3-chat-latest'),
+                        ClauseEquals(equals='gpt-5-3-chat'),
+                        ClauseEquals(equals='gpt-5-3-chat-latest'),
+                    ]
+                ),
+                name='GPT-5.3 Chat',
+                description='GPT-5.3 Instant model used in ChatGPT',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-5.3-codex',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.3-codex'), ClauseEquals(equals='gpt-5-3-codex')]),
                 name='GPT-5.3-Codex',
@@ -5672,6 +5726,44 @@ providers: list[Provider] = [
                     input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
                     output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
                 ),
+            ),
+            ModelInfo(
+                id='gpt-5.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.5'),
+                        ClauseEquals(equals='gpt-5.5-2026-04-23'),
+                        ClauseEquals(equals='gpt-5.5-2026-04-24'),
+                        ClauseEquals(equals='gpt-5-5'),
+                        ClauseEquals(equals='gpt-5-5-2026-04-23'),
+                        ClauseEquals(equals='gpt-5-5-2026-04-24'),
+                        ClauseEquals(equals='gpt-5.5-chat'),
+                        ClauseEquals(equals='gpt-5.5-chat-latest'),
+                        ClauseEquals(equals='gpt-5-5-chat'),
+                        ClauseEquals(equals='gpt-5-5-chat-latest'),
+                        ClauseEquals(equals='gpt-5.5-codex'),
+                        ClauseEquals(equals='gpt-5-5-codex'),
+                    ]
+                ),
+                name='GPT-5.5',
+                description='The best model for coding and agentic tasks across industries',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+            ),
+            ModelInfo(
+                id='gpt-5.5-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.5-pro'),
+                        ClauseEquals(equals='gpt-5.5-pro-2026-04-23'),
+                        ClauseEquals(equals='gpt-5-5-pro'),
+                        ClauseEquals(equals='gpt-5-5-pro-2026-04-23'),
+                    ]
+                ),
+                name='GPT-5.5 Pro',
+                description='Version of GPT-5.5 that produces smarter and more precise responses.',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
             ),
             ModelInfo(
                 id='gpt-realtime',
@@ -5859,6 +5951,29 @@ providers: list[Provider] = [
         name='OpenRouter',
         api_pattern='https://(api\\.)?openrouter\\.ai',
         pricing_urls=['https://openrouter.ai/models'],
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='01-ai/yi-large',
@@ -6708,6 +6823,15 @@ providers: list[Provider] = [
                 id='deepseek/deepseek-v3-base:free',
                 match=ClauseEquals(equals='deepseek/deepseek-v3-base:free'),
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3.2',
+                match=ClauseEquals(equals='deepseek/deepseek-v3.2'),
+                name='DeepSeek V3.2',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.252'), cache_read_mtok=Decimal('0.0252'), output_mtok=Decimal('0.378')
+                ),
             ),
             ModelInfo(
                 id='deepseek/deepseek-v3.2-exp',
@@ -10313,6 +10437,22 @@ providers: list[Provider] = [
                 context_window=2000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='grok-4.3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.3'),
+                        ClauseEquals(equals='grok-4.3-latest'),
+                        ClauseEquals(equals='grok-latest'),
+                    ]
+                ),
+                name='Grok 4.3',
+                description='Most advanced flagship model, leading the industry in non-hallucination rate, agentic tool calling, and instruction following capabilities. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
                 ),
             ),
             ModelInfo(

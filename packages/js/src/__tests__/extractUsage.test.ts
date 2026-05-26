@@ -128,6 +128,41 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('OpenRouter provider', () => {
+    const openrouterProvider: Provider = data.find((provider) => provider.id === 'openrouter')!
+
+    it('should extract chat usage with cache write tokens', () => {
+      const responseData = {
+        model: 'anthropic/claude-4.6-sonnet-20260217',
+        usage: {
+          completion_tokens: 1906,
+          completion_tokens_details: {
+            audio_tokens: 23,
+          },
+          prompt_tokens: 4819,
+          prompt_tokens_details: {
+            audio_tokens: 17,
+            cache_write_tokens: 4800,
+            cached_tokens: 0,
+          },
+          total_tokens: 6725,
+        },
+      }
+
+      const { model, usage } = extractUsage(openrouterProvider, responseData, 'chat')
+
+      expect(model).toBe('anthropic/claude-4.6-sonnet-20260217')
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 4800,
+        input_audio_tokens: 17,
+        input_tokens: 4819,
+        output_audio_tokens: 23,
+        output_tokens: 1906,
+      })
+    })
+  })
+
   describe('error handling', () => {
     it.each([
       [{}, 'Missing value at `usage`'],
@@ -138,6 +173,52 @@ describe('extractUsage', () => {
       [{ model: 'x', usage: { input_tokens: [] } }, 'Expected `usage.input_tokens` value to be a number, got array'],
     ])('should throw error for invalid data: %j', (responseData, expectedError) => {
       expect(() => extractUsage(anthropicProvider, responseData)).toThrow(expectedError)
+    })
+
+    it('should throw when a required nested path has the wrong intermediate shape', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [{ dest: 'input_tokens', path: ['totals', 'input_tokens'], required: true }],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(() => extractUsage(provider, { model: 'test-model', usage: { totals: 1 } })).toThrow(
+        'Expected `usage.totals` value to be a mapping, got number'
+      )
+    })
+
+    it('should skip optional nested paths with the wrong intermediate shape', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [
+              { dest: 'input_tokens', path: ['totals', 'input_tokens'], required: false },
+              { dest: 'output_tokens', path: 'output_tokens', required: true },
+            ],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(extractUsage(provider, { model: 'test-model', usage: { output_tokens: 2, totals: 1 } })).toEqual({
+        model: 'test-model',
+        usage: { output_tokens: 2 },
+      })
     })
   })
 
@@ -199,7 +280,8 @@ describe('extractUsage', () => {
           promptTokenCount: 75,
           promptTokensDetails: [{ modality: 'TEXT', tokenCount: 75 }],
           thoughtsTokenCount: 144,
-          totalTokenCount: 237,
+          toolUsePromptTokenCount: 25,
+          totalTokenCount: 262,
           trafficType: 'ON_DEMAND',
         },
       }
@@ -207,7 +289,7 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
-        input_tokens: 75,
+        input_tokens: 100,
         output_tokens: 162,
       })
     })

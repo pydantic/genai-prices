@@ -6,7 +6,7 @@ import threading
 from dataclasses import dataclass, field
 from time import time
 
-import httpx
+import httpx2
 
 from . import data_snapshot
 
@@ -97,7 +97,7 @@ class UpdatePrices:
     """How often to update prices in seconds."""
     url: str = DEFAULT_UPDATE_URL
     """The URL to fetch prices from."""
-    request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=10, connect=5))
+    request_timeout: httpx2.Timeout = field(default_factory=lambda: httpx2.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
     _prices_updated: threading.Event = field(default_factory=threading.Event)
@@ -153,11 +153,12 @@ class UpdatePrices:
         global _global_update_prices
 
         _global_update_prices = None
-        data_snapshot.set_custom_snapshot(None)
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
+        # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
+        data_snapshot.set_custom_snapshot(None)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
@@ -203,6 +204,6 @@ class UpdatePrices:
         """Fetches the latest provider data from the configured URL."""
         from . import data
 
-        r = httpx.get(self.url, timeout=self.request_timeout)
+        r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)
