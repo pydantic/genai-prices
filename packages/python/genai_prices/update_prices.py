@@ -60,11 +60,8 @@ def update_prices_in_background() -> UpdatePricesHandle:
     global _global_update_prices_ref_count, _global_update_prices_lock, _global_update_prices
 
     with _global_update_prices_lock:
-        if _global_update_prices_ref_count == 0:
-            # Should I touch the global state here or let it be throwaway variable anyway?
-            # I wonder if I could trigger without holding the variable so that it looks more throwaway?
-            update_prices = UpdatePrices()
-            update_prices.start()
+        if _global_update_prices is None:
+            _throwaway = UpdatePrices().start()
         _global_update_prices_ref_count += 1
 
         return UpdatePricesHandle()
@@ -78,17 +75,15 @@ class UpdatePricesHandle:
 
     def close(self):
         global _global_update_prices_ref_count, _global_update_prices_lock, _global_update_prices
-        if _global_update_prices is None:
+        if _global_update_prices is None or self._closed:
             # Maybe consider raising an error here?
             return
+
         with _global_update_prices_lock:
-            if self._closed:
-                return
             _global_update_prices_ref_count -= 1
             if _global_update_prices_ref_count == 0:
                 _global_update_prices.stop()
             self._closed = True
-            return
 
 
 @dataclass
