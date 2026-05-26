@@ -9,6 +9,7 @@ from genai_prices import (
     Usage,
     calc_price,
     data_snapshot,
+    update_prices_in_background,
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
@@ -95,3 +96,21 @@ def test_update_prices_multiple():
         ):
             with UpdatePrices():
                 pass
+
+
+def test_update_prices_ref_count():
+    # Both should get the same global updater from genai-prices
+    handle_1 = update_prices_in_background()
+    handle_2 = update_prices_in_background()
+    assert handle_1 is not handle_2
+    handle_1.close()
+    handle_2.close()
+    assert data_snapshot._custom_snapshot is not None
+
+
+def test_update_prices_manual_with_global():
+    handle = update_prices_in_background()
+    with UpdatePrices():
+        assert data_snapshot._custom_snapshot is not None
+    handle.close()
+    assert data_snapshot._custom_snapshot is not None

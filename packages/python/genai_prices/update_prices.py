@@ -20,6 +20,8 @@ __all__ = (
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
 _global_update_prices: UpdatePrices | None = None
+_global_update_prices_lock = threading.Lock()
+_global_update_prices_ref_count: int = 0
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -46,6 +48,47 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
         True if prices were updated, False otherwise.
     """
     return await asyncio.to_thread(wait_prices_updated_sync, timeout)
+
+
+def update_prices_in_background() -> UpdatePricesHandle:
+    """Update prices in the background using a daemon thread.
+
+    Args:
+        update_interval: The interval to update prices in seconds.
+    """
+
+    global _global_update_prices_ref_count, _global_update_prices_lock, _global_update_prices
+
+    with _global_update_prices_lock:
+        if _global_update_prices_ref_count == 0:
+            # Should I touch the global state here or let it be throwaway variable anyway?
+            # I wonder if I could trigger without holding the variable so that it looks more throwaway?
+            update_prices = UpdatePrices()
+            update_prices.start()
+        _global_update_prices_ref_count += 1
+
+        return UpdatePricesHandle()
+
+
+@dataclass
+class UpdatePricesHandle:
+    """A handle for the update prices in the background."""
+
+    _closed: bool = field(default=False, init=False)
+
+    def close(self):
+        global _global_update_prices_ref_count, _global_update_prices_lock, _global_update_prices
+        if _global_update_prices is None:
+            # Maybe consider raising an error here?
+            return
+        with _global_update_prices_lock:
+            if self._closed:
+                return
+            _global_update_prices_ref_count -= 1
+            if _global_update_prices_ref_count == 0:
+                _global_update_prices.stop()
+            self._closed = True
+            return
 
 
 @dataclass
@@ -78,10 +121,15 @@ class UpdatePrices:
         if self._thread is not None:
             raise RuntimeError('UpdatePrices background task already started')
 
+        # Maybe we need to change up a few things right here?
+        # We cannot keep raising here because we do need multiple threads to be able to at least call it
+        # Whether we start the updater is a different thing
+
         if _global_update_prices is not None:
             raise RuntimeError(
                 'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
             )
+            return
 
         _global_update_prices = self
         self._prices_updated.clear()
