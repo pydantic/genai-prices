@@ -6,10 +6,23 @@ from typing import Any, overload
 
 from . import data_snapshot, types
 from .types import Usage
-from .update_prices import UpdatePrices, wait_prices_updated_async, wait_prices_updated_sync
+from .update_prices import (
+    UpdatePrices,
+    update_prices_in_background,
+    wait_prices_updated_async,
+    wait_prices_updated_sync,
+)
 
 __version__ = _metadata_version('genai_prices')
-__all__ = 'Usage', 'calc_price', 'UpdatePrices', 'wait_prices_updated_sync', 'wait_prices_updated_async', '__version__'
+__all__ = (
+    'Usage',
+    'calc_price',
+    'UpdatePrices',
+    'wait_prices_updated_sync',
+    'wait_prices_updated_async',
+    'update_prices_in_background',
+    '__version__',
+)
 
 
 @overload
