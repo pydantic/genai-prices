@@ -429,6 +429,36 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-4-8',
+        name: 'Claude Opus 4.8',
+        description: 'Our most capable model for complex reasoning and agentic coding',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-4-8',
+            },
+            {
+              starts_with: 'claude-opus-4.8',
+            },
+            {
+              starts_with: 'claude-4-8-opus',
+            },
+            {
+              starts_with: 'claude-4.8-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'claude-sonnet-4-0',
         name: 'Claude Sonnet 4',
         description: 'Optimal balance of intelligence, cost, and speed',
@@ -898,6 +928,18 @@ export const data: Provider[] = [
         id: 'global.anthropic.claude-opus-4-7-v1:0',
         match: {
           contains: 'global.anthropic.claude-opus-4-7',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-4-8-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-8',
         },
         prices: {
           input_mtok: 5,
@@ -1573,6 +1615,43 @@ export const data: Provider[] = [
             },
             {
               contains: 'jp.anthropic.claude-opus-4-7',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-4-8-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-opus-4-8',
+            },
+            {
+              starts_with: 'claude-opus-4-8',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'apac.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'us-gov.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-8',
             },
           ],
         },
@@ -3189,6 +3268,34 @@ export const data: Provider[] = [
             },
             {
               contains: 'claude-opus-4.7',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'claude-opus-4-8',
+        match: {
+          or: [
+            {
+              contains: 'claude-4-8-opus',
+            },
+            {
+              contains: 'claude-opus-4-8',
+            },
+            {
+              contains: 'claude-4.8-opus',
+            },
+            {
+              contains: 'claude-opus-4.8',
             },
           ],
         },
@@ -11177,6 +11284,28 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-opus-4.7:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-4.8',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-4.8',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.8:beta',
             },
           ],
         },
