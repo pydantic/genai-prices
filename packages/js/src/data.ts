@@ -1642,13 +1642,7 @@ export const data: Provider[] = [
               contains: 'au.anthropic.claude-opus-4-8',
             },
             {
-              contains: 'apac.anthropic.claude-opus-4-8',
-            },
-            {
               contains: 'eu.anthropic.claude-opus-4-8',
-            },
-            {
-              contains: 'us-gov.anthropic.claude-opus-4-8',
             },
             {
               contains: 'jp.anthropic.claude-opus-4-8',

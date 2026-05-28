@@ -627,9 +627,7 @@ models:
         - starts_with: claude-opus-4-8
         - contains: us.anthropic.claude-opus-4-8
         - contains: au.anthropic.claude-opus-4-8
-        - contains: apac.anthropic.claude-opus-4-8
         - contains: eu.anthropic.claude-opus-4-8
-        - contains: us-gov.anthropic.claude-opus-4-8
         - contains: jp.anthropic.claude-opus-4-8
     prices:
       input_mtok: 5.5

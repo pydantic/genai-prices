@@ -954,9 +954,7 @@ providers: list[Provider] = [
                         ClauseStartsWith(starts_with='claude-opus-4-8'),
                         ClauseContains(contains='us.anthropic.claude-opus-4-8'),
                         ClauseContains(contains='au.anthropic.claude-opus-4-8'),
-                        ClauseContains(contains='apac.anthropic.claude-opus-4-8'),
                         ClauseContains(contains='eu.anthropic.claude-opus-4-8'),
-                        ClauseContains(contains='us-gov.anthropic.claude-opus-4-8'),
                         ClauseContains(contains='jp.anthropic.claude-opus-4-8'),
                     ]
                 ),
