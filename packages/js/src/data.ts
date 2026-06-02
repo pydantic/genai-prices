@@ -2668,12 +2668,10 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        price_comments:
-          'Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount that is not reflected here.',
         prices: {
-          input_mtok: 1.74,
-          cache_read_mtok: 0.0145,
-          output_mtok: 3.48,
+          input_mtok: 0.435,
+          cache_read_mtok: 0.003625,
+          output_mtok: 0.87,
         },
       },
     ],
