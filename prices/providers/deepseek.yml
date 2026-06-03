@@ -98,15 +98,12 @@ models:
     description: >-
       DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls,
       chat prefix completion, and FIM completion (non-thinking only).
-    price_comments: >-
-      Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount
-      that is not reflected here.
     match:
       or:
         - starts_with: deepseek-v4-pro
     context_window: 1000000
-    prices_checked: 2026-05-12
+    prices_checked: 2026-06-02
     prices:
-      input_mtok: 1.74
-      cache_read_mtok: 0.0145
-      output_mtok: 3.48
+      input_mtok: 0.435
+      cache_read_mtok: 0.003625
+      output_mtok: 0.87

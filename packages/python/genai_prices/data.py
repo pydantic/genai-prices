@@ -1513,9 +1513,8 @@ providers: list[Provider] = [
                 name='DeepSeek V4 Pro',
                 description='DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls, chat prefix completion, and FIM completion (non-thinking only).',
                 context_window=1000000,
-                price_comments='Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount that is not reflected here.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.0145'), output_mtok=Decimal('3.48')
+                    input_mtok=Decimal('0.435'), cache_read_mtok=Decimal('0.003625'), output_mtok=Decimal('0.87')
                 ),
             ),
         ],
