@@ -607,6 +607,24 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='google.gemma-3-12b-it',
+                match=ClauseContains(contains='google.gemma-3-12b-it'),
+                name='Gemma 3 12B IT',
+                prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.29')),
+            ),
+            ModelInfo(
+                id='google.gemma-3-27b-it',
+                match=ClauseContains(contains='google.gemma-3-27b-it'),
+                name='Gemma 3 27B IT',
+                prices=ModelPrice(input_mtok=Decimal('0.23'), output_mtok=Decimal('0.38')),
+            ),
+            ModelInfo(
+                id='google.gemma-3-4b-it',
+                match=ClauseContains(contains='google.gemma-3-4b-it'),
+                name='Gemma 3 4B IT',
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.08')),
+            ),
+            ModelInfo(
                 id='meta.llama3-1-70b-instruct-v1:0',
                 match=ClauseContains(contains='meta.llama3-1-70b-instruct'),
                 name='Llama 3.1 70B Instruct',
@@ -673,6 +691,36 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.17'), output_mtok=Decimal('0.66')),
             ),
             ModelInfo(
+                id='mistral.devstral-2-123b',
+                match=ClauseContains(contains='mistral.devstral-2-123b'),
+                name='Devstral 2 123B',
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='mistral.magistral-small-2509',
+                match=ClauseContains(contains='mistral.magistral-small-2509'),
+                name='Magistral Small 2509',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='mistral.ministral-3-14b-instruct',
+                match=ClauseContains(contains='mistral.ministral-3-14b-instruct'),
+                name='Ministral 14B 3.0',
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='mistral.ministral-3-3b-instruct',
+                match=ClauseContains(contains='mistral.ministral-3-3b-instruct'),
+                name='Ministral 3B 3.0',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='mistral.ministral-3-8b-instruct',
+                match=ClauseContains(contains='mistral.ministral-3-8b-instruct'),
+                name='Ministral 8B 3.0',
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
+            ),
+            ModelInfo(
                 id='mistral.mistral-7b-instruct-v0:2',
                 match=ClauseContains(contains='mistral.mistral-7b-instruct-v0'),
                 name='Mistral 7B Instruct',
@@ -683,6 +731,12 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='mistral.mistral-large-2402'),
                 name='Mistral Large (24.02)',
                 prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('12')),
+            ),
+            ModelInfo(
+                id='mistral.mistral-large-3-675b-instruct',
+                match=ClauseContains(contains='mistral.mistral-large-3-675b-instruct'),
+                name='Mistral Large 3',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
             ),
             ModelInfo(
                 id='mistral.mistral-small-2402-v1:0',
@@ -701,6 +755,18 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='mistral.pixtral-large-2502'),
                 name='Pixtral Large (25.02)',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='mistral.voxtral-mini-3b-2507',
+                match=ClauseContains(contains='mistral.voxtral-mini-3b-2507'),
+                name='Voxtral Mini 3B 2507',
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.04')),
+            ),
+            ModelInfo(
+                id='mistral.voxtral-small-24b-2507',
+                match=ClauseContains(contains='mistral.voxtral-small-24b-2507'),
+                name='Voxtral Small 24B 2507',
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='nvidia.nemotron-nano-3-30b:0',

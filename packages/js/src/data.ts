@@ -1017,6 +1017,39 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google.gemma-3-12b-it',
+        name: 'Gemma 3 12B IT',
+        match: {
+          contains: 'google.gemma-3-12b-it',
+        },
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.29,
+        },
+      },
+      {
+        id: 'google.gemma-3-27b-it',
+        name: 'Gemma 3 27B IT',
+        match: {
+          contains: 'google.gemma-3-27b-it',
+        },
+        prices: {
+          input_mtok: 0.23,
+          output_mtok: 0.38,
+        },
+      },
+      {
+        id: 'google.gemma-3-4b-it',
+        name: 'Gemma 3 4B IT',
+        match: {
+          contains: 'google.gemma-3-4b-it',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.08,
+        },
+      },
+      {
         id: 'meta.llama3-1-70b-instruct-v1:0',
         name: 'Llama 3.1 70B Instruct',
         match: {
@@ -1138,6 +1171,61 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistral.devstral-2-123b',
+        name: 'Devstral 2 123B',
+        match: {
+          contains: 'mistral.devstral-2-123b',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'mistral.magistral-small-2509',
+        name: 'Magistral Small 2509',
+        match: {
+          contains: 'mistral.magistral-small-2509',
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'mistral.ministral-3-14b-instruct',
+        name: 'Ministral 14B 3.0',
+        match: {
+          contains: 'mistral.ministral-3-14b-instruct',
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'mistral.ministral-3-3b-instruct',
+        name: 'Ministral 3B 3.0',
+        match: {
+          contains: 'mistral.ministral-3-3b-instruct',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'mistral.ministral-3-8b-instruct',
+        name: 'Ministral 8B 3.0',
+        match: {
+          contains: 'mistral.ministral-3-8b-instruct',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.15,
+        },
+      },
+      {
         id: 'mistral.mistral-7b-instruct-v0:2',
         name: 'Mistral 7B Instruct',
         match: {
@@ -1157,6 +1245,17 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 4,
           output_mtok: 12,
+        },
+      },
+      {
+        id: 'mistral.mistral-large-3-675b-instruct',
+        name: 'Mistral Large 3',
+        match: {
+          contains: 'mistral.mistral-large-3-675b-instruct',
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
         },
       },
       {
@@ -1190,6 +1289,28 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'mistral.voxtral-mini-3b-2507',
+        name: 'Voxtral Mini 3B 2507',
+        match: {
+          contains: 'mistral.voxtral-mini-3b-2507',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
+        },
+      },
+      {
+        id: 'mistral.voxtral-small-24b-2507',
+        name: 'Voxtral Small 24B 2507',
+        match: {
+          contains: 'mistral.voxtral-small-24b-2507',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
         },
       },
       {
