@@ -2798,6 +2798,253 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'doubleword',
+    name: 'Doubleword',
+    pricing_urls: ['https://docs.doubleword.ai/inference-api/models'],
+    api_pattern: 'https://api\\.doubleword\\.ai',
+    price_comments: 'Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'Qwen/Qwen3-14B-FP8',
+        name: 'Qwen3 14B',
+        match: {
+          equals: 'Qwen/Qwen3-14B-FP8',
+        },
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Embedding-8B',
+        name: 'Qwen3 Embedding 8B',
+        match: {
+          equals: 'Qwen/Qwen3-Embedding-8B',
+        },
+        prices: {
+          input_mtok: 0.04,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
+        name: 'Qwen3 VL 235B A22B Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
+        name: 'Qwen3 VL 30B A3B Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
+        },
+        prices: {
+          input_mtok: 0.16,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-35B-A3B-FP8',
+        name: 'Qwen3.5 35B A3B',
+        match: {
+          equals: 'Qwen/Qwen3.5-35B-A3B-FP8',
+        },
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-397B-A17B',
+        name: 'Qwen3.5 397B A17B',
+        match: {
+          equals: 'Qwen/Qwen3.5-397B-A17B',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 3.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-9B',
+        name: 'Qwen3.5 9B',
+        match: {
+          equals: 'Qwen/Qwen3.5-9B',
+        },
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.7,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-35B-A3B-FP8',
+        name: 'Qwen3.6 35B A3B',
+        match: {
+          equals: 'Qwen/Qwen3.6-35B-A3B-FP8',
+        },
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash',
+        name: 'DeepSeek V4 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Flash',
+        },
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Pro',
+        },
+        prices: {
+          input_mtok: 1.74,
+          output_mtok: 3.48,
+        },
+      },
+      {
+        id: 'google/gemma-4-31B-it',
+        name: 'Gemma 4 31B IT',
+        match: {
+          equals: 'google/gemma-4-31B-it',
+        },
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'mistralai/Devstral-2-123B-Instruct-2512',
+        name: 'Devstral 2 123B Instruct 2512',
+        match: {
+          equals: 'mistralai/Devstral-2-123B-Instruct-2512',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: 'moonshotai/Kimi-K2.6',
+        },
+        prices: {
+          input_mtok: 0.95,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
+        name: 'Nemotron 3 Super 120B A12B',
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'GPT OSS 20B',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.1-FP8',
+        name: 'GLM 5.1',
+        match: {
+          equals: 'zai-org/GLM-5.1-FP8',
+        },
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
+        },
+      },
+    ],
+  },
+  {
     id: 'fireworks',
     name: 'Fireworks',
     pricing_urls: ['https://fireworks.ai/pricing'],

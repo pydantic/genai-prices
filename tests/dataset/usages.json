@@ -43,6 +43,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000042",
             "output_price": "0.000975",
@@ -103,6 +107,10 @@
             "input_price": "0.002232",
             "output_price": "0.000795",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -167,6 +175,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002472",
             "output_price": "0.000345",
@@ -227,6 +239,10 @@
             "input_price": "0.002391",
             "output_price": "0.001365",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -291,6 +307,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002871",
             "output_price": "0.000345",
@@ -351,6 +371,10 @@
             "input_price": "0.001374",
             "output_price": "0.00057",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -415,6 +439,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001575",
             "output_price": "0.001095",
@@ -475,6 +503,10 @@
             "input_price": "0.002232",
             "output_price": "0.000795",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -539,6 +571,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002433",
             "output_price": "0.000345",
@@ -599,6 +635,10 @@
             "input_price": "0.002193",
             "output_price": "0.00165",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -663,6 +703,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001671",
             "output_price": "0.000825",
@@ -723,6 +767,10 @@
             "input_price": "0.001908",
             "output_price": "0.00132",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -787,6 +835,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002034",
             "output_price": "0.00111",
@@ -847,6 +899,10 @@
             "input_price": "0.002196",
             "output_price": "0.000585",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -911,6 +967,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002403",
             "output_price": "0.00114",
@@ -971,6 +1031,10 @@
             "input_price": "0.002235",
             "output_price": "0.000795",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1035,6 +1099,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002454",
             "output_price": "0.00036",
@@ -1095,6 +1163,10 @@
             "input_price": "0.001683",
             "output_price": "0.00081",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1159,6 +1231,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.00192",
             "output_price": "0.00039",
@@ -1219,6 +1295,10 @@
             "input_price": "0.001749",
             "output_price": "0.00114",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1283,6 +1363,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002052",
             "output_price": "0.00036",
@@ -1343,6 +1427,10 @@
             "input_price": "0.000588",
             "output_price": "0.000285",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1407,6 +1495,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001131",
             "output_price": "0.00096",
@@ -1467,6 +1559,10 @@
             "input_price": "0.001392",
             "output_price": "0.00045",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1531,6 +1627,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001836",
             "output_price": "0.001515",
@@ -1591,6 +1691,10 @@
             "input_price": "0.002394",
             "output_price": "0.00075",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1655,6 +1759,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002343",
             "output_price": "0.00111",
@@ -1717,6 +1825,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002841",
             "output_price": "0.001125",
@@ -1777,6 +1889,10 @@
             "input_price": "0.000591",
             "output_price": "0.00027",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -1915,6 +2031,10 @@
             "input_price": "0.00005625",
             "output_price": "0.01719",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -2332,6 +2452,10 @@
             "input_price": "0.00489",
             "output_price": "0.001635",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -3079,6 +3203,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.032427",
             "output_price": "0.00966",
@@ -3802,6 +3930,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -3858,6 +3990,10 @@
             "input_price": "0.00047375",
             "output_price": "0.00077",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -5617,6 +5753,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -5702,6 +5842,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -5743,6 +5887,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -5844,6 +5992,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -5885,6 +6037,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -5986,6 +6142,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6024,6 +6184,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -6125,6 +6289,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6166,6 +6334,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -6267,6 +6439,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6321,6 +6497,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -6422,6 +6602,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6460,6 +6644,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -6561,6 +6749,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6606,6 +6798,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -6707,6 +6903,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6752,6 +6952,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -6853,6 +7057,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -6905,6 +7113,10 @@
             "input_price": "0.000795",
             "output_price": "0.000465",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -6985,6 +7197,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "provider_id": "openai"
           }
         ],
@@ -7057,6 +7273,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "provider_id": "openai"
           }
         ],
@@ -7110,6 +7330,10 @@
             "input_price": "0.001884",
             "output_price": "0.00075",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7174,6 +7398,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002073",
             "output_price": "0.000795",
@@ -7234,6 +7462,10 @@
             "input_price": "0.002271",
             "output_price": "0.00009",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7298,6 +7530,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.0003",
             "output_price": "0.00075",
@@ -7358,6 +7594,10 @@
             "input_price": "0.001377",
             "output_price": "0.00057",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7422,6 +7662,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.00153",
             "output_price": "0.000255",
@@ -7482,6 +7726,10 @@
             "input_price": "0.004731",
             "output_price": "0.00129",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7546,6 +7794,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.005037",
             "output_price": "0.00024",
@@ -7606,6 +7858,10 @@
             "input_price": "0.004845",
             "output_price": "0.00042",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7670,6 +7926,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001335",
             "output_price": "0.000345",
@@ -7730,6 +7990,10 @@
             "input_price": "0.001491",
             "output_price": "0.00084",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7794,6 +8058,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.006654",
             "output_price": "0.000195",
@@ -7850,6 +8118,10 @@
             "input_price": "0.000658",
             "output_price": "0.000096",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -7918,6 +8190,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.021786",
             "output_price": "0.002565",
@@ -7978,6 +8254,10 @@
             "input_price": "0.019038",
             "output_price": "0.00531",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8042,6 +8322,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.008046",
             "output_price": "0.001515",
@@ -8102,6 +8386,10 @@
             "input_price": "0.000008",
             "output_price": "0.000105",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8166,6 +8454,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001149",
             "output_price": "0.000975",
@@ -8226,6 +8518,10 @@
             "input_price": "0.00138",
             "output_price": "0.001365",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8290,6 +8586,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.002139",
             "output_price": "0.00249",
@@ -8350,6 +8650,10 @@
             "input_price": "0.000423",
             "output_price": "0.00101",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8414,6 +8718,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000771",
             "output_price": "0.000385",
@@ -8474,6 +8782,10 @@
             "input_price": "0.000335",
             "output_price": "0.000735",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8538,6 +8850,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000296",
             "output_price": "0.000455",
@@ -8598,6 +8914,10 @@
             "input_price": "0.000561",
             "output_price": "0.001695",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8662,6 +8982,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001116",
             "output_price": "0.000735",
@@ -8722,6 +9046,10 @@
             "input_price": "0.006075",
             "output_price": "0.001215",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8789,6 +9117,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.008022",
             "output_price": "0.005595",
@@ -8854,6 +9186,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.015786",
             "output_price": "0.005535",
@@ -8914,6 +9250,10 @@
             "input_price": "0.000276",
             "output_price": "0.00294",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -8978,6 +9318,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000504",
             "output_price": "0.00348",
@@ -9040,6 +9384,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000057",
             "output_price": "0.001155",
@@ -9096,6 +9444,10 @@
             "input_price": "0.00002875",
             "output_price": "0.02211",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -9158,6 +9510,10 @@
             "input_price": "0.004029",
             "output_price": "0.00807",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -9226,6 +9582,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.026952",
             "output_price": "0.0078",
@@ -9292,6 +9652,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.059577",
             "output_price": "0.00816",
@@ -9354,6 +9718,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000126",
             "output_price": "0.005445",
@@ -9414,6 +9782,10 @@
             "input_price": "0.000873",
             "output_price": "0.007065",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -9482,6 +9854,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.048249",
             "output_price": "0.002475",
@@ -9544,6 +9920,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.001191",
             "output_price": "0.00237",
@@ -9604,6 +9984,10 @@
             "input_price": "0.001704",
             "output_price": "0.001755",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -9718,6 +10102,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.005049",
             "output_price": "0.001695",
@@ -9782,6 +10170,10 @@
             "input_price": "0.005313",
             "output_price": "0.002565",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -9850,6 +10242,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.005223",
             "output_price": "0.002145",
@@ -9912,6 +10308,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000123",
             "output_price": "0.00132",
@@ -9968,6 +10368,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0098604",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -10771,6 +11175,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0089232",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -11797,6 +12205,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -11895,6 +12307,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -11935,6 +12351,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12052,6 +12472,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12092,6 +12516,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12193,6 +12621,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12233,6 +12665,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12340,6 +12776,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12380,6 +12820,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12481,6 +12925,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12521,6 +12969,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12628,6 +13080,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12668,6 +13124,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12769,6 +13229,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12809,6 +13273,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -12918,6 +13386,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -12958,6 +13430,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -13059,6 +13535,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -13099,6 +13579,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -13202,6 +13686,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -13242,6 +13730,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -13345,6 +13837,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -13395,6 +13891,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -13500,6 +14000,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00006",
             "output_price": "0",
             "provider_id": "openai"
@@ -13552,6 +14056,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -13655,6 +14163,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000121",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -13705,6 +14217,10 @@
             "input_price": "0.0000515",
             "output_price": "0.0000024",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -13765,6 +14281,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -13868,6 +14388,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00003",
             "output_price": "0",
             "provider_id": "openai"
@@ -13920,6 +14444,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14023,6 +14551,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000143",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -14073,6 +14605,10 @@
             "input_price": "0.00000375",
             "output_price": "0.000006",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -14133,6 +14669,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14238,6 +14778,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
@@ -14290,6 +14834,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14395,6 +14943,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00023",
             "output_price": "0",
             "provider_id": "openai"
@@ -14435,6 +14987,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14538,6 +15094,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -14576,6 +15136,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14679,6 +15243,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -14729,6 +15297,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14832,6 +15404,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
@@ -14881,6 +15457,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -14999,6 +15579,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "openai"
@@ -15051,6 +15635,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -15151,6 +15739,10 @@
             "input_price": "0.0006",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -15209,6 +15801,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -15311,6 +15907,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00002",
             "output_price": "0",
             "provider_id": "openai"
@@ -15363,6 +15963,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -15468,6 +16072,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001125",
             "output_price": "0",
             "provider_id": "openai"
@@ -15520,6 +16128,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -15623,6 +16235,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000275",
             "output_price": "0",
             "provider_id": "openai"
@@ -15675,6 +16291,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -15778,6 +16398,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00002",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -15830,6 +16454,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -15933,6 +16561,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00003",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -15985,6 +16617,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -16090,6 +16726,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0007025",
             "output_price": "0",
             "provider_id": "openai"
@@ -16142,6 +16782,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -16247,6 +16891,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0007775",
             "output_price": "0",
             "provider_id": "openai"
@@ -16299,6 +16947,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -16404,6 +17056,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000115",
             "output_price": "0",
             "provider_id": "openai"
@@ -16456,6 +17112,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -16561,6 +17221,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0012575",
             "output_price": "0",
             "provider_id": "openai"
@@ -16606,6 +17270,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -16707,6 +17375,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -16757,6 +17429,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -16862,6 +17538,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000012",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -16914,6 +17594,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17019,6 +17703,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00017",
             "output_price": "0",
             "provider_id": "openai"
@@ -17071,6 +17759,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17176,6 +17868,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0002225",
             "output_price": "0",
             "provider_id": "openai"
@@ -17226,6 +17922,10 @@
             "input_price": "0.0000143",
             "output_price": "0.008426",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -17286,6 +17986,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17389,6 +18093,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0006347",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -17441,6 +18149,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17546,6 +18258,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0027975",
             "output_price": "0",
             "provider_id": "openai"
@@ -17591,6 +18307,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17690,6 +18410,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -17733,6 +18457,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17832,6 +18560,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -17882,6 +18614,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -17987,6 +18723,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0002725",
             "output_price": "0",
             "provider_id": "openai"
@@ -18039,6 +18779,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -18144,6 +18888,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000325",
             "output_price": "0",
             "provider_id": "openai"
@@ -18196,6 +18944,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -18301,6 +19053,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0005875",
             "output_price": "0",
             "provider_id": "openai"
@@ -18353,6 +19109,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -18458,6 +19218,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0006825",
             "output_price": "0",
             "provider_id": "openai"
@@ -18510,6 +19274,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -18615,6 +19383,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000735",
             "output_price": "0",
             "provider_id": "openai"
@@ -18667,6 +19439,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -18772,6 +19548,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00002",
             "output_price": "0",
             "provider_id": "openai"
@@ -18824,6 +19604,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -18929,6 +19713,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
@@ -18981,6 +19769,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -19086,6 +19878,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001575",
             "output_price": "0",
             "provider_id": "openai"
@@ -19138,6 +19934,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -19243,6 +20043,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0041975",
             "output_price": "0",
             "provider_id": "openai"
@@ -19295,6 +20099,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -19398,6 +20206,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000124",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -19443,6 +20255,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -19542,6 +20358,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -19592,6 +20412,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -19695,6 +20519,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000515",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -19747,6 +20575,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -19852,6 +20684,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000115",
             "output_price": "0",
             "provider_id": "openai"
@@ -19904,6 +20740,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -20009,6 +20849,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0029625",
             "output_price": "0",
             "provider_id": "openai"
@@ -20061,6 +20905,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -20166,6 +21014,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -20218,6 +21070,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -20323,6 +21179,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0005875",
             "output_price": "0",
             "provider_id": "openai"
@@ -20375,6 +21235,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -20477,6 +21341,10 @@
             "input_price": "0.000033",
             "output_price": "0.0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -20615,6 +21483,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -20717,6 +21589,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000156",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -20769,6 +21645,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -20874,6 +21754,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00001935",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -20926,6 +21810,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -21029,6 +21917,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0000077",
             "output_price": "0.0",
             "provider_id": "openai"
@@ -21081,6 +21973,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -21186,6 +22082,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004",
             "output_price": "0",
             "provider_id": "openai"
@@ -21238,6 +22138,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -21343,6 +22247,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004525",
             "output_price": "0",
             "provider_id": "openai"
@@ -21392,6 +22300,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -21507,6 +22419,10 @@
             "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -21897,6 +22813,10 @@
             "input_price": "0.00002875",
             "output_price": "0.0203",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -22392,6 +23312,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -22490,6 +23414,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -22528,6 +23456,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -22629,6 +23561,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -22679,6 +23615,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -22725,6 +23665,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -22826,6 +23770,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -22889,6 +23837,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00248075",
             "output_price": "0.00638",
             "provider_id": "openai"
@@ -22941,6 +23893,10 @@
             "input_price": "0.00154",
             "output_price": "0.00098",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23001,6 +23957,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -23057,6 +24017,10 @@
             "input_price": "0.000135",
             "output_price": "0.00018",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23117,6 +24081,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -23173,6 +24141,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0009988",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23233,6 +24205,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -23289,6 +24265,10 @@
             "input_price": "0.00073375",
             "output_price": "0.02587",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23362,6 +24342,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00042625",
             "output_price": "0.00125",
             "provider_id": "openai"
@@ -23414,6 +24398,10 @@
             "input_price": "0.00099125",
             "output_price": "0.00007",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23472,6 +24460,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23545,6 +24537,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00306375",
             "output_price": "0.0161",
             "provider_id": "openai"
@@ -23612,6 +24608,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00246875",
             "output_price": "0.0066",
             "provider_id": "openai"
@@ -23664,6 +24664,10 @@
             "input_price": "0.0013277",
             "output_price": "0.002354",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23724,6 +24728,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -23780,6 +24788,10 @@
             "input_price": "0.002265",
             "output_price": "0.01313",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23840,6 +24852,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -23896,6 +24912,10 @@
             "input_price": "0.000195",
             "output_price": "0.00924",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -23956,6 +24976,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -24012,6 +25036,10 @@
             "input_price": "0.0002675",
             "output_price": "0.00012",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24072,6 +25100,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -24128,6 +25160,10 @@
             "input_price": "0.0016575",
             "output_price": "0.0002",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24188,6 +25224,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -24244,6 +25284,10 @@
             "input_price": "0.000155",
             "output_price": "0.00012",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24304,6 +25348,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -24360,6 +25408,10 @@
             "input_price": "0.00236125",
             "output_price": "0.01434",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24433,6 +25485,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00155625",
             "output_price": "0.00707",
             "provider_id": "openai"
@@ -24497,6 +25553,10 @@
             "input_price": "0.0037515",
             "output_price": "0.01844",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
@@ -24567,6 +25627,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00211975",
             "output_price": "0.00577",
             "provider_id": "openai"
@@ -24634,6 +25698,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.0022345",
             "output_price": "0.00439",
             "provider_id": "openai"
@@ -24686,6 +25754,10 @@
             "input_price": "0.00009",
             "output_price": "0.00012",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24746,6 +25818,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -24802,6 +25878,10 @@
             "input_price": "0.0008",
             "output_price": "0.00159",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24866,6 +25946,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000126",
             "output_price": "0.004365",
@@ -24922,6 +26006,10 @@
             "input_price": "0.0003825",
             "output_price": "0.03134",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -24982,6 +26070,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -25038,6 +26130,10 @@
             "input_price": "0.00032125",
             "output_price": "0.00005",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25098,6 +26194,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -25154,6 +26254,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00355",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25214,6 +26318,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -25270,6 +26378,10 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25343,6 +26455,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.0020925",
             "output_price": "0.0001",
             "provider_id": "openai"
@@ -25395,6 +26511,10 @@
             "input_price": "0.000155",
             "output_price": "0.01926",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25468,6 +26588,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.00030475",
             "output_price": "0.00124",
             "provider_id": "openai"
@@ -25520,6 +26644,10 @@
             "input_price": "0.00006",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25580,6 +26708,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -25638,6 +26770,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -25694,6 +26830,10 @@
             "input_price": "0.000122",
             "output_price": "0.000448",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25767,6 +26907,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.0411775",
             "output_price": "0.0172",
             "provider_id": "openai"
@@ -25819,6 +26963,10 @@
             "input_price": "0.000045",
             "output_price": "0.00216",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25879,6 +27027,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -25935,6 +27087,10 @@
             "input_price": "0.0002225",
             "output_price": "0.00016",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -25995,6 +27151,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26051,6 +27211,10 @@
             "input_price": "0.0029625",
             "output_price": "0.00011",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26111,6 +27275,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26167,6 +27335,10 @@
             "input_price": "0.00223625",
             "output_price": "0.01312",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26227,6 +27399,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26283,6 +27459,10 @@
             "input_price": "0.00044",
             "output_price": "0.00026",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26343,6 +27523,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26399,6 +27583,10 @@
             "input_price": "0.0001675",
             "output_price": "0.00011",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26459,6 +27647,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26517,6 +27709,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26570,6 +27766,10 @@
             "input_price": "0.0008375",
             "output_price": "0.00044",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26630,6 +27830,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26686,6 +27890,10 @@
             "input_price": "0.000765",
             "output_price": "0.00022",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26746,6 +27954,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26802,6 +28014,10 @@
             "input_price": "0.0003925",
             "output_price": "0.02737",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26862,6 +28078,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -26918,6 +28138,10 @@
             "input_price": "0.0016175",
             "output_price": "0.00065",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -26978,6 +28202,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "provider_id": "google"
           },
@@ -27028,6 +28256,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -27129,6 +28361,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -27171,6 +28407,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -27292,6 +28532,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -27336,6 +28580,10 @@
             "input_price": "0.00001155",
             "output_price": "0.00309666",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -27441,6 +28689,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -27485,6 +28737,10 @@
             "input_price": "0.0002882",
             "output_price": "0.0034821",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -27590,6 +28846,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -27632,6 +28892,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -27739,6 +29003,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -27781,6 +29049,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -27882,6 +29154,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -27924,6 +29200,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28031,6 +29311,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -28073,6 +29357,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28180,6 +29468,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -28222,6 +29514,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28329,6 +29625,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -28371,6 +29671,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28492,6 +29796,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -28534,6 +29842,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28633,6 +29945,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -28675,6 +29991,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28796,6 +30116,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -28838,6 +30162,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -28959,6 +30287,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -29007,6 +30339,10 @@
             "input_price": "0.0000066",
             "output_price": "0.00172791",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -29106,6 +30442,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -29156,6 +30496,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -29261,6 +30605,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
@@ -29313,6 +30661,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -29418,6 +30770,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
@@ -29470,6 +30826,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -29575,6 +30935,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -29627,6 +30991,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -29732,6 +31100,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
@@ -29784,6 +31156,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -29889,6 +31265,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
@@ -29941,6 +31321,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -30046,6 +31430,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
@@ -30098,6 +31486,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -30203,6 +31595,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000095",
             "output_price": "0",
             "provider_id": "openai"
@@ -30255,6 +31651,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -30360,6 +31760,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -30412,6 +31816,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -30517,6 +31925,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
@@ -30569,6 +31981,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -30674,6 +32090,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
@@ -30726,6 +32146,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -30828,6 +32252,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -30886,6 +32314,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -30985,6 +32417,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -31043,6 +32479,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -31145,6 +32585,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -31197,6 +32641,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -31302,6 +32750,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
@@ -31354,6 +32806,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -31459,6 +32915,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001675",
             "output_price": "0",
             "provider_id": "openai"
@@ -31511,6 +32971,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -31616,6 +33080,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -31668,6 +33136,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -31773,6 +33245,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
@@ -31825,6 +33301,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -31927,6 +33407,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -31985,6 +33469,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -32084,6 +33572,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -32212,6 +33704,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -32314,6 +33810,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0007625",
             "output_price": "0",
             "provider_id": "openai"
@@ -32366,6 +33866,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -32471,6 +33975,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00363",
             "output_price": "0",
             "provider_id": "openai"
@@ -32523,6 +34031,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -32628,6 +34140,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0005",
             "output_price": "0",
             "provider_id": "openai"
@@ -32680,6 +34196,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -32785,6 +34305,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00056",
             "output_price": "0",
             "provider_id": "openai"
@@ -32837,6 +34361,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -32942,6 +34470,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0005075",
             "output_price": "0",
             "provider_id": "openai"
@@ -32994,6 +34526,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -33099,6 +34635,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000625",
             "output_price": "0",
             "provider_id": "openai"
@@ -33151,6 +34691,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -33253,6 +34797,10 @@
             "input_price": "0.0006925",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -33385,6 +34933,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -33487,6 +35039,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004875",
             "output_price": "0",
             "provider_id": "openai"
@@ -33539,6 +35095,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -33644,6 +35204,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0033875",
             "output_price": "0",
             "provider_id": "openai"
@@ -33696,6 +35260,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -33801,6 +35369,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0008575",
             "output_price": "0",
             "provider_id": "openai"
@@ -33853,6 +35425,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -33958,6 +35534,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000935",
             "output_price": "0",
             "provider_id": "openai"
@@ -34010,6 +35590,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -34115,6 +35699,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00067",
             "output_price": "0",
             "provider_id": "openai"
@@ -34167,6 +35755,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -34272,6 +35864,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00075",
             "output_price": "0",
             "provider_id": "openai"
@@ -34324,6 +35920,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -34429,6 +36029,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0007625",
             "output_price": "0",
             "provider_id": "openai"
@@ -34481,6 +36085,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -34586,6 +36194,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00083",
             "output_price": "0",
             "provider_id": "openai"
@@ -34638,6 +36250,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -34743,6 +36359,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004875",
             "output_price": "0",
             "provider_id": "openai"
@@ -34795,6 +36415,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -34900,6 +36524,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0005675",
             "output_price": "0",
             "provider_id": "openai"
@@ -34952,6 +36580,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35057,6 +36689,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004775",
             "output_price": "0",
             "provider_id": "openai"
@@ -35109,6 +36745,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35214,6 +36854,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00333",
             "output_price": "0",
             "provider_id": "openai"
@@ -35266,6 +36910,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35371,6 +37019,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004875",
             "output_price": "0",
             "provider_id": "openai"
@@ -35423,6 +37075,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35528,6 +37184,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000555",
             "output_price": "0",
             "provider_id": "openai"
@@ -35580,6 +37240,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35685,6 +37349,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000475",
             "output_price": "0",
             "provider_id": "openai"
@@ -35737,6 +37405,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35842,6 +37514,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0033225",
             "output_price": "0",
             "provider_id": "openai"
@@ -35894,6 +37570,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -35999,6 +37679,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000485",
             "output_price": "0",
             "provider_id": "openai"
@@ -36051,6 +37735,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -36156,6 +37844,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000585",
             "output_price": "0",
             "provider_id": "openai"
@@ -36208,6 +37900,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -36313,6 +38009,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004825",
             "output_price": "0",
             "provider_id": "openai"
@@ -36365,6 +38065,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -36470,6 +38174,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00053",
             "output_price": "0",
             "provider_id": "openai"
@@ -36522,6 +38230,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -36627,6 +38339,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001125",
             "output_price": "0",
             "provider_id": "openai"
@@ -36679,6 +38395,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -36781,6 +38501,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -36839,6 +38563,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -36938,6 +38666,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -36996,6 +38728,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -37095,6 +38831,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -37163,6 +38903,10 @@
           },
           {
             "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
             "input_price": "0.0121425",
             "output_price": "0.0115",
             "provider_id": "openai"
@@ -37217,6 +38961,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -37322,6 +39070,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
@@ -37374,6 +39126,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -37479,6 +39235,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001675",
             "output_price": "0",
             "provider_id": "openai"
@@ -37531,6 +39291,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -37636,6 +39400,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
@@ -37688,6 +39456,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -37793,6 +39565,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
@@ -37845,6 +39621,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -37950,6 +39730,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
@@ -38002,6 +39786,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -38107,6 +39895,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
@@ -38159,6 +39951,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -38264,6 +40060,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
@@ -38316,6 +40116,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -38421,6 +40225,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
@@ -38473,6 +40281,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -38578,6 +40390,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -38630,6 +40446,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -38735,6 +40555,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000095",
             "output_price": "0",
             "provider_id": "openai"
@@ -38787,6 +40611,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -38892,6 +40720,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0004525",
             "output_price": "0",
             "provider_id": "openai"
@@ -38944,6 +40776,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -39049,6 +40885,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0023125",
             "output_price": "0",
             "provider_id": "openai"
@@ -39101,6 +40941,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -39206,6 +41050,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -39290,6 +41138,10 @@
             "provider_id": "azure"
           },
           {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
+          },
+          {
             "api_flavor": "anthropic",
             "input_price": "0.000096",
             "output_price": "0.000075",
@@ -39340,6 +41192,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -39441,6 +41297,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -39520,6 +41380,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -39620,6 +41484,10 @@
             "input_price": "0.0000341",
             "output_price": "0.0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -39730,6 +41598,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -39828,6 +41700,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -39878,6 +41754,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -39980,6 +41860,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -40038,6 +41922,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -40137,6 +42025,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -40195,6 +42087,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -40294,6 +42190,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -40352,6 +42252,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -40454,6 +42358,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -40506,6 +42414,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -40611,6 +42523,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
@@ -40663,6 +42579,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -40768,6 +42688,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
@@ -40820,6 +42744,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -40925,6 +42853,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
@@ -40977,6 +42909,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -41082,6 +43018,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -41134,6 +43074,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -41239,6 +43183,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00008",
             "output_price": "0",
             "provider_id": "openai"
@@ -41291,6 +43239,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -41396,6 +43348,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001275",
             "output_price": "0",
             "provider_id": "openai"
@@ -41448,6 +43404,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -41553,6 +43513,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -41605,6 +43569,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -41710,6 +43678,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
@@ -41762,6 +43734,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -41867,6 +43843,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
@@ -41919,6 +43899,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -42024,6 +44008,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
@@ -42076,6 +44064,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -42181,6 +44173,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
@@ -42233,6 +44229,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -42335,6 +44335,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -42393,6 +44397,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -42492,6 +44500,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -42591,6 +44603,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -42693,6 +44709,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
@@ -42733,6 +44753,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -42836,6 +44860,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -42878,6 +44906,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -42978,6 +45010,10 @@
             "input_price": "0.000042",
             "output_price": "0",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "embeddings",
@@ -43082,6 +45118,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "fireworks"
           },
           {
@@ -43182,6 +45222,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
@@ -43257,6 +45301,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "deepseek"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "chat",
@@ -43358,6 +45406,10 @@
           },
           {
             "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
             "provider_id": "openai"
           }
         ],
@@ -43413,6 +45465,10 @@
             "input_price": "0.000042",
             "output_price": "0.00015",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
@@ -43474,6 +45530,10 @@
             "input_price": "0.00001625",
             "output_price": "0.00008",
             "provider_id": "azure"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "doubleword"
           },
           {
             "api_flavor": "anthropic",
