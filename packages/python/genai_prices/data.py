@@ -1586,6 +1586,146 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='doubleword',
+        name='Doubleword',
+        api_pattern='https://api\\.doubleword\\.ai',
+        pricing_urls=['https://docs.doubleword.ai/inference-api/models'],
+        price_comments='Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='Qwen/Qwen3-14B-FP8',
+                match=ClauseEquals(equals='Qwen/Qwen3-14B-FP8'),
+                name='Qwen3 14B',
+                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3-Embedding-8B',
+                match=ClauseEquals(equals='Qwen/Qwen3-Embedding-8B'),
+                name='Qwen3 Embedding 8B',
+                prices=ModelPrice(input_mtok=Decimal('0.04')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
+                match=ClauseEquals(equals='Qwen/Qwen3-VL-235B-A22B-Instruct-FP8'),
+                name='Qwen3 VL 235B A22B Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('1.2')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
+                match=ClauseEquals(equals='Qwen/Qwen3-VL-30B-A3B-Instruct-FP8'),
+                name='Qwen3 VL 30B A3B Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.16'), output_mtok=Decimal('0.8')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.5-35B-A3B-FP8',
+                match=ClauseEquals(equals='Qwen/Qwen3.5-35B-A3B-FP8'),
+                name='Qwen3.5 35B A3B',
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.5-397B-A17B',
+                match=ClauseEquals(equals='Qwen/Qwen3.5-397B-A17B'),
+                name='Qwen3.5 397B A17B',
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('3.6')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.5-9B',
+                match=ClauseEquals(equals='Qwen/Qwen3.5-9B'),
+                name='Qwen3.5 9B',
+                prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.7')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen3.6-35B-A3B-FP8',
+                match=ClauseEquals(equals='Qwen/Qwen3.6-35B-A3B-FP8'),
+                name='Qwen3.6 35B A3B',
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Flash',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Flash'),
+                name='DeepSeek V4 Flash',
+                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('0.28')),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4-Pro',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4-Pro'),
+                name='DeepSeek V4 Pro',
+                prices=ModelPrice(input_mtok=Decimal('1.74'), output_mtok=Decimal('3.48')),
+            ),
+            ModelInfo(
+                id='google/gemma-4-31B-it',
+                match=ClauseEquals(equals='google/gemma-4-31B-it'),
+                name='Gemma 4 31B IT',
+                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('0.4')),
+            ),
+            ModelInfo(
+                id='mistralai/Devstral-2-123B-Instruct-2512',
+                match=ClauseEquals(equals='mistralai/Devstral-2-123B-Instruct-2512'),
+                name='Devstral 2 123B Instruct 2512',
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K2.6',
+                match=ClauseEquals(equals='moonshotai/Kimi-K2.6'),
+                name='Kimi K2.6',
+                prices=ModelPrice(input_mtok=Decimal('0.95'), output_mtok=Decimal('4')),
+            ),
+            ModelInfo(
+                id='nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
+                match=ClauseEquals(equals='nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4'),
+                name='Nemotron 3 Super 120B A12B',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('0.75')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-20b',
+                match=ClauseEquals(equals='openai/gpt-oss-20b'),
+                name='GPT OSS 20B',
+                prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.3')),
+            ),
+            ModelInfo(
+                id='zai-org/GLM-5.1-FP8',
+                match=ClauseEquals(equals='zai-org/GLM-5.1-FP8'),
+                name='GLM 5.1',
+                prices=ModelPrice(input_mtok=Decimal('1.4'), output_mtok=Decimal('4.4')),
+            ),
+        ],
+    ),
+    Provider(
         id='fireworks',
         name='Fireworks',
         api_pattern='https://api\\.fireworks\\.ai',
