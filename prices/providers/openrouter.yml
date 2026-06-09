@@ -268,6 +268,22 @@ models:
       input_mtok: 3
       output_mtok: 15
 
+  - id: anthropic/claude-fable-5
+    match:
+      or:
+        - equals: anthropic/claude-fable-5
+        - equals: anthropic/claude-fable-5:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      output_mtok: 50
+    prices_checked: 2026-06-09
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+
   - id: anthropic/claude-haiku-4.5
     match:
       or:
@@ -330,6 +346,22 @@ models:
       cache_write_mtok: 6.25
       output_mtok: 25
     prices_checked: 2026-04-16
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+
+  - id: anthropic/claude-opus-4.8
+    match:
+      or:
+        - equals: anthropic/claude-opus-4.8
+        - equals: anthropic/claude-opus-4.8:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      cache_write_mtok: 6.25
+      output_mtok: 25
+    prices_checked: 2026-05-28
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing

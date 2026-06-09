@@ -217,6 +217,23 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-fable-5',
+        name: 'Claude Fable 5',
+        description: "Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
+        match: {
+          starts_with: 'claude-fable-5',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'claude-haiku-4-5',
         name: 'Claude Haiku 4.5',
         description: 'Fastest and most intelligent Haiku model',
@@ -415,6 +432,36 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-4.7-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'claude-opus-4-8',
+        name: 'Claude Opus 4.8',
+        description: 'Our most capable model for complex reasoning and agentic coding',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-4-8',
+            },
+            {
+              starts_with: 'claude-opus-4.8',
+            },
+            {
+              starts_with: 'claude-4-8-opus',
+            },
+            {
+              starts_with: 'claude-4.8-opus',
             },
           ],
         },
@@ -827,6 +874,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-fable-5-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-fable-5',
+        },
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'global.anthropic.claude-haiku-4-5-20251001-v1:0',
         match: {
           contains: 'global.anthropic.claude-haiku-4-5-20251001',
@@ -907,6 +966,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-opus-4-8-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-opus-4-8',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'global.anthropic.claude-sonnet-4-20250514-v1:0',
         match: {
           contains: 'global.anthropic.claude-sonnet-4-20250514',
@@ -972,6 +1043,39 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'google.gemma-3-12b-it',
+        name: 'Gemma 3 12B IT',
+        match: {
+          contains: 'google.gemma-3-12b-it',
+        },
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 0.29,
+        },
+      },
+      {
+        id: 'google.gemma-3-27b-it',
+        name: 'Gemma 3 27B IT',
+        match: {
+          contains: 'google.gemma-3-27b-it',
+        },
+        prices: {
+          input_mtok: 0.23,
+          output_mtok: 0.38,
+        },
+      },
+      {
+        id: 'google.gemma-3-4b-it',
+        name: 'Gemma 3 4B IT',
+        match: {
+          contains: 'google.gemma-3-4b-it',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.08,
         },
       },
       {
@@ -1096,6 +1200,61 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'mistral.devstral-2-123b',
+        name: 'Devstral 2 123B',
+        match: {
+          contains: 'mistral.devstral-2-123b',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'mistral.magistral-small-2509',
+        name: 'Magistral Small 2509',
+        match: {
+          contains: 'mistral.magistral-small-2509',
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'mistral.ministral-3-14b-instruct',
+        name: 'Ministral 14B 3.0',
+        match: {
+          contains: 'mistral.ministral-3-14b-instruct',
+        },
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'mistral.ministral-3-3b-instruct',
+        name: 'Ministral 3B 3.0',
+        match: {
+          contains: 'mistral.ministral-3-3b-instruct',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.1,
+        },
+      },
+      {
+        id: 'mistral.ministral-3-8b-instruct',
+        name: 'Ministral 8B 3.0',
+        match: {
+          contains: 'mistral.ministral-3-8b-instruct',
+        },
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.15,
+        },
+      },
+      {
         id: 'mistral.mistral-7b-instruct-v0:2',
         name: 'Mistral 7B Instruct',
         match: {
@@ -1115,6 +1274,17 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 4,
           output_mtok: 12,
+        },
+      },
+      {
+        id: 'mistral.mistral-large-3-675b-instruct',
+        name: 'Mistral Large 3',
+        match: {
+          contains: 'mistral.mistral-large-3-675b-instruct',
+        },
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
         },
       },
       {
@@ -1148,6 +1318,28 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'mistral.voxtral-mini-3b-2507',
+        name: 'Voxtral Mini 3B 2507',
+        match: {
+          contains: 'mistral.voxtral-mini-3b-2507',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.04,
+        },
+      },
+      {
+        id: 'mistral.voxtral-small-24b-2507',
+        name: 'Voxtral Small 24B 2507',
+        match: {
+          contains: 'mistral.voxtral-small-24b-2507',
+        },
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.3,
         },
       },
       {
@@ -1327,6 +1519,37 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-fable-5-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-fable-5',
+            },
+            {
+              starts_with: 'claude-fable-5',
+            },
+            {
+              contains: 'us.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'au.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'eu.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'jp.anthropic.claude-fable-5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 11,
+          cache_write_mtok: 13.75,
+          cache_read_mtok: 1.1,
+          output_mtok: 55,
         },
       },
       {
@@ -1573,6 +1796,37 @@ export const data: Provider[] = [
             },
             {
               contains: 'jp.anthropic.claude-opus-4-7',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-4-8-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-opus-4-8',
+            },
+            {
+              starts_with: 'claude-opus-4-8',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-4-8',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-4-8',
             },
           ],
         },
@@ -2595,12 +2849,257 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        price_comments:
-          'Standard (non-promotional) pricing. DeepSeek is offering a temporary 75% promotional discount that is not reflected here.',
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.003625,
+          output_mtok: 0.87,
+        },
+      },
+    ],
+  },
+  {
+    id: 'doubleword',
+    name: 'Doubleword',
+    pricing_urls: ['https://docs.doubleword.ai/inference-api/models'],
+    api_pattern: 'https://api\\.doubleword\\.ai',
+    price_comments: 'Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'Qwen/Qwen3-14B-FP8',
+        name: 'Qwen3 14B',
+        match: {
+          equals: 'Qwen/Qwen3-14B-FP8',
+        },
+        prices: {
+          input_mtok: 0.05,
+          output_mtok: 0.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-Embedding-8B',
+        name: 'Qwen3 Embedding 8B',
+        match: {
+          equals: 'Qwen/Qwen3-Embedding-8B',
+        },
+        prices: {
+          input_mtok: 0.04,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
+        name: 'Qwen3 VL 235B A22B Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-235B-A22B-Instruct-FP8',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
+        name: 'Qwen3 VL 30B A3B Instruct',
+        match: {
+          equals: 'Qwen/Qwen3-VL-30B-A3B-Instruct-FP8',
+        },
+        prices: {
+          input_mtok: 0.16,
+          output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-35B-A3B-FP8',
+        name: 'Qwen3.5 35B A3B',
+        match: {
+          equals: 'Qwen/Qwen3.5-35B-A3B-FP8',
+        },
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-397B-A17B',
+        name: 'Qwen3.5 397B A17B',
+        match: {
+          equals: 'Qwen/Qwen3.5-397B-A17B',
+        },
+        prices: {
+          input_mtok: 0.6,
+          output_mtok: 3.6,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.5-9B',
+        name: 'Qwen3.5 9B',
+        match: {
+          equals: 'Qwen/Qwen3.5-9B',
+        },
+        prices: {
+          input_mtok: 0.08,
+          output_mtok: 0.7,
+        },
+      },
+      {
+        id: 'Qwen/Qwen3.6-35B-A3B-FP8',
+        name: 'Qwen3.6 35B A3B',
+        match: {
+          equals: 'Qwen/Qwen3.6-35B-A3B-FP8',
+        },
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Flash',
+        name: 'DeepSeek V4 Flash',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Flash',
+        },
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4-Pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4-Pro',
+        },
         prices: {
           input_mtok: 1.74,
-          cache_read_mtok: 0.0145,
           output_mtok: 3.48,
+        },
+      },
+      {
+        id: 'google/gemma-4-31B-it',
+        name: 'Gemma 4 31B IT',
+        match: {
+          equals: 'google/gemma-4-31B-it',
+        },
+        prices: {
+          input_mtok: 0.14,
+          output_mtok: 0.4,
+        },
+      },
+      {
+        id: 'mistralai/Devstral-2-123B-Instruct-2512',
+        name: 'Devstral 2 123B Instruct 2512',
+        match: {
+          equals: 'mistralai/Devstral-2-123B-Instruct-2512',
+        },
+        prices: {
+          input_mtok: 0.4,
+          output_mtok: 2,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K2.6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: 'moonshotai/Kimi-K2.6',
+        },
+        prices: {
+          input_mtok: 0.95,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
+        name: 'Nemotron 3 Super 120B A12B',
+        match: {
+          equals: 'nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
+        },
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'openai/gpt-oss-20b',
+        name: 'GPT OSS 20B',
+        match: {
+          equals: 'openai/gpt-oss-20b',
+        },
+        prices: {
+          input_mtok: 0.04,
+          output_mtok: 0.3,
+        },
+      },
+      {
+        id: 'zai-org/GLM-5.1-FP8',
+        name: 'GLM 5.1',
+        match: {
+          equals: 'zai-org/GLM-5.1-FP8',
+        },
+        prices: {
+          input_mtok: 1.4,
+          output_mtok: 4.4,
         },
       },
     ],
@@ -3117,6 +3616,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-fable-5',
+        match: {
+          contains: 'claude-fable-5',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'claude-opus-4-6',
         match: {
           or: [
@@ -3189,6 +3703,34 @@ export const data: Provider[] = [
             },
             {
               contains: 'claude-opus-4.7',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'claude-opus-4-8',
+        match: {
+          or: [
+            {
+              contains: 'claude-4-8-opus',
+            },
+            {
+              contains: 'claude-opus-4-8',
+            },
+            {
+              contains: 'claude-4.8-opus',
+            },
+            {
+              contains: 'claude-opus-4.8',
             },
           ],
         },
@@ -8157,6 +8699,201 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'minimax',
+    name: 'MiniMax',
+    pricing_urls: ['https://platform.minimax.io/docs/guides/pricing-paygo'],
+    api_pattern: 'https://api\\.minimax(i)?\\.(?:com|io)',
+    price_comments:
+      'Prices sourced from MiniMax international platform USD pricing (platform.minimax.io, May 2026). M2.1, M2.1-highspeed, and M2 are legacy models; prices inferred from CNY pricing at the equivalent 7.00 CNY/USD rate used by the international platform for current models.',
+    model_match: {
+      or: [
+        {
+          starts_with: 'MiniMax-M',
+        },
+        {
+          starts_with: 'minimax-m',
+        },
+        {
+          equals: 'M2-her',
+        },
+        {
+          equals: 'm2-her',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'M2-her',
+        name: 'MiniMax M2-her',
+        description:
+          'MiniMax M2-her, a text dialogue model optimized for role-playing and multi-turn conversations. 64,000 token context window. No cache support.',
+        match: {
+          or: [
+            {
+              equals: 'M2-her',
+            },
+            {
+              equals: 'm2-her',
+            },
+          ],
+        },
+        context_window: 64000,
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'MiniMax-M2',
+        name: 'MiniMax M2',
+        description:
+          'MiniMax M2 (legacy), a multimodal language model with 204,800 token context window. Supports agentic capabilities and advanced reasoning.',
+        match: {
+          or: [
+            {
+              equals: 'MiniMax-M2',
+            },
+            {
+              equals: 'minimax-m2',
+            },
+            {
+              equals: 'MiniMax-M2.1',
+            },
+            {
+              equals: 'minimax-m2.1',
+            },
+            {
+              equals: 'MiniMax-M2.5',
+            },
+            {
+              equals: 'minimax-m2.5',
+            },
+          ],
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          cache_write_mtok: 0.375,
+          cache_read_mtok: 0.03,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'MiniMax-M2.1-highspeed',
+        name: 'MiniMax M2.1 Highspeed',
+        description: 'MiniMax M2.1 highspeed variant (legacy) with higher throughput.',
+        match: {
+          or: [
+            {
+              contains: 'M2.1-highspeed',
+            },
+            {
+              contains: 'm2.1-highspeed',
+            },
+          ],
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.6,
+          cache_write_mtok: 0.375,
+          cache_read_mtok: 0.03,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'MiniMax-M2.5-highspeed',
+        name: 'MiniMax M2.5 Highspeed',
+        description: 'MiniMax M2.5 highspeed variant with higher throughput.',
+        match: {
+          or: [
+            {
+              contains: 'M2.5-highspeed',
+            },
+            {
+              contains: 'm2.5-highspeed',
+            },
+          ],
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.6,
+          cache_write_mtok: 0.375,
+          cache_read_mtok: 0.03,
+          output_mtok: 2.4,
+        },
+      },
+      {
+        id: 'MiniMax-M2.7',
+        name: 'MiniMax M2.7',
+        description:
+          'MiniMax M2.7, a multimodal language model with 204,800 token context window. Achieves top performance in real-world engineering, office productivity, and character-rich interaction.',
+        match: {
+          or: [
+            {
+              equals: 'MiniMax-M2.7',
+            },
+            {
+              equals: 'minimax-m2.7',
+            },
+          ],
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.3,
+          cache_write_mtok: 0.375,
+          cache_read_mtok: 0.06,
+          output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'MiniMax-M2.7-highspeed',
+        name: 'MiniMax M2.7 Highspeed',
+        description: 'MiniMax M2.7 highspeed variant with higher throughput.',
+        match: {
+          or: [
+            {
+              contains: 'M2.7-highspeed',
+            },
+            {
+              contains: 'm2.7-highspeed',
+            },
+          ],
+        },
+        context_window: 204800,
+        prices: {
+          input_mtok: 0.6,
+          cache_write_mtok: 0.375,
+          cache_read_mtok: 0.06,
+          output_mtok: 2.4,
+        },
+      },
+    ],
+  },
+  {
     id: 'mistral',
     name: 'Mistral',
     pricing_urls: ['https://mistral.ai/pricing#api-pricing'],
@@ -8653,6 +9390,21 @@ export const data: Provider[] = [
           input_mtok: 0.6,
           cache_read_mtok: 0.1,
           output_mtok: 3,
+        },
+      },
+      {
+        id: 'kimi-k2.6',
+        name: 'Kimi K2.6',
+        description:
+          "Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
+        match: {
+          starts_with: 'kimi-k2.6',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
         },
       },
       {
@@ -11073,6 +11825,28 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'anthropic/claude-fable-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-fable-5',
+            },
+            {
+              equals: 'anthropic/claude-fable-5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'anthropic/claude-haiku-4.5',
         match: {
           or: [
@@ -11177,6 +11951,28 @@ export const data: Provider[] = [
             },
             {
               equals: 'anthropic/claude-opus-4.7:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-4.8',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-4.8',
+            },
+            {
+              equals: 'anthropic/claude-opus-4.8:beta',
             },
           ],
         },
@@ -18777,6 +19573,311 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
           output_mtok: 1.5,
+        },
+      },
+    ],
+  },
+  {
+    id: 'zhipuai',
+    name: 'Zhipu AI',
+    pricing_urls: ['https://open.bigmodel.cn/pricing', 'https://docs.bigmodel.cn/cn/guide/start/model-overview'],
+    api_pattern: 'https://open\\.bigmodel\\.cn',
+    price_comments:
+      'Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing), converted to USD at 1 USD = 7.25 CNY (May 2026). Zhipu AI does not publish USD prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7, GLM-5 series) have tiered pricing by input/output length; prices shown are for the cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard inference models (GLM-4-Air, GLM-4-Plus, etc.) bill input and output tokens at the same per-token rate per their pricing page. Cache write is temporarily free for flagship models (limited-time promotion, not included).',
+    model_match: {
+      or: [
+        {
+          starts_with: 'GLM-',
+        },
+        {
+          starts_with: 'glm-',
+        },
+      ],
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'GLM-4-Air',
+        name: 'GLM-4-Air',
+        description:
+          'High-performance GLM-4 model with context caching. 128,000 token context window. Input and output billed at the same per-token rate.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-Air',
+            },
+            {
+              equals: 'glm-4-air',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.069,
+          cache_read_mtok: 0.034,
+          output_mtok: 0.069,
+        },
+      },
+      {
+        id: 'GLM-4-AirX',
+        name: 'GLM-4-AirX',
+        description:
+          'Fastest GLM-4 model. 8,000 token context window. Does not support context caching. Input and output billed at the same per-token rate.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-AirX',
+            },
+            {
+              equals: 'glm-4-airx',
+            },
+          ],
+        },
+        context_window: 8000,
+        prices: {
+          input_mtok: 1.379,
+          output_mtok: 1.379,
+        },
+      },
+      {
+        id: 'GLM-4-Assistant',
+        name: 'GLM-4-Assistant',
+        description:
+          'GLM-4 agent/assistant model. 128,000 token context window. Does not support context caching. Input and output billed at the same per-token rate.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-Assistant',
+            },
+            {
+              equals: 'glm-4-assistant',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.69,
+          output_mtok: 0.69,
+        },
+      },
+      {
+        id: 'GLM-4-FlashX-250414',
+        name: 'GLM-4-FlashX-250414',
+        description:
+          'Fast and cheap GLM-4 model with context caching. 128,000 token context window. Input and output billed at the same per-token rate.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-FlashX-250414',
+            },
+            {
+              equals: 'glm-4-flashx-250414',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.014,
+          cache_read_mtok: 0.007,
+          output_mtok: 0.014,
+        },
+      },
+      {
+        id: 'GLM-4-Long',
+        name: 'GLM-4-Long',
+        description:
+          'GLM-4 model optimized for long inputs with context caching. 1,000,000 token context window. Input and output billed at the same per-token rate.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-Long',
+            },
+            {
+              equals: 'glm-4-long',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.138,
+          cache_read_mtok: 0.069,
+          output_mtok: 0.138,
+        },
+      },
+      {
+        id: 'GLM-4-Plus',
+        name: 'GLM-4-Plus',
+        description:
+          'Flagship GLM-4 model with context caching. 128,000 token context window. Input and output billed at the same per-token rate.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4-Plus',
+            },
+            {
+              equals: 'glm-4-plus',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.69,
+          cache_read_mtok: 0.345,
+          output_mtok: 0.69,
+        },
+      },
+      {
+        id: 'GLM-4.5-Air',
+        name: 'GLM-4.5-Air',
+        description:
+          "Zhipu AI's GLM-4.5-Air flagship model with context caching. 128,000 token context window. Tiered pricing; prices shown for [0, 32k) input / [0, 0.2k) output tier.",
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.5-Air',
+            },
+            {
+              equals: 'glm-4.5-air',
+            },
+          ],
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 0.11,
+          cache_read_mtok: 0.022,
+          output_mtok: 0.276,
+        },
+      },
+      {
+        id: 'GLM-4.7',
+        name: 'GLM-4.7',
+        description:
+          "Zhipu AI's GLM-4.7 flagship model with context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input / [0, 0.2k) output tier.",
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.7',
+            },
+            {
+              equals: 'glm-4.7',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.276,
+          cache_read_mtok: 0.055,
+          output_mtok: 1.103,
+        },
+      },
+      {
+        id: 'GLM-4.7-FlashX',
+        name: 'GLM-4.7-FlashX',
+        description: 'Fast and affordable GLM-4.7 model with context caching. 200,000 token context window.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-4.7-FlashX',
+            },
+            {
+              equals: 'glm-4.7-flashx',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.069,
+          cache_read_mtok: 0.014,
+          output_mtok: 0.414,
+        },
+      },
+      {
+        id: 'GLM-5',
+        name: 'GLM-5',
+        description:
+          'Zhipu AI GLM-5 model with context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5',
+            },
+            {
+              equals: 'glm-5',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.552,
+          cache_read_mtok: 0.138,
+          output_mtok: 2.483,
+        },
+      },
+      {
+        id: 'GLM-5-Turbo',
+        name: 'GLM-5-Turbo',
+        description:
+          'Zhipu AI GLM-5 Turbo model with context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.',
+        match: {
+          or: [
+            {
+              equals: 'GLM-5-Turbo',
+            },
+            {
+              equals: 'glm-5-turbo',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.69,
+          cache_read_mtok: 0.166,
+          output_mtok: 3.034,
+        },
+      },
+      {
+        id: 'GLM-5.1',
+        name: 'GLM-5.1',
+        description:
+          "Zhipu AI's latest flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.",
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.1',
+            },
+            {
+              equals: 'glm-5.1',
+            },
+          ],
+        },
+        context_window: 200000,
+        prices: {
+          input_mtok: 0.828,
+          cache_read_mtok: 0.179,
+          output_mtok: 3.31,
         },
       },
     ],
