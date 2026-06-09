@@ -81,6 +81,34 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
             output_mtok=mtok(self.completion),
         )
 
+    def has_negative_price(self) -> bool:
+        # OpenRouter reports a price of -1 for models whose cost is adaptive/dynamic rather than a
+        # fixed per-token rate, so there is no single number we can store. Two kinds of model do this:
+        #   - auto-routers / meta-models that pick an underlying model per request, e.g.
+        #     `openrouter/auto`, `openrouter/fusion`, `openrouter/pareto-code`, `openrouter/bodybuilder`.
+        #   - `~`-prefixed "latest" aliases that redirect to whatever the newest model in a family is,
+        #     e.g. `~anthropic/claude-fable-latest` ("always redirects to the latest model in the Claude
+        #     Fable family"). This one is what first tripped this and crashed the whole pull on
+        #     ModelPrice validation.
+        # In both cases the resolved model (and price) varies per request, so -1 is a sentinel.
+        #
+        # ModelPrice requires positive prices, so we skip these models entirely for now.
+        # TODO: represent adaptive/dynamic pricing instead of dropping these models.
+        return any(
+            v is not None and v < 0
+            for v in (
+                self.audio,
+                self.prompt,
+                self.completion,
+                self.request,
+                self.image,
+                self.web_search,
+                self.internal_reasoning,
+                self.input_cache_write,
+                self.input_cache_read,
+            )
+        )
+
 
 class OpenRouterResponse(BaseModel):
     data: list[OpenRouterModel]
@@ -105,6 +133,9 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
         provider_id = or_model.provider_id()
         if provider_id == 'openrouter':
             # this model is invalid
+            continue
+        if or_model.pricing.has_negative_price():
+            # variable/dynamic pricing we can't represent as a fixed price, skip it
             continue
         if models := or_providers.get(provider_id):
             models.append(or_model)
