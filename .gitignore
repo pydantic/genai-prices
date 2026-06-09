@@ -10,7 +10,9 @@ wheels/
 .venv
 /scratch/
 /prices/source_prices/
-.claude/
+.claude/*
+!.claude/agents/
+!.claude/agents/*.md
 .coverage
 TODO.md
 node_modules/
