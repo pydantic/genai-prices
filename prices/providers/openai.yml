@@ -718,9 +718,11 @@ models:
     name: GPT-5.4 Image 2
     description: >-
       GPT-5.4 Image 2 combines OpenAI's GPT-5.4 model with state-of-the-art image generation capabilities from GPT Image 2.
-      It enables rich multimodal workflows, allowing users to seamlessly move between reasoning, coding, and...
+      It enables rich multimodal workflows across reasoning, coding, and image generation.
     match:
       equals: gpt-5.4-image-2
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 8
       cache_read_mtok: 2
@@ -827,9 +829,11 @@ models:
     name: GPT Audio
     description: >-
       The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder
-      for more natural sounding voices and maintains better voice consistency. Audio is priced...
+      for more natural-sounding voices and maintains better voice consistency.
     match:
       equals: gpt-audio
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 2.5
       output_mtok: 10
@@ -838,9 +842,11 @@ models:
     name: GPT Audio Mini
     description: >-
       A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices
-      and maintains better voice consistency. Input is priced at $0.60 per million...
+      and maintains better voice consistency.
     match:
       equals: gpt-audio-mini
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 0.6
       output_mtok: 2.4
@@ -849,9 +855,11 @@ models:
     name: GPT Chat Latest
     description: >-
       GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model
-      used in ChatGPT. As OpenAI rolls out new Instant model updates...
+      used in ChatGPT.
     match:
       equals: gpt-chat-latest
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
@@ -861,9 +869,11 @@ models:
     name: gpt-oss-120b
     description: >-
       gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning,
-      agentic, and general-purpose production use cases. It activates 5.1B parameters per forward pass and is optimized...
+      agentic, and general-purpose production use cases.
     match:
       equals: gpt-oss-120b
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 0.039
       output_mtok: 0.18
@@ -872,9 +882,11 @@ models:
     name: gpt-oss-20b
     description: >-
       gpt-oss-20b is an open-weight 21B parameter model released by OpenAI under the Apache 2.0 license. It uses a Mixture-of-Experts
-      (MoE) architecture with 3.6B active parameters per forward pass, optimized for...
+      (MoE) architecture with 3.6B active parameters per forward pass.
     match:
       equals: gpt-oss-20b
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 0.029
       output_mtok: 0.14
@@ -883,10 +895,11 @@ models:
     name: gpt-oss-safeguard-20b
     description: >-
       gpt-oss-safeguard-20b is a safety reasoning model from OpenAI built upon gpt-oss-20b. This open-weight, 21B-parameter
-      Mixture-of-Experts (MoE) model offers lower latency for safety tasks like content classification, LLM filtering, and
-      trust...
+      Mixture-of-Experts (MoE) model offers lower latency for safety tasks.
     match:
       equals: gpt-oss-safeguard-20b
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
     prices:
       input_mtok: 0.075
       cache_read_mtok: 0.037

@@ -735,9 +735,11 @@ models:
     name: Gemma 2 27B
     description: >-
       Gemma 2 27B by Google is an open model built from the same research and technology used to create the Gemini models.
-      Gemma models are well-suited for a variety of...
+      Gemma models are well-suited for a variety of text generation and instruction-following tasks.
     match:
       equals: gemma-2-27b-it
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
     prices:
       input_mtok: 0.65
       output_mtok: 0.65
@@ -767,9 +769,11 @@ models:
     name: Gemma 4 26B A4B
     description: >-
       Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total
-      parameters, only 3.8B activate per token during inference — delivering near-31B quality at...
+      parameters, only 3.8B activate per token during inference.
     match:
       equals: gemma-4-26b-a4b-it
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
     prices:
       input_mtok: 0.06
       output_mtok: 0.33
@@ -778,9 +782,11 @@ models:
     name: Gemma 4 31B
     description: >-
       Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output.
-      Features a 256K token context window, configurable thinking/reasoning mode, native function...
+      It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.
     match:
       equals: gemma-4-31b-it
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
     prices:
       input_mtok: 0.12
       cache_read_mtok: 0.09

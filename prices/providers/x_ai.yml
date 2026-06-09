@@ -220,9 +220,10 @@ models:
     name: Grok 4.20
     description: >-
       Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines
-      the lowest hallucination rate on the market with strict prompt adherence, delivering...
+      low hallucination rates with strict prompt adherence.
     match:
       equals: grok-4.20
+    prices_checked: 2026-06-09
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.2
@@ -232,9 +233,10 @@ models:
     name: Grok 4.20 Multi-Agent
     description: >-
       Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents
-      operate in parallel to conduct deep research, coordinate tool use, and synthesize information...
+      operate in parallel to conduct deep research, coordinate tool use, and synthesize information.
     match:
       equals: grok-4.20-multi-agent
+    prices_checked: 2026-06-09
     prices:
       input_mtok: 2
       cache_read_mtok: 0.2
@@ -262,9 +264,10 @@ models:
     name: Grok Build 0.1
     description: >-
       Grok Build 0.1 is xAI's fast coding model trained specifically for agentic software engineering workflows. It supports
-      text and image inputs with text output, and is optimized for interactive coding...
+      text and image inputs with text output, and is optimized for interactive coding.
     match:
       equals: grok-build-0.1
+    prices_checked: 2026-06-09
     prices:
       input_mtok: 1
       cache_read_mtok: 0.2
