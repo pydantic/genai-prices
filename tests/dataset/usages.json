@@ -6933,7 +6933,7 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000031",
+            "input_price": "0.00000310000000000",
             "output_price": "0.0000084",
             "provider_id": "openrouter"
           },
@@ -7095,8 +7095,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000096",
-            "output_price": "0.00490175",
+            "input_price": "0.00001032",
+            "output_price": "0.00487374",
             "provider_id": "openrouter"
           },
           {
@@ -13806,6 +13806,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00000195",
+            "output_price": "0.000654",
             "provider_id": "openrouter"
           },
           {
@@ -13965,6 +13967,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.00008983",
+            "output_price": "0.001116",
             "provider_id": "openrouter"
           },
           {
@@ -14132,8 +14136,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00006",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -14942,8 +14944,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001775",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -15115,8 +15115,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00023",
-            "output_price": "0.00015",
             "provider_id": "openrouter"
           },
           {
@@ -15276,8 +15274,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00004375",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -15433,8 +15429,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000825",
-            "output_price": "0.00006",
             "provider_id": "openrouter"
           },
           {
@@ -16127,8 +16121,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00002",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -16300,8 +16292,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001125",
-            "output_price": "0.00026",
             "provider_id": "openrouter"
           },
           {
@@ -16986,8 +16976,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0007025",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -17159,8 +17147,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0007775",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -17332,8 +17318,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000115",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -17505,8 +17489,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0012575",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -17673,8 +17655,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000002886",
-            "output_price": "0.00000648",
             "provider_id": "openrouter"
           },
           {
@@ -17848,8 +17828,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000012",
-            "output_price": "0.000006",
             "provider_id": "openrouter"
           },
           {
@@ -18021,8 +17999,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00017",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -18194,8 +18170,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0002225",
-            "output_price": "0.00036",
             "provider_id": "openrouter"
           },
           {
@@ -18600,8 +18574,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0027975",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -19089,8 +19061,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0002725",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -19262,8 +19232,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000325",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -19435,8 +19403,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0005875",
-            "output_price": "0.00016",
             "provider_id": "openrouter"
           },
           {
@@ -19608,8 +19574,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0006825",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -19781,8 +19745,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000735",
-            "output_price": "0.00021",
             "provider_id": "openrouter"
           },
           {
@@ -19954,8 +19916,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00002",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -20127,8 +20087,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000105",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -20300,8 +20258,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001575",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -20473,8 +20429,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0041975",
-            "output_price": "0.00025",
             "provider_id": "openrouter"
           },
           {
@@ -21146,8 +21100,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000115",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -21319,8 +21271,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0029625",
-            "output_price": "0.00009",
             "provider_id": "openrouter"
           },
           {
@@ -21492,8 +21442,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00007",
             "provider_id": "openrouter"
           },
           {
@@ -21665,8 +21613,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0005875",
-            "output_price": "0.00013",
             "provider_id": "openrouter"
           },
           {
@@ -22091,8 +22037,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000156",
-            "output_price": "0.0000096",
             "provider_id": "openrouter"
           },
           {
@@ -22264,8 +22208,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00001935",
-            "output_price": "0.0000054",
             "provider_id": "openrouter"
           },
           {
@@ -22608,8 +22550,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -22781,8 +22721,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004525",
-            "output_price": "0.00025",
             "provider_id": "openrouter"
           },
           {
@@ -29116,8 +29054,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00000708",
-            "output_price": "0.0000174",
+            "input_price": "0.000006903",
+            "output_price": "0.00001566",
             "provider_id": "openrouter"
           },
           {
@@ -29279,8 +29217,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000021",
-            "output_price": "0.0005656",
             "provider_id": "openrouter"
           },
           {
@@ -29444,8 +29380,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000524",
-            "output_price": "0.000636",
             "provider_id": "openrouter"
           },
           {
@@ -30444,8 +30378,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00000712",
-            "output_price": "0.0000188",
+            "input_price": "0.000006942",
+            "output_price": "0.00001692",
             "provider_id": "openrouter"
           },
           {
@@ -30780,8 +30714,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00001132",
-            "output_price": "0.0000098",
+            "input_price": "0.000011037",
+            "output_price": "0.00000882",
             "provider_id": "openrouter"
           },
           {
@@ -30959,8 +30893,8 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00001276",
-            "output_price": "0.0000192",
+            "input_price": "0.000012441",
+            "output_price": "0.00001728",
             "provider_id": "openrouter"
           },
           {
@@ -31291,8 +31225,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001775",
-            "output_price": "0.00046",
             "provider_id": "openrouter"
           },
           {
@@ -31464,8 +31396,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0003325",
-            "output_price": "0.00019",
             "provider_id": "openrouter"
           },
           {
@@ -31637,8 +31567,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -31810,8 +31738,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001175",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -31983,8 +31909,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0002175",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -32156,8 +32080,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00029",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -32329,8 +32251,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000095",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -32502,8 +32422,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -32675,8 +32593,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001775",
-            "output_price": "0.00046",
             "provider_id": "openrouter"
           },
           {
@@ -32848,8 +32764,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0003325",
-            "output_price": "0.00019",
             "provider_id": "openrouter"
           },
           {
@@ -33021,8 +32935,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -33194,8 +33106,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -33367,8 +33277,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -33540,8 +33448,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000105",
-            "output_price": "0.00013",
             "provider_id": "openrouter"
           },
           {
@@ -33713,8 +33619,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001675",
-            "output_price": "0.00009",
             "provider_id": "openrouter"
           },
           {
@@ -33886,8 +33790,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -34059,8 +33961,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000105",
-            "output_price": "0.00013",
             "provider_id": "openrouter"
           },
           {
@@ -34232,8 +34132,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -34405,8 +34303,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -34648,8 +34544,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0007625",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -34821,8 +34715,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00363",
-            "output_price": "0.00029",
             "provider_id": "openrouter"
           },
           {
@@ -34994,8 +34886,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0005",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -35167,8 +35057,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00056",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -35340,8 +35228,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0005075",
-            "output_price": "0.00015",
             "provider_id": "openrouter"
           },
           {
@@ -35513,8 +35399,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000625",
-            "output_price": "0.00015",
             "provider_id": "openrouter"
           },
           {
@@ -35686,8 +35570,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0006925",
-            "output_price": "0.00022",
             "provider_id": "openrouter"
           },
           {
@@ -35933,8 +35815,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004875",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -36106,8 +35986,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0033875",
-            "output_price": "0.00024",
             "provider_id": "openrouter"
           },
           {
@@ -36279,8 +36157,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0008575",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -36452,8 +36328,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000935",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -36625,8 +36499,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00067",
-            "output_price": "0.00018",
             "provider_id": "openrouter"
           },
           {
@@ -36798,8 +36670,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00075",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -36971,8 +36841,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0007625",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -37144,8 +37012,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00083",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -37317,8 +37183,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004875",
-            "output_price": "0.00019",
             "provider_id": "openrouter"
           },
           {
@@ -37490,8 +37354,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0005675",
-            "output_price": "0.00013",
             "provider_id": "openrouter"
           },
           {
@@ -37663,8 +37525,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004775",
-            "output_price": "0.00012",
             "provider_id": "openrouter"
           },
           {
@@ -37836,8 +37696,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00333",
-            "output_price": "0.00019",
             "provider_id": "openrouter"
           },
           {
@@ -38009,8 +37867,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004875",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -38182,8 +38038,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000555",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -38355,8 +38209,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000475",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -38528,8 +38380,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0033225",
-            "output_price": "0.00015",
             "provider_id": "openrouter"
           },
           {
@@ -38701,8 +38551,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000485",
-            "output_price": "0.00018",
             "provider_id": "openrouter"
           },
           {
@@ -38874,8 +38722,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000585",
-            "output_price": "0.00019",
             "provider_id": "openrouter"
           },
           {
@@ -39047,8 +38893,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004825",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -39220,8 +39064,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00053",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -39393,8 +39235,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001125",
-            "output_price": "0.00015",
             "provider_id": "openrouter"
           },
           {
@@ -39566,8 +39406,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -39739,8 +39577,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -39912,8 +39748,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -40156,8 +39990,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000105",
-            "output_price": "0.00013",
             "provider_id": "openrouter"
           },
           {
@@ -40329,8 +40161,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001675",
-            "output_price": "0.00009",
             "provider_id": "openrouter"
           },
           {
@@ -40502,8 +40332,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001175",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -40675,8 +40503,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0002175",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -40848,8 +40674,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00029",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -41021,8 +40845,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001775",
-            "output_price": "0.00046",
             "provider_id": "openrouter"
           },
           {
@@ -41194,8 +41016,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0003325",
-            "output_price": "0.00019",
             "provider_id": "openrouter"
           },
           {
@@ -41367,8 +41187,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000105",
-            "output_price": "0.00013",
             "provider_id": "openrouter"
           },
           {
@@ -41540,8 +41358,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -41713,8 +41529,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000095",
-            "output_price": "0.00011",
             "provider_id": "openrouter"
           },
           {
@@ -41886,8 +41700,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0004525",
-            "output_price": "0.00034",
             "provider_id": "openrouter"
           },
           {
@@ -42059,8 +41871,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0023125",
-            "output_price": "0.00085",
             "provider_id": "openrouter"
           },
           {
@@ -42232,8 +42042,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -43077,8 +42885,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -43250,8 +43056,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -43423,8 +43227,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -43596,8 +43398,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -43769,8 +43569,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001175",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -43942,8 +43740,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0002175",
-            "output_price": "0.00017",
             "provider_id": "openrouter"
           },
           {
@@ -44115,8 +43911,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00029",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -44288,8 +44082,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -44461,8 +44253,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.00008",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -44634,8 +44424,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001275",
-            "output_price": "0.0001",
             "provider_id": "openrouter"
           },
           {
@@ -44807,8 +44595,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -44980,8 +44766,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001775",
-            "output_price": "0.00046",
             "provider_id": "openrouter"
           },
           {
@@ -45153,8 +44937,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0003325",
-            "output_price": "0.0002",
             "provider_id": "openrouter"
           },
           {
@@ -45326,8 +45108,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0001775",
-            "output_price": "0.00046",
             "provider_id": "openrouter"
           },
           {
@@ -45499,8 +45279,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0003325",
-            "output_price": "0.00022",
             "provider_id": "openrouter"
           },
           {
@@ -45672,8 +45450,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -45845,8 +45621,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00008",
             "provider_id": "openrouter"
           },
           {
@@ -46059,8 +45833,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000035",
-            "output_price": "0.00009",
             "provider_id": "openrouter"
           },
           {
