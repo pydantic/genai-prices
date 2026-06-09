@@ -37,14 +37,16 @@ class OpenRouterModel(BaseModel):
     def provider_name(self) -> str:
         return self.name.split(':', 1)[0].strip()
 
-    def model_id(self) -> str:
+    def model_id(self, *, strip_provider: bool = True) -> str:
+        if not strip_provider:
+            return self.id
         return self.id.split('/', 1)[1]
 
     def model_name(self) -> str:
         return self.name.split(':', 1)[-1].strip()
 
-    def model_info(self, inc_description: bool = True) -> ModelInfo:
-        model_id = self.model_id()
+    def model_info(self, inc_description: bool = True, *, strip_provider: bool = True) -> ModelInfo:
+        model_id = self.model_id(strip_provider=strip_provider)
 
         if inc_description:
             description = self.description.split('\n\n', 1)[0]
@@ -143,7 +145,7 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
             or_providers[provider_id] = [or_model]
 
         # add all models to the openrouter provider
-        model_info = or_model.model_info(inc_description=False)
+        model_info = or_model.model_info(inc_description=False, strip_provider=False)
         assert isinstance(model_info.prices, ModelPrice)
         try:
             or_provider_yaml.update_model(model_info.id, model_info)

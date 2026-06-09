@@ -70,6 +70,18 @@ def test_openrouter_deepseek_v32_price():
     assert price.provider.id == snapshot('openrouter')
 
 
+@pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
+def test_openrouter_response_model_refs_priceable_by_api_url(model_ref: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref=model_ref,
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == model_ref
+    assert price.provider.id == 'openrouter'
+
+
 def test_tiered_prices():
     price = calc_price(Usage(input_tokens=500_000), model_ref='gemini-1.5-flash', provider_id='google')
     # Google uses threshold-based pricing: if context > 128K, ALL tokens charged at tier price
