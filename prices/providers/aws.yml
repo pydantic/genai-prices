@@ -127,6 +127,16 @@ models:
       input_mtok: 1.35
       output_mtok: 5.4
 
+  - id: global.anthropic.claude-fable-5-v1:0
+    prices_checked: 2026-06-09
+    match:
+      contains: global.anthropic.claude-fable-5
+    prices:
+      input_mtok: 10
+      cache_write_mtok: 12.5
+      cache_read_mtok: 1.0
+      output_mtok: 50
+
   - id: global.anthropic.claude-haiku-4-5-20251001-v1:0
     match:
       contains: global.anthropic.claude-haiku-4-5-20251001
@@ -596,6 +606,22 @@ models:
       cache_write_mtok: 3.75
       cache_read_mtok: 0.3
       output_mtok: 15
+
+  - id: regional.anthropic.claude-fable-5-v1:0
+    prices_checked: 2026-06-09
+    match:
+      or:
+        - starts_with: anthropic.claude-fable-5
+        - starts_with: claude-fable-5
+        - contains: us.anthropic.claude-fable-5
+        - contains: au.anthropic.claude-fable-5
+        - contains: eu.anthropic.claude-fable-5
+        - contains: jp.anthropic.claude-fable-5
+    prices:
+      input_mtok: 11
+      cache_write_mtok: 13.75
+      cache_read_mtok: 1.1
+      output_mtok: 55
 
   - id: regional.anthropic.claude-haiku-4-5-20251001-v1:0
     match:

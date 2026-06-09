@@ -149,6 +149,22 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
 
+  - id: claude-fable-5
+    name: Claude Fable 5
+    description: Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work
+    match:
+      starts_with: claude-fable-5
+    context_window: 1000000
+    prices_checked: 2026-06-09
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      output_mtok: 50
+
   - id: claude-haiku-4-5
     name: Claude Haiku 4.5
     description: Fastest and most intelligent Haiku model

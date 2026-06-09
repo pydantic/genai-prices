@@ -217,6 +217,23 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-fable-5',
+        name: 'Claude Fable 5',
+        description: "Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
+        match: {
+          starts_with: 'claude-fable-5',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'claude-haiku-4-5',
         name: 'Claude Haiku 4.5',
         description: 'Fastest and most intelligent Haiku model',
@@ -857,6 +874,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-fable-5-v1:0',
+        match: {
+          contains: 'global.anthropic.claude-fable-5',
+        },
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'global.anthropic.claude-haiku-4-5-20251001-v1:0',
         match: {
           contains: 'global.anthropic.claude-haiku-4-5-20251001',
@@ -1490,6 +1519,37 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-fable-5-v1:0',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-fable-5',
+            },
+            {
+              starts_with: 'claude-fable-5',
+            },
+            {
+              contains: 'us.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'au.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'eu.anthropic.claude-fable-5',
+            },
+            {
+              contains: 'jp.anthropic.claude-fable-5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 11,
+          cache_write_mtok: 13.75,
+          cache_read_mtok: 1.1,
+          output_mtok: 55,
         },
       },
       {
@@ -3553,6 +3613,21 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'claude-fable-5',
+        match: {
+          contains: 'claude-fable-5',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -11537,6 +11612,28 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'anthropic/claude-fable-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-fable-5',
+            },
+            {
+              equals: 'anthropic/claude-fable-5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {

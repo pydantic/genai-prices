@@ -147,6 +147,20 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-fable-5',
+                match=ClauseStartsWith(starts_with='claude-fable-5'),
+                name='Claude Fable 5',
+                description="Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('10'),
+                    cache_write_mtok=Decimal('12.5'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-haiku-4-5',
                 match=ClauseOr(
                     or_=[
@@ -523,6 +537,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.35'), output_mtok=Decimal('5.4')),
             ),
             ModelInfo(
+                id='global.anthropic.claude-fable-5-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-fable-5'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('10'),
+                    cache_write_mtok=Decimal('12.5'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
+                ),
+            ),
+            ModelInfo(
                 id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
                 prices=ModelPrice(
@@ -880,6 +904,25 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-fable-5-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-fable-5'),
+                        ClauseStartsWith(starts_with='claude-fable-5'),
+                        ClauseContains(contains='us.anthropic.claude-fable-5'),
+                        ClauseContains(contains='au.anthropic.claude-fable-5'),
+                        ClauseContains(contains='eu.anthropic.claude-fable-5'),
+                        ClauseContains(contains='jp.anthropic.claude-fable-5'),
+                    ]
+                ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('11'),
+                    cache_write_mtok=Decimal('13.75'),
+                    cache_read_mtok=Decimal('1.1'),
+                    output_mtok=Decimal('55'),
                 ),
             ),
             ModelInfo(
@@ -2040,6 +2083,18 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-fable-5',
+                match=ClauseContains(contains='claude-fable-5'),
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('10'),
+                    cache_write_mtok=Decimal('12.5'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
@@ -6448,6 +6503,23 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='anthropic/claude-fable-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-fable-5'),
+                        ClauseEquals(equals='anthropic/claude-fable-5:beta'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('10'),
+                    cache_write_mtok=Decimal('12.5'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
+                ),
             ),
             ModelInfo(
                 id='anthropic/claude-haiku-4.5',
