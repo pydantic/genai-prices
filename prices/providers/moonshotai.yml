@@ -108,6 +108,22 @@ models:
       cache_read_mtok: 0.10
       output_mtok: 3.00
 
+  - id: kimi-k2.6
+    name: Kimi K2.6
+    description: >-
+      Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and
+      self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking
+      and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode,
+      and internet search.
+    match:
+      starts_with: kimi-k2.6
+    context_window: 262144
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.16
+      output_mtok: 4.00
+
   - id: moonshot-v1-128k
     name: Moonshot V1 128K
     match:

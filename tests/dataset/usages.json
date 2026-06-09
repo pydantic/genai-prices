@@ -5809,6 +5809,10 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "moonshotai"
           },
           {
@@ -5826,6 +5830,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -5949,6 +5957,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -5977,6 +5989,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -6099,6 +6115,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -6127,6 +6147,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -6246,6 +6270,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -6274,6 +6302,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -6396,6 +6428,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -6424,6 +6460,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -6559,6 +6599,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -6587,6 +6631,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -6706,6 +6754,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -6734,6 +6786,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -6860,6 +6916,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -6888,6 +6948,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -7014,6 +7078,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -7042,6 +7110,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -12266,6 +12338,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -12292,6 +12368,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -12431,6 +12511,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -12457,6 +12541,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -12580,6 +12668,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -12606,6 +12698,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -12733,6 +12829,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -12761,6 +12861,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -12884,6 +12988,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -12910,6 +13018,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13037,6 +13149,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13065,6 +13181,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13188,6 +13308,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13214,6 +13338,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13345,6 +13473,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13371,6 +13503,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13494,6 +13630,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13520,6 +13660,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13645,6 +13789,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13671,6 +13819,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13796,6 +13948,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13822,6 +13978,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -13953,6 +14113,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -13983,6 +14147,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -14118,6 +14286,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -14146,6 +14318,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -14343,6 +14519,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -14371,6 +14551,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -14506,6 +14690,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -14534,6 +14722,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -14731,6 +14923,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -14761,6 +14957,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -14896,6 +15096,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -14926,6 +15130,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -15051,6 +15259,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -15079,6 +15291,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -15200,6 +15416,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -15228,6 +15448,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -15359,6 +15583,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -15387,6 +15615,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -15471,6 +15703,10 @@
             "provider_id": "groq"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -15485,6 +15721,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -15697,6 +15937,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -15725,6 +15969,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -15860,6 +16108,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -15890,6 +16142,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -16025,6 +16281,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -16055,6 +16315,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -16190,6 +16454,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -16218,6 +16486,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -16353,6 +16625,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -16381,6 +16657,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -16516,6 +16796,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -16544,6 +16828,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -16679,6 +16967,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -16709,6 +17001,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -16844,6 +17140,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -16874,6 +17174,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -17009,6 +17313,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -17039,6 +17347,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -17174,6 +17486,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -17204,6 +17520,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -17332,6 +17652,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -17360,6 +17684,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -17491,6 +17819,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -17521,6 +17853,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -17656,6 +17992,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -17686,6 +18026,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -17821,6 +18165,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -17851,6 +18199,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -18048,6 +18400,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -18076,6 +18432,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -18211,6 +18571,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -18241,6 +18605,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -18369,6 +18737,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -18395,6 +18767,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -18519,6 +18895,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -18545,6 +18925,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -18676,6 +19060,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -18706,6 +19094,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -18841,6 +19233,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -18871,6 +19267,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19006,6 +19406,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -19036,6 +19440,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19171,6 +19579,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -19201,6 +19613,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19336,6 +19752,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -19366,6 +19786,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19501,6 +19925,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -19531,6 +19959,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19666,6 +20098,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -19696,6 +20132,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19831,6 +20271,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -19861,6 +20305,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -19996,6 +20444,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20026,6 +20478,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -20161,6 +20617,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20189,6 +20649,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -20317,6 +20781,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20343,6 +20811,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -20474,6 +20946,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20502,6 +20978,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -20637,6 +21117,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20667,6 +21151,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -20802,6 +21290,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20832,6 +21324,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -20967,6 +21463,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -20997,6 +21497,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -21132,6 +21636,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -21162,6 +21670,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -21297,6 +21809,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -21327,6 +21843,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -21542,6 +22062,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -21572,6 +22096,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -21707,6 +22235,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -21737,6 +22269,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -21872,6 +22408,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -21900,6 +22440,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -22035,6 +22579,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -22065,6 +22613,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -22200,6 +22752,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -22230,6 +22786,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -22314,6 +22874,10 @@
             "provider_id": "groq"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -22328,6 +22892,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -23371,6 +23939,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00000975",
             "output_price": "0.0000024",
@@ -23399,6 +23971,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -23518,6 +24094,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.00043965",
             "output_price": "0.0000105",
@@ -23546,6 +24126,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -23727,6 +24311,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.001328",
             "output_price": "0.003735",
@@ -23755,6 +24343,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -28320,6 +28912,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -28346,6 +28942,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -28489,6 +29089,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -28517,6 +29121,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -28644,6 +29252,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -28674,6 +29286,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -28801,6 +29417,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -28831,6 +29451,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -28962,6 +29586,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -28988,6 +29616,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -29113,6 +29745,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -29139,6 +29775,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -29270,6 +29910,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -29296,6 +29940,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -29427,6 +30075,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -29453,6 +30105,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -29584,6 +30240,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -29610,6 +30270,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -29753,6 +30417,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -29781,6 +30449,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -29904,6 +30576,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -29930,6 +30606,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -30073,6 +30753,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -30101,6 +30785,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -30244,6 +30932,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -30272,6 +30964,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -30401,6 +31097,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -30427,6 +31127,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -30558,6 +31262,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -30588,6 +31296,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -30723,6 +31435,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -30753,6 +31469,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -30888,6 +31608,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -30918,6 +31642,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -31053,6 +31781,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -31083,6 +31815,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -31218,6 +31954,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -31248,6 +31988,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -31383,6 +32127,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -31413,6 +32161,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -31548,6 +32300,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -31578,6 +32334,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -31713,6 +32473,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -31743,6 +32507,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -31878,6 +32646,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -31908,6 +32680,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -32043,6 +32819,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -32073,6 +32853,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -32208,6 +32992,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -32238,6 +33026,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -32373,6 +33165,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -32403,6 +33199,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -32538,6 +33338,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -32568,6 +33372,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -32703,6 +33511,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -32733,6 +33545,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -32868,6 +33684,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -32898,6 +33718,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -33033,6 +33857,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -33063,6 +33891,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -33198,6 +34030,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -33228,6 +34064,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -33363,6 +34203,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -33393,6 +34237,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -33528,6 +34376,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -33558,6 +34410,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -33763,6 +34619,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -33793,6 +34653,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -33928,6 +34792,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -33958,6 +34826,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -34093,6 +34965,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -34123,6 +34999,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -34258,6 +35138,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -34288,6 +35172,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -34423,6 +35311,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -34453,6 +35345,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -34588,6 +35484,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -34618,6 +35518,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -34753,6 +35657,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -34783,6 +35691,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -34992,6 +35904,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -35022,6 +35938,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -35157,6 +36077,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -35187,6 +36111,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -35322,6 +36250,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -35352,6 +36284,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -35487,6 +36423,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -35517,6 +36457,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -35652,6 +36596,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -35682,6 +36630,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -35817,6 +36769,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -35847,6 +36803,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -35982,6 +36942,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -36012,6 +36976,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -36147,6 +37115,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -36177,6 +37149,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -36312,6 +37288,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -36342,6 +37322,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -36477,6 +37461,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -36507,6 +37495,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -36642,6 +37634,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -36672,6 +37668,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -36807,6 +37807,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -36837,6 +37841,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -36972,6 +37980,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37002,6 +38014,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -37137,6 +38153,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37167,6 +38187,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -37302,6 +38326,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37332,6 +38360,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -37467,6 +38499,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37497,6 +38533,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -37632,6 +38672,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37662,6 +38706,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -37797,6 +38845,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37827,6 +38879,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -37962,6 +39018,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -37992,6 +39052,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -38127,6 +39191,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -38157,6 +39225,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -38292,6 +39364,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -38322,6 +39398,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -38457,6 +39537,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -38487,6 +39571,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -38622,6 +39710,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -38652,6 +39744,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -38787,6 +39883,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -38817,6 +39917,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -39023,6 +40127,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -39053,6 +40161,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -39188,6 +40300,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -39218,6 +40334,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -39353,6 +40473,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -39383,6 +40507,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -39518,6 +40646,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -39548,6 +40680,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -39683,6 +40819,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -39713,6 +40853,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -39848,6 +40992,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -39878,6 +41026,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -40013,6 +41165,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -40043,6 +41199,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -40178,6 +41338,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -40208,6 +41372,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -40343,6 +41511,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -40373,6 +41545,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -40508,6 +41684,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -40538,6 +41718,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -40673,6 +41857,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -40703,6 +41891,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -40838,6 +42030,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -40868,6 +42064,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -41003,6 +42203,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -41033,6 +42237,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -41256,6 +42464,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -41282,6 +42494,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -41442,6 +42658,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -41470,6 +42690,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -41657,6 +42881,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "input_price": "0.0000028",
             "output_price": "0.000006",
@@ -41685,6 +42913,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -41816,6 +43048,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -41846,6 +43082,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -41981,6 +43221,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -42011,6 +43255,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -42146,6 +43394,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -42176,6 +43428,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -42311,6 +43567,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -42341,6 +43601,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -42476,6 +43740,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -42506,6 +43774,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -42641,6 +43913,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -42671,6 +43947,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -42806,6 +44086,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -42836,6 +44120,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -42971,6 +44259,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43001,6 +44293,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -43136,6 +44432,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43166,6 +44466,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -43301,6 +44605,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43331,6 +44639,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -43466,6 +44778,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43496,6 +44812,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -43631,6 +44951,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43661,6 +44985,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -43796,6 +45124,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43826,6 +45158,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -43961,6 +45297,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -43991,6 +45331,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -44126,6 +45470,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -44156,6 +45504,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -44291,6 +45643,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -44321,6 +45677,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -44456,6 +45816,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -44486,6 +45850,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -44662,6 +46030,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -44692,6 +46064,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -44817,6 +46193,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -44845,6 +46225,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -44970,6 +46354,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -44996,6 +46384,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -45177,6 +46569,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -45205,6 +46601,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {
@@ -45365,6 +46765,10 @@
             "provider_id": "huggingface_together"
           },
           {
+            "api_flavor": "chat",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "mistral"
           },
@@ -45391,6 +46795,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
           }
         ],
         "usage": {

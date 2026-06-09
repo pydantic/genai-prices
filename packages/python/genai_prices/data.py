@@ -4954,6 +4954,125 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='minimax',
+        name='MiniMax',
+        api_pattern='https://api\\.minimax(i)?\\.(?:com|io)',
+        pricing_urls=['https://platform.minimax.io/docs/guides/pricing-paygo'],
+        price_comments='Prices sourced from MiniMax international platform USD pricing (platform.minimax.io, May 2026). M2.1, M2.1-highspeed, and M2 are legacy models; prices inferred from CNY pricing at the equivalent 7.00 CNY/USD rate used by the international platform for current models.',
+        model_match=ClauseOr(
+            or_=[
+                ClauseStartsWith(starts_with='MiniMax-M'),
+                ClauseStartsWith(starts_with='minimax-m'),
+                ClauseEquals(equals='M2-her'),
+                ClauseEquals(equals='m2-her'),
+            ]
+        ),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='M2-her',
+                match=ClauseOr(or_=[ClauseEquals(equals='M2-her'), ClauseEquals(equals='m2-her')]),
+                name='MiniMax M2-her',
+                description='MiniMax M2-her, a text dialogue model optimized for role-playing and multi-turn conversations. 64,000 token context window. No cache support.',
+                context_window=64000,
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
+            ),
+            ModelInfo(
+                id='MiniMax-M2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='MiniMax-M2'),
+                        ClauseEquals(equals='minimax-m2'),
+                        ClauseEquals(equals='MiniMax-M2.1'),
+                        ClauseEquals(equals='minimax-m2.1'),
+                        ClauseEquals(equals='MiniMax-M2.5'),
+                        ClauseEquals(equals='minimax-m2.5'),
+                    ]
+                ),
+                name='MiniMax M2',
+                description='MiniMax M2 (legacy), a multimodal language model with 204,800 token context window. Supports agentic capabilities and advanced reasoning.',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'),
+                    cache_write_mtok=Decimal('0.375'),
+                    cache_read_mtok=Decimal('0.03'),
+                    output_mtok=Decimal('1.2'),
+                ),
+            ),
+            ModelInfo(
+                id='MiniMax-M2.1-highspeed',
+                match=ClauseOr(
+                    or_=[ClauseContains(contains='M2.1-highspeed'), ClauseContains(contains='m2.1-highspeed')]
+                ),
+                name='MiniMax M2.1 Highspeed',
+                description='MiniMax M2.1 highspeed variant (legacy) with higher throughput.',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    cache_write_mtok=Decimal('0.375'),
+                    cache_read_mtok=Decimal('0.03'),
+                    output_mtok=Decimal('2.4'),
+                ),
+            ),
+            ModelInfo(
+                id='MiniMax-M2.5-highspeed',
+                match=ClauseOr(
+                    or_=[ClauseContains(contains='M2.5-highspeed'), ClauseContains(contains='m2.5-highspeed')]
+                ),
+                name='MiniMax M2.5 Highspeed',
+                description='MiniMax M2.5 highspeed variant with higher throughput.',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    cache_write_mtok=Decimal('0.375'),
+                    cache_read_mtok=Decimal('0.03'),
+                    output_mtok=Decimal('2.4'),
+                ),
+            ),
+            ModelInfo(
+                id='MiniMax-M2.7',
+                match=ClauseOr(or_=[ClauseEquals(equals='MiniMax-M2.7'), ClauseEquals(equals='minimax-m2.7')]),
+                name='MiniMax M2.7',
+                description='MiniMax M2.7, a multimodal language model with 204,800 token context window. Achieves top performance in real-world engineering, office productivity, and character-rich interaction.',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'),
+                    cache_write_mtok=Decimal('0.375'),
+                    cache_read_mtok=Decimal('0.06'),
+                    output_mtok=Decimal('1.2'),
+                ),
+            ),
+            ModelInfo(
+                id='MiniMax-M2.7-highspeed',
+                match=ClauseOr(
+                    or_=[ClauseContains(contains='M2.7-highspeed'), ClauseContains(contains='m2.7-highspeed')]
+                ),
+                name='MiniMax M2.7 Highspeed',
+                description='MiniMax M2.7 highspeed variant with higher throughput.',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    cache_write_mtok=Decimal('0.375'),
+                    cache_read_mtok=Decimal('0.06'),
+                    output_mtok=Decimal('2.4'),
+                ),
+            ),
+        ],
+    ),
+    Provider(
         id='mistral',
         name='Mistral',
         api_pattern='https://api\\.mistral\\.ai',
@@ -5216,6 +5335,16 @@ providers: list[Provider] = [
                 description="Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='kimi-k2.6',
+                match=ClauseStartsWith(starts_with='kimi-k2.6'),
+                name='Kimi K2.6',
+                description="Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
             ),
             ModelInfo(
                 id='moonshot-v1-128k',
@@ -10832,6 +10961,148 @@ providers: list[Provider] = [
                 context_window=256000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.5')
+                ),
+            ),
+        ],
+    ),
+    Provider(
+        id='zhipuai',
+        name='Zhipu AI',
+        api_pattern='https://open\\.bigmodel\\.cn',
+        pricing_urls=['https://open.bigmodel.cn/pricing', 'https://docs.bigmodel.cn/cn/guide/start/model-overview'],
+        price_comments='Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing), converted to USD at 1 USD = 7.25 CNY (May 2026). Zhipu AI does not publish USD prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7, GLM-5 series) have tiered pricing by input/output length; prices shown are for the cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard inference models (GLM-4-Air, GLM-4-Plus, etc.) bill input and output tokens at the same per-token rate per their pricing page. Cache write is temporarily free for flagship models (limited-time promotion, not included).',
+        model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='GLM-'), ClauseStartsWith(starts_with='glm-')]),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='GLM-4-Air',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4-Air'), ClauseEquals(equals='glm-4-air')]),
+                name='GLM-4-Air',
+                description='High-performance GLM-4 model with context caching. 128,000 token context window. Input and output billed at the same per-token rate.',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.069'), cache_read_mtok=Decimal('0.034'), output_mtok=Decimal('0.069')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4-AirX',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4-AirX'), ClauseEquals(equals='glm-4-airx')]),
+                name='GLM-4-AirX',
+                description='Fastest GLM-4 model. 8,000 token context window. Does not support context caching. Input and output billed at the same per-token rate.',
+                context_window=8000,
+                prices=ModelPrice(input_mtok=Decimal('1.379'), output_mtok=Decimal('1.379')),
+            ),
+            ModelInfo(
+                id='GLM-4-Assistant',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4-Assistant'), ClauseEquals(equals='glm-4-assistant')]),
+                name='GLM-4-Assistant',
+                description='GLM-4 agent/assistant model. 128,000 token context window. Does not support context caching. Input and output billed at the same per-token rate.',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.69'), output_mtok=Decimal('0.69')),
+            ),
+            ModelInfo(
+                id='GLM-4-FlashX-250414',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='GLM-4-FlashX-250414'), ClauseEquals(equals='glm-4-flashx-250414')]
+                ),
+                name='GLM-4-FlashX-250414',
+                description='Fast and cheap GLM-4 model with context caching. 128,000 token context window. Input and output billed at the same per-token rate.',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.014'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('0.014')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4-Long',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4-Long'), ClauseEquals(equals='glm-4-long')]),
+                name='GLM-4-Long',
+                description='GLM-4 model optimized for long inputs with context caching. 1,000,000 token context window. Input and output billed at the same per-token rate.',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.138'), cache_read_mtok=Decimal('0.069'), output_mtok=Decimal('0.138')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4-Plus',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4-Plus'), ClauseEquals(equals='glm-4-plus')]),
+                name='GLM-4-Plus',
+                description='Flagship GLM-4 model with context caching. 128,000 token context window. Input and output billed at the same per-token rate.',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.69'), cache_read_mtok=Decimal('0.345'), output_mtok=Decimal('0.69')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.5-Air',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.5-Air'), ClauseEquals(equals='glm-4.5-air')]),
+                name='GLM-4.5-Air',
+                description="Zhipu AI's GLM-4.5-Air flagship model with context caching. 128,000 token context window. Tiered pricing; prices shown for [0, 32k) input / [0, 0.2k) output tier.",
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.11'), cache_read_mtok=Decimal('0.022'), output_mtok=Decimal('0.276')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.7',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.7'), ClauseEquals(equals='glm-4.7')]),
+                name='GLM-4.7',
+                description="Zhipu AI's GLM-4.7 flagship model with context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input / [0, 0.2k) output tier.",
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.276'), cache_read_mtok=Decimal('0.055'), output_mtok=Decimal('1.103')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-4.7-FlashX',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-4.7-FlashX'), ClauseEquals(equals='glm-4.7-flashx')]),
+                name='GLM-4.7-FlashX',
+                description='Fast and affordable GLM-4.7 model with context caching. 200,000 token context window.',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.069'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('0.414')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5'), ClauseEquals(equals='glm-5')]),
+                name='GLM-5',
+                description='Zhipu AI GLM-5 model with context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.552'), cache_read_mtok=Decimal('0.138'), output_mtok=Decimal('2.483')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5-Turbo',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5-Turbo'), ClauseEquals(equals='glm-5-turbo')]),
+                name='GLM-5-Turbo',
+                description='Zhipu AI GLM-5 Turbo model with context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.69'), cache_read_mtok=Decimal('0.166'), output_mtok=Decimal('3.034')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5.1',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.1'), ClauseEquals(equals='glm-5.1')]),
+                name='GLM-5.1',
+                description="Zhipu AI's latest flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.",
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.828'), cache_read_mtok=Decimal('0.179'), output_mtok=Decimal('3.31')
                 ),
             ),
         ],

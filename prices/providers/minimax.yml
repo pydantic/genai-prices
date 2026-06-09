@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=.schema.json
+name: MiniMax
+id: minimax
+pricing_urls:
+  - https://platform.minimax.io/docs/guides/pricing-paygo
+api_pattern: 'https://api\.minimax(i)?\.(?:com|io)'
+price_comments: >-
+  Prices sourced from MiniMax international platform USD pricing
+  (platform.minimax.io, May 2026). M2.1, M2.1-highspeed, and M2 are legacy
+  models; prices inferred from CNY pricing at the equivalent 7.00 CNY/USD
+  rate used by the international platform for current models.
+model_match:
+  or:
+    - starts_with: "MiniMax-M"
+    - starts_with: "minimax-m"
+    - equals: "M2-her"
+    - equals: "m2-her"
+extractors:
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+models:
+  - id: M2-her
+    name: MiniMax M2-her
+    description: >-
+      MiniMax M2-her, a text dialogue model optimized for role-playing and
+      multi-turn conversations. 64,000 token context window. No cache support.
+    match:
+      or:
+        - equals: M2-her
+        - equals: m2-her
+    context_window: 64000
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.30
+      output_mtok: 1.20
+
+  - id: MiniMax-M2
+    name: MiniMax M2
+    description: >-
+      MiniMax M2 (legacy), a multimodal language model with 204,800 token
+      context window. Supports agentic capabilities and advanced reasoning.
+    match:
+      or:
+        - equals: MiniMax-M2
+        - equals: minimax-m2
+        - equals: MiniMax-M2.1
+        - equals: minimax-m2.1
+        - equals: MiniMax-M2.5
+        - equals: minimax-m2.5
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.30
+      cache_read_mtok: 0.03
+      cache_write_mtok: 0.375
+      output_mtok: 1.20
+
+  - id: MiniMax-M2.1-highspeed
+    name: MiniMax M2.1 Highspeed
+    description: >-
+      MiniMax M2.1 highspeed variant (legacy) with higher throughput.
+    match:
+      or:
+        - contains: "M2.1-highspeed"
+        - contains: "m2.1-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.60
+      cache_read_mtok: 0.03
+      cache_write_mtok: 0.375
+      output_mtok: 2.40
+
+  - id: MiniMax-M2.5-highspeed
+    name: MiniMax M2.5 Highspeed
+    description: >-
+      MiniMax M2.5 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.5-highspeed"
+        - contains: "m2.5-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.60
+      cache_read_mtok: 0.03
+      cache_write_mtok: 0.375
+      output_mtok: 2.40
+
+  - id: MiniMax-M2.7
+    name: MiniMax M2.7
+    description: >-
+      MiniMax M2.7, a multimodal language model with 204,800 token context
+      window. Achieves top performance in real-world engineering, office
+      productivity, and character-rich interaction.
+    match:
+      or:
+        - equals: MiniMax-M2.7
+        - equals: minimax-m2.7
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.30
+      cache_read_mtok: 0.06
+      cache_write_mtok: 0.375
+      output_mtok: 1.20
+
+  - id: MiniMax-M2.7-highspeed
+    name: MiniMax M2.7 Highspeed
+    description: >-
+      MiniMax M2.7 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.7-highspeed"
+        - contains: "m2.7-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.60
+      cache_read_mtok: 0.06
+      cache_write_mtok: 0.375
+      output_mtok: 2.40

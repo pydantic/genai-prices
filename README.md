@@ -54,8 +54,9 @@ The following providers are currently supported:
 - [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 8 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
+- [MiniMax](prices/providers/minimax.yml) - 6 models
 - [Mistral](prices/providers/mistral.yml) - 22 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 9 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 10 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 71 models
 - [OpenRouter](prices/providers/openrouter.yml) - 587 models
@@ -63,6 +64,7 @@ The following providers are currently supported:
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [X AI](prices/providers/x_ai.yml) - 13 models
+- [Zhipu AI](prices/providers/zhipuai.yml) - 12 models
 
 [comment]: <> (providers-end)
 
