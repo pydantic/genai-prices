@@ -226,6 +226,18 @@ models:
       input_mtok: 0.07
       output_mtok: 0.14
 
+  - id: phi-4-mini-instruct
+    name: Phi 4 Mini Instruct
+    description: >-
+      Phi-4-mini-instruct is a lightweight open model built upon synthetic data and filtered publicly available websites -
+      with a focus on high-quality, reasoning dense data. The model belongs to the Phi-4...
+    match:
+      equals: phi-4-mini-instruct
+    prices:
+      input_mtok: 0.08
+      cache_read_mtok: 0.08
+      output_mtok: 0.35
+
   - id: phi-4-multimodal-instruct
     name: Phi 4 Multimodal Instruct
     description: >-

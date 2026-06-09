@@ -78,6 +78,40 @@ models:
           cache_read_mtok: 0.14
           output_mtok: 2.19
 
+  - id: deepseek-v3.1-terminus
+    name: DeepSeek V3.1 Terminus
+    description: >-
+      DeepSeek-V3.1 Terminus is an update to DeepSeek V3.1 that maintains the model's original capabilities while addressing
+      issues reported by users, including language consistency and agent capabilities, further optimizing the model's...
+    match:
+      equals: deepseek-v3.1-terminus
+    prices:
+      input_mtok: 0.27
+      cache_read_mtok: 0.13
+      output_mtok: 0.95
+
+  - id: deepseek-v3.2
+    name: DeepSeek V3.2
+    description: >-
+      DeepSeek-V3.2 is a large language model designed to harmonize high computational efficiency with strong reasoning and
+      agentic tool-use performance. It introduces DeepSeek Sparse Attention (DSA), a fine-grained sparse attention mechanism...
+    match:
+      equals: deepseek-v3.2
+    prices:
+      input_mtok: 0.2288
+      output_mtok: 0.3432
+
+  - id: deepseek-v3.2-exp
+    name: DeepSeek V3.2 Exp
+    description: >-
+      DeepSeek-V3.2-Exp is an experimental large language model released by DeepSeek as an intermediate step between V3.1
+      and future architectures. It introduces DeepSeek Sparse Attention (DSA), a fine-grained sparse attention mechanism...
+    match:
+      equals: deepseek-v3.2-exp
+    prices:
+      input_mtok: 0.27
+      output_mtok: 0.41
+
   - id: deepseek-v4-flash
     name: DeepSeek V4 Flash
     description: >-

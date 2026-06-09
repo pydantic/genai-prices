@@ -129,3 +129,38 @@ models:
       cache_read_mtok: 0.06
       cache_write_mtok: 0.375
       output_mtok: 2.40
+
+  - id: minimax-01
+    name: MiniMax-01
+    description: >-
+      MiniMax-01 is a combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding. It has 456 billion
+      parameters, with 45.9 billion parameters activated per inference, and can handle a context...
+    match:
+      equals: minimax-01
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.1
+
+  - id: minimax-m1
+    name: MiniMax M1
+    description: >-
+      MiniMax-M1 is a large-scale, open-weight reasoning model designed for extended context and high-efficiency inference.
+      It leverages a hybrid Mixture-of-Experts (MoE) architecture paired with a custom "lightning attention" mechanism, allowing
+      it...
+    match:
+      equals: minimax-m1
+    prices:
+      input_mtok: 0.4
+      output_mtok: 2.2
+
+  - id: minimax-m3
+    name: MiniMax M3
+    description: >-
+      MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output,
+      a 1M-token context window, and is suited for long-horizon agentic work, coding,...
+    match:
+      equals: minimax-m3
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.06
+      output_mtok: 1.2

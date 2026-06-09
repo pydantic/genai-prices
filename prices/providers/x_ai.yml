@@ -40,7 +40,8 @@ models:
   - id: grok-2-1212
     name: Grok 2 1212
     description: >-
-      (deprecated) Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making
+      (deprecated) Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support,
+      making
       it a powerful and flexible choice for developers seeking a highly steerable, intelligent model.
     match:
       or:
@@ -88,7 +89,8 @@ models:
   - id: grok-3-fast
     name: Grok 3 Fast
     description: >-
-      Excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.
+      Excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge
+      in finance, healthcare, law, and science.
     match:
       or:
         - equals: grok-3-fast
@@ -121,7 +123,8 @@ models:
   - id: grok-3-mini-fast
     name: Grok 3 Mini Fast
     description: >-
-      A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require deep domain knowledge. The raw thinking traces are accessible.
+      A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require
+      deep domain knowledge. The raw thinking traces are accessible.
     match:
       or:
         - equals: grok-3-mini-fast
@@ -137,7 +140,8 @@ models:
   - id: grok-4-0709
     name: Grok 4
     description: >-
-      A flagship model, offering unparalleled performance in natural language, math and reasoning - the perfect jack of all trades.
+      A flagship model, offering unparalleled performance in natural language, math and reasoning - the perfect jack of all
+      trades.
     match:
       or:
         - equals: grok-4-0709
@@ -212,6 +216,30 @@ models:
       cache_read_mtok: 0.05
       output_mtok: 0.5
 
+  - id: grok-4.20
+    name: Grok 4.20
+    description: >-
+      Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines
+      the lowest hallucination rate on the market with strict prompt adherence, delivering...
+    match:
+      equals: grok-4.20
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.2
+      output_mtok: 2.5
+
+  - id: grok-4.20-multi-agent
+    name: Grok 4.20 Multi-Agent
+    description: >-
+      Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents
+      operate in parallel to conduct deep research, coordinate tool use, and synthesize information...
+    match:
+      equals: grok-4.20-multi-agent
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.2
+      output_mtok: 6
+
   - id: grok-4.3
     name: Grok 4.3
     description: >-
@@ -229,6 +257,18 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
+
+  - id: grok-build-0.1
+    name: Grok Build 0.1
+    description: >-
+      Grok Build 0.1 is xAI's fast coding model trained specifically for agentic software engineering workflows. It supports
+      text and image inputs with text output, and is optimized for interactive coding...
+    match:
+      equals: grok-build-0.1
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.2
+      output_mtok: 2
 
   - id: grok-code-fast-1
     name: Grok Code Fast 1

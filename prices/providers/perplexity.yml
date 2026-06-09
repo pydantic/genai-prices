@@ -83,6 +83,17 @@ models:
       input_mtok: 3
       output_mtok: 15
 
+  - id: sonar-pro-search
+    name: Sonar Pro Search
+    description: >-
+      Exclusively available on the OpenRouter API, Sonar Pro's new Pro Search mode is Perplexity's most advanced agentic search
+      system. It is designed for deeper reasoning and analysis. Pricing is based...
+    match:
+      equals: sonar-pro-search
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
   - id: sonar-reasoning
     name: Sonar Reasoning
     description: >-

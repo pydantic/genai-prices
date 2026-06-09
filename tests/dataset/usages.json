@@ -17579,6 +17579,8 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000002886",
+            "output_price": "0.00000648",
             "provider_id": "azure"
           },
           {
@@ -17665,10 +17667,14 @@
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000002886",
+            "output_price": "0.00000648",
             "provider_id": "openai"
           },
           {
             "api_flavor": "chat",
+            "input_price": "0.000002886",
+            "output_price": "0.00000648",
             "provider_id": "openrouter"
           },
           {
@@ -17699,6 +17705,8 @@
         "extractors": [
           {
             "api_flavor": "embeddings",
+            "input_price": "0.000002886",
+            "output_price": "0.00",
             "provider_id": "azure"
           },
           {
@@ -17707,6 +17715,8 @@
           },
           {
             "api_flavor": "embeddings",
+            "input_price": "0.000002886",
+            "output_price": "0.00",
             "provider_id": "openai"
           }
         ],
