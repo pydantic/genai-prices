@@ -189,6 +189,20 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
 
+  - id: claude-fable-5
+    match:
+      contains: claude-fable-5
+    context_window: 1000000
+    prices_checked: 2026-06-09
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      output_mtok: 50
+
   - id: claude-opus-4-6
     match:
       or:
