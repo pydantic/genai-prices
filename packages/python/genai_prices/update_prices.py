@@ -2,6 +2,7 @@ from __future__ import annotations as _annotations
 
 import asyncio
 import logging
+import os
 import threading
 from dataclasses import dataclass, field
 from time import time
@@ -21,18 +22,62 @@ __all__ = (
 
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
-# TODO: this module-level state (including the lock) does not survive os.fork() (e.g. gunicorn with
-# preload_app=True): the child inherits bookkeeping claiming an updater is running, but the updater
-# thread is dead, so update_prices_in_background() in a forked worker never starts a new thread and
-# prices stay frozen at the fork-time snapshot. Worse, if the fork lands while another thread holds
-# _global_update_prices_lock (e.g. close() joining an in-flight fetch), the child inherits the lock
-# permanently held and every lock-taking updater API call in it deadlocks (calc_price and
-# UpdatePrices.wait() never take this lock). Consider resetting this state, and reinitializing the
-# lock, via os.register_at_fork(after_in_child=...).
+# This module-level state would not survive os.fork() on its own (threads die with the parent,
+# and locks can be inherited in a held state, e.g. under gunicorn with preload_app=True). Fork
+# hooks registered lazily in _register_fork_hooks() keep it consistent: the global lock is held
+# across the fork and reinitialized in the child, and a running updater is restarted in place -
+# see _fork_after_in_child.
 _global_update_prices: UpdatePrices | None = None
 _managed_update_prices: UpdatePrices | None = None
 _managed_update_prices_ref_count = 0
 _global_update_prices_lock = threading.RLock()
+
+_fork_hooks_registered = False
+
+
+def _register_fork_hooks() -> None:
+    """Keep the updater working across os.fork() (e.g. gunicorn with preload_app=True).
+
+    Called under `_global_update_prices_lock` from `_start_thread`, so registration happens at
+    most once, and only in processes that actually start an updater.
+    """
+    global _fork_hooks_registered
+    if _fork_hooks_registered or not hasattr(os, 'register_at_fork'):
+        return
+    _fork_hooks_registered = True
+    os.register_at_fork(before=_fork_before, after_in_parent=_fork_after_in_parent, after_in_child=_fork_after_in_child)
+
+
+def _fork_before() -> None:
+    # Hold the lock across the fork so the child inherits consistent bookkeeping rather than a
+    # torn, mid-mutation state.
+    _global_update_prices_lock.acquire()
+
+
+def _fork_after_in_parent() -> None:
+    _global_update_prices_lock.release()
+
+
+def _fork_after_in_child() -> None:
+    global _global_update_prices_lock, _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
+
+    # The child inherits the lock acquired in _fork_before; replace it with a fresh one rather
+    # than releasing the inherited object.
+    _global_update_prices_lock = threading.RLock()
+    updater = _global_update_prices
+    if updater is None:
+        return
+    try:
+        # The parent's updater thread does not survive the fork; restart it on the same instance,
+        # preserving identity so existing handles and the managed bookkeeping remain valid.
+        updater._revive_after_fork()  # pyright: ignore[reportPrivateUsage]
+    except Exception as e:
+        _global_update_prices = None
+        _managed_update_prices = None
+        _managed_update_prices_ref_count = 0
+        data_snapshot.set_custom_snapshot(None)
+        logger.error('Failed to restart the genai-prices background updater after fork (%s): %s', type(e).__name__, e)
+
 
 _STOPPED_THREAD_JOIN_TIMEOUT = 5.0
 
@@ -283,6 +328,7 @@ class UpdatePrices:
         if self._thread is not None:
             raise RuntimeError('UpdatePrices background task already started')
 
+        _register_fork_hooks()
         self._prices_updated.clear()
         self._stop_event.clear()
         self._background_exc = None
@@ -342,6 +388,16 @@ class UpdatePrices:
             exc = self._background_exc
             self._background_exc = None
             raise exc
+
+    def _revive_after_fork(self) -> None:
+        # Threads do not survive fork, and the inherited events/locks may have been captured in an
+        # arbitrary state (e.g. mid-install); recreate them and restart the background thread on
+        # this same instance.
+        self._thread = None
+        self._stop_event = threading.Event()
+        self._prices_updated = threading.Event()
+        self._snapshot_lock = threading.Lock()
+        self._start_thread()
 
     def _stop_and_detach(self) -> threading.Thread | None:
         """Signal the background thread to stop and revert prices to the bundled data.

@@ -1,3 +1,4 @@
+import os
 import threading
 from decimal import Decimal
 from time import monotonic
@@ -412,6 +413,34 @@ def test_stop_on_unstarted_instance_is_noop(monkeypatch: pytest.MonkeyPatch):
         assert update_prices_module._global_update_prices is update_prices
         assert data_snapshot._custom_snapshot is not None
     assert data_snapshot._custom_snapshot is None
+
+
+@pytest.mark.skipif(not hasattr(os, 'fork'), reason='requires os.fork')
+def test_forked_child_restarts_shared_updater(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    handle = update_prices_in_background()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+
+        pid = os.fork()
+        if pid == 0:
+            # Child: never return into pytest - report via the exit code.
+            try:
+                ok = (
+                    wait_prices_updated_sync(timeout=5)
+                    and any(t.name == 'genai_prices:update' and t.is_alive() for t in threading.enumerate())
+                    and data_snapshot._custom_snapshot is not None
+                    and update_prices_module._global_update_prices is not None
+                )
+                os._exit(0 if ok else 1)
+            except BaseException:
+                os._exit(2)
+
+        _, status = os.waitpid(pid, 0)
+        assert os.waitstatus_to_exitcode(status) == 0
+    finally:
+        handle.close()
+        data_snapshot.set_custom_snapshot(None)
 
 
 def test_update_prices_in_background_concurrent_acquire_close(monkeypatch: pytest.MonkeyPatch):
