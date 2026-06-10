@@ -174,11 +174,6 @@ short-lived script), call `wait_prices_updated_sync()` / `wait_prices_updated_as
 handle — these never raise and return `False` if the update failed (the error is logged on the `genai-prices`
 logger), so your calculations simply fall back to the bundled data.
 
-To disable background updates entirely (e.g. in air-gapped environments, or when a library enables them on your
-behalf), set the `GENAI_PRICES_DISABLE_AUTO_UPDATE` environment variable to any non-empty value:
-`update_prices_in_background()` then returns a do-nothing handle and makes no network requests. This does not
-affect manually created `UpdatePrices` instances.
-
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
 ```py
