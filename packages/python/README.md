@@ -152,11 +152,10 @@ first:
   manual instance takes over; existing handles become inert. Prices briefly revert to the bundled data until the
   manual updater's first fetch completes — pass `wait` to `start()` to block until then.
 
-Both cases are logged at `INFO` level on the `genai-prices` logger, which is the place to look if background
-updates ever stop unexpectedly.
-
 Either way, an inert handle stays inert: if the manual updater is later stopped, background updates stop with
-it — call `update_prices_in_background()` again to start a new shared updater.
+it — call `update_prices_in_background()` again to start a new shared updater. Both precedence cases are logged
+at `INFO` level on the `genai-prices` logger, which is the place to look if background updates ever stop
+unexpectedly.
 
 `UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged instead.
 
