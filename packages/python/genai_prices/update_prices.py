@@ -145,6 +145,10 @@ class UpdatePricesHandle:
             _global_update_prices = None
             _managed_update_prices = None
             _managed_update_prices_ref_count = 0
+            # _stop_thread() joins the background thread while the global lock is held, so if a fetch
+            # is in flight, callers contending for the lock can block for up to the request timeout.
+            # This is deliberate: joining outside the lock would let a new updater start while the old
+            # thread can still install or clear the snapshot, requiring snapshot-ownership tracking.
             try:
                 update_prices._stop_thread()  # pyright: ignore[reportPrivateUsage]
             except Exception as e:
