@@ -157,14 +157,22 @@ it — call `update_prices_in_background()` again to start a new shared updater.
 at `INFO` level on the `genai-prices` logger, which is the place to look if background updates ever stop
 unexpectedly.
 
-`UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged instead.
+`UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged
+instead. Closing the last handle stops the updater and waits for its thread to exit, so if a fetch is in flight,
+`close()` (and `UpdatePrices.start()` when taking over) can block for roughly the request timeout (typically
+10–15 seconds with the default settings, since httpx timeouts are per-operation rather than a total deadline).
+Other updater lifecycle calls (`update_prices_in_background()`, `wait_prices_updated_sync()`) contend
+on the same internal lock and can block for the same duration in that window; `calc_price` never takes that lock
+and is unaffected. A handle represents exactly one claim on the updater — don't copy one, as closing the copy
+releases the original's claim too.
 
-`update_prices_in_background()` returns immediately and never blocks on the download. Until the first fetch
-completes, `calc_price` keeps using the data bundled with the installed package, so prices for models released
-after that snapshot may be missing for the first moments of the process. Once the fetch lands, every subsequent
-calculation uses the fresh data — prices computed before then are not recalculated. If you need fresh prices
-before calculating (e.g. in a short-lived script), call `wait_prices_updated_sync()` /
-`wait_prices_updated_async()` after acquiring the handle.
+`update_prices_in_background()` does not wait for the download. Until the first fetch completes, `calc_price`
+keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
+missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
+data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
+short-lived script), call `wait_prices_updated_sync()` / `wait_prices_updated_async()` after acquiring the
+handle — these never raise and return `False` if the update failed (the error is logged on the `genai-prices`
+logger), so your calculations simply fall back to the bundled data.
 
 To disable background updates entirely (e.g. in air-gapped environments, or when a library enables them on your
 behalf), set the `GENAI_PRICES_DISABLE_AUTO_UPDATE` environment variable to any non-empty value:
