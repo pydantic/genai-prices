@@ -184,10 +184,14 @@ def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):
                 pass
 
 
-def test_update_prices_in_background_inert_when_manual_updater_running(monkeypatch: pytest.MonkeyPatch):
+def test_update_prices_in_background_inert_when_manual_updater_running(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+):
     _mock_update_prices_get(monkeypatch)
     with UpdatePrices():
-        handle = update_prices_in_background()
+        with caplog.at_level('INFO', logger='genai-prices'):
+            handle = update_prices_in_background()
+        assert any('returning an inert handle' in record.message for record in caplog.records)
         assert wait_prices_updated_sync(timeout=5)
         assert data_snapshot._custom_snapshot is not None
 
@@ -316,3 +320,112 @@ def test_update_prices_in_background_disabled_by_env_var(monkeypatch: pytest.Mon
     assert data_snapshot._custom_snapshot is None
     handle.close()
     assert data_snapshot._custom_snapshot is None
+
+
+def test_disable_env_var_does_not_affect_manual_update_prices(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv('GENAI_PRICES_DISABLE_AUTO_UPDATE', '1')
+    _mock_update_prices_get(monkeypatch)
+    with UpdatePrices() as update_prices:
+        assert update_prices.wait(timeout=5)
+        assert data_snapshot._custom_snapshot is not None
+    assert data_snapshot._custom_snapshot is None
+
+
+def test_wait_prices_updated_sync_returns_false_on_failed_fetch(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+):
+    def fake_get(*_args: object, **_kwargs: object) -> object:
+        raise httpx2.ConnectError('network down')
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    handle = update_prices_in_background()
+    try:
+        # Never raises and returns False on failure, for every waiter — not just the first.
+        assert wait_prices_updated_sync(timeout=5) is False
+        assert wait_prices_updated_sync(timeout=0) is False
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        with caplog.at_level('ERROR', logger='genai-prices'):
+            handle.close()
+        data_snapshot.set_custom_snapshot(None)
+    # The stored exception is not consumed by the waiters above, so close() still logs it.
+    assert any('while closing' in record.message for record in caplog.records)
+
+
+def test_stale_handle_close_does_not_affect_new_shared_updater(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    handle_1 = update_prices_in_background()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+        with UpdatePrices():
+            pass
+
+        handle_2 = update_prices_in_background()
+        try:
+            assert wait_prices_updated_sync(timeout=5)
+            new_updater = update_prices_module._managed_update_prices
+            assert new_updater is not None
+
+            # handle_1 is bound to the pre-takeover updater: closing it while a different
+            # shared updater is live must not release handle_2's claim.
+            handle_1.close()
+            assert update_prices_module._managed_update_prices is new_updater
+            assert update_prices_module._managed_update_prices_ref_count == 1
+            assert wait_prices_updated_sync(timeout=0)
+            assert data_snapshot._custom_snapshot is not None
+        finally:
+            handle_2.close()
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        handle_1.close()
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_stop_on_unstarted_instance_is_noop(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    with UpdatePrices() as update_prices:
+        assert update_prices.wait(timeout=5)
+        UpdatePrices().stop()
+        assert update_prices_module._global_update_prices is update_prices
+        assert data_snapshot._custom_snapshot is not None
+    assert data_snapshot._custom_snapshot is None
+
+
+def test_update_prices_in_background_concurrent_acquire_close(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    barrier = threading.Barrier(16)
+    errors: list[BaseException] = []
+
+    def worker() -> None:
+        try:
+            barrier.wait(timeout=5)
+            for _ in range(10):
+                handle = update_prices_in_background()
+                handle.close()
+        except BaseException as exc:  # pragma: no cover
+            errors.append(exc)
+
+    threads = [threading.Thread(target=worker) for _ in range(16)]
+    try:
+        for thread in threads:
+            thread.start()
+    finally:
+        for thread in threads:
+            thread.join(timeout=30)
+
+    assert not [t for t in threads if t.is_alive()]
+    assert not errors
+    assert update_prices_module._global_update_prices is None
+    assert update_prices_module._managed_update_prices is None
+    assert update_prices_module._managed_update_prices_ref_count == 0
+    assert not [t for t in threading.enumerate() if t.name == 'genai_prices:update']
+    assert data_snapshot._custom_snapshot is None
+
+    # The shared updater can still be acquired cleanly after the churn.
+    handle = update_prices_in_background()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+        assert data_snapshot._custom_snapshot is not None
+    finally:
+        handle.close()
+        data_snapshot.set_custom_snapshot(None)
