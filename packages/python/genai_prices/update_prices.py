@@ -2,6 +2,7 @@ from __future__ import annotations as _annotations
 
 import asyncio
 import logging
+import os
 import threading
 from dataclasses import dataclass, field
 from time import time
@@ -13,6 +14,8 @@ from . import data_snapshot
 __all__ = (
     'DEFAULT_UPDATE_URL',
     'UpdatePrices',
+    'UpdatePricesHandle',
+    'update_prices_in_background',
     'wait_prices_updated_sync',
     'wait_prices_updated_async',
 )
@@ -20,8 +23,9 @@ __all__ = (
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
 _global_update_prices: UpdatePrices | None = None
-_global_update_prices_lock = threading.Lock()
-_global_update_prices_ref_count: int = 0
+_managed_update_prices: UpdatePrices | None = None
+_managed_update_prices_ref_count = 0
+_global_update_prices_lock = threading.RLock()
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -33,8 +37,11 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     Returns:
         True if prices were updated, False otherwise.
     """
-    if _global_update_prices:
-        return _global_update_prices.wait(timeout)
+    with _global_update_prices_lock:
+        update_prices = _global_update_prices
+
+    if update_prices is not None:
+        return update_prices.wait(timeout)
     return False
 
 
@@ -51,39 +58,97 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 
 
 def update_prices_in_background() -> UpdatePricesHandle:
-    """Update prices in the background using a daemon thread.
+    """Update prices in the background using a shared, process-wide daemon thread.
 
-    Args:
-        update_interval: The interval to update prices in seconds.
+    The first call starts the shared updater; later calls reuse it and return independent handles.
+    The updater is stopped when the last handle is closed, at which point prices revert to the
+    data bundled with the installed package.
+
+    This function returns immediately and never blocks on the download: until the first fetch
+    completes, price calculations keep using the bundled data, and prices computed before then
+    are not recalculated once fresh data lands. Use `wait_prices_updated_sync` or
+    `wait_prices_updated_async` if you need fresh prices before calculating.
+
+    If an `UpdatePrices` instance has already been started manually, no second updater is started
+    and the returned handle does nothing on close — prices are already being kept up to date. Such
+    a handle stays inert: if the manual updater is later stopped, background updates stop with it,
+    and a new handle must be acquired to restart them.
+
+    Set the `GENAI_PRICES_DISABLE_AUTO_UPDATE` environment variable to any non-empty value to
+    disable this function entirely: it returns a do-nothing handle and no updater is started.
+
+    Returns:
+        A handle that stops the shared background updater when all handles have been closed.
     """
+    global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
-    global _global_update_prices_ref_count, _global_update_prices_lock, _global_update_prices
+    if os.environ.get('GENAI_PRICES_DISABLE_AUTO_UPDATE'):
+        return UpdatePricesHandle()
 
     with _global_update_prices_lock:
-        if _global_update_prices is None:
-            _throwaway = UpdatePrices().start()
-        _global_update_prices_ref_count += 1
+        if _managed_update_prices is not None:
+            _managed_update_prices_ref_count += 1
+            return UpdatePricesHandle(_managed_update_prices)
 
-        return UpdatePricesHandle()
+        if _global_update_prices is not None:
+            # A manually started UpdatePrices is already keeping prices fresh; don't start a
+            # second updater and don't claim the manual one — its owner controls its lifetime.
+            return UpdatePricesHandle()
+
+        update_prices = UpdatePrices()
+        _global_update_prices = update_prices
+        _managed_update_prices = update_prices
+        _managed_update_prices_ref_count = 1
+        try:
+            update_prices._start_thread()  # pyright: ignore[reportPrivateUsage]
+        except Exception:
+            _global_update_prices = None
+            _managed_update_prices = None
+            _managed_update_prices_ref_count = 0
+            raise
+
+        return UpdatePricesHandle(update_prices)
 
 
 @dataclass
 class UpdatePricesHandle:
-    """A handle for the update prices in the background."""
+    """A claim on the shared background updater started by `update_prices_in_background`.
 
+    A handle only releases the updater it was created for: handles constructed directly, or
+    outliving the updater they belong to, are inert and closing them does nothing.
+    """
+
+    _update_prices: UpdatePrices | None = None
     _closed: bool = field(default=False, init=False)
 
     def close(self):
-        global _global_update_prices_ref_count, _global_update_prices_lock, _global_update_prices
-        if _global_update_prices is None or self._closed:
-            # Maybe consider raising an error here?
-            return
+        """Release this handle's claim on the shared updater.
+
+        Stops the updater if this was the last open handle. Idempotent, and never raises:
+        errors from the background updater are logged instead.
+        """
+        global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
         with _global_update_prices_lock:
-            _global_update_prices_ref_count -= 1
-            if _global_update_prices_ref_count == 0:
-                _global_update_prices.stop()
+            if self._closed:
+                return
+
             self._closed = True
+            if self._update_prices is None or _managed_update_prices is not self._update_prices:
+                return
+
+            _managed_update_prices_ref_count -= 1
+            if _managed_update_prices_ref_count > 0:
+                return
+
+            update_prices = self._update_prices
+            _global_update_prices = None
+            _managed_update_prices = None
+            _managed_update_prices_ref_count = 0
+            try:
+                update_prices._stop_thread()  # pyright: ignore[reportPrivateUsage]
+            except Exception as e:
+                logger.error('Error from genai-prices background updater while closing (%s): %s', type(e).__name__, e)
 
 
 @dataclass
@@ -113,27 +178,34 @@ class UpdatePrices:
         """
         global _global_update_prices
 
+        with _global_update_prices_lock:
+            if self._thread is not None:
+                raise RuntimeError('UpdatePrices background task already started')
+
+            if _global_update_prices is not None:
+                raise RuntimeError(
+                    'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+                )
+
+            _global_update_prices = self
+            try:
+                self._start_thread()
+            except Exception:
+                _global_update_prices = None
+                raise
+
+        if wait:
+            self.wait(timeout=30 if wait is True else wait)
+
+    def _start_thread(self) -> None:
         if self._thread is not None:
             raise RuntimeError('UpdatePrices background task already started')
 
-        # Maybe we need to change up a few things right here?
-        # We cannot keep raising here because we do need multiple threads to be able to at least call it
-        # Whether we start the updater is a different thing
-
-        if _global_update_prices is not None:
-            raise RuntimeError(
-                'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
-            )
-            return
-
-        _global_update_prices = self
         self._prices_updated.clear()
         self._stop_event.clear()
         self._background_exc = None
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         self._thread.start()
-        if wait:
-            self.wait(timeout=30 if wait is True else wait)
 
     def wait(self, timeout: float | None = None) -> bool:
         """Wait for the prices to be updated in the background task.
@@ -150,9 +222,20 @@ class UpdatePrices:
 
     def stop(self):
         """Stop the background task."""
-        global _global_update_prices
+        global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
-        _global_update_prices = None
+        with _global_update_prices_lock:
+            if self._thread is None:
+                return
+
+            if _global_update_prices is self:
+                _global_update_prices = None
+            if _managed_update_prices is self:
+                _managed_update_prices = None
+                _managed_update_prices_ref_count = 0
+            self._stop_thread()
+
+    def _stop_thread(self) -> None:
         if self._thread is not None:
             self._stop_event.set()
             self._thread.join()
