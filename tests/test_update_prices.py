@@ -308,29 +308,6 @@ def test_update_prices_handle_close_does_not_raise_after_failed_fetch(
     assert any('while closing' in record.message for record in caplog.records)
 
 
-def test_update_prices_in_background_disabled_by_env_var(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv('GENAI_PRICES_DISABLE_AUTO_UPDATE', '1')
-
-    def fail_get(*_args: object, **_kwargs: object) -> object:
-        raise AssertionError('no network requests should be made')
-
-    monkeypatch.setattr(httpx2, 'get', fail_get)
-    handle = update_prices_in_background()
-    assert not wait_prices_updated_sync(timeout=0)
-    assert data_snapshot._custom_snapshot is None
-    handle.close()
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_disable_env_var_does_not_affect_manual_update_prices(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv('GENAI_PRICES_DISABLE_AUTO_UPDATE', '1')
-    _mock_update_prices_get(monkeypatch)
-    with UpdatePrices() as update_prices:
-        assert update_prices.wait(timeout=5)
-        assert data_snapshot._custom_snapshot is not None
-    assert data_snapshot._custom_snapshot is None
-
-
 def test_wait_prices_updated_sync_returns_false_on_failed_fetch(
     monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ):

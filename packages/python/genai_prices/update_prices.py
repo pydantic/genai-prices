@@ -2,7 +2,6 @@ from __future__ import annotations as _annotations
 
 import asyncio
 import logging
-import os
 import threading
 from dataclasses import dataclass, field
 from time import time
@@ -97,16 +96,10 @@ def update_prices_in_background() -> UpdatePricesHandle:
     manual updater is later stopped, background updates stop with it, and a new handle must be
     acquired to restart them.
 
-    Set the `GENAI_PRICES_DISABLE_AUTO_UPDATE` environment variable to any non-empty value to
-    disable this function entirely: it returns a do-nothing handle and no updater is started.
-
     Returns:
         A handle that stops the shared background updater when all handles have been closed.
     """
     global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
-
-    if os.environ.get('GENAI_PRICES_DISABLE_AUTO_UPDATE'):
-        return UpdatePricesHandle()
 
     with _global_update_prices_lock:
         if _managed_update_prices is not None:
