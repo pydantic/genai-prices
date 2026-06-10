@@ -22,6 +22,10 @@ __all__ = (
 
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
+# TODO: this module-level state does not survive os.fork() (e.g. gunicorn with preload_app=True):
+# the child inherits bookkeeping claiming an updater is running, but the updater thread is dead, so
+# update_prices_in_background() in a forked worker never starts a new thread and prices stay frozen
+# at the fork-time snapshot. Consider resetting this state via os.register_at_fork(after_in_child=...).
 _global_update_prices: UpdatePrices | None = None
 _managed_update_prices: UpdatePrices | None = None
 _managed_update_prices_ref_count = 0
@@ -69,10 +73,12 @@ def update_prices_in_background() -> UpdatePricesHandle:
     are not recalculated once fresh data lands. Use `wait_prices_updated_sync` or
     `wait_prices_updated_async` if you need fresh prices before calculating.
 
-    If an `UpdatePrices` instance has already been started manually, no second updater is started
-    and the returned handle does nothing on close — prices are already being kept up to date. Such
-    a handle stays inert: if the manual updater is later stopped, background updates stop with it,
-    and a new handle must be acquired to restart them.
+    A manually started `UpdatePrices` always takes precedence over the shared updater. If one is
+    already running, no second updater is started and the returned handle does nothing on close —
+    prices are already being kept up to date. If one is started later, the shared updater is
+    stopped and existing handles become inert. Either way, an inert handle stays inert: if the
+    manual updater is later stopped, background updates stop with it, and a new handle must be
+    acquired to restart them.
 
     Set the `GENAI_PRICES_DISABLE_AUTO_UPDATE` environment variable to any non-empty value to
     disable this function entirely: it returns a do-nothing handle and no updater is started.
@@ -93,6 +99,10 @@ def update_prices_in_background() -> UpdatePricesHandle:
         if _global_update_prices is not None:
             # A manually started UpdatePrices is already keeping prices fresh; don't start a
             # second updater and don't claim the manual one — its owner controls its lifetime.
+            logger.info(
+                'A manually started UpdatePrices is already running; update_prices_in_background() '
+                'is returning an inert handle and not starting a shared updater.'
+            )
             return UpdatePricesHandle()
 
         update_prices = UpdatePrices()
@@ -176,20 +186,43 @@ class UpdatePrices:
     def start(self, *, wait: bool | float = False):
         """Start the background task.
 
+        If the shared background updater started by `update_prices_in_background` is running, it is
+        stopped and this instance takes over: a manually started `UpdatePrices` always takes
+        precedence, and existing handles on the shared updater become inert. Prices briefly revert
+        to the bundled data until this instance's first fetch completes (pass `wait` to block until
+        then). Starting a second manually created `UpdatePrices` still raises `RuntimeError`.
+
         Args:
             wait: Whether to wait for the prices to be updated before returning, if an int is passed
                 wait for that many seconds, if `True` wait for 30 seconds.
         """
-        global _global_update_prices
+        global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
         with _global_update_prices_lock:
             if self._thread is not None:
                 raise RuntimeError('UpdatePrices background task already started')
 
             if _global_update_prices is not None:
-                raise RuntimeError(
-                    'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+                if _global_update_prices is not _managed_update_prices:
+                    raise RuntimeError(
+                        'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+                    )
+
+                managed = _global_update_prices
+                logger.info(
+                    'Stopping the shared background updater started via update_prices_in_background(); '
+                    'its open handles (e.g. held by libraries such as logfire) are now inert and this '
+                    'manually started UpdatePrices takes over.'
                 )
+                _global_update_prices = None
+                _managed_update_prices = None
+                _managed_update_prices_ref_count = 0
+                try:
+                    managed._stop_thread()
+                except Exception as e:
+                    logger.error(
+                        'Error from genai-prices background updater while taking over (%s): %s', type(e).__name__, e
+                    )
 
             _global_update_prices = self
             try:

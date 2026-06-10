@@ -223,18 +223,48 @@ def test_update_prices_in_background_ref_count(monkeypatch: pytest.MonkeyPatch):
         data_snapshot.set_custom_snapshot(None)
 
 
-def test_update_prices_in_background_conflicts_with_manual_start(monkeypatch: pytest.MonkeyPatch):
+def test_manual_start_takes_over_shared_updater(monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture):
     _mock_update_prices_get(monkeypatch)
     handle = update_prices_in_background()
     try:
-        with pytest.raises(
-            RuntimeError,
-            match='UpdatePrices global task already started, only one UpdatePrices can be active at a time',
-        ):
-            with UpdatePrices():
-                pass
+        assert wait_prices_updated_sync(timeout=5)
+        with caplog.at_level('INFO', logger='genai-prices'):
+            with UpdatePrices() as manual:
+                manual.wait(timeout=5)
+                assert data_snapshot._custom_snapshot is not None
+                assert update_prices_module._global_update_prices is manual
+                assert update_prices_module._managed_update_prices is None
+
+                # the pre-takeover handle is inert: closing it does not stop the manual updater
+                handle.close()
+                assert data_snapshot._custom_snapshot is not None
+                assert update_prices_module._global_update_prices is manual
+        assert any('takes over' in record.message for record in caplog.records)
+        assert data_snapshot._custom_snapshot is None
+        assert not [t for t in threading.enumerate() if t.name == 'genai_prices:update']
     finally:
         handle.close()
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_background_updater_restarts_after_manual_takeover_stops(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    handle_1 = update_prices_in_background()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+        with UpdatePrices():
+            pass
+        assert data_snapshot._custom_snapshot is None
+
+        handle_2 = update_prices_in_background()
+        try:
+            assert wait_prices_updated_sync(timeout=5)
+            assert data_snapshot._custom_snapshot is not None
+        finally:
+            handle_2.close()
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        handle_1.close()
         data_snapshot.set_custom_snapshot(None)
 
 

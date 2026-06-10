@@ -142,11 +142,21 @@ the shared updater is not configurable; if you need a custom URL or interval, us
 calls reuse the same updater and return independent handles. The updater is stopped when the last handle is
 closed, at which point prices revert to the data bundled with the installed package.
 
-If an `UpdatePrices` instance has already been started manually, `update_prices_in_background()` does not start a
-second updater and returns a handle that does nothing on close: prices are already being kept up to date, and the
-manual updater's lifetime stays with whoever started it. Note that such a handle stays inert: if the manual
-updater is later stopped, background updates stop with it — call `update_prices_in_background()` again to start a
-new shared updater.
+A manually started `UpdatePrices` always takes precedence over the shared updater, regardless of which started
+first:
+
+- If an `UpdatePrices` instance has already been started manually, `update_prices_in_background()` does not start
+  a second updater and returns a handle that does nothing on close: prices are already being kept up to date, and
+  the manual updater's lifetime stays with whoever started it.
+- If `UpdatePrices.start()` is called while the shared updater is running, the shared updater is stopped and the
+  manual instance takes over; existing handles become inert. Prices briefly revert to the bundled data until the
+  manual updater's first fetch completes — pass `wait` to `start()` to block until then.
+
+Both cases are logged at `INFO` level on the `genai-prices` logger, which is the place to look if background
+updates ever stop unexpectedly.
+
+Either way, an inert handle stays inert: if the manual updater is later stopped, background updates stop with
+it — call `update_prices_in_background()` again to start a new shared updater.
 
 `UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged instead.
 
