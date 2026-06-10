@@ -126,6 +126,42 @@ update_prices.stop()  # stop updating prices
 
 Only one `UpdatePrices` instance can be running at a time.
 
+For libraries and integrations that want to opt into updating prices without creating duplicate background
+threads, use `update_prices_in_background()`:
+
+```py
+from genai_prices import update_prices_in_background
+
+update_prices_handle = update_prices_in_background()
+...
+update_prices_handle.close()
+```
+
+The first call starts a shared process-wide updater with default settings (hourly refresh from the default URL —
+the shared updater is not configurable; if you need a custom URL or interval, use `UpdatePrices` directly). Later
+calls reuse the same updater and return independent handles. The updater is stopped when the last handle is
+closed, at which point prices revert to the data bundled with the installed package.
+
+If an `UpdatePrices` instance has already been started manually, `update_prices_in_background()` does not start a
+second updater and returns a handle that does nothing on close: prices are already being kept up to date, and the
+manual updater's lifetime stays with whoever started it. Note that such a handle stays inert: if the manual
+updater is later stopped, background updates stop with it — call `update_prices_in_background()` again to start a
+new shared updater.
+
+`UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged instead.
+
+`update_prices_in_background()` returns immediately and never blocks on the download. Until the first fetch
+completes, `calc_price` keeps using the data bundled with the installed package, so prices for models released
+after that snapshot may be missing for the first moments of the process. Once the fetch lands, every subsequent
+calculation uses the fresh data — prices computed before then are not recalculated. If you need fresh prices
+before calculating (e.g. in a short-lived script), call `wait_prices_updated_sync()` /
+`wait_prices_updated_async()` after acquiring the handle.
+
+To disable background updates entirely (e.g. in air-gapped environments, or when a library enables them on your
+behalf), set the `GENAI_PRICES_DISABLE_AUTO_UPDATE` environment variable to any non-empty value:
+`update_prices_in_background()` then returns a do-nothing handle and makes no network requests. This does not
+affect manually created `UpdatePrices` instances.
+
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
 ```py
