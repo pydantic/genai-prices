@@ -34,6 +34,28 @@ _managed_update_prices: UpdatePrices | None = None
 _managed_update_prices_ref_count = 0
 _global_update_prices_lock = threading.RLock()
 
+_STOPPED_THREAD_JOIN_TIMEOUT = 5.0
+
+
+def _join_stopped_updater_thread(thread: threading.Thread | None) -> None:
+    """Give a stopped updater thread a short grace period to exit, then abandon it.
+
+    Called outside `_global_update_prices_lock` so a thread blocked on an in-flight fetch never
+    stalls other updater API calls. Abandonment is safe: the thread is a daemon, it exits as soon
+    as the fetch completes, and a stopped updater can never install its result (see
+    `UpdatePrices._install_snapshot`).
+    """
+    if thread is None:
+        return
+    thread.join(timeout=_STOPPED_THREAD_JOIN_TIMEOUT)
+    if thread.is_alive():
+        logger.warning(
+            'genai-prices background updater thread did not exit within %.0f seconds (a fetch is '
+            'likely in flight); abandoning the daemon thread. It will exit once the fetch '
+            'completes, without updating prices.',
+            _STOPPED_THREAD_JOIN_TIMEOUT,
+        )
+
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     """Synchronously wait for prices to be updated.
@@ -44,9 +66,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
 
     Args:
         timeout: The maximum time to wait for prices to be updated. Defaults to None which waits
-            indefinitely. The timeout covers waiting on the update itself; if the updater is
-            concurrently being stopped mid-fetch, this call can additionally block on an internal
-            lock for roughly the request timeout before it starts waiting.
+            indefinitely.
 
     Returns:
         True if prices were updated, False otherwise (including when the update failed).
@@ -85,9 +105,7 @@ def update_prices_in_background() -> UpdatePricesHandle:
     This function does not wait for the download: until the first fetch completes, price
     calculations keep using the bundled data, and prices computed before then are not recalculated
     once fresh data lands. Use `wait_prices_updated_sync` or `wait_prices_updated_async` if you
-    need fresh prices before calculating. (Like all updater lifecycle calls, it can briefly block
-    on an internal lock — for roughly the request timeout — if another thread is concurrently
-    stopping an updater whose fetch is in flight.)
+    need fresh prices before calculating.
 
     A manually started `UpdatePrices` always takes precedence over the shared updater. If one is
     already running, no second updater is started and the returned handle does nothing on close —
@@ -151,9 +169,9 @@ class UpdatePricesHandle:
         Stops the updater if this was the last open handle. Idempotent, and never raises:
         errors from the background updater are logged instead.
 
-        Stopping the updater waits for its thread to exit, so closing the last handle can block
-        for roughly the request timeout (typically 10-15s with the default settings, since httpx
-        timeouts are per-operation rather than a total deadline) if a fetch is in flight.
+        Returns promptly: prices revert to the bundled data immediately, and if a fetch is in
+        flight the daemon thread is given a short grace period to exit before being abandoned
+        with a warning log - a stopped updater can never install its result afterwards.
         """
         global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
@@ -173,14 +191,15 @@ class UpdatePricesHandle:
             _global_update_prices = None
             _managed_update_prices = None
             _managed_update_prices_ref_count = 0
-            # _stop_thread() joins the background thread while the global lock is held, so if a fetch
-            # is in flight, callers contending for the lock can block for up to the request timeout.
-            # This is deliberate: joining outside the lock would let a new updater start while the old
-            # thread can still install or clear the snapshot, requiring snapshot-ownership tracking.
-            try:
-                update_prices._stop_thread()  # pyright: ignore[reportPrivateUsage]
-            except Exception as e:
-                logger.error('Error from genai-prices background updater while closing (%s): %s', type(e).__name__, e)
+            thread = update_prices._stop_and_detach()  # pyright: ignore[reportPrivateUsage]
+
+        # Join outside the lock so a thread blocked on an in-flight fetch never stalls other
+        # updater API calls; re-publication is already fenced off by _stop_and_detach().
+        _join_stopped_updater_thread(thread)
+        exc = update_prices._background_exc  # pyright: ignore[reportPrivateUsage]
+        if exc:
+            update_prices._background_exc = None  # pyright: ignore[reportPrivateUsage]
+            logger.error('Error from genai-prices background updater while closing (%s): %s', type(exc).__name__, exc)
 
 
 @dataclass
@@ -198,6 +217,7 @@ class UpdatePrices:
     """The timeout for HTTP requests."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
     _prices_updated: threading.Event = field(default_factory=threading.Event)
+    _snapshot_lock: threading.Lock = field(default_factory=threading.Lock, init=False)
     _thread: threading.Thread | None = field(default=None, init=False)
     _background_exc: Exception | None = field(default=None, init=False)
     _update_succeeded: bool = field(default=False, init=False)
@@ -217,6 +237,8 @@ class UpdatePrices:
         """
         global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
+        taken_over: UpdatePrices | None = None
+        drained_thread: threading.Thread | None = None
         with _global_update_prices_lock:
             if self._thread is not None:
                 raise RuntimeError('UpdatePrices background task already started')
@@ -227,7 +249,7 @@ class UpdatePrices:
                         'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
                     )
 
-                managed = _global_update_prices
+                taken_over = _global_update_prices
                 logger.info(
                     'Stopping the shared background updater started via update_prices_in_background(); '
                     'its open handles (e.g. held by libraries such as logfire) are now inert and this '
@@ -236,12 +258,7 @@ class UpdatePrices:
                 _global_update_prices = None
                 _managed_update_prices = None
                 _managed_update_prices_ref_count = 0
-                try:
-                    managed._stop_thread()
-                except Exception as e:
-                    logger.error(
-                        'Error from genai-prices background updater while taking over (%s): %s', type(e).__name__, e
-                    )
+                drained_thread = taken_over._stop_and_detach()
 
             _global_update_prices = self
             try:
@@ -249,6 +266,15 @@ class UpdatePrices:
             except Exception:
                 _global_update_prices = None
                 raise
+
+        if taken_over is not None:
+            _join_stopped_updater_thread(drained_thread)
+            exc = taken_over._background_exc
+            if exc:
+                taken_over._background_exc = None
+                logger.error(
+                    'Error from genai-prices background updater while taking over (%s): %s', type(exc).__name__, exc
+                )
 
         if wait:
             self.wait(timeout=30 if wait is True else wait)
@@ -290,6 +316,10 @@ class UpdatePrices:
 
         A no-op if this instance was never started or has already been stopped; it does not
         affect any other updater that happens to be running.
+
+        Prices revert to the bundled data immediately. The call then waits for the background
+        thread to exit (bounded by the request timeout if a fetch is in flight) without blocking
+        other updater API calls, and re-raises the stored background exception, if any.
         """
         global _global_update_prices, _managed_update_prices, _managed_update_prices_ref_count
 
@@ -302,19 +332,31 @@ class UpdatePrices:
             if _managed_update_prices is self:
                 _managed_update_prices = None
                 _managed_update_prices_ref_count = 0
-            self._stop_thread()
+            thread = self._stop_and_detach()
 
-    def _stop_thread(self) -> None:
-        if self._thread is not None:
-            self._stop_event.set()
-            self._thread.join()
-            self._thread = None
-        # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
-        data_snapshot.set_custom_snapshot(None)
+        # Join outside the global lock so concurrent updater API calls don't queue behind an
+        # in-flight fetch; the snapshot is already reverted and re-publication fenced off.
+        if thread is not None:
+            thread.join()
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
             raise exc
+
+    def _stop_and_detach(self) -> threading.Thread | None:
+        """Signal the background thread to stop and revert prices to the bundled data.
+
+        Does not join; returns the (possibly still draining) thread so the caller can wait on it
+        outside `_global_update_prices_lock`. Setting the stop event before clearing the snapshot,
+        both ordered against `_install_snapshot` via `_snapshot_lock`, guarantees an in-flight
+        fetch can finish but can never install its result afterwards.
+        """
+        thread = self._thread
+        self._thread = None
+        self._stop_event.set()
+        with self._snapshot_lock:
+            data_snapshot.set_custom_snapshot(None)
+        return thread
 
     def __enter__(self):
         self.start()
@@ -352,7 +394,17 @@ class UpdatePrices:
         else:
             logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
 
-        data_snapshot.set_custom_snapshot(snapshot)
+        self._install_snapshot(snapshot)
+
+    def _install_snapshot(self, snapshot: data_snapshot.DataSnapshot | None) -> None:
+        # Fencing check: never publish after stop. The stop path sets _stop_event and then clears
+        # the snapshot under the same lock (see _stop_and_detach), so re-checking the event here
+        # makes publish-after-stop impossible rather than merely unlikely.
+        with self._snapshot_lock:
+            if self._stop_event.is_set():
+                logger.info('genai-prices updater was stopped during the fetch; discarding the fetched snapshot')
+                return
+            data_snapshot.set_custom_snapshot(snapshot)
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""

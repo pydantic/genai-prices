@@ -1,5 +1,6 @@
 import threading
 from decimal import Decimal
+from time import monotonic
 
 import httpx2
 import pytest
@@ -199,6 +200,51 @@ def test_update_prices_in_background_inert_when_manual_updater_running(
         assert wait_prices_updated_sync(timeout=0)
         assert data_snapshot._custom_snapshot is not None
     assert data_snapshot._custom_snapshot is None
+
+
+def test_close_does_not_block_on_in_flight_fetch_and_discards_result(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+):
+    fetch_started = threading.Event()
+    allow_fetch_return = threading.Event()
+
+    class Response:
+        content = PROVIDER_ARRAY_PAYLOAD
+
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
+        assert url == DEFAULT_UPDATE_URL
+        assert timeout is not None
+        fetch_started.set()
+        assert allow_fetch_return.wait(timeout=5)
+        return Response()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    monkeypatch.setattr(update_prices_module, '_STOPPED_THREAD_JOIN_TIMEOUT', 0.05)
+
+    handle = update_prices_in_background()
+    try:
+        assert fetch_started.wait(timeout=5)
+        (thread,) = [t for t in threading.enumerate() if t.name == 'genai_prices:update']
+
+        start = monotonic()
+        with caplog.at_level('WARNING', logger='genai-prices'):
+            handle.close()
+        assert monotonic() - start < 2  # did not wait for the in-flight fetch
+        assert any('abandoning the daemon thread' in record.message for record in caplog.records)
+        assert data_snapshot._custom_snapshot is None
+
+        # The drained fetch completes but its snapshot is discarded by the fencing check.
+        allow_fetch_return.set()
+        thread.join(timeout=5)
+        assert not thread.is_alive()
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        allow_fetch_return.set()
+        handle.close()
+        data_snapshot.set_custom_snapshot(None)
 
 
 def test_update_prices_in_background_ref_count(monkeypatch: pytest.MonkeyPatch):

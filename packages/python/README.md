@@ -158,13 +158,13 @@ at `INFO` level on the `genai-prices` logger, which is the place to look if back
 unexpectedly.
 
 `UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged
-instead. Closing the last handle stops the updater and waits for its thread to exit, so if a fetch is in flight,
-`close()` (and `UpdatePrices.start()` when taking over) can block for roughly the request timeout (typically
-10–15 seconds with the default settings, since httpx timeouts are per-operation rather than a total deadline).
-Other updater lifecycle calls (`update_prices_in_background()`, `wait_prices_updated_sync()`) contend
-on the same internal lock and can block for the same duration in that window; `calc_price` never takes that lock
-and is unaffected. A handle represents exactly one claim on the updater — don't copy one, as closing the copy
-releases the original's claim too.
+instead. Closing the last handle stops the updater and reverts prices to the bundled data immediately. If a
+fetch is in flight, the daemon thread is given a short grace period to exit and is otherwise abandoned with a
+warning log: it exits once the fetch completes, and its result is discarded — a stopped updater can never
+install prices afterwards. (`UpdatePrices.stop()` instead waits for the thread to exit, so a manual stop can
+block its caller for roughly the request timeout; neither blocks other updater API calls, and `calc_price`
+is always unaffected.) A handle represents exactly one claim on the updater — don't copy one, as closing the
+copy releases the original's claim too.
 
 `update_prices_in_background()` does not wait for the download. Until the first fetch completes, `calc_price`
 keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
