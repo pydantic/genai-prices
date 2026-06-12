@@ -5,7 +5,18 @@ import pytest
 from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
-from genai_prices.types import ModelPrice, TieredPrices
+from genai_prices.data import providers
+from genai_prices.types import (
+    ClauseContains,
+    ClauseEndsWith,
+    ClauseEquals,
+    ClauseOr,
+    ClauseRegex,
+    ClauseStartsWith,
+    MatchLogic,
+    ModelPrice,
+    TieredPrices,
+)
 
 pytestmark = pytest.mark.anyio
 
@@ -63,11 +74,23 @@ def test_openrouter_deepseek_v32_price():
         provider_id='openrouter',
     )
 
-    assert price.input_price == snapshot(Decimal('0.2772'))
-    assert price.output_price == snapshot(Decimal('0.3780'))
-    assert price.total_price == snapshot(Decimal('0.6552'))
+    assert price.input_price == snapshot(Decimal('0.4576'))
+    assert price.output_price == snapshot(Decimal('0.3432'))
+    assert price.total_price == snapshot(Decimal('0.8008'))
     assert price.model.name == snapshot('DeepSeek V3.2')
     assert price.provider.id == snapshot('openrouter')
+
+
+@pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
+def test_openrouter_api_model_refs_priceable_by_api_url(model_ref: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref=model_ref,
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == model_ref
+    assert price.provider.id == 'openrouter'
 
 
 def test_tiered_prices():
@@ -212,6 +235,53 @@ EXAMPLES: list[tuple[str, str]] = [
 @pytest.mark.parametrize('provider,model', EXAMPLES)
 def test_models_found(provider: str, model: str):
     calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model, provider_id=provider)
+
+
+def test_all_bundled_models_have_a_priceable_public_ref():
+    failures: list[str] = []
+    usage = Usage(input_tokens=1000, cache_read_tokens=10, cache_write_tokens=10, output_tokens=100)
+
+    for provider in providers:
+        for model in provider.models:
+            candidate_refs = dict.fromkeys([model.id, *_example_model_refs(model.match)])
+            errors: list[str] = []
+
+            for model_ref in candidate_refs:
+                try:
+                    calc_price(usage, model_ref=model_ref, provider_id=provider.id)
+                except Exception as exc:
+                    errors.append(f'{model_ref}: {type(exc).__name__}: {exc}')
+                else:
+                    break
+            else:
+                failures.append(f'{provider.id}/{model.id}: {"; ".join(errors)}')
+
+    assert not failures
+
+
+def _example_model_refs(match: MatchLogic) -> list[str]:
+    if isinstance(match, ClauseEquals):
+        return [match.equals]
+    elif isinstance(match, ClauseStartsWith):
+        return [match.starts_with]
+    elif isinstance(match, ClauseEndsWith):
+        return [match.ends_with]
+    elif isinstance(match, ClauseContains):
+        return [match.contains]
+    elif isinstance(match, ClauseRegex):
+        return []
+    elif isinstance(match, ClauseOr):
+        refs: list[str] = []
+        for clause in match.or_:
+            refs.extend(_example_model_refs(clause))
+        return refs
+    ref = ''
+    for clause in match.and_:
+        clause_refs = _example_model_refs(clause)
+        if not clause_refs:
+            return []
+        ref += clause_refs[0]
+    return [ref]
 
 
 def test_complex_usage():
