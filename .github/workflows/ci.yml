@@ -6,6 +6,21 @@ on:
     tags:
       - "**"
   pull_request: {}
+  workflow_dispatch:
+    inputs:
+      release_target:
+        description: Which package registry to release
+        type: choice
+        required: true
+        default: npm
+        options:
+          - npm
+          - pypi
+          - all
+      release_tag:
+        description: Existing release tag to publish, for example v0.0.59
+        type: string
+        required: true
 
 permissions:
   contents: read
@@ -22,6 +37,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
@@ -51,6 +67,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
@@ -76,6 +93,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
           # needed for diff-cover
           fetch-depth: 0
       - name: get coverage files
@@ -103,6 +121,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
 
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
@@ -126,7 +145,15 @@ jobs:
 
   release-pypi:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    if: >-
+      success() &&
+      (
+        startsWith(github.ref, 'refs/tags/') ||
+        (
+          github.event_name == 'workflow_dispatch' &&
+          (inputs.release_target == 'pypi' || inputs.release_target == 'all')
+        )
+      )
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
@@ -139,6 +166,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
 
       - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
         with:
@@ -148,6 +176,7 @@ jobs:
         uses: samuelcolvin/check-python-version@ee87cddb8049d2694cc03badc8569765a05cef00 # v5
         with:
           version_file_path: packages/python/pyproject.toml
+          test_github_ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
 
       - run: uv build --package genai-prices
 
@@ -155,7 +184,15 @@ jobs:
 
   release-npm:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    if: >-
+      success() &&
+      (
+        startsWith(github.ref, 'refs/tags/') ||
+        (
+          github.event_name == 'workflow_dispatch' &&
+          (inputs.release_target == 'npm' || inputs.release_target == 'all')
+        )
+      )
     runs-on: ubuntu-latest
     environment:
       name: release-npm
@@ -166,6 +203,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
 
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
@@ -178,6 +216,7 @@ jobs:
         with:
           version_file_path: packages/js/package.json
           version_pattern: '"version": *"(?P<version>.+?)"'
+          test_github_ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
 
       - run: npm ci
       - run: npm run build --workspace=packages/js
