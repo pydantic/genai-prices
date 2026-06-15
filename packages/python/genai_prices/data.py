@@ -467,6 +467,17 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='amazon.nova-2-sonic-v1:0',
+                match=ClauseContains(contains='amazon.nova-2-sonic'),
+                name='Nova 2 Sonic',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.33'),
+                    output_mtok=Decimal('2.75'),
+                    input_audio_mtok=Decimal('3'),
+                    output_audio_mtok=Decimal('12'),
+                ),
+            ),
+            ModelInfo(
                 id='amazon.nova-lite-v1:0',
                 match=ClauseContains(contains='amazon.nova-lite'),
                 name='Nova Lite',
@@ -535,6 +546,14 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='deepseek.r1'),
                 name='DeepSeek-R1',
                 prices=ModelPrice(input_mtok=Decimal('1.35'), output_mtok=Decimal('5.4')),
+            ),
+            ModelInfo(
+                id='global.amazon.nova-2-lite-v1:0',
+                match=ClauseContains(contains='global.amazon.nova-2-lite'),
+                name='Nova 2 Lite',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('2.5')
+                ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-fable-5-v1:0',
@@ -845,6 +864,21 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='qwen.qwen3-vl-235b-a22b'),
                 name='Qwen3-VL-235B-A22B-Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.53'), output_mtok=Decimal('2.66')),
+            ),
+            ModelInfo(
+                id='regional.amazon.nova-2-lite-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='us.amazon.nova-2-lite'),
+                        ClauseContains(contains='eu.amazon.nova-2-lite'),
+                        ClauseContains(contains='jp.amazon.nova-2-lite'),
+                    ]
+                ),
+                name='Nova 2 Lite',
+                description='Amazon Nova 2 Lite is an advanced multimodal reasoning model that intelligently balances performance and efficiency by dynamically adjusting reasoning depth based on task complexity. With flexible controls for developers to adjust the reasoning process, Nova 2 Lite delivers superior results for agentic workflows across software development, consumer experiences and enterprise application.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.33'), cache_read_mtok=Decimal('0.0825'), output_mtok=Decimal('2.75')
+                ),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-haiku-20241022-v1:0',
