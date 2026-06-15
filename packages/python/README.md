@@ -126,6 +126,54 @@ update_prices.stop()  # stop updating prices
 
 Only one `UpdatePrices` instance can be running at a time.
 
+For libraries and integrations that want to opt into updating prices without creating duplicate background
+threads, use `update_prices_in_background()`:
+
+```py
+from genai_prices import update_prices_in_background
+
+update_prices_handle = update_prices_in_background()
+...
+update_prices_handle.close()
+```
+
+The first call starts a shared process-wide updater with default settings (hourly refresh from the default URL —
+the shared updater is not configurable; if you need a custom URL or interval, use `UpdatePrices` directly). Later
+calls reuse the same updater and return independent handles. The updater is stopped when the last handle is
+closed, at which point prices revert to the data bundled with the installed package.
+
+A manually started `UpdatePrices` always takes precedence over the shared updater, regardless of which started
+first:
+
+- If an `UpdatePrices` instance has already been started manually, `update_prices_in_background()` does not start
+  a second updater and returns a handle that does nothing on close: prices are already being kept up to date, and
+  the manual updater's lifetime stays with whoever started it.
+- If `UpdatePrices.start()` is called while the shared updater is running, the shared updater is stopped and the
+  manual instance takes over; existing handles become inert. Prices briefly revert to the bundled data until the
+  manual updater's first fetch completes — pass `wait` to `start()` to block until then.
+
+Either way, an inert handle stays inert: if the manual updater is later stopped, background updates stop with
+it — call `update_prices_in_background()` again to start a new shared updater. Both precedence cases are logged
+at `INFO` level on the `genai-prices` logger, which is the place to look if background updates ever stop
+unexpectedly.
+
+`UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged
+instead. Closing the last handle stops the updater and reverts prices to the bundled data immediately. If a
+fetch is in flight, the daemon thread is given a short grace period to exit and is otherwise abandoned with a
+warning log: it exits once the fetch completes, and its result is discarded — a stopped updater can never
+install prices afterwards. (`UpdatePrices.stop()` instead waits for the thread to exit, so a manual stop can
+block its caller for roughly the request timeout; neither blocks other updater API calls, and `calc_price`
+is always unaffected.) A handle represents exactly one claim on the updater — don't copy one, as closing the
+copy releases the original's claim too.
+
+`update_prices_in_background()` does not wait for the download. Until the first fetch completes, `calc_price`
+keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
+missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
+data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
+short-lived script), call `wait_prices_updated_sync()` / `wait_prices_updated_async()` after acquiring the
+handle — these never raise and return `False` if the update failed (the error is logged on the `genai-prices`
+logger), so your calculations simply fall back to the bundled data.
+
 If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
 
 ```py
