@@ -56,10 +56,10 @@ The following providers are currently supported:
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 6 models
 - [Mistral](prices/providers/mistral.yml) - 22 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 10 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 11 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 71 models
-- [OpenRouter](prices/providers/openrouter.yml) - 587 models
+- [OpenRouter](prices/providers/openrouter.yml) - 588 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 8 models
 - [Together AI](prices/providers/together.yml) - 72 models

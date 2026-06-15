@@ -5381,6 +5381,17 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='kimi-k2.7-code',
+                match=ClauseEquals(equals='kimi-k2.7-code'),
+                name='Kimi K2.7 Code',
+                description="Kimi's most intelligent coding model, capable of completing programming tasks with higher success rates in long context. It features a native multimodal architecture that supports text, image, video input, thinking modes, dialogue, and agent tasks.",
+                context_window=262144,
+                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
                 id='moonshot-v1-128k',
                 match=ClauseOr(
                     or_=[
@@ -8943,6 +8954,16 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='moonshotai/kimi-k2.5'),
                 name='Kimi K2.5',
                 prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.7-code',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.7-code'),
+                name='Kimi K2.7 Code',
+                context_window=262144,
+                price_comments='Ref: https://openrouter.ai/api/v1/models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('3.5')
+                ),
             ),
             ModelInfo(
                 id='moonshotai/kimi-vl-a3b-thinking:free',
