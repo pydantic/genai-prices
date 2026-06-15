@@ -23,6 +23,18 @@ extractors:
         dest: output_tokens
 
 models:
+  - id: kimi-k2
+    name: Kimi K2 0711
+    description: >-
+      Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion
+      total parameters with 32 billion active per forward pass.
+    match:
+      equals: kimi-k2
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.57
+      output_mtok: 2.3
+
   - id: kimi-k2-0711-preview
     name: Kimi K2 0711 Preview
     description: >-
