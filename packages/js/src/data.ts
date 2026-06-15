@@ -764,6 +764,19 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'amazon.nova-2-sonic-v1:0',
+        name: 'Nova 2 Sonic',
+        match: {
+          contains: 'amazon.nova-2-sonic',
+        },
+        prices: {
+          input_mtok: 0.33,
+          output_mtok: 2.75,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
+        },
+      },
+      {
         id: 'amazon.nova-lite-v1:0',
         name: 'Nova Lite',
         description:
@@ -871,6 +884,18 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.35,
           output_mtok: 5.4,
+        },
+      },
+      {
+        id: 'global.amazon.nova-2-lite-v1:0',
+        name: 'Nova 2 Lite',
+        match: {
+          contains: 'global.amazon.nova-2-lite',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.075,
+          output_mtok: 2.5,
         },
       },
       {
@@ -1439,6 +1464,30 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.53,
           output_mtok: 2.66,
+        },
+      },
+      {
+        id: 'regional.amazon.nova-2-lite-v1:0',
+        name: 'Nova 2 Lite',
+        description:
+          'Amazon Nova 2 Lite is an advanced multimodal reasoning model that intelligently balances performance and efficiency by dynamically adjusting reasoning depth based on task complexity. With flexible controls for developers to adjust the reasoning process, Nova 2 Lite delivers superior results for agentic workflows across software development, consumer experiences and enterprise application.',
+        match: {
+          or: [
+            {
+              contains: 'us.amazon.nova-2-lite',
+            },
+            {
+              contains: 'eu.amazon.nova-2-lite',
+            },
+            {
+              contains: 'jp.amazon.nova-2-lite',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.33,
+          cache_read_mtok: 0.0825,
+          output_mtok: 2.75,
         },
       },
       {
@@ -9690,6 +9739,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k2.7-code',
+        name: 'Kimi K2.7 Code',
+        description:
+          "Kimi's most intelligent coding model, capable of completing programming tasks with higher success rates in long context. It features a native multimodal architecture that supports text, image, video input, thinking modes, dialogue, and agent tasks.",
+        match: {
+          equals: 'kimi-k2.7-code',
+        },
+        context_window: 262144,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.19,
+          output_mtok: 4,
+        },
+      },
+      {
         id: 'moonshot-v1-128k',
         name: 'Moonshot V1 128K',
         match: {
@@ -16232,6 +16297,20 @@ export const data: Provider[] = [
           equals: 'moonshotai/kimi-k2.6:free',
         },
         prices: {},
+      },
+      {
+        id: 'moonshotai/kimi-k2.7-code',
+        name: 'Kimi K2.7 Code',
+        match: {
+          equals: 'moonshotai/kimi-k2.7-code',
+        },
+        context_window: 262144,
+        price_comments: 'Ref: https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 0.75,
+          cache_read_mtok: 0.16,
+          output_mtok: 3.5,
+        },
       },
       {
         id: 'moonshotai/kimi-vl-a3b-thinking:free',

@@ -3093,6 +3093,18 @@ models:
       equals: moonshotai/kimi-k2.6:free
     prices: {}
 
+  - id: moonshotai/kimi-k2.7-code
+    name: Kimi K2.7 Code
+    match:
+      equals: moonshotai/kimi-k2.7-code
+    context_window: 262144
+    prices_checked: "2026-06-15"
+    price_comments: "Ref: https://openrouter.ai/api/v1/models"
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.16
+      output_mtok: 3.50
+
   - id: "moonshotai/kimi-vl-a3b-thinking:free"
     match:
       equals: "moonshotai/kimi-vl-a3b-thinking:free"

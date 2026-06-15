@@ -34,7 +34,7 @@ The following providers are currently supported:
 
 - [Anthropic](prices/providers/anthropic.yml) - 21 models
 - [Avian](prices/providers/avian.yml) - 4 models
-- [AWS Bedrock](prices/providers/aws.yml) - 72 models
+- [AWS Bedrock](prices/providers/aws.yml) - 75 models
 - [Microsoft Azure](prices/providers/azure.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
 - [Cohere](prices/providers/cohere.yml) - 6 models
@@ -56,10 +56,10 @@ The following providers are currently supported:
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
 - [Mistral](prices/providers/mistral.yml) - 31 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 11 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 12 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 78 models
-- [OpenRouter](prices/providers/openrouter.yml) - 684 models
+- [OpenRouter](prices/providers/openrouter.yml) - 685 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
