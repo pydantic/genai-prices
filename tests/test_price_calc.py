@@ -107,6 +107,19 @@ def test_openrouter_kimi_k27_code_price():
     assert price.total_price == Decimal('0.001041')
 
 
+def test_openrouter_kimi_k27_code_dated_price():
+    price = calc_price(
+        Usage(input_tokens=2_038_030, output_tokens=13_034),
+        model_ref='moonshotai/kimi-k2.7-code-20260612',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'moonshotai/kimi-k2.7-code'
+    assert price.input_price == Decimal('1.5285225')
+    assert price.output_price == Decimal('0.0456190')
+    assert price.total_price == Decimal('1.5741415')
+
+
 @pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
 def test_openrouter_api_model_refs_priceable_by_api_url(model_ref: str):
     price = calc_price(

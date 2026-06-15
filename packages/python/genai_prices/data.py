@@ -9345,7 +9345,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='moonshotai/kimi-k2.7-code',
-                match=ClauseEquals(equals='moonshotai/kimi-k2.7-code'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='moonshotai/kimi-k2.7-code'),
+                        ClauseEquals(equals='moonshotai/kimi-k2.7-code-20260612'),
+                    ]
+                ),
                 name='Kimi K2.7 Code',
                 context_window=262144,
                 price_comments='Ref: https://openrouter.ai/api/v1/models',

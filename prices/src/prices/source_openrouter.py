@@ -9,7 +9,7 @@ import httpx2
 from pydantic import BaseModel
 
 from . import source_prices
-from .prices_types import ClauseEquals, ModelInfo, ModelPrice
+from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from .update import get_providers_yaml
 from .utils import mtok
 
@@ -47,6 +47,14 @@ class OpenRouterModel(BaseModel):
 
     def model_info(self, inc_description: bool = True, *, strip_provider: bool = True) -> ModelInfo:
         model_id = self.model_id(strip_provider=strip_provider)
+        match_clauses = [ClauseEquals(equals=model_id)]
+        if not strip_provider and self.canonical_slug != self.id:
+            match_clauses.append(ClauseEquals(equals=self.canonical_slug))
+        match = (
+            ClauseOr(or_=match_clauses)  # pyright: ignore[reportCallIssue]
+            if len(match_clauses) > 1
+            else match_clauses[0]
+        )
 
         if inc_description:
             description = self.description.split('\n\n', 1)[0]
@@ -59,7 +67,7 @@ class OpenRouterModel(BaseModel):
             id=model_id,
             name=self.model_name(),
             description=description,
-            match=ClauseEquals(equals=model_id),
+            match=match,
             prices=self.pricing.model_price(),
         )
 

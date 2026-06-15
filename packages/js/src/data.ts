@@ -16302,7 +16302,14 @@ export const data: Provider[] = [
         id: 'moonshotai/kimi-k2.7-code',
         name: 'Kimi K2.7 Code',
         match: {
-          equals: 'moonshotai/kimi-k2.7-code',
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.7-code',
+            },
+            {
+              equals: 'moonshotai/kimi-k2.7-code-20260612',
+            },
+          ],
         },
         context_window: 262144,
         price_comments: 'Ref: https://openrouter.ai/api/v1/models',
