@@ -8939,7 +8939,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='minimax/minimax-m2-her',
-                match=ClauseEquals(equals='minimax/minimax-m2-her'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='minimax/minimax-m2-her'),
+                        ClauseEquals(equals='minimax/minimax-m2-her-20260123'),
+                    ]
+                ),
                 name='MiniMax M2-her',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1.2')
@@ -8955,7 +8960,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='minimax/minimax-m2.5',
-                match=ClauseEquals(equals='minimax/minimax-m2.5'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='minimax/minimax-m2.5'),
+                        ClauseEquals(equals='minimax/minimax-m2.5-20260211'),
+                    ]
+                ),
                 name='MiniMax M2.5',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.9')
@@ -8963,15 +8973,22 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='minimax/minimax-m2.7',
-                match=ClauseEquals(equals='minimax/minimax-m2.7'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='minimax/minimax-m2.7'),
+                        ClauseEquals(equals='minimax/minimax-m2.7-20260318'),
+                    ]
+                ),
                 name='MiniMax M2.7',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.054'), output_mtok=Decimal('1.08')
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
                 ),
             ),
             ModelInfo(
                 id='minimax/minimax-m3',
-                match=ClauseEquals(equals='minimax/minimax-m3'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='minimax/minimax-m3'), ClauseEquals(equals='minimax/minimax-m3-20260531')]
+                ),
                 name='MiniMax M3',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
@@ -10391,7 +10408,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3-coder',
-                match=ClauseEquals(equals='qwen/qwen3-coder'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-coder'),
+                        ClauseEquals(equals='qwen/qwen3-coder-480b-a35b-07-25'),
+                    ]
+                ),
                 name='Qwen3 Coder 480B A35B',
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('1.8')),
             ),
@@ -10414,7 +10436,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3-coder-next',
-                match=ClauseEquals(equals='qwen/qwen3-coder-next'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-coder-next'),
+                        ClauseEquals(equals='qwen/qwen3-coder-next-2025-02-03'),
+                    ]
+                ),
                 name='Qwen3 Coder Next',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.11'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('0.8')
@@ -10441,17 +10468,32 @@ providers: list[Provider] = [
                 id='qwen/qwen3-max',
                 match=ClauseEquals(equals='qwen/qwen3-max'),
                 name='Qwen 3 Max',
-                prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('6')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.78'),
+                    cache_write_mtok=Decimal('0.975'),
+                    cache_read_mtok=Decimal('0.156'),
+                    output_mtok=Decimal('3.9'),
+                ),
             ),
             ModelInfo(
                 id='qwen/qwen3-max-thinking',
-                match=ClauseEquals(equals='qwen/qwen3-max-thinking'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-max-thinking'),
+                        ClauseEquals(equals='qwen/qwen3-max-thinking-20260123'),
+                    ]
+                ),
                 name='Qwen3 Max Thinking',
                 prices=ModelPrice(input_mtok=Decimal('0.78'), output_mtok=Decimal('3.9')),
             ),
             ModelInfo(
                 id='qwen/qwen3-next-80b-a3b-instruct',
-                match=ClauseEquals(equals='qwen/qwen3-next-80b-a3b-instruct'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-next-80b-a3b-instruct'),
+                        ClauseEquals(equals='qwen/qwen3-next-80b-a3b-instruct-2509'),
+                    ]
+                ),
                 name='Qwen3 Next 80B A3B Instruct',
                 prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('1.1')),
             ),
@@ -10463,7 +10505,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3-next-80b-a3b-thinking',
-                match=ClauseEquals(equals='qwen/qwen3-next-80b-a3b-thinking'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-next-80b-a3b-thinking'),
+                        ClauseEquals(equals='qwen/qwen3-next-80b-a3b-thinking-2509'),
+                    ]
+                ),
                 name='Qwen3 Next 80B A3B Thinking',
                 prices=ModelPrice(input_mtok=Decimal('0.0975'), output_mtok=Decimal('0.78')),
             ),
@@ -10513,19 +10560,31 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.5-122b-a10b',
-                match=ClauseEquals(equals='qwen/qwen3.5-122b-a10b'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.5-122b-a10b'),
+                        ClauseEquals(equals='qwen/qwen3.5-122b-a10b-20260224'),
+                    ]
+                ),
                 name='Qwen3.5-122B-A10B',
                 prices=ModelPrice(input_mtok=Decimal('0.26'), output_mtok=Decimal('2.08')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-27b',
-                match=ClauseEquals(equals='qwen/qwen3.5-27b'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen3.5-27b'), ClauseEquals(equals='qwen/qwen3.5-27b-20260224')]
+                ),
                 name='Qwen3.5-27B',
                 prices=ModelPrice(input_mtok=Decimal('0.195'), output_mtok=Decimal('1.56')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-35b-a3b',
-                match=ClauseEquals(equals='qwen/qwen3.5-35b-a3b'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.5-35b-a3b'),
+                        ClauseEquals(equals='qwen/qwen3.5-35b-a3b-20260224'),
+                    ]
+                ),
                 name='Qwen3.5-35B-A3B',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
@@ -10533,27 +10592,44 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.5-397b-a17b',
-                match=ClauseEquals(equals='qwen/qwen3.5-397b-a17b'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.5-397b-a17b'),
+                        ClauseEquals(equals='qwen/qwen3.5-397b-a17b-20260216'),
+                    ]
+                ),
                 name='Qwen3.5 397B A17B',
-                prices=ModelPrice(input_mtok=Decimal('0.39'), output_mtok=Decimal('2.34')),
+                prices=ModelPrice(input_mtok=Decimal('0.385'), output_mtok=Decimal('2.45')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-9b',
-                match=ClauseEquals(equals='qwen/qwen3.5-9b'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen3.5-9b'), ClauseEquals(equals='qwen/qwen3.5-9b-20260310')]
+                ),
                 name='Qwen3.5-9B',
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.15')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-flash-02-23',
-                match=ClauseEquals(equals='qwen/qwen3.5-flash-02-23'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.5-flash-02-23'),
+                        ClauseEquals(equals='qwen/qwen3.5-flash-20260224'),
+                    ]
+                ),
                 name='Qwen3.5-Flash',
                 prices=ModelPrice(input_mtok=Decimal('0.065'), output_mtok=Decimal('0.26')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-plus-02-15',
-                match=ClauseEquals(equals='qwen/qwen3.5-plus-02-15'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.5-plus-02-15'),
+                        ClauseEquals(equals='qwen/qwen3.5-plus-20260216'),
+                    ]
+                ),
                 name='Qwen3.5 plus-02-15',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.4')),
+                prices=ModelPrice(input_mtok=Decimal('0.26'), output_mtok=Decimal('1.56')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-plus-20260420',
@@ -10565,15 +10641,24 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.6-27b',
-                match=ClauseEquals(equals='qwen/qwen3.6-27b'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen3.6-27b'), ClauseEquals(equals='qwen/qwen3.6-27b-20260422')]
+                ),
                 name='Qwen3.6 27B',
-                prices=ModelPrice(input_mtok=Decimal('0.289'), output_mtok=Decimal('2.4')),
+                prices=ModelPrice(input_mtok=Decimal('0.2885'), output_mtok=Decimal('3.17')),
             ),
             ModelInfo(
                 id='qwen/qwen3.6-35b-a3b',
-                match=ClauseEquals(equals='qwen/qwen3.6-35b-a3b'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.6-35b-a3b'),
+                        ClauseEquals(equals='qwen/qwen3.6-35b-a3b-20260415'),
+                    ]
+                ),
                 name='Qwen3.6 35B A3B',
-                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('1')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
+                ),
             ),
             ModelInfo(
                 id='qwen/qwen3.6-flash',
@@ -10585,7 +10670,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.6-max-preview',
-                match=ClauseEquals(equals='qwen/qwen3.6-max-preview'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.6-max-preview'),
+                        ClauseEquals(equals='qwen/qwen3.6-max-preview-20260420'),
+                    ]
+                ),
                 name='Qwen3.6 Max Preview',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.04'), cache_write_mtok=Decimal('1.3'), output_mtok=Decimal('6.24')
@@ -10593,7 +10683,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.6-plus',
-                match=ClauseEquals(equals='qwen/qwen3.6-plus'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen3.6-plus'), ClauseEquals(equals='qwen/qwen3.6-plus-04-02')]
+                ),
                 name='Qwen3.6 Plus',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.325'), cache_write_mtok=Decimal('0.40625'), output_mtok=Decimal('1.95')
@@ -10601,7 +10693,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.7-max',
-                match=ClauseEquals(equals='qwen/qwen3.7-max'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen3.7-max'), ClauseEquals(equals='qwen/qwen3.7-max-20260520')]
+                ),
                 name='Qwen3.7 Max',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'),
@@ -10612,13 +10706,15 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='qwen/qwen3.7-plus',
-                match=ClauseEquals(equals='qwen/qwen3.7-plus'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen3.7-plus'), ClauseEquals(equals='qwen/qwen3.7-plus-20260602')]
+                ),
                 name='Qwen3.7 Plus',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.4'),
-                    cache_write_mtok=Decimal('0.5'),
-                    cache_read_mtok=Decimal('0.08'),
-                    output_mtok=Decimal('1.6'),
+                    input_mtok=Decimal('0.32'),
+                    cache_write_mtok=Decimal('0.4'),
+                    cache_read_mtok=Decimal('0.064'),
+                    output_mtok=Decimal('1.28'),
                 ),
             ),
             ModelInfo(
@@ -11134,7 +11230,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='z-ai/glm-4.7-flash',
-                match=ClauseEquals(equals='z-ai/glm-4.7-flash'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='z-ai/glm-4.7-flash'), ClauseEquals(equals='z-ai/glm-4.7-flash-20260119')]
+                ),
                 name='GLM 4.7 Flash',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.06'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.4')
@@ -11142,7 +11240,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='z-ai/glm-5',
-                match=ClauseEquals(equals='z-ai/glm-5'),
+                match=ClauseOr(or_=[ClauseEquals(equals='z-ai/glm-5'), ClauseEquals(equals='z-ai/glm-5-20260211')]),
                 name='GLM 5',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.12'), output_mtok=Decimal('1.92')
@@ -11150,16 +11248,27 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='z-ai/glm-5-turbo',
-                match=ClauseEquals(equals='z-ai/glm-5-turbo'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='z-ai/glm-5-turbo'), ClauseEquals(equals='z-ai/glm-5-turbo-20260315')]
+                ),
                 name='GLM 5 Turbo',
                 prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.24'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='z-ai/glm-5.1',
-                match=ClauseEquals(equals='z-ai/glm-5.1'),
+                match=ClauseOr(or_=[ClauseEquals(equals='z-ai/glm-5.1'), ClauseEquals(equals='z-ai/glm-5.1-20260406')]),
                 name='GLM 5.1',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.98'), cache_read_mtok=Decimal('0.182'), output_mtok=Decimal('3.08')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.2',
+                match=ClauseOr(or_=[ClauseEquals(equals='z-ai/glm-5.2'), ClauseEquals(equals='z-ai/glm-5.2-20260616')]),
+                name='GLM 5.2',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
                 ),
             ),
             ModelInfo(
@@ -12269,7 +12378,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='GLM-5.1',
-                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.1'), ClauseEquals(equals='glm-5.1')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='GLM-5.1'),
+                        ClauseEquals(equals='glm-5.1'),
+                        ClauseEquals(equals='GLM-5.1-20260406'),
+                        ClauseEquals(equals='glm-5.1-20260406'),
+                    ]
+                ),
                 name='GLM-5.1',
                 description="Zhipu AI's latest flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.",
                 context_window=200000,

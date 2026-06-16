@@ -216,6 +216,8 @@ models:
       or:
         - equals: GLM-5.1
         - equals: glm-5.1
+        - equals: GLM-5.1-20260406
+        - equals: glm-5.1-20260406
     context_window: 200000
     prices_checked: "2026-05-23"
     prices:
