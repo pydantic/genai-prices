@@ -1180,7 +1180,7 @@ providers: list[Provider] = [
     Provider(
         id='azure',
         name='Microsoft Azure',
-        api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com)',
+        api_pattern='(https?://)?([^.]*\\.)?(?:openai\\.azure\\.com|azure-api\\.net|cognitiveservices\\.azure\\.com|services\\.ai\\.azure\\.com)',
         pricing_urls=['https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/#pricing'],
         price_comments='These are prices for "*-Global" models, prices for "Regional" models are often slightly higher. Retired models are listed at https://learn.microsoft.com/th-th/azure/ai-foundry/openai/concepts/legacy-models',
         extractors=[
