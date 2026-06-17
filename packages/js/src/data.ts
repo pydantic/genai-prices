@@ -15667,9 +15667,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 0.25,
-          cache_read_mtok: 0.05,
-          output_mtok: 1,
+          input_mtok: 0.27,
+          cache_read_mtok: 0.054,
+          output_mtok: 1.08,
         },
       },
       {
@@ -18248,10 +18248,8 @@ export const data: Provider[] = [
           equals: 'qwen/qwen3-max',
         },
         prices: {
-          input_mtok: 0.78,
-          cache_write_mtok: 0.975,
-          cache_read_mtok: 0.156,
-          output_mtok: 3.9,
+          input_mtok: 1.2,
+          output_mtok: 6,
         },
       },
       {
@@ -18463,8 +18461,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 0.385,
-          output_mtok: 2.45,
+          input_mtok: 0.39,
+          output_mtok: 2.34,
         },
       },
       {
@@ -18517,8 +18515,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 0.26,
-          output_mtok: 1.56,
+          input_mtok: 0.4,
+          output_mtok: 2.4,
         },
       },
       {
@@ -18547,8 +18545,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 0.2885,
-          output_mtok: 3.17,
+          input_mtok: 0.289,
+          output_mtok: 2.4,
         },
       },
       {
@@ -18565,8 +18563,7 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 0.15,
-          cache_read_mtok: 0.05,
+          input_mtok: 0.14,
           output_mtok: 1,
         },
       },
@@ -18654,10 +18651,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 0.32,
-          cache_write_mtok: 0.4,
-          cache_read_mtok: 0.064,
-          output_mtok: 1.28,
+          input_mtok: 0.4,
+          cache_write_mtok: 0.5,
+          cache_read_mtok: 0.08,
+          output_mtok: 1.6,
         },
       },
       {

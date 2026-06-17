@@ -8981,7 +8981,7 @@ providers: list[Provider] = [
                 ),
                 name='MiniMax M2.7',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
+                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.054'), output_mtok=Decimal('1.08')
                 ),
             ),
             ModelInfo(
@@ -10468,12 +10468,7 @@ providers: list[Provider] = [
                 id='qwen/qwen3-max',
                 match=ClauseEquals(equals='qwen/qwen3-max'),
                 name='Qwen 3 Max',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.78'),
-                    cache_write_mtok=Decimal('0.975'),
-                    cache_read_mtok=Decimal('0.156'),
-                    output_mtok=Decimal('3.9'),
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='qwen/qwen3-max-thinking',
@@ -10599,7 +10594,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Qwen3.5 397B A17B',
-                prices=ModelPrice(input_mtok=Decimal('0.385'), output_mtok=Decimal('2.45')),
+                prices=ModelPrice(input_mtok=Decimal('0.39'), output_mtok=Decimal('2.34')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-9b',
@@ -10629,7 +10624,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Qwen3.5 plus-02-15',
-                prices=ModelPrice(input_mtok=Decimal('0.26'), output_mtok=Decimal('1.56')),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.4')),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-plus-20260420',
@@ -10645,7 +10640,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='qwen/qwen3.6-27b'), ClauseEquals(equals='qwen/qwen3.6-27b-20260422')]
                 ),
                 name='Qwen3.6 27B',
-                prices=ModelPrice(input_mtok=Decimal('0.2885'), output_mtok=Decimal('3.17')),
+                prices=ModelPrice(input_mtok=Decimal('0.289'), output_mtok=Decimal('2.4')),
             ),
             ModelInfo(
                 id='qwen/qwen3.6-35b-a3b',
@@ -10656,9 +10651,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Qwen3.6 35B A3B',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='qwen/qwen3.6-flash',
@@ -10711,10 +10704,10 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3.7 Plus',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.32'),
-                    cache_write_mtok=Decimal('0.4'),
-                    cache_read_mtok=Decimal('0.064'),
-                    output_mtok=Decimal('1.28'),
+                    input_mtok=Decimal('0.4'),
+                    cache_write_mtok=Decimal('0.5'),
+                    cache_read_mtok=Decimal('0.08'),
+                    output_mtok=Decimal('1.6'),
                 ),
             ),
             ModelInfo(

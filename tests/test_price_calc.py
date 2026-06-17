@@ -158,9 +158,9 @@ def test_openrouter_modern_dated_aliases_price():
         (
             'qwen/qwen3.7-plus-20260602',
             'qwen/qwen3.7-plus',
-            Decimal('0.00032'),
-            Decimal('0.000128'),
-            Decimal('0.000448'),
+            Decimal('0.0004'),
+            Decimal('0.00016'),
+            Decimal('0.00056'),
         ),
     ]:
         price = calc_price(
