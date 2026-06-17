@@ -12244,7 +12244,7 @@ providers: list[Provider] = [
         name='Zhipu AI',
         api_pattern='https://open\\.bigmodel\\.cn',
         pricing_urls=['https://open.bigmodel.cn/pricing', 'https://docs.bigmodel.cn/cn/guide/start/model-overview'],
-        price_comments='Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing), converted to USD at 1 USD = 7.25 CNY (May 2026). Zhipu AI does not publish USD prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7, GLM-5 series) have tiered pricing by input/output length; prices shown are for the cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard inference models (GLM-4-Air, GLM-4-Plus, etc.) bill input and output tokens at the same per-token rate per their pricing page. Cache write is temporarily free for flagship models (limited-time promotion, not included).',
+        price_comments='Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing), converted to USD at 1 USD = 7.25 CNY (May/June 2026). Zhipu AI does not publish USD prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7, GLM-5 series) have tiered pricing by input/output length; prices shown are for the cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard inference models (GLM-4-Air, GLM-4-Plus, etc.) bill input and output tokens at the same per-token rate per their pricing page. Cache write is temporarily free for flagship models (limited-time promotion, not included).',
         model_match=ClauseOr(or_=[ClauseStartsWith(starts_with='GLM-'), ClauseStartsWith(starts_with='glm-')]),
         extractors=[
             UsageExtractor(
@@ -12380,10 +12380,20 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='GLM-5.1',
-                description="Zhipu AI's latest flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.",
+                description='Zhipu AI flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.',
                 context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.828'), cache_read_mtok=Decimal('0.179'), output_mtok=Decimal('3.31')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5.2',
+                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.2'), ClauseEquals(equals='glm-5.2')]),
+                name='GLM-5.2',
+                description="Zhipu AI's latest flagship model supporting 1,000,000 token context, long-horizon coding tasks, structured output, function calling, and context caching.",
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.103'), cache_read_mtok=Decimal('0.276'), output_mtok=Decimal('3.862')
                 ),
             ),
         ],

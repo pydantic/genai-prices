@@ -92,7 +92,9 @@ def write_prices(providers: list[Provider], prices_file: str, *, slim: bool = Fa
             }
         }
 
-    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
+    json_data = (
+        providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude, indent=2) + b'\n'
+    )
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:

@@ -146,6 +146,19 @@ def test_openrouter_glm_52_dated_price():
     assert price.total_price == Decimal('0.00184')
 
 
+def test_zhipuai_glm_52_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='glm-5.2',
+        provider_id='zhipuai',
+    )
+
+    assert price.model.id == 'GLM-5.2'
+    assert price.input_price == Decimal('0.001103')
+    assert price.output_price == Decimal('0.0003862')
+    assert price.total_price == Decimal('0.0014892')
+
+
 def test_openrouter_modern_dated_aliases_price():
     for model_ref, model_id, input_price, output_price, total_price in [
         (
