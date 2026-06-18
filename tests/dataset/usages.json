@@ -2051,17 +2051,6 @@
           "input_tokens": 45,
           "output_tokens": 1719
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1764
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -3959,17 +3948,6 @@
           "input_tokens": 37,
           "output_tokens": 272
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 309
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -4031,17 +4009,6 @@
         "usage": {
           "input_tokens": 379,
           "output_tokens": 77
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 456
         }
       }
     ],
@@ -5893,17 +5860,6 @@
         "usage": {
           "input_tokens": 687
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 927
-        }
       }
     ],
     "model": "x-ai/grok-4"
@@ -6061,17 +6017,6 @@
         ],
         "usage": {
           "input_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 23
         }
       }
     ],
@@ -6231,17 +6176,6 @@
         "usage": {
           "input_tokens": 41
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1498
-        }
       }
     ],
     "model": "openai/gpt-5-mini"
@@ -6396,17 +6330,6 @@
         ],
         "usage": {
           "input_tokens": 43
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 445
         }
       }
     ],
@@ -6565,17 +6488,6 @@
         ],
         "usage": {
           "input_tokens": 17
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1532
         }
       }
     ],
@@ -6748,17 +6660,6 @@
         "usage": {
           "input_tokens": 17
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2194
-        }
       }
     ],
     "model": "openai/gpt-5-mini"
@@ -6913,17 +6814,6 @@
         ],
         "usage": {
           "input_tokens": 134
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 177
         }
       }
     ],
@@ -7087,17 +6977,6 @@
         "usage": {
           "input_tokens": 31
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 52
-        }
       }
     ],
     "model": "google/gemini-2.5-flash-lite"
@@ -7259,17 +7138,6 @@
         ],
         "usage": {
           "input_tokens": 24
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2825
         }
       }
     ],
@@ -8341,17 +8209,6 @@
         "usage": {
           "input_tokens": 329,
           "output_tokens": 12
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 341
         }
       }
     ],
@@ -9679,17 +9536,6 @@
           "input_tokens": 23,
           "output_tokens": 2211
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2234
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -10614,17 +10460,6 @@
           "input_tokens": 13,
           "output_tokens": 2241
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2254
-        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -11431,17 +11266,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 2028
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2041
         }
       }
     ],
@@ -12573,17 +12397,6 @@
         "usage": {
           "input_tokens": 30
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 59
-        }
       }
     ],
     "model": "Qwen/Qwen2.5-72B-Instruct-fast"
@@ -12757,17 +12570,6 @@
         "usage": {
           "input_tokens": 92
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 115
-        }
       }
     ],
     "model": "meta-llama/Llama-3.3-70B-Instruct-fast"
@@ -12924,17 +12726,6 @@
         ],
         "usage": {
           "input_tokens": 26
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 28
         }
       }
     ],
@@ -13099,17 +12890,6 @@
         "usage": {
           "input_tokens": 7625
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 7674
-        }
       }
     ],
     "model": "Qwen/Qwen2.5-VL-72B-Instruct"
@@ -13266,17 +13046,6 @@
         ],
         "usage": {
           "input_tokens": 30
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 63
         }
       }
     ],
@@ -13441,17 +13210,6 @@
         "usage": {
           "input_tokens": 269
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 284
-        }
       }
     ],
     "model": "Qwen/Qwen2.5-VL-72B-Instruct"
@@ -13608,17 +13366,6 @@
         ],
         "usage": {
           "input_tokens": 30
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 59
         }
       }
     ],
@@ -13785,17 +13532,6 @@
         "usage": {
           "input_tokens": 6
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 171
-        }
       }
     ],
     "model": "deepseek-ai/DeepSeek-R1-0528"
@@ -13952,17 +13688,6 @@
         ],
         "usage": {
           "input_tokens": 30
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 70
         }
       }
     ],
@@ -14125,17 +13850,6 @@
         "usage": {
           "input_tokens": 15
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1105
-        }
       }
     ],
     "model": "Qwen/Qwen3-235B-A22B"
@@ -14296,17 +14010,6 @@
         ],
         "usage": {
           "input_tokens": 691
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2551
         }
       }
     ],
@@ -14479,17 +14182,6 @@
         "usage": {
           "input_tokens": 24
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 32
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -14661,17 +14353,6 @@
         "usage": {
           "input_tokens": 11
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 820
-        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -14733,17 +14414,6 @@
         "usage": {
           "input_tokens": 515,
           "output_tokens": 6
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 521
         }
       }
     ],
@@ -14916,17 +14586,6 @@
         "usage": {
           "input_tokens": 12
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 305
-        }
       }
     ],
     "model": "gpt-4o-search-preview-2025-03-11"
@@ -15098,17 +14757,6 @@
         "usage": {
           "input_tokens": 13
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 251
-        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -15170,17 +14818,6 @@
         "usage": {
           "input_tokens": 25,
           "output_tokens": 10
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 35
         }
       }
     ],
@@ -15353,17 +14990,6 @@
         "usage": {
           "input_tokens": 71
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 83
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15535,17 +15161,6 @@
         "usage": {
           "input_tokens": 92
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 107
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -15701,17 +15316,6 @@
         "usage": {
           "input_tokens": 35
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 109
-        }
       }
     ],
     "model": "gemini-2.5-pro-preview-05-06"
@@ -15866,17 +15470,6 @@
         ],
         "usage": {
           "input_tokens": 66
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 100
         }
       }
     ],
@@ -16048,17 +15641,6 @@
         ],
         "usage": {
           "input_tokens": 13
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 24
         }
       }
     ],
@@ -16243,17 +15825,6 @@
         "usage": {
           "input_tokens": 81
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 153
-        }
       }
     ],
     "model": "gpt-4o-audio-preview-2024-12-17"
@@ -16424,17 +15995,6 @@
         ],
         "usage": {
           "input_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 18
         }
       }
     ],
@@ -16607,17 +16167,6 @@
         "usage": {
           "input_tokens": 8
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 18
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -16788,17 +16337,6 @@
         ],
         "usage": {
           "input_tokens": 45
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 71
         }
       }
     ],
@@ -16971,17 +16509,6 @@
         "usage": {
           "input_tokens": 11
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 28
-        }
       }
     ],
     "model": "gpt-4o-search-preview-2025-03-11"
@@ -17152,17 +16679,6 @@
         ],
         "usage": {
           "input_tokens": 50
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 65
         }
       }
     ],
@@ -17335,17 +16851,6 @@
         "usage": {
           "input_tokens": 75
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 90
-        }
       }
     ],
     "model": "gpt-4.1-mini-2025-04-14"
@@ -17516,17 +17021,6 @@
         ],
         "usage": {
           "input_tokens": 281
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 298
         }
       }
     ],
@@ -17699,17 +17193,6 @@
         "usage": {
           "input_tokens": 311
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 328
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -17880,17 +17363,6 @@
         ],
         "usage": {
           "input_tokens": 46
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 57
         }
       }
     ],
@@ -18063,17 +17535,6 @@
         "usage": {
           "input_tokens": 503
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 511
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18241,17 +17702,6 @@
         ],
         "usage": {
           "input_tokens": 74
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 110
         }
       }
     ],
@@ -18424,17 +17874,6 @@
         "usage": {
           "input_tokens": 8
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 18
-        }
       }
     ],
     "model": "gpt-4o-mini-2024-07-18"
@@ -18605,17 +18044,6 @@
         ],
         "usage": {
           "input_tokens": 68
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 80
         }
       }
     ],
@@ -18788,17 +18216,6 @@
         "usage": {
           "input_tokens": 89
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 125
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -18860,17 +18277,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 1915
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1928
         }
       }
     ],
@@ -19043,17 +18449,6 @@
         "usage": {
           "input_tokens": 577
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2897
-        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -19225,17 +18620,6 @@
         "usage": {
           "input_tokens": 1119
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1129
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19394,17 +18778,6 @@
         "usage": {
           "input_tokens": 304
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 329
-        }
       }
     ],
     "model": "qwen-3-coder-480b"
@@ -19562,17 +18935,6 @@
         ],
         "usage": {
           "input_tokens": 364
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 397
         }
       }
     ],
@@ -19745,17 +19107,6 @@
         "usage": {
           "input_tokens": 109
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 120
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -19926,17 +19277,6 @@
         ],
         "usage": {
           "input_tokens": 130
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 141
         }
       }
     ],
@@ -20109,17 +19449,6 @@
         "usage": {
           "input_tokens": 235
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 251
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -20290,17 +19619,6 @@
         ],
         "usage": {
           "input_tokens": 273
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 284
         }
       }
     ],
@@ -20473,17 +19791,6 @@
         "usage": {
           "input_tokens": 294
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 315
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -20654,17 +19961,6 @@
         ],
         "usage": {
           "input_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 18
         }
       }
     ],
@@ -20837,17 +20133,6 @@
         "usage": {
           "input_tokens": 42
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 53
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -21018,17 +20303,6 @@
         ],
         "usage": {
           "input_tokens": 63
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 73
         }
       }
     ],
@@ -21201,17 +20475,6 @@
         "usage": {
           "input_tokens": 1679
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1704
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -21383,17 +20646,6 @@
         "usage": {
           "input_tokens": 31
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 39
-        }
       }
     ],
     "model": "gpt-4.1-mini-2025-04-14"
@@ -21551,17 +20803,6 @@
         ],
         "usage": {
           "input_tokens": 42
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 50
         }
       }
     ],
@@ -21734,17 +20975,6 @@
         "usage": {
           "input_tokens": 515
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 521
-        }
       }
     ],
     "model": "gpt-4.1-nano-2025-04-14"
@@ -21915,17 +21145,6 @@
         ],
         "usage": {
           "input_tokens": 46
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 57
         }
       }
     ],
@@ -22098,17 +21317,6 @@
         "usage": {
           "input_tokens": 1185
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1194
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -22280,17 +21488,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 21
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -22461,17 +21658,6 @@
         ],
         "usage": {
           "input_tokens": 235
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 248
         }
       }
     ],
@@ -22645,17 +21831,6 @@
         ],
         "usage": {
           "input_tokens": 30
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 242
         }
       }
     ],
@@ -22908,17 +22083,6 @@
         "usage": {
           "input_tokens": 104
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 120
-        }
       }
     ],
     "model": "gpt-4o-mini-2024-07-18"
@@ -23089,17 +22253,6 @@
         ],
         "usage": {
           "input_tokens": 129
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 138
         }
       }
     ],
@@ -23272,17 +22425,6 @@
         "usage": {
           "input_tokens": 7
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 92
-        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -23454,17 +22596,6 @@
         "usage": {
           "input_tokens": 160
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 171
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -23635,17 +22766,6 @@
         ],
         "usage": {
           "input_tokens": 181
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 206
         }
       }
     ],
@@ -23829,17 +22949,6 @@
         ],
         "usage": {
           "input_tokens": 64
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 73
         }
       }
     ],
@@ -24239,17 +23348,6 @@
         "usage": {
           "input_tokens": 23,
           "output_tokens": 2030
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2053
         }
       }
     ],
@@ -24850,17 +23948,6 @@
         "usage": {
           "input_tokens": 65
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 81
-        }
       }
     ],
     "model": "pixtral-12b-latest"
@@ -25016,17 +24103,6 @@
         "usage": {
           "input_tokens": 2931
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3001
-        }
       }
     ],
     "model": "pixtral-12b-latest"
@@ -25088,17 +24164,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 1616
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1629
         }
       }
     ],
@@ -25255,17 +24320,6 @@
         "usage": {
           "input_tokens": 664
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1411
-        }
       }
     ],
     "model": "magistral-medium-latest"
@@ -25337,17 +24391,6 @@
           "input_tokens": 9703,
           "output_tokens": 638
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 10341
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -25409,17 +24452,6 @@
         "usage": {
           "input_tokens": 616,
           "output_tokens": 98
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 714
         }
       }
     ],
@@ -25483,17 +24515,6 @@
           "input_tokens": 51,
           "output_tokens": 11
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 62
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -25555,17 +24576,6 @@
         "usage": {
           "input_tokens": 54,
           "output_tokens": 18
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 72
         }
       }
     ],
@@ -25629,17 +24639,6 @@
           "input_tokens": 42,
           "output_tokens": 8
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 50
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -25701,17 +24700,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 227
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 240
         }
       }
     ],
@@ -25775,17 +24763,6 @@
           "input_tokens": 2253,
           "output_tokens": 1755
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 4008
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -25847,17 +24824,6 @@
         "usage": {
           "input_tokens": 587,
           "output_tokens": 2587
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3174
         }
       }
     ],
@@ -25930,17 +24896,6 @@
           "input_tokens": 1493,
           "output_tokens": 125
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1618
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -26003,17 +24958,6 @@
           "input_tokens": 793,
           "output_tokens": 7
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 800
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -26075,17 +25019,6 @@
         "usage": {
           "input_tokens": 14,
           "output_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -26158,17 +25091,6 @@
           "input_tokens": 9939,
           "output_tokens": 1610
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 11549
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -26240,17 +25162,6 @@
           "input_tokens": 9463,
           "output_tokens": 660
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 10123
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -26312,17 +25223,6 @@
         "usage": {
           "input_tokens": 1207,
           "output_tokens": 535
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1742
         }
       }
     ],
@@ -26386,17 +25286,6 @@
           "input_tokens": 1109,
           "output_tokens": 444
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1553
-        }
       }
     ],
     "model": "o4-mini-2025-04-16"
@@ -26458,17 +25347,6 @@
         "usage": {
           "input_tokens": 1812,
           "output_tokens": 1313
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3125
         }
       }
     ],
@@ -26532,17 +25410,6 @@
           "input_tokens": 23,
           "output_tokens": 88
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 111
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -26604,17 +25471,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 77
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 90
         }
       }
     ],
@@ -26678,17 +25534,6 @@
           "input_tokens": 1065,
           "output_tokens": 760
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1825
-        }
       }
     ],
     "model": "o4-mini-2025-04-16"
@@ -26750,17 +25595,6 @@
         "usage": {
           "input_tokens": 107,
           "output_tokens": 12
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 119
         }
       }
     ],
@@ -26824,17 +25658,6 @@
           "input_tokens": 130,
           "output_tokens": 12
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 142
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -26896,17 +25719,6 @@
         "usage": {
           "input_tokens": 663,
           "output_tokens": 20
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 683
         }
       }
     ],
@@ -26970,17 +25782,6 @@
           "input_tokens": 10,
           "output_tokens": 1
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 11
-        }
       }
     ],
     "model": "gpt-5"
@@ -27042,17 +25843,6 @@
         "usage": {
           "input_tokens": 62,
           "output_tokens": 12
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 74
         }
       }
     ],
@@ -27116,17 +25906,6 @@
           "input_tokens": 85,
           "output_tokens": 20
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 105
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -27188,17 +25967,6 @@
         "usage": {
           "input_tokens": 1889,
           "output_tokens": 1434
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3323
         }
       }
     ],
@@ -27271,17 +26039,6 @@
           "input_tokens": 2973,
           "output_tokens": 707
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3680
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -27352,17 +26109,6 @@
           "cache_read_tokens": 1792,
           "input_tokens": 4614,
           "output_tokens": 1844
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 6458
         }
       }
     ],
@@ -27435,17 +26181,6 @@
           "input_tokens": 9299,
           "output_tokens": 577
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 9876
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -27517,17 +26252,6 @@
           "input_tokens": 9506,
           "output_tokens": 439
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 9945
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -27589,17 +26313,6 @@
         "usage": {
           "input_tokens": 36,
           "output_tokens": 12
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 48
         }
       }
     ],
@@ -27663,17 +26376,6 @@
           "input_tokens": 59,
           "output_tokens": 11
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 70
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -27735,17 +26437,6 @@
         "usage": {
           "input_tokens": 320,
           "output_tokens": 159
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 479
         }
       }
     ],
@@ -27875,17 +26566,6 @@
           "input_tokens": 306,
           "output_tokens": 3134
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3440
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -27947,17 +26627,6 @@
         "usage": {
           "input_tokens": 40,
           "output_tokens": 148
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 188
         }
       }
     ],
@@ -28021,17 +26690,6 @@
           "input_tokens": 257,
           "output_tokens": 5
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 262
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -28093,17 +26751,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 248
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 261
         }
       }
     ],
@@ -28167,17 +26814,6 @@
           "input_tokens": 142,
           "output_tokens": 355
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 497
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -28240,17 +26876,6 @@
           "input_tokens": 10,
           "output_tokens": 1
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 11
-        }
       }
     ],
     "model": "gpt-5"
@@ -28312,17 +26937,6 @@
         "usage": {
           "input_tokens": 10,
           "output_tokens": 1
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 11
         }
       }
     ],
@@ -28395,17 +27009,6 @@
           "input_tokens": 1349,
           "output_tokens": 10
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1359
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -28467,17 +27070,6 @@
         "usage": {
           "input_tokens": 124,
           "output_tokens": 1926
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2050
         }
       }
     ],
@@ -28550,17 +27142,6 @@
           "input_tokens": 2087,
           "output_tokens": 124
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2211
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -28622,17 +27203,6 @@
         "usage": {
           "input_tokens": 24,
           "output_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 32
         }
       }
     ],
@@ -28696,17 +27266,6 @@
           "input_tokens": 286,
           "output_tokens": 11
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 297
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -28769,17 +27328,6 @@
           "input_tokens": 36,
           "output_tokens": 15
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 51
-        }
       }
     ],
     "model": "gpt-4.1-2025-04-14"
@@ -28841,17 +27389,6 @@
         "usage": {
           "input_tokens": 61,
           "output_tokens": 56
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117
         }
       }
     ],
@@ -28924,17 +27461,6 @@
           "input_tokens": 115886,
           "output_tokens": 1720
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117606
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -28996,17 +27522,6 @@
         "usage": {
           "input_tokens": 15,
           "output_tokens": 180
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 195
         }
       }
     ],
@@ -29070,17 +27585,6 @@
           "input_tokens": 66,
           "output_tokens": 12
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 78
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -29142,17 +27646,6 @@
         "usage": {
           "input_tokens": 89,
           "output_tokens": 16
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 105
         }
       }
     ],
@@ -29216,17 +27709,6 @@
           "input_tokens": 40,
           "output_tokens": 11
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 51
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -29288,17 +27770,6 @@
         "usage": {
           "input_tokens": 1185,
           "output_tokens": 11
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1196
         }
       }
     ],
@@ -29362,17 +27833,6 @@
           "input_tokens": 88,
           "output_tokens": 547
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 635
-        }
       }
     ],
     "model": "o3-mini-2025-01-31"
@@ -29434,17 +27894,6 @@
         "usage": {
           "input_tokens": 1789,
           "output_tokens": 1312
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3101
         }
       }
     ],
@@ -29508,17 +27957,6 @@
           "input_tokens": 153,
           "output_tokens": 12
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 165
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -29580,17 +28018,6 @@
         "usage": {
           "input_tokens": 176,
           "output_tokens": 26
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 202
         }
       }
     ],
@@ -29654,17 +28081,6 @@
           "input_tokens": 40,
           "output_tokens": 18
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 58
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -29726,17 +28142,6 @@
         "usage": {
           "input_tokens": 67,
           "output_tokens": 11
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 78
         }
       }
     ],
@@ -29800,17 +28205,6 @@
           "input_tokens": 10,
           "output_tokens": 1
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 11
-        }
       }
     ],
     "model": "gpt-5"
@@ -29867,10 +28261,6 @@
             "input_price": "0.00",
             "output_price": "0",
             "provider_id": "openai"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
           }
         ],
         "usage": {}
@@ -29936,17 +28326,6 @@
           "input_tokens": 335,
           "output_tokens": 44
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 379
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -30008,17 +28387,6 @@
         "usage": {
           "input_tokens": 283,
           "output_tokens": 12
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 295
         }
       }
     ],
@@ -30082,17 +28450,6 @@
           "input_tokens": 306,
           "output_tokens": 22
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 328
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -30154,17 +28511,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 2199
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2212
         }
       }
     ],
@@ -30228,17 +28574,6 @@
           "input_tokens": 314,
           "output_tokens": 2737
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 3051
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -30300,17 +28635,6 @@
         "usage": {
           "input_tokens": 389,
           "output_tokens": 721
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1110
         }
       }
     ],
@@ -30374,17 +28698,6 @@
           "input_tokens": 1294,
           "output_tokens": 65
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1359
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -30446,17 +28759,6 @@
         "usage": {
           "input_tokens": 103,
           "output_tokens": 409
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 512
         }
       }
     ],
@@ -30616,17 +28918,6 @@
         ],
         "usage": {
           "input_tokens": 48
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 56
         }
       }
     ],
@@ -30807,17 +29098,6 @@
         "usage": {
           "input_tokens": 177
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 264
-        }
       }
     ],
     "model": "openai/gpt-oss-120b"
@@ -30981,17 +29261,6 @@
         "usage": {
           "input_tokens": 21
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1435
-        }
       }
     ],
     "model": "deepseek-r1-distill-llama-70b"
@@ -31154,17 +29423,6 @@
         ],
         "usage": {
           "input_tokens": 524
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2114
         }
       }
     ],
@@ -31331,17 +29589,6 @@
         "usage": {
           "input_tokens": 2344
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2399
-        }
       }
     ],
     "model": "meta-llama/llama-4-scout-17b-16e-instruct"
@@ -31500,17 +29747,6 @@
         ],
         "usage": {
           "input_tokens": 48
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 56
         }
       }
     ],
@@ -31677,17 +29913,6 @@
         "usage": {
           "input_tokens": 749
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 856
-        }
       }
     ],
     "model": "meta-llama/llama-4-scout-17b-16e-instruct"
@@ -31853,17 +30078,6 @@
         "usage": {
           "input_tokens": 192
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 200
-        }
       }
     ],
     "model": "meta-llama/llama-4-scout-17b-16e-instruct"
@@ -32028,17 +30242,6 @@
         ],
         "usage": {
           "input_tokens": 2552
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 2563
         }
       }
     ],
@@ -32219,17 +30422,6 @@
         "usage": {
           "input_tokens": 178
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 272
-        }
       }
     ],
     "model": "openai/gpt-oss-120b"
@@ -32386,17 +30578,6 @@
         ],
         "usage": {
           "input_tokens": 5296
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 5683
         }
       }
     ],
@@ -32577,17 +30758,6 @@
         "usage": {
           "input_tokens": 283
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 332
-        }
       }
     ],
     "model": "openai/gpt-oss-120b"
@@ -32767,17 +30937,6 @@
         "usage": {
           "input_tokens": 319
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 415
-        }
       }
     ],
     "model": "openai/gpt-oss-120b"
@@ -32940,17 +31099,6 @@
         ],
         "usage": {
           "input_tokens": 12
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 801
         }
       }
     ],
@@ -33123,17 +31271,6 @@
         "usage": {
           "input_tokens": 71
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -33304,17 +31441,6 @@
         ],
         "usage": {
           "input_tokens": 133
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 152
         }
       }
     ],
@@ -33487,17 +31613,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -33668,17 +31783,6 @@
         ],
         "usage": {
           "input_tokens": 47
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 64
         }
       }
     ],
@@ -33851,17 +31955,6 @@
         "usage": {
           "input_tokens": 87
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 104
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -34032,17 +32125,6 @@
         ],
         "usage": {
           "input_tokens": 116
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 126
         }
       }
     ],
@@ -34215,17 +32297,6 @@
         "usage": {
           "input_tokens": 38
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 49
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -34396,17 +32467,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -34579,17 +32639,6 @@
         "usage": {
           "input_tokens": 71
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -34760,17 +32809,6 @@
         ],
         "usage": {
           "input_tokens": 133
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 152
         }
       }
     ],
@@ -34943,17 +32981,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -35124,17 +33151,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -35307,17 +33323,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -35488,17 +33493,6 @@
         ],
         "usage": {
           "input_tokens": 42
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 55
         }
       }
     ],
@@ -35671,17 +33665,6 @@
         "usage": {
           "input_tokens": 67
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 76
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -35852,17 +33835,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -36035,17 +34007,6 @@
         "usage": {
           "input_tokens": 42
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 55
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -36217,17 +34178,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -36398,17 +34348,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -36651,17 +34590,6 @@
         "usage": {
           "input_tokens": 305
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 317
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -36832,17 +34760,6 @@
         ],
         "usage": {
           "input_tokens": 1452
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1481
         }
       }
     ],
@@ -37015,17 +34932,6 @@
         "usage": {
           "input_tokens": 200
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 212
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -37196,17 +35102,6 @@
         ],
         "usage": {
           "input_tokens": 224
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 236
         }
       }
     ],
@@ -37379,17 +35274,6 @@
         "usage": {
           "input_tokens": 203
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 218
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -37561,17 +35445,6 @@
         "usage": {
           "input_tokens": 250
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 265
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -37742,17 +35615,6 @@
         ],
         "usage": {
           "input_tokens": 277
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 299
         }
       }
     ],
@@ -37999,17 +35861,6 @@
         "usage": {
           "input_tokens": 195
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 207
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -38180,17 +36031,6 @@
         ],
         "usage": {
           "input_tokens": 1355
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1379
         }
       }
     ],
@@ -38363,17 +36203,6 @@
         "usage": {
           "input_tokens": 343
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 355
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -38544,17 +36373,6 @@
         ],
         "usage": {
           "input_tokens": 374
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 384
         }
       }
     ],
@@ -38727,17 +36545,6 @@
         "usage": {
           "input_tokens": 268
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 286
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -38908,17 +36715,6 @@
         ],
         "usage": {
           "input_tokens": 300
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 312
         }
       }
     ],
@@ -39091,17 +36887,6 @@
         "usage": {
           "input_tokens": 305
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 317
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -39272,17 +37057,6 @@
         ],
         "usage": {
           "input_tokens": 332
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 343
         }
       }
     ],
@@ -39455,17 +37229,6 @@
         "usage": {
           "input_tokens": 195
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 214
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -39636,17 +37399,6 @@
         ],
         "usage": {
           "input_tokens": 227
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 240
         }
       }
     ],
@@ -39819,17 +37571,6 @@
         "usage": {
           "input_tokens": 191
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 203
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -40000,17 +37741,6 @@
         ],
         "usage": {
           "input_tokens": 1332
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1351
         }
       }
     ],
@@ -40183,17 +37913,6 @@
         "usage": {
           "input_tokens": 195
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 206
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -40364,17 +38083,6 @@
         ],
         "usage": {
           "input_tokens": 222
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 233
         }
       }
     ],
@@ -40547,17 +38255,6 @@
         "usage": {
           "input_tokens": 190
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 201
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -40728,17 +38425,6 @@
         ],
         "usage": {
           "input_tokens": 1329
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1344
         }
       }
     ],
@@ -40911,17 +38597,6 @@
         "usage": {
           "input_tokens": 194
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 212
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -41092,17 +38767,6 @@
         ],
         "usage": {
           "input_tokens": 234
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 253
         }
       }
     ],
@@ -41275,17 +38939,6 @@
         "usage": {
           "input_tokens": 193
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 204
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -41456,17 +39109,6 @@
         ],
         "usage": {
           "input_tokens": 212
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 223
         }
       }
     ],
@@ -41639,17 +39281,6 @@
         "usage": {
           "input_tokens": 45
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 60
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -41820,17 +39451,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -42003,17 +39623,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -42185,17 +39794,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -42266,17 +39864,6 @@
           "cache_read_tokens": 3200,
           "input_tokens": 12594,
           "output_tokens": 1150
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 13744
         }
       }
     ],
@@ -42449,17 +40036,6 @@
         "usage": {
           "input_tokens": 42
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 55
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -42630,17 +40206,6 @@
         ],
         "usage": {
           "input_tokens": 67
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 76
         }
       }
     ],
@@ -42813,17 +40378,6 @@
         "usage": {
           "input_tokens": 47
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 64
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -42994,17 +40548,6 @@
         ],
         "usage": {
           "input_tokens": 87
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 104
         }
       }
     ],
@@ -43177,17 +40720,6 @@
         "usage": {
           "input_tokens": 116
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 126
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -43358,17 +40890,6 @@
         ],
         "usage": {
           "input_tokens": 71
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117
         }
       }
     ],
@@ -43541,17 +41062,6 @@
         "usage": {
           "input_tokens": 133
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 152
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -43722,17 +41232,6 @@
         ],
         "usage": {
           "input_tokens": 42
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 55
         }
       }
     ],
@@ -43905,17 +41404,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -44086,17 +41574,6 @@
         ],
         "usage": {
           "input_tokens": 38
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 49
         }
       }
     ],
@@ -44269,17 +41746,6 @@
         "usage": {
           "input_tokens": 181
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 215
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -44451,17 +41917,6 @@
         "usage": {
           "input_tokens": 925
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 1010
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -44632,17 +42087,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -44897,17 +42341,6 @@
         "usage": {
           "input_tokens": 35
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 60
-        }
       }
     ],
     "model": "llama3-8b-8192"
@@ -45107,17 +42540,6 @@
         ],
         "usage": {
           "input_tokens": 31
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 498
         }
       }
     ],
@@ -45338,17 +42760,6 @@
         "usage": {
           "input_tokens": 28
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 34
-        }
       }
     ],
     "model": "ministral-8b-latest"
@@ -45519,17 +42930,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -45702,17 +43102,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -45883,17 +43272,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -46066,17 +43444,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -46247,17 +43614,6 @@
         ],
         "usage": {
           "input_tokens": 47
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 64
         }
       }
     ],
@@ -46430,17 +43786,6 @@
         "usage": {
           "input_tokens": 87
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 104
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -46611,17 +43956,6 @@
         ],
         "usage": {
           "input_tokens": 116
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 126
         }
       }
     ],
@@ -46794,17 +44128,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -46975,17 +44298,6 @@
         ],
         "usage": {
           "input_tokens": 32
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 42
         }
       }
     ],
@@ -47158,17 +44470,6 @@
         "usage": {
           "input_tokens": 51
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 61
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -47340,17 +44641,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -47521,17 +44811,6 @@
         ],
         "usage": {
           "input_tokens": 71
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117
         }
       }
     ],
@@ -47704,17 +44983,6 @@
         "usage": {
           "input_tokens": 133
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 153
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -47885,17 +45153,6 @@
         ],
         "usage": {
           "input_tokens": 71
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 117
         }
       }
     ],
@@ -48068,17 +45325,6 @@
         "usage": {
           "input_tokens": 133
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 155
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -48250,17 +45496,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
-        }
       }
     ],
     "model": "gpt-4o-2024-08-06"
@@ -48431,17 +45666,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 22
         }
       }
     ],
@@ -48655,17 +45879,6 @@
         "usage": {
           "input_tokens": 14
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 23
-        }
       }
     ],
     "model": "gpt-4o-2024-11-20"
@@ -48822,17 +46035,6 @@
         ],
         "usage": {
           "input_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 25
         }
       }
     ],
@@ -48994,17 +46196,6 @@
         ],
         "usage": {
           "input_tokens": 14
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 65
         }
       }
     ],
@@ -49225,17 +46416,6 @@
         "usage": {
           "input_tokens": 13
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 24
-        }
       }
     ],
     "model": "gpt-5-2025-08-07"
@@ -49426,17 +46606,6 @@
         "usage": {
           "input_tokens": 42
         }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 50
-        }
       }
     ],
     "model": "llama-3.3-70b-versatile"
@@ -49570,17 +46739,6 @@
         "usage": {
           "input_tokens": 13,
           "output_tokens": 8
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "default",
-            "provider_id": "voyageai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 21
         }
       }
     ],

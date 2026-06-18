@@ -11890,14 +11890,6 @@ providers: list[Provider] = [
         price_comments='Voyage AI bills per input token only; embedding models produce vectors rather than completion tokens, so there is no output price. The Batch API offers a 33% discount. This file covers text embedding models only; rerankers and multimodal embedding models are not included.',
         model_match=ClauseStartsWith(starts_with='voyage-'),
         provider_match=ClauseContains(contains='voyage'),
-        extractors=[
-            UsageExtractor(
-                root=['usage'],
-                mappings=[UsageExtractorMapping(path='total_tokens', dest='input_tokens', required=True)],
-                api_flavor='default',
-                model_path='model',
-            )
-        ],
         models=[
             ModelInfo(
                 id='voyage-01',
@@ -11907,22 +11899,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
-                id='voyage-02',
-                match=ClauseEquals(equals='voyage-02'),
-                name='Voyage 02',
-                deprecated=True,
-                prices=ModelPrice(input_mtok=Decimal('0.1')),
-            ),
-            ModelInfo(
                 id='voyage-2',
-                match=ClauseEquals(equals='voyage-2'),
+                match=ClauseOr(or_=[ClauseEquals(equals='voyage-2'), ClauseEquals(equals='voyage-02')]),
                 name='Voyage 2',
                 deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='voyage-3',
-                match=ClauseOr(or_=[ClauseEquals(equals='voyage-3'), ClauseEquals(equals='voyage-3.5')]),
+                match=ClauseEquals(equals='voyage-3'),
                 name='Voyage 3',
                 description='General-purpose text embedding model optimized for retrieval quality and cost.',
                 deprecated=True,
@@ -11941,6 +11926,14 @@ providers: list[Provider] = [
                 name='Voyage 3 Lite',
                 deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='voyage-3.5',
+                match=ClauseEquals(equals='voyage-3.5'),
+                name='Voyage 3.5',
+                description='General-purpose text embedding model optimized for retrieval quality and cost.',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.06')),
             ),
             ModelInfo(
                 id='voyage-3.5-lite',
@@ -12001,10 +11994,15 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='voyage-large-2',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='voyage-large-2'), ClauseEquals(equals='voyage-large-2-instruct')]
-                ),
+                match=ClauseEquals(equals='voyage-large-2'),
                 name='Voyage Large 2',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.12')),
+            ),
+            ModelInfo(
+                id='voyage-large-2-instruct',
+                match=ClauseEquals(equals='voyage-large-2-instruct'),
+                name='Voyage Large 2 Instruct',
                 deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.12')),
             ),
@@ -12017,10 +12015,15 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='voyage-lite-01',
-                match=ClauseOr(
-                    or_=[ClauseEquals(equals='voyage-lite-01'), ClauseEquals(equals='voyage-lite-01-instruct')]
-                ),
+                match=ClauseEquals(equals='voyage-lite-01'),
                 name='Voyage Lite 01',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='voyage-lite-01-instruct',
+                match=ClauseEquals(equals='voyage-lite-01-instruct'),
+                name='Voyage Lite 01 Instruct',
                 deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),

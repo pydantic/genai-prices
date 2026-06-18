@@ -20776,20 +20776,6 @@ export const data: Provider[] = [
     provider_match: {
       contains: 'voyage',
     },
-    extractors: [
-      {
-        api_flavor: 'default',
-        root: ['usage'],
-        model_path: 'model',
-        mappings: [
-          {
-            path: 'total_tokens',
-            dest: 'input_tokens',
-            required: true,
-          },
-        ],
-      },
-    ],
     models: [
       {
         id: 'voyage-01',
@@ -20803,21 +20789,17 @@ export const data: Provider[] = [
         deprecated: true,
       },
       {
-        id: 'voyage-02',
-        name: 'Voyage 02',
-        match: {
-          equals: 'voyage-02',
-        },
-        prices: {
-          input_mtok: 0.1,
-        },
-        deprecated: true,
-      },
-      {
         id: 'voyage-2',
         name: 'Voyage 2',
         match: {
-          equals: 'voyage-2',
+          or: [
+            {
+              equals: 'voyage-2',
+            },
+            {
+              equals: 'voyage-02',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.1,
@@ -20829,14 +20811,7 @@ export const data: Provider[] = [
         name: 'Voyage 3',
         description: 'General-purpose text embedding model optimized for retrieval quality and cost.',
         match: {
-          or: [
-            {
-              equals: 'voyage-3',
-            },
-            {
-              equals: 'voyage-3.5',
-            },
-          ],
+          equals: 'voyage-3',
         },
         prices: {
           input_mtok: 0.06,
@@ -20862,6 +20837,18 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.02,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-3.5',
+        name: 'Voyage 3.5',
+        description: 'General-purpose text embedding model optimized for retrieval quality and cost.',
+        match: {
+          equals: 'voyage-3.5',
+        },
+        prices: {
+          input_mtok: 0.06,
         },
         deprecated: true,
       },
@@ -20958,14 +20945,18 @@ export const data: Provider[] = [
         id: 'voyage-large-2',
         name: 'Voyage Large 2',
         match: {
-          or: [
-            {
-              equals: 'voyage-large-2',
-            },
-            {
-              equals: 'voyage-large-2-instruct',
-            },
-          ],
+          equals: 'voyage-large-2',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-large-2-instruct',
+        name: 'Voyage Large 2 Instruct',
+        match: {
+          equals: 'voyage-large-2-instruct',
         },
         prices: {
           input_mtok: 0.12,
@@ -20987,14 +20978,18 @@ export const data: Provider[] = [
         id: 'voyage-lite-01',
         name: 'Voyage Lite 01',
         match: {
-          or: [
-            {
-              equals: 'voyage-lite-01',
-            },
-            {
-              equals: 'voyage-lite-01-instruct',
-            },
-          ],
+          equals: 'voyage-lite-01',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-lite-01-instruct',
+        name: 'Voyage Lite 01 Instruct',
+        match: {
+          equals: 'voyage-lite-01-instruct',
         },
         prices: {
           input_mtok: 0.1,

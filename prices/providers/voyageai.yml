@@ -12,13 +12,6 @@ price_comments: >-
   Voyage AI bills per input token only; embedding models produce vectors rather than completion tokens, so there
   is no output price. The Batch API offers a 33% discount. This file covers text embedding models only; rerankers
   and multimodal embedding models are not included.
-extractors:
-  # Voyage embeddings/multimodal responses return token usage under `usage.total_tokens`.
-  # https://docs.voyageai.com/reference/embeddings-api
-  - root: [usage]
-    mappings:
-      - path: total_tokens
-        dest: input_tokens
 
 models:
   - id: voyage-01
@@ -30,19 +23,12 @@ models:
     prices:
       input_mtok: 0.1
 
-  - id: voyage-02
-    name: Voyage 02
-    match:
-      equals: voyage-02
-    deprecated: true
-    prices_checked: 2026-06-18
-    prices:
-      input_mtok: 0.1
-
   - id: voyage-2
     name: Voyage 2
     match:
-      equals: voyage-2
+      or:
+        - equals: voyage-2
+        - equals: voyage-02
     deprecated: true
     prices_checked: 2026-06-18
     prices:
@@ -53,9 +39,7 @@ models:
     description: >-
       General-purpose text embedding model optimized for retrieval quality and cost.
     match:
-      or:
-        - equals: voyage-3
-        - equals: voyage-3.5
+      equals: voyage-3
     deprecated: true
     prices_checked: 2026-06-18
     prices:
@@ -78,6 +62,17 @@ models:
     prices_checked: 2026-06-18
     prices:
       input_mtok: 0.02
+
+  - id: voyage-3.5
+    name: Voyage 3.5
+    description: General-purpose text embedding model optimized for retrieval quality and cost.
+    match:
+      equals: voyage-3.5
+    collapse: false
+    deprecated: true
+    prices_checked: 2026-06-18
+    prices:
+      input_mtok: 0.06
 
   - id: voyage-3.5-lite
     name: Voyage 3.5 Lite
@@ -155,9 +150,17 @@ models:
   - id: voyage-large-2
     name: Voyage Large 2
     match:
-      or:
-        - equals: voyage-large-2
-        - equals: voyage-large-2-instruct
+      equals: voyage-large-2
+    deprecated: true
+    prices_checked: 2026-06-18
+    prices:
+      input_mtok: 0.12
+
+  - id: voyage-large-2-instruct
+    name: Voyage Large 2 Instruct
+    match:
+      equals: voyage-large-2-instruct
+    collapse: false
     deprecated: true
     prices_checked: 2026-06-18
     prices:
@@ -175,9 +178,17 @@ models:
   - id: voyage-lite-01
     name: Voyage Lite 01
     match:
-      or:
-        - equals: voyage-lite-01
-        - equals: voyage-lite-01-instruct
+      equals: voyage-lite-01
+    deprecated: true
+    prices_checked: 2026-06-18
+    prices:
+      input_mtok: 0.1
+
+  - id: voyage-lite-01-instruct
+    name: Voyage Lite 01 Instruct
+    match:
+      equals: voyage-lite-01-instruct
+    collapse: false
     deprecated: true
     prices_checked: 2026-06-18
     prices:
