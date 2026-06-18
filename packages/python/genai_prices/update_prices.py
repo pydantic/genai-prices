@@ -71,12 +71,12 @@ def _fork_after_in_child() -> None:
         # The parent's updater thread does not survive the fork; restart it on the same instance,
         # preserving identity so existing handles and the managed bookkeeping remain valid.
         updater._revive_after_fork()  # pyright: ignore[reportPrivateUsage]
-    except Exception as e:
+    except Exception:
         _global_update_prices = None
         _managed_update_prices = None
         _managed_update_prices_ref_count = 0
         data_snapshot.set_custom_snapshot(None)
-        logger.error('Failed to restart the genai-prices background updater after fork (%s): %s', type(e).__name__, e)
+        logger.warning('Failed to restart the genai-prices background updater after fork', exc_info=True)
 
 
 _STOPPED_THREAD_JOIN_TIMEOUT = 5.0
@@ -244,7 +244,7 @@ class UpdatePricesHandle:
         exc = update_prices._background_exc  # pyright: ignore[reportPrivateUsage]
         if exc:
             update_prices._background_exc = None  # pyright: ignore[reportPrivateUsage]
-            logger.error('Error from genai-prices background updater while closing (%s): %s', type(exc).__name__, exc)
+            logger.error('Error from genai-prices background updater while closing', exc_info=exc)
 
 
 @dataclass
@@ -317,9 +317,7 @@ class UpdatePrices:
             exc = taken_over._background_exc
             if exc:
                 taken_over._background_exc = None
-                logger.error(
-                    'Error from genai-prices background updater while taking over (%s): %s', type(exc).__name__, exc
-                )
+                logger.exception('Error from genai-prices background updater while taking over', exc_info=exc)
 
         if wait:
             self.wait(timeout=30 if wait is True else wait)
@@ -434,7 +432,7 @@ class UpdatePrices:
                 except Exception as e:
                     self._background_exc = e
                     self._prices_updated.set()
-                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                    logger.exception('Error updating genai-prices in the background')
                 if self._stop_event.wait(self.update_interval):
                     break
 
