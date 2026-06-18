@@ -20764,6 +20764,268 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'voyageai',
+    name: 'Voyage AI',
+    pricing_urls: ['https://docs.voyageai.com/docs/pricing'],
+    api_pattern: 'https://api\\.voyageai\\.com',
+    price_comments:
+      'Voyage AI bills per input token only; embedding models produce vectors rather than completion tokens, so there is no output price. The Batch API offers a 33% discount. This file covers text embedding models only; rerankers and multimodal embedding models are not included.',
+    model_match: {
+      starts_with: 'voyage-',
+    },
+    provider_match: {
+      contains: 'voyage',
+    },
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: ['usage'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'total_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'voyage-01',
+        name: 'Voyage 01',
+        match: {
+          equals: 'voyage-01',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-02',
+        name: 'Voyage 02',
+        match: {
+          equals: 'voyage-02',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-2',
+        name: 'Voyage 2',
+        match: {
+          equals: 'voyage-2',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-3',
+        name: 'Voyage 3',
+        description: 'General-purpose text embedding model optimized for retrieval quality and cost.',
+        match: {
+          or: [
+            {
+              equals: 'voyage-3',
+            },
+            {
+              equals: 'voyage-3.5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.06,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-3-large',
+        name: 'Voyage 3 Large',
+        match: {
+          equals: 'voyage-3-large',
+        },
+        prices: {
+          input_mtok: 0.18,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-3-lite',
+        name: 'Voyage 3 Lite',
+        match: {
+          equals: 'voyage-3-lite',
+        },
+        prices: {
+          input_mtok: 0.02,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-3.5-lite',
+        name: 'Voyage 3.5 Lite',
+        description: 'Latency- and cost-optimized variant of voyage-3.5.',
+        match: {
+          equals: 'voyage-3.5-lite',
+        },
+        prices: {
+          input_mtok: 0.02,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-4',
+        name: 'Voyage 4',
+        description: 'General-purpose text embedding model balancing retrieval quality and cost.',
+        match: {
+          equals: 'voyage-4',
+        },
+        prices: {
+          input_mtok: 0.06,
+        },
+      },
+      {
+        id: 'voyage-4-large',
+        name: 'Voyage 4 Large',
+        description: 'Highest-quality general-purpose text embedding model in the Voyage 4 family.',
+        match: {
+          equals: 'voyage-4-large',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+      },
+      {
+        id: 'voyage-4-lite',
+        name: 'Voyage 4 Lite',
+        description: 'Latency- and cost-optimized text embedding model in the Voyage 4 family.',
+        match: {
+          equals: 'voyage-4-lite',
+        },
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'voyage-code-2',
+        name: 'Voyage Code 2',
+        description: 'Embedding model optimized for code retrieval.',
+        match: {
+          equals: 'voyage-code-2',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+      },
+      {
+        id: 'voyage-code-3',
+        name: 'Voyage Code 3',
+        description: 'Embedding model optimized for code retrieval.',
+        match: {
+          equals: 'voyage-code-3',
+        },
+        prices: {
+          input_mtok: 0.18,
+        },
+      },
+      {
+        id: 'voyage-context-3',
+        name: 'Voyage Context 3',
+        description: 'Contextualized chunk embedding model that encodes chunks together with full-document context.',
+        match: {
+          equals: 'voyage-context-3',
+        },
+        prices: {
+          input_mtok: 0.18,
+        },
+      },
+      {
+        id: 'voyage-finance-2',
+        name: 'Voyage Finance 2',
+        description: 'Embedding model optimized for finance-domain retrieval.',
+        match: {
+          equals: 'voyage-finance-2',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+      },
+      {
+        id: 'voyage-large-2',
+        name: 'Voyage Large 2',
+        match: {
+          or: [
+            {
+              equals: 'voyage-large-2',
+            },
+            {
+              equals: 'voyage-large-2-instruct',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-law-2',
+        name: 'Voyage Law 2',
+        description: 'Embedding model optimized for legal-domain retrieval.',
+        match: {
+          equals: 'voyage-law-2',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+      },
+      {
+        id: 'voyage-lite-01',
+        name: 'Voyage Lite 01',
+        match: {
+          or: [
+            {
+              equals: 'voyage-lite-01',
+            },
+            {
+              equals: 'voyage-lite-01-instruct',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-lite-02-instruct',
+        name: 'Voyage Lite 02 Instruct',
+        match: {
+          equals: 'voyage-lite-02-instruct',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'voyage-multilingual-2',
+        name: 'Voyage Multilingual 2',
+        match: {
+          equals: 'voyage-multilingual-2',
+        },
+        prices: {
+          input_mtok: 0.12,
+        },
+        deprecated: true,
+      },
+    ],
+  },
+  {
     id: 'x-ai',
     name: 'X AI',
     pricing_urls: ['https://docs.x.ai/docs/models'],
