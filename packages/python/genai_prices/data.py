@@ -11899,10 +11899,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
-                id='voyage-2',
-                match=ClauseOr(or_=[ClauseEquals(equals='voyage-2'), ClauseEquals(equals='voyage-02')]),
-                name='Voyage 2',
+                id='voyage-02',
+                match=ClauseEquals(equals='voyage-02'),
+                name='Voyage 02',
                 deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
+                id='voyage-2',
+                match=ClauseEquals(equals='voyage-2'),
+                name='Voyage 2',
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -11910,21 +11916,18 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='voyage-3'),
                 name='Voyage 3',
                 description='General-purpose text embedding model optimized for retrieval quality and cost.',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.06')),
             ),
             ModelInfo(
                 id='voyage-3-large',
                 match=ClauseEquals(equals='voyage-3-large'),
                 name='Voyage 3 Large',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.18')),
             ),
             ModelInfo(
                 id='voyage-3-lite',
                 match=ClauseEquals(equals='voyage-3-lite'),
                 name='Voyage 3 Lite',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
@@ -11932,7 +11935,6 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='voyage-3.5'),
                 name='Voyage 3.5',
                 description='General-purpose text embedding model optimized for retrieval quality and cost.',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.06')),
             ),
             ModelInfo(
@@ -11940,7 +11942,6 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='voyage-3.5-lite'),
                 name='Voyage 3.5 Lite',
                 description='Latency- and cost-optimized variant of voyage-3.5.',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
@@ -11996,14 +11997,12 @@ providers: list[Provider] = [
                 id='voyage-large-2',
                 match=ClauseEquals(equals='voyage-large-2'),
                 name='Voyage Large 2',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.12')),
             ),
             ModelInfo(
                 id='voyage-large-2-instruct',
                 match=ClauseEquals(equals='voyage-large-2-instruct'),
                 name='Voyage Large 2 Instruct',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.12')),
             ),
             ModelInfo(
@@ -12038,7 +12037,6 @@ providers: list[Provider] = [
                 id='voyage-multilingual-2',
                 match=ClauseEquals(equals='voyage-multilingual-2'),
                 name='Voyage Multilingual 2',
-                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.12')),
             ),
         ],

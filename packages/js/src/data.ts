@@ -20789,22 +20789,25 @@ export const data: Provider[] = [
         deprecated: true,
       },
       {
-        id: 'voyage-2',
-        name: 'Voyage 2',
+        id: 'voyage-02',
+        name: 'Voyage 02',
         match: {
-          or: [
-            {
-              equals: 'voyage-2',
-            },
-            {
-              equals: 'voyage-02',
-            },
-          ],
+          equals: 'voyage-02',
         },
         prices: {
           input_mtok: 0.1,
         },
         deprecated: true,
+      },
+      {
+        id: 'voyage-2',
+        name: 'Voyage 2',
+        match: {
+          equals: 'voyage-2',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
       },
       {
         id: 'voyage-3',
@@ -20816,7 +20819,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.06,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-3-large',
@@ -20827,7 +20829,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.18,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-3-lite',
@@ -20838,7 +20839,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.02,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-3.5',
@@ -20850,7 +20850,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.06,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-3.5-lite',
@@ -20862,7 +20861,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.02,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-4',
@@ -20950,7 +20948,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.12,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-large-2-instruct',
@@ -20961,7 +20958,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.12,
         },
-        deprecated: true,
       },
       {
         id: 'voyage-law-2',
@@ -21016,7 +21012,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.12,
         },
-        deprecated: true,
       },
     ],
   },

@@ -63,7 +63,7 @@ The following providers are currently supported:
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
-- [Voyage AI](prices/providers/voyageai.yml) - 21 models
+- [Voyage AI](prices/providers/voyageai.yml) - 22 models
 - [X AI](prices/providers/x_ai.yml) - 16 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 12 models
 
