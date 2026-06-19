@@ -3,7 +3,7 @@ import threading
 from decimal import Decimal
 from time import monotonic, sleep
 
-import httpx
+import httpx2
 import pytest
 from inline_snapshot import snapshot
 
@@ -46,7 +46,7 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
         def raise_for_status(self) -> None:
             pass
 
-    def fake_get(url: str, timeout: httpx.Timeout) -> Response:
+    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
         assert url in {
             'https://example.test/prices.json',
             'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json',
@@ -54,7 +54,7 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
         assert timeout is not None
         return Response(content)
 
-    monkeypatch.setattr(httpx, 'get', fake_get)
+    monkeypatch.setattr(httpx2, 'get', fake_get)
 
 
 def test_update_prices_fetch_parses_provider_array(monkeypatch: pytest.MonkeyPatch):
@@ -154,14 +154,14 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
         def raise_for_status(self) -> None:
             pass
 
-    def fake_get(url: str, timeout: httpx.Timeout) -> Response:
+    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
         assert url == 'https://example.test/prices.json'
         assert timeout is not None
         fetch_started.set()
         assert allow_fetch_return.wait(timeout=5)
         return Response()
 
-    monkeypatch.setattr(httpx, 'get', fake_get)
+    monkeypatch.setattr(httpx2, 'get', fake_get)
     update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=3600)
     update_prices.start()
     try:
@@ -184,7 +184,7 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
 def test_update_prices_failed():
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404') as update_prices:
-        with pytest.raises(httpx.HTTPStatusError):
+        with pytest.raises(httpx2.HTTPStatusError):
             update_prices.wait()
     assert data_snapshot._custom_snapshot is None
 
@@ -195,7 +195,7 @@ def test_update_prices_failed_stop():
     assert data_snapshot._custom_snapshot is None
     update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
     update_prices.start()
-    with pytest.raises(httpx.HTTPStatusError):
+    with pytest.raises(httpx2.HTTPStatusError):
         update_prices.stop()
     assert data_snapshot._custom_snapshot is None
 
