@@ -574,8 +574,12 @@ def test_accumulate_extracted_usage():
         )
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(input_tokens=100 * 2, output_tokens=162 * 2)
-    assert repr(double_extracted).startswith('ExtractedUsage(')
-    assert repr(double_extracted.calc_price()).startswith('PriceCalculation(')
+    assert repr(double_extracted) == snapshot(
+        "ExtractedUsage(usage=Usage(input_tokens=200, cache_write_tokens=None, cache_read_tokens=None, output_tokens=324, input_audio_tokens=None, cache_audio_read_tokens=None, output_audio_tokens=None), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
+    )
+    assert repr(double_extracted.calc_price()) == snapshot(
+        "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $0.03/cache read MTok, $2.5/output MTok, $1/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
+    )
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20
     )
