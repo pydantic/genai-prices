@@ -1,0 +1,19 @@
+Makefile
+  s_c922f620f5d696::t_63f0ade12e6e64 100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "1363f71307a0d83125d96a147e393156ec51a934",
+  "prompts": {},
+  "sessions": {
+    "s_c922f620f5d696": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e46f9-7e05-7bf1-8e4a-a646abba926f",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
