@@ -7,6 +7,7 @@ from inline_snapshot import snapshot
 from genai_prices import Usage, calc_price
 from genai_prices.data import providers
 from genai_prices.types import (
+    ClauseAnd,
     ClauseContains,
     ClauseEndsWith,
     ClauseEquals,
@@ -14,7 +15,9 @@ from genai_prices.types import (
     ClauseRegex,
     ClauseStartsWith,
     MatchLogic,
+    ModelInfo,
     ModelPrice,
+    Provider,
     TieredPrices,
 )
 
@@ -277,10 +280,35 @@ def test_models_found(provider: str, model: str):
 
 
 def test_all_bundled_models_have_a_priceable_public_ref():
+    assert not _unpriceable_model_refs(providers)
+
+
+def test_unpriceable_model_refs_reports_public_ref_errors():
+    test_providers = [
+        Provider(
+            id='test-provider',
+            name='Test Provider',
+            api_pattern='https://example.com',
+            models=[
+                ModelInfo(
+                    id='test-model',
+                    match=ClauseRegex('^test-model$'),
+                    prices=ModelPrice(input_mtok=Decimal('1')),
+                )
+            ],
+        )
+    ]
+
+    assert _unpriceable_model_refs(test_providers) == [
+        "test-provider/test-model: test-model: LookupError: Unable to find provider provider_id='test-provider'"
+    ]
+
+
+def _unpriceable_model_refs(test_providers: list[Provider]) -> list[str]:
     failures: list[str] = []
     usage = Usage(input_tokens=1000, cache_read_tokens=10, cache_write_tokens=10, output_tokens=100)
 
-    for provider in providers:
+    for provider in test_providers:
         for model in provider.models:
             candidate_refs = dict.fromkeys([model.id, *_example_model_refs(model.match)])
             errors: list[str] = []
@@ -295,7 +323,7 @@ def test_all_bundled_models_have_a_priceable_public_ref():
             else:
                 failures.append(f'{provider.id}/{model.id}: {"; ".join(errors)}')
 
-    assert not failures
+    return failures
 
 
 def _example_model_refs(match: MatchLogic) -> list[str]:
@@ -321,6 +349,12 @@ def _example_model_refs(match: MatchLogic) -> list[str]:
             return []
         ref += clause_refs[0]
     return [ref]
+
+
+def test_example_model_refs_handles_regex_and_and_clauses():
+    assert _example_model_refs(ClauseRegex('^test$')) == []
+    assert _example_model_refs(ClauseAnd([ClauseStartsWith('test-'), ClauseEndsWith('model')])) == ['test-model']
+    assert _example_model_refs(ClauseAnd([ClauseStartsWith('test-'), ClauseRegex('model')])) == []
 
 
 def test_complex_usage():
