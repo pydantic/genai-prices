@@ -124,6 +124,14 @@ Otherwise, to contribute:
 - If you need a library for another language, please create an issue, we'd be happy to discuss building it, hosting it here,
   or helping you maintain it elsewhere.
 
+## Part of the Pydantic Stack
+
+The Pydantic Stack is everything you need to ship production-grade AI agents:
+
+- [Pydantic AI](https://pydantic.dev/pydantic-ai?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - Type-safe agent framework
+- [Pydantic Logfire](https://pydantic.dev/logfire?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - AI-first, full-stack observability
+- [Logfire AI Gateway](https://pydantic.dev/ai-gateway?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - Unified LLM proxy
+
 ## Thanks
 
 This project would not be possible without the following existing data sources:
