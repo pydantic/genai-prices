@@ -63,6 +63,7 @@ The following providers are currently supported:
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
+- [Voyage AI](prices/providers/voyageai.yml) - 22 models
 - [X AI](prices/providers/x_ai.yml) - 16 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
@@ -122,6 +123,14 @@ Otherwise, to contribute:
 - Feel free to submit pull requests or issues about the Python and JS packages.
 - If you need a library for another language, please create an issue, we'd be happy to discuss building it, hosting it here,
   or helping you maintain it elsewhere.
+
+## Part of the Pydantic Stack
+
+The Pydantic Stack is everything you need to ship production-grade AI agents:
+
+- [Pydantic AI](https://pydantic.dev/pydantic-ai?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - Type-safe agent framework
+- [Pydantic Logfire](https://pydantic.dev/logfire?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - AI-first, full-stack observability
+- [Logfire AI Gateway](https://pydantic.dev/ai-gateway?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - Unified LLM proxy
 
 ## Thanks
 
