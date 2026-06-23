@@ -2645,6 +2645,9 @@ providers: list[Provider] = [
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
                 ],
                 api_flavor='default',
                 model_path='model',

@@ -510,3 +510,37 @@ def test_xai_native():
     model, usage = provider.extract_usage(response_data)
     assert model == 'grok-4-fast-non-reasoning'
     assert usage == Usage(input_tokens=181, cache_read_tokens=162, output_tokens=27)
+
+
+def test_groq_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'groq')
+    assert provider.name == 'Groq'
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'moonshotai/kimi-k2-instruct',
+        'usage': {
+            'completion_tokens': 135,
+            'prompt_tokens': 19038,
+            'total_tokens': 19173,
+            'completion_time': 0.409281709,
+            'completion_tokens_details': {'reasoning_tokens': 94},
+            'prompt_time': 0.031360741,
+            'prompt_tokens_details': {'cached_tokens': 18944},
+            'queue_time': 0.018796632,
+            'total_time': 0.44064245,
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == 'moonshotai/kimi-k2-instruct'
+    assert usage == Usage(input_tokens=19038, cache_read_tokens=18944, output_tokens=135)
+
+
+def test_groq_without_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'groq')
+    response_data = {
+        'model': 'llama-3.3-70b-versatile',
+        'usage': {'prompt_tokens': 100, 'completion_tokens': 200, 'total_tokens': 300},
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == 'llama-3.3-70b-versatile'
+    assert usage == Usage(input_tokens=100, output_tokens=200)

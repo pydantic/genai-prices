@@ -4654,6 +4654,11 @@ export const data: Provider[] = [
             dest: 'output_tokens',
             required: true,
           },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
         ],
       },
     ],
