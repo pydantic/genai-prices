@@ -15607,7 +15607,14 @@ export const data: Provider[] = [
         id: 'minimax/minimax-m2-her',
         name: 'MiniMax M2-her',
         match: {
-          equals: 'minimax/minimax-m2-her',
+          or: [
+            {
+              equals: 'minimax/minimax-m2-her',
+            },
+            {
+              equals: 'minimax/minimax-m2-her-20260123',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.3,
@@ -15631,7 +15638,14 @@ export const data: Provider[] = [
         id: 'minimax/minimax-m2.5',
         name: 'MiniMax M2.5',
         match: {
-          equals: 'minimax/minimax-m2.5',
+          or: [
+            {
+              equals: 'minimax/minimax-m2.5',
+            },
+            {
+              equals: 'minimax/minimax-m2.5-20260211',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.15,
@@ -15643,7 +15657,14 @@ export const data: Provider[] = [
         id: 'minimax/minimax-m2.7',
         name: 'MiniMax M2.7',
         match: {
-          equals: 'minimax/minimax-m2.7',
+          or: [
+            {
+              equals: 'minimax/minimax-m2.7',
+            },
+            {
+              equals: 'minimax/minimax-m2.7-20260318',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.27,
@@ -15655,7 +15676,14 @@ export const data: Provider[] = [
         id: 'minimax/minimax-m3',
         name: 'MiniMax M3',
         match: {
-          equals: 'minimax/minimax-m3',
+          or: [
+            {
+              equals: 'minimax/minimax-m3',
+            },
+            {
+              equals: 'minimax/minimax-m3-20260531',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.3,
@@ -18135,7 +18163,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-coder',
         name: 'Qwen3 Coder 480B A35B',
         match: {
-          equals: 'qwen/qwen3-coder',
+          or: [
+            {
+              equals: 'qwen/qwen3-coder',
+            },
+            {
+              equals: 'qwen/qwen3-coder-480b-a35b-07-25',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.22,
@@ -18170,7 +18205,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-coder-next',
         name: 'Qwen3 Coder Next',
         match: {
-          equals: 'qwen/qwen3-coder-next',
+          or: [
+            {
+              equals: 'qwen/qwen3-coder-next',
+            },
+            {
+              equals: 'qwen/qwen3-coder-next-2025-02-03',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.11,
@@ -18214,7 +18256,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-max-thinking',
         name: 'Qwen3 Max Thinking',
         match: {
-          equals: 'qwen/qwen3-max-thinking',
+          or: [
+            {
+              equals: 'qwen/qwen3-max-thinking',
+            },
+            {
+              equals: 'qwen/qwen3-max-thinking-20260123',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.78,
@@ -18225,7 +18274,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-next-80b-a3b-instruct',
         name: 'Qwen3 Next 80B A3B Instruct',
         match: {
-          equals: 'qwen/qwen3-next-80b-a3b-instruct',
+          or: [
+            {
+              equals: 'qwen/qwen3-next-80b-a3b-instruct',
+            },
+            {
+              equals: 'qwen/qwen3-next-80b-a3b-instruct-2509',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.09,
@@ -18244,7 +18300,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3-next-80b-a3b-thinking',
         name: 'Qwen3 Next 80B A3B Thinking',
         match: {
-          equals: 'qwen/qwen3-next-80b-a3b-thinking',
+          or: [
+            {
+              equals: 'qwen/qwen3-next-80b-a3b-thinking',
+            },
+            {
+              equals: 'qwen/qwen3-next-80b-a3b-thinking-2509',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.0975,
@@ -18333,7 +18396,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-122b-a10b',
         name: 'Qwen3.5-122B-A10B',
         match: {
-          equals: 'qwen/qwen3.5-122b-a10b',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-122b-a10b',
+            },
+            {
+              equals: 'qwen/qwen3.5-122b-a10b-20260224',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.26,
@@ -18344,7 +18414,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-27b',
         name: 'Qwen3.5-27B',
         match: {
-          equals: 'qwen/qwen3.5-27b',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-27b',
+            },
+            {
+              equals: 'qwen/qwen3.5-27b-20260224',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.195,
@@ -18355,7 +18432,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-35b-a3b',
         name: 'Qwen3.5-35B-A3B',
         match: {
-          equals: 'qwen/qwen3.5-35b-a3b',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-35b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3.5-35b-a3b-20260224',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.14,
@@ -18367,7 +18451,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-397b-a17b',
         name: 'Qwen3.5 397B A17B',
         match: {
-          equals: 'qwen/qwen3.5-397b-a17b',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-397b-a17b',
+            },
+            {
+              equals: 'qwen/qwen3.5-397b-a17b-20260216',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.39,
@@ -18378,7 +18469,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-9b',
         name: 'Qwen3.5-9B',
         match: {
-          equals: 'qwen/qwen3.5-9b',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-9b',
+            },
+            {
+              equals: 'qwen/qwen3.5-9b-20260310',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.1,
@@ -18389,7 +18487,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-flash-02-23',
         name: 'Qwen3.5-Flash',
         match: {
-          equals: 'qwen/qwen3.5-flash-02-23',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-flash-02-23',
+            },
+            {
+              equals: 'qwen/qwen3.5-flash-20260224',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.065,
@@ -18400,7 +18505,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.5-plus-02-15',
         name: 'Qwen3.5 plus-02-15',
         match: {
-          equals: 'qwen/qwen3.5-plus-02-15',
+          or: [
+            {
+              equals: 'qwen/qwen3.5-plus-02-15',
+            },
+            {
+              equals: 'qwen/qwen3.5-plus-20260216',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.4,
@@ -18423,7 +18535,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.6-27b',
         name: 'Qwen3.6 27B',
         match: {
-          equals: 'qwen/qwen3.6-27b',
+          or: [
+            {
+              equals: 'qwen/qwen3.6-27b',
+            },
+            {
+              equals: 'qwen/qwen3.6-27b-20260422',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.289,
@@ -18434,7 +18553,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.6-35b-a3b',
         name: 'Qwen3.6 35B A3B',
         match: {
-          equals: 'qwen/qwen3.6-35b-a3b',
+          or: [
+            {
+              equals: 'qwen/qwen3.6-35b-a3b',
+            },
+            {
+              equals: 'qwen/qwen3.6-35b-a3b-20260415',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.14,
@@ -18457,7 +18583,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.6-max-preview',
         name: 'Qwen3.6 Max Preview',
         match: {
-          equals: 'qwen/qwen3.6-max-preview',
+          or: [
+            {
+              equals: 'qwen/qwen3.6-max-preview',
+            },
+            {
+              equals: 'qwen/qwen3.6-max-preview-20260420',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.04,
@@ -18469,7 +18602,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.6-plus',
         name: 'Qwen3.6 Plus',
         match: {
-          equals: 'qwen/qwen3.6-plus',
+          or: [
+            {
+              equals: 'qwen/qwen3.6-plus',
+            },
+            {
+              equals: 'qwen/qwen3.6-plus-04-02',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.325,
@@ -18481,7 +18621,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.7-max',
         name: 'Qwen3.7 Max',
         match: {
-          equals: 'qwen/qwen3.7-max',
+          or: [
+            {
+              equals: 'qwen/qwen3.7-max',
+            },
+            {
+              equals: 'qwen/qwen3.7-max-20260520',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.25,
@@ -18494,7 +18641,14 @@ export const data: Provider[] = [
         id: 'qwen/qwen3.7-plus',
         name: 'Qwen3.7 Plus',
         match: {
-          equals: 'qwen/qwen3.7-plus',
+          or: [
+            {
+              equals: 'qwen/qwen3.7-plus',
+            },
+            {
+              equals: 'qwen/qwen3.7-plus-20260602',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.4,
@@ -19389,7 +19543,14 @@ export const data: Provider[] = [
         id: 'z-ai/glm-4.7-flash',
         name: 'GLM 4.7 Flash',
         match: {
-          equals: 'z-ai/glm-4.7-flash',
+          or: [
+            {
+              equals: 'z-ai/glm-4.7-flash',
+            },
+            {
+              equals: 'z-ai/glm-4.7-flash-20260119',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.06,
@@ -19401,7 +19562,14 @@ export const data: Provider[] = [
         id: 'z-ai/glm-5',
         name: 'GLM 5',
         match: {
-          equals: 'z-ai/glm-5',
+          or: [
+            {
+              equals: 'z-ai/glm-5',
+            },
+            {
+              equals: 'z-ai/glm-5-20260211',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.6,
@@ -19413,7 +19581,14 @@ export const data: Provider[] = [
         id: 'z-ai/glm-5-turbo',
         name: 'GLM 5 Turbo',
         match: {
-          equals: 'z-ai/glm-5-turbo',
+          or: [
+            {
+              equals: 'z-ai/glm-5-turbo',
+            },
+            {
+              equals: 'z-ai/glm-5-turbo-20260315',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.2,
@@ -19425,12 +19600,39 @@ export const data: Provider[] = [
         id: 'z-ai/glm-5.1',
         name: 'GLM 5.1',
         match: {
-          equals: 'z-ai/glm-5.1',
+          or: [
+            {
+              equals: 'z-ai/glm-5.1',
+            },
+            {
+              equals: 'z-ai/glm-5.1-20260406',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.98,
           cache_read_mtok: 0.182,
           output_mtok: 3.08,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.2',
+        name: 'GLM 5.2',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5.2',
+            },
+            {
+              equals: 'z-ai/glm-5.2-20260616',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
         },
       },
       {
@@ -21440,7 +21642,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://open.bigmodel.cn/pricing', 'https://docs.bigmodel.cn/cn/guide/start/model-overview'],
     api_pattern: 'https://open\\.bigmodel\\.cn',
     price_comments:
-      'Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing), converted to USD at 1 USD = 7.25 CNY (May 2026). Zhipu AI does not publish USD prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7, GLM-5 series) have tiered pricing by input/output length; prices shown are for the cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard inference models (GLM-4-Air, GLM-4-Plus, etc.) bill input and output tokens at the same per-token rate per their pricing page. Cache write is temporarily free for flagship models (limited-time promotion, not included).',
+      'Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing), converted to USD at 1 USD = 7.25 CNY (May/June 2026). Zhipu AI does not publish USD prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7, GLM-5 series) have tiered pricing by input/output length; prices shown are for the cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard inference models (GLM-4-Air, GLM-4-Plus, etc.) bill input and output tokens at the same per-token rate per their pricing page. Cache write is temporarily free for flagship models (limited-time promotion, not included).',
     model_match: {
       or: [
         {
@@ -21719,7 +21921,7 @@ export const data: Provider[] = [
         id: 'GLM-5.1',
         name: 'GLM-5.1',
         description:
-          "Zhipu AI's latest flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.",
+          'Zhipu AI flagship model supporting long-horizon tasks, structured output, function calling, and context caching. 200,000 token context window. Tiered pricing; prices shown for [0, 32k) input tier.',
         match: {
           or: [
             {
@@ -21728,6 +21930,12 @@ export const data: Provider[] = [
             {
               equals: 'glm-5.1',
             },
+            {
+              equals: 'GLM-5.1-20260406',
+            },
+            {
+              equals: 'glm-5.1-20260406',
+            },
           ],
         },
         context_window: 200000,
@@ -21735,6 +21943,28 @@ export const data: Provider[] = [
           input_mtok: 0.828,
           cache_read_mtok: 0.179,
           output_mtok: 3.31,
+        },
+      },
+      {
+        id: 'GLM-5.2',
+        name: 'GLM-5.2',
+        description:
+          "Zhipu AI's latest flagship model supporting 1,000,000 token context, long-horizon coding tasks, structured output, function calling, and context caching.",
+        match: {
+          or: [
+            {
+              equals: 'GLM-5.2',
+            },
+            {
+              equals: 'glm-5.2',
+            },
+          ],
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.103,
+          cache_read_mtok: 0.276,
+          output_mtok: 3.862,
         },
       },
     ],

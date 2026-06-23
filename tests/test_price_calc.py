@@ -120,6 +120,74 @@ def test_openrouter_kimi_k27_code_dated_price():
     assert price.total_price == Decimal('1.5741415')
 
 
+def test_openrouter_glm_51_dated_price():
+    price = calc_price(
+        Usage(input_tokens=27_447, output_tokens=83),
+        model_ref='z-ai/glm-5.1-20260406',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'z-ai/glm-5.1'
+    assert price.input_price == Decimal('0.02689806')
+    assert price.output_price == Decimal('0.00025564')
+    assert price.total_price == Decimal('0.02715370')
+
+
+def test_openrouter_glm_52_dated_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='z-ai/glm-5.2-20260616',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'z-ai/glm-5.2'
+    assert price.input_price == Decimal('0.0014')
+    assert price.output_price == Decimal('0.00044')
+    assert price.total_price == Decimal('0.00184')
+
+
+def test_zhipuai_glm_52_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='glm-5.2',
+        provider_id='zhipuai',
+    )
+
+    assert price.model.id == 'GLM-5.2'
+    assert price.input_price == Decimal('0.001103')
+    assert price.output_price == Decimal('0.0003862')
+    assert price.total_price == Decimal('0.0014892')
+
+
+def test_openrouter_modern_dated_aliases_price():
+    for model_ref, model_id, input_price, output_price, total_price in [
+        (
+            'minimax/minimax-m3-20260531',
+            'minimax/minimax-m3',
+            Decimal('0.0003'),
+            Decimal('0.00012'),
+            Decimal('0.00042'),
+        ),
+        (
+            'qwen/qwen3.7-plus-20260602',
+            'qwen/qwen3.7-plus',
+            Decimal('0.0004'),
+            Decimal('0.00016'),
+            Decimal('0.00056'),
+        ),
+    ]:
+        price = calc_price(
+            Usage(input_tokens=1_000, output_tokens=100),
+            model_ref=model_ref,
+            provider_api_url='https://openrouter.ai/api/v1',
+        )
+
+        assert price.model.id == model_id
+        assert price.input_price == input_price
+        assert price.output_price == output_price
+        assert price.total_price == total_price
+
+
 @pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
 def test_openrouter_api_model_refs_priceable_by_api_url(model_ref: str):
     price = calc_price(
