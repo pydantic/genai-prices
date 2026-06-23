@@ -9755,6 +9755,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k2.7-code-highspeed',
+        name: 'Kimi K2.7 Code HighSpeed',
+        description:
+          'High-speed version of Kimi K2.7 Code, with output speed of approximately 180 tokens/sec and up to 260 tokens/sec in short context scenarios.',
+        match: {
+          equals: 'kimi-k2.7-code-highspeed',
+        },
+        context_window: 262144,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+        prices: {
+          input_mtok: 1.9,
+          cache_read_mtok: 0.38,
+          output_mtok: 8,
+        },
+      },
+      {
         id: 'moonshot-v1-128k',
         name: 'Moonshot V1 128K',
         match: {
@@ -16345,6 +16361,21 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           cache_read_mtok: 0.16,
           output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.7-code-highspeed',
+        name: 'Kimi K2.7 Code HighSpeed',
+        match: {
+          equals: 'moonshotai/kimi-k2.7-code-highspeed',
+        },
+        context_window: 262144,
+        price_comments:
+          'Not listed in https://openrouter.ai/api/v1/models as of 2026-06-23. Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
+        prices: {
+          input_mtok: 1.9,
+          cache_read_mtok: 0.38,
+          output_mtok: 8,
         },
       },
       {

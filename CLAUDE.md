@@ -75,6 +75,8 @@ make check-for-price-discrepancies     # Check for price discrepancies
 - **NEVER** edit `prices/data.json` or `prices/data_slim.json` directly - they are generated files
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
+- When adding a new model, check source-specific aliases before finalizing `match`; for OpenRouter, inspect
+  `canonical_slug` from `https://openrouter.ai/api/v1/models` for dated model IDs.
 - URLs for `data.json` and `data_slim.json` must not change (used by auto-update feature)
 
 ### Development Workflow

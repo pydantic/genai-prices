@@ -3115,6 +3115,20 @@ models:
       cache_read_mtok: 0.16
       output_mtok: 3.50
 
+  - id: moonshotai/kimi-k2.7-code-highspeed
+    name: Kimi K2.7 Code HighSpeed
+    match:
+      equals: moonshotai/kimi-k2.7-code-highspeed
+    context_window: 262144
+    prices_checked: "2026-06-23"
+    price_comments: >-
+      Not listed in https://openrouter.ai/api/v1/models as of 2026-06-23.
+      Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md
+    prices:
+      input_mtok: 1.90
+      cache_read_mtok: 0.38
+      output_mtok: 8.00
+
   - id: "moonshotai/kimi-vl-a3b-thinking:free"
     match:
       equals: "moonshotai/kimi-vl-a3b-thinking:free"
