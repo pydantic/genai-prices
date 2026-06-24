@@ -134,6 +134,41 @@ def test_openai():
         provider.extract_usage(response_data)
 
 
+@pytest.mark.parametrize('provider_id', ['openai', 'azure'])
+def test_openai_chat_extracts_cached_audio_tokens(provider_id: str):
+    provider = next(provider for provider in providers if provider.id == provider_id)
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'gpt-4o-audio-preview',
+        'usage': {
+            'prompt_tokens': 12389,
+            'completion_tokens': 10,
+            'prompt_tokens_details': {
+                'cached_tokens': 12239,
+                'audio_tokens': 150,
+                'cached_audio_tokens': 129,
+            },
+            'completion_tokens_details': {
+                'audio_tokens': 10,
+            },
+        },
+    }
+
+    model, usage = provider.extract_usage(response_data, api_flavor='chat')
+
+    assert model == snapshot('gpt-4o-audio-preview')
+    assert usage == snapshot(
+        Usage(
+            input_tokens=12389,
+            cache_read_tokens=12239,
+            output_tokens=10,
+            input_audio_tokens=150,
+            cache_audio_read_tokens=129,
+            output_audio_tokens=10,
+        )
+    )
+
+
 def test_openrouter_chat_cache_write_tokens():
     provider = next(provider for provider in providers if provider.id == 'openrouter')
     assert provider.name == 'OpenRouter'
