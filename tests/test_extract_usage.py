@@ -134,6 +134,39 @@ def test_openai():
         provider.extract_usage(response_data)
 
 
+def test_groq_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'groq')
+    assert provider.name == 'Groq'
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'llama-3.1-8b-instant',
+        'usage': {
+            'completion_tokens': 135,
+            'prompt_tokens': 19038,
+            'total_tokens': 19173,
+            'completion_time': 0.409281709,
+            'completion_tokens_details': {
+                'reasoning_tokens': 94,
+            },
+            'prompt_time': 0.031360741,
+            'prompt_tokens_details': {
+                'cached_tokens': 18944,
+            },
+            'queue_time': 0.018796632,
+            'total_time': 0.44064245,
+        },
+    }
+
+    usage = provider.extract_usage(response_data)
+    assert usage == snapshot(
+        ('llama-3.1-8b-instant', Usage(input_tokens=19038, cache_read_tokens=18944, output_tokens=135))
+    )
+
+    extracted_usage = extract_usage(response_data, provider_id='groq')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=19038, cache_read_tokens=18944, output_tokens=135))
+    assert extracted_usage.provider.name == snapshot('Groq')
+
+
 def test_openrouter_chat_cache_write_tokens():
     provider = next(provider for provider in providers if provider.id == 'openrouter')
     assert provider.name == 'OpenRouter'
