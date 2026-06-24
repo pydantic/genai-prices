@@ -761,6 +761,7 @@ models:
       or:
         - starts_with: anthropic.claude-opus-4-5
         - starts_with: claude-opus-4-5
+        - contains: regional.anthropic.claude-opus-4-5
         - contains: us.anthropic.claude-opus-4-5
         - contains: au.anthropic.claude-opus-4-5
         - contains: apac.anthropic.claude-opus-4-5
@@ -779,6 +780,7 @@ models:
       or:
         - starts_with: anthropic.claude-opus-4-6
         - starts_with: claude-opus-4-6
+        - contains: regional.anthropic.claude-opus-4-6
         - contains: us.anthropic.claude-opus-4-6
         - contains: au.anthropic.claude-opus-4-6
         - contains: apac.anthropic.claude-opus-4-6

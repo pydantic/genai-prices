@@ -162,6 +162,32 @@ def test_zhipuai_glm_52_price():
     assert price.total_price == Decimal('0.0014892')
 
 
+@pytest.mark.parametrize(
+    'model_ref,model_id',
+    [
+        (
+            'regional.anthropic.claude-opus-4-5-20250929-v1:0',
+            'regional.anthropic.claude-opus-4-5-v1:0',
+        ),
+        (
+            'regional.anthropic.claude-opus-4-6-v1:0',
+            'regional.anthropic.claude-opus-4-6-v1:0',
+        ),
+    ],
+)
+def test_aws_regional_claude_opus_refs_price(model_ref: str, model_id: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref=model_ref,
+        provider_id='aws',
+    )
+
+    assert price.model.id == model_id
+    assert price.input_price == Decimal('0.0055')
+    assert price.output_price == Decimal('0.00275')
+    assert price.total_price == Decimal('0.00825')
+
+
 def test_openrouter_modern_dated_aliases_price():
     for model_ref, model_id, input_price, output_price, total_price in [
         (
