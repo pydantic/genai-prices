@@ -185,6 +185,40 @@ def test_aws_regional_claude_opus_refs_price(model_ref: str, model_id: str):
     assert price.total_price == Decimal('0.00825')
 
 
+@pytest.mark.parametrize(
+    'model_ref',
+    [
+        'regional.anthropic.claude-3-5-haiku-20241022-v1:0',
+        'regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
+        'regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
+        'regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
+        'regional.anthropic.claude-3-haiku-20240307-v1:0',
+        'regional.anthropic.claude-3-opus-20240229-v1:0',
+        'regional.anthropic.claude-3-sonnet-20240229-v1:0',
+        'regional.anthropic.claude-fable-5-v1:0',
+        'regional.anthropic.claude-haiku-4-5-20251001-v1:0',
+        'regional.anthropic.claude-opus-4-1-20250805-v1:0',
+        'regional.anthropic.claude-opus-4-20250514-v1:0',
+        'regional.anthropic.claude-opus-4-5-v1:0',
+        'regional.anthropic.claude-opus-4-6-v1:0',
+        'regional.anthropic.claude-opus-4-7-v1:0',
+        'regional.anthropic.claude-opus-4-8-v1:0',
+        'regional.anthropic.claude-sonnet-4-20250514-v1:0',
+        'regional.anthropic.claude-sonnet-4-5-20250929-v1:0',
+        'regional.anthropic.claude-sonnet-4-6-v1:0',
+    ],
+)
+def test_aws_regional_anthropic_literal_refs_price(model_ref: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref=model_ref,
+        provider_id='aws',
+    )
+
+    assert price.model.id == model_ref
+    assert price.total_price is not None
+
+
 def test_openrouter_modern_dated_aliases_price():
     for model_ref, model_id, input_price, output_price, total_price in [
         (
