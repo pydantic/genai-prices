@@ -66,20 +66,20 @@ models:
     name: DeepSeek-V4-Flash
     match:
       equals: accounts/fireworks/models/deepseek-v4-flash
-    prices_checked: 2026-05-28
+    prices_checked: 2026-06-24
     prices:
       input_mtok: 0.14
-      cache_read_mtok: 0.03
+      cache_read_mtok: 0.028
       output_mtok: 0.28
 
   - id: deepseek-v4-pro
     name: DeepSeek-V4-Pro
     match:
       equals: accounts/fireworks/models/deepseek-v4-pro
-    prices_checked: 2026-05-28
+    prices_checked: 2026-06-24
     prices:
       input_mtok: 1.74
-      cache_read_mtok: 0.14
+      cache_read_mtok: 0.145
       output_mtok: 3.48
 
   - id: gemma-3-27b-it

@@ -9,7 +9,7 @@ import httpx2
 from pydantic import BaseModel
 
 from . import source_prices
-from .prices_types import ClauseEquals, ModelInfo, ModelPrice
+from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from .update import get_providers_yaml
 from .utils import mtok
 
@@ -37,14 +37,24 @@ class OpenRouterModel(BaseModel):
     def provider_name(self) -> str:
         return self.name.split(':', 1)[0].strip()
 
-    def model_id(self) -> str:
+    def model_id(self, *, strip_provider: bool = True) -> str:
+        if not strip_provider:
+            return self.id
         return self.id.split('/', 1)[1]
 
     def model_name(self) -> str:
         return self.name.split(':', 1)[-1].strip()
 
-    def model_info(self, inc_description: bool = True) -> ModelInfo:
-        model_id = self.model_id()
+    def model_info(self, inc_description: bool = True, *, strip_provider: bool = True) -> ModelInfo:
+        model_id = self.model_id(strip_provider=strip_provider)
+        match_clauses = [ClauseEquals(equals=model_id)]
+        if not strip_provider and self.canonical_slug != self.id:
+            match_clauses.append(ClauseEquals(equals=self.canonical_slug))
+        match = (
+            ClauseOr(or_=match_clauses)  # pyright: ignore[reportCallIssue]
+            if len(match_clauses) > 1
+            else match_clauses[0]
+        )
 
         if inc_description:
             description = self.description.split('\n\n', 1)[0]
@@ -57,7 +67,7 @@ class OpenRouterModel(BaseModel):
             id=model_id,
             name=self.model_name(),
             description=description,
-            match=ClauseEquals(equals=model_id),
+            match=match,
             prices=self.pricing.model_price(),
         )
 
@@ -79,6 +89,34 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
             cache_write_mtok=mtok(self.input_cache_write),
             cache_read_mtok=mtok(self.input_cache_read),
             output_mtok=mtok(self.completion),
+        )
+
+    def has_negative_price(self) -> bool:
+        # OpenRouter reports a price of -1 for models whose cost is adaptive/dynamic rather than a
+        # fixed per-token rate, so there is no single number we can store. Two kinds of model do this:
+        #   - auto-routers / meta-models that pick an underlying model per request, e.g.
+        #     `openrouter/auto`, `openrouter/fusion`, `openrouter/pareto-code`, `openrouter/bodybuilder`.
+        #   - `~`-prefixed "latest" aliases that redirect to whatever the newest model in a family is,
+        #     e.g. `~anthropic/claude-fable-latest` ("always redirects to the latest model in the Claude
+        #     Fable family"). This one is what first tripped this and crashed the whole pull on
+        #     ModelPrice validation.
+        # In both cases the resolved model (and price) varies per request, so -1 is a sentinel.
+        #
+        # ModelPrice requires positive prices, so we skip these models entirely for now.
+        # TODO: represent adaptive/dynamic pricing instead of dropping these models.
+        return any(
+            v is not None and v < 0
+            for v in (
+                self.audio,
+                self.prompt,
+                self.completion,
+                self.request,
+                self.image,
+                self.web_search,
+                self.internal_reasoning,
+                self.input_cache_write,
+                self.input_cache_read,
+            )
         )
 
 
@@ -106,13 +144,16 @@ def main(mode: Literal['metadata', 'prices']):  # noqa: C901
         if provider_id == 'openrouter':
             # this model is invalid
             continue
+        if or_model.pricing.has_negative_price():
+            # variable/dynamic pricing we can't represent as a fixed price, skip it
+            continue
         if models := or_providers.get(provider_id):
             models.append(or_model)
         else:
             or_providers[provider_id] = [or_model]
 
         # add all models to the openrouter provider
-        model_info = or_model.model_info(inc_description=False)
+        model_info = or_model.model_info(inc_description=False, strip_provider=False)
         assert isinstance(model_info.prices, ModelPrice)
         try:
             or_provider_yaml.update_model(model_info.id, model_info)
