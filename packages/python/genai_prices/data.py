@@ -1956,6 +1956,16 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
+                id='minimax-m3',
+                match=ClauseEquals(equals='accounts/fireworks/models/minimax-m3'),
+                name='MiniMax M3',
+                description='Multimodal foundation model from MiniMax with text, image, and video inputs, a long context window, and long-horizon agentic work.',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
                 id='qwen2p5-vl-72b-instruct',
                 match=ClauseEquals(equals='accounts/fireworks/models/qwen2p5-vl-72b-instruct'),
                 name='Qwen2.5-VL 72B Instruct',

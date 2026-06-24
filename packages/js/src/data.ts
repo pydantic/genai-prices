@@ -3406,6 +3406,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'minimax-m3',
+        name: 'MiniMax M3',
+        description:
+          'Multimodal foundation model from MiniMax with text, image, and video inputs, a long context window, and long-horizon agentic work.',
+        match: {
+          equals: 'accounts/fireworks/models/minimax-m3',
+        },
+        context_window: 524288,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.06,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'qwen2p5-vl-72b-instruct',
         name: 'Qwen2.5-VL 72B Instruct',
         description: "Latest Qwen's VLM model",
