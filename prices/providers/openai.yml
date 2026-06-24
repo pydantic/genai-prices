@@ -722,7 +722,8 @@ models:
     match:
       equals: gpt-5.4-image-2
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 8
       cache_read_mtok: 2
@@ -831,12 +832,16 @@ models:
       The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder
       for more natural-sounding voices and maintains better voice consistency.
     match:
-      equals: gpt-audio
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+      or:
+        - equals: gpt-audio
+        - equals: gpt-audio-2025-08-28
+        - equals: gpt-audio-1.5
+    prices_checked: 2026-06-26
     prices:
       input_mtok: 2.5
+      input_audio_mtok: 32
       output_mtok: 10
+      output_audio_mtok: 64
 
   - id: gpt-audio-mini
     name: GPT Audio Mini
@@ -844,12 +849,16 @@ models:
       A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices
       and maintains better voice consistency.
     match:
-      equals: gpt-audio-mini
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+      or:
+        - equals: gpt-audio-mini
+        - equals: gpt-audio-mini-2025-10-06
+        - equals: gpt-audio-mini-2025-12-15
+    prices_checked: 2026-06-26
     prices:
       input_mtok: 0.6
+      input_audio_mtok: 10
       output_mtok: 2.4
+      output_audio_mtok: 20
 
   - id: gpt-chat-latest
     name: GPT Chat Latest
@@ -859,11 +868,51 @@ models:
     match:
       equals: gpt-chat-latest
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 30
+
+  - id: gpt-image-1-mini
+    name: GPT Image 1 Mini
+    description: >-
+      A cost-efficient image generation model from OpenAI with text input pricing.
+    match:
+      or:
+        - equals: gpt-image-1-mini
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.2
+
+  - id: gpt-image-1.5
+    name: GPT Image 1.5
+    description: >-
+      An improved image generation model from OpenAI supporting text input and output pricing.
+    match:
+      or:
+        - equals: gpt-image-1.5
+        - equals: gpt-image-1.5-2025-12-16
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-image-2
+    name: GPT Image 2
+    description: >-
+      OpenAI's latest image generation model with text input pricing.
+    match:
+      or:
+        - equals: gpt-image-2
+        - equals: gpt-image-2-2026-04-21
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 1.25
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -873,7 +922,8 @@ models:
     match:
       equals: gpt-oss-120b
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.039
       output_mtok: 0.18
@@ -886,7 +936,8 @@ models:
     match:
       equals: gpt-oss-20b
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.029
       output_mtok: 0.14
@@ -899,7 +950,8 @@ models:
     match:
       equals: gpt-oss-safeguard-20b
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.075
       cache_read_mtok: 0.037
@@ -910,6 +962,7 @@ models:
       or:
         - equals: gpt-realtime
         - equals: gpt-realtime-2025-08-28
+        - equals: gpt-realtime-1.5
     price_comments: Missing image token prices which we don't support yet
     prices:
       input_mtok: 4
@@ -919,9 +972,26 @@ models:
       output_mtok: 16
       output_audio_mtok: 64
 
+  - id: gpt-realtime-2
+    match:
+      or:
+        - equals: gpt-realtime-2
+    price_comments: Missing image token prices which we don't support yet
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.4
+      output_mtok: 24
+      input_audio_mtok: 32
+      cache_audio_read_mtok: 0.4
+      output_audio_mtok: 64
+
   - id: gpt-realtime-mini
     match:
-      equals: gpt-realtime-mini
+      or:
+        - equals: gpt-realtime-mini
+        - equals: gpt-realtime-mini-2025-12-15
+        - equals: gpt-realtime-mini-2025-10-06
     price_comments: Missing image token prices which we don't support yet
     prices:
       input_mtok: 0.6
