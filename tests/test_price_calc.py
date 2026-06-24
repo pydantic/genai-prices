@@ -175,6 +175,13 @@ def test_openrouter_modern_dated_aliases_price():
             Decimal('0.00016'),
             Decimal('0.00056'),
         ),
+        (
+            'openai/gpt-5.2-20251211',
+            'openai/gpt-5.2',
+            Decimal('0.00175'),
+            Decimal('0.0014'),
+            Decimal('0.00315'),
+        ),
     ]:
         price = calc_price(
             Usage(input_tokens=1_000, output_tokens=100),
@@ -186,6 +193,20 @@ def test_openrouter_modern_dated_aliases_price():
         assert price.input_price == input_price
         assert price.output_price == output_price
         assert price.total_price == total_price
+
+
+def test_litellm_openrouter_compact_dated_ref_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='openai/gpt-5.2-20251211',
+        provider_id='litellm',
+    )
+
+    assert price.provider.id == 'openai'
+    assert price.model.id == 'gpt-5.2'
+    assert price.input_price == Decimal('0.00175')
+    assert price.output_price == Decimal('0.0014')
+    assert price.total_price == Decimal('0.00315')
 
 
 @pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])

@@ -637,3 +637,7 @@ def test_litellm_provider_id():
     provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+    provider, model = snapshot.find_provider_model('openai/gpt-5.2-20251211', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-5.2'
