@@ -1887,6 +1887,22 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-v4-flash',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-flash'),
+                name='DeepSeek-V4-Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.028'), output_mtok=Decimal('0.28')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4-pro',
+                match=ClauseEquals(equals='accounts/fireworks/models/deepseek-v4-pro'),
+                name='DeepSeek-V4-Pro',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74'), cache_read_mtok=Decimal('0.145'), output_mtok=Decimal('3.48')
+                ),
+            ),
+            ModelInfo(
                 id='gemma-3-27b-it',
                 match=ClauseEquals(equals='accounts/fireworks/models/gemma-3-27b-it'),
                 name='Gemma 3 27B Instruct',
@@ -1901,6 +1917,14 @@ providers: list[Provider] = [
                 description='Next-generation general-purpose model from Z.ai optimized for coding, reasoning, and agentic workflows. 352B parameter MoE model with advanced thinking controls.',
                 context_window=202752,
                 prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('2.2')),
+            ),
+            ModelInfo(
+                id='glm-5p1',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-5p1'),
+                name='GLM-5.1',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                ),
             ),
             ModelInfo(
                 id='gpt-oss-120b',
@@ -1931,6 +1955,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
+                id='kimi-k2p6',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p6'),
+                name='Kimi K2.6',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
+            ModelInfo(
                 id='llama-v3p1-8b-instruct',
                 match=ClauseEquals(equals='accounts/fireworks/models/llama-v3p1-8b-instruct'),
                 name='Llama 3.1 8B Instruct',
@@ -1954,6 +1986,14 @@ providers: list[Provider] = [
                 description='Built for strong real-world performance across complex, multi-language, and agent-driven workflows. 228B parameter model with robust support for systems, backend, web, mobile, and office-style tasks.',
                 context_window=204800,
                 prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('1.2')),
+            ),
+            ModelInfo(
+                id='minimax-m2p7',
+                match=ClauseEquals(equals='accounts/fireworks/models/minimax-m2p7'),
+                name='MiniMax M2.7',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
+                ),
             ),
             ModelInfo(
                 id='minimax-m3',
@@ -1981,6 +2021,12 @@ providers: list[Provider] = [
                 description='Qwen3 is the latest evolution in the Qwen LLM series, featuring both dense and MoE models with major advancements in reasoning, agent capabilities, multilingual support, and instruction following. It uniquely allows seamless switching between "thinking" (for complex logic, math, coding) and "non-thinking" modes (for fast, general dialogue), delivering strong performance across tasks.',
                 context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('0.22'), output_mtok=Decimal('0.88')),
+            ),
+            ModelInfo(
+                id='qwen3p6-plus',
+                match=ClauseEquals(equals='accounts/fireworks/models/qwen3p6-plus'),
+                name='Qwen3.6 Plus',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
         ],
     ),
