@@ -62,6 +62,26 @@ models:
       cache_read_mtok: 0.28
       output_mtok: 1.68
 
+  - id: deepseek-v4-flash
+    name: DeepSeek-V4-Flash
+    match:
+      equals: accounts/fireworks/models/deepseek-v4-flash
+    prices_checked: 2026-06-24
+    prices:
+      input_mtok: 0.14
+      cache_read_mtok: 0.028
+      output_mtok: 0.28
+
+  - id: deepseek-v4-pro
+    name: DeepSeek-V4-Pro
+    match:
+      equals: accounts/fireworks/models/deepseek-v4-pro
+    prices_checked: 2026-06-24
+    prices:
+      input_mtok: 1.74
+      cache_read_mtok: 0.145
+      output_mtok: 3.48
+
   - id: gemma-3-27b-it
     name: Gemma 3 27B Instruct
     match:
@@ -84,6 +104,16 @@ models:
     prices:
       input_mtok: 0.60
       output_mtok: 2.20
+
+  - id: glm-5p1
+    name: GLM-5.1
+    match:
+      equals: accounts/fireworks/models/glm-5p1
+    prices_checked: 2026-05-28
+    prices:
+      input_mtok: 1.40
+      cache_read_mtok: 0.26
+      output_mtok: 4.40
 
   - id: gpt-oss-120b
     name: OpenAI gpt-oss-120b
@@ -124,6 +154,16 @@ models:
       cache_read_mtok: 0.10
       output_mtok: 3.00
 
+  - id: kimi-k2p6
+    name: Kimi K2.6
+    match:
+      equals: accounts/fireworks/models/kimi-k2p6
+    prices_checked: 2026-05-28
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.16
+      output_mtok: 4.00
+
   - id: llama-v3p1-8b-instruct
     name: Llama 3.1 8B Instruct
     description: >-
@@ -161,6 +201,16 @@ models:
       input_mtok: 0.30
       output_mtok: 1.20
 
+  - id: minimax-m2p7
+    name: MiniMax M2.7
+    match:
+      equals: accounts/fireworks/models/minimax-m2p7
+    prices_checked: 2026-05-28
+    prices:
+      input_mtok: 0.30
+      cache_read_mtok: 0.06
+      output_mtok: 1.20
+
   - id: qwen2p5-vl-72b-instruct
     name: Qwen2.5-VL 72B Instruct
     description: Latest Qwen's VLM model
@@ -184,3 +234,13 @@ models:
     prices:
       input_mtok: 0.22
       output_mtok: 0.88
+
+  - id: qwen3p6-plus
+    name: Qwen3.6 Plus
+    match:
+      equals: accounts/fireworks/models/qwen3p6-plus
+    prices_checked: 2026-05-28
+    prices:
+      input_mtok: 0.50
+      cache_read_mtok: 0.10
+      output_mtok: 3.00

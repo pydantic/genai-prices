@@ -3291,6 +3291,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4-flash',
+        name: 'DeepSeek-V4-Flash',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v4-flash',
+        },
+        prices: {
+          input_mtok: 0.14,
+          cache_read_mtok: 0.028,
+          output_mtok: 0.28,
+        },
+      },
+      {
+        id: 'deepseek-v4-pro',
+        name: 'DeepSeek-V4-Pro',
+        match: {
+          equals: 'accounts/fireworks/models/deepseek-v4-pro',
+        },
+        prices: {
+          input_mtok: 1.74,
+          cache_read_mtok: 0.145,
+          output_mtok: 3.48,
+        },
+      },
+      {
         id: 'gemma-3-27b-it',
         name: 'Gemma 3 27B Instruct',
         match: {
@@ -3315,6 +3339,18 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'glm-5p1',
+        name: 'GLM-5.1',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p1',
+        },
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.26,
+          output_mtok: 4.4,
         },
       },
       {
@@ -3363,6 +3399,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k2p6',
+        name: 'Kimi K2.6',
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k2p6',
+        },
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
         id: 'llama-v3p1-8b-instruct',
         name: 'Llama 3.1 8B Instruct',
         description:
@@ -3406,6 +3454,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'minimax-m2p7',
+        name: 'MiniMax M2.7',
+        match: {
+          equals: 'accounts/fireworks/models/minimax-m2p7',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.06,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'qwen2p5-vl-72b-instruct',
         name: 'Qwen2.5-VL 72B Instruct',
         description: "Latest Qwen's VLM model",
@@ -3431,6 +3491,18 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.22,
           output_mtok: 0.88,
+        },
+      },
+      {
+        id: 'qwen3p6-plus',
+        name: 'Qwen3.6 Plus',
+        match: {
+          equals: 'accounts/fireworks/models/qwen3p6-plus',
+        },
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.1,
+          output_mtok: 3,
         },
       },
     ],
