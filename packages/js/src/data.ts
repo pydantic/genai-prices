@@ -1723,6 +1723,9 @@ export const data: Provider[] = [
               starts_with: 'claude-opus-4-5',
             },
             {
+              contains: 'regional.anthropic.claude-opus-4-5',
+            },
+            {
               contains: 'us.anthropic.claude-opus-4-5',
             },
             {
@@ -1758,6 +1761,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-opus-4-6',
+            },
+            {
+              contains: 'regional.anthropic.claude-opus-4-6',
             },
             {
               contains: 'us.anthropic.claude-opus-4-6',
