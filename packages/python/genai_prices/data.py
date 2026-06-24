@@ -6324,8 +6324,10 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='gpt-5.2'),
                         ClauseEquals(equals='gpt-5.2-2025-12-11'),
+                        ClauseEquals(equals='gpt-5.2-20251211'),
                         ClauseEquals(equals='gpt-5-2'),
                         ClauseEquals(equals='gpt-5-2-2025-12-11'),
+                        ClauseEquals(equals='gpt-5-2-20251211'),
                         ClauseEquals(equals='gpt-5.2-chat'),
                         ClauseEquals(equals='gpt-5.2-chat-latest'),
                         ClauseEquals(equals='gpt-5-2-chat'),
@@ -6347,7 +6349,9 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='gpt-5.2-pro'),
                         ClauseEquals(equals='gpt-5.2-pro-2025-12-11'),
+                        ClauseEquals(equals='gpt-5.2-pro-20251211'),
                         ClauseEquals(equals='gpt-5-2-pro-2025-12-11'),
+                        ClauseEquals(equals='gpt-5-2-pro-20251211'),
                     ]
                 ),
                 description='Version of GPT-5.2 that produces smarter and more precise responses.',
@@ -9899,6 +9903,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='openai/gpt-5.2'),
+                        ClauseEquals(equals='openai/gpt-5.2-20251211'),
                         ClauseEquals(equals='openai/gpt-5.2-chat'),
                         ClauseEquals(equals='openai/gpt-5.2-codex'),
                     ]
@@ -9910,7 +9915,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-5.2-pro',
-                match=ClauseEquals(equals='openai/gpt-5.2-pro'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-5.2-pro'), ClauseEquals(equals='openai/gpt-5.2-pro-20251211')]
+                ),
                 name='GPT-5.2 Pro',
                 prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
             ),

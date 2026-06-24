@@ -623,8 +623,10 @@ models:
       or:
         - equals: gpt-5.2
         - equals: gpt-5.2-2025-12-11
+        - equals: gpt-5.2-20251211
         - equals: gpt-5-2
         - equals: gpt-5-2-2025-12-11
+        - equals: gpt-5-2-20251211
         - equals: gpt-5.2-chat
         - equals: gpt-5.2-chat-latest
         - equals: gpt-5-2-chat
@@ -644,7 +646,9 @@ models:
       or:
         - equals: gpt-5.2-pro
         - equals: gpt-5.2-pro-2025-12-11
+        - equals: gpt-5.2-pro-20251211
         - equals: gpt-5-2-pro-2025-12-11
+        - equals: gpt-5-2-pro-20251211
     context_window: 400000
     prices_checked: 2025-12-11
     prices:
