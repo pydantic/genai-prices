@@ -694,6 +694,7 @@ models:
       or:
         - starts_with: anthropic.claude-fable-5
         - starts_with: claude-fable-5
+        - contains: regional.anthropic.claude-fable-5
         - contains: us.anthropic.claude-fable-5
         - contains: au.anthropic.claude-fable-5
         - contains: eu.anthropic.claude-fable-5
@@ -709,6 +710,7 @@ models:
       or:
         - starts_with: anthropic.claude-haiku-4-5-20251001
         - starts_with: claude-haiku-4-5-20251001
+        - contains: regional.anthropic.claude-haiku-4-5-20251001
         - contains: us.anthropic.claude-haiku-4-5-20251001
         - contains: au.anthropic.claude-haiku-4-5-20251001
         - contains: apac.anthropic.claude-haiku-4-5-20251001
@@ -726,6 +728,7 @@ models:
       or:
         - starts_with: anthropic.claude-opus-4-1-20250805
         - starts_with: claude-opus-4-1-20250805
+        - contains: regional.anthropic.claude-opus-4-1-20250805
         - contains: us.anthropic.claude-opus-4-1-20250805
         - contains: au.anthropic.claude-opus-4-1-20250805
         - contains: apac.anthropic.claude-opus-4-1-20250805
@@ -743,6 +746,7 @@ models:
       or:
         - starts_with: anthropic.claude-opus-4-20250514
         - starts_with: claude-opus-4-20250514
+        - contains: regional.anthropic.claude-opus-4-20250514
         - contains: us.anthropic.claude-opus-4-20250514
         - contains: au.anthropic.claude-opus-4-20250514
         - contains: apac.anthropic.claude-opus-4-20250514
@@ -815,6 +819,7 @@ models:
       or:
         - starts_with: anthropic.claude-opus-4-7
         - starts_with: claude-opus-4-7
+        - contains: regional.anthropic.claude-opus-4-7
         - contains: us.anthropic.claude-opus-4-7
         - contains: au.anthropic.claude-opus-4-7
         - contains: apac.anthropic.claude-opus-4-7
@@ -833,6 +838,7 @@ models:
       or:
         - starts_with: anthropic.claude-opus-4-8
         - starts_with: claude-opus-4-8
+        - contains: regional.anthropic.claude-opus-4-8
         - contains: us.anthropic.claude-opus-4-8
         - contains: au.anthropic.claude-opus-4-8
         - contains: eu.anthropic.claude-opus-4-8
@@ -848,6 +854,7 @@ models:
       or:
         - starts_with: anthropic.claude-sonnet-4-20250514
         - starts_with: claude-sonnet-4-20250514
+        - contains: regional.anthropic.claude-sonnet-4-20250514
         - contains: us.anthropic.claude-sonnet-4-20250514
         - contains: au.anthropic.claude-sonnet-4-20250514
         - contains: apac.anthropic.claude-sonnet-4-20250514
@@ -865,6 +872,7 @@ models:
       or:
         - starts_with: anthropic.claude-sonnet-4-5-20250929
         - starts_with: claude-sonnet-4-5-20250929
+        - contains: regional.anthropic.claude-sonnet-4-5-20250929
         - contains: us.anthropic.claude-sonnet-4-5-20250929
         - contains: au.anthropic.claude-sonnet-4-5-20250929
         - contains: apac.anthropic.claude-sonnet-4-5-20250929
@@ -883,6 +891,7 @@ models:
       or:
         - starts_with: anthropic.claude-sonnet-4-6
         - starts_with: claude-sonnet-4-6
+        - contains: regional.anthropic.claude-sonnet-4-6
         - contains: us.anthropic.claude-sonnet-4-6
         - contains: au.anthropic.claude-sonnet-4-6
         - contains: apac.anthropic.claude-sonnet-4-6

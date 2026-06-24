@@ -1681,6 +1681,9 @@ export const data: Provider[] = [
               starts_with: 'claude-fable-5',
             },
             {
+              contains: 'regional.anthropic.claude-fable-5',
+            },
+            {
               contains: 'us.anthropic.claude-fable-5',
             },
             {
@@ -1710,6 +1713,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-haiku-4-5-20251001',
+            },
+            {
+              contains: 'regional.anthropic.claude-haiku-4-5-20251001',
             },
             {
               contains: 'us.anthropic.claude-haiku-4-5-20251001',
@@ -1749,6 +1755,9 @@ export const data: Provider[] = [
               starts_with: 'claude-opus-4-1-20250805',
             },
             {
+              contains: 'regional.anthropic.claude-opus-4-1-20250805',
+            },
+            {
               contains: 'us.anthropic.claude-opus-4-1-20250805',
             },
             {
@@ -1784,6 +1793,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-opus-4-20250514',
+            },
+            {
+              contains: 'regional.anthropic.claude-opus-4-20250514',
             },
             {
               contains: 'us.anthropic.claude-opus-4-20250514',
@@ -1935,6 +1947,9 @@ export const data: Provider[] = [
               starts_with: 'claude-opus-4-7',
             },
             {
+              contains: 'regional.anthropic.claude-opus-4-7',
+            },
+            {
               contains: 'us.anthropic.claude-opus-4-7',
             },
             {
@@ -1972,6 +1987,9 @@ export const data: Provider[] = [
               starts_with: 'claude-opus-4-8',
             },
             {
+              contains: 'regional.anthropic.claude-opus-4-8',
+            },
+            {
               contains: 'us.anthropic.claude-opus-4-8',
             },
             {
@@ -2001,6 +2019,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-sonnet-4-20250514',
+            },
+            {
+              contains: 'regional.anthropic.claude-sonnet-4-20250514',
             },
             {
               contains: 'us.anthropic.claude-sonnet-4-20250514',
@@ -2040,6 +2061,9 @@ export const data: Provider[] = [
               starts_with: 'claude-sonnet-4-5-20250929',
             },
             {
+              contains: 'regional.anthropic.claude-sonnet-4-5-20250929',
+            },
+            {
               contains: 'us.anthropic.claude-sonnet-4-5-20250929',
             },
             {
@@ -2075,6 +2099,9 @@ export const data: Provider[] = [
             },
             {
               starts_with: 'claude-sonnet-4-6',
+            },
+            {
+              contains: 'regional.anthropic.claude-sonnet-4-6',
             },
             {
               contains: 'us.anthropic.claude-sonnet-4-6',
