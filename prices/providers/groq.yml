@@ -5,7 +5,7 @@ pricing_urls:
   - https://groq.com/pricing/
 api_pattern: 'https://api\.groq\.com'
 
-# https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
+# https://github.com/groq/groq-python/blob/v1.5.0/src/groq/types/completion_usage.py
 extractors:
   - root: usage
     mappings:
@@ -13,6 +13,9 @@ extractors:
         dest: input_tokens
       - path: completion_tokens
         dest: output_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
 
 models:
   - id: deepseek-r1-distill-llama-70b
