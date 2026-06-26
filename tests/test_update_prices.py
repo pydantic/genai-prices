@@ -390,6 +390,19 @@ def test_deprecated_update_prices_wait_raises_on_failed_fetch():
     assert data_snapshot._custom_snapshot is None
 
 
+@pytest.mark.default_cassette('fail.yaml')
+@pytest.mark.vcr()
+def test_deprecated_update_prices_stop_raises_on_failed_fetch():
+    # The deprecated stop() preserves the historical behaviour of re-raising a stored fetch error.
+    assert data_snapshot._custom_snapshot is None
+    update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
+    with pytest.warns(DeprecationWarning):
+        update_prices.start()
+    with pytest.raises(httpx2.HTTPStatusError):
+        update_prices.stop()
+    assert data_snapshot._custom_snapshot is None
+
+
 def test_deprecated_stop_on_unstarted_instance_is_noop(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
     handle = update_prices_in_background()

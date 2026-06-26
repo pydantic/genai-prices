@@ -143,16 +143,23 @@ def update_prices_in_background(
 
     with _lock:
         if _updater is not None:
-            if _updater.url != url or _updater.update_interval != update_interval:
+            if (
+                _updater.url != url
+                or _updater.update_interval != update_interval
+                or _updater.request_timeout != request_timeout
+            ):
                 logger.warning(
-                    'A genai-prices background updater is already running with url=%r, '
-                    'update_interval=%r; ignoring the new url=%r, update_interval=%r and returning '
-                    'a handle on the existing updater. Configure the updater before any other '
-                    'caller starts it if you need custom settings.',
+                    'A genai-prices background updater is already running (url=%r, update_interval=%r, '
+                    'request_timeout=%r); ignoring the different configuration passed to this call '
+                    '(url=%r, update_interval=%r, request_timeout=%r) and returning a handle on the '
+                    'existing updater. Configure the updater before any other caller starts it if you '
+                    'need custom settings.',
                     _updater.url,
                     _updater.update_interval,
+                    _updater.request_timeout,
                     url,
                     update_interval,
+                    request_timeout,
                 )
             _ref_count += 1
             return UpdatePricesHandle(_updater)
@@ -235,19 +242,29 @@ class UpdatePricesHandle:
         flight the daemon thread is given a short grace period to exit before being abandoned
         with a warning log - a stopped updater can never install its result afterwards.
         """
+        exc = self._release()
+        if exc is not None:
+            logger.error('Error from genai-prices background updater while closing', exc_info=exc)
+
+    def _release(self) -> Exception | None:
+        """Release this handle's claim and tear down the updater if it was the last one.
+
+        Returns the stored background exception (if any) for the caller to surface: the public
+        `close()` logs it, while the deprecated `UpdatePrices.stop()` re-raises it. Idempotent.
+        """
         global _updater, _ref_count
 
         with _lock:
             if self._closed:
-                return
+                return None
 
             self._closed = True
             if self._update_prices is None or _updater is not self._update_prices:
-                return
+                return None
 
             _ref_count -= 1
             if _ref_count > 0:
-                return
+                return None
 
             update_prices = self._update_prices
             _updater = None
@@ -258,9 +275,8 @@ class UpdatePricesHandle:
         # updater API calls; re-publication is already fenced off by _stop_and_detach().
         _join_stopped_updater_thread(thread)
         exc = update_prices._background_exc  # pyright: ignore[reportPrivateUsage]
-        if exc:
-            update_prices._background_exc = None  # pyright: ignore[reportPrivateUsage]
-            logger.error('Error from genai-prices background updater while closing', exc_info=exc)
+        update_prices._background_exc = None  # pyright: ignore[reportPrivateUsage]
+        return exc
 
     def __enter__(self) -> UpdatePricesHandle:
         return self
@@ -439,11 +455,15 @@ class UpdatePrices:
         """Release this instance's claim on the shared updater (deprecated).
 
         Stops the shared updater only if this was the last open claim; under the shared model a
-        claim held by another caller keeps it running.
+        claim held by another caller keeps it running. Re-raises a stored background fetch error,
+        preserving the historical `UpdatePrices.stop()` behaviour.
         """
-        if self._handle is not None:
-            self._handle.close()
-            self._handle = None
+        if self._handle is None:
+            return
+        exc = self._handle._release()  # pyright: ignore[reportPrivateUsage]
+        self._handle = None
+        if exc is not None:
+            raise exc
 
     def __enter__(self):
         self.start()
