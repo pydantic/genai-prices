@@ -87,84 +87,56 @@ price = extracted_usage.calc_price()
 print(price.total_price)
 ```
 
-### `UpdatePrices`
+### Updating prices in the background
 
-`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
+`update_prices_in_background()` periodically updates the price data by downloading it from GitHub.
 
 Please note:
 
 - this functionality is explicitly opt-in
 - we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the `data.json` file
-downloaded by `UpdatePrices` is around 26KB when compressed, so is generally very quick to download.
-
-By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
-
-Usage with `UpdatePrices` as as context manager:
-
-```py
-from genai_prices import UpdatePrices, Usage, calc_price
-
-with UpdatePrices() as update_prices:
-    update_prices.wait()  # optionally wait for prices to have updated
-    p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
-    print(p)
-```
-
-Usage with `UpdatePrices` as a simple class:
-
-```py
-from genai_prices import UpdatePrices, Usage, calc_price
-
-update_prices = UpdatePrices()
-update_prices.start(wait=True)  # start updating prices, optionally wait for prices to have updated
-p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
-print(p)
-update_prices.stop()  # stop updating prices
-```
-
-Only one `UpdatePrices` instance can be running at a time.
-
-For libraries and integrations that want to opt into updating prices without creating duplicate background
-threads, use `update_prices_in_background()`:
+At the time of writing, the `data.json` file downloaded is around 26KB when compressed, so is generally very
+quick to download. By default the first fetch happens immediately in the background, then every hour after that.
 
 ```py
 from genai_prices import update_prices_in_background
 
-update_prices_handle = update_prices_in_background()
+handle = update_prices_in_background()
 ...
-update_prices_handle.close()
+handle.close()  # stop updating when you no longer need it
 ```
 
-The first call starts a shared process-wide updater with default settings (hourly refresh from the default URL —
-the shared updater is not configurable; if you need a custom URL or interval, use `UpdatePrices` directly). Later
-calls reuse the same updater and return independent handles. The updater is stopped when the last handle is
-closed, at which point prices revert to the data bundled with the installed package.
+A single shared, process-wide updater backs this function, so it is safe to call from anywhere — including from
+multiple libraries in the same process. The first call starts the updater; later calls reuse it and return
+independent handles. The updater is stopped only when the **last** handle is closed, at which point prices revert
+to the data bundled with the installed package. The handle is also a context manager (`with
+update_prices_in_background() as handle: ...`).
 
-A manually started `UpdatePrices` always takes precedence over the shared updater, regardless of which started
-first:
+**For libraries and integrations** (e.g. Logfire, Pydantic AI): call `update_prices_in_background()` with no
+arguments, once, at startup. If several libraries do this, they share the one updater rather than spawning
+duplicate threads, and each library's handle independently keeps it alive until closed. Leave configuration to
+the application.
 
-- If an `UpdatePrices` instance has already been started manually, `update_prices_in_background()` does not start
-  a second updater and returns a handle that does nothing on close: prices are already being kept up to date, and
-  the manual updater's lifetime stays with whoever started it.
-- If `UpdatePrices.start()` is called while the shared updater is running, the shared updater is stopped and the
-  manual instance takes over; existing handles become inert. Prices briefly revert to the bundled data until the
-  manual updater's first fetch completes — pass `wait` to `start()` to block until then.
+**For application authors** who need a custom URL or refresh interval: pass them, and call early in startup,
+before the libraries initialize:
 
-Either way, an inert handle stays inert: if the manual updater is later stopped, background updates stop with
-it — call `update_prices_in_background()` again to start a new shared updater. Both precedence cases are logged
-at `INFO` level on the `genai-prices` logger, which is the place to look if background updates ever stop
-unexpectedly.
+```py
+update_prices_in_background(url='https://my-mirror.example/prices.json', update_interval=1800)
+```
+
+Configuration is **first-wins**: the first caller's `url`, `update_interval` and `request_timeout` apply for the
+lifetime of the shared updater. A later caller passing different settings gets a handle on the already-running
+updater and a warning logged on the `genai-prices` logger — its settings are ignored. Calling early ensures your
+configuration is the one that takes effect.
 
 `UpdatePricesHandle.close()` is idempotent and never raises; errors from the background updater are logged
 instead. Closing the last handle stops the updater and reverts prices to the bundled data immediately. If a
 fetch is in flight, the daemon thread is given a short grace period to exit and is otherwise abandoned with a
 warning log: it exits once the fetch completes, and its result is discarded — a stopped updater can never
-install prices afterwards. (`UpdatePrices.stop()` instead waits for the thread to exit, so a manual stop can
-block its caller for roughly the request timeout; neither blocks other updater API calls, and `calc_price`
-is always unaffected.) A handle represents exactly one claim on the updater — don't copy one, as closing the
-copy releases the original's claim too.
+install prices afterwards. Other updater API calls are never blocked, and `calc_price` is always unaffected. A
+handle represents exactly one claim on the updater — don't copy one, as closing the copy releases the original's
+claim too.
 
 `update_prices_in_background()` does not wait for the download. Until the first fetch completes, `calc_price`
 keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
@@ -174,7 +146,7 @@ short-lived script), call `wait_prices_updated_sync()` / `wait_prices_updated_as
 handle — these never raise and return `False` if the update failed (the error is logged on the `genai-prices`
 logger), so your calculations simply fall back to the bundled data.
 
-If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
+You can wait for prices to be updated from anywhere with `wait_prices_updated_sync`:
 
 ```py
 from genai_prices import wait_prices_updated_sync
@@ -183,7 +155,15 @@ wait_prices_updated_sync()
 ...
 ```
 
-Or it's async variant, `wait_prices_updated_async`.
+Or its async variant, `wait_prices_updated_async`.
+
+#### Deprecated: the `UpdatePrices` class
+
+The `UpdatePrices` class (`UpdatePrices().start()` / `.stop()` / `with UpdatePrices():`) is **deprecated** and
+emits a `DeprecationWarning`. It now routes through the same shared updater described above and will be removed in
+a future release — use `update_prices_in_background()` instead. Note the behaviour change: because there is now a
+single shared updater, starting a second `UpdatePrices` no longer raises and no longer takes over an updater
+another caller already started; configuration is first-wins.
 
 ### CLI Usage
 
