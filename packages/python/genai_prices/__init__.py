@@ -8,8 +8,6 @@ from . import data_snapshot, types
 from .types import Usage
 from .update_prices import (
     UpdatePrices,
-    UpdatePricesHandle,
-    update_prices_in_background,
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
@@ -21,8 +19,6 @@ __all__ = (
     'UpdatePrices',
     'wait_prices_updated_sync',
     'wait_prices_updated_async',
-    'update_prices_in_background',
-    'UpdatePricesHandle',
     '__version__',
 )
 
