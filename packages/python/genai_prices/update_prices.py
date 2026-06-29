@@ -367,10 +367,12 @@ class _BackgroundUpdater:
         try:
             while True:
                 try:
-                    self._update_prices()
+                    installed = self._update_prices()
                     self._background_exc = None
-                    # Set before signaling the event so waiters observing the event see the flag.
-                    self._update_succeeded = True
+                    # Reflect whether the snapshot was actually installed: a fetch discarded by the
+                    # stop fence (see _install_snapshot) must not report success to waiters. Set
+                    # before signaling the event so waiters observing the event see the flag.
+                    self._update_succeeded = installed
                     self._prices_updated.set()
                 except Exception as e:
                     self._background_exc = e
@@ -382,7 +384,7 @@ class _BackgroundUpdater:
         finally:
             logger.info('genai-prices background task stopped')
 
-    def _update_prices(self):
+    def _update_prices(self) -> bool:
         start = time()
         snapshot = self.fetch()
         interval = time() - start
@@ -391,17 +393,20 @@ class _BackgroundUpdater:
         else:
             logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
 
-        self._install_snapshot(snapshot)
+        return self._install_snapshot(snapshot)
 
-    def _install_snapshot(self, snapshot: data_snapshot.DataSnapshot | None) -> None:
+    def _install_snapshot(self, snapshot: data_snapshot.DataSnapshot | None) -> bool:
         # Fencing check: never publish after stop. The stop path sets _stop_event and then clears
         # the snapshot under `_lock` (see _stop_and_detach), so taking the same lock here and
         # re-checking the event makes publish-after-stop impossible rather than merely unlikely.
+        # Returns whether the snapshot was installed, so a discarded fetch is not reported as a
+        # successful update to waiters.
         with _lock:
             if self._stop_event.is_set():
                 logger.info('genai-prices updater was stopped during the fetch; discarding the fetched snapshot')
-                return
+                return False
             data_snapshot.set_custom_snapshot(snapshot)
+            return True
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""

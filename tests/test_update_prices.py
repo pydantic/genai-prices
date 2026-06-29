@@ -243,6 +243,49 @@ def test_stop_does_not_block_on_in_flight_fetch_and_discards_result(
         data_snapshot.set_custom_snapshot(None)
 
 
+def test_waiter_gets_false_when_stop_discards_in_flight_fetch(monkeypatch: pytest.MonkeyPatch):
+    # A fetch discarded by the stop fence must not be reported to waiters as a successful update.
+    fetch_started = threading.Event()
+    allow_fetch_return = threading.Event()
+
+    class Response:
+        content = PROVIDER_ARRAY_PAYLOAD
+
+        def raise_for_status(self) -> None:
+            pass
+
+    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
+        assert url == DEFAULT_UPDATE_URL
+        assert timeout is not None
+        fetch_started.set()
+        assert allow_fetch_return.wait(timeout=5)
+        return Response()
+
+    monkeypatch.setattr(httpx2, 'get', fake_get)
+    monkeypatch.setattr(update_prices_module, '_STOPPED_THREAD_JOIN_TIMEOUT', 0.05)
+
+    update_prices = UpdatePrices()
+    update_prices.start()
+    try:
+        assert fetch_started.wait(timeout=5)
+        # A waiter that captured the updater before stop() observes this instance directly.
+        updater = update_prices_module._updater
+        assert updater is not None
+
+        update_prices.stop()  # sets the stop fence and reverts before the fetch returns
+        allow_fetch_return.set()  # the in-flight fetch now completes but must be discarded
+
+        # The background loop signals the event but must report the discarded fetch as not-updated.
+        assert updater._prices_updated.wait(timeout=5)
+        assert updater._update_succeeded is False
+        assert updater._wait_updated(0) is False
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        allow_fetch_return.set()
+        update_prices.stop()
+        data_snapshot.set_custom_snapshot(None)
+
+
 @pytest.mark.default_cassette('fail.yaml')
 @pytest.mark.vcr()
 def test_wait_raises_on_failed_fetch():
