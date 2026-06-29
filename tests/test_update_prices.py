@@ -9,12 +9,10 @@ from inline_snapshot import snapshot
 
 from genai_prices import (
     UpdatePrices,
-    UpdatePricesHandle,
     Usage,
     calc_price,
     data_snapshot,
     update_prices as update_prices_module,
-    update_prices_in_background,
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
@@ -57,7 +55,6 @@ def test_update_prices_fetch_parses_provider_array(monkeypatch: pytest.MonkeyPat
 
     _mock_update_prices_get(monkeypatch, content)
 
-    # fetch() does not emit a deprecation warning (only start() does).
     snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
 
     assert snapshot is not None
@@ -67,11 +64,11 @@ def test_update_prices_fetch_parses_provider_array(monkeypatch: pytest.MonkeyPat
     assert model.id == 'gpt-4o-mini'
 
 
-def test_background_update_and_calc_price(monkeypatch: pytest.MonkeyPatch):
+def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
     assert data_snapshot._custom_snapshot is None
-    with update_prices_in_background():
-        assert wait_prices_updated_sync(timeout=5)
+    with UpdatePrices() as update_prices:
+        update_prices.wait()
         assert data_snapshot._custom_snapshot is not None
         price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
         assert price.input_price == snapshot(Decimal('0.0025'))
@@ -82,38 +79,125 @@ def test_background_update_and_calc_price(monkeypatch: pytest.MonkeyPatch):
     assert data_snapshot._custom_snapshot is None
 
 
+def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    assert data_snapshot._custom_snapshot is None
+    with UpdatePrices():
+        assert wait_prices_updated_sync(timeout=5)
+        assert data_snapshot._custom_snapshot is not None
+    assert data_snapshot._custom_snapshot is None
+
+
 async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
     assert data_snapshot._custom_snapshot is None
-    with update_prices_in_background():
+    with UpdatePrices():
         assert await wait_prices_updated_async(timeout=5)
         assert data_snapshot._custom_snapshot is not None
     assert data_snapshot._custom_snapshot is None
 
 
+def test_ref_counted_across_instances(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    up1 = UpdatePrices()
+    up2 = UpdatePrices()
+    up1.start()
+    up2.start()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+        assert data_snapshot._custom_snapshot is not None
+
+        # Releasing one claim keeps the updater alive for the other.
+        up1.stop()
+        assert wait_prices_updated_sync(timeout=0)
+        assert data_snapshot._custom_snapshot is not None
+
+        up1.stop()  # idempotent no-op
+        assert data_snapshot._custom_snapshot is not None
+
+        up2.stop()
+        assert data_snapshot._custom_snapshot is None
+        assert not wait_prices_updated_sync(timeout=0)
+    finally:
+        up1.stop()
+        up2.stop()
+        data_snapshot.set_custom_snapshot(None)
+
+
 def test_first_wins_config(monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture):
     _mock_update_prices_get(monkeypatch)
-    handle_1 = update_prices_in_background(url='https://example.test/prices.json')
+    up1 = UpdatePrices(url='https://example.test/prices.json')
+    up1.start()
     try:
         with caplog.at_level('WARNING', logger='genai-prices'):
-            handle_2 = update_prices_in_background(url=DEFAULT_UPDATE_URL, update_interval=1)
+            up2 = UpdatePrices(url=DEFAULT_UPDATE_URL, update_interval=1)
+            up2.start()
         try:
-            # The first caller's configuration wins; the second joins the running updater.
-            assert handle_1 is not handle_2
+            # The first instance's configuration wins; the second joins the running updater.
             assert update_prices_module._updater is not None
             assert update_prices_module._updater.url == 'https://example.test/prices.json'
             assert update_prices_module._updater.update_interval == 3600
             assert any('already running' in record.message for record in caplog.records)
             assert wait_prices_updated_sync(timeout=5)
         finally:
-            handle_2.close()
+            up2.stop()
     finally:
-        handle_1.close()
+        up1.stop()
         data_snapshot.set_custom_snapshot(None)
     assert data_snapshot._custom_snapshot is None
 
 
-def test_close_does_not_block_on_in_flight_fetch_and_discards_result(
+def test_double_start_same_instance_raises(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    update_prices = UpdatePrices()
+    update_prices.start()
+    try:
+        with pytest.raises(RuntimeError, match='already started'):
+            update_prices.start()
+    finally:
+        update_prices.stop()
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_stop_on_unstarted_instance_is_noop(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    with UpdatePrices() as update_prices:
+        assert update_prices.wait(timeout=5)
+        # stop() on a never-started instance does not touch the live updater.
+        UpdatePrices().stop()
+        assert update_prices_module._updater is not None
+        assert data_snapshot._custom_snapshot is not None
+    assert data_snapshot._custom_snapshot is None
+
+
+def test_restopping_does_not_affect_a_new_updater(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    up1 = UpdatePrices()
+    up1.start()
+    assert wait_prices_updated_sync(timeout=5)
+    stale_updater = update_prices_module._updater
+    up1.stop()
+    assert data_snapshot._custom_snapshot is None
+
+    up2 = UpdatePrices()
+    up2.start()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+        new_updater = update_prices_module._updater
+        assert new_updater is not None and new_updater is not stale_updater
+
+        # up1 was already released; stopping it again must not release up2's claim.
+        up1.stop()
+        assert update_prices_module._updater is new_updater
+        assert update_prices_module._ref_count == 1
+        assert data_snapshot._custom_snapshot is not None
+    finally:
+        up2.stop()
+        data_snapshot.set_custom_snapshot(None)
+    assert data_snapshot._custom_snapshot is None
+
+
+def test_stop_does_not_block_on_in_flight_fetch_and_discards_result(
     monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ):
     fetch_started = threading.Event()
@@ -135,14 +219,15 @@ def test_close_does_not_block_on_in_flight_fetch_and_discards_result(
     monkeypatch.setattr(httpx2, 'get', fake_get)
     monkeypatch.setattr(update_prices_module, '_STOPPED_THREAD_JOIN_TIMEOUT', 0.05)
 
-    handle = update_prices_in_background()
+    update_prices = UpdatePrices()
+    update_prices.start()
     try:
         assert fetch_started.wait(timeout=5)
         (thread,) = [t for t in threading.enumerate() if t.name == 'genai_prices:update']
 
         start = monotonic()
         with caplog.at_level('WARNING', logger='genai-prices'):
-            handle.close()
+            update_prices.stop()
         assert monotonic() - start < 2  # did not wait for the in-flight fetch
         assert any('abandoning the daemon thread' in record.message for record in caplog.records)
         assert data_snapshot._custom_snapshot is None
@@ -154,99 +239,40 @@ def test_close_does_not_block_on_in_flight_fetch_and_discards_result(
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()
-        handle.close()
+        update_prices.stop()
         data_snapshot.set_custom_snapshot(None)
 
 
-def test_update_prices_in_background_ref_count(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    handle_1 = update_prices_in_background()
-    handle_2 = update_prices_in_background()
-    try:
-        assert handle_1 is not handle_2
-        assert wait_prices_updated_sync(timeout=5)
-        assert data_snapshot._custom_snapshot is not None
-
-        handle_1.close()
-        assert wait_prices_updated_sync(timeout=0)
-        assert data_snapshot._custom_snapshot is not None
-
-        handle_1.close()  # idempotent
-        assert wait_prices_updated_sync(timeout=0)
-        assert data_snapshot._custom_snapshot is not None
-
-        handle_2.close()
-        assert data_snapshot._custom_snapshot is None
-        assert not wait_prices_updated_sync(timeout=0)
-    finally:
-        handle_1.close()
-        handle_2.close()
-        data_snapshot.set_custom_snapshot(None)
-
-
-def test_update_prices_handle_directly_constructed_is_inert(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    handle = update_prices_in_background()
-    try:
-        assert wait_prices_updated_sync(timeout=5)
-
-        UpdatePricesHandle().close()
-        assert wait_prices_updated_sync(timeout=0)
-        assert data_snapshot._custom_snapshot is not None
-    finally:
-        handle.close()
-        data_snapshot.set_custom_snapshot(None)
+@pytest.mark.default_cassette('fail.yaml')
+@pytest.mark.vcr()
+def test_wait_raises_on_failed_fetch():
+    assert data_snapshot._custom_snapshot is None
+    with UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404') as update_prices:
+        with pytest.raises(httpx2.HTTPStatusError):
+            update_prices.wait(timeout=5)
     assert data_snapshot._custom_snapshot is None
 
 
-def test_stale_handle_close_does_not_affect_new_shared_updater(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    handle_1 = update_prices_in_background()
-    assert wait_prices_updated_sync(timeout=5)
-    stale_updater = update_prices_module._updater
-    assert stale_updater is not None
-
-    # Fully release the first updater, then start a fresh one.
-    handle_1.close()
-    assert data_snapshot._custom_snapshot is None
-
-    handle_2 = update_prices_in_background()
-    try:
-        assert wait_prices_updated_sync(timeout=5)
-        new_updater = update_prices_module._updater
-        assert new_updater is not None and new_updater is not stale_updater
-
-        # A handle bound to the now-defunct first updater must not release handle_2's claim.
-        UpdatePricesHandle(stale_updater).close()
-        assert update_prices_module._updater is new_updater
-        assert update_prices_module._ref_count == 1
-        assert wait_prices_updated_sync(timeout=0)
-        assert data_snapshot._custom_snapshot is not None
-    finally:
-        handle_2.close()
-        data_snapshot.set_custom_snapshot(None)
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_update_prices_handle_close_does_not_raise_after_failed_fetch(
+def test_stop_logs_and_does_not_raise_after_failed_fetch(
     monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ):
     def fake_get(*_args: object, **_kwargs: object) -> object:
         raise httpx2.ConnectError('network down')
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
-    handle = update_prices_in_background()
+    update_prices = UpdatePrices()
+    update_prices.start()
     try:
-        # Wait on the internal event rather than wait_prices_updated_sync, which would
-        # consume the stored exception that close() is expected to log instead of raise.
+        # Wait on the internal event rather than wait(), which would consume and raise the stored
+        # exception that stop() is expected to log instead.
         updater = update_prices_module._updater
         assert updater is not None
         assert updater._prices_updated.wait(timeout=5)
     finally:
         with caplog.at_level('ERROR', logger='genai-prices'):
-            handle.close()
+            update_prices.stop()  # never raises
         data_snapshot.set_custom_snapshot(None)
-    assert any('while closing' in record.message for record in caplog.records)
+    assert any('while stopping' in record.message for record in caplog.records)
 
 
 def test_wait_prices_updated_sync_returns_false_on_failed_fetch(
@@ -256,7 +282,8 @@ def test_wait_prices_updated_sync_returns_false_on_failed_fetch(
         raise httpx2.ConnectError('network down')
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
-    handle = update_prices_in_background()
+    update_prices = UpdatePrices()
+    update_prices.start()
     try:
         # Never raises and returns False on failure, for every waiter — not just the first.
         assert wait_prices_updated_sync(timeout=5) is False
@@ -264,16 +291,17 @@ def test_wait_prices_updated_sync_returns_false_on_failed_fetch(
         assert data_snapshot._custom_snapshot is None
     finally:
         with caplog.at_level('ERROR', logger='genai-prices'):
-            handle.close()
+            update_prices.stop()
         data_snapshot.set_custom_snapshot(None)
-    # The stored exception is not consumed by the waiters above, so close() still logs it.
-    assert any('while closing' in record.message for record in caplog.records)
+    # The stored exception is not consumed by the waiters above, so stop() still logs it.
+    assert any('while stopping' in record.message for record in caplog.records)
 
 
 @pytest.mark.skipif(not hasattr(os, 'fork'), reason='requires os.fork')
 def test_forked_child_restarts_shared_updater(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
-    handle = update_prices_in_background()
+    update_prices = UpdatePrices()
+    update_prices.start()
     try:
         assert wait_prices_updated_sync(timeout=5)
 
@@ -294,11 +322,11 @@ def test_forked_child_restarts_shared_updater(monkeypatch: pytest.MonkeyPatch):
         _, status = os.waitpid(pid, 0)
         assert os.waitstatus_to_exitcode(status) == 0
     finally:
-        handle.close()
+        update_prices.stop()
         data_snapshot.set_custom_snapshot(None)
 
 
-def test_update_prices_in_background_concurrent_acquire_close(monkeypatch: pytest.MonkeyPatch):
+def test_concurrent_start_stop(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
     barrier = threading.Barrier(16)
     errors: list[BaseException] = []
@@ -307,8 +335,9 @@ def test_update_prices_in_background_concurrent_acquire_close(monkeypatch: pytes
         try:
             barrier.wait(timeout=5)
             for _ in range(10):
-                handle = update_prices_in_background()
-                handle.close()
+                update_prices = UpdatePrices()
+                update_prices.start()
+                update_prices.stop()
         except BaseException as exc:  # pragma: no cover
             errors.append(exc)
 
@@ -328,91 +357,11 @@ def test_update_prices_in_background_concurrent_acquire_close(monkeypatch: pytes
     assert data_snapshot._custom_snapshot is None
 
     # The shared updater can still be acquired cleanly after the churn.
-    handle = update_prices_in_background()
-    try:
-        assert wait_prices_updated_sync(timeout=5)
-        assert data_snapshot._custom_snapshot is not None
-    finally:
-        handle.close()
-        data_snapshot.set_custom_snapshot(None)
-
-
-# --- Deprecated UpdatePrices shim ------------------------------------------------------------
-
-
-def test_deprecated_update_prices_warns_and_routes_through_shared_updater(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    assert data_snapshot._custom_snapshot is None
-    with pytest.warns(DeprecationWarning, match='update_prices_in_background'):
-        with UpdatePrices() as update_prices:
-            assert update_prices.wait(timeout=5)
-            assert data_snapshot._custom_snapshot is not None
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_deprecated_update_prices_multiple_instances_no_longer_raise(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    # Two distinct instances now share the one updater (first-wins) instead of raising.
-    with pytest.warns(DeprecationWarning):
-        with UpdatePrices():
-            with UpdatePrices():
-                assert wait_prices_updated_sync(timeout=5)
-                assert data_snapshot._custom_snapshot is not None
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_deprecated_update_prices_same_instance_double_start_raises(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
     update_prices = UpdatePrices()
-    with pytest.warns(DeprecationWarning):
-        update_prices.start()
-    try:
-        with pytest.warns(DeprecationWarning):
-            with pytest.raises(RuntimeError, match='already started'):
-                update_prices.start()
-    finally:
-        update_prices.stop()
-        data_snapshot.set_custom_snapshot(None)
-
-
-@pytest.mark.default_cassette('fail.yaml')
-@pytest.mark.vcr()
-def test_deprecated_update_prices_wait_raises_on_failed_fetch():
-    assert data_snapshot._custom_snapshot is None
-    update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
-    with pytest.warns(DeprecationWarning):
-        update_prices.start()
-    try:
-        with pytest.raises(httpx2.HTTPStatusError):
-            update_prices.wait(timeout=5)
-    finally:
-        update_prices.stop()
-    assert data_snapshot._custom_snapshot is None
-
-
-@pytest.mark.default_cassette('fail.yaml')
-@pytest.mark.vcr()
-def test_deprecated_update_prices_stop_raises_on_failed_fetch():
-    # The deprecated stop() preserves the historical behaviour of re-raising a stored fetch error.
-    assert data_snapshot._custom_snapshot is None
-    update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
-    with pytest.warns(DeprecationWarning):
-        update_prices.start()
-    with pytest.raises(httpx2.HTTPStatusError):
-        update_prices.stop()
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_deprecated_stop_on_unstarted_instance_is_noop(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    handle = update_prices_in_background()
+    update_prices.start()
     try:
         assert wait_prices_updated_sync(timeout=5)
-        # stop() on a never-started instance does not warn and does not touch the live updater.
-        UpdatePrices().stop()
-        assert update_prices_module._updater is not None
         assert data_snapshot._custom_snapshot is not None
     finally:
-        handle.close()
+        update_prices.stop()
         data_snapshot.set_custom_snapshot(None)
-    assert data_snapshot._custom_snapshot is None
