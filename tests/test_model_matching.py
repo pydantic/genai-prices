@@ -392,6 +392,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-2026-03-05', snapshot(('openai', 'gpt-5.4'))),
     ('openai', 'gpt-5-4', snapshot(('openai', 'gpt-5.4'))),
     ('openai', 'gpt-5-4-2026-03-05', snapshot(('openai', 'gpt-5.4'))),
+    ('openai', 'openai.gpt-5.4', snapshot(('openai', 'gpt-5.4'))),
+    ('bedrock', 'openai.gpt-5.4', snapshot(('aws', 'gpt-5.4'))),
+    ('openai', 'openai.gpt-5.5', snapshot(('openai', 'gpt-5.5'))),
+    ('bedrock', 'openai.gpt-5.5', snapshot(('aws', 'gpt-5.5'))),
     ('openai', 'gpt-5.4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5.4-pro-2026-03-05', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5-4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
@@ -404,6 +408,10 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
+    ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
+    ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
+    ('google-gla', 'google/gemini-3.5-flash-20260519', snapshot(('google', 'gemini-3.5-flash'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
 ]
 

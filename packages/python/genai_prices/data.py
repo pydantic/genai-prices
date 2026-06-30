@@ -465,6 +465,7 @@ providers: list[Provider] = [
                 model_path='model',
             ),
         ],
+        fallback_model_providers=['openai'],
         models=[
             ModelInfo(
                 id='amazon.nova-2-sonic-v1:0',
@@ -2552,7 +2553,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.5-flash',
-                match=ClauseStartsWith(starts_with='gemini-3.5-flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='gemini-3.5-flash'),
+                        ClauseStartsWith(starts_with='google/gemini-3.5-flash'),
+                    ]
+                ),
                 name='Gemini 3.5 Flash',
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
@@ -6431,6 +6437,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5.4-2026-03-05'),
                         ClauseEquals(equals='gpt-5-4'),
                         ClauseEquals(equals='gpt-5-4-2026-03-05'),
+                        ClauseEquals(equals='openai.gpt-5.4'),
                     ]
                 ),
                 name='GPT-5.4',
@@ -6520,6 +6527,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-5-chat-latest'),
                         ClauseEquals(equals='gpt-5.5-codex'),
                         ClauseEquals(equals='gpt-5-5-codex'),
+                        ClauseEquals(equals='openai.gpt-5.5'),
                     ]
                 ),
                 name='GPT-5.5',
@@ -8212,7 +8220,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='google/gemini-3.5-flash',
-                match=ClauseEquals(equals='google/gemini-3.5-flash'),
+                match=ClauseStartsWith(starts_with='google/gemini-3.5-flash'),
                 name='Gemini 3.5 Flash',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'),
@@ -11204,7 +11212,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='x-ai/grok-4.3',
-                match=ClauseEquals(equals='x-ai/grok-4.3'),
+                match=ClauseStartsWith(starts_with='x-ai/grok-4.3'),
                 name='Grok 4.3',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
@@ -12458,6 +12466,8 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='grok-4.3'),
+                        ClauseStartsWith(starts_with='grok-4.3-'),
+                        ClauseStartsWith(starts_with='x-ai/grok-4.3'),
                         ClauseEquals(equals='grok-4.3-latest'),
                         ClauseEquals(equals='grok-latest'),
                     ]

@@ -251,6 +251,8 @@ models:
     match:
       or:
         - equals: grok-4.3
+        - starts_with: grok-4.3-
+        - starts_with: x-ai/grok-4.3
         - equals: grok-4.3-latest
         - equals: grok-latest
     context_window: 1000000

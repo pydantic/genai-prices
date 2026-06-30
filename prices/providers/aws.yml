@@ -8,6 +8,8 @@ provider_match:
   or:
     - contains: bedrock
     - contains: amazon
+fallback_model_providers:
+  - openai
 extractors:
   - root: usage
     mappings:
