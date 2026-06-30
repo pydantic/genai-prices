@@ -32,7 +32,7 @@ The following providers are currently supported:
 
 [comment]: <> (providers-start)
 
-- [Anthropic](prices/providers/anthropic.yml) - 21 models
+- [Anthropic](prices/providers/anthropic.yml) - 22 models
 - [Avian](prices/providers/avian.yml) - 4 models
 - [AWS Bedrock](prices/providers/aws.yml) - 77 models
 - [Microsoft Azure](prices/providers/azure.yml) - 22 models
@@ -59,7 +59,7 @@ The following providers are currently supported:
 - [MoonshotAi](prices/providers/moonshotai.yml) - 12 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 78 models
-- [OpenRouter](prices/providers/openrouter.yml) - 686 models
+- [OpenRouter](prices/providers/openrouter.yml) - 687 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
