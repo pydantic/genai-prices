@@ -267,6 +267,28 @@ models:
           - start: 200000
             price: 22.50
 
+  - id: global.anthropic.claude-sonnet-5-v1:0
+    prices_checked: 2026-06-30
+    match:
+      contains: global.anthropic.claude-sonnet-5
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01.
+      Ref: https://aws.amazon.com/bedrock/pricing/
+    prices:
+      - prices:
+          input_mtok: 2
+          cache_write_mtok: 2.5
+          cache_read_mtok: 0.2
+          output_mtok: 10
+      - constraint:
+          start_date: 2026-09-01
+        prices:
+          input_mtok: 3
+          cache_write_mtok: 3.75
+          cache_read_mtok: 0.3
+          output_mtok: 15
+
   - id: google.gemma-3-12b-it
     name: Gemma 3 12B IT
     prices_checked: 2026-06-03
@@ -866,3 +888,34 @@ models:
         tiers:
           - start: 200000
             price: 24.75
+
+  - id: regional.anthropic.claude-sonnet-5-v1:0
+    prices_checked: 2026-06-30
+    match:
+      or:
+        - starts_with: anthropic.claude-sonnet-5
+        - starts_with: claude-sonnet-5
+        - contains: us.anthropic.claude-sonnet-5
+        - contains: au.anthropic.claude-sonnet-5
+        - contains: apac.anthropic.claude-sonnet-5
+        - contains: eu.anthropic.claude-sonnet-5
+        - contains: us-gov.anthropic.claude-sonnet-5
+        - contains: jp.anthropic.claude-sonnet-5
+    price_comments: >-
+      Regional/cross-region endpoints carry a 10% premium over global (AWS published only the
+      global promo rate; regional computed as global +10%, per the documented regional premium).
+      Promotional launch pricing through 2026-08-31; standard from 2026-09-01.
+      Ref: https://aws.amazon.com/bedrock/pricing/
+    prices:
+      - prices:
+          input_mtok: 2.2
+          cache_write_mtok: 2.75
+          cache_read_mtok: 0.22
+          output_mtok: 11
+      - constraint:
+          start_date: 2026-09-01
+        prices:
+          input_mtok: 3.3
+          cache_write_mtok: 4.125
+          cache_read_mtok: 0.33
+          output_mtok: 16.5
