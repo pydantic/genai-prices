@@ -316,6 +316,8 @@ class StartDateConstraint(_Model):
 
     start_date: date
     """Date when this price starts"""
+    type: Literal['start_date'] = 'start_date'
+    """Discriminator so JSON consumers (e.g. the JS engine reading remote data.json) can identify the constraint kind."""
 
 
 class TimeOfDateConstraint(_Model):
@@ -325,6 +327,8 @@ class TimeOfDateConstraint(_Model):
     """Start time of the interval."""
     end_time: time
     """End time of the interval."""
+    type: Literal['time_of_date'] = 'time_of_date'
+    """Discriminator so JSON consumers (e.g. the JS engine reading remote data.json) can identify the constraint kind."""
 
     @field_validator('start_time', 'end_time', mode='after')
     @classmethod
