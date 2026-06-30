@@ -122,10 +122,10 @@ models:
     match:
       equals: accounts/fireworks/models/glm-5p2
     context_window: 1040000
-    prices_checked: 2026-06-24
+    prices_checked: 2026-06-30
     prices:
       input_mtok: 1.40
-      cache_read_mtok: 0.26
+      cache_read_mtok: 0.14
       output_mtok: 4.40
 
   - id: gpt-oss-120b

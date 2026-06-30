@@ -1933,7 +1933,7 @@ providers: list[Provider] = [
                 description='GLM-5.2 introduces a robust 1M-token context and advanced, multi-effort coding capabilities to significantly enhance performance on long-horizon tasks. Features a new IndexShare architecture and improved MTP layer for greater efficiency. 743B parameter MoE model from Z.ai.',
                 context_window=1040000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.26'), output_mtok=Decimal('4.4')
+                    input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
                 ),
             ),
             ModelInfo(
