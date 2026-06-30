@@ -95,7 +95,7 @@ jobs:
           name: coverage-html
           path: htmlcov
           include-hidden-files: true
-      - run: uv run coverage report --fail-under 95
+      - run: uv run coverage report --fail-under 100
 
   test-js:
     runs-on: ubuntu-latest
