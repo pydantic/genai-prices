@@ -89,19 +89,17 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
+`UpdatePrices` periodically updates the price data by downloading it from GitHub.
 
 Please note:
 
 - this functionality is explicitly opt-in
 - we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the `data.json` file
-downloaded by `UpdatePrices` is around 26KB when compressed, so is generally very quick to download.
+At the time of writing, the `data.json` file downloaded is around 26KB when compressed, so is generally very
+quick to download. By default the first fetch happens immediately in the background, then every hour after that.
 
-By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
-
-Usage with `UpdatePrices` as as context manager:
+Usage as a context manager:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
@@ -112,21 +110,57 @@ with UpdatePrices() as update_prices:
     print(p)
 ```
 
-Usage with `UpdatePrices` as a simple class:
+Or by calling `start()` / `stop()` yourself:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
 
 update_prices = UpdatePrices()
-update_prices.start(wait=True)  # start updating prices, optionally wait for prices to have updated
+update_prices.start(wait=True)  # optionally wait for the first update
 p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
 print(p)
-update_prices.stop()  # stop updating prices
+update_prices.stop()
 ```
 
-Only one `UpdatePrices` instance can be running at a time.
+A single shared, process-wide updater backs every `UpdatePrices` instance, so it is safe to create and start them
+from anywhere — including from several libraries in the same process. Starting an instance is a **claim** on that
+one updater, not a private thread: the first `start()` launches it, later ones join it, and the background thread
+stops (reverting prices to the data bundled with the installed package) only when the **last** started instance is
+stopped.
 
-If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
+**For libraries and integrations** (e.g. Logfire, Pydantic AI): create one `UpdatePrices()` with no arguments,
+`start()` it at startup, and `stop()` it on shutdown. If several libraries do this they share the one updater
+rather than spawning duplicate threads, and each one's claim independently keeps it alive until stopped. Leave
+configuration to the application.
+
+**For application authors** who need a custom URL or refresh interval: pass them, and start early in startup,
+before the libraries initialize:
+
+```py
+UpdatePrices(url='https://my-mirror.example/prices.json', update_interval=1800).start()
+```
+
+Configuration is **first-wins**: the first instance to start fixes `url`, `update_interval` and `request_timeout`
+for the updater's lifetime. Starting another instance with different settings logs a warning on the `genai-prices`
+logger and joins the running updater; its settings are ignored. Starting early ensures your configuration is the
+one that takes effect.
+
+`stop()` is idempotent and never raises — a background fetch error is logged instead (use `wait()` if you want it
+raised). Stopping the last claim reverts prices to the bundled data immediately. If a fetch is in flight, the
+daemon thread is given a short grace period to exit and is otherwise abandoned with a warning log: it exits once
+the fetch completes, and its result is discarded — a stopped updater can never install prices afterwards. Other
+updater API calls are never blocked, and `calc_price` is always unaffected.
+
+`start()` does not wait for the download (unless you pass `wait`). Until the first fetch completes, `calc_price`
+keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
+missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
+data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
+short-lived script), pass `wait` to `start()`, or call `wait_prices_updated_sync()` /
+`wait_prices_updated_async()` — these never raise and return `False` if the update failed (the error is logged on
+the `genai-prices` logger), so your calculations simply fall back to the bundled data.
+
+You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
+`wait_prices_updated_sync`:
 
 ```py
 from genai_prices import wait_prices_updated_sync
@@ -135,7 +169,7 @@ wait_prices_updated_sync()
 ...
 ```
 
-Or it's async variant, `wait_prices_updated_async`.
+Or its async variant, `wait_prices_updated_async`.
 
 ### CLI Usage
 
