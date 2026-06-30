@@ -398,6 +398,40 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='claude-sonnet-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-sonnet-5'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5.0'),
+                        ClauseStartsWith(starts_with='claude-5-sonnet'),
+                        ClauseStartsWith(starts_with='claude-5.0-sonnet'),
+                    ]
+                ),
+                name='Claude Sonnet 5',
+                description='Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost',
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
                 id='claude-v1',
                 match=ClauseEquals(equals='claude-v1'),
                 description='Retired, here to match price sources',
@@ -7221,6 +7255,36 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
                 ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-sonnet-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-sonnet-5'),
+                        ClauseEquals(equals='anthropic/claude-sonnet-5:beta'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01. OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30. Ref: https://openrouter.ai/anthropic/claude-sonnet-5',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='anubis-pro-105b-v1',
