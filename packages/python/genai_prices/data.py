@@ -465,7 +465,6 @@ providers: list[Provider] = [
                 model_path='model',
             ),
         ],
-        fallback_model_providers=['openai'],
         models=[
             ModelInfo(
                 id='amazon.nova-2-sonic-v1:0',
@@ -829,6 +828,24 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='nvidia.nemotron-super-3-120b'),
                 name='Nemotron 3 Super 120B',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.65')),
+            ),
+            ModelInfo(
+                id='openai.gpt-5.4',
+                match=ClauseEquals(equals='openai.gpt-5.4'),
+                name='GPT-5.4',
+                price_comments='Standard tier pricing from https://aws.amazon.com/bedrock/pricing/#OpenAI.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.75'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('16.5')
+                ),
+            ),
+            ModelInfo(
+                id='openai.gpt-5.5',
+                match=ClauseEquals(equals='openai.gpt-5.5'),
+                name='GPT-5.5',
+                price_comments='Standard tier pricing from https://aws.amazon.com/bedrock/pricing/#OpenAI.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.5'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('33')
+                ),
             ),
             ModelInfo(
                 id='openai.gpt-oss-120b-1:0',
@@ -6437,7 +6454,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5.4-2026-03-05'),
                         ClauseEquals(equals='gpt-5-4'),
                         ClauseEquals(equals='gpt-5-4-2026-03-05'),
-                        ClauseEquals(equals='openai.gpt-5.4'),
                     ]
                 ),
                 name='GPT-5.4',
@@ -6527,7 +6543,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-5-chat-latest'),
                         ClauseEquals(equals='gpt-5.5-codex'),
                         ClauseEquals(equals='gpt-5-5-codex'),
-                        ClauseEquals(equals='openai.gpt-5.5'),
                     ]
                 ),
                 name='GPT-5.5',

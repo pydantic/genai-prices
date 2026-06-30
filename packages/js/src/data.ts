@@ -762,7 +762,6 @@ export const data: Provider[] = [
         ],
       },
     ],
-    fallback_model_providers: ['openai'],
     models: [
       {
         id: 'amazon.nova-2-sonic-v1:0',
@@ -1399,6 +1398,32 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.65,
+        },
+      },
+      {
+        id: 'openai.gpt-5.4',
+        name: 'GPT-5.4',
+        match: {
+          equals: 'openai.gpt-5.4',
+        },
+        price_comments: 'Standard tier pricing from https://aws.amazon.com/bedrock/pricing/#OpenAI.',
+        prices: {
+          input_mtok: 2.75,
+          cache_read_mtok: 0.275,
+          output_mtok: 16.5,
+        },
+      },
+      {
+        id: 'openai.gpt-5.5',
+        name: 'GPT-5.5',
+        match: {
+          equals: 'openai.gpt-5.5',
+        },
+        price_comments: 'Standard tier pricing from https://aws.amazon.com/bedrock/pricing/#OpenAI.',
+        prices: {
+          input_mtok: 5.5,
+          cache_read_mtok: 0.55,
+          output_mtok: 33,
         },
       },
       {
@@ -11372,9 +11397,6 @@ export const data: Provider[] = [
             {
               equals: 'gpt-5-4-2026-03-05',
             },
-            {
-              equals: 'openai.gpt-5.4',
-            },
           ],
         },
         context_window: 1050000,
@@ -11560,9 +11582,6 @@ export const data: Provider[] = [
             },
             {
               equals: 'gpt-5-5-codex',
-            },
-            {
-              equals: 'openai.gpt-5.5',
             },
           ],
         },
