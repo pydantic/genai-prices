@@ -7,7 +7,7 @@ pricing_urls:
 api_pattern: 'https://open\.bigmodel\.cn'
 price_comments: >-
   Prices sourced from Zhipu AI open platform pricing (CNY, open.bigmodel.cn/pricing),
-  converted to USD at 1 USD = 7.25 CNY (May 2026). Zhipu AI does not publish USD
+  converted to USD at 1 USD = 7.25 CNY (May/June 2026). Zhipu AI does not publish USD
   prices; CNY is the only billing currency. Flagship models (GLM-4.5-Air, GLM-4.7,
   GLM-5 series) have tiered pricing by input/output length; prices shown are for the
   cheapest tier ([0, 32k) input / [0, 0.2k) output where applicable). GLM-4 standard
@@ -209,16 +209,34 @@ models:
   - id: GLM-5.1
     name: GLM-5.1
     description: >-
-      Zhipu AI's latest flagship model supporting long-horizon tasks, structured
-      output, function calling, and context caching. 200,000 token context window.
+      Zhipu AI flagship model supporting long-horizon tasks, structured output,
+      function calling, and context caching. 200,000 token context window.
       Tiered pricing; prices shown for [0, 32k) input tier.
     match:
       or:
         - equals: GLM-5.1
         - equals: glm-5.1
+        - equals: GLM-5.1-20260406
+        - equals: glm-5.1-20260406
     context_window: 200000
     prices_checked: "2026-05-23"
     prices:
       input_mtok: 0.828
       cache_read_mtok: 0.179
       output_mtok: 3.310
+
+  - id: GLM-5.2
+    name: GLM-5.2
+    description: >-
+      Zhipu AI's latest flagship model supporting 1,000,000 token context, long-horizon
+      coding tasks, structured output, function calling, and context caching.
+    match:
+      or:
+        - equals: GLM-5.2
+        - equals: glm-5.2
+    context_window: 1000000
+    prices_checked: "2026-06-17"
+    prices:
+      input_mtok: 1.103
+      cache_read_mtok: 0.276
+      output_mtok: 3.862

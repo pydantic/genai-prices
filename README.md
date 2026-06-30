@@ -40,7 +40,7 @@ The following providers are currently supported:
 - [Cohere](prices/providers/cohere.yml) - 6 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
-- [Fireworks](prices/providers/fireworks.yml) - 13 models
+- [Fireworks](prices/providers/fireworks.yml) - 24 models
 - [Google](prices/providers/google.yml) - 39 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
@@ -59,13 +59,13 @@ The following providers are currently supported:
 - [MoonshotAi](prices/providers/moonshotai.yml) - 12 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 78 models
-- [OpenRouter](prices/providers/openrouter.yml) - 685 models
+- [OpenRouter](prices/providers/openrouter.yml) - 686 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
 - [X AI](prices/providers/x_ai.yml) - 16 models
-- [Zhipu AI](prices/providers/zhipuai.yml) - 12 models
+- [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
 [comment]: <> (providers-end)
 
@@ -123,6 +123,14 @@ Otherwise, to contribute:
 - Feel free to submit pull requests or issues about the Python and JS packages.
 - If you need a library for another language, please create an issue, we'd be happy to discuss building it, hosting it here,
   or helping you maintain it elsewhere.
+
+## Part of the Pydantic Stack
+
+The Pydantic Stack is everything you need to ship production-grade AI agents:
+
+- [Pydantic AI](https://pydantic.dev/pydantic-ai?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - Type-safe agent framework
+- [Pydantic Logfire](https://pydantic.dev/logfire?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - AI-first, full-stack observability
+- [Logfire AI Gateway](https://pydantic.dev/ai-gateway?utm_source=github&utm_medium=readme&utm_campaign=genai-prices) - Unified LLM proxy
 
 ## Thanks
 
