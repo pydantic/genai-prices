@@ -19,6 +19,7 @@ try:
     from pydantic_settings import (
         BaseSettings,
         CliApp,
+        CliExplicitFlag,
         CliPositionalArg,
         CliSettingsSource,
         CliSubCommand,
@@ -146,7 +147,8 @@ class CalcCLI(_CLIBase):
         validation_alias=AliasChoices('T', 'table'),
         description='Whether to use wide table output with one row per model.',
     )
-    no_color: bool = Field(
+    # CliExplicitFlag avoids BooleanOptionalAction, whose `--no-`-prefixed names argparse rejects on Python 3.14.
+    no_color: CliExplicitFlag[bool] = Field(
         False,
         validation_alias=AliasChoices('n', 'no-color'),
         description='Whether to disable colors in calc output.',
