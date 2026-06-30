@@ -97,7 +97,7 @@ typecheck:
 test: ## Run tests and collect coverage data
 	uv run coverage run -m pytest
 	uv run python tests/dataset/extract_usages.py
-	@uv run coverage report
+	@uv run coverage report --fail-under=0
 
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report

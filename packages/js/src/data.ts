@@ -3354,6 +3354,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p2',
+        name: 'GLM-5.2',
+        description:
+          'GLM-5.2 introduces a robust 1M-token context and advanced, multi-effort coding capabilities to significantly enhance performance on long-horizon tasks. Features a new IndexShare architecture and improved MTP layer for greater efficiency. 743B parameter MoE model from Z.ai.',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p2',
+        },
+        context_window: 1040000,
+        prices: {
+          input_mtok: 1.4,
+          cache_read_mtok: 0.14,
+          output_mtok: 4.4,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'OpenAI gpt-oss-120b',
         description:
@@ -3407,6 +3422,21 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k2p7-code',
+        name: 'Kimi K2.7 Code',
+        description:
+          'Kimi K2.7 Code is a coding-focused agentic model built upon Kimi K2.6, delivering substantial improvements on real-world long-horizon coding tasks while reducing thinking tokens by roughly 30% compared to its predecessor.',
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k2p7-code',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.19,
           output_mtok: 4,
         },
       },
@@ -3481,6 +3511,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'nemotron-3-ultra-nvfp4',
+        name: 'NVIDIA Nemotron 3 Ultra NVFP4',
+        description:
+          'Frontier-scale LLM from NVIDIA using a hybrid Latent Mixture-of-Experts (LatentMoE) architecture with interleaved Mamba-2 and MoE layers plus select Attention layers. Features 55B active parameters out of 550B total and Multi-Token Prediction layers for faster generation, optimized for complex multi-step agents, long-context analysis, and high-accuracy reasoning over code, math, and science.',
+        match: {
+          equals: 'accounts/fireworks/models/nemotron-3-ultra-nvfp4',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.12,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'qwen2p5-vl-72b-instruct',
         name: 'Qwen2.5-VL 72B Instruct',
         description: "Latest Qwen's VLM model",
@@ -3518,6 +3563,21 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           cache_read_mtok: 0.1,
           output_mtok: 3,
+        },
+      },
+      {
+        id: 'qwen3p7-plus',
+        name: 'Qwen3.7 Plus',
+        description:
+          "Qwen3.7 Plus is Alibaba's latest flagship closed model, available exclusively through Fireworks AI outside of Alibaba's own infrastructure.",
+        match: {
+          equals: 'accounts/fireworks/models/qwen3p7-plus',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.4,
+          cache_read_mtok: 0.08,
+          output_mtok: 1.6,
         },
       },
     ],
