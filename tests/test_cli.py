@@ -4,7 +4,7 @@ import dataclasses
 import io
 import subprocess
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,18 +26,14 @@ from genai_prices.data import providers
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, Provider, TieredPrices
 
 
-def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: set[str] | None = None) -> str:
-    exclude = exclude or set()
+def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: Collection[str] = frozenset()) -> str:
     now = datetime.now(timezone.utc)
-    for provider in providers:
-        for model in provider.models:
-            prices = model.get_prices(now)
-            if predicate(prices):
-                model_ref = f'{provider.id}:{model.id}'
-                if model_ref in exclude:
-                    continue
-                return model_ref
-    raise AssertionError('No matching model found')
+    return next(
+        f'{provider.id}:{model.id}'
+        for provider in providers
+        for model in provider.models
+        if predicate(model.get_prices(now)) and f'{provider.id}:{model.id}' not in exclude
+    )
 
 
 def _has_tiered_prices(model_price: ModelPrice) -> bool:
@@ -340,6 +336,14 @@ def test_calc_provider_suggestions(capsys: pytest.CaptureFixture[str]):
     assert 'Did you mean provider: openai' in err
 
 
+def test_calc_unknown_provider_without_suggestions(capsys: pytest.CaptureFixture[str]):
+    assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'zzzzzz:gpt-4o']) == 1
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert 'Error:' in err
+    assert 'Did you mean provider:' not in err
+
+
 def test_calc_model_suggestions(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'openai:gpt-4o0']) == 1
     out, err = capsys.readouterr()
@@ -352,6 +356,15 @@ def test_calc_provider_suggestions_rich_color(capsys: pytest.CaptureFixture[str]
     out, err = capsys.readouterr()
     assert out == ''
     assert 'Did you mean provider:' in err
+
+
+def test_calc_provider_suggestions_rich_color_multiple(capsys: pytest.CaptureFixture[str]):
+    assert cli_logic(['calc', '--input-tokens', '1000', 'coher:gpt-4o']) == 1
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert 'Did you mean provider:' in err
+    assert 'cohere' in err
+    assert 'together' in err
 
 
 def test_calc_provider_suggestions_rich_no_color(capsys: pytest.CaptureFixture[str]):
@@ -380,6 +393,22 @@ def test_calc_requests_kcount_rich(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['calc', '--input-tokens', '1000', model_ref]) == 0
     out, err = capsys.readouterr()
     assert 'K requests' in out
+    assert err == ''
+
+
+def test_calc_requests_kcount_no_color(capsys: pytest.CaptureFixture[str]):
+    model_ref = _find_model_ref(lambda price: price.requests_kcount is not None)
+    assert cli_logic(['calc', '--no-color', '--input-tokens', '1000', model_ref]) == 0
+    out, err = capsys.readouterr()
+    assert 'K requests' in out
+    assert err == ''
+
+
+def test_calc_tiered_prices_no_color(capsys: pytest.CaptureFixture[str]):
+    model_ref = _find_model_ref(_has_tiered_prices)
+    assert cli_logic(['calc', '--no-color', '--input-tokens', '1000', model_ref]) == 0
+    out, err = capsys.readouterr()
+    assert '(+tiers)' in out
     assert err == ''
 
 
