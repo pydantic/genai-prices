@@ -511,6 +511,13 @@
           "format": "date",
           "title": "Start Date",
           "type": "string"
+        },
+        "type": {
+          "const": "start_date",
+          "default": "start_date",
+          "description": "Discriminator so JSON consumers (e.g. the JS engine reading remote data.json) can identify the constraint kind.",
+          "title": "Type",
+          "type": "string"
         }
       },
       "required": [
@@ -580,6 +587,13 @@
           "description": "End time of the interval.",
           "format": "time",
           "title": "End Time",
+          "type": "string"
+        },
+        "type": {
+          "const": "time_of_date",
+          "default": "time_of_date",
+          "description": "Discriminator so JSON consumers (e.g. the JS engine reading remote data.json) can identify the constraint kind.",
+          "title": "Type",
           "type": "string"
         }
       },

@@ -819,6 +819,8 @@ class StartDateConstraint:
 
     start_date: date
     """Date when this price starts"""
+    type: Literal['start_date'] = 'start_date'
+    """Discriminator so JSON consumers (e.g. the JS engine reading remote data.json) can identify the constraint kind."""
 
     def active(self, request_timestamp: datetime) -> bool:
         return request_timestamp.date() >= self.start_date
@@ -832,6 +834,8 @@ class TimeOfDateConstraint:
     """Start time of the interval."""
     end_time: time
     """End time of the interval."""
+    type: Literal['time_of_date'] = 'time_of_date'
+    """Discriminator so JSON consumers (e.g. the JS engine reading remote data.json) can identify the constraint kind."""
 
     def active(self, request_timestamp: datetime) -> bool:
         return self.start_time <= request_timestamp.timetz() < self.end_time
