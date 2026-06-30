@@ -650,6 +650,30 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.anthropic.claude-sonnet-5-v1:0',
+                match=ClauseContains(contains='global.anthropic.claude-sonnet-5'),
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
                 id='google.gemma-3-12b-it',
                 match=ClauseContains(contains='google.gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -1174,6 +1198,41 @@ providers: list[Provider] = [
                     ),
                     output_mtok=TieredPrices(base=Decimal('16.5'), tiers=[Tier(start=200000, price=Decimal('24.75'))]),
                 ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-sonnet-5-v1:0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-sonnet-5'),
+                        ClauseStartsWith(starts_with='claude-sonnet-5'),
+                        ClauseContains(contains='us.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='au.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='apac.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='eu.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='us-gov.anthropic.claude-sonnet-5'),
+                        ClauseContains(contains='jp.anthropic.claude-sonnet-5'),
+                    ]
+                ),
+                price_comments='Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.2'),
+                            cache_write_mtok=Decimal('2.75'),
+                            cache_read_mtok=Decimal('0.22'),
+                            output_mtok=Decimal('11'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.3'),
+                            cache_write_mtok=Decimal('4.125'),
+                            cache_read_mtok=Decimal('0.33'),
+                            output_mtok=Decimal('16.5'),
+                        ),
+                    ),
+                ],
             ),
         ],
     ),
