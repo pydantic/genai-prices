@@ -34,6 +34,12 @@ extractors:
       - path: completion_tokens
         dest: output_tokens
         required: true
+  - api_flavor: embeddings
+    root: usage
+    model_path: model
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
 models:
   - id: DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B

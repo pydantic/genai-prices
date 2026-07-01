@@ -6127,6 +6127,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -6285,6 +6289,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -6443,6 +6451,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -6598,6 +6610,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -6756,6 +6772,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -6927,6 +6947,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -7082,6 +7106,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -7244,6 +7272,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -7406,6 +7438,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -13064,6 +13100,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -13237,6 +13277,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -13394,6 +13438,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -13557,6 +13605,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -13714,6 +13766,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -13877,6 +13933,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14034,6 +14094,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14199,6 +14263,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14356,6 +14424,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14517,6 +14589,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14678,6 +14754,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -14849,6 +14929,10 @@
             "input_price": "0.00006",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -15020,6 +15104,10 @@
             "input_price": "0.0000121",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -15261,6 +15349,10 @@
             "input_price": "0.00003",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -15432,6 +15524,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -15673,6 +15769,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -15844,6 +15944,10 @@
             "input_price": "0.00023",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -15999,6 +16103,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -16154,6 +16262,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -16325,6 +16437,10 @@
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -16508,6 +16624,10 @@
             "input_price": "0.0002025",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -16679,6 +16799,10 @@
             "input_price": "0.0006",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -16850,6 +16974,10 @@
             "input_price": "0.00002",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -17021,6 +17149,10 @@
             "input_price": "0.0001125",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -17192,6 +17324,10 @@
             "input_price": "0.0000275",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -17363,6 +17499,10 @@
             "input_price": "0.00002",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -17534,6 +17674,10 @@
             "input_price": "0.00003",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -17705,6 +17849,10 @@
             "input_price": "0.0007025",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -17876,6 +18024,10 @@
             "input_price": "0.0007775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -18047,6 +18199,10 @@
             "input_price": "0.000115",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -18218,6 +18374,10 @@
             "input_price": "0.0012575",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -18386,6 +18546,12 @@
             "input_price": "0.000002886",
             "output_price": "0.00",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00000666",
+            "output_price": "0.00",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -18557,6 +18723,10 @@
             "input_price": "0.0000012",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -18728,6 +18898,10 @@
             "input_price": "0.00017",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -18899,6 +19073,10 @@
             "input_price": "0.0002225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -19140,6 +19318,10 @@
             "input_price": "0.0006347",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -19311,6 +19493,10 @@
             "input_price": "0.0027975",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -19469,6 +19655,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -19627,6 +19817,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -19798,6 +19992,10 @@
             "input_price": "0.0002725",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -19969,6 +20167,10 @@
             "input_price": "0.000325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20140,6 +20342,10 @@
             "input_price": "0.0005875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20311,6 +20517,10 @@
             "input_price": "0.0006825",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20482,6 +20692,10 @@
             "input_price": "0.000735",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20653,6 +20867,10 @@
             "input_price": "0.00002",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20824,6 +21042,10 @@
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -20995,6 +21217,10 @@
             "input_price": "0.0001575",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -21166,6 +21392,10 @@
             "input_price": "0.0041975",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -21337,6 +21567,10 @@
             "input_price": "0.0000124",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -21495,6 +21729,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -21666,6 +21904,10 @@
             "input_price": "0.0000515",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -21837,6 +22079,10 @@
             "input_price": "0.000115",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -22008,6 +22254,10 @@
             "input_price": "0.0029625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -22179,6 +22429,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -22350,6 +22604,10 @@
             "input_price": "0.0005875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -22523,6 +22781,10 @@
             "input_price": "0.000033",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -22774,6 +23036,10 @@
             "input_price": "0.0000156",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -22945,6 +23211,10 @@
             "input_price": "0.00001935",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -23116,6 +23386,10 @@
             "input_price": "0.0000077",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -23287,6 +23561,10 @@
             "input_price": "0.0004",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -23458,6 +23736,10 @@
             "input_price": "0.0004525",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -23641,6 +23923,10 @@
             "input_price": "0.00016",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -24647,6 +24933,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -24802,6 +25092,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -25027,6 +25321,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -30186,6 +30484,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -30365,6 +30667,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -30528,6 +30834,12 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00001554",
+            "output_price": "0.00",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -30691,6 +31003,12 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "input_price": "0.00038776",
+            "output_price": "0.00",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -30856,6 +31174,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -31015,6 +31337,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -31180,6 +31506,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -31345,6 +31675,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -31510,6 +31844,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -31689,6 +32027,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -31846,6 +32188,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -32025,6 +32371,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -32204,6 +32554,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -32367,6 +32721,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -32538,6 +32896,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -32709,6 +33071,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -32880,6 +33246,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -33051,6 +33421,10 @@
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -33222,6 +33596,10 @@
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -33393,6 +33771,10 @@
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -33564,6 +33946,10 @@
             "input_price": "0.000095",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -33735,6 +34121,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -33906,6 +34296,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -34077,6 +34471,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -34248,6 +34646,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -34419,6 +34821,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -34590,6 +34996,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -34761,6 +35171,10 @@
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -34932,6 +35346,10 @@
             "input_price": "0.0001675",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -35103,6 +35521,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -35274,6 +35696,10 @@
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -35445,6 +35871,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -35616,6 +36046,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -35857,6 +36291,10 @@
             "input_price": "0.0007625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -36028,6 +36466,10 @@
             "input_price": "0.00363",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -36199,6 +36641,10 @@
             "input_price": "0.0005",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -36370,6 +36816,10 @@
             "input_price": "0.00056",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -36541,6 +36991,10 @@
             "input_price": "0.0005075",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -36712,6 +37166,10 @@
             "input_price": "0.000625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -36883,6 +37341,10 @@
             "input_price": "0.0006925",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -37128,6 +37590,10 @@
             "input_price": "0.0004875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -37299,6 +37765,10 @@
             "input_price": "0.0033875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -37470,6 +37940,10 @@
             "input_price": "0.0008575",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -37641,6 +38115,10 @@
             "input_price": "0.000935",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -37812,6 +38290,10 @@
             "input_price": "0.00067",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -37983,6 +38465,10 @@
             "input_price": "0.00075",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -38154,6 +38640,10 @@
             "input_price": "0.0007625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -38325,6 +38815,10 @@
             "input_price": "0.00083",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -38496,6 +38990,10 @@
             "input_price": "0.0004875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -38667,6 +39165,10 @@
             "input_price": "0.0005675",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -38838,6 +39340,10 @@
             "input_price": "0.0004775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -39009,6 +39515,10 @@
             "input_price": "0.00333",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -39180,6 +39690,10 @@
             "input_price": "0.0004875",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -39351,6 +39865,10 @@
             "input_price": "0.000555",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -39522,6 +40040,10 @@
             "input_price": "0.000475",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -39693,6 +40215,10 @@
             "input_price": "0.0033225",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -39864,6 +40390,10 @@
             "input_price": "0.000485",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -40035,6 +40565,10 @@
             "input_price": "0.000585",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -40206,6 +40740,10 @@
             "input_price": "0.0004825",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -40377,6 +40915,10 @@
             "input_price": "0.00053",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -40548,6 +41090,10 @@
             "input_price": "0.0001125",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -40719,6 +41265,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -40890,6 +41440,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -41061,6 +41615,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -41311,6 +41869,10 @@
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -41482,6 +42044,10 @@
             "input_price": "0.0001675",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -41653,6 +42219,10 @@
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -41824,6 +42394,10 @@
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -41995,6 +42569,10 @@
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -42166,6 +42744,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -42337,6 +42919,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -42508,6 +43094,10 @@
             "input_price": "0.000105",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -42679,6 +43269,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -42850,6 +43444,10 @@
             "input_price": "0.000095",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -43021,6 +43619,10 @@
             "input_price": "0.0004525",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -43192,6 +43794,10 @@
             "input_price": "0.0023125",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -43363,6 +43969,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -43624,6 +44234,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -43824,6 +44438,10 @@
             "input_price": "0.0000341",
             "output_price": "0.0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -44043,6 +44661,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -44214,6 +44836,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -44385,6 +45011,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -44556,6 +45186,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -44727,6 +45361,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -44898,6 +45536,10 @@
             "input_price": "0.0001175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -45069,6 +45711,10 @@
             "input_price": "0.0002175",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -45240,6 +45886,10 @@
             "input_price": "0.00029",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -45411,6 +46061,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -45582,6 +46236,10 @@
             "input_price": "0.00008",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -45753,6 +46411,10 @@
             "input_price": "0.0001275",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -45924,6 +46586,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -46095,6 +46761,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -46266,6 +46936,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -46437,6 +47111,10 @@
             "input_price": "0.0001775",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -46608,6 +47286,10 @@
             "input_price": "0.0003325",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -46779,6 +47461,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -46950,6 +47636,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -47162,6 +47852,10 @@
             "input_price": "0.000035",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -47319,6 +48013,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -47480,6 +48178,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -47699,6 +48401,10 @@
             "input_price": "0.00001625",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
@@ -47889,6 +48595,10 @@
           {
             "api_flavor": "embeddings",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "ovhcloud"
           }
         ],
         "usage": {
