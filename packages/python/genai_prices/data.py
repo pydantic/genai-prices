@@ -1301,6 +1301,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(
@@ -1696,6 +1699,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
@@ -1957,6 +1963,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
@@ -2256,6 +2265,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -2993,6 +3005,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(
@@ -3033,6 +3048,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -3092,6 +3110,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -3170,6 +3191,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -3337,6 +3361,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -3658,6 +3685,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -4383,6 +4413,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(
@@ -4628,6 +4661,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(
@@ -4728,6 +4764,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -4847,6 +4886,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(
@@ -4962,6 +5004,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -5673,6 +5718,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='chat',
@@ -6000,6 +6048,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -11610,6 +11661,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
                     ),
                     UsageExtractorMapping(
@@ -12409,6 +12463,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
