@@ -406,6 +406,9 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
+    ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
+    ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
 ]
 

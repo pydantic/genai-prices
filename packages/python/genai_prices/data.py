@@ -8351,7 +8351,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='google/gemini-3.5-flash',
-                match=ClauseEquals(equals='google/gemini-3.5-flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-3.5-flash'),
+                        ClauseRegex(regex='^google/gemini-3\\.5-flash-\\d{8}$'),
+                    ]
+                ),
                 name='Gemini 3.5 Flash',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'),
@@ -11343,7 +11348,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='x-ai/grok-4.3',
-                match=ClauseEquals(equals='x-ai/grok-4.3'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='x-ai/grok-4.3'), ClauseRegex(regex='^x-ai/grok-4\\.3-\\d{8}$')]
+                ),
                 name='Grok 4.3',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
@@ -12597,6 +12604,9 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='grok-4.3'),
+                        ClauseRegex(regex='^grok-4\\.3-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.3'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.3-\\d{8}$'),
                         ClauseEquals(equals='grok-4.3-latest'),
                         ClauseEquals(equals='grok-latest'),
                     ]

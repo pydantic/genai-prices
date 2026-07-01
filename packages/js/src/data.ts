@@ -14532,7 +14532,14 @@ export const data: Provider[] = [
         id: 'google/gemini-3.5-flash',
         name: 'Gemini 3.5 Flash',
         match: {
-          equals: 'google/gemini-3.5-flash',
+          or: [
+            {
+              equals: 'google/gemini-3.5-flash',
+            },
+            {
+              regex: '^google/gemini-3\\.5-flash-\\d{8}$',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.5,
@@ -19698,7 +19705,14 @@ export const data: Provider[] = [
         id: 'x-ai/grok-4.3',
         name: 'Grok 4.3',
         match: {
-          equals: 'x-ai/grok-4.3',
+          or: [
+            {
+              equals: 'x-ai/grok-4.3',
+            },
+            {
+              regex: '^x-ai/grok-4\\.3-\\d{8}$',
+            },
+          ],
         },
         prices: {
           input_mtok: 1.25,
@@ -21920,6 +21934,15 @@ export const data: Provider[] = [
           or: [
             {
               equals: 'grok-4.3',
+            },
+            {
+              regex: '^grok-4\\.3-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.3',
+            },
+            {
+              regex: '^x-ai/grok-4\\.3-\\d{8}$',
             },
             {
               equals: 'grok-4.3-latest',

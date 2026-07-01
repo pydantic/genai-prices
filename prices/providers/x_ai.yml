@@ -251,6 +251,9 @@ models:
     match:
       or:
         - equals: grok-4.3
+        - regex: ^grok-4\.3-\d{8}$
+        - equals: x-ai/grok-4.3
+        - regex: ^x-ai/grok-4\.3-\d{8}$
         - equals: grok-4.3-latest
         - equals: grok-latest
     context_window: 1000000
