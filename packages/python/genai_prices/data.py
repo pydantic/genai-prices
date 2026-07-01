@@ -888,6 +888,22 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.65')),
             ),
             ModelInfo(
+                id='openai.gpt-5.4',
+                match=ClauseEquals(equals='openai.gpt-5.4'),
+                name='GPT-5.4',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.75'), cache_read_mtok=Decimal('0.275'), output_mtok=Decimal('16.5')
+                ),
+            ),
+            ModelInfo(
+                id='openai.gpt-5.5',
+                match=ClauseEquals(equals='openai.gpt-5.5'),
+                name='GPT-5.5',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.5'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('33')
+                ),
+            ),
+            ModelInfo(
                 id='openai.gpt-oss-120b-1:0',
                 match=ClauseContains(contains='openai.gpt-oss-120b-1'),
                 name='gpt-oss-120b',
