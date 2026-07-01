@@ -248,6 +248,17 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('OVHcloud provider', () => {
+    const ovhProvider = data.find((p) => p.id === 'ovhcloud')!
+
+    it('should extract embeddings usage', () => {
+      const { model, usage } = extractUsage(ovhProvider, { model: 'bge-m3', usage: { prompt_tokens: 512 } }, 'embeddings')
+
+      expect(model).toBe('bge-m3')
+      expect(usage).toEqual({ input_tokens: 512 })
+    })
+  })
+
   describe('provider without extractors', () => {
     it('should throw error when no extraction logic is defined', () => {
       const providerWithoutExtractors: Provider = {

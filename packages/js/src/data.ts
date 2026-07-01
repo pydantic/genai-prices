@@ -20202,6 +20202,18 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'embeddings',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
