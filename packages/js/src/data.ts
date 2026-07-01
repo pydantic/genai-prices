@@ -4571,14 +4571,7 @@ export const data: Provider[] = [
         description:
           "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
         match: {
-          or: [
-            {
-              starts_with: 'gemini-3.5-flash',
-            },
-            {
-              regex: '^google/gemini-3\\.5-flash-\\d{8}$',
-            },
-          ],
+          starts_with: 'gemini-3.5-flash',
         },
         context_window: 1000000,
         price_comments:

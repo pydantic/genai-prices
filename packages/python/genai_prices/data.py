@@ -2645,12 +2645,7 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.5-flash',
-                match=ClauseOr(
-                    or_=[
-                        ClauseStartsWith(starts_with='gemini-3.5-flash'),
-                        ClauseRegex(regex='^google/gemini-3\\.5-flash-\\d{8}$'),
-                    ]
-                ),
+                match=ClauseStartsWith(starts_with='gemini-3.5-flash'),
                 name='Gemini 3.5 Flash',
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,

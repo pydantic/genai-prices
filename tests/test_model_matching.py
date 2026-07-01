@@ -407,7 +407,6 @@ test_cases: list[tuple[str, str, str]] = [
     ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
     ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
     ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
-    ('google-gla', 'google/gemini-3.5-flash-20260519', snapshot(('google', 'gemini-3.5-flash'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
 ]
 
