@@ -392,6 +392,8 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-2026-03-05', snapshot(('openai', 'gpt-5.4'))),
     ('openai', 'gpt-5-4', snapshot(('openai', 'gpt-5.4'))),
     ('openai', 'gpt-5-4-2026-03-05', snapshot(('openai', 'gpt-5.4'))),
+    ('bedrock', 'openai.gpt-5.4', snapshot(('aws', 'openai.gpt-5.4'))),
+    ('bedrock', 'openai.gpt-5.5', snapshot(('aws', 'openai.gpt-5.5'))),
     ('openai', 'gpt-5.4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5.4-pro-2026-03-05', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5-4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
