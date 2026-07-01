@@ -384,17 +384,47 @@ describe('extractUsage', () => {
   })
 
   describe('AWS Bedrock provider', () => {
-    const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
+    const awsProvider: Provider = data.find((p) => p.id === 'aws')!
 
     it('should extract usage with model name', () => {
       const responseData = {
         usage: { inputTokens: 406, outputTokens: 53, serverToolUsage: {}, totalTokens: 459 },
       }
 
-      const { model, usage } = extractUsage(bedrockProvider, responseData)
+      const { model, usage } = extractUsage(awsProvider, responseData)
 
       expect(model).toBeNull()
       expect(usage).toEqual({ input_tokens: 406, output_tokens: 53 })
+    })
+
+    it('should extract Converse usage with cache write tokens (real observed body)', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 0, cacheWriteInputTokens: 11207, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(awsProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 0, cache_write_tokens: 11207, input_tokens: 11216, output_tokens: 5 })
+    })
+
+    it('should extract Converse usage with cache read tokens', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 11207, cacheWriteInputTokens: 0, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(awsProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 11207, cache_write_tokens: 0, input_tokens: 11216, output_tokens: 5 })
+    })
+
+    it('should extract Converse usage without cache tokens (non-cached requests unaffected)', () => {
+      const responseData = {
+        usage: { inputTokens: 100, outputTokens: 50 },
+      }
+
+      const { usage } = extractUsage(awsProvider, responseData)
+
+      expect(usage).toEqual({ input_tokens: 100, output_tokens: 50 })
     })
   })
 })
