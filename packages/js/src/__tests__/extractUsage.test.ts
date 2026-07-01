@@ -328,6 +328,61 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('MiniMax provider', () => {
+    const minimaxProvider = data.find((p) => p.id === 'minimax')!
+
+    it('should extract default usage without cache', () => {
+      const responseData = { model: 'MiniMax-M2', usage: { input_tokens: 100, output_tokens: 50 } }
+
+      const { model, usage } = extractUsage(minimaxProvider, responseData)
+
+      expect(model).toBe('MiniMax-M2')
+      expect(usage).toEqual({ input_tokens: 100, output_tokens: 50 })
+    })
+
+    it('should extract default usage with cache write (Anthropic accounting: add-back)', () => {
+      const responseData = {
+        usage: { cache_creation_input_tokens: 1900, cache_read_input_tokens: 0, input_tokens: 0, output_tokens: 8 },
+      }
+
+      const { usage } = extractUsage(minimaxProvider, responseData)
+
+      // cache_read_input_tokens: 0 is present so cache_read_tokens: 0 also appears
+      expect(usage).toEqual({ cache_read_tokens: 0, cache_write_tokens: 1900, input_tokens: 1900, output_tokens: 8 })
+    })
+
+    it('should extract default usage with cache read (Anthropic accounting: add-back)', () => {
+      const responseData = {
+        usage: { cache_creation_input_tokens: 0, cache_read_input_tokens: 1900, input_tokens: 0, output_tokens: 8 },
+      }
+
+      const { usage } = extractUsage(minimaxProvider, responseData)
+
+      // cache_creation_input_tokens: 0 is present so cache_write_tokens: 0 also appears
+      expect(usage).toEqual({ cache_read_tokens: 1900, cache_write_tokens: 0, input_tokens: 1900, output_tokens: 8 })
+    })
+
+    it('should extract responses usage without cache (OpenAI accounting: no add-back)', () => {
+      const responseData = {
+        usage: { input_tokens: 1925, input_tokens_details: { cached_tokens: 0 }, output_tokens: 16 },
+      }
+
+      const { usage } = extractUsage(minimaxProvider, responseData, 'responses')
+
+      expect(usage).toEqual({ cache_read_tokens: 0, input_tokens: 1925, output_tokens: 16 })
+    })
+
+    it('should extract responses usage with cache (OpenAI accounting: subset, no add-back)', () => {
+      const responseData = {
+        usage: { input_tokens: 2000, input_tokens_details: { cached_tokens: 500 }, output_tokens: 16 },
+      }
+
+      const { usage } = extractUsage(minimaxProvider, responseData, 'responses')
+
+      expect(usage).toEqual({ cache_read_tokens: 500, input_tokens: 2000, output_tokens: 16 })
+    })
+  })
+
   describe('AWS Bedrock provider', () => {
     const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
 

@@ -17,6 +17,38 @@ model_match:
     - equals: "M2-her"
     - equals: "m2-her"
 extractors:
+  # Anthropic-compatible endpoint (api.minimax.io/anthropic/v1/messages): Anthropic
+  # accounting — input_tokens excludes cache, so add cache back to get total input.
+  - root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  # OpenAI Responses-compatible endpoint (api.minimax.io/v1/responses): OpenAI
+  # accounting — input_tokens already includes cached tokens (a subset).
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
   - api_flavor: chat
     root: usage
     mappings:
