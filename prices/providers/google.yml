@@ -605,7 +605,9 @@ models:
       Google's most intelligent model built for speed, combining frontier intelligence with
       improved reasoning, coding, and multimodal understanding.
     match:
-      starts_with: gemini-3.5-flash
+      or:
+        - starts_with: gemini-3.5-flash
+        - regex: ^google/gemini-3\.5-flash-\d{8}$
     context_window: 1000000
     prices_checked: 2026-05-19
     price_comments:

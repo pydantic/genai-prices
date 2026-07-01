@@ -1618,7 +1618,9 @@ models:
   - id: google/gemini-3.5-flash
     name: Gemini 3.5 Flash
     match:
-      equals: google/gemini-3.5-flash
+      or:
+        - equals: google/gemini-3.5-flash
+        - regex: ^google/gemini-3\.5-flash-\d{8}$
     prices:
       input_mtok: 1.5
       cache_write_mtok: 0.08333333333333334
@@ -5224,7 +5226,9 @@ models:
   - id: x-ai/grok-4.3
     name: Grok 4.3
     match:
-      equals: x-ai/grok-4.3
+      or:
+        - equals: x-ai/grok-4.3
+        - regex: ^x-ai/grok-4\.3-\d{8}$
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.2
