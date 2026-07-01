@@ -383,6 +383,42 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('Mistral provider', () => {
+    const mistralProvider = data.find((p) => p.id === 'mistral')!
+
+    it('should extract usage with cached tokens (INCLUDE convention: input already includes cached subset)', () => {
+      const responseData = {
+        usage: { completion_tokens: 2, prompt_tokens: 1013, prompt_tokens_details: { cached_tokens: 1008 } },
+      }
+
+      const { usage } = extractUsage(mistralProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 1008, input_tokens: 1013, output_tokens: 2 })
+    })
+
+    it('should extract usage without cache tokens', () => {
+      const responseData = { usage: { completion_tokens: 50, prompt_tokens: 100 } }
+
+      const { usage } = extractUsage(mistralProvider, responseData)
+
+      expect(usage).toEqual({ input_tokens: 100, output_tokens: 50 })
+    })
+  })
+
+  describe('Groq provider', () => {
+    const groqProvider = data.find((p) => p.id === 'groq')!
+
+    it('should extract usage with cached tokens (INCLUDE convention: input already includes cached subset)', () => {
+      const responseData = {
+        usage: { completion_tokens: 8, prompt_tokens: 4641, prompt_tokens_details: { cached_tokens: 4608 } },
+      }
+
+      const { usage } = extractUsage(groqProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 4608, input_tokens: 4641, output_tokens: 8 })
+    })
+  })
+
   describe('AWS Bedrock provider', () => {
     const bedrockProvider: Provider = data.find((provider) => provider.id === 'aws')!
 
