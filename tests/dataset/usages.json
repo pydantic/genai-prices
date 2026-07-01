@@ -53,6 +53,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -117,6 +125,14 @@
             "input_price": "0.002232",
             "output_price": "0.000795",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -185,6 +201,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -249,6 +273,14 @@
             "input_price": "0.002391",
             "output_price": "0.001365",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -317,6 +349,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -381,6 +421,14 @@
             "input_price": "0.001374",
             "output_price": "0.00057",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -449,6 +497,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -513,6 +569,14 @@
             "input_price": "0.002232",
             "output_price": "0.000795",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -581,6 +645,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -645,6 +717,14 @@
             "input_price": "0.002193",
             "output_price": "0.00165",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -713,6 +793,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -777,6 +865,14 @@
             "input_price": "0.001908",
             "output_price": "0.00132",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -845,6 +941,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -909,6 +1013,14 @@
             "input_price": "0.002196",
             "output_price": "0.000585",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -977,6 +1089,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1041,6 +1161,14 @@
             "input_price": "0.002235",
             "output_price": "0.000795",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -1109,6 +1237,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1173,6 +1309,14 @@
             "input_price": "0.001683",
             "output_price": "0.00081",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -1241,6 +1385,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1305,6 +1457,14 @@
             "input_price": "0.001749",
             "output_price": "0.00114",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -1373,6 +1533,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1437,6 +1605,14 @@
             "input_price": "0.000588",
             "output_price": "0.000285",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -1505,6 +1681,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1569,6 +1753,14 @@
             "input_price": "0.001392",
             "output_price": "0.00045",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -1637,6 +1829,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1701,6 +1901,14 @@
             "input_price": "0.002394",
             "output_price": "0.00075",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -1769,6 +1977,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1835,6 +2051,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -1899,6 +2123,14 @@
             "input_price": "0.000591",
             "output_price": "0.00027",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -2039,6 +2271,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -2462,6 +2702,14 @@
             "input_price": "0.00489",
             "output_price": "0.001635",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -3213,6 +3461,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -3938,6 +4194,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00004625",
             "output_price": "0.00272",
@@ -3998,6 +4262,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7197,6 +7469,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -7251,6 +7531,10 @@
             "input_price": "0.00417525",
             "output_price": "0.005865",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -7270,6 +7554,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7326,6 +7614,10 @@
             "input_price": "0.00185355",
             "output_price": "0.000495",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -7346,6 +7638,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7414,6 +7710,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -7478,6 +7782,14 @@
             "input_price": "0.002073",
             "output_price": "0.000795",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7546,6 +7858,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -7610,6 +7930,14 @@
             "input_price": "0.0003",
             "output_price": "0.00075",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7678,6 +8006,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -7742,6 +8078,14 @@
             "input_price": "0.00153",
             "output_price": "0.000255",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7810,6 +8154,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -7874,6 +8226,14 @@
             "input_price": "0.005037",
             "output_price": "0.00024",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -7942,6 +8302,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8006,6 +8374,14 @@
             "input_price": "0.001335",
             "output_price": "0.000345",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8074,6 +8450,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8140,6 +8524,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8198,6 +8590,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8272,6 +8672,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8336,6 +8744,14 @@
             "input_price": "0.019038",
             "output_price": "0.00531",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8404,6 +8820,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8468,6 +8892,14 @@
             "input_price": "0.000008",
             "output_price": "0.000105",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8536,6 +8968,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8600,6 +9040,14 @@
             "input_price": "0.00138",
             "output_price": "0.001365",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8668,6 +9116,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8732,6 +9188,14 @@
             "input_price": "0.000423",
             "output_price": "0.00101",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8800,6 +9264,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8864,6 +9336,14 @@
             "input_price": "0.000335",
             "output_price": "0.000735",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -8932,6 +9412,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -8996,6 +9484,14 @@
             "input_price": "0.000561",
             "output_price": "0.001695",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -9064,6 +9560,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9128,6 +9632,14 @@
             "input_price": "0.006075",
             "output_price": "0.001215",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -9199,6 +9711,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9268,6 +9788,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9332,6 +9860,14 @@
             "input_price": "0.000276",
             "output_price": "0.00294",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -9400,6 +9936,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9466,6 +10010,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9524,6 +10076,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -9592,6 +10152,14 @@
             "input_price": "0.004029",
             "output_price": "0.00807",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -9664,6 +10232,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9734,6 +10310,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9800,6 +10384,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -9864,6 +10456,14 @@
             "input_price": "0.000873",
             "output_price": "0.007065",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -9936,6 +10536,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -10002,6 +10610,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -10066,6 +10682,14 @@
             "input_price": "0.001704",
             "output_price": "0.001755",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -10184,6 +10808,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -10252,6 +10884,14 @@
             "input_price": "0.005313",
             "output_price": "0.002565",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -10324,6 +10964,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -10390,6 +11038,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -10448,6 +11104,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -11255,6 +11919,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -14405,6 +15077,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0000515",
             "output_price": "0.0000024",
@@ -14807,6 +15487,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -18266,6 +18954,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -23339,6 +24035,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00002875",
             "output_price": "0.0203",
@@ -24155,6 +24859,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0000143",
             "output_price": "0.0071104",
@@ -24360,6 +25072,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -24378,6 +25094,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -24443,6 +25163,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00154",
             "output_price": "0.00098",
@@ -24503,6 +25231,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -24567,6 +25303,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000135",
             "output_price": "0.00018",
@@ -24627,6 +25371,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -24691,6 +25443,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0000143",
             "output_price": "0.0009988",
@@ -24751,6 +25511,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -24815,6 +25583,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00073375",
             "output_price": "0.02587",
@@ -24865,6 +25641,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -24883,6 +25663,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -24948,6 +25732,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00099125",
             "output_price": "0.00007",
@@ -25010,6 +25802,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000035",
             "output_price": "0.00008",
@@ -25060,6 +25860,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -25078,6 +25882,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25131,6 +25939,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -25149,6 +25961,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25214,6 +26030,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0013277",
             "output_price": "0.002354",
@@ -25274,6 +26098,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25338,6 +26170,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.002265",
             "output_price": "0.01313",
@@ -25398,6 +26238,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25462,6 +26310,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000195",
             "output_price": "0.00924",
@@ -25522,6 +26378,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25586,6 +26450,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0002675",
             "output_price": "0.00012",
@@ -25646,6 +26518,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25710,6 +26590,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0016575",
             "output_price": "0.0002",
@@ -25770,6 +26658,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25834,6 +26730,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000155",
             "output_price": "0.00012",
@@ -25894,6 +26798,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -25958,6 +26870,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00236125",
             "output_price": "0.01434",
@@ -26008,6 +26928,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -26026,6 +26950,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26079,6 +27007,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -26097,6 +27029,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26150,6 +27086,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -26168,6 +27108,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26221,6 +27165,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -26239,6 +27187,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26304,6 +27256,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00009",
             "output_price": "0.00012",
@@ -26366,6 +27326,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0001475",
             "output_price": "0.00011",
@@ -26426,6 +27394,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26496,6 +27472,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -26554,6 +27538,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26618,6 +27610,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00005",
             "output_price": "0.00148",
@@ -26678,6 +27678,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26742,6 +27750,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00001625",
             "output_price": "0.00248",
@@ -26802,6 +27818,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -26866,6 +27890,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0000125",
             "output_price": "0.00001",
@@ -26928,6 +27960,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0000125",
             "output_price": "0.00001",
@@ -26978,6 +28018,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -26996,6 +28040,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27061,6 +28109,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000155",
             "output_price": "0.01926",
@@ -27111,6 +28167,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -27129,6 +28189,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27194,6 +28258,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00006",
             "output_price": "0.00008",
@@ -27254,6 +28326,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27318,6 +28398,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000072",
             "output_price": "0.00012",
@@ -27380,6 +28468,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000122",
             "output_price": "0.000448",
@@ -27430,6 +28526,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -27448,6 +28548,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27513,6 +28617,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.000045",
             "output_price": "0.00216",
@@ -27573,6 +28685,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27637,6 +28757,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0002225",
             "output_price": "0.00016",
@@ -27697,6 +28825,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27761,6 +28897,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0029625",
             "output_price": "0.00011",
@@ -27821,6 +28965,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -27885,6 +29037,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00223625",
             "output_price": "0.01312",
@@ -27945,6 +29105,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -28009,6 +29177,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00044",
             "output_price": "0.00026",
@@ -28069,6 +29245,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -28133,6 +29317,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0001675",
             "output_price": "0.00011",
@@ -28193,6 +29385,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -28257,6 +29457,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00",
             "output_price": "0",
@@ -28314,6 +29522,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -28378,6 +29594,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0007075",
             "output_price": "0.00012",
@@ -28438,6 +29662,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -28502,6 +29734,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00001625",
             "output_price": "0.02199",
@@ -28562,6 +29802,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -28626,6 +29874,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.00048625",
             "output_price": "0.00721",
@@ -28688,6 +29944,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "input_price": "0.0016175",
             "output_price": "0.00065",
@@ -28748,6 +30012,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -39834,6 +41106,10 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
           }
         ],
         "usage": {
@@ -39852,6 +41128,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -42172,6 +43452,14 @@
             "input_price": "0.000096",
             "output_price": "0.000075",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
@@ -46667,6 +47955,14 @@
             "provider_id": "google"
           },
           {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
+          },
+          {
             "api_flavor": "responses",
             "provider_id": "openai"
           }
@@ -46728,6 +48024,14 @@
           {
             "api_flavor": "anthropic",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "minimax"
           },
           {
             "api_flavor": "responses",
