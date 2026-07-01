@@ -1477,6 +1477,30 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai.gpt-5.4',
+        name: 'GPT-5.4',
+        match: {
+          equals: 'openai.gpt-5.4',
+        },
+        prices: {
+          input_mtok: 2.75,
+          cache_read_mtok: 0.275,
+          output_mtok: 16.5,
+        },
+      },
+      {
+        id: 'openai.gpt-5.5',
+        name: 'GPT-5.5',
+        match: {
+          equals: 'openai.gpt-5.5',
+        },
+        prices: {
+          input_mtok: 5.5,
+          cache_read_mtok: 0.55,
+          output_mtok: 33,
+        },
+      },
+      {
         id: 'openai.gpt-oss-120b-1:0',
         name: 'gpt-oss-120b',
         match: {
