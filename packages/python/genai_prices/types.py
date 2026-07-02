@@ -14,10 +14,12 @@ from typing_extensions import TypedDict
 __all__ = (
     'ProviderID',
     'PriceCalculation',
+    'PriceSource',
     'AbstractUsage',
     'Usage',
     'Provider',
     'UsageExtractorMapping',
+    'UsageExtractionResult',
     'UsageExtractor',
     'ModelInfo',
     'ModelPrice',
@@ -90,6 +92,7 @@ class ArrayMatch:
 
 
 ExtractPath = str | Sequence[str | ArrayMatch]
+PriceSource = Literal['calculated', 'reported']
 
 
 @dataclass(repr=False)
@@ -101,8 +104,10 @@ class PriceCalculation:
     provider: Provider = dataclasses.field(repr=False)
     model_price: ModelPrice
     auto_update_timestamp: datetime | None
+    price_source: PriceSource = 'calculated'
 
     def __repr__(self) -> str:
+        source = f', price_source={self.price_source!r}' if self.price_source != 'calculated' else ''
         return (
             'PriceCalculation('
             f'input_price={self.input_price!r}, '
@@ -111,7 +116,8 @@ class PriceCalculation:
             f'model={self.model.summary()}, '
             f'provider={self.provider.summary()}, '
             f'model_price=ModelPrice({self.model_price}), '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+            f'auto_update_timestamp={self.auto_update_timestamp!r}'
+            f'{source})'
         )
 
 
@@ -121,9 +127,14 @@ class ExtractedUsage:
     model: ModelInfo | None = dataclasses.field(repr=False)
     provider: Provider = dataclasses.field(repr=False)
     auto_update_timestamp: datetime | None
+    reported_total_price: Decimal | None = None
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        reported_total_price: Decimal | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -131,25 +142,32 @@ class ExtractedUsage:
             genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
+            reported_total_price: The provider-reported total price to prefer over calculated pricing, if available.
         """
         model = model or self.model
         if model is None:
             raise ValueError('No model reference found in response data and model not provided')
 
+        reported_total_price = reported_total_price if reported_total_price is not None else self.reported_total_price
         return model.calc_price(
             self.usage,
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            reported_total_price=reported_total_price,
         )
 
     def __repr__(self) -> str:
+        reported_price = (
+            f', reported_total_price={self.reported_total_price!r}' if self.reported_total_price is not None else ''
+        )
         return (
             'ExtractedUsage('
             f'usage={self.usage!r}, '
             f'model={self.model.summary() if self.model else None}, '
             f'provider={self.provider.summary()}, '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+            f'auto_update_timestamp={self.auto_update_timestamp!r}'
+            f'{reported_price})'
         )
 
     def __add__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
@@ -180,6 +198,7 @@ class ExtractedUsage:
             provider=self.provider,
             auto_update_timestamp=self.auto_update_timestamp,
             usage=self.usage + other.usage,
+            reported_total_price=_add_decimal_options(self.reported_total_price, other.reported_total_price),
         )
 
     def __radd__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
@@ -264,6 +283,10 @@ class Usage:
         return self + other
 
 
+def _add_decimal_options(a: Decimal | None, b: Decimal | None) -> Decimal | None:
+    return None if a is b is None else (a or Decimal(0)) + (b or Decimal(0))
+
+
 @dataclass
 class Provider:
     """Information about an LLM inference provider"""
@@ -322,6 +345,11 @@ class Provider:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
+        result = self.extract_usage_result(response_data, api_flavor=api_flavor)
+        return result.model_name, result.usage
+
+    def extract_usage_result(self, response_data: Any, *, api_flavor: str = 'default') -> UsageExtractionResult:
+        """Extract model name, token usage, and any provider-reported price from a response."""
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
@@ -331,7 +359,7 @@ class Provider:
             fs = ', '.join(e.api_flavor for e in self.extractors)
             raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
 
-        return extractor.extract(response_data)
+        return extractor.extract_result(response_data)
 
     def summary(self) -> str:
         return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
@@ -364,6 +392,15 @@ class UsageExtractorMapping:
 
 
 @dataclass
+class UsageExtractionResult:
+    """Provider usage extracted from a response."""
+
+    model_name: str | None
+    usage: Usage
+    reported_total_price: Decimal | None = None
+
+
+@dataclass
 class UsageExtractor:
     """Logic for extracting usage information from a response."""
 
@@ -375,6 +412,8 @@ class UsageExtractor:
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
+    reported_total_price_path: ExtractPath | None = None
+    """Path to the provider-reported total price, if the provider returns one."""
 
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
@@ -388,6 +427,11 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
+        result = self.extract_result(response_data)
+        return result.model_name, result.usage
+
+    def extract_result(self, response_data: Any) -> UsageExtractionResult:
+        """Extract model name, usage information and provider-reported price from a response."""
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
@@ -395,6 +439,7 @@ class UsageExtractor:
             root = [root]
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
+        reported_total_price = _extract_decimal_path(self.reported_total_price_path, usage_obj, root)
 
         usage = Usage()
         values_set = False
@@ -406,7 +451,7 @@ class UsageExtractor:
                 values_set = True
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
-        return model_name, usage
+        return UsageExtractionResult(model_name, usage, reported_total_price)
 
 
 E = TypeVar('E')
@@ -489,6 +534,20 @@ def _extract_path(
             )
 
 
+def _extract_decimal_path(path: ExtractPath | None, data: Any, data_path: Sequence[str | ArrayMatch]) -> Decimal | None:
+    if path is None:
+        return None
+
+    value = _extract_path(path, data, object, False, data_path)
+    if value is None:
+        return None
+
+    if not isinstance(value, bool) and isinstance(value, int | float | str | Decimal):
+        return Decimal(str(value))
+
+    return None
+
+
 def _expect_mapping(
     data: Any, required: bool, data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | ArrayMatch]
 ) -> TypeGuard[Mapping[str, Any]]:
@@ -563,12 +622,18 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        reported_total_price: Decimal | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
         price = model_price.calc_price(usage)
+        price_source: PriceSource = 'calculated'
+        if reported_total_price is not None:
+            _validate_reported_total_price(reported_total_price)
+            price = _apply_reported_total_price(price, reported_total_price, usage)
+            price_source = 'reported'
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
@@ -577,6 +642,7 @@ class ModelInfo:
             provider=provider,
             model_price=model_price,
             auto_update_timestamp=auto_update_timestamp,
+            price_source=price_source,
         )
 
     def summary(self) -> str:
@@ -587,6 +653,27 @@ class CalcPrice(TypedDict):
     input_price: Decimal
     output_price: Decimal
     total_price: Decimal
+
+
+def _apply_reported_total_price(price: CalcPrice, reported_total_price: Decimal, usage: AbstractUsage) -> CalcPrice:
+    calculated_total = price['total_price']
+    if calculated_total > 0:
+        input_price = reported_total_price * price['input_price'] / calculated_total
+        return {
+            'input_price': input_price,
+            'output_price': reported_total_price - input_price,
+            'total_price': reported_total_price,
+        }
+
+    if usage.output_tokens and not usage.input_tokens:
+        return {'input_price': Decimal(0), 'output_price': reported_total_price, 'total_price': reported_total_price}
+
+    return {'input_price': reported_total_price, 'output_price': Decimal(0), 'total_price': reported_total_price}
+
+
+def _validate_reported_total_price(reported_total_price: Decimal) -> None:
+    if not reported_total_price.is_finite() or reported_total_price < 0:
+        raise ValueError('reported_total_price must be a finite non-negative Decimal')
 
 
 @dataclass

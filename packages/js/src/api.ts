@@ -77,13 +77,52 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcPriceInternal(usage, modelPrice)
+  const calculatedPriceResult = calcPriceInternal(usage, modelPrice)
+  if (options?.reportedTotalPrice !== undefined) {
+    validateReportedTotalPrice(options.reportedTotalPrice)
+  }
+  const priceResult =
+    options?.reportedTotalPrice === undefined
+      ? calculatedPriceResult
+      : applyReportedTotalPrice(calculatedPriceResult, options.reportedTotalPrice, usage)
   return {
     auto_update_timestamp: undefined,
     model,
     model_price: modelPrice,
+    price_source: options?.reportedTotalPrice === undefined ? 'calculated' : 'reported',
     provider,
     ...priceResult,
+  }
+}
+
+function validateReportedTotalPrice(reportedTotalPrice: number) {
+  if (!Number.isFinite(reportedTotalPrice) || reportedTotalPrice < 0) {
+    throw new Error('reportedTotalPrice must be a finite non-negative number')
+  }
+}
+
+function applyReportedTotalPrice(price: ReturnType<typeof calcPriceInternal>, reportedTotalPrice: number, usage: Usage) {
+  if (price.total_price > 0) {
+    const inputPrice = (reportedTotalPrice * price.input_price) / price.total_price
+    return {
+      input_price: inputPrice,
+      output_price: reportedTotalPrice - inputPrice,
+      total_price: reportedTotalPrice,
+    }
+  }
+
+  if (usage.output_tokens && !usage.input_tokens) {
+    return {
+      input_price: 0,
+      output_price: reportedTotalPrice,
+      total_price: reportedTotalPrice,
+    }
+  }
+
+  return {
+    input_price: reportedTotalPrice,
+    output_price: 0,
+    total_price: reportedTotalPrice,
   }
 }
 

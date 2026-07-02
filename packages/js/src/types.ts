@@ -84,6 +84,7 @@ export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
   model_path: ExtractPath
+  reported_total_price_path?: ExtractPath
   root: ExtractPath
 }
 
@@ -118,12 +119,15 @@ export interface ModelPriceCalculationResult {
   total_price: number
 }
 
+export type PriceSource = 'calculated' | 'reported'
+
 export interface PriceCalculation {
   auto_update_timestamp?: string
   input_price: number
   model: ModelInfo
   model_price: ModelPrice
   output_price: number
+  price_source: PriceSource
   provider: Provider
   total_price: number
 }
@@ -155,5 +159,6 @@ export interface PriceOptions {
   provider?: Provider
   providerApiUrl?: string
   providerId?: string
+  reportedTotalPrice?: number
   timestamp?: Date
 }

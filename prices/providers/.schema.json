@@ -577,6 +577,28 @@
           "description": "Path to the model name in the response.\n\nAlmost all APIs return this in the 'model' field, hence the default value.",
           "title": "Model Path"
         },
+        "reported_total_price_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayMatch"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Path to the provider-reported total price, if the provider returns one.",
+          "title": "Reported Total Price Path"
+        },
         "mappings": {
           "description": "Mappings from used to build usage.",
           "items": {

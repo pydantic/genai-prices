@@ -35,6 +35,62 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+def test_sync_success_with_reported_total_price():
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        model_ref='gpt-4o',
+        provider_id='openai',
+        reported_total_price=Decimal('0.00123'),
+    )
+
+    assert price.price_source == snapshot('reported')
+    assert price.total_price == snapshot(Decimal('0.00123'))
+    assert price.input_price + price.output_price == price.total_price
+
+
+@pytest.mark.parametrize(
+    'reported_total_price',
+    [
+        pytest.param(Decimal('NaN'), id='nan'),
+        pytest.param(Decimal('Infinity'), id='infinity'),
+        pytest.param(Decimal('-0.001'), id='negative'),
+    ],
+)
+def test_sync_rejects_invalid_reported_total_price(reported_total_price: Decimal):
+    with pytest.raises(ValueError, match='reported_total_price must be a finite non-negative Decimal'):
+        calc_price(
+            Usage(input_tokens=1000, output_tokens=100),
+            model_ref='gpt-4o',
+            provider_id='openai',
+            reported_total_price=reported_total_price,
+        )
+
+
+@pytest.mark.parametrize(
+    'usage,expected_input_price,expected_output_price',
+    [
+        pytest.param(Usage(input_tokens=1000), Decimal('0.00123'), Decimal(0), id='input-only'),
+        pytest.param(Usage(output_tokens=100), Decimal(0), Decimal('0.00123'), id='output-only'),
+    ],
+)
+def test_sync_success_with_reported_total_price_and_zero_calculated_price(
+    usage: Usage,
+    expected_input_price: Decimal,
+    expected_output_price: Decimal,
+):
+    price = calc_price(
+        usage,
+        model_ref='agentica-org/deepcoder-14b-preview:free',
+        provider_id='openrouter',
+        reported_total_price=Decimal('0.00123'),
+    )
+
+    assert price.price_source == 'reported'
+    assert price.input_price == expected_input_price
+    assert price.output_price == expected_output_price
+    assert price.total_price == Decimal('0.00123')
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),

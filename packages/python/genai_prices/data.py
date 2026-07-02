@@ -6938,7 +6938,21 @@ providers: list[Provider] = [
                 ],
                 api_flavor='chat',
                 model_path='model',
-            )
+                reported_total_price_path='cost',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+                reported_total_price_path='cost',
+            ),
         ],
         models=[
             ModelInfo(

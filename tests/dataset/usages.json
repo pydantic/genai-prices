@@ -63,6 +63,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -137,6 +141,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -211,6 +219,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -285,6 +297,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -359,6 +375,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -433,6 +453,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -507,6 +531,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -581,6 +609,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -655,6 +687,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -729,6 +765,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -803,6 +843,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -877,6 +921,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -951,6 +999,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1025,6 +1077,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1099,6 +1155,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1173,6 +1233,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1247,6 +1311,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1321,6 +1389,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1395,6 +1467,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1469,6 +1545,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1543,6 +1623,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1617,6 +1701,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1691,6 +1779,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1765,6 +1857,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1839,6 +1935,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1913,6 +2013,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -1987,6 +2091,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -2061,6 +2169,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -2135,6 +2247,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -2285,6 +2401,10 @@
             "input_price": "0.00005625",
             "output_price": "0.01719",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -2714,6 +2834,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -3471,6 +3595,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -4206,6 +4334,10 @@
             "input_price": "0.00004625",
             "output_price": "0.00272",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -4276,6 +4408,10 @@
             "input_price": "0.00047375",
             "output_price": "0.00077",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7479,6 +7615,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7562,6 +7702,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7646,6 +7790,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7720,6 +7868,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7794,6 +7946,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7868,6 +8024,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -7942,6 +8102,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8016,6 +8180,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8090,6 +8258,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8164,6 +8336,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8238,6 +8414,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8312,6 +8492,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8386,6 +8570,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8460,6 +8648,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8534,6 +8726,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8604,6 +8800,10 @@
             "input_price": "0.000658",
             "output_price": "0.000096",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8682,6 +8882,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8756,6 +8960,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8830,6 +9038,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8904,6 +9116,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -8978,6 +9194,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9052,6 +9272,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9126,6 +9350,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9200,6 +9428,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9274,6 +9506,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9348,6 +9584,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9422,6 +9662,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9496,6 +9740,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9570,6 +9818,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9644,6 +9896,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9721,6 +9977,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9798,6 +10058,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9872,6 +10136,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -9946,6 +10214,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10020,6 +10292,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10090,6 +10366,10 @@
             "input_price": "0.00002875",
             "output_price": "0.02211",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10164,6 +10444,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10242,6 +10526,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10320,6 +10608,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10394,6 +10686,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10468,6 +10764,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10546,6 +10846,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10620,6 +10924,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10694,6 +11002,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10818,6 +11130,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10896,6 +11212,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -10974,6 +11294,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -11048,6 +11372,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -11118,6 +11446,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0098604",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -11933,6 +12265,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0089232",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -15089,6 +15425,10 @@
             "input_price": "0.0000515",
             "output_price": "0.0000024",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -15501,6 +15841,10 @@
             "input_price": "0.00000375",
             "output_price": "0.000006",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -18968,6 +19312,10 @@
             "input_price": "0.0000143",
             "output_price": "0.008426",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -24047,6 +24395,10 @@
             "input_price": "0.00002875",
             "output_price": "0.0203",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -24871,6 +25223,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0071104",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25104,6 +25460,10 @@
             "input_price": "0.00248075",
             "output_price": "0.00638",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25175,6 +25535,10 @@
             "input_price": "0.00154",
             "output_price": "0.00098",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25245,6 +25609,10 @@
             "input_price": "0.0001275",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25315,6 +25683,10 @@
             "input_price": "0.000135",
             "output_price": "0.00018",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25385,6 +25757,10 @@
             "input_price": "0.000105",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25455,6 +25831,10 @@
             "input_price": "0.0000143",
             "output_price": "0.0009988",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25525,6 +25905,10 @@
             "input_price": "0.00281625",
             "output_price": "0.01755",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25595,6 +25979,10 @@
             "input_price": "0.00073375",
             "output_price": "0.02587",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25673,6 +26061,10 @@
             "input_price": "0.00042625",
             "output_price": "0.00125",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25744,6 +26136,10 @@
             "input_price": "0.00099125",
             "output_price": "0.00007",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25814,6 +26210,10 @@
             "input_price": "0.000035",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25892,6 +26292,10 @@
             "input_price": "0.00306375",
             "output_price": "0.0161",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -25971,6 +26375,10 @@
             "input_price": "0.00246875",
             "output_price": "0.0066",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26042,6 +26450,10 @@
             "input_price": "0.0013277",
             "output_price": "0.002354",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26112,6 +26524,10 @@
             "input_price": "0.0012199",
             "output_price": "0.0019536",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26182,6 +26598,10 @@
             "input_price": "0.002265",
             "output_price": "0.01313",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26252,6 +26672,10 @@
             "input_price": "0.0000575",
             "output_price": "0.00088",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26322,6 +26746,10 @@
             "input_price": "0.000195",
             "output_price": "0.00924",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26392,6 +26820,10 @@
             "input_price": "0.0011715",
             "output_price": "0.003344",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26462,6 +26894,10 @@
             "input_price": "0.0002675",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26532,6 +26968,10 @@
             "input_price": "0.000325",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26602,6 +27042,10 @@
             "input_price": "0.0016575",
             "output_price": "0.0002",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26672,6 +27116,10 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26742,6 +27190,10 @@
             "input_price": "0.000155",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26812,6 +27264,10 @@
             "input_price": "0.0002125",
             "output_price": "0.0002",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26882,6 +27338,10 @@
             "input_price": "0.00236125",
             "output_price": "0.01434",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -26960,6 +27420,10 @@
             "input_price": "0.00155625",
             "output_price": "0.00707",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27039,6 +27503,10 @@
             "input_price": "0.0037515",
             "output_price": "0.01844",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27118,6 +27586,10 @@
             "input_price": "0.00211975",
             "output_price": "0.00577",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27197,6 +27669,10 @@
             "input_price": "0.0022345",
             "output_price": "0.00439",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27268,6 +27744,10 @@
             "input_price": "0.00009",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27338,6 +27818,10 @@
             "input_price": "0.0001475",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27408,6 +27892,10 @@
             "input_price": "0.0008",
             "output_price": "0.00159",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27482,6 +27970,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27552,6 +28044,10 @@
             "input_price": "0.0003825",
             "output_price": "0.03134",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27622,6 +28118,10 @@
             "input_price": "0.00005",
             "output_price": "0.00148",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27692,6 +28192,10 @@
             "input_price": "0.00032125",
             "output_price": "0.00005",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27762,6 +28266,10 @@
             "input_price": "0.00001625",
             "output_price": "0.00248",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27832,6 +28340,10 @@
             "input_price": "0.0001775",
             "output_price": "0.00355",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27902,6 +28414,10 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -27972,6 +28488,10 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28050,6 +28570,10 @@
             "input_price": "0.0020925",
             "output_price": "0.0001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28121,6 +28645,10 @@
             "input_price": "0.000155",
             "output_price": "0.01926",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28199,6 +28727,10 @@
             "input_price": "0.00030475",
             "output_price": "0.00124",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28270,6 +28802,10 @@
             "input_price": "0.00006",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28340,6 +28876,10 @@
             "input_price": "0.000715",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28410,6 +28950,10 @@
             "input_price": "0.000072",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28480,6 +29024,10 @@
             "input_price": "0.000122",
             "output_price": "0.000448",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28558,6 +29106,10 @@
             "input_price": "0.0411775",
             "output_price": "0.0172",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28629,6 +29181,10 @@
             "input_price": "0.000045",
             "output_price": "0.00216",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28699,6 +29255,10 @@
             "input_price": "0.000165",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28769,6 +29329,10 @@
             "input_price": "0.0002225",
             "output_price": "0.00016",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28839,6 +29403,10 @@
             "input_price": "0.0001",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28909,6 +29477,10 @@
             "input_price": "0.0029625",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -28979,6 +29551,10 @@
             "input_price": "0.0000968",
             "output_price": "0.0024068",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29049,6 +29625,10 @@
             "input_price": "0.00223625",
             "output_price": "0.01312",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29119,6 +29699,10 @@
             "input_price": "0.0003825",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29189,6 +29773,10 @@
             "input_price": "0.00044",
             "output_price": "0.00026",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29259,6 +29847,10 @@
             "input_price": "0.0001",
             "output_price": "0.00018",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29329,6 +29921,10 @@
             "input_price": "0.0001675",
             "output_price": "0.00011",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29399,6 +29995,10 @@
             "input_price": "0.0000125",
             "output_price": "0.00001",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29469,6 +30069,10 @@
             "input_price": "0.00",
             "output_price": "0",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {}
@@ -29536,6 +30140,10 @@
             "input_price": "0.0008375",
             "output_price": "0.00044",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29606,6 +30214,10 @@
             "input_price": "0.0007075",
             "output_price": "0.00012",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29676,6 +30288,10 @@
             "input_price": "0.000765",
             "output_price": "0.00022",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29746,6 +30362,10 @@
             "input_price": "0.00001625",
             "output_price": "0.02199",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29816,6 +30436,10 @@
             "input_price": "0.0003925",
             "output_price": "0.02737",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29886,6 +30510,10 @@
             "input_price": "0.00048625",
             "output_price": "0.00721",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -29956,6 +30584,10 @@
             "input_price": "0.0016175",
             "output_price": "0.00065",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -30026,6 +30658,10 @@
             "input_price": "0.00012875",
             "output_price": "0.00409",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -41138,6 +41774,10 @@
             "input_price": "0.0121425",
             "output_price": "0.0115",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -43464,6 +44104,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -47965,6 +48609,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {
@@ -48038,6 +48686,10 @@
             "input_price": "0.00001625",
             "output_price": "0.00008",
             "provider_id": "openai"
+          },
+          {
+            "api_flavor": "responses",
+            "provider_id": "openrouter"
           }
         ],
         "usage": {

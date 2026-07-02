@@ -139,6 +139,7 @@ describe('extractUsage', () => {
           completion_tokens_details: {
             audio_tokens: 23,
           },
+          cost: 0.123456,
           prompt_tokens: 4819,
           prompt_tokens_details: {
             audio_tokens: 17,
@@ -149,9 +150,10 @@ describe('extractUsage', () => {
         },
       }
 
-      const { model, usage } = extractUsage(openrouterProvider, responseData, 'chat')
+      const { model, reportedTotalPrice, usage } = extractUsage(openrouterProvider, responseData, 'chat')
 
       expect(model).toBe('anthropic/claude-4.6-sonnet-20260217')
+      expect(reportedTotalPrice).toBe(0.123456)
       expect(usage).toEqual({
         cache_read_tokens: 0,
         cache_write_tokens: 4800,
@@ -159,6 +161,30 @@ describe('extractUsage', () => {
         input_tokens: 4819,
         output_audio_tokens: 23,
         output_tokens: 1906,
+      })
+    })
+
+    it('should extract responses usage with reported total price', () => {
+      const responseData = {
+        model: 'openai/gpt-4o-mini',
+        usage: {
+          cost: 0.00042,
+          input_tokens: 1000,
+          input_tokens_details: {
+            cached_tokens: 200,
+          },
+          output_tokens: 100,
+        },
+      }
+
+      const { model, reportedTotalPrice, usage } = extractUsage(openrouterProvider, responseData, 'responses')
+
+      expect(model).toBe('openai/gpt-4o-mini')
+      expect(reportedTotalPrice).toBe(0.00042)
+      expect(usage).toEqual({
+        cache_read_tokens: 200,
+        input_tokens: 1000,
+        output_tokens: 100,
       })
     })
   })

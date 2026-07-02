@@ -3,6 +3,7 @@ import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
 
 interface ExtractedUsage {
   model: null | string
+  reportedTotalPrice?: number
   usage: Usage
 }
 
@@ -27,6 +28,10 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
 
   const root = asArray(extractor.root)
   const usageObj = extractPath(root, responseData, mappingCheck, true, [])
+  const reportedTotalPrice =
+    extractor.reported_total_price_path === undefined
+      ? null
+      : extractPath(extractor.reported_total_price_path, usageObj, numberCheck, false, root)
 
   const usage: Usage = {}
 
@@ -42,7 +47,11 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`No usage information found at ${JSON.stringify(extractor.root)}`)
   }
 
-  return { model, usage }
+  return {
+    model,
+    ...(reportedTotalPrice === null ? {} : { reportedTotalPrice }),
+    usage,
+  }
 }
 
 function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (ArrayMatch | string)[]): T
