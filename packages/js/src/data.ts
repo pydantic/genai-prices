@@ -345,7 +345,19 @@ export const data: Provider[] = [
         context_window: 200000,
         prices: [
           {
-            prices: {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            values: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+          {
+            values: {
               input_mtok: {
                 base: 5,
                 tiers: [
@@ -382,18 +394,6 @@ export const data: Provider[] = [
                   },
                 ],
               },
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-03-13',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 5,
-              cache_write_mtok: 6.25,
-              cache_read_mtok: 0.5,
-              output_mtok: 25,
             },
           },
         ],
@@ -530,7 +530,19 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: [
           {
-            prices: {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            values: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+          {
+            values: {
               input_mtok: {
                 base: 3,
                 tiers: [
@@ -567,18 +579,6 @@ export const data: Provider[] = [
                   },
                 ],
               },
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-03-13',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
             },
           },
         ],
@@ -2495,22 +2495,22 @@ export const data: Provider[] = [
         context_window: 64000,
         prices: [
           {
-            prices: {
-              input_mtok: 0.135,
-              cache_read_mtok: 0.035,
-              output_mtok: 0.55,
-            },
-          },
-          {
             constraint: {
               start_time: '00:30:00Z',
               end_time: '16:30:00Z',
               type: 'time_of_date',
             },
-            prices: {
+            values: {
               input_mtok: 0.27,
               cache_read_mtok: 0.07,
               output_mtok: 1.1,
+            },
+          },
+          {
+            values: {
+              input_mtok: 0.135,
+              cache_read_mtok: 0.035,
+              output_mtok: 0.55,
             },
           },
         ],
@@ -2536,22 +2536,22 @@ export const data: Provider[] = [
         context_window: 64000,
         prices: [
           {
-            prices: {
-              input_mtok: 0.135,
-              cache_read_mtok: 0.035,
-              output_mtok: 0.55,
-            },
-          },
-          {
             constraint: {
               start_time: '00:30:00Z',
               end_time: '16:30:00Z',
               type: 'time_of_date',
             },
-            prices: {
+            values: {
               input_mtok: 0.55,
               cache_read_mtok: 0.14,
               output_mtok: 2.19,
+            },
+          },
+          {
+            values: {
+              input_mtok: 0.135,
+              cache_read_mtok: 0.035,
+              output_mtok: 0.55,
             },
           },
         ],
@@ -10645,21 +10645,21 @@ export const data: Provider[] = [
         },
         prices: [
           {
-            prices: {
-              input_mtok: 10,
-              cache_read_mtok: 0.5,
-              output_mtok: 40,
-            },
-          },
-          {
             constraint: {
               start_date: '2025-06-10',
               type: 'start_date',
             },
-            prices: {
+            values: {
               input_mtok: 2,
               cache_read_mtok: 0.5,
               output_mtok: 8,
+            },
+          },
+          {
+            values: {
+              input_mtok: 10,
+              cache_read_mtok: 0.5,
+              output_mtok: 40,
             },
           },
         ],

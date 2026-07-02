@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 __all__ = (
     'ProviderID',
     'PriceCalculation',
+    'PriceContext',
+    'PriceContextValue',
     'AbstractUsage',
     'Usage',
     'Provider',
@@ -27,6 +29,7 @@ __all__ = (
     'TieredPrices',
     'Tier',
     'ConditionalPrice',
+    'ConditionOperators',
     'StartDateConstraint',
     'TimeOfDateConstraint',
     'ClauseStartsWith',
@@ -79,6 +82,10 @@ ProviderID = Literal[
     'openrouter',
 ]
 
+PriceContextValue = Union[str, int, bool]
+PriceContext = Mapping[str, PriceContextValue]
+"""Request-level pricing context, e.g. `{'service_tier': 'batch'}`."""
+
 
 @dataclass
 class ArrayMatch:
@@ -105,6 +112,7 @@ class PriceCalculation:
     provider: Provider = dataclasses.field(repr=False)
     model_price: ModelPrice
     auto_update_timestamp: datetime | None
+    price_context: dict[str, PriceContextValue] = dataclasses.field(default_factory=dict)
 
     def __repr__(self) -> str:
         return (
@@ -115,7 +123,9 @@ class PriceCalculation:
             f'model={self.model.summary()}, '
             f'provider={self.provider.summary()}, '
             f'model_price=ModelPrice({self.model_price}), '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+            f'auto_update_timestamp={self.auto_update_timestamp!r}'
+            + (f', price_context={self.price_context!r}' if self.price_context else '')
+            + ')'
         )
 
 
@@ -127,7 +137,11 @@ class ExtractedUsage:
     auto_update_timestamp: datetime | None
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -135,6 +149,7 @@ class ExtractedUsage:
             genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
+            price_context: Request-level pricing context, e.g. `{'service_tier': 'batch'}`.
         """
         model = model or self.model
         if model is None:
@@ -145,6 +160,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            price_context=price_context,
         )
 
     def __repr__(self) -> str:
@@ -633,15 +649,20 @@ class ModelInfo:
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime) -> ModelPrice:
+    def get_prices(self, request_timestamp: datetime, price_context: PriceContext | None = None) -> ModelPrice:
         if isinstance(self.prices, ModelPrice):
             return self.prices
-        else:
-            # reversed because the last price takes precedence
-            for conditional_price in reversed(self.prices):
-                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
-                    return conditional_price.prices
-            return self.prices[0].prices
+
+        context = price_context or {}
+        eligible = [entry for entry in self.prices if entry.eligible(request_timestamp, context)]
+
+        # Per-unit first-match: for each price key, the first eligible entry that defines it wins.
+        resolved: dict[str, Decimal | TieredPrices | None] = {}
+        for entry in eligible:
+            for price_key, value in _iter_defined_price_values(entry.values):
+                resolved.setdefault(price_key, value)
+
+        return type(self.prices[0].values)(**resolved)
 
     def calc_price(
         self,
@@ -650,11 +671,12 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp)
+        model_price = self.get_prices(genai_request_timestamp, price_context)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -663,6 +685,7 @@ class ModelInfo:
             model=self,
             provider=provider,
             model_price=model_price,
+            price_context=dict(price_context or {}),
             auto_update_timestamp=auto_update_timestamp,
         )
 
@@ -854,6 +877,13 @@ def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry
         yield key, value
 
 
+def _iter_defined_price_values(model_price: ModelPrice) -> Iterator[tuple[str, Decimal | TieredPrices | None]]:
+    """Yield the price keys explicitly set on a conditional entry's values."""
+    for key, value in model_price.__dict__.items():
+        if not key.startswith('_'):
+            yield key, value
+
+
 @dataclass
 class TieredPrices:
     """Pricing model when the amount paid varies by number of tokens.
@@ -887,20 +917,88 @@ class Tier:
 
 
 @dataclass
-class ConditionalPrice:
-    """Pricing together with constraints that define when those prices should be used.
+class ConditionOperators:
+    """Comparison operators for a single `when` parameter.
 
-    The last price active price (price where the constraints are met) is used.
+    An empty operator set matches anything; multiple operators are ANDed (e.g. `gte` and `lte` form a range).
     """
+
+    eq: PriceContextValue | None = None
+    gte: PriceContextValue | None = None
+    lte: PriceContextValue | None = None
+    gt: PriceContextValue | None = None
+    lt: PriceContextValue | None = None
+    in_: list[PriceContextValue] | None = None
+
+    def matches(self, actual: PriceContextValue | None) -> bool:
+        if self.eq is not None and not _context_values_equal(actual, self.eq):
+            return False
+        if self.in_ is not None and not any(_context_values_equal(actual, item) for item in self.in_):
+            return False
+        for operator, expected in (('gte', self.gte), ('lte', self.lte), ('gt', self.gt), ('lt', self.lt)):
+            if expected is not None and not _compare(operator, actual, expected):
+                return False
+        return True
+
+
+Condition = Union[PriceContextValue, ConditionOperators]
+"""A literal value (equality shorthand) or an explicit operator expression."""
+
+
+def _context_values_equal(actual: PriceContextValue | None, expected: PriceContextValue) -> bool:
+    return type(actual) is type(expected) and actual == expected
+
+
+def _compare(operator: str, actual: PriceContextValue | None, expected: PriceContextValue) -> bool:
+    if not isinstance(actual, (int, float)) or isinstance(actual, bool) or isinstance(expected, bool):
+        return False
+    if not isinstance(expected, (int, float)):
+        return False
+    if operator == 'gte':
+        return actual >= expected
+    if operator == 'lte':
+        return actual <= expected
+    if operator == 'gt':
+        return actual > expected
+    return actual < expected
+
+
+def _when_matches(when: Mapping[str, Condition] | None, price_context: PriceContext) -> bool:
+    if not when:
+        return True
+    for key, condition in when.items():
+        actual = price_context.get(key)
+        if isinstance(condition, ConditionOperators):
+            if not condition.matches(actual):
+                return False
+        elif not _context_values_equal(actual, condition):
+            return False
+    return True
+
+
+@dataclass
+class ConditionalPrice:
+    """Prices gated by an optional `when` clause and/or date/time constraint.
+
+    For each unit, the first entry (top to bottom) that both matches and defines a price for the unit wins.
+    """
+
+    when: dict[str, Condition] | None = None
+    """Request-level pricing context conditions; all conditions are ANDed. None matches any context."""
 
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
-    """Timestamp when this price starts, None means this price is always valid."""
+    """Date/time constraint. None means this entry is not gated by date/time."""
 
-    prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
-    """Prices for this condition.
+    values: ModelPrice = dataclasses.field(default_factory=ModelPrice)
+    """Prices that apply under this condition. Only the units that differ need to be listed.
 
-    This field is really required, the default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
+    The default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
     """
+
+    def eligible(self, request_timestamp: datetime, price_context: PriceContext) -> bool:
+        if self.constraint is not None and not self.constraint.active(request_timestamp):
+            return False
+        return _when_matches(self.when, price_context)
 
 
 @dataclass
@@ -1004,14 +1102,37 @@ def _normalize_model_prices(value: Any) -> Any:
     for key, raw_value in raw_mapping.items():
         if key == 'prices':
             normalized[key] = _normalize_prices_field(raw_value)
+        elif key == 'values':
+            normalized[key] = _normalize_values_field(raw_value)
+        elif key == 'when':
+            normalized[key] = _normalize_when_field(raw_value)
         else:
             normalized[key] = _normalize_model_prices(raw_value)
+    return normalized
+
+
+def _normalize_when_field(value: Any) -> Any:
+    if not isinstance(value, Mapping):
+        return value
+    normalized: dict[str, Any] = {}
+    for param, condition in cast(Mapping[str, Any], value).items():
+        if isinstance(condition, Mapping):
+            operators = {
+                ('in_' if op == 'in' else op): operand for op, operand in cast(Mapping[str, Any], condition).items()
+            }
+            normalized[param] = ConditionOperators(**operators)
+        else:
+            normalized[param] = condition
     return normalized
 
 
 def _normalize_prices_field(value: Any) -> ModelPrice | list[Any]:
     if isinstance(value, list):
         return [_normalize_model_prices(item) for item in cast(list[Any], value)]
+    return _normalize_values_field(value)
+
+
+def _normalize_values_field(value: Any) -> ModelPrice:
     if isinstance(value, ModelPrice):
         return value
     prices = _model_price_mapping_schema.validate_python(value)

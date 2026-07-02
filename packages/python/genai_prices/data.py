@@ -239,7 +239,16 @@ providers: list[Provider] = [
                 context_window=200000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        values=ModelPrice(
+                            input_mtok=Decimal('5'),
+                            cache_write_mtok=Decimal('6.25'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('25'),
+                        ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
                             input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
                             cache_write_mtok=TieredPrices(
                                 base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
@@ -251,15 +260,6 @@ providers: list[Provider] = [
                                 base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
                         )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('5'),
-                            cache_write_mtok=Decimal('6.25'),
-                            cache_read_mtok=Decimal('0.5'),
-                            output_mtok=Decimal('25'),
-                        ),
                     ),
                 ],
             ),
@@ -338,7 +338,16 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        values=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
                             input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                             cache_write_mtok=TieredPrices(
                                 base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
@@ -350,15 +359,6 @@ providers: list[Provider] = [
                                 base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
                         )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3'),
-                            cache_write_mtok=Decimal('3.75'),
-                            cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15'),
-                        ),
                     ),
                 ],
             ),
@@ -1403,18 +1403,18 @@ providers: list[Provider] = [
                 context_window=64000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=TimeOfDateConstraint(
                             start_time=datetime.time(0, 30, tzinfo=datetime.timezone.utc),
                             end_time=datetime.time(16, 30, tzinfo=datetime.timezone.utc),
                         ),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('1.1')
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
+                        )
                     ),
                 ],
             ),
@@ -1432,18 +1432,18 @@ providers: list[Provider] = [
                 context_window=64000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=TimeOfDateConstraint(
                             start_time=datetime.time(0, 30, tzinfo=datetime.timezone.utc),
                             end_time=datetime.time(16, 30, tzinfo=datetime.timezone.utc),
                         ),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('0.55'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('2.19')
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
+                        )
                     ),
                 ],
             ),
@@ -5960,15 +5960,15 @@ providers: list[Provider] = [
                 description='o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following. Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required for this model. Set up here: https://openrouter.ai/settings/integrations',
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
+                        )
                     ),
                 ],
             ),

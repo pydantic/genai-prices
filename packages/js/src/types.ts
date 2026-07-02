@@ -18,9 +18,24 @@ export class TieredPrices {
 
 export type ModelPrice = Record<string, number | TieredPrices | undefined>
 
+export type PriceContextValue = boolean | number | string
+export type PriceContext = Record<string, PriceContextValue>
+
+export interface ConditionOperators {
+  eq?: PriceContextValue
+  gt?: PriceContextValue
+  gte?: PriceContextValue
+  in?: PriceContextValue[]
+  lt?: PriceContextValue
+  lte?: PriceContextValue
+}
+
+export type Condition = ConditionOperators | PriceContextValue
+
 export interface ConditionalPrice {
   constraint?: StartDateConstraint | TimeOfDateConstraint
-  prices: ModelPrice
+  values: ModelPrice
+  when?: Record<string, Condition>
 }
 
 export interface StartDateConstraint {
@@ -116,6 +131,7 @@ export interface PriceCalculation {
   model: ModelInfo
   model_price: ModelPrice
   output_price: number
+  price_context?: PriceContext
   provider: Provider
   total_price: number
 }
@@ -149,6 +165,7 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  priceContext?: PriceContext
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

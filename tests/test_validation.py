@@ -154,7 +154,7 @@ def test_bundled_provider_model_prices_pass_registry_validation() -> None:
             prices = model.prices if isinstance(model.prices, list) else [model.prices]
             for index, maybe_conditional_price in enumerate(prices):
                 price = (
-                    maybe_conditional_price.prices
+                    maybe_conditional_price.values
                     if isinstance(maybe_conditional_price, ConditionalPrice)
                     else maybe_conditional_price
                 )

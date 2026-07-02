@@ -898,17 +898,17 @@ models:
         - equals: o3-2025-04-16
     prices_checked: 2025-07-12
     prices:
-      - prices:
-          input_mtok: 10
-          cache_read_mtok: 0.5
-          output_mtok: 40
       - constraint:
           # See https://community.openai.com/t/o3-is-80-cheaper-and-introducing-o3-pro/1284925
           start_date: 2025-06-10
-        prices:
+        values:
           input_mtok: 2
           cache_read_mtok: 0.5
           output_mtok: 8
+      - values:
+          input_mtok: 10
+          cache_read_mtok: 0.5
+          output_mtok: 40
 
   - id: o3-deep-research
     match:

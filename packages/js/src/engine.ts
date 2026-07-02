@@ -1,5 +1,18 @@
 import { computeLeafValues } from './decompose'
-import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import {
+  Condition,
+  ConditionalPrice,
+  MatchLogic,
+  ModelInfo,
+  ModelPrice,
+  ModelPriceCalculationResult,
+  PriceContext,
+  PriceContextValue,
+  Provider,
+  ProviderFindOptions,
+  TieredPrices,
+  Usage,
+} from './types'
 import { getActiveRegistry, getUnitForPriceKey } from './units'
 import { getUsageValue } from './usage'
 import { validateModelPrice } from './validation'
@@ -87,47 +100,72 @@ function isTieredPrice(price: number | TieredPrices | undefined): price is Tiere
   return typeof price === 'object'
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext: PriceContext = {}): ModelPrice {
   if (!Array.isArray(model.prices)) {
     return model.prices
   }
-  // Conditional prices: last active wins
-  for (let i = model.prices.length - 1; i >= 0; i--) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
-    const constraint = cond.constraint
 
-    if (constraint === undefined) {
-      return cond.prices
-    }
-
-    if (constraint.type === 'start_date') {
-      if (timestamp >= new Date(constraint.start_date)) {
-        return cond.prices
-      }
-    } else {
-      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
-      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
-      const startTime = constraint.start_time
-      const endTime = constraint.end_time
-
-      // Handle time ranges that span midnight (end time < start time)
-      if (endTime < startTime) {
-        // Time is in range if it's >= start OR < end
-        if (t >= startTime || t < endTime) {
-          return cond.prices
-        }
-      } else {
-        // Normal time range (start <= time < end)
-        if (t >= startTime && t < endTime) {
-          return cond.prices
-        }
+  // Per-unit first-match: for each unit, the first eligible entry that defines it wins.
+  const resolved: ModelPrice = {}
+  for (const entry of model.prices) {
+    if (!entryEligible(entry, timestamp, priceContext)) continue
+    for (const [priceKey, value] of Object.entries(entry.values)) {
+      if (value !== undefined && !(priceKey in resolved)) {
+        resolved[priceKey] = value
       }
     }
   }
-  // Fallback to first
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  return resolved
+}
+
+function entryEligible(entry: ConditionalPrice, timestamp: Date, priceContext: PriceContext): boolean {
+  return constraintActive(entry.constraint, timestamp) && whenMatches(entry.when, priceContext)
+}
+
+function constraintActive(constraint: ConditionalPrice['constraint'], timestamp: Date): boolean {
+  if (constraint === undefined) return true
+  if (constraint.type === 'start_date') {
+    return timestamp >= new Date(constraint.start_date)
+  }
+  // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
+  const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
+  const { end_time: endTime, start_time: startTime } = constraint
+  // Time ranges that span midnight (end < start) are in range if t >= start OR t < end
+  if (endTime < startTime) {
+    return t >= startTime || t < endTime
+  }
+  return t >= startTime && t < endTime
+}
+
+function whenMatches(when: Record<string, Condition> | undefined, priceContext: PriceContext): boolean {
+  if (when === undefined) return true
+  return Object.entries(when).every(([key, condition]) => conditionMatches(condition, priceContext[key]))
+}
+
+function conditionMatches(condition: Condition, actual: PriceContextValue | undefined): boolean {
+  if (typeof condition !== 'object') {
+    return contextValuesEqual(actual, condition)
+  }
+  if (condition.eq !== undefined && !contextValuesEqual(actual, condition.eq)) return false
+  if (condition.in !== undefined && !condition.in.some((item) => contextValuesEqual(actual, item))) return false
+  if (condition.gte !== undefined && !compareNumeric(actual, condition.gte, (a, b) => a >= b)) return false
+  if (condition.lte !== undefined && !compareNumeric(actual, condition.lte, (a, b) => a <= b)) return false
+  if (condition.gt !== undefined && !compareNumeric(actual, condition.gt, (a, b) => a > b)) return false
+  if (condition.lt !== undefined && !compareNumeric(actual, condition.lt, (a, b) => a < b)) return false
+  return true
+}
+
+function contextValuesEqual(actual: PriceContextValue | undefined, expected: PriceContextValue): boolean {
+  return typeof actual === typeof expected && actual === expected
+}
+
+function compareNumeric(
+  actual: PriceContextValue | undefined,
+  expected: PriceContextValue,
+  compare: (a: number, b: number) => boolean
+): boolean {
+  if (typeof actual !== 'number' || typeof expected !== 'number') return false
+  return compare(actual, expected)
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {
