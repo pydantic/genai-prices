@@ -6,7 +6,7 @@ import threading
 from dataclasses import dataclass, field
 from time import time
 
-import httpx
+import httpx2
 
 from . import data_snapshot
 
@@ -59,7 +59,7 @@ class UpdatePrices:
     """How often to update prices in seconds."""
     url: str = DEFAULT_UPDATE_URL
     """The URL to fetch prices from."""
-    request_timeout: httpx.Timeout = field(default_factory=lambda: httpx.Timeout(timeout=10, connect=5))
+    request_timeout: httpx2.Timeout = field(default_factory=lambda: httpx2.Timeout(timeout=10, connect=5))
     """The timeout for HTTP requests."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
     _prices_updated: threading.Event = field(default_factory=threading.Event)
@@ -161,6 +161,6 @@ class UpdatePrices:
         """Fetches the latest provider data from the configured URL."""
         from . import data
 
-        r = httpx.get(self.url, timeout=self.request_timeout)
+        r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)

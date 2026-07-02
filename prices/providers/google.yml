@@ -189,6 +189,20 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
 
+  - id: claude-fable-5
+    match:
+      contains: claude-fable-5
+    context_window: 1000000
+    prices_checked: 2026-06-09
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      output_mtok: 50
+
   - id: claude-opus-4-6
     match:
       or:
@@ -229,6 +243,24 @@ models:
         - contains: claude-opus-4.7
     context_window: 1000000
     prices_checked: 2026-04-16
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
+  - id: claude-opus-4-8
+    match:
+      or:
+        - contains: claude-4-8-opus
+        - contains: claude-opus-4-8
+        - contains: claude-4.8-opus
+        - contains: claude-opus-4.8
+    context_window: 1000000
+    prices_checked: 2026-05-28
     price_comments: >-
       Flat pricing across full 1M context window.
       Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
@@ -456,7 +488,8 @@ models:
         - starts_with: gemini-3-flash-preview-
     context_window: 1000000
     prices_checked: 2025-12-19
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output.
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50%
+      discount on input/output.
     prices:
       input_mtok: 0.5
       input_audio_mtok: 1
@@ -475,15 +508,18 @@ models:
         - equals: gemini-3-pro-image-preview
     context_window: 1000000
     prices_checked: 2025-12-19
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at
-      $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.
+    price_comments:
+      See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120
+      per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.
     prices:
       input_mtok: 2
       output_mtok: 120
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
-    description: The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.
+    description:
+      The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding
+      model yet.
     match:
       or:
         - starts_with: gemini-3-pro-preview
@@ -516,8 +552,8 @@ models:
       starts_with: gemini-3.1-flash-image-preview
     context_window: 1000000
     prices_checked: 2026-03-04
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at
-      $60 per 1M tokens. Preview model - pricing may change.
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens.
+      Preview model - pricing may change.
     prices:
       input_mtok: 0.5
       output_mtok: 60
@@ -541,7 +577,8 @@ models:
 
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
-    description: The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.
+    description: The latest performance, intelligence, and usability improvements to the best model family in the world
+      for multimodal understanding, agentic capabilities, and vibe-coding.
     match:
       starts_with: gemini-3.1-pro-preview
     prices_checked: 2026-02-23
@@ -561,6 +598,23 @@ models:
         tiers:
           - start: 200000
             price: 18
+
+  - id: gemini-3.5-flash
+    name: Gemini 3.5 Flash
+    description: >-
+      Google's most intelligent model built for speed, combining frontier intelligence with
+      improved reasoning, coding, and multimodal understanding.
+    match:
+      starts_with: gemini-3.5-flash
+    context_window: 1000000
+    prices_checked: 2026-05-19
+    price_comments:
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
+      offer 50% discount on input/output.
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.15
+      output_mtok: 9
 
   - id: gemini-embedding-001
     match:
@@ -677,6 +731,19 @@ models:
           - start: 128000
             price: 10
 
+  - id: gemma-2-27b-it
+    name: Gemma 2 27B
+    description: >-
+      Gemma 2 27B by Google is an open model built from the same research and technology used to create the Gemini models.
+      Gemma models are well-suited for a variety of text generation and instruction-following tasks.
+    match:
+      equals: gemma-2-27b-it
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
+    prices:
+      input_mtok: 0.65
+      output_mtok: 0.65
+
   - id: gemma-3
     name: Gemma 3 (free)
     description: Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.
@@ -697,3 +764,30 @@ models:
       or:
         - starts_with: gemma-3n
     prices: {}
+
+  - id: gemma-4-26b-a4b-it
+    name: Gemma 4 26B A4B
+    description: >-
+      Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total
+      parameters, only 3.8B activate per token during inference.
+    match:
+      equals: gemma-4-26b-a4b-it
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.33
+
+  - id: gemma-4-31b-it
+    name: Gemma 4 31B
+    description: >-
+      Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output.
+      It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.
+    match:
+      equals: gemma-4-31b-it
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Google pricing when native API pricing is published.
+    prices:
+      input_mtok: 0.12
+      cache_read_mtok: 0.09
+      output_mtok: 0.36

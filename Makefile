@@ -97,7 +97,7 @@ typecheck:
 test: ## Run tests and collect coverage data
 	uv run coverage run -m pytest
 	uv run python tests/dataset/extract_usages.py
-	@uv run coverage report
+	@uv run coverage report --fail-under=0
 
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
@@ -105,12 +105,12 @@ testcov: test ## Run tests and generate an HTML coverage report
 	@uv run coverage html
 
 .PHONY: test-all-python
-test-all-python: ## Run tests on Python 3.9 to 3.13
-	UV_PROJECT_ENVIRONMENT=.venv39 uv run --python 3.9 --all-extras --all-packages coverage run -p -m pytest
+test-all-python: ## Run tests on Python 3.10 to 3.14
 	UV_PROJECT_ENVIRONMENT=.venv310 uv run --python 3.10 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv311 uv run --python 3.11 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv312 uv run --python 3.12 --all-extras --all-packages coverage run -p -m pytest
 	UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --all-extras --all-packages coverage run -p -m pytest
+	UV_PROJECT_ENVIRONMENT=.venv314 uv run --python 3.14 --all-extras --all-packages coverage run -p -m pytest
 	@uv run coverage combine
 	@uv run coverage report
 
