@@ -130,7 +130,7 @@ def test_mistral():
     # Mistral nests prompt-cache hits under `prompt_tokens_details.cached_tokens`.
     # https://docs.mistral.ai/studio-api/conversations/advanced/prompt-caching
     response_data = {
-        'model': 'mistral-large-latest',
+        'model': 'mistral-large-2512',
         'usage': {
             'prompt_tokens': 1013,
             'completion_tokens': 30,
@@ -139,21 +139,22 @@ def test_mistral():
         },
     }
     usage = provider.extract_usage(response_data)
-    assert usage == snapshot(
-        ('mistral-large-latest', Usage(input_tokens=1013, cache_read_tokens=1008, output_tokens=30))
-    )
+    assert usage == snapshot(('mistral-large-2512', Usage(input_tokens=1013, cache_read_tokens=1008, output_tokens=30)))
 
     extracted_usage = extract_usage(response_data, provider_id='mistral')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=1013, cache_read_tokens=1008, output_tokens=30))
     assert extracted_usage.provider.name == snapshot('Mistral')
+    # The 1008 cached tokens are billed at `cache_read_mtok` (10% of the input rate), not the full
+    # input rate: (1013 - 1008) * 0.5 + 1008 * 0.05 + 30 * 1.5, all per Mtok.
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0000979'))
 
     # The nested mapping is optional: responses without prompt caching still extract cleanly.
     response_data_no_cache = {
-        'model': 'mistral-large-latest',
+        'model': 'mistral-large-2512',
         'usage': {'prompt_tokens': 10, 'completion_tokens': 5, 'total_tokens': 15},
     }
     assert provider.extract_usage(response_data_no_cache) == snapshot(
-        ('mistral-large-latest', Usage(input_tokens=10, output_tokens=5))
+        ('mistral-large-2512', Usage(input_tokens=10, output_tokens=5))
     )
 
 
