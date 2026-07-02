@@ -24,12 +24,12 @@ __all__ = (
     'UsageExtractor',
     'ModelInfo',
     'ModelPrice',
-    'PriceModifier',
     'TieredPrices',
     'Tier',
     'ConditionalPrice',
     'StartDateConstraint',
     'TimeOfDateConstraint',
+    'PriceContextConstraint',
     'ClauseStartsWith',
     'ClauseEndsWith',
     'ClauseContains',
@@ -629,13 +629,15 @@ class ModelInfo:
         else:
             # reversed because the last price takes precedence
             for conditional_price in reversed(self.prices):
-                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
+                if conditional_price.constraint is None or conditional_price.constraint.active(
+                    request_timestamp, price_context or {}
+                ):
                     prices = conditional_price.prices
                     break
             else:
                 prices = self.prices[0].prices
 
-        return prices.apply_modifiers(price_context or {})
+        return prices
 
     def calc_price(
         self,
@@ -672,52 +674,6 @@ class CalcPrice(TypedDict):
     total_price: Decimal
 
 
-PriceFieldOverride = Any
-PositiveMultiplier = Annotated[
-    Decimal, pydantic.Field(gt=0), pydantic.WithJsonSchema({'type': 'number', 'exclusiveMinimum': 0})
-]
-
-
-@dataclass
-class PriceModifier:
-    """Request-level price modifier selected by pricing context.
-
-    Modifiers are applied in the order they are listed on `ModelPrice`.
-    `match` and `not_match` compare against the pricing context passed to `calc_price`.
-    """
-
-    __pydantic_config__ = pydantic.ConfigDict(
-        json_schema_extra={
-            'anyOf': [
-                {'required': ['multiplier']},
-                {'required': ['price_multipliers']},
-                {'required': ['price_overrides']},
-            ]
-        }
-    )
-
-    match: dict[str, PriceContextValue | list[PriceContextValue]] = dataclasses.field(default_factory=dict)
-    not_match: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
-    multiplier: PositiveMultiplier | None = None
-    price_multipliers: Annotated[dict[str, PositiveMultiplier], pydantic.Field(min_length=1)] | None = None
-    price_overrides: Annotated[dict[str, PriceFieldOverride], pydantic.Field(min_length=1)] | None = None
-
-    def __post_init__(self) -> None:
-        if self.multiplier is None and not self.price_multipliers and not self.price_overrides:
-            raise ValueError('PriceModifier must define multiplier, price_multipliers, or price_overrides')
-        if self.multiplier is not None and self.multiplier <= 0:
-            raise ValueError('PriceModifier multiplier must be greater than 0')
-        if self.price_multipliers is not None:
-            for price_key, multiplier in self.price_multipliers.items():
-                if multiplier <= 0:
-                    raise ValueError(f'PriceModifier price_multipliers[{price_key!r}] must be greater than 0')
-
-    def matches(self, price_context: PriceContext) -> bool:
-        return _matches_context(self.match, price_context) and not (
-            self.not_match is not None and _matches_context(self.not_match, price_context)
-        )
-
-
 @dataclass
 class ModelPrice:
     """Set of prices for using a model"""
@@ -742,38 +698,6 @@ class ModelPrice:
 
     requests_kcount: Decimal | None = None
     """price in USD per thousand requests"""
-
-    modifiers: list[PriceModifier] | None = None
-    """Request-level price modifiers such as batch, flex, priority, fast mode, or data residency."""
-
-    def apply_modifiers(self, price_context: PriceContext) -> ModelPrice:
-        if not self.modifiers:
-            return self
-
-        values = {
-            field.name: getattr(self, field.name) for field in dataclasses.fields(self) if field.name != 'modifiers'
-        }
-        modified = ModelPrice(**values)
-
-        for modifier in self.modifiers:
-            if modifier.matches(price_context):
-                modified = modified.apply_modifier(modifier)
-        return modified
-
-    def apply_modifier(self, modifier: PriceModifier) -> ModelPrice:
-        values: dict[str, PriceFieldOverride] = {}
-        for field in dataclasses.fields(self):
-            if field.name == 'modifiers':
-                continue
-            value = getattr(self, field.name)
-            if modifier.multiplier is not None:
-                value = apply_price_multiplier(value, modifier.multiplier)
-            if modifier.price_multipliers and field.name in modifier.price_multipliers:
-                value = apply_price_multiplier(value, modifier.price_multipliers[field.name])
-            if modifier.price_overrides and field.name in modifier.price_overrides:
-                value = modifier.price_overrides[field.name]
-            values[field.name] = value
-        return ModelPrice(**values)
 
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
@@ -881,8 +805,6 @@ class ModelPrice:
     def __str__(self) -> str:
         parts: list[str] = []
         for field in dataclasses.fields(self):
-            if field.name == 'modifiers':
-                continue
             value = getattr(self, field.name)
             if value is not None:
                 if field.name == 'requests_kcount':
@@ -911,17 +833,6 @@ def _matches_context(
         elif not values_equal(actual, expected):
             return False
     return True
-
-
-def apply_price_multiplier(price: PriceFieldOverride, multiplier: Decimal) -> PriceFieldOverride:
-    if price is None:
-        return None
-    if isinstance(price, TieredPrices):
-        return TieredPrices(
-            base=price.base * multiplier,
-            tiers=[Tier(start=tier.start, price=tier.price * multiplier) for tier in price.tiers],
-        )
-    return price * multiplier
 
 
 def calc_mtok_price(
@@ -994,7 +905,7 @@ class ConditionalPrice:
     The last price active price (price where the constraints are met) is used.
     """
 
-    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    constraint: StartDateConstraint | TimeOfDateConstraint | PriceContextConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
 
     _: dataclasses.KW_ONLY
@@ -1010,7 +921,7 @@ class StartDateConstraint:
     start_date: date
     """Date when this price starts"""
 
-    def active(self, request_timestamp: datetime) -> bool:
+    def active(self, request_timestamp: datetime, _price_context: PriceContext) -> bool:
         return request_timestamp.date() >= self.start_date
 
 
@@ -1023,8 +934,23 @@ class TimeOfDateConstraint:
     end_time: time
     """End time of the interval."""
 
-    def active(self, request_timestamp: datetime) -> bool:
+    def active(self, request_timestamp: datetime, _price_context: PriceContext) -> bool:
         return self.start_time <= request_timestamp.timetz() < self.end_time
+
+
+@dataclass
+class PriceContextConstraint:
+    """Constraint that selects prices based on request-level pricing context."""
+
+    price_context: dict[str, PriceContextValue | list[PriceContextValue]]
+    """Context values required for this price to apply."""
+    not_price_context: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
+    """Context values that prevent this price from applying."""
+
+    def active(self, _request_timestamp: datetime, price_context: PriceContext) -> bool:
+        return _matches_context(self.price_context, price_context) and not (
+            self.not_price_context is not None and _matches_context(self.not_price_context, price_context)
+        )
 
 
 @dataclass

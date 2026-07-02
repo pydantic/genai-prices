@@ -9,7 +9,6 @@ from annotated_types import Gt, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
-    ConfigDict,
     Discriminator,
     Field,
     HttpUrl,
@@ -19,7 +18,6 @@ from pydantic import (
     ValidationInfo,
     WithJsonSchema,
     field_validator,
-    model_validator,
 )
 
 from .utils import check_unique
@@ -251,13 +249,6 @@ DollarPrice = Annotated[
     PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
 ]
 
-PositiveMultiplier = Annotated[
-    Decimal,
-    Gt(0),
-    WithJsonSchema({'type': 'number', 'exclusiveMinimum': 0}),
-    PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
-]
-
 
 class ModelPrice(_Model):
     """Set of prices for using a model"""
@@ -283,48 +274,12 @@ class ModelPrice(_Model):
     requests_kcount: DollarPrice | None = None
     """price in USD per thousand requests"""
 
-    modifiers: list[PriceModifier] | None = None
-    """Request-level price modifiers such as batch, flex, priority, fast mode, or data residency."""
-
     def is_free(self) -> bool:
         """Whether all values are zero or unset"""
         for field_name in self.__pydantic_fields__:
-            if field_name == 'modifiers':
-                continue
             if getattr(self, field_name):
                 return False
         return True
-
-
-class PriceModifier(_Model):
-    """Request-level price modifier selected by pricing context."""
-
-    model_config = ConfigDict(
-        json_schema_extra={
-            'anyOf': [
-                {'required': ['multiplier']},
-                {'required': ['price_multipliers']},
-                {'required': ['price_overrides']},
-            ]
-        }
-    )
-
-    match: dict[str, PriceContextValue | list[PriceContextValue]] = Field(default_factory=dict)
-    """Context values required for this modifier to apply."""
-    not_match: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
-    """Context values that prevent this modifier from applying."""
-    multiplier: PositiveMultiplier | None = None
-    """Multiplier applied to all price keys."""
-    price_multipliers: Annotated[dict[str, PositiveMultiplier], Field(min_length=1)] | None = None
-    """Per-price-key multipliers."""
-    price_overrides: Annotated[dict[str, DollarPrice | TieredPrices | None], Field(min_length=1)] | None = None
-    """Per-price-key override prices."""
-
-    @model_validator(mode='after')
-    def require_price_effect(self) -> PriceModifier:
-        if self.multiplier is None and not self.price_multipliers and not self.price_overrides:
-            raise ValueError('PriceModifier must define multiplier, price_multipliers, or price_overrides')
-        return self
 
 
 class TieredPrices(_Model):
@@ -366,7 +321,7 @@ class ConditionalPrice(_Model):
     The last price active price (price where the constraints are met) is used.
     """
 
-    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    constraint: StartDateConstraint | TimeOfDateConstraint | PriceContextConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
     """Prices for this condition."""
@@ -393,6 +348,15 @@ class TimeOfDateConstraint(_Model):
         if time_of_date.tzinfo is None:
             raise ValueError('Times must be timezone aware')
         return time_of_date
+
+
+class PriceContextConstraint(_Model):
+    """Constraint that selects prices based on request-level pricing context."""
+
+    price_context: dict[str, PriceContextValue | list[PriceContextValue]]
+    """Context values required for this price to apply."""
+    not_price_context: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
+    """Context values that prevent this price from applying."""
 
 
 class ClauseStartsWith(_Model):

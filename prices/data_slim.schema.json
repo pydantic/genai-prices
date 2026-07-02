@@ -207,6 +207,9 @@
             },
             {
               "$ref": "#/$defs/TimeOfDateConstraint"
+            },
+            {
+              "$ref": "#/$defs/PriceContextConstraint"
             }
           ],
           "description": "Timestamp when this price starts, None means this price is always valid.",
@@ -387,41 +390,16 @@
           "type": "number",
           "description": "price in USD per thousand requests",
           "title": "Requests Kcount"
-        },
-        "modifiers": {
-          "items": {
-            "$ref": "#/$defs/PriceModifier"
-          },
-          "type": "array",
-          "description": "Request-level price modifiers such as batch, flex, priority, fast mode, or data residency.",
-          "title": "Modifiers"
         }
       },
       "title": "ModelPrice",
       "type": "object"
     },
-    "PriceModifier": {
+    "PriceContextConstraint": {
       "additionalProperties": false,
-      "anyOf": [
-        {
-          "required": [
-            "multiplier"
-          ]
-        },
-        {
-          "required": [
-            "price_multipliers"
-          ]
-        },
-        {
-          "required": [
-            "price_overrides"
-          ]
-        }
-      ],
-      "description": "Request-level price modifier selected by pricing context.",
+      "description": "Constraint that selects prices based on request-level pricing context.",
       "properties": {
-        "match": {
+        "price_context": {
           "additionalProperties": {
             "anyOf": [
               {
@@ -451,11 +429,11 @@
               }
             ]
           },
-          "description": "Context values required for this modifier to apply.",
-          "title": "Match",
+          "description": "Context values required for this price to apply.",
+          "title": "Price Context",
           "type": "object"
         },
-        "not_match": {
+        "not_price_context": {
           "additionalProperties": {
             "anyOf": [
               {
@@ -486,43 +464,14 @@
             ]
           },
           "type": "object",
-          "description": "Context values that prevent this modifier from applying.",
-          "title": "Not Match"
-        },
-        "multiplier": {
-          "exclusiveMinimum": 0,
-          "type": "number",
-          "description": "Multiplier applied to all price keys.",
-          "title": "Multiplier"
-        },
-        "price_multipliers": {
-          "additionalProperties": {
-            "exclusiveMinimum": 0,
-            "type": "number"
-          },
-          "minProperties": 1,
-          "type": "object",
-          "description": "Per-price-key multipliers.",
-          "title": "Price Multipliers"
-        },
-        "price_overrides": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "$ref": "#/$defs/TieredPrices"
-              }
-            ]
-          },
-          "minProperties": 1,
-          "type": "object",
-          "description": "Per-price-key override prices.",
-          "title": "Price Overrides"
+          "description": "Context values that prevent this price from applying.",
+          "title": "Not Price Context"
         }
       },
-      "title": "PriceModifier",
+      "required": [
+        "price_context"
+      ],
+      "title": "PriceContextConstraint",
       "type": "object"
     },
     "PricingContextExtractorMapping": {

@@ -228,17 +228,18 @@ describe('Core Price Calculation Function', () => {
       expect(result).toMatchObject(expected)
     })
 
-    it('should apply the OpenAI Batch API price modifier', () => {
+    it('should apply the OpenAI Batch API conditional price', () => {
       const modelPrice = getActiveModelPrice(
         {
           id: 'gpt-4.1',
           match: { equals: 'gpt-4.1' },
-          prices: {
-            cache_read_mtok: 0.5,
-            input_mtok: 2,
-            modifiers: [{ match: { service_tier: 'batch' }, multiplier: 0.5 }],
-            output_mtok: 8,
-          },
+          prices: [
+            { prices: { cache_read_mtok: 0.5, input_mtok: 2, output_mtok: 8 } },
+            {
+              constraint: { price_context: { service_tier: 'batch' }, type: 'price_context' },
+              prices: { cache_read_mtok: 0.25, input_mtok: 1, output_mtok: 4 },
+            },
+          ],
         },
         new Date(),
         { service_tier: 'batch' }
@@ -252,28 +253,18 @@ describe('Core Price Calculation Function', () => {
       expect(result.total_price).toBeCloseTo(0.001325)
     })
 
-    it('should apply Anthropic Message Batches per-field price multipliers', () => {
+    it('should apply Anthropic Message Batches conditional prices', () => {
       const modelPrice = getActiveModelPrice(
         {
           id: 'claude-3-5-haiku-latest',
           match: { equals: 'claude-3-5-haiku-20241022' },
-          prices: {
-            cache_read_mtok: 0.08,
-            cache_write_mtok: 1,
-            input_mtok: 0.8,
-            modifiers: [
-              {
-                match: { service_tier: ['batch', 'message_batch'] },
-                price_multipliers: {
-                  cache_read_mtok: 0.5,
-                  cache_write_mtok: 0.5,
-                  input_mtok: 0.5,
-                  output_mtok: 0.5,
-                },
-              },
-            ],
-            output_mtok: 4,
-          },
+          prices: [
+            { prices: { cache_read_mtok: 0.08, cache_write_mtok: 1, input_mtok: 0.8, output_mtok: 4 } },
+            {
+              constraint: { price_context: { service_tier: ['batch', 'message_batch'] }, type: 'price_context' },
+              prices: { cache_read_mtok: 0.04, cache_write_mtok: 0.5, input_mtok: 0.4, output_mtok: 2 },
+            },
+          ],
         },
         new Date(),
         { service_tier: 'batch' }
@@ -292,23 +283,26 @@ describe('Core Price Calculation Function', () => {
       expect(result.total_price).toBeCloseTo(0.000538)
     })
 
-    it('should stack request-level price modifiers in order', () => {
+    it('should use the last matching request-context conditional price', () => {
       const modelPrice = getActiveModelPrice(
         {
           id: 'test-model',
           match: { equals: 'test-model' },
-          prices: {
-            input_mtok: 10,
-            modifiers: [
-              {
-                match: { speed: 'fast' },
-                not_match: { service_tier: 'batch' },
-                price_overrides: { input_mtok: 30, output_mtok: 150 },
+          prices: [
+            { prices: { input_mtok: 10, output_mtok: 20 } },
+            {
+              constraint: {
+                not_price_context: { service_tier: 'batch' },
+                price_context: { speed: 'fast' },
+                type: 'price_context',
               },
-              { match: { inference_geo: 'us' }, multiplier: 1.1 },
-            ],
-            output_mtok: 20,
-          },
+              prices: { input_mtok: 30, output_mtok: 150 },
+            },
+            {
+              constraint: { price_context: { inference_geo: 'us' }, type: 'price_context' },
+              prices: { input_mtok: 40, output_mtok: 160 },
+            },
+          ],
         },
         new Date(),
         { inference_geo: 'us', speed: 'fast' }
@@ -316,35 +310,11 @@ describe('Core Price Calculation Function', () => {
 
       const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
 
-      expect(modelPrice).toEqual({ input_mtok: 33, output_mtok: 165 })
+      expect(modelPrice).toEqual({ input_mtok: 40, output_mtok: 160 })
       expect(result).toMatchObject({
-        input_price: 0.033,
-        output_price: 0.0165,
-        total_price: 0.0495,
-      })
-    })
-
-    it('should apply request-level price overrides for fields absent from the base price', () => {
-      const modelPrice = getActiveModelPrice(
-        {
-          id: 'test-model',
-          match: { equals: 'test-model' },
-          prices: {
-            input_mtok: 10,
-            modifiers: [{ match: { mode: 'with-output' }, price_overrides: { output_mtok: 20 } }],
-          },
-        },
-        new Date(),
-        { mode: 'with-output' }
-      )
-
-      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
-
-      expect(modelPrice).toEqual({ input_mtok: 10, output_mtok: 20 })
-      expect(result).toMatchObject({
-        input_price: 0.01,
-        output_price: 0.002,
-        total_price: 0.012,
+        input_price: 0.04,
+        output_price: 0.016,
+        total_price: 0.056,
       })
     })
   })

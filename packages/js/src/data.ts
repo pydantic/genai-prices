@@ -110,12 +110,30 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
-        prices: {
-          input_mtok: 0.8,
-          cache_write_mtok: 1,
-          cache_read_mtok: 0.08,
-          output_mtok: 4,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.8,
+              cache_write_mtok: 1,
+              cache_read_mtok: 0.08,
+              output_mtok: 4,
+            },
+          },
+          {
+            constraint: {
+              price_context: {
+                service_tier: 'batch',
+              },
+              type: 'price_context',
+            },
+            prices: {
+              input_mtok: 0.4,
+              cache_write_mtok: 0.5,
+              cache_read_mtok: 0.04,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'claude-3-5-sonnet',
@@ -10994,11 +11012,28 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.5,
-          output_mtok: 8,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.5,
+              output_mtok: 8,
+            },
+          },
+          {
+            constraint: {
+              price_context: {
+                service_tier: 'batch',
+              },
+              type: 'price_context',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.25,
+              output_mtok: 4,
+            },
+          },
+        ],
       },
       {
         id: 'gpt-4.1-mini',

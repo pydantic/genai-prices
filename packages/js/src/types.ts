@@ -33,22 +33,13 @@ export interface ModelPrice {
   cache_write_mtok?: number | TieredPrices
   input_audio_mtok?: number | TieredPrices
   input_mtok?: number | TieredPrices
-  modifiers?: PriceModifier[]
   output_audio_mtok?: number | TieredPrices
   output_mtok?: number | TieredPrices
   requests_kcount?: number
 }
 
-export interface PriceModifier {
-  match?: Record<string, PriceContextValue | PriceContextValue[]>
-  multiplier?: number
-  not_match?: Record<string, PriceContextValue | PriceContextValue[]>
-  price_multipliers?: Record<string, number>
-  price_overrides?: Record<string, null | number | TieredPrices | undefined>
-}
-
 export interface ConditionalPrice {
-  constraint?: StartDateConstraint | TimeOfDateConstraint
+  constraint?: PriceContextConstraint | StartDateConstraint | TimeOfDateConstraint
   prices: ModelPrice
 }
 
@@ -61,6 +52,12 @@ export interface TimeOfDateConstraint {
   end_time: string // HH:MM:SS
   start_time: string // HH:MM:SS
   type: 'time_of_date'
+}
+
+export interface PriceContextConstraint {
+  not_price_context?: Record<string, PriceContextValue | PriceContextValue[]>
+  price_context: Record<string, PriceContextValue | PriceContextValue[]>
+  type: 'price_context'
 }
 
 export type MatchLogic =
