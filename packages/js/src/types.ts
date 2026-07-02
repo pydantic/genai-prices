@@ -105,6 +105,12 @@ export interface ModelInfo {
   prices: ConditionalPrice[] | ModelPrice
 }
 
+export interface ProviderConditionalPrice {
+  constraint?: StartDateConstraint | TimeOfDateConstraint
+  values: ModelPrice
+  when?: Record<string, Condition | MatchLogic>
+}
+
 export interface Provider {
   api_pattern: string
   description?: string
@@ -115,6 +121,7 @@ export interface Provider {
   models: ModelInfo[]
   name: string
   price_comments?: string
+  prices?: ModelPrice | ProviderConditionalPrice[]
   pricing_urls?: string[]
   provider_match?: MatchLogic
 }

@@ -61,8 +61,25 @@ class Provider(_Model):
     This is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,
     Azure offers OpenAI models, etc.
     """
+    prices: ModelPrice | list[ProviderConditionalPrice] | None = None
+    """Prices inherited by every model in this provider; a model-level price for the same unit overrides it."""
     models: list[ModelInfo]
     """List of models supported by this provider"""
+
+    @field_validator('prices', mode='after')
+    @classmethod
+    def provider_prices_last_unconditional(
+        cls, prices: ModelPrice | list[ProviderConditionalPrice] | None
+    ) -> ModelPrice | list[ProviderConditionalPrice] | None:
+        if isinstance(prices, list):
+            if len(prices) == 0:
+                raise ValueError('provider prices may not be empty')
+            unconditional = [p for p in prices if p.when is None and p.constraint is None]
+            if len(unconditional) != 1:
+                raise ValueError('When multiple provider prices are provided, exactly one price must be unconditional')
+            if prices[-1].when is not None or prices[-1].constraint is not None:
+                raise ValueError('The last provider conditional price must be unconditional')
+        return prices
 
     @field_validator('extractors', mode='after')
     @classmethod
@@ -332,6 +349,24 @@ class ConditionalPrice(_Model):
 
     when: dict[WhenParameter, Condition] | None = None
     """Request-level pricing context conditions; all conditions are ANDed. None matches any context."""
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Date/time constraint. None means this entry is not gated by date/time."""
+    values: ModelPrice
+    """Prices that apply under this condition. Only the units that differ need to be listed."""
+
+
+ProviderWhenParameter = Literal['model', 'service_tier', 'batch', 'cache_ttl', 'fast_mode', 'inference_geo', 'region']
+"""`when` parameters usable in a provider-level price; `model` matches the model being priced."""
+
+ProviderCondition = Union[PriceContextValue, ConditionOperators, 'MatchLogic']
+"""Provider-level condition: a context condition, or `MatchLogic` when the parameter is `model`."""
+
+
+class ProviderConditionalPrice(_Model):
+    """A provider-level conditional price; like `ConditionalPrice` but its `when` may match on `model`."""
+
+    when: dict[ProviderWhenParameter, ProviderCondition] | None = None
+    """Conditions ANDed together; the `model` parameter matches the model id via `MatchLogic`."""
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Date/time constraint. None means this entry is not gated by date/time."""
     values: ModelPrice
