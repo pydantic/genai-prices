@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import date, time
 from decimal import Decimal
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, TypeAlias
 
 from annotated_types import Gt, MaxLen
 from pydantic import (
@@ -145,6 +145,20 @@ class UsageExtractorMapping(_Model):
     """Whether the value is required to be present in the response"""
 
 
+PriceContextValue: TypeAlias = str | int | bool
+
+
+class PricingContextExtractorMapping(_Model):
+    """Mappings used to extract request-level pricing context."""
+
+    path: ExtractPath
+    """Path to the value to extract"""
+    dest: str
+    """Destination key to store the extracted pricing context value."""
+    required: bool = False
+    """Whether the value is required to be present in the response"""
+
+
 class UsageExtractor(_Model):
     """Logic for extracting usage information from a response."""
 
@@ -159,6 +173,8 @@ class UsageExtractor(_Model):
     """
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
+    pricing_context_mappings: list[PricingContextExtractorMapping] | None = None
+    """Mappings used to extract request-level pricing context values from the usage root."""
 
 
 class ModelInfo(_Model):
@@ -258,12 +274,32 @@ class ModelPrice(_Model):
     requests_kcount: DollarPrice | None = None
     """price in USD per thousand requests"""
 
+    modifiers: list[PriceModifier] | None = None
+    """Request-level price modifiers such as batch, flex, priority, fast mode, or data residency."""
+
     def is_free(self) -> bool:
         """Whether all values are zero or unset"""
         for field_name in self.__pydantic_fields__:
+            if field_name == 'modifiers':
+                continue
             if getattr(self, field_name):
                 return False
         return True
+
+
+class PriceModifier(_Model):
+    """Request-level price modifier selected by pricing context."""
+
+    match: dict[str, PriceContextValue | list[PriceContextValue]] = Field(default_factory=dict)
+    """Context values required for this modifier to apply."""
+    not_match: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
+    """Context values that prevent this modifier from applying."""
+    multiplier: DollarPrice | None = None
+    """Multiplier applied to all price keys."""
+    price_multipliers: dict[str, DollarPrice] | None = None
+    """Per-price-key multipliers."""
+    price_overrides: dict[str, DollarPrice | TieredPrices | None] | None = None
+    """Per-price-key override prices."""
 
 
 class TieredPrices(_Model):

@@ -17,6 +17,7 @@ from genai_prices.types import (
     MatchLogic,
     ModelInfo,
     ModelPrice,
+    PriceModifier,
     Provider,
     TieredPrices,
 )
@@ -218,6 +219,66 @@ def test_tiered_prices():
 def test_model_price_str_tiered_prices_include_dollar_prefix():
     model_price = ModelPrice(input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[]))
     assert str(model_price) == '$2.5/input MTok (+tiers)'
+
+
+def test_request_level_price_modifier_multiplier():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            output_mtok=Decimal('20'),
+            modifiers=[PriceModifier(match={'service_tier': 'batch'}, multiplier=Decimal('0.5'))],
+        ),
+    )
+
+    standard = model.calc_price(Usage(input_tokens=1000, output_tokens=100), provider)
+    batch = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100), provider, price_context={'service_tier': 'batch'}
+    )
+
+    assert standard.total_price == Decimal('0.012')
+    assert batch.input_price == Decimal('0.005')
+    assert batch.output_price == Decimal('0.001')
+    assert batch.total_price == Decimal('0.006')
+    assert batch.price_context == {'service_tier': 'batch'}
+
+
+def test_request_level_price_modifiers_stack_in_order():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            output_mtok=Decimal('20'),
+            modifiers=[
+                PriceModifier(
+                    match={'speed': 'fast'},
+                    not_match={'service_tier': 'batch'},
+                    price_overrides={'input_mtok': Decimal('30'), 'output_mtok': Decimal('150')},
+                ),
+                PriceModifier(match={'inference_geo': 'us'}, multiplier=Decimal('1.1')),
+            ],
+        ),
+    )
+
+    price = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        provider,
+        price_context={'speed': 'fast', 'inference_geo': 'us'},
+    )
+    excluded = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        provider,
+        price_context={'speed': 'fast', 'service_tier': 'batch'},
+    )
+
+    assert price.input_price == Decimal('0.033')
+    assert price.output_price == Decimal('0.0165')
+    assert price.total_price == Decimal('0.0495')
+    assert excluded.total_price == Decimal('0.012')
 
 
 def test_requests_kcount_prices():

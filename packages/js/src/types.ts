@@ -8,6 +8,9 @@ export interface Usage {
   output_tokens?: number
 }
 
+export type PriceContextValue = boolean | number | string
+export type PriceContext = Record<string, PriceContextValue>
+
 export interface Tier {
   price: number
   start: number
@@ -30,9 +33,18 @@ export interface ModelPrice {
   cache_write_mtok?: number | TieredPrices
   input_audio_mtok?: number | TieredPrices
   input_mtok?: number | TieredPrices
+  modifiers?: PriceModifier[]
   output_audio_mtok?: number | TieredPrices
   output_mtok?: number | TieredPrices
   requests_kcount?: number
+}
+
+export interface PriceModifier {
+  match?: Record<string, PriceContextValue | PriceContextValue[]>
+  multiplier?: number
+  not_match?: Record<string, PriceContextValue | PriceContextValue[]>
+  price_multipliers?: Record<string, number>
+  price_overrides?: Record<string, null | number | TieredPrices | undefined>
 }
 
 export interface ConditionalPrice {
@@ -80,10 +92,18 @@ export interface UsageExtractorMapping {
   path: ExtractPath
   required: boolean
 }
+
+export interface PricingContextExtractorMapping {
+  dest: string
+  path: ExtractPath
+  required: boolean
+}
+
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
   model_path: ExtractPath
+  pricing_context_mappings?: PricingContextExtractorMapping[]
   root: ExtractPath
 }
 
@@ -124,6 +144,7 @@ export interface PriceCalculation {
   model: ModelInfo
   model_price: ModelPrice
   output_price: number
+  price_context: PriceContext
   provider: Provider
   total_price: number
 }
@@ -152,6 +173,7 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  priceContext?: PriceContext
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

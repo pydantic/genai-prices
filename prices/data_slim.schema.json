@@ -387,9 +387,166 @@
           "type": "number",
           "description": "price in USD per thousand requests",
           "title": "Requests Kcount"
+        },
+        "modifiers": {
+          "items": {
+            "$ref": "#/$defs/PriceModifier"
+          },
+          "type": "array",
+          "description": "Request-level price modifiers such as batch, flex, priority, fast mode, or data residency.",
+          "title": "Modifiers"
         }
       },
       "title": "ModelPrice",
+      "type": "object"
+    },
+    "PriceModifier": {
+      "additionalProperties": false,
+      "description": "Request-level price modifier selected by pricing context.",
+      "properties": {
+        "match": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "description": "Context values required for this modifier to apply.",
+          "title": "Match",
+          "type": "object"
+        },
+        "not_match": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "type": "object",
+          "description": "Context values that prevent this modifier from applying.",
+          "title": "Not Match"
+        },
+        "multiplier": {
+          "type": "number",
+          "description": "Multiplier applied to all price keys.",
+          "title": "Multiplier"
+        },
+        "price_multipliers": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "type": "object",
+          "description": "Per-price-key multipliers.",
+          "title": "Price Multipliers"
+        },
+        "price_overrides": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "$ref": "#/$defs/TieredPrices"
+              }
+            ]
+          },
+          "type": "object",
+          "description": "Per-price-key override prices.",
+          "title": "Price Overrides"
+        }
+      },
+      "title": "PriceModifier",
+      "type": "object"
+    },
+    "PricingContextExtractorMapping": {
+      "additionalProperties": false,
+      "description": "Mappings used to extract request-level pricing context.",
+      "properties": {
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayMatch"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Path to the value to extract",
+          "title": "Path"
+        },
+        "dest": {
+          "description": "Destination key to store the extracted pricing context value.",
+          "title": "Dest",
+          "type": "string"
+        },
+        "required": {
+          "default": false,
+          "description": "Whether the value is required to be present in the response",
+          "title": "Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "path",
+        "dest"
+      ],
+      "title": "PricingContextExtractorMapping",
       "type": "object"
     },
     "Provider": {
@@ -652,6 +809,14 @@
           },
           "title": "Mappings",
           "type": "array"
+        },
+        "pricing_context_mappings": {
+          "items": {
+            "$ref": "#/$defs/PricingContextExtractorMapping"
+          },
+          "type": "array",
+          "description": "Mappings used to extract request-level pricing context values from the usage root.",
+          "title": "Pricing Context Mappings"
         }
       },
       "required": [
