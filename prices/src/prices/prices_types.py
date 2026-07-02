@@ -157,6 +157,8 @@ class UsageExtractor(_Model):
 
     Almost all APIs return this in the 'model' field, hence the default value.
     """
+    reported_total_price_path: ExtractPath | None = None
+    """Path to the provider-reported total price, if the provider returns one."""
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
 

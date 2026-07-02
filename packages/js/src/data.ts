@@ -12220,6 +12220,7 @@ export const data: Provider[] = [
         api_flavor: 'chat',
         root: 'usage',
         model_path: 'model',
+        reported_total_price_path: 'cost',
         mappings: [
           {
             path: 'prompt_tokens',
@@ -12248,6 +12249,29 @@ export const data: Provider[] = [
           },
           {
             path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        reported_total_price_path: 'cost',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
           },

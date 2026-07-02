@@ -10,6 +10,7 @@ extractors:
   # https://openrouter.ai/docs/api-reference/overview#response-usage
   - api_flavor: chat
     root: usage
+    reported_total_price_path: cost
     mappings:
       - path: prompt_tokens
         dest: input_tokens
@@ -26,6 +27,17 @@ extractors:
         dest: output_audio_tokens
         required: false
       - path: completion_tokens
+        dest: output_tokens
+  - api_flavor: responses
+    root: usage
+    reported_total_price_path: cost
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
         dest: output_tokens
 
 models:

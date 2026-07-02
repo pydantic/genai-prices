@@ -3,6 +3,7 @@ from __future__ import annotations as _annotations
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from functools import cache
 from typing import Any
 
@@ -52,6 +53,7 @@ class DataSnapshot:
         provider_id: str | None,
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
+        reported_total_price: Decimal | None = None,
     ) -> types.PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
@@ -62,6 +64,7 @@ class DataSnapshot:
             provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
+            reported_total_price=reported_total_price,
         )
 
     def extract_usage(
@@ -72,12 +75,19 @@ class DataSnapshot:
         api_flavor: str = 'default',
     ) -> types.ExtractedUsage:
         provider = self.find_provider(None, provider_id, provider_api_url)
-        model_ref, usage = provider.extract_usage(response_data, api_flavor=api_flavor)
+        result = provider.extract_usage_result(response_data, api_flavor=api_flavor)
+        model_ref = result.model_name
         if model_ref is not None:
             _, model = self.find_provider_model(model_ref, provider, None, None)
         else:
             model = None
-        return types.ExtractedUsage(usage, model, provider, self.timestamp if self.from_auto_update else None)
+        return types.ExtractedUsage(
+            result.usage,
+            model,
+            provider,
+            self.timestamp if self.from_auto_update else None,
+            reported_total_price=result.reported_total_price,
+        )
 
     def find_provider_model(
         self,

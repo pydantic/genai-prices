@@ -35,6 +35,19 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+def test_sync_success_with_reported_total_price():
+    price = calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        model_ref='gpt-4o',
+        provider_id='openai',
+        reported_total_price=Decimal('0.00123'),
+    )
+
+    assert price.price_source == snapshot('reported')
+    assert price.total_price == snapshot(Decimal('0.00123'))
+    assert price.input_price + price.output_price == price.total_price
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),

@@ -1,6 +1,7 @@
 from __future__ import annotations as _annotations
 
 from datetime import datetime
+from decimal import Decimal
 from importlib.metadata import version as _metadata_version
 from typing import Any, overload
 
@@ -19,6 +20,7 @@ def calc_price(
     *,
     provider_id: types.ProviderID | str | None = None,
     genai_request_timestamp: datetime | None = None,
+    reported_total_price: Decimal | None = None,
 ) -> types.PriceCalculation: ...
 
 
@@ -29,6 +31,7 @@ def calc_price(
     *,
     provider_api_url: str | None = None,
     genai_request_timestamp: datetime | None = None,
+    reported_total_price: Decimal | None = None,
 ) -> types.PriceCalculation: ...
 
 
@@ -39,6 +42,7 @@ def calc_price(
     provider_id: types.ProviderID | str | None = None,
     provider_api_url: str | None = None,
     genai_request_timestamp: datetime | None = None,
+    reported_total_price: Decimal | None = None,
 ) -> types.PriceCalculation:
     """Calculate the price of an LLM API call.
 
@@ -51,11 +55,14 @@ def calc_price(
         provider_id: The ID of the provider to calculate the price for.
         provider_api_url: The API URL of the provider to calculate the price for.
         genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current time.
+        reported_total_price: The provider-reported total price to prefer over calculated pricing, if available.
 
     Returns:
         The price calculation details.
     """
-    return data_snapshot.get_snapshot().calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
+    return data_snapshot.get_snapshot().calc(
+        usage, model_ref, provider_id, provider_api_url, genai_request_timestamp, reported_total_price
+    )
 
 
 @overload

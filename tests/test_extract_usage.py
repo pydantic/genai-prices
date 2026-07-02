@@ -167,6 +167,7 @@ def test_openrouter_chat_cache_write_tokens():
         'usage': {
             'prompt_tokens': 4819,
             'completion_tokens': 1906,
+            'cost': 0.123456,
             'total_tokens': 6725,
             'prompt_tokens_details': {
                 'cached_tokens': 0,
@@ -207,11 +208,38 @@ def test_openrouter_chat_cache_write_tokens():
     assert extracted_usage.provider.name == snapshot('OpenRouter')
     assert extracted_usage.model is not None
     assert extracted_usage.model.id == snapshot('anthropic/claude-sonnet-4.6')
+    assert extracted_usage.reported_total_price == snapshot(Decimal('0.123456'))
+    price = extracted_usage.calc_price()
+    assert price.price_source == snapshot('reported')
+    assert price.total_price == snapshot(Decimal('0.123456'))
+    assert price.input_price + price.output_price == price.total_price
 
     extracted_usage_by_url = extract_usage(
         response_data, provider_api_url='https://openrouter.ai/api/v1', api_flavor='chat'
     )
     assert extracted_usage_by_url.usage == extracted_usage.usage
+    assert extracted_usage_by_url.reported_total_price == extracted_usage.reported_total_price
+
+
+def test_openrouter_responses_uses_reported_price():
+    response_data = {
+        'model': 'openai/gpt-4o-mini',
+        'usage': {
+            'input_tokens': 1000,
+            'input_tokens_details': {'cached_tokens': 200},
+            'output_tokens': 100,
+            'cost': 0.00042,
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='openrouter', api_flavor='responses')
+
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=1000, cache_read_tokens=200, output_tokens=100))
+    assert extracted_usage.reported_total_price == snapshot(Decimal('0.00042'))
+    price = extracted_usage.calc_price()
+    assert price.price_source == snapshot('reported')
+    assert price.total_price == snapshot(Decimal('0.00042'))
+    assert price.input_price + price.output_price == price.total_price
 
 
 def test_extracted_usage_calc_price_requires_model():
