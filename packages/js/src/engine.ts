@@ -1,4 +1,16 @@
-import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import {
+  MatchLogic,
+  ModelInfo,
+  ModelPrice,
+  ModelPriceCalculationResult,
+  PriceContext,
+  PriceContextValue,
+  PriceModifier,
+  Provider,
+  ProviderFindOptions,
+  TieredPrices,
+  Usage,
+} from './types'
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
@@ -116,47 +128,133 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   }
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext: PriceContext = {}): ModelPrice {
+  let modelPrice: ModelPrice
   if (!Array.isArray(model.prices)) {
-    return model.prices
-  }
-  // Conditional prices: last active wins
-  for (let i = model.prices.length - 1; i >= 0; i--) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
-    const constraint = cond.constraint
-
-    if (constraint === undefined) {
-      return cond.prices
+    modelPrice = model.prices
+  } else {
+    const firstPrice = model.prices[0]
+    if (firstPrice === undefined) {
+      throw new Error(`Model ${model.id} has no prices`)
     }
+    // Conditional prices: last active wins
+    modelPrice = firstPrice.prices
+    for (let i = model.prices.length - 1; i >= 0; i--) {
+      const cond = model.prices[i]
+      if (cond === undefined) continue
+      const constraint = cond.constraint
 
-    if (constraint.type === 'start_date') {
-      if (timestamp >= new Date(constraint.start_date)) {
-        return cond.prices
+      if (constraint === undefined) {
+        modelPrice = cond.prices
+        break
       }
-    } else {
-      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
-      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
-      const startTime = constraint.start_time
-      const endTime = constraint.end_time
 
-      // Handle time ranges that span midnight (end time < start time)
-      if (endTime < startTime) {
-        // Time is in range if it's >= start OR < end
-        if (t >= startTime || t < endTime) {
-          return cond.prices
+      if (constraint.type === 'start_date') {
+        if (timestamp >= new Date(constraint.start_date)) {
+          modelPrice = cond.prices
+          break
         }
       } else {
-        // Normal time range (start <= time < end)
-        if (t >= startTime && t < endTime) {
-          return cond.prices
+        // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
+        const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
+        const startTime = constraint.start_time
+        const endTime = constraint.end_time
+
+        // Handle time ranges that span midnight (end time < start time)
+        if (endTime < startTime) {
+          // Time is in range if it's >= start OR < end
+          if (t >= startTime || t < endTime) {
+            modelPrice = cond.prices
+            break
+          }
+        } else {
+          // Normal time range (start <= time < end)
+          if (t >= startTime && t < endTime) {
+            modelPrice = cond.prices
+            break
+          }
         }
       }
     }
   }
-  // Fallback to first
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  return applyModelPriceModifiers(modelPrice, priceContext)
+}
+
+const MODEL_PRICE_FIELDS = [
+  'cache_audio_read_mtok',
+  'cache_read_mtok',
+  'cache_write_mtok',
+  'input_audio_mtok',
+  'input_mtok',
+  'output_audio_mtok',
+  'output_mtok',
+  'requests_kcount',
+] as const
+
+type ModelPriceFieldValue = number | TieredPrices
+type ModelPriceFieldMap = Record<(typeof MODEL_PRICE_FIELDS)[number], ModelPriceFieldValue | undefined>
+
+function applyModelPriceModifiers(modelPrice: ModelPrice, priceContext: PriceContext): ModelPrice {
+  if (!modelPrice.modifiers?.length) return modelPrice
+
+  let modified = copyModelPrice(modelPrice)
+  for (const modifier of modelPrice.modifiers) {
+    if (modifierMatches(modifier, priceContext)) {
+      modified = applyPriceModifier(modified, modifier)
+    }
+  }
+  return modified
+}
+
+function copyModelPrice(modelPrice: ModelPrice): ModelPrice {
+  const copied: ModelPrice = {}
+  const copiedFields = copied as unknown as Partial<ModelPriceFieldMap>
+  for (const field of MODEL_PRICE_FIELDS) {
+    if (modelPrice[field] !== undefined) {
+      copiedFields[field] = modelPrice[field]
+    }
+  }
+  return copied
+}
+
+function applyPriceModifier(modelPrice: ModelPrice, modifier: PriceModifier): ModelPrice {
+  const modified = copyModelPrice(modelPrice)
+  const modifiedFields = modified as unknown as Partial<ModelPriceFieldMap>
+  for (const field of MODEL_PRICE_FIELDS) {
+    if (modifiedFields[field] !== undefined && modifier.multiplier !== undefined) {
+      modifiedFields[field] = applyPriceMultiplier(modifiedFields[field], modifier.multiplier)
+    }
+    if (modifiedFields[field] !== undefined && modifier.price_multipliers?.[field] !== undefined) {
+      modifiedFields[field] = applyPriceMultiplier(modifiedFields[field], modifier.price_multipliers[field])
+    }
+    if (modifier.price_overrides && field in modifier.price_overrides) {
+      const override = modifier.price_overrides[field]
+      modifiedFields[field] = override === null ? undefined : override
+    }
+  }
+  return modified
+}
+
+function applyPriceMultiplier<T extends number | TieredPrices>(price: T, multiplier: number): T {
+  if (multiplier === 1) return price
+  if (typeof price === 'number') {
+    return (price * multiplier) as T
+  }
+  return new TieredPrices({
+    base: price.base * multiplier,
+    tiers: price.tiers.map((tier) => ({ price: tier.price * multiplier, start: tier.start })),
+  }) as T
+}
+
+function modifierMatches(modifier: PriceModifier, priceContext: PriceContext): boolean {
+  return matchesContext(modifier.match ?? {}, priceContext) && !(modifier.not_match && matchesContext(modifier.not_match, priceContext))
+}
+
+function matchesContext(expectedContext: Record<string, PriceContextValue | PriceContextValue[]>, priceContext: PriceContext): boolean {
+  return Object.entries(expectedContext).every(([key, expected]) => {
+    const actual = priceContext[key]
+    return Array.isArray(expected) ? actual !== undefined && expected.includes(actual) : actual === expected
+  })
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {

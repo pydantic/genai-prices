@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timezone
 from decimal import Decimal
 
@@ -14,9 +15,11 @@ from genai_prices.types import (
     ClauseOr,
     ClauseRegex,
     ClauseStartsWith,
+    ExtractedUsage,
     MatchLogic,
     ModelInfo,
     ModelPrice,
+    PriceModifier,
     Provider,
     TieredPrices,
 )
@@ -218,6 +221,117 @@ def test_tiered_prices():
 def test_model_price_str_tiered_prices_include_dollar_prefix():
     model_price = ModelPrice(input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[]))
     assert str(model_price) == '$2.5/input MTok (+tiers)'
+
+
+def test_request_level_price_modifier_multiplier():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            output_mtok=Decimal('20'),
+            modifiers=[PriceModifier(match={'service_tier': 'batch'}, multiplier=Decimal('0.5'))],
+        ),
+    )
+
+    standard = model.calc_price(Usage(input_tokens=1000, output_tokens=100), provider)
+    batch = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100), provider, price_context={'service_tier': 'batch'}
+    )
+
+    assert standard.total_price == Decimal('0.012')
+    assert batch.input_price == Decimal('0.005')
+    assert batch.output_price == Decimal('0.001')
+    assert batch.total_price == Decimal('0.006')
+    assert batch.price_context == {'service_tier': 'batch'}
+
+
+def test_request_level_price_modifiers_stack_in_order():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            output_mtok=Decimal('20'),
+            modifiers=[
+                PriceModifier(
+                    match={'speed': 'fast'},
+                    not_match={'service_tier': 'batch'},
+                    price_overrides={'input_mtok': Decimal('30'), 'output_mtok': Decimal('150')},
+                ),
+                PriceModifier(match={'inference_geo': 'us'}, multiplier=Decimal('1.1')),
+            ],
+        ),
+    )
+
+    price = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        provider,
+        price_context={'speed': 'fast', 'inference_geo': 'us'},
+    )
+    excluded = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        provider,
+        price_context={'speed': 'fast', 'service_tier': 'batch'},
+    )
+
+    assert price.input_price == Decimal('0.033')
+    assert price.output_price == Decimal('0.0165')
+    assert price.total_price == Decimal('0.0495')
+    assert excluded.total_price == Decimal('0.012')
+
+
+def test_extracted_usage_price_context_can_be_suppressed():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            modifiers=[PriceModifier(match={'service_tier': 'batch'}, multiplier=Decimal('0.5'))],
+        ),
+    )
+    extracted = ExtractedUsage(
+        usage=Usage(input_tokens=1000),
+        model=model,
+        provider=provider,
+        auto_update_timestamp=None,
+        price_context={'service_tier': 'batch'},
+    )
+
+    assert extracted.calc_price().total_price == Decimal('0.005')
+    assert extracted.calc_price(price_context={}).total_price == Decimal('0.01')
+
+
+def test_request_level_price_context_matches_value_types_strictly():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            modifiers=[PriceModifier(match={'flag': True}, multiplier=Decimal('0.5'))],
+        ),
+    )
+
+    bool_context = model.calc_price(Usage(input_tokens=1000), provider, price_context={'flag': True})
+    int_context = model.calc_price(Usage(input_tokens=1000), provider, price_context={'flag': 1})
+
+    assert bool_context.total_price == Decimal('0.005')
+    assert int_context.total_price == Decimal('0.01')
+
+
+def test_request_level_price_modifier_requires_price_effect():
+    with pytest.raises(ValueError, match='must define multiplier, price_multipliers, or price_overrides'):
+        PriceModifier(match={'service_tier': 'batch'})
+
+    with pytest.raises(ValueError, match='multiplier must be greater than 0'):
+        PriceModifier(match={'service_tier': 'batch'}, multiplier=Decimal('0'))
+
+    with pytest.raises(ValueError, match=re.escape("price_multipliers['input_mtok'] must be greater than 0")):
+        PriceModifier(match={'service_tier': 'batch'}, price_multipliers={'input_mtok': Decimal('-1')})
 
 
 def test_requests_kcount_prices():

@@ -1,8 +1,9 @@
 import { matchLogic } from './engine'
-import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
+import { ArrayMatch, ExtractPath, PriceContext, PriceContextValue, Provider, Usage } from './types'
 
 interface ExtractedUsage {
   model: null | string
+  pricing_context: PriceContext
   usage: Usage
 }
 
@@ -42,7 +43,15 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`No usage information found at ${JSON.stringify(extractor.root)}`)
   }
 
-  return { model, usage }
+  const pricingContext: PriceContext = {}
+  for (const mapping of extractor.pricing_context_mappings ?? []) {
+    const value = extractPath(mapping.path, usageObj, priceContextValueCheck, mapping.required, root)
+    if (value !== null) {
+      pricingContext[mapping.dest] = value
+    }
+  }
+
+  return { model, pricing_context: pricingContext, usage }
 }
 
 function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (ArrayMatch | string)[]): T
@@ -175,6 +184,11 @@ const stringCheck: TypeCheck<string> = {
 const numberCheck: TypeCheck<number> = {
   guard: (value: unknown): value is number => typeof value === 'number',
   name: 'number',
+}
+
+const priceContextValueCheck: TypeCheck<PriceContextValue> = {
+  guard: (value: unknown): value is PriceContextValue => ['boolean', 'number', 'string'].includes(typeof value),
+  name: 'string, number, or boolean',
 }
 
 const dottedPath = (dataPath: (ArrayMatch | string)[], errorPath: (ArrayMatch | string)[]): string =>

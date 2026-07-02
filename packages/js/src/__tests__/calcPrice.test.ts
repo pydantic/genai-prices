@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { ModelPrice, Usage } from '../types'
 
-import { calcPrice } from '../engine'
+import { calcPrice, getActiveModelPrice } from '../engine'
 
 const MILLION = 1_000_000
 
@@ -226,6 +226,87 @@ describe('Core Price Calculation Function', () => {
     ])('should handle $name', ({ expected, modelPrice, usage }) => {
       const result = calcPrice(usage, modelPrice)
       expect(result).toMatchObject(expected)
+    })
+
+    it('should apply request-level price modifiers', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'test-model',
+          match: { equals: 'test-model' },
+          prices: {
+            input_mtok: 10,
+            modifiers: [{ match: { service_tier: 'batch' }, multiplier: 0.5 }],
+            output_mtok: 20,
+          },
+        },
+        new Date(),
+        { service_tier: 'batch' }
+      )
+
+      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({ input_mtok: 5, output_mtok: 10 })
+      expect(result).toMatchObject({
+        input_price: 0.005,
+        output_price: 0.001,
+        total_price: 0.006,
+      })
+    })
+
+    it('should stack request-level price modifiers in order', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'test-model',
+          match: { equals: 'test-model' },
+          prices: {
+            input_mtok: 10,
+            modifiers: [
+              {
+                match: { speed: 'fast' },
+                not_match: { service_tier: 'batch' },
+                price_overrides: { input_mtok: 30, output_mtok: 150 },
+              },
+              { match: { inference_geo: 'us' }, multiplier: 1.1 },
+            ],
+            output_mtok: 20,
+          },
+        },
+        new Date(),
+        { inference_geo: 'us', speed: 'fast' }
+      )
+
+      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({ input_mtok: 33, output_mtok: 165 })
+      expect(result).toMatchObject({
+        input_price: 0.033,
+        output_price: 0.0165,
+        total_price: 0.0495,
+      })
+    })
+
+    it('should apply request-level price overrides for fields absent from the base price', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'test-model',
+          match: { equals: 'test-model' },
+          prices: {
+            input_mtok: 10,
+            modifiers: [{ match: { mode: 'with-output' }, price_overrides: { output_mtok: 20 } }],
+          },
+        },
+        new Date(),
+        { mode: 'with-output' }
+      )
+
+      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({ input_mtok: 10, output_mtok: 20 })
+      expect(result).toMatchObject({
+        input_price: 0.01,
+        output_price: 0.002,
+        total_price: 0.012,
+      })
     })
   })
 })

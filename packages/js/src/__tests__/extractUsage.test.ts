@@ -217,7 +217,43 @@ describe('extractUsage', () => {
 
       expect(extractUsage(provider, { model: 'test-model', usage: { output_tokens: 2, totals: 1 } })).toEqual({
         model: 'test-model',
+        pricing_context: {},
         usage: { output_tokens: 2 },
+      })
+    })
+
+    it('should extract pricing context while preserving usage fields', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [
+              { dest: 'input_tokens', path: 'input_tokens', required: true },
+              { dest: 'output_tokens', path: 'output_tokens', required: true },
+            ],
+            model_path: 'model',
+            pricing_context_mappings: [
+              { dest: 'service_tier', path: 'service_tier', required: false },
+              { dest: 'inference_geo', path: 'inference_geo', required: false },
+            ],
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(
+        extractUsage(provider, {
+          model: 'test-model',
+          usage: { input_tokens: 100, output_tokens: 20, service_tier: 'batch' },
+        })
+      ).toEqual({
+        model: 'test-model',
+        pricing_context: { service_tier: 'batch' },
+        usage: { input_tokens: 100, output_tokens: 20 },
       })
     })
   })

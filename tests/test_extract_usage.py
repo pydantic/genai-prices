@@ -12,6 +12,7 @@ from genai_prices.types import (
     ClauseEquals,
     ExtractedUsage,
     ModelPrice,
+    PricingContextExtractorMapping,
     Provider,
     UsageExtractor,
     UsageExtractorMapping,
@@ -224,6 +225,37 @@ def test_extracted_usage_calc_price_requires_model():
 
     with pytest.raises(ValueError, match='No model reference found in response data and model not provided'):
         extracted_usage.calc_price()
+
+
+def test_extract_usage_pricing_context_preserves_two_tuple_api():
+    provider = Provider(
+        id='test',
+        name='Test',
+        api_pattern='test',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens'),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+                ],
+                pricing_context_mappings=[
+                    PricingContextExtractorMapping(path='service_tier', dest='service_tier'),
+                    PricingContextExtractorMapping(path='inference_geo', dest='inference_geo', required=False),
+                ],
+            )
+        ],
+    )
+    response_data = {
+        'model': 'test-model',
+        'usage': {'input_tokens': 100, 'output_tokens': 20, 'service_tier': 'batch'},
+    }
+
+    assert provider.extract_usage(response_data) == ('test-model', Usage(input_tokens=100, output_tokens=20))
+    model_ref, usage, price_context = provider.extract_usage_with_context(response_data)
+    assert model_ref == 'test-model'
+    assert usage == Usage(input_tokens=100, output_tokens=20)
+    assert price_context == {'service_tier': 'batch'}
 
 
 @pytest.mark.parametrize(
