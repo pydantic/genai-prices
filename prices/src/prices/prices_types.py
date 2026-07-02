@@ -315,14 +315,14 @@ class PriceModifier(_Model):
     """Context values that prevent this modifier from applying."""
     multiplier: PositiveMultiplier | None = None
     """Multiplier applied to all price keys."""
-    price_multipliers: dict[str, PositiveMultiplier] | None = None
+    price_multipliers: Annotated[dict[str, PositiveMultiplier], Field(min_length=1)] | None = None
     """Per-price-key multipliers."""
-    price_overrides: dict[str, DollarPrice | TieredPrices | None] | None = None
+    price_overrides: Annotated[dict[str, DollarPrice | TieredPrices | None], Field(min_length=1)] | None = None
     """Per-price-key override prices."""
 
     @model_validator(mode='after')
     def require_price_effect(self) -> PriceModifier:
-        if self.multiplier is None and self.price_multipliers is None and self.price_overrides is None:
+        if self.multiplier is None and not self.price_multipliers and not self.price_overrides:
             raise ValueError('PriceModifier must define multiplier, price_multipliers, or price_overrides')
         return self
 

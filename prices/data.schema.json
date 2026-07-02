@@ -518,6 +518,7 @@
             "exclusiveMinimum": 0,
             "type": "number"
           },
+          "minProperties": 1,
           "type": "object",
           "description": "Per-price-key multipliers.",
           "title": "Price Multipliers"
@@ -533,6 +534,7 @@
               }
             ]
           },
+          "minProperties": 1,
           "type": "object",
           "description": "Per-price-key override prices.",
           "title": "Price Overrides"

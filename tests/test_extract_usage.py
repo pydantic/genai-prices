@@ -258,6 +258,37 @@ def test_extract_usage_pricing_context_preserves_two_tuple_api():
     assert price_context == {'service_tier': 'batch'}
 
 
+def test_extract_usage_with_context_errors_match_extract_usage():
+    provider = Provider(id='test', name='Test', api_pattern='test')
+
+    with pytest.raises(ValueError, match='No extraction logic defined for this provider'):
+        provider.extract_usage_with_context({})
+
+    provider.extractors = [UsageExtractor(root='usage', mappings=[])]
+    with pytest.raises(ValueError, match=re.escape("Unknown api_flavor 'chat', allowed values: default")):
+        provider.extract_usage_with_context({}, api_flavor='chat')
+
+
+def test_extract_usage_pricing_context_rejects_unsupported_value_type():
+    provider = Provider(
+        id='test',
+        name='Test',
+        api_pattern='test',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens')],
+                pricing_context_mappings=[PricingContextExtractorMapping(path='service_tier', dest='service_tier')],
+            )
+        ],
+    )
+
+    with pytest.raises(
+        ValueError, match="Expected pricing context value for 'service_tier' to be a str, int, or bool, got list"
+    ):
+        provider.extract_usage_with_context({'model': 'x', 'usage': {'input_tokens': 1, 'service_tier': ['batch']}})
+
+
 @pytest.mark.parametrize(
     'response_data,error',
     [

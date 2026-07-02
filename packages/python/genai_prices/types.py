@@ -699,11 +699,11 @@ class PriceModifier:
     match: dict[str, PriceContextValue | list[PriceContextValue]] = dataclasses.field(default_factory=dict)
     not_match: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
     multiplier: PositiveMultiplier | None = None
-    price_multipliers: dict[str, PositiveMultiplier] | None = None
-    price_overrides: dict[str, PriceFieldOverride] | None = None
+    price_multipliers: Annotated[dict[str, PositiveMultiplier], pydantic.Field(min_length=1)] | None = None
+    price_overrides: Annotated[dict[str, PriceFieldOverride], pydantic.Field(min_length=1)] | None = None
 
     def __post_init__(self) -> None:
-        if self.multiplier is None and self.price_multipliers is None and self.price_overrides is None:
+        if self.multiplier is None and not self.price_multipliers and not self.price_overrides:
             raise ValueError('PriceModifier must define multiplier, price_multipliers, or price_overrides')
         if self.multiplier is not None and self.multiplier <= 0:
             raise ValueError('PriceModifier multiplier must be greater than 0')
