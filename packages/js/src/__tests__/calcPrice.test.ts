@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { ModelPrice, Usage } from '../types'
 
-import { calcPrice } from '../engine'
+import { calcPrice, getActiveModelPrice } from '../engine'
 
 const MILLION = 1_000_000
 
@@ -226,6 +226,96 @@ describe('Core Price Calculation Function', () => {
     ])('should handle $name', ({ expected, modelPrice, usage }) => {
       const result = calcPrice(usage, modelPrice)
       expect(result).toMatchObject(expected)
+    })
+
+    it('should apply the OpenAI Batch API conditional price', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'gpt-4.1',
+          match: { equals: 'gpt-4.1' },
+          prices: [
+            { prices: { cache_read_mtok: 0.5, input_mtok: 2, output_mtok: 8 } },
+            {
+              constraint: { price_context: { service_tier: 'batch' }, type: 'price_context' },
+              prices: { cache_read_mtok: 0.25, input_mtok: 1, output_mtok: 4 },
+            },
+          ],
+        },
+        new Date(),
+        { service_tier: 'batch' }
+      )
+
+      const result = calcPrice({ cache_read_tokens: 100, input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({ cache_read_mtok: 0.25, input_mtok: 1, output_mtok: 4 })
+      expect(result.input_price).toBeCloseTo(0.000925)
+      expect(result.output_price).toBeCloseTo(0.0004)
+      expect(result.total_price).toBeCloseTo(0.001325)
+    })
+
+    it('should apply Anthropic Message Batches conditional prices', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'claude-3-5-haiku-latest',
+          match: { equals: 'claude-3-5-haiku-20241022' },
+          prices: [
+            { prices: { cache_read_mtok: 0.08, cache_write_mtok: 1, input_mtok: 0.8, output_mtok: 4 } },
+            {
+              constraint: { price_context: { service_tier: ['batch', 'message_batch'] }, type: 'price_context' },
+              prices: { cache_read_mtok: 0.04, cache_write_mtok: 0.5, input_mtok: 0.4, output_mtok: 2 },
+            },
+          ],
+        },
+        new Date(),
+        { service_tier: 'batch' }
+      )
+
+      const result = calcPrice({ cache_read_tokens: 200, cache_write_tokens: 100, input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({
+        cache_read_mtok: 0.04,
+        cache_write_mtok: 0.5,
+        input_mtok: 0.4,
+        output_mtok: 2,
+      })
+      expect(result.input_price).toBeCloseTo(0.000338)
+      expect(result.output_price).toBeCloseTo(0.0002)
+      expect(result.total_price).toBeCloseTo(0.000538)
+    })
+
+    it('should use the last matching request-context conditional price', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'test-model',
+          match: { equals: 'test-model' },
+          prices: [
+            { prices: { input_mtok: 10, output_mtok: 20 } },
+            {
+              constraint: {
+                not_price_context: { service_tier: 'batch' },
+                price_context: { speed: 'fast' },
+                type: 'price_context',
+              },
+              prices: { input_mtok: 30, output_mtok: 150 },
+            },
+            {
+              constraint: { price_context: { inference_geo: 'us' }, type: 'price_context' },
+              prices: { input_mtok: 40, output_mtok: 160 },
+            },
+          ],
+        },
+        new Date(),
+        { inference_geo: 'us', speed: 'fast' }
+      )
+
+      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({ input_mtok: 40, output_mtok: 160 })
+      expect(result).toMatchObject({
+        input_price: 0.04,
+        output_price: 0.016,
+        total_price: 0.056,
+      })
     })
   })
 })

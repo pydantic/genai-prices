@@ -62,12 +62,27 @@ providers: list[Provider] = [
                 name='Claude Haiku 3.5',
                 description='Fastest, most cost-effective model',
                 context_window=200000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.8'),
-                    cache_write_mtok=Decimal('1'),
-                    cache_read_mtok=Decimal('0.08'),
-                    output_mtok=Decimal('4'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.8'),
+                            cache_write_mtok=Decimal('1'),
+                            cache_read_mtok=Decimal('0.08'),
+                            output_mtok=Decimal('4'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=PriceContextConstraint(
+                            price_context={'service_tier': 'batch'}, not_price_context=None
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.4'),
+                            cache_write_mtok=Decimal('0.5'),
+                            cache_read_mtok=Decimal('0.04'),
+                            output_mtok=Decimal('2'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='claude-3-5-sonnet',
@@ -6244,7 +6259,21 @@ providers: list[Provider] = [
                 name='gpt 4.1',
                 description="GPT-4.1 is OpenAI's latest flagship model, offering major improvements in coding, instruction following, and long context understanding with up to 1 million tokens of context.",
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=PriceContextConstraint(
+                            price_context={'service_tier': 'batch'}, not_price_context=None
+                        ),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('4')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-4.1-mini',

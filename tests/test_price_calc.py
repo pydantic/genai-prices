@@ -14,11 +14,15 @@ from genai_prices.types import (
     ClauseOr,
     ClauseRegex,
     ClauseStartsWith,
+    ConditionalPrice,
+    ExtractedUsage,
     MatchLogic,
     ModelInfo,
     ModelPrice,
+    PriceContextConstraint,
     Provider,
     TieredPrices,
+    _extract_type_name,
 )
 
 pytestmark = pytest.mark.anyio
@@ -218,6 +222,182 @@ def test_tiered_prices():
 def test_model_price_str_tiered_prices_include_dollar_prefix():
     model_price = ModelPrice(input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[]))
     assert str(model_price) == '$2.5/input MTok (+tiers)'
+
+
+def test_openai_batch_api_conditional_price():
+    usage = Usage(input_tokens=1000, cache_read_tokens=100, output_tokens=100)
+    standard = calc_price(usage, model_ref='gpt-4.1', provider_id='openai')
+    batch = calc_price(
+        usage,
+        model_ref='gpt-4.1',
+        provider_id='openai',
+        price_context={'service_tier': 'batch'},
+    )
+
+    assert standard.input_price == Decimal('0.00185')
+    assert standard.output_price == Decimal('0.0008')
+    assert standard.total_price == Decimal('0.00265')
+    assert batch.input_price == Decimal('0.000925')
+    assert batch.output_price == Decimal('0.0004')
+    assert batch.total_price == Decimal('0.001325')
+    assert batch.price_context == {'service_tier': 'batch'}
+
+
+def test_request_context_conditional_prices_use_last_matching_price():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('20'))),
+            ConditionalPrice(
+                constraint=PriceContextConstraint(
+                    price_context={'speed': 'fast'}, not_price_context={'service_tier': 'batch'}
+                ),
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('150')),
+            ),
+            ConditionalPrice(
+                constraint=PriceContextConstraint(price_context={'inference_geo': 'us'}),
+                prices=ModelPrice(input_mtok=Decimal('40'), output_mtok=Decimal('160')),
+            ),
+        ],
+    )
+
+    price = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        provider,
+        price_context={'speed': 'fast', 'inference_geo': 'us'},
+    )
+    excluded = model.calc_price(
+        Usage(input_tokens=1000, output_tokens=100),
+        provider,
+        price_context={'speed': 'fast', 'service_tier': 'batch'},
+    )
+
+    assert price.input_price == Decimal('0.04')
+    assert price.output_price == Decimal('0.016')
+    assert price.total_price == Decimal('0.056')
+    assert excluded.total_price == Decimal('0.012')
+
+
+def test_anthropic_message_batches_conditional_price():
+    usage = Usage(input_tokens=1000, cache_write_tokens=100, cache_read_tokens=200, output_tokens=100)
+    standard = calc_price(usage, model_ref='claude-3-5-haiku-20241022', provider_id='anthropic')
+    batch = calc_price(
+        usage,
+        model_ref='claude-3-5-haiku-20241022',
+        provider_id='anthropic',
+        price_context={'service_tier': 'batch'},
+    )
+    skipped = calc_price(
+        usage,
+        model_ref='claude-3-5-haiku-20241022',
+        provider_id='anthropic',
+        price_context={'service_tier': 'priority'},
+    )
+
+    assert standard.input_price == Decimal('0.000676')
+    assert standard.output_price == Decimal('0.0004')
+    assert standard.total_price == Decimal('0.001076')
+    assert batch.input_price == Decimal('0.000338')
+    assert batch.output_price == Decimal('0.0002')
+    assert batch.total_price == Decimal('0.000538')
+    assert skipped.total_price == standard.total_price
+
+
+def test_request_context_conditional_price_supports_tiered_prices():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=TieredPrices(base=Decimal('10'), tiers=[]))),
+            ConditionalPrice(
+                constraint=PriceContextConstraint(price_context={'service_tier': ['batch', 'offline']}),
+                prices=ModelPrice(input_mtok=TieredPrices(base=Decimal('5'), tiers=[])),
+            ),
+        ],
+    )
+
+    price = model.calc_price(Usage(input_tokens=1000), provider, price_context={'service_tier': 'batch'})
+    skipped = model.calc_price(Usage(input_tokens=1000), provider, price_context={'service_tier': 'priority'})
+
+    assert price.input_price == Decimal('0.005')
+    assert skipped.input_price == Decimal('0.01')
+
+
+def test_extracted_usage_price_context_can_be_suppressed():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('10'))),
+            ConditionalPrice(
+                constraint=PriceContextConstraint(price_context={'service_tier': 'batch'}),
+                prices=ModelPrice(input_mtok=Decimal('5')),
+            ),
+        ],
+    )
+    extracted = ExtractedUsage(
+        usage=Usage(input_tokens=1000),
+        model=model,
+        provider=provider,
+        auto_update_timestamp=None,
+        price_context={'service_tier': 'batch'},
+    )
+
+    assert extracted.calc_price().total_price == Decimal('0.005')
+    assert extracted.calc_price(price_context={}).total_price == Decimal('0.01')
+
+
+def test_extracted_usage_cannot_add_different_price_contexts():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model', match=ClauseEquals(equals='test-model'), prices=ModelPrice(input_mtok=Decimal('1'))
+    )
+    standard = ExtractedUsage(
+        usage=Usage(input_tokens=1),
+        model=model,
+        provider=provider,
+        auto_update_timestamp=None,
+        price_context={'service_tier': 'standard'},
+    )
+    batch = ExtractedUsage(
+        usage=Usage(input_tokens=1),
+        model=model,
+        provider=provider,
+        auto_update_timestamp=None,
+        price_context={'service_tier': 'batch'},
+    )
+
+    with pytest.raises(ValueError, match='price contexts do not match'):
+        _ = standard + batch
+
+
+def test_request_context_conditional_price_matches_value_types_strictly():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=[
+            ConditionalPrice(prices=ModelPrice(input_mtok=Decimal('10'))),
+            ConditionalPrice(
+                constraint=PriceContextConstraint(price_context={'flag': True}),
+                prices=ModelPrice(input_mtok=Decimal('5')),
+            ),
+        ],
+    )
+
+    bool_context = model.calc_price(Usage(input_tokens=1000), provider, price_context={'flag': True})
+    int_context = model.calc_price(Usage(input_tokens=1000), provider, price_context={'flag': 1})
+
+    assert bool_context.total_price == Decimal('0.005')
+    assert int_context.total_price == Decimal('0.01')
+
+
+def test_extract_type_name_for_multiple_expected_types():
+    assert _extract_type_name((str, int)) == 'str, int'
 
 
 def test_requests_kcount_prices():

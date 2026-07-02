@@ -292,9 +292,17 @@ models:
     context_window: 1000000
     prices_checked: 2025-07-04
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.5
-      output_mtok: 8
+      - prices:
+          input_mtok: 2
+          cache_read_mtok: 0.5
+          output_mtok: 8
+      - constraint:
+          price_context:
+            service_tier: batch
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.25
+          output_mtok: 4
 
   - id: gpt-4.1-mini
     name: gpt 4.1 mini

@@ -14,10 +14,13 @@ from typing_extensions import TypedDict
 __all__ = (
     'ProviderID',
     'PriceCalculation',
+    'PriceContext',
+    'PriceContextValue',
     'AbstractUsage',
     'Usage',
     'Provider',
     'UsageExtractorMapping',
+    'PricingContextExtractorMapping',
     'UsageExtractor',
     'ModelInfo',
     'ModelPrice',
@@ -26,6 +29,7 @@ __all__ = (
     'ConditionalPrice',
     'StartDateConstraint',
     'TimeOfDateConstraint',
+    'PriceContextConstraint',
     'ClauseStartsWith',
     'ClauseEndsWith',
     'ClauseContains',
@@ -75,6 +79,9 @@ ProviderID = Literal[
     'openrouter',
 ]
 
+PriceContextValue = str | int | bool
+PriceContext = Mapping[str, PriceContextValue]
+
 
 @dataclass
 class ArrayMatch:
@@ -101,6 +108,7 @@ class PriceCalculation:
     provider: Provider = dataclasses.field(repr=False)
     model_price: ModelPrice
     auto_update_timestamp: datetime | None
+    price_context: dict[str, PriceContextValue] = dataclasses.field(default_factory=dict)
 
     def __repr__(self) -> str:
         return (
@@ -111,7 +119,9 @@ class PriceCalculation:
             f'model={self.model.summary()}, '
             f'provider={self.provider.summary()}, '
             f'model_price=ModelPrice({self.model_price}), '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+            f'auto_update_timestamp={self.auto_update_timestamp!r}'
+            + (f', price_context={self.price_context!r}' if self.price_context else '')
+            + ')'
         )
 
 
@@ -121,9 +131,14 @@ class ExtractedUsage:
     model: ModelInfo | None = dataclasses.field(repr=False)
     provider: Provider = dataclasses.field(repr=False)
     auto_update_timestamp: datetime | None
+    price_context: dict[str, PriceContextValue] = dataclasses.field(default_factory=dict)
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -141,6 +156,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            price_context=self.price_context if price_context is None else price_context,
         )
 
     def __repr__(self) -> str:
@@ -149,7 +165,9 @@ class ExtractedUsage:
             f'usage={self.usage!r}, '
             f'model={self.model.summary() if self.model else None}, '
             f'provider={self.provider.summary()}, '
-            f'auto_update_timestamp={self.auto_update_timestamp!r})'
+            f'auto_update_timestamp={self.auto_update_timestamp!r}'
+            + (f', price_context={self.price_context!r}' if self.price_context else '')
+            + ')'
         )
 
     def __add__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
@@ -175,11 +193,18 @@ class ExtractedUsage:
                 f'Cannot add {other} to {self}, providers do not match {other.provider} != {self.provider}'
             )
 
+        if self.price_context != other.price_context:
+            raise ValueError(
+                f'Cannot add {other} to {self}, price contexts do not match '
+                f'{other.price_context} != {self.price_context}'
+            )
+
         return ExtractedUsage(
             model=self.model,
             provider=self.provider,
             auto_update_timestamp=self.auto_update_timestamp,
             usage=self.usage + other.usage,
+            price_context=dict(self.price_context),
         )
 
     def __radd__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
@@ -333,6 +358,21 @@ class Provider:
 
         return extractor.extract(response_data)
 
+    def extract_usage_with_context(
+        self, response_data: Any, *, api_flavor: str = 'default'
+    ) -> tuple[str | None, Usage, dict[str, PriceContextValue]]:
+        """Extract model name, usage information, and pricing context from a response."""
+        if self.extractors is None:
+            raise ValueError('No extraction logic defined for this provider')
+
+        try:
+            extractor = next(e for e in self.extractors if e.api_flavor == api_flavor)
+        except StopIteration as e:
+            fs = ', '.join(e.api_flavor for e in self.extractors)
+            raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
+
+        return extractor.extract_with_context(response_data)
+
     def summary(self) -> str:
         return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
 
@@ -364,6 +404,18 @@ class UsageExtractorMapping:
 
 
 @dataclass
+class PricingContextExtractorMapping:
+    """Mappings used to extract request-level pricing context."""
+
+    path: ExtractPath
+    """Path to the value to extract"""
+    dest: str
+    """Destination key to store the extracted pricing context value."""
+    required: bool = False
+    """Whether the value is required to be present in the response"""
+
+
+@dataclass
 class UsageExtractor:
     """Logic for extracting usage information from a response."""
 
@@ -375,6 +427,8 @@ class UsageExtractor:
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
+    pricing_context_mappings: list[PricingContextExtractorMapping] | None = None
+    """Mappings used to extract request-level pricing context values from the usage root."""
 
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
@@ -388,6 +442,11 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
+        model_name, usage, _ = self.extract_with_context(response_data)
+        return model_name, usage
+
+    def extract_with_context(self, response_data: Any) -> tuple[str | None, Usage, dict[str, PriceContextValue]]:
+        """Extract model name, usage information, and request-level pricing context from a response."""
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
@@ -406,7 +465,18 @@ class UsageExtractor:
                 values_set = True
         if not values_set:
             raise ValueError(f'No usage information found at {self.root}')
-        return model_name, usage
+
+        price_context: dict[str, PriceContextValue] = {}
+        for mapping in self.pricing_context_mappings or ():
+            value = _extract_path(mapping.path, usage_obj, object, mapping.required, root)
+            if value is not None:
+                if not isinstance(value, str | int | bool):
+                    raise ValueError(
+                        f'Expected pricing context value for {mapping.dest!r} to be a str, int, or bool, '
+                        f'got {_type_name(value)}'
+                    )
+                price_context[mapping.dest] = value
+        return model_name, usage, price_context
 
 
 E = TypeVar('E')
@@ -485,7 +555,8 @@ def _extract_path(
         elif required:
             error_path.append(last)
             raise ValueError(
-                f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
+                f'Expected `{_dot_path(data_path, error_path)}` value to be a '
+                f'{_extract_type_name(extract_type)}, got {_type_name(value)}'
             )
 
 
@@ -513,6 +584,12 @@ def _dot_path(data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | 
 
 def _type_name(v: Any) -> str:
     return 'None' if v is None else type(v).__name__
+
+
+def _extract_type_name(extract_type: type[Any] | tuple[type[Any], ...]) -> str:
+    if isinstance(extract_type, tuple):
+        return ', '.join(t.__name__ for t in extract_type)
+    return extract_type.__name__
 
 
 @dataclass
@@ -546,15 +623,21 @@ class ModelInfo:
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime) -> ModelPrice:
+    def get_prices(self, request_timestamp: datetime, price_context: PriceContext | None = None) -> ModelPrice:
         if isinstance(self.prices, ModelPrice):
-            return self.prices
+            prices = self.prices
         else:
             # reversed because the last price takes precedence
             for conditional_price in reversed(self.prices):
-                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
-                    return conditional_price.prices
-            return self.prices[0].prices
+                if conditional_price.constraint is None or conditional_price.constraint.active(
+                    request_timestamp, price_context or {}
+                ):
+                    prices = conditional_price.prices
+                    break
+            else:
+                prices = self.prices[0].prices
+
+        return prices
 
     def calc_price(
         self,
@@ -563,11 +646,12 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp)
+        model_price = self.get_prices(genai_request_timestamp, price_context)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -577,6 +661,7 @@ class ModelInfo:
             provider=provider,
             model_price=model_price,
             auto_update_timestamp=auto_update_timestamp,
+            price_context=dict(price_context or {}),
         )
 
     def summary(self) -> str:
@@ -734,6 +819,22 @@ class ModelPrice:
         return ', '.join(parts)
 
 
+def _matches_context(
+    expected_context: Mapping[str, PriceContextValue | Sequence[PriceContextValue]], price_context: PriceContext
+) -> bool:
+    def values_equal(actual: PriceContextValue | None, expected: PriceContextValue) -> bool:
+        return type(actual) is type(expected) and actual == expected
+
+    for key, expected in expected_context.items():
+        actual = price_context.get(key)
+        if isinstance(expected, Sequence) and not isinstance(expected, str):
+            if not any(values_equal(actual, item) for item in expected):
+                return False
+        elif not values_equal(actual, expected):
+            return False
+    return True
+
+
 def calc_mtok_price(
     field_mtok: Decimal | TieredPrices | None, token_count: int | None, total_input_tokens: int
 ) -> Decimal:
@@ -804,7 +905,7 @@ class ConditionalPrice:
     The last price active price (price where the constraints are met) is used.
     """
 
-    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    constraint: StartDateConstraint | TimeOfDateConstraint | PriceContextConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
 
     _: dataclasses.KW_ONLY
@@ -820,7 +921,7 @@ class StartDateConstraint:
     start_date: date
     """Date when this price starts"""
 
-    def active(self, request_timestamp: datetime) -> bool:
+    def active(self, request_timestamp: datetime, _price_context: PriceContext) -> bool:
         return request_timestamp.date() >= self.start_date
 
 
@@ -833,8 +934,23 @@ class TimeOfDateConstraint:
     end_time: time
     """End time of the interval."""
 
-    def active(self, request_timestamp: datetime) -> bool:
+    def active(self, request_timestamp: datetime, _price_context: PriceContext) -> bool:
         return self.start_time <= request_timestamp.timetz() < self.end_time
+
+
+@dataclass
+class PriceContextConstraint:
+    """Constraint that selects prices based on request-level pricing context."""
+
+    price_context: dict[str, PriceContextValue | list[PriceContextValue]]
+    """Context values required for this price to apply."""
+    not_price_context: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
+    """Context values that prevent this price from applying."""
+
+    def active(self, _request_timestamp: datetime, price_context: PriceContext) -> bool:
+        return _matches_context(self.price_context, price_context) and not (
+            self.not_price_context is not None and _matches_context(self.not_price_context, price_context)
+        )
 
 
 @dataclass

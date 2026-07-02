@@ -52,6 +52,7 @@ class DataSnapshot:
         provider_id: str | None,
         provider_api_url: str | None,
         genai_request_timestamp: datetime | None,
+        price_context: types.PriceContext | None = None,
     ) -> types.PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
@@ -62,6 +63,7 @@ class DataSnapshot:
             provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
+            price_context=price_context,
         )
 
     def extract_usage(
@@ -72,12 +74,14 @@ class DataSnapshot:
         api_flavor: str = 'default',
     ) -> types.ExtractedUsage:
         provider = self.find_provider(None, provider_id, provider_api_url)
-        model_ref, usage = provider.extract_usage(response_data, api_flavor=api_flavor)
+        model_ref, usage, price_context = provider.extract_usage_with_context(response_data, api_flavor=api_flavor)
         if model_ref is not None:
             _, model = self.find_provider_model(model_ref, provider, None, None)
         else:
             model = None
-        return types.ExtractedUsage(usage, model, provider, self.timestamp if self.from_auto_update else None)
+        return types.ExtractedUsage(
+            usage, model, provider, self.timestamp if self.from_auto_update else None, price_context
+        )
 
     def find_provider_model(
         self,

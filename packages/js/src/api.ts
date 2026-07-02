@@ -76,12 +76,14 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
+  const priceContext = options?.priceContext ?? {}
+  const modelPrice = getActiveModelPrice(model, timestamp, priceContext)
   const priceResult = calcPriceInternal(usage, modelPrice)
   return {
     auto_update_timestamp: undefined,
     model,
     model_price: modelPrice,
+    price_context: priceContext,
     provider,
     ...priceResult,
   }

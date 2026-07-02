@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import date, time
 from decimal import Decimal
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, TypeAlias
 
 from annotated_types import Gt, MaxLen
 from pydantic import (
@@ -145,6 +145,20 @@ class UsageExtractorMapping(_Model):
     """Whether the value is required to be present in the response"""
 
 
+PriceContextValue: TypeAlias = str | int | bool
+
+
+class PricingContextExtractorMapping(_Model):
+    """Mappings used to extract request-level pricing context."""
+
+    path: ExtractPath
+    """Path to the value to extract"""
+    dest: str
+    """Destination key to store the extracted pricing context value."""
+    required: bool = False
+    """Whether the value is required to be present in the response"""
+
+
 class UsageExtractor(_Model):
     """Logic for extracting usage information from a response."""
 
@@ -159,6 +173,8 @@ class UsageExtractor(_Model):
     """
     mappings: list[UsageExtractorMapping]
     """Mappings from used to build usage."""
+    pricing_context_mappings: list[PricingContextExtractorMapping] | None = None
+    """Mappings used to extract request-level pricing context values from the usage root."""
 
 
 class ModelInfo(_Model):
@@ -305,7 +321,7 @@ class ConditionalPrice(_Model):
     The last price active price (price where the constraints are met) is used.
     """
 
-    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    constraint: StartDateConstraint | TimeOfDateConstraint | PriceContextConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
     prices: ModelPrice
     """Prices for this condition."""
@@ -332,6 +348,15 @@ class TimeOfDateConstraint(_Model):
         if time_of_date.tzinfo is None:
             raise ValueError('Times must be timezone aware')
         return time_of_date
+
+
+class PriceContextConstraint(_Model):
+    """Constraint that selects prices based on request-level pricing context."""
+
+    price_context: dict[str, PriceContextValue | list[PriceContextValue]]
+    """Context values required for this price to apply."""
+    not_price_context: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
+    """Context values that prevent this price from applying."""
 
 
 class ClauseStartsWith(_Model):

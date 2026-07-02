@@ -8,6 +8,9 @@ export interface Usage {
   output_tokens?: number
 }
 
+export type PriceContextValue = boolean | number | string
+export type PriceContext = Record<string, PriceContextValue>
+
 export interface Tier {
   price: number
   start: number
@@ -36,7 +39,7 @@ export interface ModelPrice {
 }
 
 export interface ConditionalPrice {
-  constraint?: StartDateConstraint | TimeOfDateConstraint
+  constraint?: PriceContextConstraint | StartDateConstraint | TimeOfDateConstraint
   prices: ModelPrice
 }
 
@@ -49,6 +52,12 @@ export interface TimeOfDateConstraint {
   end_time: string // HH:MM:SS
   start_time: string // HH:MM:SS
   type: 'time_of_date'
+}
+
+export interface PriceContextConstraint {
+  not_price_context?: Record<string, PriceContextValue | PriceContextValue[]>
+  price_context: Record<string, PriceContextValue | PriceContextValue[]>
+  type: 'price_context'
 }
 
 export type MatchLogic =
@@ -80,10 +89,18 @@ export interface UsageExtractorMapping {
   path: ExtractPath
   required: boolean
 }
+
+export interface PricingContextExtractorMapping {
+  dest: string
+  path: ExtractPath
+  required: boolean
+}
+
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
   model_path: ExtractPath
+  pricing_context_mappings?: PricingContextExtractorMapping[]
   root: ExtractPath
 }
 
@@ -124,6 +141,7 @@ export interface PriceCalculation {
   model: ModelInfo
   model_price: ModelPrice
   output_price: number
+  price_context: PriceContext
   provider: Provider
   total_price: number
 }
@@ -152,6 +170,7 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  priceContext?: PriceContext
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

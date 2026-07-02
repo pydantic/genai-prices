@@ -102,6 +102,8 @@ def fix_ts_constraints(json_data: JsonData) -> None:
                     constraint['type'] = 'start_date'
                 elif 'start_time' in constraint and 'end_time' in constraint:
                     constraint['type'] = 'time_of_date'
+                elif 'price_context' in constraint:
+                    constraint['type'] = 'price_context'
 
         # Recurse into nested objects
         for value in json_data.values():

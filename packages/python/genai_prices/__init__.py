@@ -19,6 +19,7 @@ def calc_price(
     *,
     provider_id: types.ProviderID | str | None = None,
     genai_request_timestamp: datetime | None = None,
+    price_context: types.PriceContext | None = None,
 ) -> types.PriceCalculation: ...
 
 
@@ -29,6 +30,7 @@ def calc_price(
     *,
     provider_api_url: str | None = None,
     genai_request_timestamp: datetime | None = None,
+    price_context: types.PriceContext | None = None,
 ) -> types.PriceCalculation: ...
 
 
@@ -39,6 +41,7 @@ def calc_price(
     provider_id: types.ProviderID | str | None = None,
     provider_api_url: str | None = None,
     genai_request_timestamp: datetime | None = None,
+    price_context: types.PriceContext | None = None,
 ) -> types.PriceCalculation:
     """Calculate the price of an LLM API call.
 
@@ -51,11 +54,14 @@ def calc_price(
         provider_id: The ID of the provider to calculate the price for.
         provider_api_url: The API URL of the provider to calculate the price for.
         genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current time.
+        price_context: Request-level pricing context, e.g. `{'service_tier': 'batch'}`.
 
     Returns:
         The price calculation details.
     """
-    return data_snapshot.get_snapshot().calc(usage, model_ref, provider_id, provider_api_url, genai_request_timestamp)
+    return data_snapshot.get_snapshot().calc(
+        usage, model_ref, provider_id, provider_api_url, genai_request_timestamp, price_context
+    )
 
 
 @overload

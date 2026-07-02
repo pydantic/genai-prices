@@ -1,4 +1,15 @@
-import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import {
+  MatchLogic,
+  ModelInfo,
+  ModelPrice,
+  ModelPriceCalculationResult,
+  PriceContext,
+  PriceContextValue,
+  Provider,
+  ProviderFindOptions,
+  TieredPrices,
+  Usage,
+} from './types'
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
@@ -116,47 +127,69 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalcu
   }
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext: PriceContext = {}): ModelPrice {
+  let modelPrice: ModelPrice
   if (!Array.isArray(model.prices)) {
-    return model.prices
-  }
-  // Conditional prices: last active wins
-  for (let i = model.prices.length - 1; i >= 0; i--) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
-    const constraint = cond.constraint
-
-    if (constraint === undefined) {
-      return cond.prices
+    modelPrice = model.prices
+  } else {
+    const firstPrice = model.prices[0]
+    if (firstPrice === undefined) {
+      throw new Error(`Model ${model.id} has no prices`)
     }
+    // Conditional prices: last active wins
+    modelPrice = firstPrice.prices
+    for (let i = model.prices.length - 1; i >= 0; i--) {
+      const cond = model.prices[i]
+      if (cond === undefined) continue
+      const constraint = cond.constraint
 
-    if (constraint.type === 'start_date') {
-      if (timestamp >= new Date(constraint.start_date)) {
-        return cond.prices
+      if (constraint === undefined) {
+        modelPrice = cond.prices
+        break
       }
-    } else {
-      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
-      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
-      const startTime = constraint.start_time
-      const endTime = constraint.end_time
 
-      // Handle time ranges that span midnight (end time < start time)
-      if (endTime < startTime) {
-        // Time is in range if it's >= start OR < end
-        if (t >= startTime || t < endTime) {
-          return cond.prices
+      if (constraint.type === 'start_date') {
+        if (timestamp >= new Date(constraint.start_date)) {
+          modelPrice = cond.prices
+          break
         }
-      } else {
-        // Normal time range (start <= time < end)
-        if (t >= startTime && t < endTime) {
-          return cond.prices
+      } else if (constraint.type === 'time_of_date') {
+        // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
+        const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
+        const startTime = constraint.start_time
+        const endTime = constraint.end_time
+
+        // Handle time ranges that span midnight (end time < start time)
+        if (endTime < startTime) {
+          // Time is in range if it's >= start OR < end
+          if (t >= startTime || t < endTime) {
+            modelPrice = cond.prices
+            break
+          }
+        } else {
+          // Normal time range (start <= time < end)
+          if (t >= startTime && t < endTime) {
+            modelPrice = cond.prices
+            break
+          }
         }
+      } else if (
+        matchesContext(constraint.price_context, priceContext) &&
+        !(constraint.not_price_context && matchesContext(constraint.not_price_context, priceContext))
+      ) {
+        modelPrice = cond.prices
+        break
       }
     }
   }
-  // Fallback to first
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  return modelPrice
+}
+
+function matchesContext(expectedContext: Record<string, PriceContextValue | PriceContextValue[]>, priceContext: PriceContext): boolean {
+  return Object.entries(expectedContext).every(([key, expected]) => {
+    const actual = priceContext[key]
+    return Array.isArray(expected) ? actual !== undefined && expected.includes(actual) : actual === expected
+  })
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {
