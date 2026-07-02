@@ -49,6 +49,24 @@ def test_sync_success_with_reported_total_price():
 
 
 @pytest.mark.parametrize(
+    'reported_total_price',
+    [
+        pytest.param(Decimal('NaN'), id='nan'),
+        pytest.param(Decimal('Infinity'), id='infinity'),
+        pytest.param(Decimal('-0.001'), id='negative'),
+    ],
+)
+def test_sync_rejects_invalid_reported_total_price(reported_total_price: Decimal):
+    with pytest.raises(ValueError, match='reported_total_price must be a finite non-negative Decimal'):
+        calc_price(
+            Usage(input_tokens=1000, output_tokens=100),
+            model_ref='gpt-4o',
+            provider_id='openai',
+            reported_total_price=reported_total_price,
+        )
+
+
+@pytest.mark.parametrize(
     'usage,expected_input_price,expected_output_price',
     [
         pytest.param(Usage(input_tokens=1000), Decimal('0.00123'), Decimal(0), id='input-only'),

@@ -545,6 +545,19 @@ describe('Comprehensive API Tests', () => {
       expect(result!.input_price + result!.output_price).toBeCloseTo(result!.total_price)
     })
 
+    it.each([
+      [Number.NaN, 'NaN'],
+      [Number.POSITIVE_INFINITY, 'Infinity'],
+      [-0.001, 'negative'],
+    ])('should reject invalid reported total price: %s', (reportedTotalPrice) => {
+      expect(() =>
+        calcPrice({ input_tokens: 1000, output_tokens: 100 }, 'gpt-4o', {
+          providerId: 'openai',
+          reportedTotalPrice,
+        })
+      ).toThrow('reportedTotalPrice must be a finite non-negative number')
+    })
+
     it('should handle litellm provider_id with anthropic prefix', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
       const result = calcPrice(usage, 'anthropic/claude-3-5-sonnet-20241022', { providerId: 'litellm' })

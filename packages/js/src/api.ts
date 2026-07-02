@@ -78,6 +78,9 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
   const calculatedPriceResult = calcPriceInternal(usage, modelPrice)
+  if (options?.reportedTotalPrice !== undefined) {
+    validateReportedTotalPrice(options.reportedTotalPrice)
+  }
   const priceResult =
     options?.reportedTotalPrice === undefined
       ? calculatedPriceResult
@@ -89,6 +92,12 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     price_source: options?.reportedTotalPrice === undefined ? 'calculated' : 'reported',
     provider,
     ...priceResult,
+  }
+}
+
+function validateReportedTotalPrice(reportedTotalPrice: number) {
+  if (!Number.isFinite(reportedTotalPrice) || reportedTotalPrice < 0) {
+    throw new Error('reportedTotalPrice must be a finite non-negative number')
   }
 }
 

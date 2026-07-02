@@ -631,6 +631,7 @@ class ModelInfo:
         price = model_price.calc_price(usage)
         price_source: PriceSource = 'calculated'
         if reported_total_price is not None:
+            _validate_reported_total_price(reported_total_price)
             price = _apply_reported_total_price(price, reported_total_price, usage)
             price_source = 'reported'
         return PriceCalculation(
@@ -668,6 +669,11 @@ def _apply_reported_total_price(price: CalcPrice, reported_total_price: Decimal,
         return {'input_price': Decimal(0), 'output_price': reported_total_price, 'total_price': reported_total_price}
 
     return {'input_price': reported_total_price, 'output_price': Decimal(0), 'total_price': reported_total_price}
+
+
+def _validate_reported_total_price(reported_total_price: Decimal) -> None:
+    if not reported_total_price.is_finite() or reported_total_price < 0:
+        raise ValueError('reported_total_price must be a finite non-negative Decimal')
 
 
 @dataclass
