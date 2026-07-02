@@ -439,7 +439,7 @@ class UsageExtractor:
             root = [root]
 
         usage_obj = cast(dict[str, Any], _extract_path(root, response_data, Mapping, True, []))
-        reported_total_price = _extract_decimal_path(self.reported_total_price_path, usage_obj, False, root)
+        reported_total_price = _extract_decimal_path(self.reported_total_price_path, usage_obj, root)
 
         usage = Usage()
         values_set = False
@@ -534,24 +534,17 @@ def _extract_path(
             )
 
 
-def _extract_decimal_path(
-    path: ExtractPath | None, data: Any, required: bool, data_path: Sequence[str | ArrayMatch]
-) -> Decimal | None:
+def _extract_decimal_path(path: ExtractPath | None, data: Any, data_path: Sequence[str | ArrayMatch]) -> Decimal | None:
     if path is None:
         return None
 
-    value = _extract_path(path, data, object, required, data_path)
+    value = _extract_path(path, data, object, False, data_path)
     if value is None:
         return None
 
-    if isinstance(value, bool):
-        pass
-    elif isinstance(value, int | float | str | Decimal):
+    if not isinstance(value, bool) and isinstance(value, int | float | str | Decimal):
         return Decimal(str(value))
 
-    if required:
-        path_value = [path] if isinstance(path, str) else path
-        raise ValueError(f'Expected `{_dot_path(data_path, path_value)}` value to be a number, got {_type_name(value)}')
     return None
 
 

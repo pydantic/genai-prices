@@ -48,6 +48,31 @@ def test_sync_success_with_reported_total_price():
     assert price.input_price + price.output_price == price.total_price
 
 
+@pytest.mark.parametrize(
+    'usage,expected_input_price,expected_output_price',
+    [
+        pytest.param(Usage(input_tokens=1000), Decimal('0.00123'), Decimal(0), id='input-only'),
+        pytest.param(Usage(output_tokens=100), Decimal(0), Decimal('0.00123'), id='output-only'),
+    ],
+)
+def test_sync_success_with_reported_total_price_and_zero_calculated_price(
+    usage: Usage,
+    expected_input_price: Decimal,
+    expected_output_price: Decimal,
+):
+    price = calc_price(
+        usage,
+        model_ref='agentica-org/deepcoder-14b-preview:free',
+        provider_id='openrouter',
+        reported_total_price=Decimal('0.00123'),
+    )
+
+    assert price.price_source == 'reported'
+    assert price.input_price == expected_input_price
+    assert price.output_price == expected_output_price
+    assert price.total_price == Decimal('0.00123')
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),

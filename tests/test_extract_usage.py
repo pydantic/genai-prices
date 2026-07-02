@@ -242,6 +242,24 @@ def test_openrouter_responses_uses_reported_price():
     assert price.input_price + price.output_price == price.total_price
 
 
+@pytest.mark.parametrize('cost', [None, True], ids=['missing-cost', 'bool-cost'])
+def test_openrouter_responses_without_numeric_reported_price(cost: Any):
+    usage: dict[str, Any] = {
+        'input_tokens': 1000,
+        'output_tokens': 100,
+    }
+    if cost is not None:
+        usage['cost'] = cost
+
+    extracted_usage = extract_usage(
+        {'model': 'openai/gpt-4o-mini', 'usage': usage}, provider_id='openrouter', api_flavor='responses'
+    )
+
+    assert extracted_usage.usage == Usage(input_tokens=1000, output_tokens=100)
+    assert extracted_usage.reported_total_price is None
+    assert extracted_usage.calc_price().price_source == 'calculated'
+
+
 def test_extracted_usage_calc_price_requires_model():
     extracted_usage = ExtractedUsage(
         usage=Usage(input_tokens=1),
