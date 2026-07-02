@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timezone
 from decimal import Decimal
 
@@ -14,6 +15,7 @@ from genai_prices.types import (
     ClauseOr,
     ClauseRegex,
     ClauseStartsWith,
+    ExtractedUsage,
     MatchLogic,
     ModelInfo,
     ModelPrice,
@@ -279,6 +281,57 @@ def test_request_level_price_modifiers_stack_in_order():
     assert price.output_price == Decimal('0.0165')
     assert price.total_price == Decimal('0.0495')
     assert excluded.total_price == Decimal('0.012')
+
+
+def test_extracted_usage_price_context_can_be_suppressed():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            modifiers=[PriceModifier(match={'service_tier': 'batch'}, multiplier=Decimal('0.5'))],
+        ),
+    )
+    extracted = ExtractedUsage(
+        usage=Usage(input_tokens=1000),
+        model=model,
+        provider=provider,
+        auto_update_timestamp=None,
+        price_context={'service_tier': 'batch'},
+    )
+
+    assert extracted.calc_price().total_price == Decimal('0.005')
+    assert extracted.calc_price(price_context={}).total_price == Decimal('0.01')
+
+
+def test_request_level_price_context_matches_value_types_strictly():
+    provider = Provider(id='test-provider', name='Test Provider', api_pattern='test')
+    model = ModelInfo(
+        id='test-model',
+        match=ClauseEquals(equals='test-model'),
+        prices=ModelPrice(
+            input_mtok=Decimal('10'),
+            modifiers=[PriceModifier(match={'flag': True}, multiplier=Decimal('0.5'))],
+        ),
+    )
+
+    bool_context = model.calc_price(Usage(input_tokens=1000), provider, price_context={'flag': True})
+    int_context = model.calc_price(Usage(input_tokens=1000), provider, price_context={'flag': 1})
+
+    assert bool_context.total_price == Decimal('0.005')
+    assert int_context.total_price == Decimal('0.01')
+
+
+def test_request_level_price_modifier_requires_price_effect():
+    with pytest.raises(ValueError, match='must define multiplier, price_multipliers, or price_overrides'):
+        PriceModifier(match={'service_tier': 'batch'})
+
+    with pytest.raises(ValueError, match='multiplier must be greater than 0'):
+        PriceModifier(match={'service_tier': 'batch'}, multiplier=Decimal('0'))
+
+    with pytest.raises(ValueError, match=re.escape("price_multipliers['input_mtok'] must be greater than 0")):
+        PriceModifier(match={'service_tier': 'batch'}, price_multipliers={'input_mtok': Decimal('-1')})
 
 
 def test_requests_kcount_prices():

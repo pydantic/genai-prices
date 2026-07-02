@@ -221,12 +221,10 @@ function applyPriceModifier(modelPrice: ModelPrice, modifier: PriceModifier): Mo
   const modified = copyModelPrice(modelPrice)
   const modifiedFields = modified as unknown as Partial<ModelPriceFieldMap>
   for (const field of MODEL_PRICE_FIELDS) {
-    if (modifiedFields[field] === undefined) continue
-
-    if (modifier.multiplier !== undefined) {
+    if (modifiedFields[field] !== undefined && modifier.multiplier !== undefined) {
       modifiedFields[field] = applyPriceMultiplier(modifiedFields[field], modifier.multiplier)
     }
-    if (modifier.price_multipliers?.[field] !== undefined) {
+    if (modifiedFields[field] !== undefined && modifier.price_multipliers?.[field] !== undefined) {
       modifiedFields[field] = applyPriceMultiplier(modifiedFields[field], modifier.price_multipliers[field])
     }
     if (modifier.price_overrides && field in modifier.price_overrides) {

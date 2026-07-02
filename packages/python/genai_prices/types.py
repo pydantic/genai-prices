@@ -156,7 +156,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
-            price_context=price_context or self.price_context,
+            price_context=self.price_context if price_context is None else price_context,
         )
 
     def __repr__(self) -> str:
@@ -673,6 +673,9 @@ class CalcPrice(TypedDict):
 
 
 PriceFieldOverride = Any
+PositiveMultiplier = Annotated[
+    Decimal, pydantic.Field(gt=0), pydantic.WithJsonSchema({'type': 'number', 'exclusiveMinimum': 0})
+]
 
 
 @dataclass
@@ -683,11 +686,31 @@ class PriceModifier:
     `match` and `not_match` compare against the pricing context passed to `calc_price`.
     """
 
+    __pydantic_config__ = pydantic.ConfigDict(
+        json_schema_extra={
+            'anyOf': [
+                {'required': ['multiplier']},
+                {'required': ['price_multipliers']},
+                {'required': ['price_overrides']},
+            ]
+        }
+    )
+
     match: dict[str, PriceContextValue | list[PriceContextValue]] = dataclasses.field(default_factory=dict)
     not_match: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
-    multiplier: Decimal | None = None
-    price_multipliers: dict[str, Decimal] | None = None
+    multiplier: PositiveMultiplier | None = None
+    price_multipliers: dict[str, PositiveMultiplier] | None = None
     price_overrides: dict[str, PriceFieldOverride] | None = None
+
+    def __post_init__(self) -> None:
+        if self.multiplier is None and self.price_multipliers is None and self.price_overrides is None:
+            raise ValueError('PriceModifier must define multiplier, price_multipliers, or price_overrides')
+        if self.multiplier is not None and self.multiplier <= 0:
+            raise ValueError('PriceModifier multiplier must be greater than 0')
+        if self.price_multipliers is not None:
+            for price_key, multiplier in self.price_multipliers.items():
+                if multiplier <= 0:
+                    raise ValueError(f'PriceModifier price_multipliers[{price_key!r}] must be greater than 0')
 
     def matches(self, price_context: PriceContext) -> bool:
         return _matches_context(self.match, price_context) and not (
@@ -877,12 +900,15 @@ class ModelPrice:
 def _matches_context(
     expected_context: Mapping[str, PriceContextValue | Sequence[PriceContextValue]], price_context: PriceContext
 ) -> bool:
+    def values_equal(actual: PriceContextValue | None, expected: PriceContextValue) -> bool:
+        return type(actual) is type(expected) and actual == expected
+
     for key, expected in expected_context.items():
         actual = price_context.get(key)
         if isinstance(expected, Sequence) and not isinstance(expected, str):
-            if actual not in expected:
+            if not any(values_equal(actual, item) for item in expected):
                 return False
-        elif actual != expected:
+        elif not values_equal(actual, expected):
             return False
     return True
 

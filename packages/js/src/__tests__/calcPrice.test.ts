@@ -284,5 +284,29 @@ describe('Core Price Calculation Function', () => {
         total_price: 0.0495,
       })
     })
+
+    it('should apply request-level price overrides for fields absent from the base price', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'test-model',
+          match: { equals: 'test-model' },
+          prices: {
+            input_mtok: 10,
+            modifiers: [{ match: { mode: 'with-output' }, price_overrides: { output_mtok: 20 } }],
+          },
+        },
+        new Date(),
+        { mode: 'with-output' }
+      )
+
+      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({ input_mtok: 10, output_mtok: 20 })
+      expect(result).toMatchObject({
+        input_price: 0.01,
+        output_price: 0.002,
+        total_price: 0.012,
+      })
+    })
   })
 })

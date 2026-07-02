@@ -9,6 +9,7 @@ from annotated_types import Gt, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
+    ConfigDict,
     Discriminator,
     Field,
     HttpUrl,
@@ -18,6 +19,7 @@ from pydantic import (
     ValidationInfo,
     WithJsonSchema,
     field_validator,
+    model_validator,
 )
 
 from .utils import check_unique
@@ -249,6 +251,13 @@ DollarPrice = Annotated[
     PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
 ]
 
+PositiveMultiplier = Annotated[
+    Decimal,
+    Gt(0),
+    WithJsonSchema({'type': 'number', 'exclusiveMinimum': 0}),
+    PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
+]
+
 
 class ModelPrice(_Model):
     """Set of prices for using a model"""
@@ -290,16 +299,32 @@ class ModelPrice(_Model):
 class PriceModifier(_Model):
     """Request-level price modifier selected by pricing context."""
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            'anyOf': [
+                {'required': ['multiplier']},
+                {'required': ['price_multipliers']},
+                {'required': ['price_overrides']},
+            ]
+        }
+    )
+
     match: dict[str, PriceContextValue | list[PriceContextValue]] = Field(default_factory=dict)
     """Context values required for this modifier to apply."""
     not_match: dict[str, PriceContextValue | list[PriceContextValue]] | None = None
     """Context values that prevent this modifier from applying."""
-    multiplier: DollarPrice | None = None
+    multiplier: PositiveMultiplier | None = None
     """Multiplier applied to all price keys."""
-    price_multipliers: dict[str, DollarPrice] | None = None
+    price_multipliers: dict[str, PositiveMultiplier] | None = None
     """Per-price-key multipliers."""
     price_overrides: dict[str, DollarPrice | TieredPrices | None] | None = None
     """Per-price-key override prices."""
+
+    @model_validator(mode='after')
+    def require_price_effect(self) -> PriceModifier:
+        if self.multiplier is None and self.price_multipliers is None and self.price_overrides is None:
+            raise ValueError('PriceModifier must define multiplier, price_multipliers, or price_overrides')
+        return self
 
 
 class TieredPrices(_Model):

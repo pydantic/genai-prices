@@ -420,6 +420,23 @@
     },
     "PriceModifier": {
       "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "multiplier"
+          ]
+        },
+        {
+          "required": [
+            "price_multipliers"
+          ]
+        },
+        {
+          "required": [
+            "price_overrides"
+          ]
+        }
+      ],
       "description": "Request-level price modifier selected by pricing context.",
       "properties": {
         "match": {
@@ -491,12 +508,14 @@
           "title": "Not Match"
         },
         "multiplier": {
+          "exclusiveMinimum": 0,
           "type": "number",
           "description": "Multiplier applied to all price keys.",
           "title": "Multiplier"
         },
         "price_multipliers": {
           "additionalProperties": {
+            "exclusiveMinimum": 0,
             "type": "number"
           },
           "type": "object",
