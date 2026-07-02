@@ -6001,10 +6001,6 @@
           },
           {
             "api_flavor": "default",
-            "provider_id": "mistral"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
           }
         ],
@@ -6082,6 +6078,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "minimax"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "mistral"
           },
           {
             "api_flavor": "chat",
