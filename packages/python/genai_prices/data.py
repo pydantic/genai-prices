@@ -5417,9 +5417,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='minimax-m3'),
                 name='MiniMax M3',
                 description='MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and long-horizon agentic work.',
-                price_comments='Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+                context_window=1000000,
+                price_comments='Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
+                    input_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=512000, price=Decimal('0.6'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.06'), tiers=[Tier(start=512000, price=Decimal('0.12'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=512000, price=Decimal('2.4'))]),
                 ),
             ),
         ],
