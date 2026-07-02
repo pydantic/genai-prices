@@ -228,29 +228,68 @@ describe('Core Price Calculation Function', () => {
       expect(result).toMatchObject(expected)
     })
 
-    it('should apply request-level price modifiers', () => {
+    it('should apply the OpenAI Batch API price modifier', () => {
       const modelPrice = getActiveModelPrice(
         {
-          id: 'test-model',
-          match: { equals: 'test-model' },
+          id: 'gpt-4.1',
+          match: { equals: 'gpt-4.1' },
           prices: {
-            input_mtok: 10,
+            cache_read_mtok: 0.5,
+            input_mtok: 2,
             modifiers: [{ match: { service_tier: 'batch' }, multiplier: 0.5 }],
-            output_mtok: 20,
+            output_mtok: 8,
           },
         },
         new Date(),
         { service_tier: 'batch' }
       )
 
-      const result = calcPrice({ input_tokens: 1000, output_tokens: 100 }, modelPrice)
+      const result = calcPrice({ cache_read_tokens: 100, input_tokens: 1000, output_tokens: 100 }, modelPrice)
 
-      expect(modelPrice).toEqual({ input_mtok: 5, output_mtok: 10 })
-      expect(result).toMatchObject({
-        input_price: 0.005,
-        output_price: 0.001,
-        total_price: 0.006,
+      expect(modelPrice).toEqual({ cache_read_mtok: 0.25, input_mtok: 1, output_mtok: 4 })
+      expect(result.input_price).toBeCloseTo(0.000925)
+      expect(result.output_price).toBeCloseTo(0.0004)
+      expect(result.total_price).toBeCloseTo(0.001325)
+    })
+
+    it('should apply Anthropic Message Batches per-field price multipliers', () => {
+      const modelPrice = getActiveModelPrice(
+        {
+          id: 'claude-3-5-haiku-latest',
+          match: { equals: 'claude-3-5-haiku-20241022' },
+          prices: {
+            cache_read_mtok: 0.08,
+            cache_write_mtok: 1,
+            input_mtok: 0.8,
+            modifiers: [
+              {
+                match: { service_tier: ['batch', 'message_batch'] },
+                price_multipliers: {
+                  cache_read_mtok: 0.5,
+                  cache_write_mtok: 0.5,
+                  input_mtok: 0.5,
+                  output_mtok: 0.5,
+                },
+              },
+            ],
+            output_mtok: 4,
+          },
+        },
+        new Date(),
+        { service_tier: 'batch' }
+      )
+
+      const result = calcPrice({ cache_read_tokens: 200, cache_write_tokens: 100, input_tokens: 1000, output_tokens: 100 }, modelPrice)
+
+      expect(modelPrice).toEqual({
+        cache_read_mtok: 0.04,
+        cache_write_mtok: 0.5,
+        input_mtok: 0.4,
+        output_mtok: 2,
       })
+      expect(result.input_price).toBeCloseTo(0.000338)
+      expect(result.output_price).toBeCloseTo(0.0002)
+      expect(result.total_price).toBeCloseTo(0.000538)
     })
 
     it('should stack request-level price modifiers in order', () => {
