@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-import httpx
+import httpx2
 from pydantic import BaseModel, OnErrorOmit, TypeAdapter
 
 from . import source_prices
@@ -24,7 +24,7 @@ simonw_response_schema = TypeAdapter(dict[str, OnErrorOmit[SimonWModel]])
 def get_simonw_prices():
     """Get prices from github.com/simonw/llm-prices."""
     url = 'https://www.llm-prices.com/current-v1.json'
-    r = httpx.get(url)
+    r = httpx2.get(url)
     r.raise_for_status()
     response_data = simonw_response_schema.validate_json(r.content)
 

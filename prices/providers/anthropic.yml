@@ -149,6 +149,22 @@ models:
       cache_read_mtok: 0.3
       output_mtok: 15
 
+  - id: claude-fable-5
+    name: Claude Fable 5
+    description: Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work
+    match:
+      starts_with: claude-fable-5
+    context_window: 1000000
+    prices_checked: 2026-06-09
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      output_mtok: 50
+
   - id: claude-haiku-4-5
     name: Claude Haiku 4.5
     description: Fastest and most intelligent Haiku model
@@ -296,6 +312,26 @@ models:
       cache_write_mtok: 6.25
       output_mtok: 25
 
+  - id: claude-opus-4-8
+    name: Claude Opus 4.8
+    description: Our most capable model for complex reasoning and agentic coding
+    match:
+      or:
+        - starts_with: claude-opus-4-8
+        - starts_with: claude-opus-4.8
+        - starts_with: claude-4-8-opus
+        - starts_with: claude-4.8-opus
+    context_window: 1000000
+    prices_checked: 2026-05-28
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      output_mtok: 25
+
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4
     description: Optimal balance of intelligence, cost, and speed
@@ -384,6 +420,35 @@ models:
             tiers:
               - start: 200000
                 price: 22.50
+
+  - id: claude-sonnet-5
+    name: Claude Sonnet 5
+    description: Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost
+    match:
+      or:
+        - starts_with: claude-sonnet-5
+        - starts_with: claude-sonnet-5.0
+        - starts_with: claude-5-sonnet
+        - starts_with: claude-5.0-sonnet
+    context_window: 1000000
+    prices_checked: 2026-06-30
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01.
+      Ref: https://www.anthropic.com/news/claude-sonnet-5
+    prices:
+      - constraint:
+          start_date: 2026-09-01
+        values:
+          input_mtok: 3
+          cache_read_mtok: 0.30
+          cache_write_mtok: 3.75
+          output_mtok: 15
+      - values:
+          input_mtok: 2
+          cache_read_mtok: 0.20
+          cache_write_mtok: 2.50
+          output_mtok: 10
 
   - id: claude-v1
     description: Retired, here to match price sources

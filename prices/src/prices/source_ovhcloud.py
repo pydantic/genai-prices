@@ -3,7 +3,7 @@ from operator import attrgetter
 from pathlib import Path
 from typing import Any, cast
 
-import httpx
+import httpx2
 from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
@@ -60,7 +60,7 @@ def main():
     api_url = 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'
 
     try:
-        response = httpx.get(api_url, timeout=30.0)
+        response = httpx2.get(api_url, timeout=30.0)
         response.raise_for_status()
         data = response.json()
         models = data.get('data', [])
@@ -97,7 +97,9 @@ def main():
     )
 
     # Convert to YAML format
-    yaml_data = cast(ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True))
+    yaml_data = cast(
+        ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
+    )
 
     yaml_string = (
         '# yaml-language-server: $schema=.schema.json\n'

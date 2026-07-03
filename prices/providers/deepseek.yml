@@ -77,3 +77,70 @@ models:
           input_mtok: 0.135
           cache_read_mtok: 0.035
           output_mtok: 0.550
+
+  - id: deepseek-v3.1-terminus
+    name: DeepSeek V3.1 Terminus
+    description: >-
+      DeepSeek-V3.1 Terminus is an update to DeepSeek V3.1 that maintains the model's original capabilities while addressing
+      issues reported by users, including language consistency and agent capabilities.
+    match:
+      equals: deepseek-v3.1-terminus
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.27
+      cache_read_mtok: 0.13
+      output_mtok: 0.95
+
+  - id: deepseek-v3.2
+    name: DeepSeek V3.2
+    description: >-
+      DeepSeek-V3.2 is a large language model designed to harmonize high computational efficiency with strong reasoning and
+      agentic tool-use performance.
+    match:
+      equals: deepseek-v3.2
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.2288
+      output_mtok: 0.3432
+
+  - id: deepseek-v3.2-exp
+    name: DeepSeek V3.2 Exp
+    description: >-
+      DeepSeek-V3.2-Exp is an experimental large language model released by DeepSeek as an intermediate step between V3.1
+      and future architectures.
+    match:
+      equals: deepseek-v3.2-exp
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.27
+      output_mtok: 0.41
+
+  - id: deepseek-v4-flash
+    name: DeepSeek V4 Flash
+    description: >-
+      DeepSeek-V4-Flash. Supports both non-thinking and thinking (default) modes, JSON output, tool calls,
+      chat prefix completion, and FIM completion (non-thinking only).
+    match:
+      or:
+        - starts_with: deepseek-v4-flash
+    context_window: 1000000
+    prices_checked: 2026-05-12
+    prices:
+      input_mtok: 0.14
+      cache_read_mtok: 0.0028
+      output_mtok: 0.28
+
+  - id: deepseek-v4-pro
+    name: DeepSeek V4 Pro
+    description: >-
+      DeepSeek-V4-Pro. Supports both non-thinking and thinking (default) modes, JSON output, tool calls,
+      chat prefix completion, and FIM completion (non-thinking only).
+    match:
+      or:
+        - starts_with: deepseek-v4-pro
+    context_window: 1000000
+    prices_checked: 2026-06-02
+    prices:
+      input_mtok: 0.435
+      cache_read_mtok: 0.003625
+      output_mtok: 0.87

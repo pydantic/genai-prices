@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import NamedTuple, Optional, Union
+from typing import NamedTuple
 
 from genai_prices.data import providers
 from genai_prices.types import ArrayMatch, ClauseEquals, UsageExtractorMapping
@@ -10,15 +10,15 @@ GoogleExtractorMappingSignature = tuple[tuple[str, ...], str, bool]
 class GoogleUsageMetadataSource(NamedTuple):
     count_stem: str
     count_destinations: tuple[str, ...]
-    detail_direction: Optional[str] = None
-    detail_stem: Optional[str] = None
+    detail_direction: str | None = None
+    detail_stem: str | None = None
 
     @property
     def count_path(self) -> str:
         return f'{self.count_stem}TokenCount'
 
     @property
-    def detail_path(self) -> Optional[str]:
+    def detail_path(self) -> str | None:
         if self.detail_direction is None:
             return None
         detail_stem = self.detail_stem or self.count_stem
@@ -77,7 +77,7 @@ def _google_detail_signatures(source: GoogleUsageMetadataSource) -> set[GoogleEx
     }
 
 
-def _google_optional_extractor_mapping(path: Union[str, tuple[str, ...]], dest: str) -> GoogleExtractorMappingSignature:
+def _google_optional_extractor_mapping(path: str | tuple[str, ...], dest: str) -> GoogleExtractorMappingSignature:
     path_tuple = (path,) if isinstance(path, str) else path
     return path_tuple, dest, False
 
@@ -86,7 +86,7 @@ def _google_extractor_mapping_signature(mapping: UsageExtractorMapping) -> Googl
     return _google_extractor_path_signature(mapping.path), mapping.dest, mapping.required
 
 
-def _google_extractor_path_signature(path: Union[str, Sequence[Union[str, ArrayMatch]]]) -> tuple[str, ...]:
+def _google_extractor_path_signature(path: str | Sequence[str | ArrayMatch]) -> tuple[str, ...]:
     if isinstance(path, str):
         return (path,)
     assert len(path) == 3

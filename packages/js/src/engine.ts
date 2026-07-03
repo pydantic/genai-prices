@@ -217,13 +217,13 @@ export function matchLogic(logic: MatchLogic, text: string): boolean {
   } else if ('and' in logic) {
     return logic.and.every((clause) => matchLogic(clause, text))
   } else if ('equals' in logic) {
-    return text === logic.equals
+    return text.toLowerCase() === logic.equals.toLowerCase()
   } else if ('starts_with' in logic) {
-    return text.startsWith(logic.starts_with)
+    return text.toLowerCase().startsWith(logic.starts_with.toLowerCase())
   } else if ('ends_with' in logic) {
-    return text.endsWith(logic.ends_with)
+    return text.toLowerCase().endsWith(logic.ends_with.toLowerCase())
   } else if ('contains' in logic) {
-    return text.includes(logic.contains)
+    return text.toLowerCase().includes(logic.contains.toLowerCase())
   } else if ('regex' in logic) {
     return new RegExp(logic.regex).test(text)
   } else {
