@@ -27,8 +27,9 @@ class CustomModelPrice(types.ModelPrice):
 
     def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
         price = super().calc_price(usage)
-        if isinstance(usage, CustomUsage) and self.sausage_price is not None:
-            price['total_price'] += self.sausage_price * usage.sausages
+        assert isinstance(usage, CustomUsage)
+        assert self.sausage_price is not None
+        price['total_price'] += self.sausage_price * usage.sausages
         return price
 
 

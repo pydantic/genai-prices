@@ -129,6 +129,7 @@ def write_prices(providers: list[Provider], units: dict[str, Any], prices_file: 
         by_alias=True,
         exclude_none=True,
         exclude=exclude,
+        warnings=False,
     )
     json_data = pydantic_core.to_json({'units': units, 'providers': provider_data}) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None

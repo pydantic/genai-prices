@@ -839,6 +839,7 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
             mode='json',
             by_alias=True,
             exclude_none=True,
+            warnings=False,
         ),
     }
     data_path = tmp_path / 'data.json'
@@ -918,6 +919,7 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
             mode='json',
             by_alias=True,
             exclude_none=True,
+            warnings=False,
         ),
     }
     data_path = tmp_path / 'data.json'

@@ -6,10 +6,10 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar, Union, cast, overload
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypedDict
 
 if TYPE_CHECKING:
     from genai_prices.units import UnitDef, UnitRegistry
@@ -48,15 +48,13 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 MatchLogic = Annotated[
-    Union[
-        Annotated['ClauseStartsWith', pydantic.Tag('starts_with')],
-        Annotated['ClauseEndsWith', pydantic.Tag('ends_with')],
-        Annotated['ClauseContains', pydantic.Tag('contains')],
-        Annotated['ClauseRegex', pydantic.Tag('regex')],
-        Annotated['ClauseEquals', pydantic.Tag('equals')],
-        Annotated['ClauseOr', pydantic.Tag('or')],
-        Annotated['ClauseAnd', pydantic.Tag('and')],
-    ],
+    Annotated['ClauseStartsWith', pydantic.Tag('starts_with')]
+    | Annotated['ClauseEndsWith', pydantic.Tag('ends_with')]
+    | Annotated['ClauseContains', pydantic.Tag('contains')]
+    | Annotated['ClauseRegex', pydantic.Tag('regex')]
+    | Annotated['ClauseEquals', pydantic.Tag('equals')]
+    | Annotated['ClauseOr', pydantic.Tag('or')]
+    | Annotated['ClauseAnd', pydantic.Tag('and')],
     pydantic.Discriminator(clause_discriminator),
 ]
 
@@ -93,7 +91,7 @@ class ArrayMatch:
                     return item
 
 
-ExtractPath = Union[str, Sequence[Union[str, ArrayMatch]]]
+ExtractPath = str | Sequence[str | ArrayMatch]
 
 
 @dataclass(repr=False)
@@ -527,10 +525,8 @@ def _extract_path(
             else:
                 return None
         else:
-            if not _is_mapping(data):
-                raise ValueError(
-                    f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}'
-                )
+            if not _expect_mapping(data, required, data_path, error_path):
+                return None
             try:
                 data = data[step]
             except KeyError as e:
@@ -542,8 +538,8 @@ def _extract_path(
     if data is None and not required:
         return None
 
-    if not _is_mapping(data):
-        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
+    if not _expect_mapping(data, required, data_path, error_path):
+        return None
 
     try:
         value = data[last]
@@ -561,6 +557,16 @@ def _extract_path(
             raise ValueError(
                 f'Expected `{_dot_path(data_path, error_path)}` value to be a {extract_type.__name__}, got {_type_name(value)}'
             )
+
+
+def _expect_mapping(
+    data: Any, required: bool, data_path: Sequence[str | ArrayMatch], error_path: Sequence[str | ArrayMatch]
+) -> TypeGuard[Mapping[str, Any]]:
+    if _is_mapping(data):
+        return True
+    if required:
+        raise ValueError(f'Expected `{_dot_path(data_path, error_path)}` value to be a dict, got {_type_name(data)}')
+    return False
 
 
 def _is_mapping(item: Any) -> TypeGuard[Mapping[str, Any]]:
@@ -896,11 +902,10 @@ class ConditionalPrice:
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Timestamp when this price starts, None means this price is always valid."""
 
-    prices: ModelPrice = dataclasses.field(default_factory=ModelPrice)
-    """Prices for this condition.
+    _: dataclasses.KW_ONLY
 
-    This field is really required, the default factory is a hack until we can drop 3.9 and use kwonly on the dataclass.
-    """
+    prices: ModelPrice
+    """Prices for this condition."""
 
 
 @dataclass
@@ -983,7 +988,7 @@ class ClauseAnd:
         return all(clause.is_match(text) for clause in self.and_)
 
 
-_model_price_mapping_schema = pydantic.TypeAdapter(dict[str, Union[Decimal, TieredPrices, None]])
+_model_price_mapping_schema = pydantic.TypeAdapter(dict[str, Decimal | TieredPrices | None])
 _providers_schema = pydantic.TypeAdapter(
     list[Provider], config=pydantic.ConfigDict(defer_build=True, arbitrary_types_allowed=True)
 )

@@ -11,7 +11,7 @@ interactions:
         host:
           - raw.githubusercontent.com
         user-agent:
-          - python-httpx/0.28.1
+          - python-httpx2/2.2.0
       method: GET
       uri: https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json
     response:

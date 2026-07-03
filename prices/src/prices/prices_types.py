@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import date, time
 from decimal import Decimal
-from typing import Annotated, Any, Union
+from typing import Annotated, Any, Literal
 
 from annotated_types import Gt, MaxLen
 from pydantic import (
@@ -18,9 +18,9 @@ from pydantic import (
     TypeAdapter,
     ValidationInfo,
     WithJsonSchema,
+    field_serializer,
     field_validator,
 )
-from typing_extensions import Literal
 
 from .utils import check_unique
 
@@ -206,6 +206,16 @@ class ModelInfo(_Model):
                 raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
         return prices
 
+    @field_serializer('prices', when_used='json', return_type='ModelPrice | list[ConditionalPrice]')
+    def _serialize_prices(self, prices: ModelPrice | list[ConditionalPrice]) -> Any:
+        # Serialize each member directly. Pydantic's smart-union serializer bypasses the DollarPrice
+        # serializer here, emitting whole-number prices as floats (10.0 instead of 10). The explicit
+        # `return_type` keeps the generated JSON schema; callers pass `warnings=False` to silence the
+        # benign dict-vs-model serializer warning this raises.
+        if isinstance(prices, list):
+            return [entry.model_dump(mode='json', by_alias=True, exclude_none=True) for entry in prices]
+        return prices.model_dump(mode='json', by_alias=True, exclude_none=True)
+
     def is_free(self) -> bool:
         if isinstance(self.prices, list):
             return all(price.prices.is_free() for price in self.prices)
@@ -221,7 +231,7 @@ DollarPrice = Annotated[
     Decimal,
     Gt(0),
     WithJsonSchema({'type': 'number'}),
-    PlainSerializer(serialize_decimal, return_type=Union[float, int], when_used='json'),
+    PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
 ]
 
 
@@ -395,15 +405,13 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 MatchLogic = Annotated[
-    Union[
-        Annotated[ClauseStartsWith, Tag('starts_with')],
-        Annotated[ClauseEndsWith, Tag('ends_with')],
-        Annotated[ClauseContains, Tag('contains')],
-        Annotated[ClauseRegex, Tag('regex')],
-        Annotated[ClauseEquals, Tag('equals')],
-        Annotated[ClauseOr, Tag('or')],
-        Annotated[ClauseAnd, Tag('and')],
-    ],
+    Annotated[ClauseStartsWith, Tag('starts_with')]
+    | Annotated[ClauseEndsWith, Tag('ends_with')]
+    | Annotated[ClauseContains, Tag('contains')]
+    | Annotated[ClauseRegex, Tag('regex')]
+    | Annotated[ClauseEquals, Tag('equals')]
+    | Annotated[ClauseOr, Tag('or')]
+    | Annotated[ClauseAnd, Tag('and')],
     Discriminator(clause_discriminator),
 ]
 match_logic_schema: TypeAdapter[MatchLogic] = TypeAdapter(MatchLogic)
@@ -424,7 +432,7 @@ def doesnt_end_with_find_item(path: str | list[str | ArrayMatch]) -> str | list[
     return path
 
 
-ExtractPath = Annotated[Union[str, list[Union[str, ArrayMatch]]], AfterValidator(doesnt_end_with_find_item)]
+ExtractPath = Annotated[str | list[str | ArrayMatch], AfterValidator(doesnt_end_with_find_item)]
 
 providers_schema = TypeAdapter(list[Provider])
 

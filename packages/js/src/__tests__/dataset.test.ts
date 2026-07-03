@@ -86,7 +86,14 @@ describe('dataset', () => {
             expect(usage.model).toBeUndefined()
           } else {
             expect(model).toBe(usage.model)
-            const price = calcPrice(extracted.usage, model, { provider, timestamp: new Date(2025, 11, 6, 12, 0, 0) })
+            // Must match the instant used by tests/dataset/extract_usages.py
+            // (datetime(2025, 11, 6, 12, 0, 0, tzinfo=utc)) which generates the expected prices.
+            // Use an explicit UTC ISO string so time-of-day-dependent pricing (e.g. DeepSeek
+            // off-peak, keyed to UTC hours) resolves identically regardless of the local timezone.
+            const price = calcPrice(extracted.usage, model, {
+              provider,
+              timestamp: new Date('2025-11-06T12:00:00Z'),
+            })
             if (price) {
               expect(price.input_price).toBeCloseTo(parseFloat(extractor.input_price!), 8)
               expect(price.output_price).toBeCloseTo(parseFloat(extractor.output_price!), 8)

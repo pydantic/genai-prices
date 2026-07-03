@@ -79,6 +79,7 @@ def test_unknown_providers():
         ('anthropic', snapshot('anthropic')),
         ('google-gla', snapshot('google')),
         ('bedrock', snapshot('aws')),
+        ('amazon', snapshot('aws')),
         ('google-vertex', snapshot('google')),
         ('groq', snapshot('groq')),
         ('gemini', snapshot('google')),
