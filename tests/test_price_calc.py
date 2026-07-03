@@ -5,9 +5,17 @@ import pytest
 from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
+from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
+    ClauseAnd,
+    ClauseContains,
+    ClauseEndsWith,
     ClauseEquals,
+    ClauseOr,
+    ClauseRegex,
+    ClauseStartsWith,
+    MatchLogic,
     ModelInfo,
     ModelPrice,
     Provider,
@@ -73,11 +81,130 @@ def test_openrouter_deepseek_v32_price():
         provider_id='openrouter',
     )
 
-    assert price.input_price == snapshot(Decimal('0.2772'))
-    assert price.output_price == snapshot(Decimal('0.3780'))
-    assert price.total_price == snapshot(Decimal('0.6552'))
+    assert price.input_price == snapshot(Decimal('0.4576'))
+    assert price.output_price == snapshot(Decimal('0.3432'))
+    assert price.total_price == snapshot(Decimal('0.8008'))
     assert price.model.name == snapshot('DeepSeek V3.2')
     assert price.provider.id == snapshot('openrouter')
+
+
+def test_moonshotai_kimi_k27_code_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
+        model_ref='kimi-k2.7-code',
+        provider_id='moonshotai',
+    )
+
+    assert price.model.id == 'kimi-k2.7-code'
+    assert price.input_price == Decimal('0.000874')
+    assert price.output_price == Decimal('0.0004')
+    assert price.total_price == Decimal('0.001274')
+
+
+def test_openrouter_kimi_k27_code_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=100, output_tokens=100),
+        model_ref='moonshotai/kimi-k2.7-code',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'moonshotai/kimi-k2.7-code'
+    assert price.input_price == Decimal('0.000691')
+    assert price.output_price == Decimal('0.00035')
+    assert price.total_price == Decimal('0.001041')
+
+
+def test_openrouter_kimi_k27_code_dated_price():
+    price = calc_price(
+        Usage(input_tokens=2_038_030, output_tokens=13_034),
+        model_ref='moonshotai/kimi-k2.7-code-20260612',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'moonshotai/kimi-k2.7-code'
+    assert price.input_price == Decimal('1.5285225')
+    assert price.output_price == Decimal('0.0456190')
+    assert price.total_price == Decimal('1.5741415')
+
+
+def test_openrouter_glm_51_dated_price():
+    price = calc_price(
+        Usage(input_tokens=27_447, output_tokens=83),
+        model_ref='z-ai/glm-5.1-20260406',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'z-ai/glm-5.1'
+    assert price.input_price == Decimal('0.02689806')
+    assert price.output_price == Decimal('0.00025564')
+    assert price.total_price == Decimal('0.02715370')
+
+
+def test_openrouter_glm_52_dated_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='z-ai/glm-5.2-20260616',
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == 'z-ai/glm-5.2'
+    assert price.input_price == Decimal('0.0014')
+    assert price.output_price == Decimal('0.00044')
+    assert price.total_price == Decimal('0.00184')
+
+
+def test_zhipuai_glm_52_price():
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref='glm-5.2',
+        provider_id='zhipuai',
+    )
+
+    assert price.model.id == 'GLM-5.2'
+    assert price.input_price == Decimal('0.001103')
+    assert price.output_price == Decimal('0.0003862')
+    assert price.total_price == Decimal('0.0014892')
+
+
+def test_openrouter_modern_dated_aliases_price():
+    for model_ref, model_id, input_price, output_price, total_price in [
+        (
+            'minimax/minimax-m3-20260531',
+            'minimax/minimax-m3',
+            Decimal('0.0003'),
+            Decimal('0.00012'),
+            Decimal('0.00042'),
+        ),
+        (
+            'qwen/qwen3.7-plus-20260602',
+            'qwen/qwen3.7-plus',
+            Decimal('0.0004'),
+            Decimal('0.00016'),
+            Decimal('0.00056'),
+        ),
+    ]:
+        price = calc_price(
+            Usage(input_tokens=1_000, output_tokens=100),
+            model_ref=model_ref,
+            provider_api_url='https://openrouter.ai/api/v1',
+        )
+
+        assert price.model.id == model_id
+        assert price.input_price == input_price
+        assert price.output_price == output_price
+        assert price.total_price == total_price
+
+
+@pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
+def test_openrouter_api_model_refs_priceable_by_api_url(model_ref: str):
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref=model_ref,
+        provider_api_url='https://openrouter.ai/api/v1',
+    )
+
+    assert price.model.id == model_ref
+    assert price.provider.id == 'openrouter'
 
 
 def test_tiered_prices():
@@ -284,6 +411,84 @@ EXAMPLES: list[tuple[str, str]] = [
 @pytest.mark.parametrize('provider,model', EXAMPLES)
 def test_models_found(provider: str, model: str):
     calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref=model, provider_id=provider)
+
+
+def test_all_bundled_models_have_a_priceable_public_ref():
+    assert not _unpriceable_model_refs(providers)
+
+
+def test_unpriceable_model_refs_reports_public_ref_errors():
+    test_providers = [
+        Provider(
+            id='test-provider',
+            name='Test Provider',
+            api_pattern='https://example.com',
+            models=[
+                ModelInfo(
+                    id='test-model',
+                    match=ClauseRegex('^test-model$'),
+                    prices=ModelPrice(input_mtok=Decimal('1')),
+                )
+            ],
+        )
+    ]
+
+    assert _unpriceable_model_refs(test_providers) == [
+        "test-provider/test-model: test-model: LookupError: Unable to find provider provider_id='test-provider'"
+    ]
+
+
+def _unpriceable_model_refs(test_providers: list[Provider]) -> list[str]:
+    failures: list[str] = []
+    usage = Usage(input_tokens=1000, cache_read_tokens=10, cache_write_tokens=10, output_tokens=100)
+
+    for provider in test_providers:
+        for model in provider.models:
+            candidate_refs = dict.fromkeys([model.id, *_example_model_refs(model.match)])
+            errors: list[str] = []
+
+            for model_ref in candidate_refs:
+                try:
+                    calc_price(usage, model_ref=model_ref, provider_id=provider.id)
+                except Exception as exc:
+                    errors.append(f'{model_ref}: {type(exc).__name__}: {exc}')
+                else:
+                    break
+            else:
+                failures.append(f'{provider.id}/{model.id}: {"; ".join(errors)}')
+
+    return failures
+
+
+def _example_model_refs(match: MatchLogic) -> list[str]:
+    if isinstance(match, ClauseEquals):
+        return [match.equals]
+    elif isinstance(match, ClauseStartsWith):
+        return [match.starts_with]
+    elif isinstance(match, ClauseEndsWith):
+        return [match.ends_with]
+    elif isinstance(match, ClauseContains):
+        return [match.contains]
+    elif isinstance(match, ClauseRegex):
+        return []
+    elif isinstance(match, ClauseOr):
+        refs: list[str] = []
+        for clause in match.or_:
+            refs.extend(_example_model_refs(clause))
+        return refs
+    ref = ''
+    for clause in match.and_:
+        clause_refs = _example_model_refs(clause)
+        if not clause_refs:
+            return []
+        ref += clause_refs[0]
+    return [ref]
+
+
+def test_example_model_refs_handles_regex_and_and_clauses():
+    assert _example_model_refs(ClauseRegex('^test$')) == []
+    assert _example_model_refs(ClauseAnd([ClauseStartsWith('test-'), ClauseEndsWith('model')])) == ['test-model']
+    assert _example_model_refs(ClauseAnd([ClauseStartsWith('test-'), ClauseRegex('model')])) == []
 
 
 def test_complex_usage():

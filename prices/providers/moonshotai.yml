@@ -23,6 +23,18 @@ extractors:
         dest: output_tokens
 
 models:
+  - id: kimi-k2
+    name: Kimi K2 0711
+    description: >-
+      Kimi K2 Instruct is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion
+      total parameters with 32 billion active per forward pass.
+    match:
+      equals: kimi-k2
+    prices_checked: 2026-06-09
+    prices:
+      input_mtok: 0.57
+      output_mtok: 2.3
+
   - id: kimi-k2-0711-preview
     name: Kimi K2 0711 Preview
     description: >-
@@ -107,6 +119,38 @@ models:
       input_mtok: 0.60
       cache_read_mtok: 0.10
       output_mtok: 3.00
+
+  - id: kimi-k2.6
+    name: Kimi K2.6
+    description: >-
+      Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and
+      self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking
+      and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode,
+      and internet search.
+    match:
+      starts_with: kimi-k2.6
+    context_window: 262144
+    prices_checked: "2026-05-22"
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.16
+      output_mtok: 4.00
+
+  - id: kimi-k2.7-code
+    name: Kimi K2.7 Code
+    description: >-
+      Kimi's most intelligent coding model, capable of completing programming tasks with higher success rates in long
+      context. It features a native multimodal architecture that supports text, image, video input, thinking modes,
+      dialogue, and agent tasks.
+    match:
+      equals: kimi-k2.7-code
+    context_window: 262144
+    prices_checked: "2026-06-15"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
+    prices:
+      input_mtok: 0.95
+      cache_read_mtok: 0.19
+      output_mtok: 4.00
 
   - id: moonshot-v1-128k
     name: Moonshot V1 128K

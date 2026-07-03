@@ -32,17 +32,15 @@ def test_deprecated_flag_in_data_json():
     data = json.loads(data_json_path.read_bytes())['providers']
 
     deprecated_found = False
-    non_deprecated_with_flag = False
 
     for provider in data:
         for model in provider['models']:
             if model.get('deprecated') is True:
                 deprecated_found = True
-            elif 'deprecated' in model:
-                non_deprecated_with_flag = True
+            else:
+                assert 'deprecated' not in model, f'Non-deprecated model has deprecated key: {model["id"]}'
 
     assert deprecated_found, 'Expected at least one model with deprecated=true in data.json'
-    assert not non_deprecated_with_flag, 'Non-deprecated models should not have the deprecated key in data.json'
 
 
 def test_removed_field_not_in_data_json():

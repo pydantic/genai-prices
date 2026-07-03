@@ -1,9 +1,18 @@
+from datetime import date, datetime
 from decimal import Decimal
 
 import pytest
 
 from genai_prices import Usage
-from genai_prices.types import ModelPrice, Tier, TieredPrices
+from genai_prices.types import (
+    ClauseEquals,
+    ConditionalPrice,
+    ModelInfo,
+    ModelPrice,
+    StartDateConstraint,
+    Tier,
+    TieredPrices,
+)
 
 MILLION = Decimal(1_000_000)
 THOUSAND = Decimal(1_000)
@@ -28,6 +37,23 @@ def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
         'output_price': expected_output,
         'total_price': expected_input + expected_output,
     }
+
+
+def test_model_info_uses_unconditional_price_when_no_constraint_is_active() -> None:
+    model = ModelInfo(
+        id='future-model',
+        match=ClauseEquals('future-model'),
+        prices=[
+            ConditionalPrice(
+                constraint=StartDateConstraint(start_date=date(2030, 1, 1)),
+                values=ModelPrice(input_mtok=Decimal('2')),
+            ),
+            ConditionalPrice(values=ModelPrice(input_mtok=Decimal('1'))),
+        ],
+    )
+
+    assert model.get_prices(datetime(2029, 1, 1)).input_mtok == Decimal('1')
+    assert model.get_prices(datetime(2030, 6, 1)).input_mtok == Decimal('2')
 
 
 def test_standard_price_parity_handles_simple_input_output_tokens() -> None:
