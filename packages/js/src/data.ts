@@ -362,7 +362,19 @@ export const data: Provider[] = [
         context_window: 200000,
         prices: [
           {
-            prices: {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            values: {
+              input_mtok: 5,
+              cache_write_mtok: 6.25,
+              cache_read_mtok: 0.5,
+              output_mtok: 25,
+            },
+          },
+          {
+            values: {
               input_mtok: {
                 base: 5,
                 tiers: [
@@ -399,18 +411,6 @@ export const data: Provider[] = [
                   },
                 ],
               },
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-03-13',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 5,
-              cache_write_mtok: 6.25,
-              cache_read_mtok: 0.5,
-              output_mtok: 25,
             },
           },
         ],
@@ -577,7 +577,19 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: [
           {
-            prices: {
+            constraint: {
+              start_date: '2026-03-13',
+              type: 'start_date',
+            },
+            values: {
+              input_mtok: 3,
+              cache_write_mtok: 3.75,
+              cache_read_mtok: 0.3,
+              output_mtok: 15,
+            },
+          },
+          {
+            values: {
               input_mtok: {
                 base: 3,
                 tiers: [
@@ -616,18 +628,6 @@ export const data: Provider[] = [
               },
             },
           },
-          {
-            constraint: {
-              start_date: '2026-03-13',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 3,
-              cache_write_mtok: 3.75,
-              cache_read_mtok: 0.3,
-              output_mtok: 15,
-            },
-          },
         ],
       },
       {
@@ -655,23 +655,23 @@ export const data: Provider[] = [
           'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5',
         prices: [
           {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
             constraint: {
               start_date: '2026-09-01',
               type: 'start_date',
             },
-            prices: {
+            values: {
               input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+            },
+          },
+          {
+            values: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
             },
           },
         ],
@@ -1125,23 +1125,23 @@ export const data: Provider[] = [
           'Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
         prices: [
           {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
             constraint: {
               start_date: '2026-09-01',
               type: 'start_date',
             },
-            prices: {
+            values: {
               input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+            },
+          },
+          {
+            values: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
             },
           },
         ],
@@ -2163,23 +2163,23 @@ export const data: Provider[] = [
           'Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
         prices: [
           {
-            prices: {
-              input_mtok: 2.2,
-              cache_write_mtok: 2.75,
-              cache_read_mtok: 0.22,
-              output_mtok: 11,
-            },
-          },
-          {
             constraint: {
               start_date: '2026-09-01',
               type: 'start_date',
             },
-            prices: {
+            values: {
               input_mtok: 3.3,
               cache_write_mtok: 4.125,
               cache_read_mtok: 0.33,
               output_mtok: 16.5,
+            },
+          },
+          {
+            values: {
+              input_mtok: 2.2,
+              cache_write_mtok: 2.75,
+              cache_read_mtok: 0.22,
+              output_mtok: 11,
             },
           },
         ],
@@ -2975,22 +2975,22 @@ export const data: Provider[] = [
         context_window: 64000,
         prices: [
           {
-            prices: {
-              input_mtok: 0.135,
-              cache_read_mtok: 0.035,
-              output_mtok: 0.55,
-            },
-          },
-          {
             constraint: {
               start_time: '00:30:00Z',
               end_time: '16:30:00Z',
               type: 'time_of_date',
             },
-            prices: {
+            values: {
               input_mtok: 0.27,
               cache_read_mtok: 0.07,
               output_mtok: 1.1,
+            },
+          },
+          {
+            values: {
+              input_mtok: 0.135,
+              cache_read_mtok: 0.035,
+              output_mtok: 0.55,
             },
           },
         ],
@@ -3016,22 +3016,22 @@ export const data: Provider[] = [
         context_window: 64000,
         prices: [
           {
-            prices: {
-              input_mtok: 0.135,
-              cache_read_mtok: 0.035,
-              output_mtok: 0.55,
-            },
-          },
-          {
             constraint: {
               start_time: '00:30:00Z',
               end_time: '16:30:00Z',
               type: 'time_of_date',
             },
-            prices: {
+            values: {
               input_mtok: 0.55,
               cache_read_mtok: 0.14,
               output_mtok: 2.19,
+            },
+          },
+          {
+            values: {
+              input_mtok: 0.135,
+              cache_read_mtok: 0.035,
+              output_mtok: 0.55,
             },
           },
         ],
@@ -12281,21 +12281,21 @@ export const data: Provider[] = [
         },
         prices: [
           {
-            prices: {
-              input_mtok: 10,
-              cache_read_mtok: 0.5,
-              output_mtok: 40,
-            },
-          },
-          {
             constraint: {
               start_date: '2025-06-10',
               type: 'start_date',
             },
-            prices: {
+            values: {
               input_mtok: 2,
               cache_read_mtok: 0.5,
               output_mtok: 8,
+            },
+          },
+          {
+            values: {
+              input_mtok: 10,
+              cache_read_mtok: 0.5,
+              output_mtok: 40,
             },
           },
         ],
@@ -13276,23 +13276,23 @@ export const data: Provider[] = [
           'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01. OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30. Ref: https://openrouter.ai/anthropic/claude-sonnet-5',
         prices: [
           {
-            prices: {
-              input_mtok: 2,
-              cache_write_mtok: 2.5,
-              cache_read_mtok: 0.2,
-              output_mtok: 10,
-            },
-          },
-          {
             constraint: {
               start_date: '2026-09-01',
               type: 'start_date',
             },
-            prices: {
+            values: {
               input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+            },
+          },
+          {
+            values: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.2,
+              output_mtok: 10,
             },
           },
         ],

@@ -276,18 +276,18 @@ models:
       Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01.
       Ref: https://aws.amazon.com/bedrock/pricing/
     prices:
-      - prices:
-          input_mtok: 2
-          cache_write_mtok: 2.5
-          cache_read_mtok: 0.2
-          output_mtok: 10
       - constraint:
           start_date: 2026-09-01
-        prices:
+        values:
           input_mtok: 3
           cache_write_mtok: 3.75
           cache_read_mtok: 0.3
           output_mtok: 15
+      - values:
+          input_mtok: 2
+          cache_write_mtok: 2.5
+          cache_read_mtok: 0.2
+          output_mtok: 10
 
   - id: google.gemma-3-12b-it
     name: Gemma 3 12B IT
@@ -927,15 +927,15 @@ models:
       Promotional launch pricing through 2026-08-31; standard from 2026-09-01.
       Ref: https://aws.amazon.com/bedrock/pricing/
     prices:
-      - prices:
-          input_mtok: 2.2
-          cache_write_mtok: 2.75
-          cache_read_mtok: 0.22
-          output_mtok: 11
       - constraint:
           start_date: 2026-09-01
-        prices:
+        values:
           input_mtok: 3.3
           cache_write_mtok: 4.125
           cache_read_mtok: 0.33
           output_mtok: 16.5
+      - values:
+          input_mtok: 2.2
+          cache_write_mtok: 2.75
+          cache_read_mtok: 0.22
+          output_mtok: 11

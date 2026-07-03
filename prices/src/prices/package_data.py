@@ -150,7 +150,7 @@ def validate_provider_extractor_destinations(providers: Iterable[object], regist
 def _iter_model_prices(prices: object) -> Iterator[tuple[str, object]]:
     if isinstance(prices, list):
         for index, conditional_price in enumerate(cast(list[object], prices)):
-            yield f'[{index}]', getattr(conditional_price, 'prices')
+            yield f'[{index}]', getattr(conditional_price, 'values')
     else:
         yield '', prices
 

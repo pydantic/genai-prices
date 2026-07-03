@@ -982,7 +982,7 @@ def test_extras_only_paid_model_survives_slim_filtering() -> None:
 def test_package_data_validates_conditional_model_prices() -> None:
     registry = UnitRegistry(load_units())
     provider = _build_provider_prices(
-        [build_types.ConditionalPrice(prices=build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))]
+        [build_types.ConditionalPrice(values=build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))]
     )
 
     package_data.validate_provider_model_prices([provider], registry)
@@ -1058,7 +1058,7 @@ def test_package_data_model_price_validation_rejects_missing_join_units_for_cond
     provider = _build_provider_prices(
         [
             build_types.ConditionalPrice(
-                prices=build_types.ModelPrice(
+                values=build_types.ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('0.5'),
                     input_audio_mtok=Decimal('2'),

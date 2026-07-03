@@ -253,7 +253,16 @@ providers: list[Provider] = [
                 context_window=200000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        values=ModelPrice(
+                            input_mtok=Decimal('5'),
+                            cache_write_mtok=Decimal('6.25'),
+                            cache_read_mtok=Decimal('0.5'),
+                            output_mtok=Decimal('25'),
+                        ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
                             input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
                             cache_write_mtok=TieredPrices(
                                 base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
@@ -265,15 +274,6 @@ providers: list[Provider] = [
                                 base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
                         )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('5'),
-                            cache_write_mtok=Decimal('6.25'),
-                            cache_read_mtok=Decimal('0.5'),
-                            output_mtok=Decimal('25'),
-                        ),
                     ),
                 ],
             ),
@@ -373,7 +373,16 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
+                        values=ModelPrice(
+                            input_mtok=Decimal('3'),
+                            cache_write_mtok=Decimal('3.75'),
+                            cache_read_mtok=Decimal('0.3'),
+                            output_mtok=Decimal('15'),
+                        ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
                             input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                             cache_write_mtok=TieredPrices(
                                 base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
@@ -385,15 +394,6 @@ providers: list[Provider] = [
                                 base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
                         )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('3'),
-                            cache_write_mtok=Decimal('3.75'),
-                            cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15'),
-                        ),
                     ),
                 ],
             ),
@@ -413,21 +413,21 @@ providers: list[Provider] = [
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5',
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2'),
-                            cache_write_mtok=Decimal('2.5'),
-                            cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10'),
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        )
                     ),
                 ],
             ),
@@ -689,21 +689,21 @@ providers: list[Provider] = [
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Promotional launch pricing ($2/$10 per MTok) through 2026-08-31; standard ($3/$15) from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2'),
-                            cache_write_mtok=Decimal('2.5'),
-                            cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10'),
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        )
                     ),
                 ],
             ),
@@ -1266,21 +1266,21 @@ providers: list[Provider] = [
                 price_comments='Regional/cross-region endpoints carry a 10% premium over global (AWS published only the global promo rate; regional computed as global +10%, per the documented regional premium). Promotional launch pricing through 2026-08-31; standard from 2026-09-01. Ref: https://aws.amazon.com/bedrock/pricing/',
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2.2'),
-                            cache_write_mtok=Decimal('2.75'),
-                            cache_read_mtok=Decimal('0.22'),
-                            output_mtok=Decimal('11'),
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('3.3'),
                             cache_write_mtok=Decimal('4.125'),
                             cache_read_mtok=Decimal('0.33'),
                             output_mtok=Decimal('16.5'),
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('2.2'),
+                            cache_write_mtok=Decimal('2.75'),
+                            cache_read_mtok=Decimal('0.22'),
+                            output_mtok=Decimal('11'),
+                        )
                     ),
                 ],
             ),
@@ -1715,18 +1715,18 @@ providers: list[Provider] = [
                 context_window=64000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=TimeOfDateConstraint(
                             start_time=datetime.time(0, 30, tzinfo=datetime.timezone.utc),
                             end_time=datetime.time(16, 30, tzinfo=datetime.timezone.utc),
                         ),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('1.1')
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
+                        )
                     ),
                 ],
             ),
@@ -1744,18 +1744,18 @@ providers: list[Provider] = [
                 context_window=64000,
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=TimeOfDateConstraint(
                             start_time=datetime.time(0, 30, tzinfo=datetime.timezone.utc),
                             end_time=datetime.time(16, 30, tzinfo=datetime.timezone.utc),
                         ),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('0.55'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('2.19')
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('0.55')
+                        )
                     ),
                 ],
             ),
@@ -6958,15 +6958,15 @@ providers: list[Provider] = [
                 description='o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual reasoning tasks. It also excels at technical writing and instruction-following. Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required for this model. Set up here: https://openrouter.ai/settings/integrations',
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
+                        )
                     ),
                 ],
             ),
@@ -7539,21 +7539,21 @@ providers: list[Provider] = [
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard ($3/$15) from 2026-09-01. OpenRouter mirrors Anthropic first-party pricing; $2/$10 verified live via the OpenRouter API on 2026-06-30. Ref: https://openrouter.ai/anthropic/claude-sonnet-5',
                 prices=[
                     ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('2'),
-                            cache_write_mtok=Decimal('2.5'),
-                            cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10'),
-                        )
-                    ),
-                    ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
-                        prices=ModelPrice(
+                        values=ModelPrice(
                             input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
                         ),
+                    ),
+                    ConditionalPrice(
+                        values=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                        )
                     ),
                 ],
             ),

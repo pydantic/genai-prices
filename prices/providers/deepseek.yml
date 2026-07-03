@@ -41,17 +41,17 @@ models:
     context_window: 64000
     prices_checked: 2025-07-12
     prices:
-      - prices:
-          input_mtok: 0.135
-          cache_read_mtok: 0.035
-          output_mtok: 0.550
       - constraint:
           start_time: 00:30:00Z
           end_time: 16:30:00Z
-        prices:
+        values:
           input_mtok: 0.27
           cache_read_mtok: 0.07
           output_mtok: 1.1
+      - values:
+          input_mtok: 0.135
+          cache_read_mtok: 0.035
+          output_mtok: 0.550
 
   - id: deepseek-reasoner
     name: Deepseek R1
@@ -66,17 +66,17 @@ models:
     context_window: 64000
     prices_checked: 2025-07-12
     prices:
-      - prices:
-          input_mtok: 0.135
-          cache_read_mtok: 0.035
-          output_mtok: 0.550
       - constraint:
           start_time: 00:30:00Z
           end_time: 16:30:00Z
-        prices:
+        values:
           input_mtok: 0.55
           cache_read_mtok: 0.14
           output_mtok: 2.19
+      - values:
+          input_mtok: 0.135
+          cache_read_mtok: 0.035
+          output_mtok: 0.550
 
   - id: deepseek-v3.1-terminus
     name: DeepSeek V3.1 Terminus

@@ -202,8 +202,11 @@ class ModelInfo(_Model):
         if isinstance(prices, list):
             if len(prices) == 0:
                 raise ValueError('model prices may not be empty')
-            if sum(p.constraint is None for p in prices) != 1:
-                raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
+            unconditional = [p for p in prices if p.when is None and p.constraint is None]
+            if len(unconditional) != 1:
+                raise ValueError('When multiple prices are provided, exactly one price must be unconditional')
+            if prices[-1].when is not None or prices[-1].constraint is not None:
+                raise ValueError('The last conditional price must be unconditional')
         return prices
 
     @field_serializer('prices', when_used='json', return_type='ModelPrice | list[ConditionalPrice]')
@@ -218,7 +221,7 @@ class ModelInfo(_Model):
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):
-            return all(price.prices.is_free() for price in self.prices)
+            return all(price.values.is_free() for price in self.prices)
         else:
             return self.prices.is_free()
 
@@ -307,16 +310,42 @@ class Tier(_Model):
     """Price for this tier"""
 
 
-class ConditionalPrice(_Model):
-    """Pricing together with constraints that define when those prices should be used.
+WhenParameter = Literal['service_tier', 'batch', 'cache_ttl', 'fast_mode', 'inference_geo', 'region']
+"""Request-level pricing context parameters usable in a `when` clause."""
 
-    The last price active price (price where the constraints are met) is used.
+PriceContextValue = str | int | bool
+
+
+class ConditionOperators(_Model):
+    """Comparison operators for a single `when` parameter.
+
+    An empty operator set matches anything; multiple operators are ANDed (e.g. `gte` and `lte` form a range).
     """
 
+    eq: PriceContextValue | None = None
+    gte: PriceContextValue | None = None
+    lte: PriceContextValue | None = None
+    gt: PriceContextValue | None = None
+    lt: PriceContextValue | None = None
+    in_: list[PriceContextValue] | None = Field(default=None, alias='in')
+
+
+Condition = PriceContextValue | ConditionOperators
+"""A literal value (equality shorthand) or an explicit operator expression."""
+
+
+class ConditionalPrice(_Model):
+    """Prices gated by an optional `when` clause and/or date/time constraint.
+
+    For each unit, the first entry (top to bottom) that both matches and defines a price for the unit wins.
+    """
+
+    when: dict[WhenParameter, Condition] | None = None
+    """Request-level pricing context conditions; all conditions are ANDed. None matches any context."""
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
-    """Timestamp when this price starts, None means this price is always valid."""
-    prices: ModelPrice
-    """Prices for this condition."""
+    """Date/time constraint. None means this entry is not gated by date/time."""
+    values: ModelPrice
+    """Prices that apply under this condition. Only the units that differ need to be listed."""
 
 
 class StartDateConstraint(_Model):

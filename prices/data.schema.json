@@ -196,10 +196,136 @@
       "title": "ClauseStartsWith",
       "type": "object"
     },
+    "ConditionOperators": {
+      "additionalProperties": false,
+      "description": "Comparison operators for a single `when` parameter.\n\nAn empty operator set matches anything; multiple operators are ANDed (e.g. `gte` and `lte` form a range).",
+      "properties": {
+        "eq": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Eq"
+        },
+        "gte": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Gte"
+        },
+        "lte": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Lte"
+        },
+        "gt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Gt"
+        },
+        "lt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "title": "Lt"
+        },
+        "in": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "type": "array",
+          "title": "In"
+        }
+      },
+      "title": "ConditionOperators",
+      "type": "object"
+    },
     "ConditionalPrice": {
       "additionalProperties": false,
-      "description": "Pricing together with constraints that define when those prices should be used.\n\nThe last price active price (price where the constraints are met) is used.",
+      "description": "Prices gated by an optional `when` clause and/or date/time constraint.\n\nFor each unit, the first entry (top to bottom) that both matches and defines a price for the unit wins.",
       "properties": {
+        "when": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "$ref": "#/$defs/ConditionOperators"
+              }
+            ]
+          },
+          "propertyNames": {
+            "enum": [
+              "service_tier",
+              "batch",
+              "cache_ttl",
+              "fast_mode",
+              "inference_geo",
+              "region"
+            ]
+          },
+          "type": "object",
+          "description": "Request-level pricing context conditions; all conditions are ANDed. None matches any context.",
+          "title": "When"
+        },
         "constraint": {
           "anyOf": [
             {
@@ -209,16 +335,16 @@
               "$ref": "#/$defs/TimeOfDateConstraint"
             }
           ],
-          "description": "Timestamp when this price starts, None means this price is always valid.",
+          "description": "Date/time constraint. None means this entry is not gated by date/time.",
           "title": "Constraint"
         },
-        "prices": {
+        "values": {
           "$ref": "#/$defs/ModelPrice",
-          "description": "Prices for this condition."
+          "description": "Prices that apply under this condition. Only the units that differ need to be listed."
         }
       },
       "required": [
-        "prices"
+        "values"
       ],
       "title": "ConditionalPrice",
       "type": "object"

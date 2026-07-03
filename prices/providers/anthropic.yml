@@ -262,7 +262,15 @@ models:
     context_window: 200000
     prices_checked: 2026-03-16
     prices:
-      - prices:
+      - constraint:
+          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
+          start_date: 2026-03-13
+        values:
+          input_mtok: 5
+          cache_read_mtok: 0.50
+          cache_write_mtok: 6.25
+          output_mtok: 25
+      - values:
           input_mtok:
             base: 5
             tiers:
@@ -283,14 +291,6 @@ models:
             tiers:
               - start: 200000
                 price: 37.50
-      - constraint:
-          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
-          start_date: 2026-03-13
-        prices:
-          input_mtok: 5
-          cache_read_mtok: 0.50
-          cache_write_mtok: 6.25
-          output_mtok: 25
 
   - id: claude-opus-4-7
     name: Claude Opus 4.7
@@ -391,7 +391,15 @@ models:
     context_window: 1000000
     prices_checked: 2026-03-16
     prices:
-      - prices:
+      - constraint:
+          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
+          start_date: 2026-03-13
+        values:
+          input_mtok: 3
+          cache_read_mtok: 0.30
+          cache_write_mtok: 3.75
+          output_mtok: 15
+      - values:
           input_mtok:
             base: 3
             tiers:
@@ -412,14 +420,6 @@ models:
             tiers:
               - start: 200000
                 price: 22.50
-      - constraint:
-          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
-          start_date: 2026-03-13
-        prices:
-          input_mtok: 3
-          cache_read_mtok: 0.30
-          cache_write_mtok: 3.75
-          output_mtok: 15
 
   - id: claude-sonnet-5
     name: Claude Sonnet 5
@@ -437,18 +437,18 @@ models:
       Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01.
       Ref: https://www.anthropic.com/news/claude-sonnet-5
     prices:
-      - prices:
-          input_mtok: 2
-          cache_read_mtok: 0.20
-          cache_write_mtok: 2.50
-          output_mtok: 10
       - constraint:
           start_date: 2026-09-01
-        prices:
+        values:
           input_mtok: 3
           cache_read_mtok: 0.30
           cache_write_mtok: 3.75
           output_mtok: 15
+      - values:
+          input_mtok: 2
+          cache_read_mtok: 0.20
+          cache_write_mtok: 2.50
+          output_mtok: 10
 
   - id: claude-v1
     description: Retired, here to match price sources

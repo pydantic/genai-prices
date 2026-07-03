@@ -502,18 +502,18 @@ models:
         - equals: anthropic/claude-sonnet-5:beta
     context_window: 1000000
     prices:
-      - prices:
-          input_mtok: 2
-          cache_read_mtok: 0.2
-          cache_write_mtok: 2.5
-          output_mtok: 10
       - constraint:
           start_date: 2026-09-01
-        prices:
+        values:
           input_mtok: 3
           cache_read_mtok: 0.3
           cache_write_mtok: 3.75
           output_mtok: 15
+      - values:
+          input_mtok: 2
+          cache_read_mtok: 0.2
+          cache_write_mtok: 2.5
+          output_mtok: 10
     prices_checked: 2026-06-30
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
