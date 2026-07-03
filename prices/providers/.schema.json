@@ -699,6 +699,90 @@
       "title": "ModelPrice",
       "type": "object"
     },
+    "ProviderConditionalPrice": {
+      "additionalProperties": false,
+      "description": "A provider-level conditional price; like `ConditionalPrice` but its `when` may match on `model`.",
+      "properties": {
+        "when": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "$ref": "#/$defs/ConditionOperators"
+              },
+              {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/ClauseStartsWith"
+                  },
+                  {
+                    "$ref": "#/$defs/ClauseEndsWith"
+                  },
+                  {
+                    "$ref": "#/$defs/ClauseContains"
+                  },
+                  {
+                    "$ref": "#/$defs/ClauseRegex"
+                  },
+                  {
+                    "$ref": "#/$defs/ClauseEquals"
+                  },
+                  {
+                    "$ref": "#/$defs/ClauseOr"
+                  },
+                  {
+                    "$ref": "#/$defs/ClauseAnd"
+                  }
+                ]
+              }
+            ]
+          },
+          "propertyNames": {
+            "enum": [
+              "model",
+              "service_tier",
+              "batch",
+              "cache_ttl",
+              "fast_mode",
+              "inference_geo",
+              "region"
+            ]
+          },
+          "type": "object",
+          "description": "Conditions ANDed together; the `model` parameter matches the model id via `MatchLogic`.",
+          "title": "When"
+        },
+        "constraint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StartDateConstraint"
+            },
+            {
+              "$ref": "#/$defs/TimeOfDateConstraint"
+            }
+          ],
+          "description": "Date/time constraint. None means this entry is not gated by date/time.",
+          "title": "Constraint"
+        },
+        "values": {
+          "$ref": "#/$defs/ModelPrice",
+          "description": "Prices that apply under this condition. Only the units that differ need to be listed."
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "ProviderConditionalPrice",
+      "type": "object"
+    },
     "StartDateConstraint": {
       "additionalProperties": false,
       "description": "Constraint that defines when this price starts, e.g. when a new price is introduced.",
@@ -1039,6 +1123,21 @@
       "type": "array",
       "description": "List of provider identifiers to fallback to to get prices if this provider doesn't have a price.\n\nThis is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,\nAzure offers OpenAI models, etc.",
       "title": "Fallback Model Providers"
+    },
+    "prices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ModelPrice"
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/ProviderConditionalPrice"
+          },
+          "type": "array"
+        }
+      ],
+      "description": "Prices inherited by every model in this provider; a model-level price for the same unit overrides it.",
+      "title": "Prices"
     },
     "models": {
       "description": "List of models supported by this provider",

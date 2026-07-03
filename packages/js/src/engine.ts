@@ -9,6 +9,7 @@ import {
   PriceContext,
   PriceContextValue,
   Provider,
+  ProviderConditionalPrice,
   ProviderFindOptions,
   TieredPrices,
   Usage,
@@ -100,15 +101,26 @@ function isTieredPrice(price: number | TieredPrices | undefined): price is Tiere
   return typeof price === 'object'
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext: PriceContext = {}): ModelPrice {
-  if (!Array.isArray(model.prices)) {
-    return model.prices
-  }
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext: PriceContext = {}, provider?: Provider): ModelPrice {
+  const modelPrice = resolveConditionalPrices(model.prices, timestamp, priceContext, model.id)
+  if (provider?.prices === undefined) return modelPrice
+  const providerPrice = resolveConditionalPrices(provider.prices, timestamp, priceContext, model.id)
+  return mergeProviderPrices(modelPrice, providerPrice)
+}
+
+function resolveConditionalPrices(
+  prices: ConditionalPrice[] | ModelPrice | ProviderConditionalPrice[] | undefined,
+  timestamp: Date,
+  priceContext: PriceContext,
+  modelId: string
+): ModelPrice {
+  if (prices === undefined) return {}
+  if (!Array.isArray(prices)) return prices
 
   // Per-unit first-match: for each unit, the first eligible entry that defines it wins.
   const resolved: ModelPrice = {}
-  for (const entry of model.prices) {
-    if (!entryEligible(entry, timestamp, priceContext)) continue
+  for (const entry of prices) {
+    if (!entryEligible(entry, timestamp, priceContext, modelId)) continue
     for (const [priceKey, value] of Object.entries(entry.values)) {
       if (value !== undefined && !(priceKey in resolved)) {
         resolved[priceKey] = value
@@ -118,8 +130,18 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceCont
   return resolved
 }
 
-function entryEligible(entry: ConditionalPrice, timestamp: Date, priceContext: PriceContext): boolean {
-  return constraintActive(entry.constraint, timestamp) && whenMatches(entry.when, priceContext)
+function mergeProviderPrices(modelPrice: ModelPrice, providerPrice: ModelPrice): ModelPrice {
+  // Model-level prices override provider-level prices for the same unit.
+  return { ...providerPrice, ...modelPrice }
+}
+
+function entryEligible(
+  entry: ConditionalPrice | ProviderConditionalPrice,
+  timestamp: Date,
+  priceContext: PriceContext,
+  modelId: string
+): boolean {
+  return constraintActive(entry.constraint, timestamp) && whenMatches(entry.when, priceContext, modelId)
 }
 
 function constraintActive(constraint: ConditionalPrice['constraint'], timestamp: Date): boolean {
@@ -137,9 +159,30 @@ function constraintActive(constraint: ConditionalPrice['constraint'], timestamp:
   return t >= startTime && t < endTime
 }
 
-function whenMatches(when: Record<string, Condition> | undefined, priceContext: PriceContext): boolean {
+function whenMatches(when: Record<string, Condition | MatchLogic> | undefined, priceContext: PriceContext, modelId: string): boolean {
   if (when === undefined) return true
-  return Object.entries(when).every(([key, condition]) => conditionMatches(condition, priceContext[key]))
+  return Object.entries(when).every(([key, condition]) => {
+    if (key === 'model') return modelConditionMatches(condition, modelId)
+    return conditionMatches(condition as Condition, priceContext[key])
+  })
+}
+
+function modelConditionMatches(condition: Condition | MatchLogic, modelId: string): boolean {
+  if (typeof condition === 'string') return condition.toLowerCase() === modelId.toLowerCase()
+  if (typeof condition === 'object' && isMatchLogic(condition)) return matchLogic(condition, modelId.toLowerCase())
+  return false
+}
+
+function isMatchLogic(value: object): value is MatchLogic {
+  return (
+    'starts_with' in value ||
+    'ends_with' in value ||
+    'contains' in value ||
+    'equals' in value ||
+    'regex' in value ||
+    'or' in value ||
+    'and' in value
+  )
 }
 
 function conditionMatches(condition: Condition, actual: PriceContextValue | undefined): boolean {

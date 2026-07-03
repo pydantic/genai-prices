@@ -117,7 +117,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const priceContext = options?.priceContext ?? {}
-  const modelPrice = getActiveModelPrice(model, timestamp, priceContext)
+  const modelPrice = getActiveModelPrice(model, timestamp, priceContext, provider)
   const priceResult = calcPriceInternal(usage, modelPrice)
   return {
     auto_update_timestamp: undefined,

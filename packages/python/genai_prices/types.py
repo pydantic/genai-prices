@@ -9,7 +9,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
-from typing_extensions import TypedDict
+from typing_extensions import Protocol, TypedDict, runtime_checkable
 
 if TYPE_CHECKING:
     from genai_prices.units import UnitDef, UnitRegistry
@@ -378,8 +378,21 @@ class Provider:
     This is used when one provider offers another provider's models, e.g. Google and AWS offer Anthropic models,
     Azure offers OpenAI models, etc.
     """
+    prices: ModelPrice | list[ConditionalPrice] | None = None
+    """Prices inherited by every model in this provider.
+
+    Model-level prices override provider-level prices for the same unit. Provider-level `when` clauses may
+    additionally match on the `model` parameter using the same logic as `model_match`.
+    """
     models: list[ModelInfo] = dataclasses.field(default_factory=list)
     """List of models supported by this provider"""
+
+    def get_prices(
+        self, request_timestamp: datetime, price_context: PriceContext | None = None, model_id: str | None = None
+    ) -> ModelPrice:
+        if self.prices is None:
+            return ModelPrice()
+        return _resolve_conditional_prices(self.prices, request_timestamp, price_context or {}, model_id)
 
     def find_model(self, model_ref: str, *, all_providers: list[Provider] | None = None) -> ModelInfo | None:
         model_ref = model_ref.lower()
@@ -656,19 +669,7 @@ class ModelInfo:
         return self.match.is_match(model_ref.lower())
 
     def get_prices(self, request_timestamp: datetime, price_context: PriceContext | None = None) -> ModelPrice:
-        if isinstance(self.prices, ModelPrice):
-            return self.prices
-
-        context = price_context or {}
-        eligible = [entry for entry in self.prices if entry.eligible(request_timestamp, context)]
-
-        # Per-unit first-match: for each price key, the first eligible entry that defines it wins.
-        resolved: dict[str, Decimal | TieredPrices | None] = {}
-        for entry in eligible:
-            for price_key, value in _iter_defined_price_values(entry.values):
-                resolved.setdefault(price_key, value)
-
-        return type(self.prices[0].values)(**resolved)
+        return _resolve_conditional_prices(self.prices, request_timestamp, price_context or {}, self.id)
 
     def calc_price(
         self,
@@ -683,6 +684,8 @@ class ModelInfo:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp, price_context)
+        provider_price = provider.get_prices(genai_request_timestamp, price_context, self.id)
+        model_price = _merge_provider_prices(model_price, provider_price)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -951,7 +954,7 @@ Condition = PriceContextValue | ConditionOperators
 """A literal value (equality shorthand) or an explicit operator expression."""
 
 
-def _context_values_equal(actual: PriceContextValue | None, expected: PriceContextValue) -> bool:
+def _context_values_equal(actual: PriceContextValue | None, expected: object) -> bool:
     return type(actual) is type(expected) and actual == expected
 
 
@@ -969,10 +972,16 @@ def _compare(operator: str, actual: PriceContextValue | None, expected: PriceCon
     return actual < expected
 
 
-def _when_matches(when: Mapping[str, Condition] | None, price_context: PriceContext) -> bool:
+def _when_matches(
+    when: Mapping[str, Condition | MatchLogic] | None, price_context: PriceContext, model_id: str | None
+) -> bool:
     if not when:
         return True
     for key, condition in when.items():
+        if key == 'model':
+            if model_id is None or not _model_condition_matches(condition, model_id):
+                return False
+            continue
         actual = price_context.get(key)
         if isinstance(condition, ConditionOperators):
             if not condition.matches(actual):
@@ -982,6 +991,19 @@ def _when_matches(when: Mapping[str, Condition] | None, price_context: PriceCont
     return True
 
 
+@runtime_checkable
+class _ModelMatcher(Protocol):
+    def is_match(self, text: str) -> bool: ...
+
+
+def _model_condition_matches(condition: object, model_id: str) -> bool:
+    if isinstance(condition, str):
+        return condition.lower() == model_id.lower()
+    if isinstance(condition, _ModelMatcher):
+        return condition.is_match(model_id.lower())
+    return False
+
+
 @dataclass
 class ConditionalPrice:
     """Prices gated by an optional `when` clause and/or date/time constraint.
@@ -989,8 +1011,8 @@ class ConditionalPrice:
     For each unit, the first entry (top to bottom) that both matches and defines a price for the unit wins.
     """
 
-    when: dict[str, Condition] | None = None
-    """Request-level pricing context conditions; all conditions are ANDed. None matches any context."""
+    when: dict[str, Condition | MatchLogic] | None = None
+    """Conditions ANDed together. None matches anything. The `model` key matches the model id via `MatchLogic`."""
 
     constraint: StartDateConstraint | TimeOfDateConstraint | None = None
     """Date/time constraint. None means this entry is not gated by date/time."""
@@ -1000,10 +1022,46 @@ class ConditionalPrice:
     values: ModelPrice
     """Prices that apply under this condition. Only the units that differ need to be listed."""
 
-    def eligible(self, request_timestamp: datetime, price_context: PriceContext) -> bool:
+    def eligible(self, request_timestamp: datetime, price_context: PriceContext, model_id: str | None = None) -> bool:
         if self.constraint is not None and not self.constraint.active(request_timestamp):
             return False
-        return _when_matches(self.when, price_context)
+        return _when_matches(self.when, price_context, model_id)
+
+
+def _resolve_conditional_prices(
+    prices: ModelPrice | list[ConditionalPrice],
+    request_timestamp: datetime,
+    price_context: PriceContext,
+    model_id: str | None,
+) -> ModelPrice:
+    if isinstance(prices, ModelPrice):
+        return prices
+
+    if not prices:
+        return ModelPrice()
+
+    # Per-unit first-match: for each price key, the first eligible entry that defines it wins.
+    resolved: dict[str, Decimal | TieredPrices | None] = {}
+    for entry in prices:
+        if not entry.eligible(request_timestamp, price_context, model_id):
+            continue
+        for price_key, value in _iter_defined_price_values(entry.values):
+            resolved.setdefault(price_key, value)
+
+    return type(prices[0].values)(**resolved)
+
+
+def _merge_provider_prices(model_price: ModelPrice, provider_price: ModelPrice) -> ModelPrice:
+    """Fill in units the model does not price from provider-level prices; model wins per unit."""
+    merged: dict[str, Decimal | TieredPrices | None] = {
+        key: value for key, value in _iter_defined_price_values(provider_price) if value is not None
+    }
+    if not merged:
+        return model_price
+
+    for key, value in _iter_defined_price_values(model_price):
+        merged[key] = value
+    return type(model_price)(**merged)
 
 
 @dataclass
@@ -1121,7 +1179,8 @@ def _normalize_when_field(value: Any) -> Any:
         return value
     normalized: dict[str, Any] = {}
     for param, condition in cast(Mapping[str, Any], value).items():
-        if isinstance(condition, Mapping):
+        # `model` conditions are MatchLogic; leave them raw so pydantic's discriminated union parses them.
+        if param != 'model' and isinstance(condition, Mapping):
             operators = {
                 ('in_' if op == 'in' else op): operand for op, operand in cast(Mapping[str, Any], condition).items()
             }
