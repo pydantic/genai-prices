@@ -27,6 +27,7 @@ dev = [
     "ruff>=0.12.3",
     "boto3-stubs[bedrock,pricing]>=1.40.75",
     "boto3>=1.40.75",
+    "packaging>=25.0",
 ]
 
 [tool.uv.workspace]
