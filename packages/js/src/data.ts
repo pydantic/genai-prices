@@ -9309,11 +9309,37 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax-m3',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+        context_window: 1000000,
+        price_comments:
+          'Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
         prices: {
-          input_mtok: 0.3,
-          cache_read_mtok: 0.06,
-          output_mtok: 1.2,
+          input_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 512000,
+                price: 0.6,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.06,
+            tiers: [
+              {
+                start: 512000,
+                price: 0.12,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 1.2,
+            tiers: [
+              {
+                start: 512000,
+                price: 2.4,
+              },
+            ],
+          },
         },
       },
     ],
