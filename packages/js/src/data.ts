@@ -11682,12 +11682,23 @@ export const data: Provider[] = [
         description:
           "The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
         match: {
-          equals: 'gpt-audio',
+          or: [
+            {
+              equals: 'gpt-audio',
+            },
+            {
+              equals: 'gpt-audio-2025-08-28',
+            },
+            {
+              equals: 'gpt-audio-1.5',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
+          input_audio_mtok: 32,
+          output_audio_mtok: 64,
         },
       },
       {
@@ -11696,12 +11707,23 @@ export const data: Provider[] = [
         description:
           'A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency.',
         match: {
-          equals: 'gpt-audio-mini',
+          or: [
+            {
+              equals: 'gpt-audio-mini',
+            },
+            {
+              equals: 'gpt-audio-mini-2025-10-06',
+            },
+            {
+              equals: 'gpt-audio-mini-2025-12-15',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.4,
+          input_audio_mtok: 10,
+          output_audio_mtok: 20,
         },
       },
       {
@@ -11717,6 +11739,61 @@ export const data: Provider[] = [
           input_mtok: 5,
           cache_read_mtok: 0.5,
           output_mtok: 30,
+        },
+      },
+      {
+        id: 'gpt-image-1-mini',
+        name: 'GPT Image 1 Mini',
+        description: 'A cost-efficient image generation model from OpenAI with text input pricing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-1-mini',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+        },
+      },
+      {
+        id: 'gpt-image-1.5',
+        name: 'GPT Image 1.5',
+        description: 'An improved image generation model from OpenAI supporting text input and output pricing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-1.5',
+            },
+            {
+              equals: 'gpt-image-1.5-2025-12-16',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-image-2',
+        name: 'GPT Image 2',
+        description: "OpenAI's latest image generation model with text input pricing.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2',
+            },
+            {
+              equals: 'gpt-image-2-2026-04-21',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
         },
       },
       {
@@ -11772,6 +11849,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-realtime-2025-08-28',
             },
+            {
+              equals: 'gpt-realtime-1.5',
+            },
           ],
         },
         price_comments: "Missing image token prices which we don't support yet",
@@ -11785,9 +11865,38 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-realtime-2',
+        match: {
+          or: [
+            {
+              equals: 'gpt-realtime-2',
+            },
+          ],
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.4,
+          output_mtok: 24,
+          input_audio_mtok: 32,
+          cache_audio_read_mtok: 0.4,
+          output_audio_mtok: 64,
+        },
+      },
+      {
         id: 'gpt-realtime-mini',
         match: {
-          equals: 'gpt-realtime-mini',
+          or: [
+            {
+              equals: 'gpt-realtime-mini',
+            },
+            {
+              equals: 'gpt-realtime-mini-2025-12-15',
+            },
+            {
+              equals: 'gpt-realtime-mini-2025-10-06',
+            },
+          ],
         },
         price_comments: "Missing image token prices which we don't support yet",
         prices: {

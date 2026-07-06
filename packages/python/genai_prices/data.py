@@ -6671,19 +6671,39 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-audio',
-                match=ClauseEquals(equals='gpt-audio'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-audio'),
+                        ClauseEquals(equals='gpt-audio-2025-08-28'),
+                        ClauseEquals(equals='gpt-audio-1.5'),
+                    ]
+                ),
                 name='GPT Audio',
                 description="The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
-                price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'),
+                    output_mtok=Decimal('10'),
+                    input_audio_mtok=Decimal('32'),
+                    output_audio_mtok=Decimal('64'),
+                ),
             ),
             ModelInfo(
                 id='gpt-audio-mini',
-                match=ClauseEquals(equals='gpt-audio-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-audio-mini'),
+                        ClauseEquals(equals='gpt-audio-mini-2025-10-06'),
+                        ClauseEquals(equals='gpt-audio-mini-2025-12-15'),
+                    ]
+                ),
                 name='GPT Audio Mini',
                 description='A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency.',
-                price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('2.4')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    output_mtok=Decimal('2.4'),
+                    input_audio_mtok=Decimal('10'),
+                    output_audio_mtok=Decimal('20'),
+                ),
             ),
             ModelInfo(
                 id='gpt-chat-latest',
@@ -6692,6 +6712,29 @@ providers: list[Provider] = [
                 description="GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model used in ChatGPT.",
                 price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+            ),
+            ModelInfo(
+                id='gpt-image-1-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-image-1-mini')]),
+                name='GPT Image 1 Mini',
+                description='A cost-efficient image generation model from OpenAI with text input pricing.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='gpt-image-1.5',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-image-1.5'), ClauseEquals(equals='gpt-image-1.5-2025-12-16')]
+                ),
+                name='GPT Image 1.5',
+                description='An improved image generation model from OpenAI supporting text input and output pricing.',
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gpt-image-2',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-image-2'), ClauseEquals(equals='gpt-image-2-2026-04-21')]),
+                name='GPT Image 2',
+                description="OpenAI's latest image generation model with text input pricing.",
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='gpt-oss-120b',
@@ -6722,7 +6765,11 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-realtime',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='gpt-realtime'), ClauseEquals(equals='gpt-realtime-2025-08-28')]
+                    or_=[
+                        ClauseEquals(equals='gpt-realtime'),
+                        ClauseEquals(equals='gpt-realtime-2025-08-28'),
+                        ClauseEquals(equals='gpt-realtime-1.5'),
+                    ]
                 ),
                 price_comments="Missing image token prices which we don't support yet",
                 prices=ModelPrice(
@@ -6735,8 +6782,27 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-realtime-2',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-realtime-2')]),
+                price_comments="Missing image token prices which we don't support yet",
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_read_mtok=Decimal('0.4'),
+                    output_mtok=Decimal('24'),
+                    input_audio_mtok=Decimal('32'),
+                    cache_audio_read_mtok=Decimal('0.4'),
+                    output_audio_mtok=Decimal('64'),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-realtime-mini',
-                match=ClauseEquals(equals='gpt-realtime-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-realtime-mini'),
+                        ClauseEquals(equals='gpt-realtime-mini-2025-12-15'),
+                        ClauseEquals(equals='gpt-realtime-mini-2025-10-06'),
+                    ]
+                ),
                 price_comments="Missing image token prices which we don't support yet",
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'),
