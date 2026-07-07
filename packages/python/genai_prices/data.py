@@ -470,7 +470,7 @@ providers: list[Provider] = [
     Provider(
         id='aws',
         name='AWS Bedrock',
-        api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
+        api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
         provider_match=ClauseOr(or_=[ClauseContains(contains='bedrock'), ClauseContains(contains='amazon')]),
         extractors=[
@@ -478,6 +478,10 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='inputTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cacheReadInputTokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cacheWriteInputTokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cacheReadInputTokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='cacheWriteInputTokens', dest='cache_write_tokens', required=False),
                     UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',

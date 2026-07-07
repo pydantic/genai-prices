@@ -422,5 +422,25 @@ describe('extractUsage', () => {
       expect(model).toBeNull()
       expect(usage).toEqual({ input_tokens: 406, output_tokens: 53 })
     })
+
+    it('should extract Converse usage with cache write tokens (real observed body)', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 0, cacheWriteInputTokens: 11207, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 0, cache_write_tokens: 11207, input_tokens: 11216, output_tokens: 5 })
+    })
+
+    it('should extract Converse usage with cache read tokens', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 11207, cacheWriteInputTokens: 0, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 11207, cache_write_tokens: 0, input_tokens: 11216, output_tokens: 5 })
+    })
   })
 })

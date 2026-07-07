@@ -741,7 +741,7 @@ export const data: Provider[] = [
     id: 'aws',
     name: 'AWS Bedrock',
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
-    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
+    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
     provider_match: {
       or: [
         {
@@ -762,6 +762,26 @@ export const data: Provider[] = [
             path: 'inputTokens',
             dest: 'input_tokens',
             required: true,
+          },
+          {
+            path: 'cacheReadInputTokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheWriteInputTokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheReadInputTokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheWriteInputTokens',
+            dest: 'cache_write_tokens',
+            required: false,
           },
           {
             path: 'outputTokens',
