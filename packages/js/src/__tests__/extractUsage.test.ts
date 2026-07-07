@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { extractUsage } from '../index'
+import { extractUsage, findProvider } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 
@@ -199,6 +199,16 @@ describe('extractUsage', () => {
         model: 'server-side-routed-model',
         usage: { cache_read_tokens: 2, input_tokens: 4, output_tokens: 197 },
       })
+    })
+
+    it('should resolve routed and generic providers without shadowing', () => {
+      // JS matches api_pattern with unanchored RegExp.test, so pin resolution precedence here too.
+      expect(findProvider({ providerId: 'huggingface' })?.id).toBe('huggingface')
+      expect(findProvider({ providerId: 'huggingface_together' })?.id).toBe('huggingface_together')
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/together' })?.id).toBe(
+        'huggingface_together',
+      )
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/v1' })?.id).toBe('huggingface')
     })
   })
 
