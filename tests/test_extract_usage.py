@@ -158,6 +158,25 @@ def test_mistral():
     )
 
 
+def test_groq_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'groq')
+    response_data = {
+        'model': 'llama-3.3-70b-versatile',
+        'usage': {
+            'prompt_tokens': 19038,
+            'completion_tokens': 135,
+            'prompt_tokens_details': {'cached_tokens': 18944},
+            'completion_tokens_details': {'reasoning_tokens': 94},
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == 'llama-3.3-70b-versatile'
+    assert usage == Usage(input_tokens=19038, output_tokens=135, cache_read_tokens=18944)
+
+    extracted_usage = extract_usage(response_data, provider_id='groq')
+    assert extracted_usage.usage == Usage(input_tokens=19038, output_tokens=135, cache_read_tokens=18944)
+
+
 def test_openrouter_chat_cache_write_tokens():
     provider = next(provider for provider in providers if provider.id == 'openrouter')
     assert provider.name == 'OpenRouter'
