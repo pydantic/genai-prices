@@ -49,7 +49,7 @@ providers: list[Provider] = [
                 name='Claude 2.0 / 2.1',
                 description="Claude 2 is Anthropic's previous generation model, offering reliable performance for various tasks. This includes Claude 2.0 and Claude 2.1.\n",
                 context_window=200000,
-                prices=ModelPrice(input_mtok=Decimal('8.0'), output_mtok=Decimal('24.0')),
+                prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
             ),
             ModelInfo(
                 id='claude-3-5-haiku-latest',
@@ -64,9 +64,9 @@ providers: list[Provider] = [
                 context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
-                    cache_write_mtok=Decimal('1.0'),
+                    cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
-                    output_mtok=Decimal('4.0'),
+                    output_mtok=Decimal('4'),
                 ),
             ),
             ModelInfo(
@@ -81,10 +81,10 @@ providers: list[Provider] = [
                 description='Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -101,10 +101,10 @@ providers: list[Provider] = [
                 description='Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities.',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -127,10 +127,10 @@ providers: list[Provider] = [
                 description="Claude 3 Opus was Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.",
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -140,10 +140,10 @@ providers: list[Provider] = [
                 description='Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -154,10 +154,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10.0'),
+                    input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1.0'),
-                    output_mtok=Decimal('50.0'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
@@ -174,10 +174,10 @@ providers: list[Provider] = [
                 description='Fastest and most intelligent Haiku model',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.0'),
+                    input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('5.0'),
+                    output_mtok=Decimal('5'),
                 ),
             ),
             ModelInfo(
@@ -194,10 +194,10 @@ providers: list[Provider] = [
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -212,10 +212,10 @@ providers: list[Provider] = [
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -232,10 +232,10 @@ providers: list[Provider] = [
                 description='Premium model combining maximum intelligence with practical performance',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -254,27 +254,25 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('5.0'), tiers=[Tier(start=200000, price=Decimal('10.0'))]
-                            ),
+                            input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
                             cache_write_mtok=TieredPrices(
                                 base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
                             ),
                             cache_read_mtok=TieredPrices(
-                                base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1.0'))]
+                                base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('25.0'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
+                                base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('5.0'),
+                            input_mtok=Decimal('5'),
                             cache_write_mtok=Decimal('6.25'),
                             cache_read_mtok=Decimal('0.5'),
-                            output_mtok=Decimal('25.0'),
+                            output_mtok=Decimal('25'),
                         ),
                     ),
                 ],
@@ -294,10 +292,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -315,10 +313,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -336,10 +334,10 @@ providers: list[Provider] = [
                 description='Optimal balance of intelligence, cost, and speed',
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -354,12 +352,12 @@ providers: list[Provider] = [
                 description='Our best combination of speed and intelligence',
                 context_window=1000000,
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('3.0'), tiers=[Tier(start=200000, price=Decimal('6.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
                         base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
-                    output_mtok=TieredPrices(base=Decimal('15.0'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -376,9 +374,7 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('3.0'), tiers=[Tier(start=200000, price=Decimal('6.0'))]
-                            ),
+                            input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                             cache_write_mtok=TieredPrices(
                                 base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
                             ),
@@ -386,17 +382,17 @@ providers: list[Provider] = [
                                 base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]
                             ),
                             output_mtok=TieredPrices(
-                                base=Decimal('15.0'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
+                                base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 3, 13)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('3.0'),
+                            input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15.0'),
+                            output_mtok=Decimal('15'),
                         ),
                     ),
                 ],
@@ -418,19 +414,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('2.0'),
+                            input_mtok=Decimal('2'),
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10.0'),
+                            output_mtok=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('3.0'),
+                            input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15.0'),
+                            output_mtok=Decimal('15'),
                         ),
                     ),
                 ],
@@ -439,7 +435,7 @@ providers: list[Provider] = [
                 id='claude-v1',
                 match=ClauseEquals(equals='claude-v1'),
                 description='Retired, here to match price sources',
-                prices=ModelPrice(input_mtok=Decimal('8.0'), output_mtok=Decimal('24.0')),
+                prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
             ),
         ],
     ),
@@ -515,8 +511,8 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.33'),
                     output_mtok=Decimal('2.75'),
-                    input_audio_mtok=Decimal('3.0'),
-                    output_audio_mtok=Decimal('12.0'),
+                    input_audio_mtok=Decimal('3'),
+                    output_audio_mtok=Decimal('12'),
                 ),
             ),
             ModelInfo(
@@ -601,90 +597,90 @@ providers: list[Provider] = [
                 id='global.anthropic.claude-fable-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-fable-5'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('10.0'),
+                    input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1.0'),
-                    output_mtok=Decimal('50.0'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-haiku-4-5-20251001-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-haiku-4-5-20251001'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.0'),
+                    input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('5.0'),
+                    output_mtok=Decimal('5'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-5-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-5'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-6'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-7-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-7'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-opus-4-8-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-8'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-20250514-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-20250514'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-5-20250929-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-5-20250929'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
                 id='global.anthropic.claude-sonnet-4-6-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-sonnet-4-6'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -694,19 +690,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('2.0'),
+                            input_mtok=Decimal('2'),
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10.0'),
+                            output_mtok=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('3.0'),
+                            input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15.0'),
+                            output_mtok=Decimal('15'),
                         ),
                     ),
                 ],
@@ -799,7 +795,7 @@ providers: list[Provider] = [
                 id='mistral.devstral-2-123b',
                 match=ClauseContains(contains='mistral.devstral-2-123b'),
                 name='Devstral 2 123B',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistral.magistral-small-2509',
@@ -835,7 +831,7 @@ providers: list[Provider] = [
                 id='mistral.mistral-large-2402-v1:0',
                 match=ClauseContains(contains='mistral.mistral-large-2402'),
                 name='Mistral Large (24.02)',
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('12.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='mistral.mistral-large-3-675b-instruct',
@@ -847,7 +843,7 @@ providers: list[Provider] = [
                 id='mistral.mistral-small-2402-v1:0',
                 match=ClauseContains(contains='mistral.mistral-small-2402'),
                 name='Mistral Small (24.02)',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='mistral.mixtral-8x7b-instruct-v0:1',
@@ -859,7 +855,7 @@ providers: list[Provider] = [
                 id='mistral.pixtral-large-2502-v1:0',
                 match=ClauseContains(contains='mistral.pixtral-large-2502'),
                 name='Pixtral Large (25.02)',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='mistral.voxtral-mini-3b-2507',
@@ -904,7 +900,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='openai.gpt-5.5'),
                 name='GPT-5.5',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.5'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('33.0')
+                    input_mtok=Decimal('5.5'), cache_read_mtok=Decimal('0.55'), output_mtok=Decimal('33')
                 ),
             ),
             ModelInfo(
@@ -963,39 +959,39 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='claude-3-5-haiku-20241022'),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
-                    cache_write_mtok=Decimal('1.0'),
+                    cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
-                    output_mtok=Decimal('4.0'),
+                    output_mtok=Decimal('4'),
                 ),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20240620-v1:0',
                 match=ClauseContains(contains='claude-3-5-sonnet-20240620'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-5-sonnet-20241022-v2:0',
                 match=ClauseContains(contains='claude-3-5-sonnet-20241022'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-7-sonnet-20250219-v1:0',
                 match=ClauseContains(contains='claude-3-7-sonnet-20250219'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -1006,16 +1002,16 @@ providers: list[Provider] = [
             ModelInfo(
                 id='regional.anthropic.claude-3-opus-20240229-v1:0',
                 match=ClauseContains(contains='claude-3-opus-20240229'),
-                prices=ModelPrice(input_mtok=Decimal('15.0'), output_mtok=Decimal('75.0')),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
             ),
             ModelInfo(
                 id='regional.anthropic.claude-3-sonnet-20240229-v1:0',
                 match=ClauseContains(contains='claude-3-sonnet-20240229'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -1031,10 +1027,10 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('11.0'),
+                    input_mtok=Decimal('11'),
                     cache_write_mtok=Decimal('13.75'),
                     cache_read_mtok=Decimal('1.1'),
-                    output_mtok=Decimal('55.0'),
+                    output_mtok=Decimal('55'),
                 ),
             ),
             ModelInfo(
@@ -1073,10 +1069,10 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -1094,10 +1090,10 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -1197,10 +1193,10 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -1266,7 +1262,7 @@ providers: list[Provider] = [
                             input_mtok=Decimal('2.2'),
                             cache_write_mtok=Decimal('2.75'),
                             cache_read_mtok=Decimal('0.22'),
-                            output_mtok=Decimal('11.0'),
+                            output_mtok=Decimal('11'),
                         )
                     ),
                     ConditionalPrice(
@@ -1369,7 +1365,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='text-curie-001'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='davinci',
@@ -1381,7 +1377,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='text-davinci-002'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mai-ds-r1:free',
@@ -1400,9 +1396,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='o1-preview-2024-09-12'),
                     ]
                 ),
-                prices=ModelPrice(
-                    input_mtok=Decimal('15.0'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='o1-mini',
@@ -1414,9 +1408,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='o3-2025-04-16',
                 match=ClauseOr(or_=[ClauseEquals(equals='o3'), ClauseEquals(equals='o3-2025-04-16')]),
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='o3-mini',
@@ -1437,7 +1429,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='phi-3-medium-128k-instruct'),
                 name='Phi-3 Medium 128K Instruct',
                 description='Phi-3 128K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='phi-3-mini-128k-instruct',
@@ -1648,14 +1640,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='command'),
                 name='Command',
                 description='Command is an instruction-following conversational model that performs language tasks with high quality, more reliably and with a longer context than our base generative models.',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='command-a',
                 match=ClauseStartsWith(starts_with='command-a'),
                 name='Command A',
                 description='Command A is an open-weights 111B parameter model with a 256k context window focused on delivering great performance across agentic, multilingual, and coding use cases.\nCompared to other leading proprietary and open-weights models Command A delivers maximum performance with minimum hardware costs, excelling on business-critical agentic and multilingual tasks.',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='command-r',
@@ -1671,7 +1663,7 @@ providers: list[Provider] = [
                 ),
                 name='Command R+',
                 description="Command R+ is a new, 104B-parameter LLM from Cohere. It's useful for roleplay, general consumer usecases, and Retrieval Augmented Generation (RAG).",
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='command-r7b',
@@ -1884,7 +1876,7 @@ providers: list[Provider] = [
                 id='Qwen/Qwen3.5-35B-A3B-FP8',
                 match=ClauseEquals(equals='Qwen/Qwen3.5-35B-A3B-FP8'),
                 name='Qwen3.5 35B A3B',
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3.5-397B-A17B',
@@ -1902,7 +1894,7 @@ providers: list[Provider] = [
                 id='Qwen/Qwen3.6-35B-A3B-FP8',
                 match=ClauseEquals(equals='Qwen/Qwen3.6-35B-A3B-FP8'),
                 name='Qwen3.6 35B A3B',
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V4-Flash',
@@ -1926,13 +1918,13 @@ providers: list[Provider] = [
                 id='mistralai/Devstral-2-123B-Instruct-2512',
                 match=ClauseEquals(equals='mistralai/Devstral-2-123B-Instruct-2512'),
                 name='Devstral 2 123B Instruct 2512',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='moonshotai/Kimi-K2.6',
                 match=ClauseEquals(equals='moonshotai/Kimi-K2.6'),
                 name='Kimi K2.6',
-                prices=ModelPrice(input_mtok=Decimal('0.95'), output_mtok=Decimal('4.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.95'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4',
@@ -1984,7 +1976,7 @@ providers: list[Provider] = [
                 name='DeepSeek R1 0528',
                 description='The updated DeepSeek-R1-0528 model delivers major improvements in reasoning, inference, and accuracy through enhanced post-training optimization and greater computational resources. It now performs at a level approaching top-tier models like O3 and Gemini 2.5 Pro, with notable gains in complex tasks such as math and programming.',
                 context_window=160000,
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='deepseek-v3-0324',
@@ -2081,16 +2073,14 @@ providers: list[Provider] = [
                 name='Kimi K2.5',
                 description="Moonshot AI's flagship agentic model. Unifies vision and text, thinking and non-thinking modes, and single-agent and multi-agent execution into one model. 1T parameter MoE model.",
                 context_window=262144,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='kimi-k2p6',
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p6'),
                 name='Kimi K2.6',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4.0')
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
                 ),
             ),
             ModelInfo(
@@ -2100,7 +2090,7 @@ providers: list[Provider] = [
                 description='Kimi K2.7 Code is a coding-focused agentic model built upon Kimi K2.6, delivering substantial improvements on real-world long-horizon coding tasks while reducing thinking tokens by roughly 30% compared to its predecessor.',
                 context_window=262144,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4.0')
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
                 ),
             ),
             ModelInfo(
@@ -2177,9 +2167,7 @@ providers: list[Provider] = [
                 id='qwen3p6-plus',
                 match=ClauseEquals(equals='accounts/fireworks/models/qwen3p6-plus'),
                 name='Qwen3.6 Plus',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='qwen3p7-plus',
@@ -2445,9 +2433,9 @@ providers: list[Provider] = [
                 context_window=200000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
-                    cache_write_mtok=Decimal('1.0'),
+                    cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
-                    output_mtok=Decimal('4.0'),
+                    output_mtok=Decimal('4'),
                 ),
             ),
             ModelInfo(
@@ -2455,10 +2443,10 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='claude-3-5-sonnet'),
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -2466,10 +2454,10 @@ providers: list[Provider] = [
                 match=ClauseContains(contains='claude-3-7-sonnet'),
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -2487,10 +2475,10 @@ providers: list[Provider] = [
                 id='claude-3-opus',
                 match=ClauseContains(contains='claude-3-opus'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -2506,10 +2494,10 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -2519,10 +2507,10 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -2531,10 +2519,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10.0'),
+                    input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1.0'),
-                    output_mtok=Decimal('50.0'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
@@ -2549,12 +2537,12 @@ providers: list[Provider] = [
                 ),
                 context_window=200000,
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('5.0'), tiers=[Tier(start=200000, price=Decimal('10.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('10'))]),
                     cache_write_mtok=TieredPrices(
                         base=Decimal('6.25'), tiers=[Tier(start=200000, price=Decimal('12.5'))]
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1.0'))]),
-                    output_mtok=TieredPrices(base=Decimal('25.0'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]),
                 ),
             ),
             ModelInfo(
@@ -2570,10 +2558,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -2589,10 +2577,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -2626,7 +2614,7 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=128000, price=Decimal('2.5'))]),
-                    output_mtok=TieredPrices(base=Decimal('5.0'), tiers=[Tier(start=128000, price=Decimal('10.0'))]),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=128000, price=Decimal('10'))]),
                 ),
             ),
             ModelInfo(
@@ -2674,7 +2662,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
                     output_mtok=Decimal('2.5'),
-                    input_audio_mtok=Decimal('1.0'),
+                    input_audio_mtok=Decimal('1'),
                     cache_audio_read_mtok=Decimal('0.1'),
                 ),
             ),
@@ -2690,7 +2678,7 @@ providers: list[Provider] = [
                 description="Google's specialized image generation model optimized for fast, high-quality image generation. Outputs images at 1024x1024 resolution, with each image consuming 1290 output tokens.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.',
-                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('30.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-lite',
@@ -2739,7 +2727,7 @@ providers: list[Provider] = [
                     cache_read_mtok=TieredPrices(
                         base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
                     ),
-                    output_mtok=TieredPrices(base=Decimal('10.0'), tiers=[Tier(start=200000, price=Decimal('15.0'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
                 ),
             ),
             ModelInfo(
@@ -2757,8 +2745,8 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'),
                     cache_read_mtok=Decimal('0.05'),
-                    output_mtok=Decimal('3.0'),
-                    input_audio_mtok=Decimal('1.0'),
+                    output_mtok=Decimal('3'),
+                    input_audio_mtok=Decimal('1'),
                     cache_audio_read_mtok=Decimal('0.1'),
                 ),
             ),
@@ -2774,9 +2762,7 @@ providers: list[Provider] = [
                 description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), output_mtok=Decimal('120.0'), output_text_mtok=Decimal('12.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('120'), output_text_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',
@@ -2789,9 +2775,9 @@ providers: list[Provider] = [
                 name='Gemini 3 Pro Preview',
                 description='The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding model yet.',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2.0'), tiers=[Tier(start=200000, price=Decimal('4.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('12.0'), tiers=[Tier(start=200000, price=Decimal('18.0'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
                 ),
             ),
             ModelInfo(
@@ -2801,7 +2787,7 @@ providers: list[Provider] = [
                 description="Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
-                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='gemini-3.1-flash-lite',
@@ -2824,9 +2810,9 @@ providers: list[Provider] = [
                 name='Gemini 3.1 Pro Preview',
                 description='The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2.0'), tiers=[Tier(start=200000, price=Decimal('4.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
-                    output_mtok=TieredPrices(base=Decimal('12.0'), tiers=[Tier(start=200000, price=Decimal('18.0'))]),
+                    output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=200000, price=Decimal('18'))]),
                 ),
             ),
             ModelInfo(
@@ -2836,9 +2822,7 @@ providers: list[Provider] = [
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9')),
             ),
             ModelInfo(
                 id='gemini-embedding-001',
@@ -2884,9 +2868,9 @@ providers: list[Provider] = [
                 ),
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('2.0'),
-                    input_audio_mtok=Decimal('3.0'),
-                    output_audio_mtok=Decimal('12.0'),
+                    output_mtok=Decimal('2'),
+                    input_audio_mtok=Decimal('3'),
+                    output_audio_mtok=Decimal('12'),
                 ),
             ),
             ModelInfo(
@@ -2910,7 +2894,7 @@ providers: list[Provider] = [
                     cache_read_mtok=TieredPrices(
                         base=Decimal('0.3125'), tiers=[Tier(start=128000, price=Decimal('0.625'))]
                     ),
-                    output_mtok=TieredPrices(base=Decimal('5.0'), tiers=[Tier(start=128000, price=Decimal('10.0'))]),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=128000, price=Decimal('10'))]),
                 ),
             ),
             ModelInfo(
@@ -3126,9 +3110,7 @@ providers: list[Provider] = [
                 ),
                 name='Kimi K2 1T 128k',
                 context_window=131072,
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('3.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
@@ -3401,7 +3383,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3-235B-A22B-Instruct-2507',
                 context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3-Coder-480B-A35B-Instruct',
@@ -3413,7 +3395,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3-Coder-480B-A35B-Instruct',
                 context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3-Next-80B-A3B-Instruct',
@@ -3449,7 +3431,7 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek-R1',
                 context_window=163840,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-R1-0528',
@@ -3461,7 +3443,7 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek-R1-0528',
                 context_window=163840,
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V3-0324',
@@ -3544,7 +3526,7 @@ providers: list[Provider] = [
                 ),
                 name='Hermes-4-405B',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='NousResearch/Hermes-4-70B',
@@ -3938,7 +3920,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3-235B-A22B-Thinking-2507',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3-30B-A3B',
@@ -4050,7 +4032,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3-VL-30B-A3B-Thinking',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3-VL-8B-Instruct',
@@ -4092,7 +4074,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3.5-35B-A3B',
                 context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3.5-397B-A17B',
@@ -4288,7 +4270,7 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek-V3.1',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.27'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.27'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V3.2',
@@ -4429,7 +4411,7 @@ providers: list[Provider] = [
                 ),
                 name='Kimi-K2.5',
                 context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
@@ -4547,7 +4529,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='zai-org/glm-5'), ClauseEquals(equals='zai-org/glm-5-fast')]),
                 name='GLM-5',
                 context_window=202800,
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.2')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3.2')),
             ),
         ],
     ),
@@ -5059,7 +5041,7 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek-R1-0528',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('7.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('7')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
@@ -5083,7 +5065,7 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek-V3-0324',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('4.5')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('4.5')),
             ),
             ModelInfo(
                 id='meta-llama/Llama-3.1-8B-Instruct',
@@ -5207,7 +5189,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3-Coder-480B-A35B-Instruct',
                 context_window=262144,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='Qwen/Qwen3-Coder-Next-FP8',
@@ -5304,7 +5286,7 @@ providers: list[Provider] = [
                 ),
                 name='DeepSeek-R1',
                 context_window=163840,
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('7.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('7')),
             ),
             ModelInfo(
                 id='deepseek-ai/DeepSeek-V3',
@@ -5423,14 +5405,14 @@ providers: list[Provider] = [
                 ),
                 name='GLM-4.7-FP8',
                 context_window=202752,
-                prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='zai-org/GLM-5',
                 match=ClauseOr(or_=[ClauseEquals(equals='zai-org/glm-5'), ClauseEquals(equals='zai-org/glm-5-fast')]),
                 name='GLM-5',
                 context_window=202752,
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.2')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3.2')),
             ),
         ],
     ),
@@ -5655,9 +5637,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='devstral-2512'),
                 name='Devstral 2 2512',
                 description='Devstral 2 is a state-of-the-art open-source model by Mistral AI specializing in agentic coding. It is a 123B-parameter dense transformer model supporting a 256K context window.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='devstral-small',
@@ -5678,7 +5658,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseStartsWith(starts_with='magistral-medium')]),
                 name='Magistral Medium',
                 description="Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing and better accuracy than with non-reasoning LLMs. From legal research and financial forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency and precision are critical.",
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='magistral-small',
@@ -5717,7 +5697,7 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='ministral-8b'),
                 name='Ministral 8B 24.10',
                 description='Ministral 8B is an 8B parameter model featuring a unique interleaved sliding-window attention pattern for faster, memory-efficient inference. Designed for edge use cases, it supports up to 128k context length and excels in knowledge and reasoning tasks. It outperforms peers in the sub-10B category, making it perfect for low-latency, privacy-first applications.',
-                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='mistral-7b',
@@ -5742,7 +5722,7 @@ providers: list[Provider] = [
                 ),
                 name='Mistral Large',
                 description="This is Mistral AI's flagship model, Mistral Large 2 (version `mistral-large-2407`). It's a proprietary weights-available model and excels at reasoning, code, JSON, chat, and more. Read the launch announcement here.",
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='mistral-large-2512',
@@ -5758,7 +5738,7 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='mistral-medium'),
                 name='Mistral Medium 3',
                 description='Mistral Medium 3 is a high-performance enterprise-grade language model designed to deliver frontier-level capabilities at significantly reduced operational cost. It balances state-of-the-art reasoning and multimodal performance with 8× lower cost compared to traditional large models, making it suitable for scalable deployments across professional and industrial use cases.',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistral-nemo',
@@ -5865,7 +5845,7 @@ providers: list[Provider] = [
                 ),
                 name='Pixtral Large 2411',
                 description='Pixtral Large is a 124B parameter, open-weight, multimodal model built on top of Mistral Large 2. The model is able to understand documents, charts and natural images.',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='voxtral-small-24b-2507',
@@ -5944,7 +5924,7 @@ providers: list[Provider] = [
                 description='High-speed version of kimi-k2-thinking, suitable for scenarios requiring both deep reasoning and extremely fast responses.',
                 context_window=262144,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8.0')
+                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
                 ),
             ),
             ModelInfo(
@@ -5954,7 +5934,7 @@ providers: list[Provider] = [
                 description='High-speed version of kimi-k2, always aligned with the latest kimi-k2. Same model parameters as kimi-k2, output speed up to 60 tokens/sec (max 100 tokens/sec).',
                 context_window=262144,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8.0')
+                    input_mtok=Decimal('1.15'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('8')
                 ),
             ),
             ModelInfo(
@@ -5963,9 +5943,7 @@ providers: list[Provider] = [
                 name='Kimi K2.5',
                 description="Kimi's most versatile model featuring a native multimodal architecture that supports both visual and text input, thinking and non-thinking modes, and dialogue and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='kimi-k2.6',
@@ -5974,7 +5952,7 @@ providers: list[Provider] = [
                 description="Kimi's most capable model with enhanced long-context coding stability, improved instruction compliance and self-correction capabilities. Native multimodal architecture supporting text, image, and video input, thinking and non-thinking modes, and agent tasks. Supports automatic context caching, ToolCalls, JSON Mode, Partial Mode, and internet search.",
                 context_window=262144,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4.0')
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
                 ),
             ),
             ModelInfo(
@@ -5985,7 +5963,7 @@ providers: list[Provider] = [
                 context_window=262144,
                 price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4.0')
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.19'), output_mtok=Decimal('4')
                 ),
             ),
             ModelInfo(
@@ -5998,7 +5976,7 @@ providers: list[Provider] = [
                 ),
                 name='Moonshot V1 128K',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='moonshot-v1-32k',
@@ -6007,7 +5985,7 @@ providers: list[Provider] = [
                 ),
                 name='Moonshot V1 32K',
                 context_window=32768,
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='moonshot-v1-8k',
@@ -6016,7 +5994,7 @@ providers: list[Provider] = [
                 ),
                 name='Moonshot V1 8K',
                 context_window=8192,
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
             ),
         ],
     ),
@@ -6039,7 +6017,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='deepseek/deepseek-r1',
                 match=ClauseEquals(equals='deepseek/deepseek-r1'),
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('4.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='deepseek/deepseek-r1-distill-llama-70b',
@@ -6269,7 +6247,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='chatgpt-4o-latest'),
                 name='ChatGPT-4o',
                 description='OpenAI ChatGPT 4o is continually updated by OpenAI to point to the current version of GPT-4o used by ChatGPT. It therefore differs slightly from the API version of GPT-4o in that it has additional RLHF. It is intended for research and evaluation.',
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='codex-mini',
@@ -6277,36 +6255,36 @@ providers: list[Provider] = [
                 name='Codex Mini',
                 description='codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we recommend starting with gpt-4.1.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6.0')
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6')
                 ),
             ),
             ModelInfo(
                 id='computer-use',
                 match=ClauseStartsWith(starts_with='computer-use'),
                 name='Computer use',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('12.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='curie',
                 match=ClauseOr(or_=[ClauseEquals(equals='curie'), ClauseEquals(equals='text-curie-001')]),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='davinci',
                 match=ClauseOr(or_=[ClauseEquals(equals='davinci'), ClauseEquals(equals='text-davinci-001')]),
-                prices=ModelPrice(input_mtok=Decimal('20.0'), output_mtok=Decimal('20.0')),
+                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='ft:gpt-3.5-turbo-',
                 match=ClauseStartsWith(starts_with='ft:gpt-3.5-turbo'),
                 description='GPT-3.5 Turbo fine tuned.',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='ft:gpt-4o',
                 match=ClauseStartsWith(starts_with='ft:gpt-4o-2024-'),
                 description='GPT-4o fine tuned.',
-                prices=ModelPrice(input_mtok=Decimal('3.75'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='ft:gpt-4o-mini',
@@ -6317,7 +6295,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-3.5-0301',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-3.5-turbo-0301'), ClauseEquals(equals='gpt-3.5-0301')]),
-                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo',
@@ -6337,13 +6315,13 @@ providers: list[Provider] = [
                 id='gpt-3.5-turbo-0613',
                 match=ClauseEquals(equals='gpt-3.5-turbo-0613'),
                 context_window=16385,
-                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-1106',
                 match=ClauseEquals(equals='gpt-3.5-turbo-1106'),
                 context_window=16385,
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-16k',
@@ -6358,7 +6336,7 @@ providers: list[Provider] = [
                 name='GPT-3.5 Turbo 16k',
                 description='This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text in a single request at a higher cost. Training data: up to Sep 2021.',
                 context_window=16385,
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('4.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-instruct',
@@ -6371,7 +6349,7 @@ providers: list[Provider] = [
                 name='gpt 3.5 turbo instruct',
                 description='GPT-3.5 Turbo offers a balance between cost and performance.',
                 context_window=16385,
-                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-4',
@@ -6386,7 +6364,7 @@ providers: list[Provider] = [
                 name='gpt 4',
                 description='GPT-4 is the latest and most advanced model in the GPT series, demonstrating sophisticated capabilities in complex reasoning, theory of mind, and narrative understanding.',
                 context_window=8192,
-                prices=ModelPrice(input_mtok=Decimal('30.0'), output_mtok=Decimal('60.0')),
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='gpt-4-32k',
@@ -6401,7 +6379,7 @@ providers: list[Provider] = [
                 description='GPT-4 is the latest and most advanced model in the GPT series, demonstrating sophisticated capabilities in complex reasoning, theory of mind, and narrative understanding.',
                 context_window=32000,
                 price_comments='see https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
-                prices=ModelPrice(input_mtok=Decimal('60.0'), output_mtok=Decimal('120.0')),
+                prices=ModelPrice(input_mtok=Decimal('60'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
                 id='gpt-4-turbo',
@@ -6418,7 +6396,7 @@ providers: list[Provider] = [
                 name='gpt 4 turbo',
                 description='GPT-4 Turbo offers a balance between cost and performance.',
                 context_window=128000,
-                prices=ModelPrice(input_mtok=Decimal('10.0'), output_mtok=Decimal('30.0')),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gpt-4-vision-preview',
@@ -6428,7 +6406,7 @@ providers: list[Provider] = [
                 name='gpt 4 vision',
                 description='GPT-4 Vision is a model that offers a balance between cost and performance.',
                 context_window=128000,
-                prices=ModelPrice(input_mtok=Decimal('10.0'), output_mtok=Decimal('30.0')),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gpt-4.1',
@@ -6436,9 +6414,7 @@ providers: list[Provider] = [
                 name='gpt 4.1',
                 description="GPT-4.1 is OpenAI's latest flagship model, offering major improvements in coding, instruction following, and long context understanding with up to 1 million tokens of context.",
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='gpt-4.1-mini',
@@ -6470,7 +6446,7 @@ providers: list[Provider] = [
                 name='GPT-4.5 (Preview)',
                 description="GPT-4.5 (Preview) is a research preview of OpenAI's latest language model, designed to advance capabilities in reasoning, creativity, and multi-turn conversation. It builds on previous iterations with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.",
                 prices=ModelPrice(
-                    input_mtok=Decimal('75.0'), cache_read_mtok=Decimal('37.5'), output_mtok=Decimal('150.0')
+                    input_mtok=Decimal('75'), cache_read_mtok=Decimal('37.5'), output_mtok=Decimal('150')
                 ),
             ),
             ModelInfo(
@@ -6487,7 +6463,7 @@ providers: list[Provider] = [
                 description='GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning, creativity, and technical tasks while maintaining consistent output quality.',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10.0')
+                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')
                 ),
             ),
             ModelInfo(
@@ -6497,7 +6473,7 @@ providers: list[Provider] = [
                 description='Audio model for gpt-4o',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0'), input_audio_mtok=Decimal('2.5')
+                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')
                 ),
             ),
             ModelInfo(
@@ -6539,35 +6515,33 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.6'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('2.4'),
-                    input_audio_mtok=Decimal('10.0'),
+                    input_audio_mtok=Decimal('10'),
                     cache_audio_read_mtok=Decimal('0.3'),
-                    output_audio_mtok=Decimal('20.0'),
+                    output_audio_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
                 id='gpt-4o-mini-transcribe',
                 match=ClauseEquals(equals='gpt-4o-mini-transcribe'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), output_mtok=Decimal('5.0'), input_audio_mtok=Decimal('3.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5'), input_audio_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='gpt-4o-mini-tts',
                 match=ClauseEquals(equals='gpt-4o-mini-tts'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.6'), output_mtok=Decimal('12.0'), output_audio_mtok=Decimal('12.0')
+                    input_mtok=Decimal('0.6'), output_mtok=Decimal('12'), output_audio_mtok=Decimal('12')
                 ),
             ),
             ModelInfo(
                 id='gpt-4o-realtime-preview',
                 match=ClauseStartsWith(starts_with='gpt-4o-realtime'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_read_mtok=Decimal('2.5'),
-                    output_mtok=Decimal('20.0'),
-                    input_audio_mtok=Decimal('40.0'),
+                    output_mtok=Decimal('20'),
+                    input_audio_mtok=Decimal('40'),
                     cache_audio_read_mtok=Decimal('2.5'),
-                    output_audio_mtok=Decimal('80.0'),
+                    output_audio_mtok=Decimal('80'),
                 ),
             ),
             ModelInfo(
@@ -6580,23 +6554,21 @@ providers: list[Provider] = [
                 ),
                 name='GPT-4o Search Preview',
                 description='GPT-4o Search Previewis a specialized model for web search in Chat Completions. It is trained to understand and execute web search queries.',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gpt-4o-transcribe',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-4o-transcribe'), ClauseEquals(equals='gpt-4o-transcribe-diarize')]
                 ),
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0'), input_audio_mtok=Decimal('6.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='gpt-4o:extended',
                 match=ClauseEquals(equals='gpt-4o:extended'),
                 name='GPT-4o (extended)',
                 description='GPT-4o ("o" for "omni") is OpenAI\'s latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of GPT-4 Turbo while being twice as fast and 50% more cost-effective. GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.',
-                prices=ModelPrice(input_mtok=Decimal('6.0'), output_mtok=Decimal('18.0')),
+                prices=ModelPrice(input_mtok=Decimal('6'), output_mtok=Decimal('18')),
             ),
             ModelInfo(
                 id='gpt-5',
@@ -6613,24 +6585,20 @@ providers: list[Provider] = [
                 description="GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10.0')
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
                 ),
             ),
             ModelInfo(
                 id='gpt-5-image',
                 match=ClauseEquals(equals='gpt-5-image'),
                 price_comments='Seen on OpenRouter before OpenAI',
-                prices=ModelPrice(
-                    input_mtok=Decimal('10.0'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gpt-5-image-mini',
                 match=ClauseEquals(equals='gpt-5-image-mini'),
                 price_comments='Seen on OpenRouter before OpenAI',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-5-mini',
@@ -6639,7 +6607,7 @@ providers: list[Provider] = [
                 description="GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and precise prompts.",
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2.0')
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
                 ),
             ),
             ModelInfo(
@@ -6656,7 +6624,7 @@ providers: list[Provider] = [
                 id='gpt-5-pro',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-5-pro'), ClauseEquals(equals='gpt-5-pro-2025-10-06')]),
                 context_window=400000,
-                prices=ModelPrice(input_mtok=Decimal('15.0'), output_mtok=Decimal('120.0')),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
                 id='gpt-5.1',
@@ -6680,7 +6648,7 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10.0')
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
                 ),
             ),
             ModelInfo(
@@ -6696,7 +6664,7 @@ providers: list[Provider] = [
                 name='GPT-5.1 Codex Mini',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2.0')
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
                 ),
             ),
             ModelInfo(
@@ -6719,7 +6687,7 @@ providers: list[Provider] = [
                 description='The best model for coding and agentic tasks across industries',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14.0')
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
             ),
             ModelInfo(
@@ -6733,7 +6701,7 @@ providers: list[Provider] = [
                 ),
                 description='Version of GPT-5.2 that produces smarter and more precise responses.',
                 context_window=400000,
-                prices=ModelPrice(input_mtok=Decimal('21.0'), output_mtok=Decimal('168.0')),
+                prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
             ),
             ModelInfo(
                 id='gpt-5.3',
@@ -6751,7 +6719,7 @@ providers: list[Provider] = [
                 description='GPT-5.3 Instant model used in ChatGPT',
                 context_window=128000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14.0')
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
             ),
             ModelInfo(
@@ -6761,7 +6729,7 @@ providers: list[Provider] = [
                 description='The most capable agentic coding model',
                 context_window=400000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14.0')
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
             ),
             ModelInfo(
@@ -6778,11 +6746,11 @@ providers: list[Provider] = [
                 description="OpenAI's most capable model with a 1.05M token context window.",
                 context_window=1050000,
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
                     cache_read_mtok=TieredPrices(
                         base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
                     ),
-                    output_mtok=TieredPrices(base=Decimal('15.0'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -6791,9 +6759,7 @@ providers: list[Provider] = [
                 name='GPT-5.4 Image 2',
                 description="GPT-5.4 Image 2 combines OpenAI's GPT-5.4 model with state-of-the-art image generation capabilities from GPT Image 2. It enables rich multimodal workflows across reasoning, coding, and image generation.",
                 price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('8.0'), cache_read_mtok=Decimal('2.0'), output_mtok=Decimal('15.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('8'), cache_read_mtok=Decimal('2'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='gpt-5.4-mini',
@@ -6843,8 +6809,8 @@ providers: list[Provider] = [
                 description='Version of GPT-5.4 that produces smarter and more precise responses.',
                 context_window=1050000,
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('30.0'), tiers=[Tier(start=272000, price=Decimal('60.0'))]),
-                    output_mtok=TieredPrices(base=Decimal('180.0'), tiers=[Tier(start=272000, price=Decimal('270.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                    output_mtok=TieredPrices(base=Decimal('180'), tiers=[Tier(start=272000, price=Decimal('270'))]),
                 ),
             ),
             ModelInfo(
@@ -6868,9 +6834,7 @@ providers: list[Provider] = [
                 name='GPT-5.5',
                 description='The best model for coding and agentic tasks across industries',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gpt-5.5-pro',
@@ -6885,7 +6849,7 @@ providers: list[Provider] = [
                 name='GPT-5.5 Pro',
                 description='Version of GPT-5.5 that produces smarter and more precise responses.',
                 context_window=1000000,
-                prices=ModelPrice(input_mtok=Decimal('30.0'), output_mtok=Decimal('180.0')),
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
             ),
             ModelInfo(
                 id='gpt-audio',
@@ -6900,9 +6864,9 @@ providers: list[Provider] = [
                 description="The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'),
-                    output_mtok=Decimal('10.0'),
-                    input_audio_mtok=Decimal('32.0'),
-                    output_audio_mtok=Decimal('64.0'),
+                    output_mtok=Decimal('10'),
+                    input_audio_mtok=Decimal('32'),
+                    output_audio_mtok=Decimal('64'),
                 ),
             ),
             ModelInfo(
@@ -6919,8 +6883,8 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'),
                     output_mtok=Decimal('2.4'),
-                    input_audio_mtok=Decimal('10.0'),
-                    output_audio_mtok=Decimal('20.0'),
+                    input_audio_mtok=Decimal('10'),
+                    output_audio_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
@@ -6929,16 +6893,14 @@ providers: list[Provider] = [
                 name='GPT Chat Latest',
                 description="GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model used in ChatGPT.",
                 price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gpt-image-1-mini',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-image-1-mini')]),
                 name='GPT Image 1 Mini',
                 description='A cost-efficient image generation model from OpenAI with text input pricing.',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.2')),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2')),
             ),
             ModelInfo(
                 id='gpt-image-1.5',
@@ -6947,16 +6909,14 @@ providers: list[Provider] = [
                 ),
                 name='GPT Image 1.5',
                 description='An improved image generation model from OpenAI supporting text input and output pricing.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gpt-image-2',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-image-2'), ClauseEquals(equals='gpt-image-2-2026-04-21')]),
                 name='GPT Image 2',
                 description="OpenAI's latest image generation model with text input pricing.",
-                prices=ModelPrice(input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('1.25')),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='gpt-oss-120b',
@@ -6995,12 +6955,12 @@ providers: list[Provider] = [
                 ),
                 price_comments="Missing image token prices which we don't support yet",
                 prices=ModelPrice(
-                    input_mtok=Decimal('4.0'),
+                    input_mtok=Decimal('4'),
                     cache_read_mtok=Decimal('0.4'),
-                    output_mtok=Decimal('16.0'),
-                    input_audio_mtok=Decimal('32.0'),
+                    output_mtok=Decimal('16'),
+                    input_audio_mtok=Decimal('32'),
                     cache_audio_read_mtok=Decimal('0.4'),
-                    output_audio_mtok=Decimal('64.0'),
+                    output_audio_mtok=Decimal('64'),
                 ),
             ),
             ModelInfo(
@@ -7008,12 +6968,12 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-realtime-2')]),
                 price_comments="Missing image token prices which we don't support yet",
                 prices=ModelPrice(
-                    input_mtok=Decimal('4.0'),
+                    input_mtok=Decimal('4'),
                     cache_read_mtok=Decimal('0.4'),
-                    output_mtok=Decimal('24.0'),
-                    input_audio_mtok=Decimal('32.0'),
+                    output_mtok=Decimal('24'),
+                    input_audio_mtok=Decimal('32'),
                     cache_audio_read_mtok=Decimal('0.4'),
-                    output_audio_mtok=Decimal('64.0'),
+                    output_audio_mtok=Decimal('64'),
                 ),
             ),
             ModelInfo(
@@ -7030,9 +6990,9 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.6'),
                     cache_read_mtok=Decimal('0.06'),
                     output_mtok=Decimal('2.4'),
-                    input_audio_mtok=Decimal('10.0'),
+                    input_audio_mtok=Decimal('10'),
                     cache_audio_read_mtok=Decimal('0.3'),
-                    output_audio_mtok=Decimal('20.0'),
+                    output_audio_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(
@@ -7054,9 +7014,7 @@ providers: list[Provider] = [
                 name='o1',
                 description='O1 is a model that offers a balance between cost and performance.',
                 context_window=128000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('15.0'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='o1-mini',
@@ -7073,7 +7031,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='o1-pro'), ClauseEquals(equals='o1-pro-2025-03-19')]),
                 name='o1-pro',
                 description='The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o1-pro model uses more compute to think harder and provide consistently better answers.',
-                prices=ModelPrice(input_mtok=Decimal('150.0'), output_mtok=Decimal('600.0')),
+                prices=ModelPrice(input_mtok=Decimal('150'), output_mtok=Decimal('600')),
             ),
             ModelInfo(
                 id='o3',
@@ -7083,13 +7041,13 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('10.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40.0')
+                            input_mtok=Decimal('10'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('40')
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2025, 6, 10)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')
                         ),
                     ),
                 ],
@@ -7099,9 +7057,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='o3-deep-research'), ClauseEquals(equals='o3-deep-research-2025-06-26')]
                 ),
-                prices=ModelPrice(
-                    input_mtok=Decimal('10.0'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
             ),
             ModelInfo(
                 id='o3-mini',
@@ -7123,7 +7079,7 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='o3-pro'), ClauseEquals(equals='o3-pro-2025-06-10')]),
                 name='o3 Pro',
                 description='The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning. The o3-pro model uses more compute to think harder and provide consistently better answers.',
-                prices=ModelPrice(input_mtok=Decimal('20.0'), output_mtok=Decimal('80.0')),
+                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('80')),
             ),
             ModelInfo(
                 id='o4-mini',
@@ -7148,19 +7104,17 @@ providers: list[Provider] = [
                         ClauseEquals(equals='o4-mini-deep-research-2025-06-26'),
                     ]
                 ),
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='text-davinci-002',
                 match=ClauseEquals(equals='text-davinci-002'),
-                prices=ModelPrice(input_mtok=Decimal('20.0'), output_mtok=Decimal('20.0')),
+                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='text-davinci-003',
                 match=ClauseEquals(equals='text-davinci-003'),
-                prices=ModelPrice(input_mtok=Decimal('20.0'), output_mtok=Decimal('20.0')),
+                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='text-embedding-3-large',
@@ -7226,7 +7180,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='01-ai/yi-large',
                 match=ClauseEquals(equals='01-ai/yi-large'),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='aetherwiing/mn-starcannon-12b',
@@ -7241,7 +7195,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='ai21/jamba-1-5-large',
                 match=ClauseEquals(equals='ai21/jamba-1-5-large'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='ai21/jamba-1-5-mini',
@@ -7251,7 +7205,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='ai21/jamba-1.6-large',
                 match=ClauseEquals(equals='ai21/jamba-1.6-large'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='ai21/jamba-1.6-mini',
@@ -7267,13 +7221,13 @@ providers: list[Provider] = [
                 id='ai21/jamba-large-1.7',
                 match=ClauseEquals(equals='ai21/jamba-large-1.7'),
                 name='Jamba Large 1.7',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='aion-labs/aion-1.0',
                 match=ClauseEquals(equals='aion-labs/aion-1.0'),
                 name='Aion-1.0',
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='aion-labs/aion-1.0-mini',
@@ -7355,7 +7309,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='anthracite-org/magnum-v2-72b',
                 match=ClauseEquals(equals='anthracite-org/magnum-v2-72b'),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='anthracite-org/magnum-v4-72b',
@@ -7374,7 +7328,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-2:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('8.0'), output_mtok=Decimal('24.0')),
+                prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
             ),
             ModelInfo(
                 id='anthropic/claude-3-haiku',
@@ -7394,7 +7348,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-3-opus:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('15.0'), output_mtok=Decimal('75.0')),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('75')),
             ),
             ModelInfo(
                 id='anthropic/claude-3-sonnet',
@@ -7404,7 +7358,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-3-sonnet:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='anthropic/claude-3.5-haiku',
@@ -7416,7 +7370,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-3.5-haiku:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('4.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='anthropic/claude-3.5-sonnet',
@@ -7428,7 +7382,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-3.5-sonnet:beta'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='anthropic/claude-3.7-sonnet',
@@ -7439,7 +7393,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='anthropic/claude-3.7-sonnet:thinking'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='anthropic/claude-fable-5',
@@ -7452,10 +7406,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10.0'),
+                    input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1.0'),
-                    output_mtok=Decimal('50.0'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
@@ -7471,10 +7425,10 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.0'),
+                    input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('5.0'),
+                    output_mtok=Decimal('5'),
                 ),
             ),
             ModelInfo(
@@ -7487,10 +7441,10 @@ providers: list[Provider] = [
                 ),
                 name='Claude Opus 4',
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -7506,10 +7460,10 @@ providers: list[Provider] = [
                     ]
                 ),
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -7527,10 +7481,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -7538,10 +7492,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='anthropic/claude-opus-4.6-fast'),
                 name='Claude Opus 4.6 (Fast)',
                 prices=ModelPrice(
-                    input_mtok=Decimal('30.0'),
+                    input_mtok=Decimal('30'),
                     cache_write_mtok=Decimal('37.5'),
-                    cache_read_mtok=Decimal('3.0'),
-                    output_mtok=Decimal('150.0'),
+                    cache_read_mtok=Decimal('3'),
+                    output_mtok=Decimal('150'),
                 ),
             ),
             ModelInfo(
@@ -7555,10 +7509,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -7566,10 +7520,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='anthropic/claude-opus-4.7-fast'),
                 name='Claude Opus 4.7 (Fast)',
                 prices=ModelPrice(
-                    input_mtok=Decimal('30.0'),
+                    input_mtok=Decimal('30'),
                     cache_write_mtok=Decimal('37.5'),
-                    cache_read_mtok=Decimal('3.0'),
-                    output_mtok=Decimal('150.0'),
+                    cache_read_mtok=Decimal('3'),
+                    output_mtok=Decimal('150'),
                 ),
             ),
             ModelInfo(
@@ -7583,10 +7537,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -7594,10 +7548,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='anthropic/claude-opus-4.8-fast'),
                 name='Claude Opus 4.8 (Fast)',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10.0'),
+                    input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1.0'),
-                    output_mtok=Decimal('50.0'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
@@ -7605,10 +7559,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='anthropic/claude-sonnet-4'),
                 name='Claude Sonnet 4',
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -7626,12 +7580,12 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('3.0'), tiers=[Tier(start=200000, price=Decimal('6.0'))]),
+                    input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
                         base=Decimal('3.75'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
-                    output_mtok=TieredPrices(base=Decimal('15.0'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
                 ),
             ),
             ModelInfo(
@@ -7649,10 +7603,10 @@ providers: list[Provider] = [
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -7668,19 +7622,19 @@ providers: list[Provider] = [
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('2.0'),
+                            input_mtok=Decimal('2'),
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
-                            output_mtok=Decimal('10.0'),
+                            output_mtok=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 9, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('3.0'),
+                            input_mtok=Decimal('3'),
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
-                            output_mtok=Decimal('15.0'),
+                            output_mtok=Decimal('15'),
                         ),
                     ),
                 ],
@@ -7689,7 +7643,7 @@ providers: list[Provider] = [
                 id='anubis-pro-105b-v1',
                 match=ClauseEquals(equals='anubis-pro-105b-v1'),
                 name='Anubis Pro 105B V1',
-                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='arcee-ai/coder-large',
@@ -7743,7 +7697,7 @@ providers: list[Provider] = [
                 id='bytedance-seed/seed-1.6',
                 match=ClauseEquals(equals='bytedance-seed/seed-1.6'),
                 name='Seed 1.6',
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='bytedance-seed/seed-1.6-flash',
@@ -7755,7 +7709,7 @@ providers: list[Provider] = [
                 id='bytedance-seed/seed-2.0-lite',
                 match=ClauseEquals(equals='bytedance-seed/seed-2.0-lite'),
                 name='Seed-2.0-Lite',
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='bytedance-seed/seed-2.0-mini',
@@ -7781,7 +7735,7 @@ providers: list[Provider] = [
                 id='chatgpt-4o-latest',
                 match=ClauseEquals(equals='chatgpt-4o-latest'),
                 name='ChatGPT-4o',
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='claude-2',
@@ -7796,17 +7750,17 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Claude v2',
-                prices=ModelPrice(input_mtok=Decimal('8.0'), output_mtok=Decimal('24.0')),
+                prices=ModelPrice(input_mtok=Decimal('8'), output_mtok=Decimal('24')),
             ),
             ModelInfo(
                 id='claude-3-opus',
                 match=ClauseOr(or_=[ClauseEquals(equals='claude-3-opus'), ClauseEquals(equals='claude-3-opus:beta')]),
                 name='Claude 3 Opus',
                 prices=ModelPrice(
-                    input_mtok=Decimal('15.0'),
+                    input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
-                    output_mtok=Decimal('75.0'),
+                    output_mtok=Decimal('75'),
                 ),
             ),
             ModelInfo(
@@ -7816,10 +7770,10 @@ providers: list[Provider] = [
                 ),
                 name='Claude 3 Sonnet',
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -7834,10 +7788,10 @@ providers: list[Provider] = [
                 ),
                 name='Claude 3.5 Sonnet',
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -7851,10 +7805,10 @@ providers: list[Provider] = [
                 ),
                 name='Claude 3.7 Sonnet',
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -7874,7 +7828,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='codex-mini'),
                 name='Codex Mini',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6.0')
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6')
                 ),
             ),
             ModelInfo(
@@ -7906,12 +7860,12 @@ providers: list[Provider] = [
             ModelInfo(
                 id='cohere/command',
                 match=ClauseEquals(equals='cohere/command'),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='cohere/command-a',
                 match=ClauseEquals(equals='cohere/command-a'),
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='cohere/command-r',
@@ -7933,12 +7887,12 @@ providers: list[Provider] = [
                         ClauseEquals(equals='cohere/command-r-plus-04-2024'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='cohere/command-r-plus-08-2024',
                 match=ClauseEquals(equals='cohere/command-r-plus-08-2024'),
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='cohere/command-r7b-12-2024',
@@ -7949,7 +7903,7 @@ providers: list[Provider] = [
                 id='command',
                 match=ClauseEquals(equals='command'),
                 name='Command',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='command-r',
@@ -7963,7 +7917,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='command-r-plus'), ClauseEquals(equals='command-r-plus-04-2024')]
                 ),
                 name='Command R+',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='deepcoder-14b-preview:free',
@@ -8264,7 +8218,7 @@ providers: list[Provider] = [
                 id='eva-llama-3.33-70b',
                 match=ClauseEquals(equals='eva-llama-3.33-70b'),
                 name='EVA Llama 3.33 70B',
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='eva-qwen-2.5-32b',
@@ -8276,12 +8230,12 @@ providers: list[Provider] = [
                 id='eva-qwen-2.5-72b',
                 match=ClauseEquals(equals='eva-qwen-2.5-72b'),
                 name='EVA Qwen2.5 72B',
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='eva-unit-01/eva-llama-3.33-70b',
                 match=ClauseEquals(equals='eva-unit-01/eva-llama-3.33-70b'),
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='eva-unit-01/eva-qwen-2.5-32b',
@@ -8403,7 +8357,7 @@ providers: list[Provider] = [
                 id='gemini-pro-1.5',
                 match=ClauseEquals(equals='gemini-pro-1.5'),
                 name='Gemini 1.5 Pro',
-                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='gemma-2-9b-it',
@@ -8463,9 +8417,7 @@ providers: list[Provider] = [
                 id='glm-5v-turbo',
                 match=ClauseEquals(equals='glm-5v-turbo'),
                 name='GLM 5V Turbo',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.24'), output_mtok=Decimal('4.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.24'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='glm-z1-32b',
@@ -8489,7 +8441,7 @@ providers: list[Provider] = [
                 id='goliath-120b',
                 match=ClauseEquals(equals='goliath-120b'),
                 name='Goliath 120B',
-                prices=ModelPrice(input_mtok=Decimal('10.0'), output_mtok=Decimal('12.5')),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('12.5')),
             ),
             ModelInfo(
                 id='google/gemini-2.0-flash-001',
@@ -8590,7 +8542,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('1.25'),
                     cache_write_mtok=Decimal('1.625'),
                     cache_read_mtok=Decimal('0.31'),
-                    output_mtok=Decimal('10.0'),
+                    output_mtok=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -8601,7 +8553,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='google/gemini-2.5-pro-preview-03-25',
                 match=ClauseEquals(equals='google/gemini-2.5-pro-preview-03-25'),
-                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='google/gemini-3-flash-preview',
@@ -8611,7 +8563,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('0.5'),
                     cache_write_mtok=Decimal('0.08333333333333334'),
                     cache_read_mtok=Decimal('0.05'),
-                    output_mtok=Decimal('3.0'),
+                    output_mtok=Decimal('3'),
                 ),
             ),
             ModelInfo(
@@ -8619,17 +8571,17 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='google/gemini-3-pro-image-preview'),
                 name='Nano Banana Pro (Gemini 3 Pro Image Preview)',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.0'),
+                    input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('0.375'),
                     cache_read_mtok=Decimal('0.2'),
-                    output_mtok=Decimal('12.0'),
+                    output_mtok=Decimal('12'),
                 ),
             ),
             ModelInfo(
                 id='google/gemini-3.1-flash-image-preview',
                 match=ClauseEquals(equals='google/gemini-3.1-flash-image-preview'),
                 name='Nano Banana 2 (Gemini 3.1 Flash Image Preview)',
-                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='google/gemini-3.1-flash-lite',
@@ -8657,10 +8609,10 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 3.1 Pro Preview',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.0'),
+                    input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('0.375'),
                     cache_read_mtok=Decimal('0.2'),
-                    output_mtok=Decimal('12.0'),
+                    output_mtok=Decimal('12'),
                 ),
             ),
             ModelInfo(
@@ -8676,7 +8628,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('1.5'),
                     cache_write_mtok=Decimal('0.08333333333333334'),
                     cache_read_mtok=Decimal('0.15'),
-                    output_mtok=Decimal('9.0'),
+                    output_mtok=Decimal('9'),
                 ),
             ),
             ModelInfo(
@@ -8704,7 +8656,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='google/gemini-pro-1.5',
                 match=ClauseEquals(equals='google/gemini-pro-1.5'),
-                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='google/gemma-2-27b-it',
@@ -8817,7 +8769,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='google/palm-2-chat-bison-32k'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='google/palm-2-codechat-bison',
@@ -8827,53 +8779,51 @@ providers: list[Provider] = [
                         ClauseEquals(equals='google/palm-2-codechat-bison-32k'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-1106',
                 match=ClauseEquals(equals='gpt-3.5-turbo-1106'),
                 name='GPT-3.5 Turbo 16k (older v1106)',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='gpt-4-1106-preview',
                 match=ClauseEquals(equals='gpt-4-1106-preview'),
                 name='GPT-4 Turbo (older v1106)',
-                prices=ModelPrice(input_mtok=Decimal('10.0'), output_mtok=Decimal('30.0')),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gpt-4.5-preview',
                 match=ClauseEquals(equals='gpt-4.5-preview'),
                 name='GPT-4.5 (Preview)',
                 prices=ModelPrice(
-                    input_mtok=Decimal('75.0'), cache_read_mtok=Decimal('37.5'), output_mtok=Decimal('150.0')
+                    input_mtok=Decimal('75'), cache_read_mtok=Decimal('37.5'), output_mtok=Decimal('150')
                 ),
             ),
             ModelInfo(
                 id='gpt-4o:extended',
                 match=ClauseEquals(equals='gpt-4o:extended'),
                 name='GPT-4o (extended)',
-                prices=ModelPrice(input_mtok=Decimal('6.0'), output_mtok=Decimal('18.0')),
+                prices=ModelPrice(input_mtok=Decimal('6'), output_mtok=Decimal('18')),
             ),
             ModelInfo(
                 id='grok-2-1212',
                 match=ClauseEquals(equals='grok-2-1212'),
                 name='Grok 2 1212',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='grok-2-vision-1212',
                 match=ClauseEquals(equals='grok-2-vision-1212'),
                 name='Grok 2 Vision 1212',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='grok-3',
                 match=ClauseOr(or_=[ClauseEquals(equals='grok-3'), ClauseEquals(equals='grok-3-beta')]),
                 name='Grok 3',
-                prices=ModelPrice(
-                    input_mtok=Decimal('3.0'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='grok-3-mini',
@@ -8887,13 +8837,13 @@ providers: list[Provider] = [
                 id='grok-beta',
                 match=ClauseEquals(equals='grok-beta'),
                 name='Grok Beta',
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='grok-vision-beta',
                 match=ClauseEquals(equals='grok-vision-beta'),
                 name='Grok Vision Beta',
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='gryphe/mythomax-l2-13b',
@@ -8966,13 +8916,13 @@ providers: list[Provider] = [
                 id='inflection/inflection-3-pi',
                 match=ClauseEquals(equals='inflection/inflection-3-pi'),
                 name='Inflection 3 Pi',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='inflection/inflection-3-productivity',
                 match=ClauseEquals(equals='inflection/inflection-3-productivity'),
                 name='Inflection 3 Productivity',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='internvl3-14b:free',
@@ -8990,7 +8940,7 @@ providers: list[Provider] = [
                 id='jamba-1.6-large',
                 match=ClauseEquals(equals='jamba-1.6-large'),
                 name='Jamba 1.6 Large',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='jamba-1.6-mini',
@@ -9089,7 +9039,7 @@ providers: list[Provider] = [
                 id='llama-3-lumimaid-70b',
                 match=ClauseEquals(equals='llama-3-lumimaid-70b'),
                 name='Llama 3 Lumimaid 70B',
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='llama-3-lumimaid-8b',
@@ -9101,7 +9051,7 @@ providers: list[Provider] = [
                 id='llama-3.1-405b',
                 match=ClauseEquals(equals='llama-3.1-405b'),
                 name='Llama 3.1 405B (base)',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='llama-3.1-405b-instruct',
@@ -9119,7 +9069,7 @@ providers: list[Provider] = [
                 id='llama-3.1-lumimaid-70b',
                 match=ClauseEquals(equals='llama-3.1-lumimaid-70b'),
                 name='Lumimaid v0.2 70B',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='llama-3.1-lumimaid-8b',
@@ -9149,7 +9099,7 @@ providers: list[Provider] = [
                 id='llama-3.1-sonar-large-128k-online',
                 match=ClauseEquals(equals='llama-3.1-sonar-large-128k-online'),
                 name='Llama 3.1 Sonar 70B Online',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='llama-3.1-sonar-small-128k-online',
@@ -9238,7 +9188,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Magistral Medium 2506',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='magistral-small-2506',
@@ -9250,13 +9200,13 @@ providers: list[Provider] = [
                 id='magnum-72b',
                 match=ClauseEquals(equals='magnum-72b'),
                 name='Magnum 72B',
-                prices=ModelPrice(input_mtok=Decimal('4.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('4'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='magnum-v2-72b',
                 match=ClauseEquals(equals='magnum-v2-72b'),
                 name='Magnum v2 72B',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='mai-ds-r1:free',
@@ -9273,7 +9223,7 @@ providers: list[Provider] = [
                 id='mercury-coder-small-beta',
                 match=ClauseEquals(equals='mercury-coder-small-beta'),
                 name='Mercury Coder Small Beta',
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='meta-llama/llama-2-13b-chat',
@@ -9300,7 +9250,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='meta-llama/llama-3.1-405b',
                 match=ClauseEquals(equals='meta-llama/llama-3.1-405b'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='meta-llama/llama-3.1-405b-instruct',
@@ -9421,7 +9371,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='microsoft/phi-3-medium-128k-instruct',
                 match=ClauseEquals(equals='microsoft/phi-3-medium-128k-instruct'),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='microsoft/phi-3-mini-128k-instruct',
@@ -9490,7 +9440,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='minimax/minimax-m2'),
                 name='MiniMax M2',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.255'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1.0')
+                    input_mtok=Decimal('0.255'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')
                 ),
             ),
             ModelInfo(
@@ -9657,9 +9607,7 @@ providers: list[Provider] = [
                 id='mistralai/devstral-2512',
                 match=ClauseEquals(equals='mistralai/devstral-2512'),
                 name='Devstral 2 2512',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistralai/ministral-14b-2512',
@@ -9730,7 +9678,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Mistral Large',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='mistralai/mistral-large-2512',
@@ -9749,7 +9697,7 @@ providers: list[Provider] = [
                 id='mistralai/mistral-medium-3',
                 match=ClauseEquals(equals='mistralai/mistral-medium-3'),
                 name='Mistral Medium 3',
-                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistralai/mistral-medium-3-5',
@@ -9761,9 +9709,7 @@ providers: list[Provider] = [
                 id='mistralai/mistral-medium-3.1',
                 match=ClauseEquals(equals='mistralai/mistral-medium-3.1'),
                 name='Mistral Medium 3.1',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='mistralai/mistral-nemo',
@@ -9846,7 +9792,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='mistralai/pixtral-large-2411',
                 match=ClauseEquals(equals='mistralai/pixtral-large-2411'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='mistralai/voxtral-small-24b-2507',
@@ -10003,7 +9949,7 @@ providers: list[Provider] = [
                 id='noromaid-20b',
                 match=ClauseEquals(equals='noromaid-20b'),
                 name='Noromaid 20B',
-                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='nothingiisreal/mn-celeste-12b',
@@ -10048,7 +9994,7 @@ providers: list[Provider] = [
                 id='nousresearch/hermes-4-405b',
                 match=ClauseEquals(equals='nousresearch/hermes-4-405b'),
                 name='Hermes 4 405B',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='nousresearch/hermes-4-70b',
@@ -10186,13 +10132,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='openai/chatgpt-4o-latest',
                 match=ClauseEquals(equals='openai/chatgpt-4o-latest'),
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='openai/codex-mini',
                 match=ClauseEquals(equals='openai/codex-mini'),
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6.0')
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.375'), output_mtok=Decimal('6')
                 ),
             ),
             ModelInfo(
@@ -10207,42 +10153,42 @@ providers: list[Provider] = [
                 id='openai/gpt-3.5-turbo-0613',
                 match=ClauseEquals(equals='openai/gpt-3.5-turbo-0613'),
                 name='GPT-3.5 Turbo (older v0613)',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='openai/gpt-3.5-turbo-1106',
                 match=ClauseEquals(equals='openai/gpt-3.5-turbo-1106'),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='openai/gpt-3.5-turbo-16k',
                 match=ClauseEquals(equals='openai/gpt-3.5-turbo-16k'),
                 name='GPT-3.5 Turbo 16k',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('4.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='openai/gpt-3.5-turbo-instruct',
                 match=ClauseEquals(equals='openai/gpt-3.5-turbo-instruct'),
                 name='GPT-3.5 Turbo Instruct',
-                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='openai/gpt-4',
                 match=ClauseOr(or_=[ClauseEquals(equals='openai/gpt-4'), ClauseEquals(equals='gpt-4-0314')]),
                 name='GPT-4',
-                prices=ModelPrice(input_mtok=Decimal('30.0'), output_mtok=Decimal('60.0')),
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='openai/gpt-4-1106-preview',
                 match=ClauseEquals(equals='openai/gpt-4-1106-preview'),
-                prices=ModelPrice(input_mtok=Decimal('10.0'), output_mtok=Decimal('30.0')),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='openai/gpt-4-32k',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='openai/gpt-4-32k'), ClauseEquals(equals='openai/gpt-4-32k-0314')]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('60.0'), output_mtok=Decimal('120.0')),
+                prices=ModelPrice(input_mtok=Decimal('60'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
                 id='openai/gpt-4-turbo',
@@ -10250,15 +10196,13 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='openai/gpt-4-turbo'), ClauseEquals(equals='openai/gpt-4-turbo-preview')]
                 ),
                 name='GPT-4 Turbo',
-                prices=ModelPrice(input_mtok=Decimal('10.0'), output_mtok=Decimal('30.0')),
+                prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='openai/gpt-4.1',
                 match=ClauseEquals(equals='openai/gpt-4.1'),
                 name='GPT-4.1',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='openai/gpt-4.1-mini',
@@ -10279,7 +10223,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='openai/gpt-4.5-preview',
                 match=ClauseEquals(equals='openai/gpt-4.5-preview'),
-                prices=ModelPrice(input_mtok=Decimal('75.0'), output_mtok=Decimal('150.0')),
+                prices=ModelPrice(input_mtok=Decimal('75'), output_mtok=Decimal('150')),
             ),
             ModelInfo(
                 id='openai/gpt-4o',
@@ -10291,13 +10235,13 @@ providers: list[Provider] = [
                         ClauseEquals(equals='openai/gpt-4o-audio-preview'),
                     ]
                 ),
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='openai/gpt-4o-2024-05-13',
                 match=ClauseEquals(equals='openai/gpt-4o-2024-05-13'),
                 name='GPT-4o (2024-05-13)',
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='openai/gpt-4o-mini',
@@ -10322,12 +10266,12 @@ providers: list[Provider] = [
                 id='openai/gpt-4o-search-preview',
                 match=ClauseEquals(equals='openai/gpt-4o-search-preview'),
                 name='GPT-4o Search Preview',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='openai/gpt-4o:extended',
                 match=ClauseEquals(equals='openai/gpt-4o:extended'),
-                prices=ModelPrice(input_mtok=Decimal('6.0'), output_mtok=Decimal('18.0')),
+                prices=ModelPrice(input_mtok=Decimal('6'), output_mtok=Decimal('18')),
             ),
             ModelInfo(
                 id='openai/gpt-5',
@@ -10341,31 +10285,27 @@ providers: list[Provider] = [
                 ),
                 name='GPT-5',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10.0')
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.125'), output_mtok=Decimal('10')
                 ),
             ),
             ModelInfo(
                 id='openai/gpt-5-image',
                 match=ClauseEquals(equals='openai/gpt-5-image'),
                 name='GPT-5 Image',
-                prices=ModelPrice(
-                    input_mtok=Decimal('10.0'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='openai/gpt-5-image-mini',
                 match=ClauseEquals(equals='openai/gpt-5-image-mini'),
                 name='GPT-5 Image Mini',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='openai/gpt-5-mini',
                 match=ClauseEquals(equals='openai/gpt-5-mini'),
                 name='GPT-5 Mini',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2.0')
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
                 ),
             ),
             ModelInfo(
@@ -10380,7 +10320,7 @@ providers: list[Provider] = [
                 id='openai/gpt-5-pro',
                 match=ClauseEquals(equals='openai/gpt-5-pro'),
                 name='GPT-5 Pro',
-                prices=ModelPrice(input_mtok=Decimal('15.0'), output_mtok=Decimal('120.0')),
+                prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('120')),
             ),
             ModelInfo(
                 id='openai/gpt-5.1',
@@ -10393,7 +10333,7 @@ providers: list[Provider] = [
                 ),
                 name='GPT-5.1',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('10.0')
+                    input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('10')
                 ),
             ),
             ModelInfo(
@@ -10401,7 +10341,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='openai/gpt-5.1-codex-mini'),
                 name='GPT-5.1-Codex-Mini',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2.0')
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2')
                 ),
             ),
             ModelInfo(
@@ -10415,21 +10355,21 @@ providers: list[Provider] = [
                 ),
                 name='GPT-5.2',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14.0')
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
             ),
             ModelInfo(
                 id='openai/gpt-5.2-pro',
                 match=ClauseEquals(equals='openai/gpt-5.2-pro'),
                 name='GPT-5.2 Pro',
-                prices=ModelPrice(input_mtok=Decimal('21.0'), output_mtok=Decimal('168.0')),
+                prices=ModelPrice(input_mtok=Decimal('21'), output_mtok=Decimal('168')),
             ),
             ModelInfo(
                 id='openai/gpt-5.3-chat',
                 match=ClauseEquals(equals='openai/gpt-5.3-chat'),
                 name='GPT-5.3 Chat',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14.0')
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
             ),
             ModelInfo(
@@ -10437,7 +10377,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='openai/gpt-5.3-codex'),
                 name='GPT-5.3-Codex',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14.0')
+                    input_mtok=Decimal('1.75'), cache_read_mtok=Decimal('0.175'), output_mtok=Decimal('14')
                 ),
             ),
             ModelInfo(
@@ -10445,16 +10385,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='openai/gpt-5.4'),
                 name='GPT-5.4',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('15.0')
+                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('15')
                 ),
             ),
             ModelInfo(
                 id='openai/gpt-5.4-image-2',
                 match=ClauseEquals(equals='openai/gpt-5.4-image-2'),
                 name='GPT-5.4 Image 2',
-                prices=ModelPrice(
-                    input_mtok=Decimal('8.0'), cache_read_mtok=Decimal('2.0'), output_mtok=Decimal('15.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('8'), cache_read_mtok=Decimal('2'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='openai/gpt-5.4-mini',
@@ -10476,27 +10414,25 @@ providers: list[Provider] = [
                 id='openai/gpt-5.4-pro',
                 match=ClauseEquals(equals='openai/gpt-5.4-pro'),
                 name='GPT-5.4 Pro',
-                prices=ModelPrice(input_mtok=Decimal('30.0'), output_mtok=Decimal('180.0')),
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
             ),
             ModelInfo(
                 id='openai/gpt-5.5',
                 match=ClauseEquals(equals='openai/gpt-5.5'),
                 name='GPT-5.5',
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='openai/gpt-5.5-pro',
                 match=ClauseEquals(equals='openai/gpt-5.5-pro'),
                 name='GPT-5.5 Pro',
-                prices=ModelPrice(input_mtok=Decimal('30.0'), output_mtok=Decimal('180.0')),
+                prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
             ),
             ModelInfo(
                 id='openai/gpt-audio',
                 match=ClauseEquals(equals='openai/gpt-audio'),
                 name='GPT Audio',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='openai/gpt-audio-mini',
@@ -10508,9 +10444,7 @@ providers: list[Provider] = [
                 id='openai/gpt-chat-latest',
                 match=ClauseEquals(equals='openai/gpt-chat-latest'),
                 name='GPT Chat Latest',
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
@@ -10554,9 +10488,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='o1',
-                prices=ModelPrice(
-                    input_mtok=Decimal('15.0'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('15'), cache_read_mtok=Decimal('7.5'), output_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='openai/o1-mini',
@@ -10569,23 +10501,19 @@ providers: list[Provider] = [
                 id='openai/o1-pro',
                 match=ClauseEquals(equals='openai/o1-pro'),
                 name='o1-pro',
-                prices=ModelPrice(input_mtok=Decimal('150.0'), output_mtok=Decimal('600.0')),
+                prices=ModelPrice(input_mtok=Decimal('150'), output_mtok=Decimal('600')),
             ),
             ModelInfo(
                 id='openai/o3',
                 match=ClauseEquals(equals='openai/o3'),
                 name='o3',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='openai/o3-deep-research',
                 match=ClauseEquals(equals='openai/o3-deep-research'),
                 name='o3 Deep Research',
-                prices=ModelPrice(
-                    input_mtok=Decimal('10.0'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('2.5'), output_mtok=Decimal('40')),
             ),
             ModelInfo(
                 id='openai/o3-mini',
@@ -10599,7 +10527,7 @@ providers: list[Provider] = [
                 id='openai/o3-pro',
                 match=ClauseEquals(equals='openai/o3-pro'),
                 name='o3 Pro',
-                prices=ModelPrice(input_mtok=Decimal('20.0'), output_mtok=Decimal('80.0')),
+                prices=ModelPrice(input_mtok=Decimal('20'), output_mtok=Decimal('80')),
             ),
             ModelInfo(
                 id='openai/o4-mini',
@@ -10613,9 +10541,7 @@ providers: list[Provider] = [
                 id='openai/o4-mini-deep-research',
                 match=ClauseEquals(equals='openai/o4-mini-deep-research'),
                 name='o4 Mini Deep Research',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='openchat/openchat-7b',
@@ -10637,7 +10563,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='perplexity/llama-3.1-sonar-large-128k-online',
                 match=ClauseEquals(equals='perplexity/llama-3.1-sonar-large-128k-online'),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='perplexity/llama-3.1-sonar-small-128k-online',
@@ -10647,38 +10573,38 @@ providers: list[Provider] = [
             ModelInfo(
                 id='perplexity/r1-1776',
                 match=ClauseEquals(equals='perplexity/r1-1776'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='perplexity/sonar',
                 match=ClauseEquals(equals='perplexity/sonar'),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='perplexity/sonar-deep-research',
                 match=ClauseEquals(equals='perplexity/sonar-deep-research'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='perplexity/sonar-pro',
                 match=ClauseEquals(equals='perplexity/sonar-pro'),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='perplexity/sonar-reasoning',
                 match=ClauseEquals(equals='perplexity/sonar-reasoning'),
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='perplexity/sonar-reasoning-pro',
                 match=ClauseEquals(equals='perplexity/sonar-reasoning-pro'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='phi-3-medium-128k-instruct',
                 match=ClauseEquals(equals='phi-3-medium-128k-instruct'),
                 name='Phi-3 Medium 128K Instruct',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='phi-3-mini-128k-instruct',
@@ -10726,7 +10652,7 @@ providers: list[Provider] = [
                 id='pixtral-large-2411',
                 match=ClauseEquals(equals='pixtral-large-2411'),
                 name='Pixtral Large 2411',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='poolside/laguna-m.1:free',
@@ -11048,7 +10974,7 @@ providers: list[Provider] = [
                 id='qwen/qwen3-max',
                 match=ClauseEquals(equals='qwen/qwen3-max'),
                 name='Qwen 3 Max',
-                prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('1.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='qwen/qwen3-max-thinking',
@@ -11162,7 +11088,7 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3.5-35B-A3B',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1.0')
+                    input_mtok=Decimal('0.14'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
                 ),
             ),
             ModelInfo(
@@ -11231,7 +11157,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='Qwen3.6 35B A3B',
-                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.14'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='qwen/qwen3.6-flash',
@@ -11385,7 +11311,7 @@ providers: list[Provider] = [
                 id='r1-1776',
                 match=ClauseEquals(equals='r1-1776'),
                 name='R1 1776',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='raifle/sorcererlm-8x22b',
@@ -11425,7 +11351,7 @@ providers: list[Provider] = [
                 id='relace/relace-search',
                 match=ClauseEquals(equals='relace/relace-search'),
                 name='Relace Search',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='sao10k/fimbulvetr-11b-v2',
@@ -11447,7 +11373,7 @@ providers: list[Provider] = [
                 id='sao10k/l3.1-70b-hanami-x1',
                 match=ClauseEquals(equals='sao10k/l3.1-70b-hanami-x1'),
                 name='Llama 3.1 70B Hanami x1',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='sao10k/l3.1-euryale-70b',
@@ -11492,7 +11418,7 @@ providers: list[Provider] = [
                 id='sonar-reasoning',
                 match=ClauseEquals(equals='sonar-reasoning'),
                 name='Sonar Reasoning',
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('5.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
                 id='sophosympatheia/midnight-rose-70b',
@@ -11560,7 +11486,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='thedrummer/anubis-pro-105b-v1',
                 match=ClauseEquals(equals='thedrummer/anubis-pro-105b-v1'),
-                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='thedrummer/cydonia-24b-v4.1',
@@ -11634,22 +11560,22 @@ providers: list[Provider] = [
                 id='writer/palmyra-x5',
                 match=ClauseEquals(equals='writer/palmyra-x5'),
                 name='Palmyra X5',
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('6.0')),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='x-ai/grok-2-1212',
                 match=ClauseEquals(equals='x-ai/grok-2-1212'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='x-ai/grok-2-vision-1212',
                 match=ClauseEquals(equals='x-ai/grok-2-vision-1212'),
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='x-ai/grok-3-beta',
                 match=ClauseEquals(equals='x-ai/grok-3-beta'),
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='x-ai/grok-3-mini-beta',
@@ -11663,7 +11589,7 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=128000, price=Decimal('0.4'))]),
                     cache_read_mtok=Decimal('0.05'),
-                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=128000, price=Decimal('1.0'))]),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=128000, price=Decimal('1'))]),
                 ),
             ),
             ModelInfo(
@@ -11684,9 +11610,7 @@ providers: list[Provider] = [
                 id='x-ai/grok-4.20-multi-agent',
                 match=ClauseEquals(equals='x-ai/grok-4.20-multi-agent'),
                 name='Grok 4.20 Multi-Agent',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='x-ai/grok-4.3',
@@ -11701,15 +11625,13 @@ providers: list[Provider] = [
             ModelInfo(
                 id='x-ai/grok-beta',
                 match=ClauseEquals(equals='x-ai/grok-beta'),
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='x-ai/grok-build-0.1',
                 match=ClauseEquals(equals='x-ai/grok-build-0.1'),
                 name='Grok Build 0.1',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.0'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='x-ai/grok-code-fast-1',
@@ -11722,7 +11644,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='x-ai/grok-vision-beta',
                 match=ClauseEquals(equals='x-ai/grok-vision-beta'),
-                prices=ModelPrice(input_mtok=Decimal('5.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='xiaomi/mimo-v2-flash',
@@ -11757,7 +11679,7 @@ providers: list[Provider] = [
                 id='yi-large',
                 match=ClauseEquals(equals='yi-large'),
                 name='Yi Large',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('3.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='z-ai/glm-4.5',
@@ -11831,9 +11753,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='z-ai/glm-5-turbo'), ClauseEquals(equals='z-ai/glm-5-turbo-20260315')]
                 ),
                 name='GLM 5 Turbo',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.24'), output_mtok=Decimal('4.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.24'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='z-ai/glm-5.1',
@@ -11857,10 +11777,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~anthropic/claude-fable-latest'),
                 name='Claude Fable Latest',
                 prices=ModelPrice(
-                    input_mtok=Decimal('10.0'),
+                    input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
-                    cache_read_mtok=Decimal('1.0'),
-                    output_mtok=Decimal('50.0'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
                 ),
             ),
             ModelInfo(
@@ -11868,10 +11788,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~anthropic/claude-haiku-latest'),
                 name='Anthropic Claude Haiku Latest',
                 prices=ModelPrice(
-                    input_mtok=Decimal('1.0'),
+                    input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
-                    output_mtok=Decimal('5.0'),
+                    output_mtok=Decimal('5'),
                 ),
             ),
             ModelInfo(
@@ -11879,10 +11799,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~anthropic/claude-opus-latest'),
                 name='Claude Opus Latest',
                 prices=ModelPrice(
-                    input_mtok=Decimal('5.0'),
+                    input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
-                    output_mtok=Decimal('25.0'),
+                    output_mtok=Decimal('25'),
                 ),
             ),
             ModelInfo(
@@ -11890,10 +11810,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~anthropic/claude-sonnet-latest'),
                 name='Anthropic Claude Sonnet Latest',
                 prices=ModelPrice(
-                    input_mtok=Decimal('3.0'),
+                    input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
-                    output_mtok=Decimal('15.0'),
+                    output_mtok=Decimal('15'),
                 ),
             ),
             ModelInfo(
@@ -11904,7 +11824,7 @@ providers: list[Provider] = [
                     input_mtok=Decimal('1.5'),
                     cache_write_mtok=Decimal('0.08333333333333334'),
                     cache_read_mtok=Decimal('0.15'),
-                    output_mtok=Decimal('9.0'),
+                    output_mtok=Decimal('9'),
                 ),
             ),
             ModelInfo(
@@ -11912,10 +11832,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='~google/gemini-pro-latest'),
                 name='Google Gemini Pro Latest',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2.0'),
+                    input_mtok=Decimal('2'),
                     cache_write_mtok=Decimal('0.375'),
                     cache_read_mtok=Decimal('0.2'),
-                    output_mtok=Decimal('12.0'),
+                    output_mtok=Decimal('12'),
                 ),
             ),
             ModelInfo(
@@ -11930,9 +11850,7 @@ providers: list[Provider] = [
                 id='~openai/gpt-latest',
                 match=ClauseEquals(equals='~openai/gpt-latest'),
                 name='OpenAI GPT Latest',
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='~openai/gpt-mini-latest',
@@ -12128,7 +12046,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='llama-3.1-sonar-large-128k-online'),
                 name='Llama 3.1 Sonar 70B Online',
                 description="Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.",
-                prices=ModelPrice(input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0')),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='llama-3.1-sonar-small-128k-online',
@@ -12142,32 +12060,28 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='r1-1776'),
                 name='R1 1776',
                 description='R1 1776 is a version of DeepSeek-R1 that has been post-trained to remove censorship constraints related to topics restricted by the Chinese government. The model retains its original reasoning capabilities while providing direct responses to a wider range of queries. R1 1776 is an offline chat model that does not use the perplexity search subsystem.',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='sonar',
                 match=ClauseEquals(equals='sonar'),
                 name='Sonar',
                 description='Sonar is lightweight, affordable, fast, and simple to use — now featuring citations and the ability to customize sources. It is designed for companies seeking to integrate lightweight question-and-answer features optimized for speed.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.0'), output_mtok=Decimal('1.0'), requests_kcount=Decimal('12.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'), requests_kcount=Decimal('12')),
             ),
             ModelInfo(
                 id='sonar-deep-research',
                 match=ClauseEquals(equals='sonar-deep-research'),
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
             ),
             ModelInfo(
                 id='sonar-pro',
                 match=ClauseEquals(equals='sonar-pro'),
                 name='Sonar Pro',
                 description='Note: Sonar Pro pricing includes Perplexity search pricing. See details here',
-                prices=ModelPrice(
-                    input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0'), requests_kcount=Decimal('14.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15'), requests_kcount=Decimal('14')),
             ),
             ModelInfo(
                 id='sonar-pro-search',
@@ -12175,25 +12089,21 @@ providers: list[Provider] = [
                 name='Sonar Pro Search',
                 description="Sonar Pro Search is Perplexity's advanced agentic search system for deeper reasoning and analysis.",
                 price_comments='Imported from OpenRouter pricing; verify against Perplexity pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('3.0'), output_mtok=Decimal('15.0')),
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='sonar-reasoning',
                 match=ClauseEquals(equals='sonar-reasoning'),
                 name='Sonar Reasoning',
                 description='Sonar Reasoning is a reasoning model provided by Perplexity based on DeepSeek R1.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.0'), output_mtok=Decimal('5.0'), requests_kcount=Decimal('12.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5'), requests_kcount=Decimal('12')),
             ),
             ModelInfo(
                 id='sonar-reasoning-pro',
                 match=ClauseEquals(equals='sonar-reasoning-pro'),
                 name='Sonar Reasoning Pro',
                 description='Sonar Pro pricing includes Perplexity search pricing.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), output_mtok=Decimal('8.0'), requests_kcount=Decimal('14.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8'), requests_kcount=Decimal('14')),
             ),
         ],
     ),
@@ -12789,7 +12699,7 @@ providers: list[Provider] = [
                 description='(deprecated) Grok 2 1212 introduces significant enhancements to accuracy, instruction adherence, and multilingual support, making it a powerful and flexible choice for developers seeking a highly steerable, intelligent model.',
                 context_window=32768,
                 deprecated=True,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='grok-2-vision-1212',
@@ -12803,7 +12713,7 @@ providers: list[Provider] = [
                 name='Grok 2 Vision 1212',
                 description='Our multimodal model that processes documents, diagrams, charts, screenshots, and photographs.',
                 context_window=32768,
-                prices=ModelPrice(input_mtok=Decimal('2.0'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='grok-3',
@@ -12817,9 +12727,7 @@ providers: list[Provider] = [
                 name='Grok 3',
                 description='Flagship model that excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.',
                 context_window=131072,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3.0'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='grok-3-fast',
@@ -12833,9 +12741,7 @@ providers: list[Provider] = [
                 name='Grok 3 Fast',
                 description='Excels at enterprise use cases like data extraction, coding, and text summarization. Possesses deep domain knowledge in finance, healthcare, law, and science.',
                 context_window=131072,
-                prices=ModelPrice(
-                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('25.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('25')),
             ),
             ModelInfo(
                 id='grok-3-mini',
@@ -12865,9 +12771,7 @@ providers: list[Provider] = [
                 name='Grok 3 Mini Fast',
                 description='A lightweight model that thinks before responding. Fast, smart, and great for logic-based tasks that do not require deep domain knowledge. The raw thinking traces are accessible.',
                 context_window=131072,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
                 id='grok-4-0709',
@@ -12881,9 +12785,7 @@ providers: list[Provider] = [
                 name='Grok 4',
                 description='A flagship model, offering unparalleled performance in natural language, math and reasoning - the perfect jack of all trades.',
                 context_window=256000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('3.0'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.75'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='grok-4-1-fast-non-reasoning',
@@ -12961,9 +12863,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-4.20-multi-agent'),
                 name='Grok 4.20 Multi-Agent',
                 description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='grok-4.3',
@@ -12989,9 +12889,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='grok-build-0.1'),
                 name='Grok Build 0.1',
                 description="Grok Build 0.1 is xAI's fast coding model trained specifically for agentic software engineering workflows. It supports text and image inputs with text output, and is optimized for interactive coding.",
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.0'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.0')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2')),
             ),
             ModelInfo(
                 id='grok-code-fast-1',

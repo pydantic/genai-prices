@@ -91,8 +91,8 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 8.0,
-          output_mtok: 24.0,
+          input_mtok: 8,
+          output_mtok: 24,
         },
       },
       {
@@ -112,9 +112,9 @@ export const data: Provider[] = [
         context_window: 200000,
         prices: {
           input_mtok: 0.8,
-          cache_write_mtok: 1.0,
+          cache_write_mtok: 1,
           cache_read_mtok: 0.08,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -134,10 +134,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -163,10 +163,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -194,10 +194,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -210,10 +210,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -227,10 +227,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1.0,
-          output_mtok: 50.0,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -255,10 +255,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
-          output_mtok: 5.0,
+          output_mtok: 5,
         },
       },
       {
@@ -283,10 +283,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -305,10 +305,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -333,10 +333,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -364,11 +364,11 @@ export const data: Provider[] = [
           {
             prices: {
               input_mtok: {
-                base: 5.0,
+                base: 5,
                 tiers: [
                   {
                     start: 200000,
-                    price: 10.0,
+                    price: 10,
                   },
                 ],
               },
@@ -386,12 +386,12 @@ export const data: Provider[] = [
                 tiers: [
                   {
                     start: 200000,
-                    price: 1.0,
+                    price: 1,
                   },
                 ],
               },
               output_mtok: {
-                base: 25.0,
+                base: 25,
                 tiers: [
                   {
                     start: 200000,
@@ -407,10 +407,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 5.0,
+              input_mtok: 5,
               cache_write_mtok: 6.25,
               cache_read_mtok: 0.5,
-              output_mtok: 25.0,
+              output_mtok: 25,
             },
           },
         ],
@@ -439,10 +439,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -469,10 +469,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -500,10 +500,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -523,11 +523,11 @@ export const data: Provider[] = [
         context_window: 1000000,
         prices: {
           input_mtok: {
-            base: 3.0,
+            base: 3,
             tiers: [
               {
                 start: 200000,
-                price: 6.0,
+                price: 6,
               },
             ],
           },
@@ -550,7 +550,7 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 15.0,
+            base: 15,
             tiers: [
               {
                 start: 200000,
@@ -579,11 +579,11 @@ export const data: Provider[] = [
           {
             prices: {
               input_mtok: {
-                base: 3.0,
+                base: 3,
                 tiers: [
                   {
                     start: 200000,
-                    price: 6.0,
+                    price: 6,
                   },
                 ],
               },
@@ -606,7 +606,7 @@ export const data: Provider[] = [
                 ],
               },
               output_mtok: {
-                base: 15.0,
+                base: 15,
                 tiers: [
                   {
                     start: 200000,
@@ -622,10 +622,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 3.0,
+              input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
-              output_mtok: 15.0,
+              output_mtok: 15,
             },
           },
         ],
@@ -656,10 +656,10 @@ export const data: Provider[] = [
         prices: [
           {
             prices: {
-              input_mtok: 2.0,
+              input_mtok: 2,
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
-              output_mtok: 10.0,
+              output_mtok: 10,
             },
           },
           {
@@ -668,10 +668,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 3.0,
+              input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
-              output_mtok: 15.0,
+              output_mtok: 15,
             },
           },
         ],
@@ -683,8 +683,8 @@ export const data: Provider[] = [
           equals: 'claude-v1',
         },
         prices: {
-          input_mtok: 8.0,
-          output_mtok: 24.0,
+          input_mtok: 8,
+          output_mtok: 24,
         },
       },
     ],
@@ -838,8 +838,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.33,
           output_mtok: 2.75,
-          input_audio_mtok: 3.0,
-          output_audio_mtok: 12.0,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
         },
       },
       {
@@ -970,10 +970,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-fable-5',
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1.0,
-          output_mtok: 50.0,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -982,10 +982,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-haiku-4-5-20251001',
         },
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
-          output_mtok: 5.0,
+          output_mtok: 5,
         },
       },
       {
@@ -994,10 +994,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-5',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -1006,10 +1006,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-6',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -1018,10 +1018,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-7',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -1030,10 +1030,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-8',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -1042,10 +1042,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-20250514',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1054,10 +1054,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-5-20250929',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1066,10 +1066,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-6',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1082,10 +1082,10 @@ export const data: Provider[] = [
         prices: [
           {
             prices: {
-              input_mtok: 2.0,
+              input_mtok: 2,
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
-              output_mtok: 10.0,
+              output_mtok: 10,
             },
           },
           {
@@ -1094,10 +1094,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 3.0,
+              input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
-              output_mtok: 15.0,
+              output_mtok: 15,
             },
           },
         ],
@@ -1264,7 +1264,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.4,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -1329,8 +1329,8 @@ export const data: Provider[] = [
           contains: 'mistral.mistral-large-2402',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 12.0,
+          input_mtok: 4,
+          output_mtok: 12,
         },
       },
       {
@@ -1351,8 +1351,8 @@ export const data: Provider[] = [
           contains: 'mistral.mistral-small-2402',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 3.0,
+          input_mtok: 1,
+          output_mtok: 3,
         },
       },
       {
@@ -1373,8 +1373,8 @@ export const data: Provider[] = [
           contains: 'mistral.pixtral-large-2502',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 6.0,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -1453,7 +1453,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 5.5,
           cache_read_mtok: 0.55,
-          output_mtok: 33.0,
+          output_mtok: 33,
         },
       },
       {
@@ -1553,9 +1553,9 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.8,
-          cache_write_mtok: 1.0,
+          cache_write_mtok: 1,
           cache_read_mtok: 0.08,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -1564,10 +1564,10 @@ export const data: Provider[] = [
           contains: 'claude-3-5-sonnet-20240620',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1576,10 +1576,10 @@ export const data: Provider[] = [
           contains: 'claude-3-5-sonnet-20241022',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1588,10 +1588,10 @@ export const data: Provider[] = [
           contains: 'claude-3-7-sonnet-20250219',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1610,8 +1610,8 @@ export const data: Provider[] = [
           contains: 'claude-3-opus-20240229',
         },
         prices: {
-          input_mtok: 15.0,
-          output_mtok: 75.0,
+          input_mtok: 15,
+          output_mtok: 75,
         },
       },
       {
@@ -1620,10 +1620,10 @@ export const data: Provider[] = [
           contains: 'claude-3-sonnet-20240229',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -1651,10 +1651,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 11.0,
+          input_mtok: 11,
           cache_write_mtok: 13.75,
           cache_read_mtok: 1.1,
-          output_mtok: 55.0,
+          output_mtok: 55,
         },
       },
       {
@@ -1725,10 +1725,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -1762,10 +1762,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -1941,10 +1941,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -2059,7 +2059,7 @@ export const data: Provider[] = [
               input_mtok: 2.2,
               cache_write_mtok: 2.75,
               cache_read_mtok: 0.22,
-              output_mtok: 11.0,
+              output_mtok: 11,
             },
           },
           {
@@ -2246,7 +2246,7 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
         },
       },
       {
@@ -2268,7 +2268,7 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
         },
       },
       {
@@ -2300,9 +2300,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_read_mtok: 7.5,
-          output_mtok: 60.0,
+          output_mtok: 60,
         },
       },
       {
@@ -2336,9 +2336,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.5,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -2386,8 +2386,8 @@ export const data: Provider[] = [
           equals: 'phi-3-medium-128k-instruct',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -2739,8 +2739,8 @@ export const data: Provider[] = [
           equals: 'command',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -2753,7 +2753,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -2793,7 +2793,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -3151,7 +3151,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -3184,7 +3184,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -3228,7 +3228,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.4,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -3239,7 +3239,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.95,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -3325,8 +3325,8 @@ export const data: Provider[] = [
         },
         context_window: 160000,
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 8.0,
+          input_mtok: 3,
+          output_mtok: 8,
         },
       },
       {
@@ -3479,7 +3479,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.1,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -3491,7 +3491,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -3506,7 +3506,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.19,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -3631,7 +3631,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.5,
           cache_read_mtok: 0.1,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -4090,9 +4090,9 @@ export const data: Provider[] = [
         context_window: 200000,
         prices: {
           input_mtok: 0.8,
-          cache_write_mtok: 1.0,
+          cache_write_mtok: 1,
           cache_read_mtok: 0.08,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -4102,10 +4102,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -4115,10 +4115,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -4140,10 +4140,10 @@ export const data: Provider[] = [
           contains: 'claude-3-opus',
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -4169,10 +4169,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -4189,10 +4189,10 @@ export const data: Provider[] = [
         },
         context_window: 200000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -4204,10 +4204,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1.0,
-          output_mtok: 50.0,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -4231,11 +4231,11 @@ export const data: Provider[] = [
         context_window: 200000,
         prices: {
           input_mtok: {
-            base: 5.0,
+            base: 5,
             tiers: [
               {
                 start: 200000,
-                price: 10.0,
+                price: 10,
               },
             ],
           },
@@ -4253,12 +4253,12 @@ export const data: Provider[] = [
             tiers: [
               {
                 start: 200000,
-                price: 1.0,
+                price: 1,
               },
             ],
           },
           output_mtok: {
-            base: 25.0,
+            base: 25,
             tiers: [
               {
                 start: 200000,
@@ -4290,10 +4290,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -4318,10 +4318,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -4398,11 +4398,11 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 5.0,
+            base: 5,
             tiers: [
               {
                 start: 128000,
-                price: 10.0,
+                price: 10,
               },
             ],
           },
@@ -4477,7 +4477,7 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
           output_mtok: 2.5,
-          input_audio_mtok: 1.0,
+          input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
         },
       },
@@ -4501,7 +4501,7 @@ export const data: Provider[] = [
           'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.',
         prices: {
           input_mtok: 0.3,
-          output_mtok: 30.0,
+          output_mtok: 30,
         },
       },
       {
@@ -4588,11 +4588,11 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 10.0,
+            base: 10,
             tiers: [
               {
                 start: 200000,
-                price: 15.0,
+                price: 15,
               },
             ],
           },
@@ -4619,8 +4619,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.5,
           cache_read_mtok: 0.05,
-          output_mtok: 3.0,
-          input_audio_mtok: 1.0,
+          output_mtok: 3,
+          input_audio_mtok: 1,
           cache_audio_read_mtok: 0.1,
         },
       },
@@ -4643,9 +4643,9 @@ export const data: Provider[] = [
         price_comments:
           'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 120.0,
-          output_text_mtok: 12.0,
+          input_mtok: 2,
+          output_mtok: 120,
+          output_text_mtok: 12,
         },
       },
       {
@@ -4664,11 +4664,11 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: {
-            base: 2.0,
+            base: 2,
             tiers: [
               {
                 start: 200000,
-                price: 4.0,
+                price: 4,
               },
             ],
           },
@@ -4682,11 +4682,11 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 12.0,
+            base: 12,
             tiers: [
               {
                 start: 200000,
-                price: 18.0,
+                price: 18,
               },
             ],
           },
@@ -4705,7 +4705,7 @@ export const data: Provider[] = [
           'See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
         prices: {
           input_mtok: 0.5,
-          output_mtok: 60.0,
+          output_mtok: 60,
         },
       },
       {
@@ -4736,11 +4736,11 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: {
-            base: 2.0,
+            base: 2,
             tiers: [
               {
                 start: 200000,
-                price: 4.0,
+                price: 4,
               },
             ],
           },
@@ -4754,11 +4754,11 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 12.0,
+            base: 12,
             tiers: [
               {
                 start: 200000,
-                price: 18.0,
+                price: 18,
               },
             ],
           },
@@ -4778,7 +4778,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.5,
           cache_read_mtok: 0.15,
-          output_mtok: 9.0,
+          output_mtok: 9,
         },
       },
       {
@@ -4883,9 +4883,9 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.5,
-          output_mtok: 2.0,
-          input_audio_mtok: 3.0,
-          output_audio_mtok: 12.0,
+          output_mtok: 2,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
         },
       },
       {
@@ -4939,11 +4939,11 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 5.0,
+            base: 5,
             tiers: [
               {
                 start: 128000,
-                price: 10.0,
+                price: 10,
               },
             ],
           },
@@ -5345,9 +5345,9 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_read_mtok: 0.5,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -5827,8 +5827,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -5846,8 +5846,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -5903,8 +5903,8 @@ export const data: Provider[] = [
         },
         context_window: 163840,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -5922,8 +5922,8 @@ export const data: Provider[] = [
         },
         context_window: 163840,
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 3.0,
+          input_mtok: 3,
+          output_mtok: 3,
         },
       },
       {
@@ -6069,8 +6069,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 3.0,
+          input_mtok: 1,
+          output_mtok: 3,
         },
       },
       {
@@ -6742,7 +6742,7 @@ export const data: Provider[] = [
         context_window: 131072,
         prices: {
           input_mtok: 0.3,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -6932,7 +6932,7 @@ export const data: Provider[] = [
         context_window: 131072,
         prices: {
           input_mtok: 0.2,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -7008,7 +7008,7 @@ export const data: Provider[] = [
         context_window: 262144,
         prices: {
           input_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -7324,7 +7324,7 @@ export const data: Provider[] = [
         context_window: 131072,
         prices: {
           input_mtok: 0.27,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -7552,7 +7552,7 @@ export const data: Provider[] = [
         context_window: 262144,
         prices: {
           input_mtok: 0.6,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -7779,7 +7779,7 @@ export const data: Provider[] = [
         },
         context_window: 202800,
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           output_mtok: 3.2,
         },
       },
@@ -8688,8 +8688,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 7.0,
+          input_mtok: 5,
+          output_mtok: 7,
         },
       },
       {
@@ -8726,7 +8726,7 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           output_mtok: 4.5,
         },
       },
@@ -8936,8 +8936,8 @@ export const data: Provider[] = [
         },
         context_window: 262144,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -9097,8 +9097,8 @@ export const data: Provider[] = [
         },
         context_window: 163840,
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 7.0,
+          input_mtok: 3,
+          output_mtok: 7,
         },
       },
       {
@@ -9313,7 +9313,7 @@ export const data: Provider[] = [
         context_window: 202752,
         prices: {
           input_mtok: 0.45,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -9331,7 +9331,7 @@ export const data: Provider[] = [
         },
         context_window: 202752,
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           output_mtok: 3.2,
         },
       },
@@ -9743,7 +9743,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -9782,8 +9782,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 5.0,
+          input_mtok: 2,
+          output_mtok: 5,
         },
       },
       {
@@ -9850,7 +9850,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.1,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -9903,8 +9903,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 6.0,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -9931,7 +9931,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.4,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -10140,8 +10140,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 6.0,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -10272,7 +10272,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.15,
           cache_read_mtok: 0.15,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -10287,7 +10287,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.15,
           cache_read_mtok: 0.15,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -10302,7 +10302,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.1,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -10317,7 +10317,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.16,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -10333,7 +10333,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.95,
           cache_read_mtok: 0.19,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -10351,8 +10351,8 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 5.0,
+          input_mtok: 2,
+          output_mtok: 5,
         },
       },
       {
@@ -10370,8 +10370,8 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 3.0,
+          input_mtok: 1,
+          output_mtok: 3,
         },
       },
       {
@@ -10390,7 +10390,7 @@ export const data: Provider[] = [
         context_window: 8192,
         prices: {
           input_mtok: 0.2,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
     ],
@@ -10427,8 +10427,8 @@ export const data: Provider[] = [
           equals: 'deepseek/deepseek-r1',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 4.0,
+          input_mtok: 4,
+          output_mtok: 4,
         },
       },
       {
@@ -10878,8 +10878,8 @@ export const data: Provider[] = [
           equals: 'chatgpt-4o-latest',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -10900,7 +10900,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.5,
           cache_read_mtok: 0.375,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -10910,8 +10910,8 @@ export const data: Provider[] = [
           starts_with: 'computer-use',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 12.0,
+          input_mtok: 3,
+          output_mtok: 12,
         },
       },
       {
@@ -10927,8 +10927,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -10944,8 +10944,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 20.0,
-          output_mtok: 20.0,
+          input_mtok: 20,
+          output_mtok: 20,
         },
       },
       {
@@ -10955,8 +10955,8 @@ export const data: Provider[] = [
           starts_with: 'ft:gpt-3.5-turbo',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 6.0,
+          input_mtok: 3,
+          output_mtok: 6,
         },
       },
       {
@@ -10967,7 +10967,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 3.75,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -10995,7 +10995,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.5,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -11029,7 +11029,7 @@ export const data: Provider[] = [
         context_window: 16385,
         prices: {
           input_mtok: 1.5,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -11039,8 +11039,8 @@ export const data: Provider[] = [
         },
         context_window: 16385,
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -11066,8 +11066,8 @@ export const data: Provider[] = [
         },
         context_window: 16385,
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 4.0,
+          input_mtok: 3,
+          output_mtok: 4,
         },
       },
       {
@@ -11087,7 +11087,7 @@ export const data: Provider[] = [
         context_window: 16385,
         prices: {
           input_mtok: 1.5,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -11113,8 +11113,8 @@ export const data: Provider[] = [
         },
         context_window: 8192,
         prices: {
-          input_mtok: 30.0,
-          output_mtok: 60.0,
+          input_mtok: 30,
+          output_mtok: 60,
         },
       },
       {
@@ -11138,8 +11138,8 @@ export const data: Provider[] = [
         context_window: 32000,
         price_comments: 'see https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
         prices: {
-          input_mtok: 60.0,
-          output_mtok: 120.0,
+          input_mtok: 60,
+          output_mtok: 120,
         },
       },
       {
@@ -11170,8 +11170,8 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         prices: {
-          input_mtok: 10.0,
-          output_mtok: 30.0,
+          input_mtok: 10,
+          output_mtok: 30,
         },
       },
       {
@@ -11190,8 +11190,8 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         prices: {
-          input_mtok: 10.0,
-          output_mtok: 30.0,
+          input_mtok: 10,
+          output_mtok: 30,
         },
       },
       {
@@ -11211,9 +11211,9 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.5,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -11269,9 +11269,9 @@ export const data: Provider[] = [
           starts_with: 'gpt-4.5-preview',
         },
         prices: {
-          input_mtok: 75.0,
+          input_mtok: 75,
           cache_read_mtok: 37.5,
-          output_mtok: 150.0,
+          output_mtok: 150,
         },
       },
       {
@@ -11299,7 +11299,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -11312,7 +11312,7 @@ export const data: Provider[] = [
         context_window: 128000,
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
           input_audio_mtok: 2.5,
         },
       },
@@ -11377,9 +11377,9 @@ export const data: Provider[] = [
           input_mtok: 0.6,
           cache_read_mtok: 0.3,
           output_mtok: 2.4,
-          input_audio_mtok: 10.0,
+          input_audio_mtok: 10,
           cache_audio_read_mtok: 0.3,
-          output_audio_mtok: 20.0,
+          output_audio_mtok: 20,
         },
       },
       {
@@ -11389,8 +11389,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.25,
-          output_mtok: 5.0,
-          input_audio_mtok: 3.0,
+          output_mtok: 5,
+          input_audio_mtok: 3,
         },
       },
       {
@@ -11400,8 +11400,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.6,
-          output_mtok: 12.0,
-          output_audio_mtok: 12.0,
+          output_mtok: 12,
+          output_audio_mtok: 12,
         },
       },
       {
@@ -11410,12 +11410,12 @@ export const data: Provider[] = [
           starts_with: 'gpt-4o-realtime',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 2.5,
-          output_mtok: 20.0,
-          input_audio_mtok: 40.0,
+          output_mtok: 20,
+          input_audio_mtok: 40,
           cache_audio_read_mtok: 2.5,
-          output_audio_mtok: 80.0,
+          output_audio_mtok: 80,
         },
       },
       {
@@ -11435,7 +11435,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -11452,8 +11452,8 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
-          input_audio_mtok: 6.0,
+          output_mtok: 10,
+          input_audio_mtok: 6,
         },
       },
       {
@@ -11465,8 +11465,8 @@ export const data: Provider[] = [
           equals: 'gpt-4o:extended',
         },
         prices: {
-          input_mtok: 6.0,
-          output_mtok: 18.0,
+          input_mtok: 6,
+          output_mtok: 18,
         },
       },
       {
@@ -11496,7 +11496,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -11506,9 +11506,9 @@ export const data: Provider[] = [
         },
         price_comments: 'Seen on OpenRouter before OpenAI',
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_read_mtok: 1.25,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -11520,7 +11520,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -11541,7 +11541,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -11579,8 +11579,8 @@ export const data: Provider[] = [
         },
         context_window: 400000,
         prices: {
-          input_mtok: 15.0,
-          output_mtok: 120.0,
+          input_mtok: 15,
+          output_mtok: 120,
         },
       },
       {
@@ -11631,7 +11631,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -11657,7 +11657,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -11702,7 +11702,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
-          output_mtok: 14.0,
+          output_mtok: 14,
         },
       },
       {
@@ -11723,8 +11723,8 @@ export const data: Provider[] = [
         },
         context_window: 400000,
         prices: {
-          input_mtok: 21.0,
-          output_mtok: 168.0,
+          input_mtok: 21,
+          output_mtok: 168,
         },
       },
       {
@@ -11757,7 +11757,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
-          output_mtok: 14.0,
+          output_mtok: 14,
         },
       },
       {
@@ -11778,7 +11778,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
-          output_mtok: 14.0,
+          output_mtok: 14,
         },
       },
       {
@@ -11808,7 +11808,7 @@ export const data: Provider[] = [
             tiers: [
               {
                 start: 272000,
-                price: 5.0,
+                price: 5,
               },
             ],
           },
@@ -11822,7 +11822,7 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 15.0,
+            base: 15,
             tiers: [
               {
                 start: 272000,
@@ -11842,9 +11842,9 @@ export const data: Provider[] = [
         },
         price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
-          input_mtok: 8.0,
-          cache_read_mtok: 2.0,
-          output_mtok: 15.0,
+          input_mtok: 8,
+          cache_read_mtok: 2,
+          output_mtok: 15,
         },
       },
       {
@@ -11924,20 +11924,20 @@ export const data: Provider[] = [
         context_window: 1050000,
         prices: {
           input_mtok: {
-            base: 30.0,
+            base: 30,
             tiers: [
               {
                 start: 272000,
-                price: 60.0,
+                price: 60,
               },
             ],
           },
           output_mtok: {
-            base: 180.0,
+            base: 180,
             tiers: [
               {
                 start: 272000,
-                price: 270.0,
+                price: 270,
               },
             ],
           },
@@ -11989,9 +11989,9 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 0.5,
-          output_mtok: 30.0,
+          output_mtok: 30,
         },
       },
       {
@@ -12016,8 +12016,8 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         prices: {
-          input_mtok: 30.0,
-          output_mtok: 180.0,
+          input_mtok: 30,
+          output_mtok: 180,
         },
       },
       {
@@ -12040,9 +12040,9 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
-          input_audio_mtok: 32.0,
-          output_audio_mtok: 64.0,
+          output_mtok: 10,
+          input_audio_mtok: 32,
+          output_audio_mtok: 64,
         },
       },
       {
@@ -12066,8 +12066,8 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.4,
-          input_audio_mtok: 10.0,
-          output_audio_mtok: 20.0,
+          input_audio_mtok: 10,
+          output_audio_mtok: 20,
         },
       },
       {
@@ -12080,9 +12080,9 @@ export const data: Provider[] = [
         },
         price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 0.5,
-          output_mtok: 30.0,
+          output_mtok: 30,
         },
       },
       {
@@ -12097,7 +12097,7 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.2,
         },
       },
@@ -12116,9 +12116,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 1.25,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -12136,7 +12136,7 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 1.25,
         },
       },
@@ -12200,12 +12200,12 @@ export const data: Provider[] = [
         },
         price_comments: "Missing image token prices which we don't support yet",
         prices: {
-          input_mtok: 4.0,
+          input_mtok: 4,
           cache_read_mtok: 0.4,
-          output_mtok: 16.0,
-          input_audio_mtok: 32.0,
+          output_mtok: 16,
+          input_audio_mtok: 32,
           cache_audio_read_mtok: 0.4,
-          output_audio_mtok: 64.0,
+          output_audio_mtok: 64,
         },
       },
       {
@@ -12219,12 +12219,12 @@ export const data: Provider[] = [
         },
         price_comments: "Missing image token prices which we don't support yet",
         prices: {
-          input_mtok: 4.0,
+          input_mtok: 4,
           cache_read_mtok: 0.4,
-          output_mtok: 24.0,
-          input_audio_mtok: 32.0,
+          output_mtok: 24,
+          input_audio_mtok: 32,
           cache_audio_read_mtok: 0.4,
-          output_audio_mtok: 64.0,
+          output_audio_mtok: 64,
         },
       },
       {
@@ -12247,9 +12247,9 @@ export const data: Provider[] = [
           input_mtok: 0.6,
           cache_read_mtok: 0.06,
           output_mtok: 2.4,
-          input_audio_mtok: 10.0,
+          input_audio_mtok: 10,
           cache_audio_read_mtok: 0.3,
-          output_audio_mtok: 20.0,
+          output_audio_mtok: 20,
         },
       },
       {
@@ -12282,9 +12282,9 @@ export const data: Provider[] = [
         },
         context_window: 128000,
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_read_mtok: 7.5,
-          output_mtok: 60.0,
+          output_mtok: 60,
         },
       },
       {
@@ -12324,8 +12324,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 150.0,
-          output_mtok: 600.0,
+          input_mtok: 150,
+          output_mtok: 600,
         },
       },
       {
@@ -12346,9 +12346,9 @@ export const data: Provider[] = [
         prices: [
           {
             prices: {
-              input_mtok: 10.0,
+              input_mtok: 10,
               cache_read_mtok: 0.5,
-              output_mtok: 40.0,
+              output_mtok: 40,
             },
           },
           {
@@ -12357,9 +12357,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 2.0,
+              input_mtok: 2,
               cache_read_mtok: 0.5,
-              output_mtok: 8.0,
+              output_mtok: 8,
             },
           },
         ],
@@ -12377,9 +12377,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_read_mtok: 2.5,
-          output_mtok: 40.0,
+          output_mtok: 40,
         },
       },
       {
@@ -12422,8 +12422,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 20.0,
-          output_mtok: 80.0,
+          input_mtok: 20,
+          output_mtok: 80,
         },
       },
       {
@@ -12462,9 +12462,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.5,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -12473,8 +12473,8 @@ export const data: Provider[] = [
           equals: 'text-davinci-002',
         },
         prices: {
-          input_mtok: 20.0,
-          output_mtok: 20.0,
+          input_mtok: 20,
+          output_mtok: 20,
         },
       },
       {
@@ -12483,8 +12483,8 @@ export const data: Provider[] = [
           equals: 'text-davinci-003',
         },
         prices: {
-          input_mtok: 20.0,
-          output_mtok: 20.0,
+          input_mtok: 20,
+          output_mtok: 20,
         },
       },
       {
@@ -12586,8 +12586,8 @@ export const data: Provider[] = [
           equals: '01-ai/yi-large',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 3.0,
+          input_mtok: 3,
+          output_mtok: 3,
         },
       },
       {
@@ -12613,8 +12613,8 @@ export const data: Provider[] = [
           equals: 'ai21/jamba-1-5-large',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -12633,8 +12633,8 @@ export const data: Provider[] = [
           equals: 'ai21/jamba-1.6-large',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -12664,8 +12664,8 @@ export const data: Provider[] = [
           equals: 'ai21/jamba-large-1.7',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -12675,8 +12675,8 @@ export const data: Provider[] = [
           equals: 'aion-labs/aion-1.0',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 8.0,
+          input_mtok: 4,
+          output_mtok: 8,
         },
       },
       {
@@ -12829,8 +12829,8 @@ export const data: Provider[] = [
           equals: 'anthracite-org/magnum-v2-72b',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 3.0,
+          input_mtok: 3,
+          output_mtok: 3,
         },
       },
       {
@@ -12868,8 +12868,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 8.0,
-          output_mtok: 24.0,
+          input_mtok: 8,
+          output_mtok: 24,
         },
       },
       {
@@ -12902,8 +12902,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
-          output_mtok: 75.0,
+          input_mtok: 15,
+          output_mtok: 75,
         },
       },
       {
@@ -12919,8 +12919,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -12943,7 +12943,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.8,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -12965,8 +12965,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -12985,8 +12985,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -13005,10 +13005,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1.0,
-          output_mtok: 50.0,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -13036,10 +13036,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
-          output_mtok: 5.0,
+          output_mtok: 5,
         },
       },
       {
@@ -13056,10 +13056,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -13087,10 +13087,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -13121,10 +13121,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -13134,10 +13134,10 @@ export const data: Provider[] = [
           equals: 'anthropic/claude-opus-4.6-fast',
         },
         prices: {
-          input_mtok: 30.0,
+          input_mtok: 30,
           cache_write_mtok: 37.5,
-          cache_read_mtok: 3.0,
-          output_mtok: 150.0,
+          cache_read_mtok: 3,
+          output_mtok: 150,
         },
       },
       {
@@ -13156,10 +13156,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -13169,10 +13169,10 @@ export const data: Provider[] = [
           equals: 'anthropic/claude-opus-4.7-fast',
         },
         prices: {
-          input_mtok: 30.0,
+          input_mtok: 30,
           cache_write_mtok: 37.5,
-          cache_read_mtok: 3.0,
-          output_mtok: 150.0,
+          cache_read_mtok: 3,
+          output_mtok: 150,
         },
       },
       {
@@ -13191,10 +13191,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -13204,10 +13204,10 @@ export const data: Provider[] = [
           equals: 'anthropic/claude-opus-4.8-fast',
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1.0,
-          output_mtok: 50.0,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -13217,10 +13217,10 @@ export const data: Provider[] = [
           equals: 'anthropic/claude-sonnet-4',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -13252,11 +13252,11 @@ export const data: Provider[] = [
           'Tiered pricing: Unlike 4.6 models, Sonnet 4.5 has long-context surcharge. Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
           input_mtok: {
-            base: 3.0,
+            base: 3,
             tiers: [
               {
                 start: 200000,
-                price: 6.0,
+                price: 6,
               },
             ],
           },
@@ -13279,7 +13279,7 @@ export const data: Provider[] = [
             ],
           },
           output_mtok: {
-            base: 15.0,
+            base: 15,
             tiers: [
               {
                 start: 200000,
@@ -13317,10 +13317,10 @@ export const data: Provider[] = [
         price_comments:
           'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -13341,10 +13341,10 @@ export const data: Provider[] = [
         prices: [
           {
             prices: {
-              input_mtok: 2.0,
+              input_mtok: 2,
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
-              output_mtok: 10.0,
+              output_mtok: 10,
             },
           },
           {
@@ -13353,10 +13353,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 3.0,
+              input_mtok: 3,
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
-              output_mtok: 15.0,
+              output_mtok: 15,
             },
           },
         ],
@@ -13369,7 +13369,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.8,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -13461,7 +13461,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -13483,7 +13483,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -13527,8 +13527,8 @@ export const data: Provider[] = [
           equals: 'chatgpt-4o-latest',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -13557,8 +13557,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 8.0,
-          output_mtok: 24.0,
+          input_mtok: 8,
+          output_mtok: 24,
         },
       },
       {
@@ -13575,10 +13575,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
-          output_mtok: 75.0,
+          output_mtok: 75,
         },
       },
       {
@@ -13595,10 +13595,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -13621,10 +13621,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -13644,10 +13644,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -13681,7 +13681,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.5,
           cache_read_mtok: 0.375,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -13732,8 +13732,8 @@ export const data: Provider[] = [
           equals: 'cohere/command',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -13743,7 +13743,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -13786,8 +13786,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -13797,7 +13797,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -13817,8 +13817,8 @@ export const data: Provider[] = [
           equals: 'command',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -13853,8 +13853,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -14337,8 +14337,8 @@ export const data: Provider[] = [
           equals: 'eva-llama-3.33-70b',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 6.0,
+          input_mtok: 4,
+          output_mtok: 6,
         },
       },
       {
@@ -14359,8 +14359,8 @@ export const data: Provider[] = [
           equals: 'eva-qwen-2.5-72b',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 6.0,
+          input_mtok: 4,
+          output_mtok: 6,
         },
       },
       {
@@ -14369,8 +14369,8 @@ export const data: Provider[] = [
           equals: 'eva-unit-01/eva-llama-3.33-70b',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 6.0,
+          input_mtok: 4,
+          output_mtok: 6,
         },
       },
       {
@@ -14542,7 +14542,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.25,
-          output_mtok: 5.0,
+          output_mtok: 5,
         },
       },
       {
@@ -14632,7 +14632,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.2,
           cache_read_mtok: 0.24,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -14672,7 +14672,7 @@ export const data: Provider[] = [
           equals: 'goliath-120b',
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           output_mtok: 12.5,
         },
       },
@@ -14820,7 +14820,7 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_write_mtok: 1.625,
           cache_read_mtok: 0.31,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -14837,7 +14837,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.25,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -14850,7 +14850,7 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           cache_write_mtok: 0.08333333333333334,
           cache_read_mtok: 0.05,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -14860,10 +14860,10 @@ export const data: Provider[] = [
           equals: 'google/gemini-3-pro-image-preview',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_write_mtok: 0.375,
           cache_read_mtok: 0.2,
-          output_mtok: 12.0,
+          output_mtok: 12,
         },
       },
       {
@@ -14874,7 +14874,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.5,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -14911,10 +14911,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_write_mtok: 0.375,
           cache_read_mtok: 0.2,
-          output_mtok: 12.0,
+          output_mtok: 12,
         },
       },
       {
@@ -14934,7 +14934,7 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_write_mtok: 0.08333333333333334,
           cache_read_mtok: 0.15,
-          output_mtok: 9.0,
+          output_mtok: 9,
         },
       },
       {
@@ -14988,7 +14988,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.25,
-          output_mtok: 5.0,
+          output_mtok: 5,
         },
       },
       {
@@ -15166,8 +15166,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -15183,8 +15183,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -15194,8 +15194,8 @@ export const data: Provider[] = [
           equals: 'gpt-3.5-turbo-1106',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -15205,8 +15205,8 @@ export const data: Provider[] = [
           equals: 'gpt-4-1106-preview',
         },
         prices: {
-          input_mtok: 10.0,
-          output_mtok: 30.0,
+          input_mtok: 10,
+          output_mtok: 30,
         },
       },
       {
@@ -15216,9 +15216,9 @@ export const data: Provider[] = [
           equals: 'gpt-4.5-preview',
         },
         prices: {
-          input_mtok: 75.0,
+          input_mtok: 75,
           cache_read_mtok: 37.5,
-          output_mtok: 150.0,
+          output_mtok: 150,
         },
       },
       {
@@ -15228,8 +15228,8 @@ export const data: Provider[] = [
           equals: 'gpt-4o:extended',
         },
         prices: {
-          input_mtok: 6.0,
-          output_mtok: 18.0,
+          input_mtok: 6,
+          output_mtok: 18,
         },
       },
       {
@@ -15239,8 +15239,8 @@ export const data: Provider[] = [
           equals: 'grok-2-1212',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 10.0,
+          input_mtok: 2,
+          output_mtok: 10,
         },
       },
       {
@@ -15250,8 +15250,8 @@ export const data: Provider[] = [
           equals: 'grok-2-vision-1212',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 10.0,
+          input_mtok: 2,
+          output_mtok: 10,
         },
       },
       {
@@ -15268,9 +15268,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_read_mtok: 0.75,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -15299,8 +15299,8 @@ export const data: Provider[] = [
           equals: 'grok-beta',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -15310,8 +15310,8 @@ export const data: Provider[] = [
           equals: 'grok-vision-beta',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -15431,7 +15431,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -15442,7 +15442,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -15468,8 +15468,8 @@ export const data: Provider[] = [
           equals: 'jamba-1.6-large',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -15639,8 +15639,8 @@ export const data: Provider[] = [
           equals: 'llama-3-lumimaid-70b',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 6.0,
+          input_mtok: 4,
+          output_mtok: 6,
         },
       },
       {
@@ -15661,8 +15661,8 @@ export const data: Provider[] = [
           equals: 'llama-3.1-405b',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -15692,7 +15692,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 3.0,
+          output_mtok: 3,
         },
       },
       {
@@ -15743,8 +15743,8 @@ export const data: Provider[] = [
           equals: 'llama-3.1-sonar-large-128k-online',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -15886,8 +15886,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 5.0,
+          input_mtok: 2,
+          output_mtok: 5,
         },
       },
       {
@@ -15908,8 +15908,8 @@ export const data: Provider[] = [
           equals: 'magnum-72b',
         },
         prices: {
-          input_mtok: 4.0,
-          output_mtok: 6.0,
+          input_mtok: 4,
+          output_mtok: 6,
         },
       },
       {
@@ -15919,8 +15919,8 @@ export const data: Provider[] = [
           equals: 'magnum-v2-72b',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 3.0,
+          input_mtok: 3,
+          output_mtok: 3,
         },
       },
       {
@@ -15949,7 +15949,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.25,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -16000,8 +16000,8 @@ export const data: Provider[] = [
           equals: 'meta-llama/llama-3.1-405b',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 2.0,
+          input_mtok: 2,
+          output_mtok: 2,
         },
       },
       {
@@ -16207,8 +16207,8 @@ export const data: Provider[] = [
           equals: 'microsoft/phi-3-medium-128k-instruct',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -16336,7 +16336,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.255,
           cache_read_mtok: 0.03,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -16613,7 +16613,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -16733,8 +16733,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 6.0,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -16767,7 +16767,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.4,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -16790,7 +16790,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -16937,8 +16937,8 @@ export const data: Provider[] = [
           equals: 'mistralai/pixtral-large-2411',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 6.0,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -17203,7 +17203,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -17281,8 +17281,8 @@ export const data: Provider[] = [
           equals: 'nousresearch/hermes-4-405b',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 3.0,
+          input_mtok: 1,
+          output_mtok: 3,
         },
       },
       {
@@ -17505,8 +17505,8 @@ export const data: Provider[] = [
           equals: 'openai/chatgpt-4o-latest',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -17517,7 +17517,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.5,
           cache_read_mtok: 0.375,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -17545,8 +17545,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-3.5-turbo-0613',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -17555,8 +17555,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-3.5-turbo-1106',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 2.0,
+          input_mtok: 1,
+          output_mtok: 2,
         },
       },
       {
@@ -17566,8 +17566,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-3.5-turbo-16k',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 4.0,
+          input_mtok: 3,
+          output_mtok: 4,
         },
       },
       {
@@ -17578,7 +17578,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.5,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -17595,8 +17595,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 30.0,
-          output_mtok: 60.0,
+          input_mtok: 30,
+          output_mtok: 60,
         },
       },
       {
@@ -17605,8 +17605,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-4-1106-preview',
         },
         prices: {
-          input_mtok: 10.0,
-          output_mtok: 30.0,
+          input_mtok: 10,
+          output_mtok: 30,
         },
       },
       {
@@ -17622,8 +17622,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 60.0,
-          output_mtok: 120.0,
+          input_mtok: 60,
+          output_mtok: 120,
         },
       },
       {
@@ -17640,8 +17640,8 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 10.0,
-          output_mtok: 30.0,
+          input_mtok: 10,
+          output_mtok: 30,
         },
       },
       {
@@ -17651,9 +17651,9 @@ export const data: Provider[] = [
           equals: 'openai/gpt-4.1',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.5,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -17686,8 +17686,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-4.5-preview',
         },
         prices: {
-          input_mtok: 75.0,
-          output_mtok: 150.0,
+          input_mtok: 75,
+          output_mtok: 150,
         },
       },
       {
@@ -17710,7 +17710,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -17720,8 +17720,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-4o-2024-05-13',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -17762,7 +17762,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -17771,8 +17771,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-4o:extended',
         },
         prices: {
-          input_mtok: 6.0,
-          output_mtok: 18.0,
+          input_mtok: 6,
+          output_mtok: 18,
         },
       },
       {
@@ -17797,7 +17797,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.125,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -17807,9 +17807,9 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5-image',
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_read_mtok: 1.25,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -17821,7 +17821,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 0.25,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -17833,7 +17833,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -17855,8 +17855,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5-pro',
         },
         prices: {
-          input_mtok: 15.0,
-          output_mtok: 120.0,
+          input_mtok: 15,
+          output_mtok: 120,
         },
       },
       {
@@ -17878,7 +17878,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.25,
           cache_read_mtok: 0.13,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -17890,7 +17890,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -17912,7 +17912,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
-          output_mtok: 14.0,
+          output_mtok: 14,
         },
       },
       {
@@ -17922,8 +17922,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5.2-pro',
         },
         prices: {
-          input_mtok: 21.0,
-          output_mtok: 168.0,
+          input_mtok: 21,
+          output_mtok: 168,
         },
       },
       {
@@ -17935,7 +17935,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
-          output_mtok: 14.0,
+          output_mtok: 14,
         },
       },
       {
@@ -17947,7 +17947,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.75,
           cache_read_mtok: 0.175,
-          output_mtok: 14.0,
+          output_mtok: 14,
         },
       },
       {
@@ -17959,7 +17959,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           cache_read_mtok: 0.25,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -17969,9 +17969,9 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5.4-image-2',
         },
         prices: {
-          input_mtok: 8.0,
-          cache_read_mtok: 2.0,
-          output_mtok: 15.0,
+          input_mtok: 8,
+          cache_read_mtok: 2,
+          output_mtok: 15,
         },
       },
       {
@@ -18005,8 +18005,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5.4-pro',
         },
         prices: {
-          input_mtok: 30.0,
-          output_mtok: 180.0,
+          input_mtok: 30,
+          output_mtok: 180,
         },
       },
       {
@@ -18016,9 +18016,9 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5.5',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 0.5,
-          output_mtok: 30.0,
+          output_mtok: 30,
         },
       },
       {
@@ -18028,8 +18028,8 @@ export const data: Provider[] = [
           equals: 'openai/gpt-5.5-pro',
         },
         prices: {
-          input_mtok: 30.0,
-          output_mtok: 180.0,
+          input_mtok: 30,
+          output_mtok: 180,
         },
       },
       {
@@ -18040,7 +18040,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 2.5,
-          output_mtok: 10.0,
+          output_mtok: 10,
         },
       },
       {
@@ -18061,9 +18061,9 @@ export const data: Provider[] = [
           equals: 'openai/gpt-chat-latest',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 0.5,
-          output_mtok: 30.0,
+          output_mtok: 30,
         },
       },
       {
@@ -18133,9 +18133,9 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: 15.0,
+          input_mtok: 15,
           cache_read_mtok: 7.5,
-          output_mtok: 60.0,
+          output_mtok: 60,
         },
       },
       {
@@ -18162,8 +18162,8 @@ export const data: Provider[] = [
           equals: 'openai/o1-pro',
         },
         prices: {
-          input_mtok: 150.0,
-          output_mtok: 600.0,
+          input_mtok: 150,
+          output_mtok: 600,
         },
       },
       {
@@ -18173,9 +18173,9 @@ export const data: Provider[] = [
           equals: 'openai/o3',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.5,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -18185,9 +18185,9 @@ export const data: Provider[] = [
           equals: 'openai/o3-deep-research',
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_read_mtok: 2.5,
-          output_mtok: 40.0,
+          output_mtok: 40,
         },
       },
       {
@@ -18216,8 +18216,8 @@ export const data: Provider[] = [
           equals: 'openai/o3-pro',
         },
         prices: {
-          input_mtok: 20.0,
-          output_mtok: 80.0,
+          input_mtok: 20,
+          output_mtok: 80,
         },
       },
       {
@@ -18246,9 +18246,9 @@ export const data: Provider[] = [
           equals: 'openai/o4-mini-deep-research',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.5,
-          output_mtok: 8.0,
+          output_mtok: 8,
         },
       },
       {
@@ -18289,8 +18289,8 @@ export const data: Provider[] = [
           equals: 'perplexity/llama-3.1-sonar-large-128k-online',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -18309,8 +18309,8 @@ export const data: Provider[] = [
           equals: 'perplexity/r1-1776',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -18319,8 +18319,8 @@ export const data: Provider[] = [
           equals: 'perplexity/sonar',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -18329,8 +18329,8 @@ export const data: Provider[] = [
           equals: 'perplexity/sonar-deep-research',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -18339,8 +18339,8 @@ export const data: Provider[] = [
           equals: 'perplexity/sonar-pro',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -18349,8 +18349,8 @@ export const data: Provider[] = [
           equals: 'perplexity/sonar-reasoning',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 5.0,
+          input_mtok: 1,
+          output_mtok: 5,
         },
       },
       {
@@ -18359,8 +18359,8 @@ export const data: Provider[] = [
           equals: 'perplexity/sonar-reasoning-pro',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -18370,8 +18370,8 @@ export const data: Provider[] = [
           equals: 'phi-3-medium-128k-instruct',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -18452,8 +18452,8 @@ export const data: Provider[] = [
           equals: 'pixtral-large-2411',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 6.0,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -18985,7 +18985,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 1.2,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -19180,7 +19180,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.14,
           cache_read_mtok: 0.05,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -19300,7 +19300,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.14,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -19547,8 +19547,8 @@ export const data: Provider[] = [
           equals: 'r1-1776',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -19616,8 +19616,8 @@ export const data: Provider[] = [
           equals: 'relace/relace-search',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 3.0,
+          input_mtok: 1,
+          output_mtok: 3,
         },
       },
       {
@@ -19658,8 +19658,8 @@ export const data: Provider[] = [
           equals: 'sao10k/l3.1-70b-hanami-x1',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 3.0,
+          input_mtok: 3,
+          output_mtok: 3,
         },
       },
       {
@@ -19734,8 +19734,8 @@ export const data: Provider[] = [
           equals: 'sonar-reasoning',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 5.0,
+          input_mtok: 1,
+          output_mtok: 5,
         },
       },
       {
@@ -19852,7 +19852,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.8,
-          output_mtok: 1.0,
+          output_mtok: 1,
         },
       },
       {
@@ -19987,7 +19987,7 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.6,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -19996,8 +19996,8 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-2-1212',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 10.0,
+          input_mtok: 2,
+          output_mtok: 10,
         },
       },
       {
@@ -20006,8 +20006,8 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-2-vision-1212',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 10.0,
+          input_mtok: 2,
+          output_mtok: 10,
         },
       },
       {
@@ -20016,8 +20016,8 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-3-beta',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -20052,7 +20052,7 @@ export const data: Provider[] = [
             tiers: [
               {
                 start: 128000,
-                price: 1.0,
+                price: 1,
               },
             ],
           },
@@ -20085,9 +20085,9 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-4.20-multi-agent',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.2,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -20115,8 +20115,8 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-beta',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -20126,9 +20126,9 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-build-0.1',
         },
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_read_mtok: 0.2,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {
@@ -20149,8 +20149,8 @@ export const data: Provider[] = [
           equals: 'x-ai/grok-vision-beta',
         },
         prices: {
-          input_mtok: 5.0,
-          output_mtok: 15.0,
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -20206,8 +20206,8 @@ export const data: Provider[] = [
           equals: 'yi-large',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 3.0,
+          input_mtok: 3,
+          output_mtok: 3,
         },
       },
       {
@@ -20336,7 +20336,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 1.2,
           cache_read_mtok: 0.24,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -20385,10 +20385,10 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-fable-latest',
         },
         prices: {
-          input_mtok: 10.0,
+          input_mtok: 10,
           cache_write_mtok: 12.5,
-          cache_read_mtok: 1.0,
-          output_mtok: 50.0,
+          cache_read_mtok: 1,
+          output_mtok: 50,
         },
       },
       {
@@ -20398,10 +20398,10 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-haiku-latest',
         },
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
-          output_mtok: 5.0,
+          output_mtok: 5,
         },
       },
       {
@@ -20411,10 +20411,10 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-opus-latest',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -20424,10 +20424,10 @@ export const data: Provider[] = [
           equals: '~anthropic/claude-sonnet-latest',
         },
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -20440,7 +20440,7 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_write_mtok: 0.08333333333333334,
           cache_read_mtok: 0.15,
-          output_mtok: 9.0,
+          output_mtok: 9,
         },
       },
       {
@@ -20450,10 +20450,10 @@ export const data: Provider[] = [
           equals: '~google/gemini-pro-latest',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_write_mtok: 0.375,
           cache_read_mtok: 0.2,
-          output_mtok: 12.0,
+          output_mtok: 12,
         },
       },
       {
@@ -20475,9 +20475,9 @@ export const data: Provider[] = [
           equals: '~openai/gpt-latest',
         },
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 0.5,
-          output_mtok: 30.0,
+          output_mtok: 30,
         },
       },
       {
@@ -20800,8 +20800,8 @@ export const data: Provider[] = [
           equals: 'llama-3.1-sonar-large-128k-online',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
+          input_mtok: 1,
+          output_mtok: 1,
         },
       },
       {
@@ -20826,8 +20826,8 @@ export const data: Provider[] = [
           equals: 'r1-1776',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -20839,9 +20839,9 @@ export const data: Provider[] = [
           equals: 'sonar',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 1.0,
-          requests_kcount: 12.0,
+          input_mtok: 1,
+          output_mtok: 1,
+          requests_kcount: 12,
         },
       },
       {
@@ -20853,8 +20853,8 @@ export const data: Provider[] = [
           equals: 'sonar-deep-research',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
+          input_mtok: 2,
+          output_mtok: 8,
         },
       },
       {
@@ -20865,9 +20865,9 @@ export const data: Provider[] = [
           equals: 'sonar-pro',
         },
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
-          requests_kcount: 14.0,
+          input_mtok: 3,
+          output_mtok: 15,
+          requests_kcount: 14,
         },
       },
       {
@@ -20879,8 +20879,8 @@ export const data: Provider[] = [
         },
         price_comments: 'Imported from OpenRouter pricing; verify against Perplexity pricing when native API pricing is published.',
         prices: {
-          input_mtok: 3.0,
-          output_mtok: 15.0,
+          input_mtok: 3,
+          output_mtok: 15,
         },
       },
       {
@@ -20891,9 +20891,9 @@ export const data: Provider[] = [
           equals: 'sonar-reasoning',
         },
         prices: {
-          input_mtok: 1.0,
-          output_mtok: 5.0,
-          requests_kcount: 12.0,
+          input_mtok: 1,
+          output_mtok: 5,
+          requests_kcount: 12,
         },
       },
       {
@@ -20904,9 +20904,9 @@ export const data: Provider[] = [
           equals: 'sonar-reasoning-pro',
         },
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 8.0,
-          requests_kcount: 14.0,
+          input_mtok: 2,
+          output_mtok: 8,
+          requests_kcount: 14,
         },
       },
     ],
@@ -22043,8 +22043,8 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 10.0,
+          input_mtok: 2,
+          output_mtok: 10,
         },
         deprecated: true,
       },
@@ -22067,8 +22067,8 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         prices: {
-          input_mtok: 2.0,
-          output_mtok: 10.0,
+          input_mtok: 2,
+          output_mtok: 10,
         },
       },
       {
@@ -22091,9 +22091,9 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_read_mtok: 0.75,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -22116,9 +22116,9 @@ export const data: Provider[] = [
         },
         context_window: 131072,
         prices: {
-          input_mtok: 5.0,
+          input_mtok: 5,
           cache_read_mtok: 1.25,
-          output_mtok: 25.0,
+          output_mtok: 25,
         },
       },
       {
@@ -22168,7 +22168,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.15,
-          output_mtok: 4.0,
+          output_mtok: 4,
         },
       },
       {
@@ -22191,9 +22191,9 @@ export const data: Provider[] = [
         },
         context_window: 256000,
         prices: {
-          input_mtok: 3.0,
+          input_mtok: 3,
           cache_read_mtok: 0.75,
-          output_mtok: 15.0,
+          output_mtok: 15,
         },
       },
       {
@@ -22309,9 +22309,9 @@ export const data: Provider[] = [
           equals: 'grok-4.20-multi-agent',
         },
         prices: {
-          input_mtok: 2.0,
+          input_mtok: 2,
           cache_read_mtok: 0.2,
-          output_mtok: 6.0,
+          output_mtok: 6,
         },
       },
       {
@@ -22357,9 +22357,9 @@ export const data: Provider[] = [
           equals: 'grok-build-0.1',
         },
         prices: {
-          input_mtok: 1.0,
+          input_mtok: 1,
           cache_read_mtok: 0.2,
-          output_mtok: 2.0,
+          output_mtok: 2,
         },
       },
       {

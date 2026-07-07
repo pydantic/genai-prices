@@ -14,10 +14,13 @@ from pydantic import (
     Field,
     HttpUrl,
     PlainSerializer,
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
     Tag,
     TypeAdapter,
     ValidationInfo,
     WithJsonSchema,
+    WrapSerializer,
     field_validator,
 )
 
@@ -151,6 +154,19 @@ class UsageExtractor(_Model):
     """Mappings from used to build usage."""
 
 
+def serialize_prices(
+    value: ModelPrice | list[ConditionalPrice], _handler: SerializerFunctionWrapHandler, info: SerializationInfo
+):
+    # Serialize each union member on its own. Under the `ModelPrice | list[ConditionalPrice]` union,
+    # pydantic-core coerces whole-number `Decimal` prices to float (because `ModelPrice` has typed
+    # `extra='allow'`); dumping the concrete member directly keeps whole numbers as ints.
+    # No return annotation: WrapSerializer would otherwise adopt it as the serialization JSON schema
+    # and collapse the detailed `prices` schema to a generic object.
+    if isinstance(value, list):
+        return [cp.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none) for cp in value]
+    return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
+
+
 class ModelInfo(_Model):
     """Information about an LLM model"""
 
@@ -166,7 +182,7 @@ class ModelInfo(_Model):
     """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
-    prices: ModelPrice | list[ConditionalPrice]
+    prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]
     """Set of prices for using this model.
 
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
