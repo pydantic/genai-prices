@@ -1,0 +1,204 @@
+# yaml-language-server: $schema=.schema.json
+name: MiniMax
+id: minimax
+pricing_urls:
+  - https://platform.minimax.io/docs/guides/pricing-paygo
+api_pattern: 'https://api\.minimax(i)?\.(?:com|io)'
+price_comments: >-
+  Prices sourced from MiniMax international platform USD pricing
+  (platform.minimax.io, May 2026). M2.1, M2.1-highspeed, and M2 are legacy
+  models; prices inferred from CNY pricing at the equivalent 7.00 CNY/USD
+  rate used by the international platform for current models.
+model_match:
+  or:
+    - starts_with: "MiniMax-M"
+    - starts_with: "minimax-m"
+    - equals: "minimax-01"
+    - equals: "M2-her"
+    - equals: "m2-her"
+extractors:
+  # Anthropic-compatible endpoint (api.minimax.io/anthropic/v1/messages): Anthropic
+  # accounting — input_tokens excludes cache, so add cache back to get total input.
+  - root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  # OpenAI Responses-compatible endpoint (api.minimax.io/v1/responses): OpenAI
+  # accounting — input_tokens already includes cached tokens (a subset).
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+models:
+  - id: M2-her
+    name: MiniMax M2-her
+    description: >-
+      MiniMax M2-her, a text dialogue model optimized for role-playing and
+      multi-turn conversations. 64,000 token context window. No cache support.
+    match:
+      or:
+        - equals: M2-her
+        - equals: m2-her
+    context_window: 64000
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.30
+      output_mtok: 1.20
+
+  - id: MiniMax-M2
+    name: MiniMax M2
+    description: >-
+      MiniMax M2 (legacy), a multimodal language model with 204,800 token
+      context window. Supports agentic capabilities and advanced reasoning.
+    match:
+      or:
+        - equals: MiniMax-M2
+        - equals: minimax-m2
+        - equals: MiniMax-M2.1
+        - equals: minimax-m2.1
+        - equals: MiniMax-M2.5
+        - equals: minimax-m2.5
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.30
+      cache_read_mtok: 0.03
+      cache_write_mtok: 0.375
+      output_mtok: 1.20
+
+  - id: MiniMax-M2.1-highspeed
+    name: MiniMax M2.1 Highspeed
+    description: >-
+      MiniMax M2.1 highspeed variant (legacy) with higher throughput.
+    match:
+      or:
+        - contains: "M2.1-highspeed"
+        - contains: "m2.1-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.60
+      cache_read_mtok: 0.03
+      cache_write_mtok: 0.375
+      output_mtok: 2.40
+
+  - id: MiniMax-M2.5-highspeed
+    name: MiniMax M2.5 Highspeed
+    description: >-
+      MiniMax M2.5 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.5-highspeed"
+        - contains: "m2.5-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.60
+      cache_read_mtok: 0.03
+      cache_write_mtok: 0.375
+      output_mtok: 2.40
+
+  - id: MiniMax-M2.7
+    name: MiniMax M2.7
+    description: >-
+      MiniMax M2.7, a multimodal language model with 204,800 token context
+      window. Achieves top performance in real-world engineering, office
+      productivity, and character-rich interaction.
+    match:
+      or:
+        - equals: MiniMax-M2.7
+        - equals: minimax-m2.7
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.30
+      cache_read_mtok: 0.06
+      cache_write_mtok: 0.375
+      output_mtok: 1.20
+
+  - id: MiniMax-M2.7-highspeed
+    name: MiniMax M2.7 Highspeed
+    description: >-
+      MiniMax M2.7 highspeed variant with higher throughput.
+    match:
+      or:
+        - contains: "M2.7-highspeed"
+        - contains: "m2.7-highspeed"
+    context_window: 204800
+    prices_checked: "2026-05-23"
+    prices:
+      input_mtok: 0.60
+      cache_read_mtok: 0.06
+      cache_write_mtok: 0.375
+      output_mtok: 2.40
+
+  - id: minimax-01
+    name: MiniMax-01
+    description: >-
+      MiniMax-01 combines MiniMax-Text-01 for text generation and MiniMax-VL-01 for image understanding.
+    match:
+      equals: minimax-01
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
+    prices:
+      input_mtok: 0.2
+      output_mtok: 1.1
+
+  - id: minimax-m1
+    name: MiniMax M1
+    description: >-
+      MiniMax-M1 is a large-scale, open-weight reasoning model designed for extended context and high-efficiency inference.
+      It leverages a hybrid Mixture-of-Experts (MoE) architecture paired with a custom "lightning attention" mechanism, allowing
+      efficient long-context processing.
+    match:
+      equals: minimax-m1
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
+    prices:
+      input_mtok: 0.4
+      output_mtok: 2.2
+
+  - id: minimax-m3
+    name: MiniMax M3
+    description: >-
+      MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output,
+      a 1M-token context window, and long-horizon agentic work.
+    match:
+      equals: minimax-m3
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.06
+      output_mtok: 1.2

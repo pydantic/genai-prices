@@ -6,9 +6,7 @@ import re
 import subprocess
 from collections.abc import Iterable, Iterator
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, cast
-
-from typing_extensions import TypeAlias
+from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
 from .prices_types import ModelPrice
 from .utils import package_dir as this_package_dir, root_dir

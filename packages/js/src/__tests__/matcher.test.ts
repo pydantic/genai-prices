@@ -4,9 +4,23 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { matchModel, matchModelWithFallback, matchProvider } from '../engine'
+import { matchLogic, matchModel, matchModelWithFallback, matchProvider } from '../engine'
 
 const actualProviders = data
+
+describe('Match Logic', () => {
+  it('should match string clauses case-insensitively', () => {
+    expect(matchLogic({ equals: 'Qwen/Qwen3.5-9B' }, 'qwen/qwen3.5-9b')).toBe(true)
+    expect(matchLogic({ starts_with: 'Qwen/' }, 'qwen/qwen3.5-9b')).toBe(true)
+    expect(matchLogic({ ends_with: '-9B' }, 'qwen/qwen3.5-9b')).toBe(true)
+    expect(matchLogic({ contains: 'Qwen3.5' }, 'qwen/qwen3.5-9b')).toBe(true)
+  })
+
+  it('should keep regex clauses case-sensitive', () => {
+    expect(matchLogic({ regex: 'Qwen/Qwen3\\.5-9B' }, 'qwen/qwen3.5-9b')).toBe(false)
+    expect(matchLogic({ regex: 'Qwen/Qwen3\\.5-9B' }, 'Qwen/Qwen3.5-9B')).toBe(true)
+  })
+})
 
 describe('Provider Matching', () => {
   describe('matchProvider with providerId', () => {

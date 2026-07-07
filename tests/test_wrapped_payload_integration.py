@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from decimal import Decimal
 
-import httpx
+import httpx2
 import pytest
 
 from genai_prices import UpdatePrices, calc_price
@@ -19,12 +19,12 @@ def test_python_wrapped_payload_dynamic_price_key_flow(monkeypatch: pytest.Monke
         def raise_for_status(self) -> None:
             pass
 
-    def fake_get(url: str, timeout: httpx.Timeout) -> Response:
+    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
         assert url == 'https://example.test/prices.json'
         assert timeout is not None
         return Response()
 
-    monkeypatch.setattr(httpx, 'get', fake_get)
+    monkeypatch.setattr(httpx2, 'get', fake_get)
 
     snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
     try:

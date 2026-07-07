@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from datetime import date, time
 from decimal import Decimal
-from typing import Annotated, Any, Union
+from typing import Annotated, Any, Literal
 
 from annotated_types import Gt, MaxLen
 from pydantic import (
@@ -20,7 +20,6 @@ from pydantic import (
     WithJsonSchema,
     field_validator,
 )
-from typing_extensions import Literal
 
 from .utils import check_unique
 
@@ -221,7 +220,7 @@ DollarPrice = Annotated[
     Decimal,
     Gt(0),
     WithJsonSchema({'type': 'number'}),
-    PlainSerializer(serialize_decimal, return_type=Union[float, int], when_used='json'),
+    PlainSerializer(serialize_decimal, return_type=float | int, when_used='json'),
 ]
 
 
@@ -395,15 +394,13 @@ def clause_discriminator(v: Any) -> str | None:
 
 
 MatchLogic = Annotated[
-    Union[
-        Annotated[ClauseStartsWith, Tag('starts_with')],
-        Annotated[ClauseEndsWith, Tag('ends_with')],
-        Annotated[ClauseContains, Tag('contains')],
-        Annotated[ClauseRegex, Tag('regex')],
-        Annotated[ClauseEquals, Tag('equals')],
-        Annotated[ClauseOr, Tag('or')],
-        Annotated[ClauseAnd, Tag('and')],
-    ],
+    Annotated[ClauseStartsWith, Tag('starts_with')]
+    | Annotated[ClauseEndsWith, Tag('ends_with')]
+    | Annotated[ClauseContains, Tag('contains')]
+    | Annotated[ClauseRegex, Tag('regex')]
+    | Annotated[ClauseEquals, Tag('equals')]
+    | Annotated[ClauseOr, Tag('or')]
+    | Annotated[ClauseAnd, Tag('and')],
     Discriminator(clause_discriminator),
 ]
 match_logic_schema: TypeAdapter[MatchLogic] = TypeAdapter(MatchLogic)
@@ -424,7 +421,7 @@ def doesnt_end_with_find_item(path: str | list[str | ArrayMatch]) -> str | list[
     return path
 
 
-ExtractPath = Annotated[Union[str, list[Union[str, ArrayMatch]]], AfterValidator(doesnt_end_with_find_item)]
+ExtractPath = Annotated[str | list[str | ArrayMatch], AfterValidator(doesnt_end_with_find_item)]
 
 providers_schema = TypeAdapter(list[Provider])
 

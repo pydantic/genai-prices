@@ -1,10 +1,11 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import pytest
 from inline_snapshot import snapshot
 
 from genai_prices.data import providers
-from genai_prices.data_snapshot import find_provider_by_id
+from genai_prices.data_snapshot import DataSnapshot, find_provider_by_id
 
 mark_xfail_todo = pytest.mark.xfail(reason='todo')
 
@@ -391,6 +392,8 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-2026-03-05', snapshot(('openai', 'gpt-5.4'))),
     ('openai', 'gpt-5-4', snapshot(('openai', 'gpt-5.4'))),
     ('openai', 'gpt-5-4-2026-03-05', snapshot(('openai', 'gpt-5.4'))),
+    ('bedrock', 'openai.gpt-5.4', snapshot(('aws', 'openai.gpt-5.4'))),
+    ('bedrock', 'openai.gpt-5.5', snapshot(('aws', 'openai.gpt-5.5'))),
     ('openai', 'gpt-5.4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5.4-pro-2026-03-05', snapshot(('openai', 'gpt-5.4-pro'))),
     ('openai', 'gpt-5-4-pro', snapshot(('openai', 'gpt-5.4-pro'))),
@@ -403,6 +406,9 @@ test_cases: list[tuple[str, str, str]] = [
     ('openai', 'gpt-5.4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano', snapshot(('openai', 'gpt-5.4-nano'))),
     ('openai', 'gpt-5-4-nano-2026-03-17', snapshot(('openai', 'gpt-5.4-nano'))),
+    ('openrouter', 'x-ai/grok-4.3-20260430', snapshot(('openrouter', 'x-ai/grok-4.3'))),
+    ('xai', 'x-ai/grok-4.3-20260430', snapshot(('x-ai', 'grok-4.3'))),
+    ('openrouter', 'google/gemini-3.5-flash-20260519', snapshot(('openrouter', 'google/gemini-3.5-flash'))),
     pytest.param('openrouter', 'moonshotai/kimi-k2', None, marks=mark_xfail_todo),
 ]
 
@@ -616,8 +622,6 @@ def test_azure_fallback_to_openai_real_data():
 
 def test_litellm_provider_id():
     """Test that litellm provider_id works by extracting actual provider from model name prefix."""
-    from genai_prices.data_snapshot import DataSnapshot
-
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
 
     # Test with prefixed model names - should extract provider from prefix
@@ -637,3 +641,26 @@ def test_litellm_provider_id():
     provider, model = snapshot.find_provider_model('gpt-4o-mini-2024-07-18', None, 'litellm', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    with pytest.raises(LookupError, match="Unable to find provider with model matching 'missing/gpt-4o'"):
+        snapshot.find_provider_model('missing/gpt-4o', None, 'litellm', None)
+
+
+def test_snapshot_active_uses_ttl():
+    snapshot = DataSnapshot(
+        providers=providers, from_auto_update=False, timestamp=datetime.now() - timedelta(seconds=5)
+    )
+
+    assert snapshot.active(timedelta(seconds=10)) is True
+    assert snapshot.active(timedelta(seconds=1)) is False
+
+
+def test_find_provider_requires_some_lookup_input():
+    snapshot = DataSnapshot(providers=providers, from_auto_update=False)
+
+    with pytest.raises(LookupError, match='Unable to find provider with model matching None'):
+        snapshot.find_provider(None, None, None)
