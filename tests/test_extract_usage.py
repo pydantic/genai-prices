@@ -7,6 +7,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
+from genai_prices.data_snapshot import find_provider_by_id, get_snapshot
 from genai_prices.types import (
     ArrayMatch,
     ClauseEquals,
@@ -212,6 +213,72 @@ def test_openrouter_chat_cache_write_tokens():
         response_data, provider_api_url='https://openrouter.ai/api/v1', api_flavor='chat'
     )
     assert extracted_usage_by_url.usage == extracted_usage.usage
+
+
+def test_huggingface_together_extract_usage_default_and_chat():
+    provider = next(provider for provider in providers if provider.id == 'huggingface_together')
+    assert provider.name == 'HuggingFace (together)'
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        'usage': {'prompt_tokens': 4, 'completion_tokens': 197, 'total_tokens': 201},
+    }
+
+    assert provider.extract_usage(response_data) == snapshot(
+        ('Qwen/Qwen3-235B-A22B-Instruct-2507', Usage(input_tokens=4, output_tokens=197))
+    )
+    assert provider.extract_usage(response_data, api_flavor='chat') == snapshot(
+        ('Qwen/Qwen3-235B-A22B-Instruct-2507', Usage(input_tokens=4, output_tokens=197))
+    )
+
+    extracted_usage = extract_usage(response_data, provider_id='huggingface_together')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=4, output_tokens=197))
+    assert extracted_usage.provider.name == snapshot('HuggingFace (together)')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.name == snapshot('Qwen3-235B-A22B-Instruct-2507')
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0001190'))
+
+
+def test_huggingface_generic_extract_usage_default_with_cache_read():
+    provider = next(provider for provider in providers if provider.id == 'huggingface')
+    assert provider.name == 'HuggingFace'
+    assert provider.models == []
+    assert provider.extractors is not None
+    response_data = {
+        'model': 'server-side-routed-model',
+        'usage': {
+            'prompt_tokens': 4,
+            'prompt_tokens_details': {'cached_tokens': 2},
+            'completion_tokens': 197,
+            'total_tokens': 201,
+        },
+    }
+
+    assert provider.extract_usage(response_data) == snapshot(
+        ('server-side-routed-model', Usage(input_tokens=4, cache_read_tokens=2, output_tokens=197))
+    )
+
+    with pytest.raises(
+        LookupError, match=re.escape("Unable to find model with model_ref='server-side-routed-model' in huggingface")
+    ):
+        extract_usage(response_data, provider_id='huggingface')
+
+
+def test_huggingface_provider_resolution():
+    snapshot_data = get_snapshot()
+
+    provider = find_provider_by_id(providers, 'huggingface')
+    assert provider is not None
+    assert provider.id == snapshot('huggingface')
+
+    routed_provider = find_provider_by_id(providers, 'huggingface_together')
+    assert routed_provider is not None
+    assert routed_provider.id == snapshot('huggingface_together')
+
+    assert snapshot_data.find_provider(None, None, 'https://router.huggingface.co/together').id == snapshot(
+        'huggingface_together'
+    )
+    assert snapshot_data.find_provider(None, None, 'https://router.huggingface.co/v1').id == snapshot('huggingface')
 
 
 def test_extracted_usage_calc_price_requires_model():

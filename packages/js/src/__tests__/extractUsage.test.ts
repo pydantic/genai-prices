@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { extractUsage } from '../index'
+import { extractUsage, findProvider } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 
@@ -160,6 +160,53 @@ describe('extractUsage', () => {
         output_audio_tokens: 23,
         output_tokens: 1906,
       })
+    })
+  })
+
+  describe('HuggingFace providers', () => {
+    const huggingfaceProvider: Provider = data.find((provider) => provider.id === 'huggingface')!
+    const huggingfaceTogetherProvider: Provider = data.find((provider) => provider.id === 'huggingface_together')!
+
+    it('should extract routed provider usage with default and chat apiFlavor', () => {
+      const responseData = {
+        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        usage: { completion_tokens: 197, prompt_tokens: 4, total_tokens: 201 },
+      }
+
+      expect(extractUsage(huggingfaceTogetherProvider, responseData)).toEqual({
+        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        usage: { input_tokens: 4, output_tokens: 197 },
+      })
+      expect(extractUsage(huggingfaceTogetherProvider, responseData, 'chat')).toEqual({
+        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        usage: { input_tokens: 4, output_tokens: 197 },
+      })
+    })
+
+    it('should extract generic provider usage with default apiFlavor and cache read tokens', () => {
+      const responseData = {
+        model: 'server-side-routed-model',
+        usage: {
+          completion_tokens: 197,
+          prompt_tokens: 4,
+          prompt_tokens_details: { cached_tokens: 2 },
+          total_tokens: 201,
+        },
+      }
+
+      expect(huggingfaceProvider.models).toEqual([])
+      expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
+        model: 'server-side-routed-model',
+        usage: { cache_read_tokens: 2, input_tokens: 4, output_tokens: 197 },
+      })
+    })
+
+    it('should resolve routed and generic providers without shadowing', () => {
+      // JS matches api_pattern with unanchored RegExp.test, so pin resolution precedence here too.
+      expect(findProvider({ providerId: 'huggingface' })?.id).toBe('huggingface')
+      expect(findProvider({ providerId: 'huggingface_together' })?.id).toBe('huggingface_together')
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/together' })?.id).toBe('huggingface_together')
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/v1' })?.id).toBe('huggingface')
     })
   })
 
