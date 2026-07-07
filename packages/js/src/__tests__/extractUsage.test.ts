@@ -163,6 +163,45 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('HuggingFace providers', () => {
+    const huggingfaceProvider: Provider = data.find((provider) => provider.id === 'huggingface')!
+    const huggingfaceTogetherProvider: Provider = data.find((provider) => provider.id === 'huggingface_together')!
+
+    it('should extract routed provider usage with default and chat apiFlavor', () => {
+      const responseData = {
+        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        usage: { completion_tokens: 197, prompt_tokens: 4, total_tokens: 201 },
+      }
+
+      expect(extractUsage(huggingfaceTogetherProvider, responseData)).toEqual({
+        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        usage: { input_tokens: 4, output_tokens: 197 },
+      })
+      expect(extractUsage(huggingfaceTogetherProvider, responseData, 'chat')).toEqual({
+        model: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+        usage: { input_tokens: 4, output_tokens: 197 },
+      })
+    })
+
+    it('should extract generic provider usage with default apiFlavor and cache read tokens', () => {
+      const responseData = {
+        model: 'server-side-routed-model',
+        usage: {
+          completion_tokens: 197,
+          prompt_tokens: 4,
+          prompt_tokens_details: { cached_tokens: 2 },
+          total_tokens: 201,
+        },
+      }
+
+      expect(huggingfaceProvider.models).toEqual([])
+      expect(extractUsage(huggingfaceProvider, responseData)).toEqual({
+        model: 'server-side-routed-model',
+        usage: { cache_read_tokens: 2, input_tokens: 4, output_tokens: 197 },
+      })
+    })
+  })
+
   describe('error handling', () => {
     it.each([
       [{}, 'Missing value at `usage`'],
