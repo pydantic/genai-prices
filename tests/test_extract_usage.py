@@ -620,6 +620,13 @@ def test_bedrock():
     assert extracted_usage.provider.name == snapshot('AWS Bedrock')
     assert extracted_usage.model == snapshot(None)
 
+    # boto3 endpoint URLs have no trailing slash
+    extracted_usage_by_url = extract_usage(
+        response_data_no_cache, provider_api_url='https://bedrock-runtime.us-east-1.amazonaws.com'
+    )
+    assert extracted_usage_by_url.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage_by_url.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
+
     response_data_pricing = {
         'model': 'amazon.nova-lite-v1:0',
         'usage': {'cacheReadInputTokens': 1504, 'cacheWriteInputTokens': 0, 'inputTokens': 13, 'outputTokens': 5},
