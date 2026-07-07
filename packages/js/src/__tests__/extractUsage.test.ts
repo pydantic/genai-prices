@@ -163,6 +163,32 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('Cohere provider', () => {
+    const cohereProvider: Provider = data.find((provider) => provider.id === 'cohere')!
+
+    it('should extract raw token usage with tokens apiFlavor', () => {
+      const responseData = {
+        id: 'chatcmpl-00000000-0000-0000-0000-000000000000',
+        message: { content: [{ text: 'Done.', type: 'text' }], role: 'assistant' },
+        model: 'command-r-plus',
+        usage: {
+          billed_units: { input_tokens: 13, output_tokens: 8 },
+          cached_tokens: 0,
+          tokens: { input_tokens: 542, output_tokens: 8 },
+        },
+      }
+
+      const { model, usage } = extractUsage(cohereProvider, responseData, 'tokens')
+
+      expect(model).toBe('command-r-plus')
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        input_tokens: 542,
+        output_tokens: 8,
+      })
+    })
+  })
+
   describe('error handling', () => {
     it.each([
       [{}, 'Missing value at `usage`'],

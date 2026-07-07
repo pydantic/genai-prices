@@ -1614,6 +1614,16 @@ providers: list[Provider] = [
                 model_path='model',
             ),
             UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path=['tokens', 'input_tokens'], dest='input_tokens', required=False),
+                    UsageExtractorMapping(path=['tokens', 'output_tokens'], dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='cached_tokens', dest='cache_read_tokens', required=False),
+                ],
+                api_flavor='tokens',
+                model_path='model',
+            ),
+            UsageExtractor(
                 root=['meta', 'billed_units'],
                 mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True)],
                 api_flavor='embeddings',

@@ -214,6 +214,83 @@ def test_openrouter_chat_cache_write_tokens():
     assert extracted_usage_by_url.usage == extracted_usage.usage
 
 
+cohere_chat_response_data = {
+    'id': 'chatcmpl-00000000-0000-0000-0000-000000000000',
+    'message': {'role': 'assistant', 'content': [{'type': 'text', 'text': 'Done.'}]},
+    'usage': {
+        'billed_units': {'input_tokens': 13, 'output_tokens': 8},
+        'tokens': {'input_tokens': 542, 'output_tokens': 8},
+        'cached_tokens': 0,
+    },
+    'model': 'command-r-plus',
+}
+
+
+def test_cohere_default_flavor_uses_billed_units_and_prices():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    usage = provider.extract_usage(cohere_chat_response_data)
+    assert usage == snapshot(('command-r-plus', Usage(input_tokens=13, output_tokens=8)))
+
+    extracted_usage = extract_usage(cohere_chat_response_data, provider_id='cohere')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=13, output_tokens=8))
+    assert extracted_usage.provider.name == snapshot('Cohere')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('command-r-plus')
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0001125'))
+
+
+def test_cohere_tokens_flavor_extracts_raw_tokens_and_cache():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    # Recorded Cohere JSON fixtures in tests/dataset/usages.json serialize these token fields as integers.
+    usage = provider.extract_usage(cohere_chat_response_data, api_flavor='tokens')
+    assert usage == snapshot(('command-r-plus', Usage(input_tokens=542, cache_read_tokens=0, output_tokens=8)))
+
+    extracted_usage = extract_usage(cohere_chat_response_data, provider_id='cohere', api_flavor='tokens')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=542, cache_read_tokens=0, output_tokens=8))
+    assert extracted_usage.provider.name == snapshot('Cohere')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('command-r-plus')
+
+
+def test_cohere_tokens_flavor_extracts_cached_tokens_without_tokens_object():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    response_data = {
+        'model': 'command-r-plus',
+        'usage': {
+            'billed_units': {'input_tokens': 13, 'output_tokens': 8},
+            'cached_tokens': 37,
+        },
+    }
+
+    usage = provider.extract_usage(response_data, api_flavor='tokens')
+    assert usage == snapshot(('command-r-plus', Usage(cache_read_tokens=37)))
+
+
+def test_cohere_tokens_flavor_errors_without_tokens_or_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    response_data = {
+        'model': 'command-r-plus',
+        'usage': {
+            'billed_units': {'input_tokens': 13, 'output_tokens': 8},
+        },
+    }
+
+    with pytest.raises(ValueError, match='No usage information found at usage'):
+        provider.extract_usage(response_data, api_flavor='tokens')
+
+
 def test_extracted_usage_calc_price_requires_model():
     extracted_usage = ExtractedUsage(
         usage=Usage(input_tokens=1),
@@ -336,6 +413,21 @@ def test_usage_extractor_skips_optional_nested_path_with_missing_parent():
     )
 
     assert extractor.extract({'model': 'test-model', 'usage': {'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_skips_optional_float_value():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 13.0, 'output_tokens': 2}}) == (
         'test-model',
         Usage(output_tokens=2),
     )

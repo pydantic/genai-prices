@@ -2675,6 +2675,28 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'tokens',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: ['tokens', 'input_tokens'],
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['tokens', 'output_tokens'],
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'cached_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+        ],
+      },
+      {
         api_flavor: 'embeddings',
         root: ['meta', 'billed_units'],
         model_path: 'model',
