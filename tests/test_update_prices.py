@@ -268,5 +268,4 @@ def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):
             RuntimeError,
             match='UpdatePrices global task already started, only one UpdatePrices can be active at a time',
         ):
-            with UpdatePrices():
-                pass
+            UpdatePrices().start()

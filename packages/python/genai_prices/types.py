@@ -775,11 +775,11 @@ class ModelPrice:
         json_schema = handler.resolve_ref_schema(json_schema)
 
         properties = json_schema.get('properties')
-        if isinstance(properties, dict):
+        if isinstance(properties, dict):  # pragma: no branch
             cast(dict[str, Any], properties).pop('_extra_prices', None)
 
         required = json_schema.get('required')
-        if isinstance(required, list):
+        if isinstance(required, list):  # pragma: no cover
             json_schema['required'] = [
                 field_name for field_name in cast(list[str], required) if field_name != '_extra_prices'
             ]
@@ -843,7 +843,7 @@ class ModelPrice:
         parts: list[str] = []
         for price_key in _iter_effective_model_price_keys(self, registry):
             value = getattr(self, price_key)
-            if value is not None:
+            if value is not None:  # pragma: no branch
                 if price_key == 'requests_kcount':
                     parts.append(f'${value} / K requests')
                 else:

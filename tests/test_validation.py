@@ -161,7 +161,7 @@ def test_bundled_provider_model_prices_pass_registry_validation() -> None:
                 price_keys = _collect_effective_model_price_keys(price, registry)
                 try:
                     validate_model_price(price_keys, registry)
-                except ValueError as exc:
+                except ValueError as exc:  # pragma: no cover
                     failures.append(f'{provider.id}/{model.id}[{index}]: {exc}')
 
     assert failures == []

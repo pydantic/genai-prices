@@ -195,6 +195,10 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     assert price.output_price == Decimal('0')
     assert price.total_price == Decimal('7')
 
+    # A non-BonusUsage skips the bonus branch, returning only the super() prices.
+    plain_price = model.calc_price(types.Usage(input_tokens=1_000_000), provider)
+    assert plain_price.total_price == Decimal('1')
+
 
 def test_base_model_price_stores_dynamic_price_kwargs() -> None:
     price = types.ModelPrice(
@@ -267,3 +271,41 @@ def test_custom_model_price_constructor_defers_undeclared_dynamic_keys_to_phase_
             cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
             sausage_price=Decimal('3'),
         )
+
+
+def test_model_price_constructor_restores_stored_extra_prices() -> None:
+    price = types.ModelPrice(
+        input_mtok=Decimal('1'),
+        _extra_prices={'cache_image_read_mtok': Decimal('0.5')},  # pyright: ignore[reportArgumentType]
+    )
+
+    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.cache_image_read_mtok == Decimal('0.5')
+
+
+def test_model_price_constructor_rejects_non_mapping_stored_extra_prices() -> None:
+    with pytest.raises(TypeError, match='_extra_prices must be a mapping'):
+        types.ModelPrice(_extra_prices=[('cache_image_read_mtok', Decimal('0.5'))])  # pyright: ignore[reportArgumentType]
+
+
+def test_store_unknown_price_keys_passes_through_non_dict_input() -> None:
+    sentinel = object()
+
+    assert types.ModelPrice._store_unknown_price_keys(sentinel) is sentinel  # pyright: ignore[reportCallIssue]
+
+
+def test_model_price_delattr_declared_field_and_unset_registered_key() -> None:
+    price = types.ModelPrice(input_mtok=Decimal('1'))
+
+    del price.input_mtok
+    assert price.input_mtok is None
+
+    with pytest.raises(AttributeError, match='cache_image_read_mtok'):
+        del price.cache_image_read_mtok
+
+
+def test_model_price_is_free_handles_non_decimal_extra_price() -> None:
+    price = types.ModelPrice()
+    price.cache_image_read_mtok = 0
+
+    assert price.is_free() is True
