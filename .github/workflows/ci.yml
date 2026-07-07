@@ -149,7 +149,11 @@ jobs:
 
   release-pypi:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    # Not success(): version-guard is skipped on tag runs, and a skipped job anywhere
+    # in the needs chain makes success() false, silently skipping the release jobs
+    # (the v0.0.70 tag hit this). An explicit status function is required, otherwise
+    # an implicit success() is still applied to the expression.
+    if: ${{ !cancelled() && needs.check.result == 'success' && startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
@@ -178,7 +182,11 @@ jobs:
 
   release-npm:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    # Not success(): version-guard is skipped on tag runs, and a skipped job anywhere
+    # in the needs chain makes success() false, silently skipping the release jobs
+    # (the v0.0.70 tag hit this). An explicit status function is required, otherwise
+    # an implicit success() is still applied to the expression.
+    if: ${{ !cancelled() && needs.check.result == 'success' && startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     environment:
       name: release-npm
