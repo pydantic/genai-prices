@@ -578,14 +578,60 @@ def test_gemini_response_thoughtless():
 
 def test_bedrock():
     provider = next(provider for provider in providers if provider.id == 'aws')
-    response_data = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
-    usage = provider.extract_usage(response_data)
+    assert provider.name == 'AWS Bedrock'
+    assert provider.extractors is not None
+
+    response_data_cache_write = {
+        'usage': {'cacheReadInputTokens': 0, 'cacheWriteInputTokens': 11207, 'inputTokens': 9, 'outputTokens': 5}
+    }
+    usage = provider.extract_usage(response_data_cache_write)
+    assert usage == snapshot(
+        (None, Usage(input_tokens=11216, cache_write_tokens=11207, cache_read_tokens=0, output_tokens=5))
+    )
+
+    extracted_usage = extract_usage(response_data_cache_write, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=11216, cache_write_tokens=11207, cache_read_tokens=0, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
+
+    response_data_cache_read = {
+        'usage': {'cacheReadInputTokens': 11207, 'cacheWriteInputTokens': 0, 'inputTokens': 9, 'outputTokens': 5}
+    }
+    usage = provider.extract_usage(response_data_cache_read)
+    assert usage == snapshot(
+        (None, Usage(input_tokens=11216, cache_write_tokens=0, cache_read_tokens=11207, output_tokens=5))
+    )
+
+    extracted_usage = extract_usage(response_data_cache_read, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=11216, cache_write_tokens=0, cache_read_tokens=11207, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
+
+    response_data_no_cache = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
+    usage = provider.extract_usage(response_data_no_cache)
     assert usage == snapshot((None, Usage(input_tokens=406, output_tokens=53)))
 
-    extracted_usage = extract_usage(response_data, provider_id='aws')
+    extracted_usage = extract_usage(response_data_no_cache, provider_id='aws')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
     assert extracted_usage.provider.name == snapshot('AWS Bedrock')
     assert extracted_usage.model == snapshot(None)
+
+    response_data_pricing = {
+        'model': 'amazon.nova-lite-v1:0',
+        'usage': {'cacheReadInputTokens': 1504, 'cacheWriteInputTokens': 0, 'inputTokens': 13, 'outputTokens': 5},
+    }
+    extracted_usage = extract_usage(response_data_pricing, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=1517, cache_write_tokens=0, cache_read_tokens=1504, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('amazon.nova-lite-v1:0')
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.00002454'))
 
 
 anthropic_response_data = {
