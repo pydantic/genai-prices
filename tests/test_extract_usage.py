@@ -742,8 +742,12 @@ def test_accumulate_extracted_usage():
         input_text_tokens=75 * 2,
         output_text_tokens=162 * 2,
     )
-    assert repr(double_extracted) == snapshot()
-    assert repr(double_extracted.calc_price()) == snapshot()
+    assert repr(double_extracted) == snapshot(
+        "ExtractedUsage(usage=Usage(input_tokens=200, output_tokens=324, input_text_tokens=150, output_text_tokens=324), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
+    )
+    assert repr(double_extracted.calc_price()) == snapshot(
+        "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $0.03/cache read MTok, $2.5/output MTok, $1.0/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
+    )
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20
     )
