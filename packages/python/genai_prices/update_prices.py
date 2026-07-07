@@ -2,6 +2,7 @@ from __future__ import annotations as _annotations
 
 import asyncio
 import logging
+import os
 import threading
 from dataclasses import dataclass, field
 from time import time
@@ -32,11 +33,56 @@ def _default_request_timeout() -> httpx2.Timeout:
 # any instance acquires a claim (ref-count++), and the background thread stops only when the last
 # claim is released.
 #
-# Note: like any daemon thread, the updater does not survive os.fork() - a child process (e.g. a
-# gunicorn worker with preload_app=True) inherits the bookkeeping but not the running thread.
+# Like any daemon thread, the updater does not survive os.fork(): a child process (e.g. a gunicorn
+# worker with preload_app=True) inherits the bookkeeping but not the running thread. An
+# after_in_child fork hook (registered lazily in _register_fork_hooks) restores the invariant by
+# replacing `_lock` and restarting the updater thread in the child - see _fork_after_in_child.
 _updater: _BackgroundUpdater | None = None
 _ref_count = 0
 _lock = threading.RLock()
+
+_fork_hooks_registered = False
+
+
+def _register_fork_hooks() -> None:
+    """Keep the updater working across os.fork() (e.g. gunicorn with preload_app=True).
+
+    Called under `_lock` from `_BackgroundUpdater._start_thread`, so registration happens at most
+    once, and only in processes that actually start an updater.
+    """
+    global _fork_hooks_registered
+    if _fork_hooks_registered or not hasattr(os, 'register_at_fork'):
+        return
+    _fork_hooks_registered = True
+    os.register_at_fork(after_in_child=_fork_after_in_child)
+
+
+def _fork_after_in_child() -> None:
+    global _lock, _updater, _ref_count
+
+    # Deliberately no `before`/`after_in_parent` hooks: `_lock` is never held across the fork, so
+    # this code cannot introduce a fork-time deadlock. The cost is that the child may inherit
+    # bookkeeping torn by a start()/stop() racing the fork in another thread; the except branch
+    # below resets that to a clean no-updater state, so the worst case is a child without
+    # background updates (logged), never corrupted prices.
+    #
+    # The inherited `_lock` may have been held by a thread that did not survive the fork; replace
+    # it rather than trying to release it. Fork hooks run before anything else in the child, so
+    # nothing can be using it concurrently.
+    _lock = threading.RLock()
+    updater = _updater
+    if updater is None:
+        return
+    try:
+        # The parent's updater thread does not survive the fork; restart it on the same instance,
+        # preserving identity so existing claims remain valid.
+        updater._revive_after_fork()  # pyright: ignore[reportPrivateUsage]
+    except Exception:
+        _updater = None
+        _ref_count = 0
+        data_snapshot.set_custom_snapshot(None)
+        logger.warning('Failed to restart the genai-prices background updater after fork', exc_info=True)
+
 
 _STOPPED_THREAD_JOIN_TIMEOUT = 5.0
 
@@ -266,6 +312,7 @@ class _BackgroundUpdater:
         if self._thread is not None:
             raise RuntimeError('genai-prices background task already started')
 
+        _register_fork_hooks()
         self._prices_updated.clear()
         self._stop_event.clear()
         self._background_exc = None
@@ -287,6 +334,16 @@ class _BackgroundUpdater:
             self._background_exc = None
             raise exc
         return prices_updated and self._update_succeeded
+
+    def _revive_after_fork(self) -> None:
+        # Threads do not survive fork, and the inherited events may have been captured in an
+        # arbitrary state (e.g. mid-install); recreate them and restart the background thread on
+        # this same instance. The module `_lock` is replaced with a fresh one in
+        # `_fork_after_in_child` before this runs.
+        self._thread = None
+        self._stop_event = threading.Event()
+        self._prices_updated = threading.Event()
+        self._start_thread()
 
     def _stop_and_detach(self) -> threading.Thread | None:
         """Signal the background thread to stop and revert prices to the bundled data.
