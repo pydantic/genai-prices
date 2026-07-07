@@ -205,9 +205,7 @@ describe('extractUsage', () => {
       // JS matches api_pattern with unanchored RegExp.test, so pin resolution precedence here too.
       expect(findProvider({ providerId: 'huggingface' })?.id).toBe('huggingface')
       expect(findProvider({ providerId: 'huggingface_together' })?.id).toBe('huggingface_together')
-      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/together' })?.id).toBe(
-        'huggingface_together',
-      )
+      expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/together' })?.id).toBe('huggingface_together')
       expect(findProvider({ providerApiUrl: 'https://router.huggingface.co/v1' })?.id).toBe('huggingface')
     })
   })
