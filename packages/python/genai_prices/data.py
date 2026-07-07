@@ -1599,7 +1599,7 @@ providers: list[Provider] = [
     Provider(
         id='cohere',
         name='Cohere',
-        api_pattern='https://api\\.cohere\\.ai',
+        api_pattern='https://api\\.cohere\\.(?:ai|com)',
         pricing_urls=['https://cohere.com/pricing'],
         model_match=ClauseStartsWith(starts_with='command-'),
         provider_match=ClauseContains(contains='cohere'),
@@ -1611,6 +1611,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path=['tokens', 'input_tokens'], dest='input_tokens', required=False),
+                    UsageExtractorMapping(path=['tokens', 'output_tokens'], dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='cached_tokens', dest='cache_read_tokens', required=False),
+                ],
+                api_flavor='tokens',
                 model_path='model',
             ),
             UsageExtractor(

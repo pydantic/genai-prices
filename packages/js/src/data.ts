@@ -2649,7 +2649,7 @@ export const data: Provider[] = [
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],
-    api_pattern: 'https://api\\.cohere\\.ai',
+    api_pattern: 'https://api\\.cohere\\.(?:ai|com)',
     model_match: {
       starts_with: 'command-',
     },
@@ -2671,6 +2671,28 @@ export const data: Provider[] = [
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'tokens',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: ['tokens', 'input_tokens'],
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['tokens', 'output_tokens'],
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'cached_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
           },
         ],
       },
