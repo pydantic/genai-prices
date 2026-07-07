@@ -3,7 +3,7 @@ name: Cohere
 id: cohere
 pricing_urls:
   - https://cohere.com/pricing
-api_pattern: 'https://api\.cohere\.ai'
+api_pattern: 'https://api\.cohere\.(ai|com)'
 model_match:
   starts_with: "command-"
 provider_match:

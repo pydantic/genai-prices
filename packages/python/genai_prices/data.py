@@ -1599,7 +1599,7 @@ providers: list[Provider] = [
     Provider(
         id='cohere',
         name='Cohere',
-        api_pattern='https://api\\.cohere\\.ai',
+        api_pattern='https://api\\.cohere\\.(ai|com)',
         pricing_urls=['https://cohere.com/pricing'],
         model_match=ClauseStartsWith(starts_with='command-'),
         provider_match=ClauseContains(contains='cohere'),

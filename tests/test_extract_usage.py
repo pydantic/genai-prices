@@ -257,6 +257,13 @@ def test_cohere_tokens_flavor_extracts_raw_tokens_and_cache():
     assert extracted_usage.model is not None
     assert extracted_usage.model.id == snapshot('command-r-plus')
 
+    # the v2 SDK talks to api.cohere.com, the old pattern only matched api.cohere.ai
+    extracted_usage_by_url = extract_usage(
+        cohere_chat_response_data, provider_api_url='https://api.cohere.com', api_flavor='tokens'
+    )
+    assert extracted_usage_by_url.provider.name == snapshot('Cohere')
+    assert extracted_usage_by_url.usage == snapshot(Usage(input_tokens=542, cache_read_tokens=0, output_tokens=8))
+
 
 def test_cohere_tokens_flavor_extracts_cached_tokens_without_tokens_object():
     provider = next(provider for provider in providers if provider.id == 'cohere')
