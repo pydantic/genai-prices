@@ -2649,7 +2649,7 @@ export const data: Provider[] = [
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],
-    api_pattern: 'https://api\\.cohere\\.(ai|com)',
+    api_pattern: 'https://api\\.cohere\\.(?:ai|com)',
     model_match: {
       starts_with: 'command-',
     },
