@@ -474,7 +474,7 @@ providers: list[Provider] = [
     Provider(
         id='aws',
         name='AWS Bedrock',
-        api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
+        api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
         provider_match=ClauseOr(or_=[ClauseContains(contains='bedrock'), ClauseContains(contains='amazon')]),
         extractors=[
@@ -482,6 +482,10 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='inputTokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cacheReadInputTokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cacheWriteInputTokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cacheReadInputTokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='cacheWriteInputTokens', dest='cache_write_tokens', required=False),
                     UsageExtractorMapping(path='outputTokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
@@ -1607,7 +1611,7 @@ providers: list[Provider] = [
     Provider(
         id='cohere',
         name='Cohere',
-        api_pattern='https://api\\.cohere\\.ai',
+        api_pattern='https://api\\.cohere\\.(?:ai|com)',
         pricing_urls=['https://cohere.com/pricing'],
         model_match=ClauseStartsWith(starts_with='command-'),
         provider_match=ClauseContains(contains='cohere'),
@@ -1619,6 +1623,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path=['tokens', 'input_tokens'], dest='input_tokens', required=False),
+                    UsageExtractorMapping(path=['tokens', 'output_tokens'], dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='cached_tokens', dest='cache_read_tokens', required=False),
+                ],
+                api_flavor='tokens',
                 model_path='model',
             ),
             UsageExtractor(
@@ -2952,6 +2966,15 @@ providers: list[Provider] = [
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
                 ],
                 api_flavor='default',
                 model_path='model',
@@ -5577,9 +5600,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='minimax-m3'),
                 name='MiniMax M3',
                 description='MiniMax-M3 is a multimodal foundation model from MiniMax. It supports text, image, and video inputs with text output, a 1M-token context window, and long-horizon agentic work.',
-                price_comments='Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+                context_window=1000000,
+                price_comments='Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
+                    input_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=512000, price=Decimal('0.6'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.06'), tiers=[Tier(start=512000, price=Decimal('0.12'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=512000, price=Decimal('2.4'))]),
                 ),
             ),
         ],
@@ -6861,19 +6889,39 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-audio',
-                match=ClauseEquals(equals='gpt-audio'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-audio'),
+                        ClauseEquals(equals='gpt-audio-2025-08-28'),
+                        ClauseEquals(equals='gpt-audio-1.5'),
+                    ]
+                ),
                 name='GPT Audio',
                 description="The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
-                price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10.0')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'),
+                    output_mtok=Decimal('10.0'),
+                    input_audio_mtok=Decimal('32.0'),
+                    output_audio_mtok=Decimal('64.0'),
+                ),
             ),
             ModelInfo(
                 id='gpt-audio-mini',
-                match=ClauseEquals(equals='gpt-audio-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-audio-mini'),
+                        ClauseEquals(equals='gpt-audio-mini-2025-10-06'),
+                        ClauseEquals(equals='gpt-audio-mini-2025-12-15'),
+                    ]
+                ),
                 name='GPT Audio Mini',
                 description='A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency.',
-                price_comments='Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
-                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('2.4')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    output_mtok=Decimal('2.4'),
+                    input_audio_mtok=Decimal('10.0'),
+                    output_audio_mtok=Decimal('20.0'),
+                ),
             ),
             ModelInfo(
                 id='gpt-chat-latest',
@@ -6884,6 +6932,31 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30.0')
                 ),
+            ),
+            ModelInfo(
+                id='gpt-image-1-mini',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-image-1-mini')]),
+                name='GPT Image 1 Mini',
+                description='A cost-efficient image generation model from OpenAI with text input pricing.',
+                prices=ModelPrice(input_mtok=Decimal('2.0'), cache_read_mtok=Decimal('0.2')),
+            ),
+            ModelInfo(
+                id='gpt-image-1.5',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gpt-image-1.5'), ClauseEquals(equals='gpt-image-1.5-2025-12-16')]
+                ),
+                name='GPT Image 1.5',
+                description='An improved image generation model from OpenAI supporting text input and output pricing.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10.0')
+                ),
+            ),
+            ModelInfo(
+                id='gpt-image-2',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-image-2'), ClauseEquals(equals='gpt-image-2-2026-04-21')]),
+                name='GPT Image 2',
+                description="OpenAI's latest image generation model with text input pricing.",
+                prices=ModelPrice(input_mtok=Decimal('5.0'), cache_read_mtok=Decimal('1.25')),
             ),
             ModelInfo(
                 id='gpt-oss-120b',
@@ -6914,7 +6987,11 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-realtime',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='gpt-realtime'), ClauseEquals(equals='gpt-realtime-2025-08-28')]
+                    or_=[
+                        ClauseEquals(equals='gpt-realtime'),
+                        ClauseEquals(equals='gpt-realtime-2025-08-28'),
+                        ClauseEquals(equals='gpt-realtime-1.5'),
+                    ]
                 ),
                 price_comments="Missing image token prices which we don't support yet",
                 prices=ModelPrice(
@@ -6927,8 +7004,27 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-realtime-2',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-realtime-2')]),
+                price_comments="Missing image token prices which we don't support yet",
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.0'),
+                    cache_read_mtok=Decimal('0.4'),
+                    output_mtok=Decimal('24.0'),
+                    input_audio_mtok=Decimal('32.0'),
+                    cache_audio_read_mtok=Decimal('0.4'),
+                    output_audio_mtok=Decimal('64.0'),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-realtime-mini',
-                match=ClauseEquals(equals='gpt-realtime-mini'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-realtime-mini'),
+                        ClauseEquals(equals='gpt-realtime-mini-2025-12-15'),
+                        ClauseEquals(equals='gpt-realtime-mini-2025-10-06'),
+                    ]
+                ),
                 price_comments="Missing image token prices which we don't support yet",
                 prices=ModelPrice(
                     input_mtok=Decimal('0.6'),

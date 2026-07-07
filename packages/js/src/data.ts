@@ -741,7 +741,7 @@ export const data: Provider[] = [
     id: 'aws',
     name: 'AWS Bedrock',
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
-    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
+    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
     provider_match: {
       or: [
         {
@@ -762,6 +762,26 @@ export const data: Provider[] = [
             path: 'inputTokens',
             dest: 'input_tokens',
             required: true,
+          },
+          {
+            path: 'cacheReadInputTokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheWriteInputTokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheReadInputTokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheWriteInputTokens',
+            dest: 'cache_write_tokens',
+            required: false,
           },
           {
             path: 'outputTokens',
@@ -2649,7 +2669,7 @@ export const data: Provider[] = [
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],
-    api_pattern: 'https://api\\.cohere\\.ai',
+    api_pattern: 'https://api\\.cohere\\.(?:ai|com)',
     model_match: {
       starts_with: 'command-',
     },
@@ -2671,6 +2691,28 @@ export const data: Provider[] = [
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'tokens',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: ['tokens', 'input_tokens'],
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['tokens', 'output_tokens'],
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'cached_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
           },
         ],
       },
@@ -5001,6 +5043,21 @@ export const data: Provider[] = [
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
           },
         ],
       },
@@ -9570,11 +9627,37 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax-m3',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+        context_window: 1000000,
+        price_comments:
+          'Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
         prices: {
-          input_mtok: 0.3,
-          cache_read_mtok: 0.06,
-          output_mtok: 1.2,
+          input_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 512000,
+                price: 0.6,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.06,
+            tiers: [
+              {
+                start: 512000,
+                price: 0.12,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 1.2,
+            tiers: [
+              {
+                start: 512000,
+                price: 2.4,
+              },
+            ],
+          },
         },
       },
     ],
@@ -11943,12 +12026,23 @@ export const data: Provider[] = [
         description:
           "The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
         match: {
-          equals: 'gpt-audio',
+          or: [
+            {
+              equals: 'gpt-audio',
+            },
+            {
+              equals: 'gpt-audio-2025-08-28',
+            },
+            {
+              equals: 'gpt-audio-1.5',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10.0,
+          input_audio_mtok: 32.0,
+          output_audio_mtok: 64.0,
         },
       },
       {
@@ -11957,12 +12051,23 @@ export const data: Provider[] = [
         description:
           'A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency.',
         match: {
-          equals: 'gpt-audio-mini',
+          or: [
+            {
+              equals: 'gpt-audio-mini',
+            },
+            {
+              equals: 'gpt-audio-mini-2025-10-06',
+            },
+            {
+              equals: 'gpt-audio-mini-2025-12-15',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.4,
+          input_audio_mtok: 10.0,
+          output_audio_mtok: 20.0,
         },
       },
       {
@@ -11978,6 +12083,61 @@ export const data: Provider[] = [
           input_mtok: 5.0,
           cache_read_mtok: 0.5,
           output_mtok: 30.0,
+        },
+      },
+      {
+        id: 'gpt-image-1-mini',
+        name: 'GPT Image 1 Mini',
+        description: 'A cost-efficient image generation model from OpenAI with text input pricing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-1-mini',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2.0,
+          cache_read_mtok: 0.2,
+        },
+      },
+      {
+        id: 'gpt-image-1.5',
+        name: 'GPT Image 1.5',
+        description: 'An improved image generation model from OpenAI supporting text input and output pricing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-1.5',
+            },
+            {
+              equals: 'gpt-image-1.5-2025-12-16',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.0,
+          cache_read_mtok: 1.25,
+          output_mtok: 10.0,
+        },
+      },
+      {
+        id: 'gpt-image-2',
+        name: 'GPT Image 2',
+        description: "OpenAI's latest image generation model with text input pricing.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2',
+            },
+            {
+              equals: 'gpt-image-2-2026-04-21',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5.0,
+          cache_read_mtok: 1.25,
         },
       },
       {
@@ -12033,6 +12193,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-realtime-2025-08-28',
             },
+            {
+              equals: 'gpt-realtime-1.5',
+            },
           ],
         },
         price_comments: "Missing image token prices which we don't support yet",
@@ -12046,9 +12209,38 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-realtime-2',
+        match: {
+          or: [
+            {
+              equals: 'gpt-realtime-2',
+            },
+          ],
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 4.0,
+          cache_read_mtok: 0.4,
+          output_mtok: 24.0,
+          input_audio_mtok: 32.0,
+          cache_audio_read_mtok: 0.4,
+          output_audio_mtok: 64.0,
+        },
+      },
+      {
         id: 'gpt-realtime-mini',
         match: {
-          equals: 'gpt-realtime-mini',
+          or: [
+            {
+              equals: 'gpt-realtime-mini',
+            },
+            {
+              equals: 'gpt-realtime-mini-2025-12-15',
+            },
+            {
+              equals: 'gpt-realtime-mini-2025-10-06',
+            },
+          ],
         },
         price_comments: "Missing image token prices which we don't support yet",
         prices: {

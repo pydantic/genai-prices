@@ -6185,10 +6185,6 @@
           },
           {
             "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
           }
         ],
@@ -6218,6 +6214,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -11344,6 +11344,18 @@
           "input_tokens": 431,
           "output_tokens": 661
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "tokens",
+            "provider_id": "cohere"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2190,
+          "output_tokens": 1257
+        }
       }
     ]
   },
@@ -11373,6 +11385,18 @@
           "input_tokens": 13,
           "output_tokens": 61
         }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "tokens",
+            "provider_id": "cohere"
+          }
+        ],
+        "usage": {
+          "input_tokens": 542,
+          "output_tokens": 63
+        }
       }
     ]
   },
@@ -11401,6 +11425,18 @@
         "usage": {
           "input_tokens": 1,
           "output_tokens": 9
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "tokens",
+            "provider_id": "cohere"
+          }
+        ],
+        "usage": {
+          "input_tokens": 496,
+          "output_tokens": 11
         }
       }
     ]
@@ -16659,10 +16695,6 @@
             "provider_id": "fireworks"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
             "api_flavor": "chat",
             "provider_id": "minimax"
           },
@@ -16703,6 +16735,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -23796,10 +23832,6 @@
             "provider_id": "fireworks"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "groq"
-          },
-          {
             "api_flavor": "chat",
             "provider_id": "minimax"
           },
@@ -23840,6 +23872,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -43947,6 +43983,18 @@
         "usage": {
           "input_tokens": 25,
           "output_tokens": 9
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "tokens",
+            "provider_id": "cohere"
+          }
+        ],
+        "usage": {
+          "input_tokens": 91,
+          "output_tokens": 11
         }
       }
     ]
