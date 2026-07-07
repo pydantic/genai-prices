@@ -1,3 +1,4 @@
+import os
 import threading
 from decimal import Decimal
 from time import monotonic
@@ -337,6 +338,35 @@ def test_wait_prices_updated_sync_returns_false_on_failed_fetch(
         data_snapshot.set_custom_snapshot(None)
     # The stored exception is not consumed by the waiters above, so stop() still logs it.
     assert any('while stopping' in record.message for record in caplog.records)
+
+
+@pytest.mark.skipif(not hasattr(os, 'fork'), reason='requires os.fork')
+def test_forked_child_restarts_shared_updater(monkeypatch: pytest.MonkeyPatch):
+    _mock_update_prices_get(monkeypatch)
+    update_prices = UpdatePrices()
+    update_prices.start()
+    try:
+        assert wait_prices_updated_sync(timeout=5)
+
+        pid = os.fork()
+        if pid == 0:
+            # Child: never return into pytest - report via the exit code.
+            try:
+                ok = (
+                    wait_prices_updated_sync(timeout=5)
+                    and any(t.name == 'genai_prices:update' and t.is_alive() for t in threading.enumerate())
+                    and data_snapshot._custom_snapshot is not None
+                    and update_prices_module._updater is not None
+                )
+                os._exit(0 if ok else 1)
+            except BaseException:
+                os._exit(2)
+
+        _, status = os.waitpid(pid, 0)
+        assert os.waitstatus_to_exitcode(status) == 0
+    finally:
+        update_prices.stop()
+        data_snapshot.set_custom_snapshot(None)
 
 
 def test_concurrent_start_stop(monkeypatch: pytest.MonkeyPatch):
