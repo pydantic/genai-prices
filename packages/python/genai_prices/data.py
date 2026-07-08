@@ -12720,7 +12720,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='x-ai/grok-4.3'),
                         ClauseRegex(regex='^x-ai/grok-4\\.3-\\d{8}$'),
                         ClauseEquals(equals='grok-4.3-latest'),
-                        ClauseEquals(equals='grok-latest'),
                     ]
                 ),
                 name='Grok 4.3',
@@ -12729,6 +12728,23 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
                 ),
+            ),
+            ModelInfo(
+                id='grok-4.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.5'),
+                        ClauseRegex(regex='^grok-4\\.5-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.5'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.5-\\d{8}$'),
+                        ClauseEquals(equals='grok-4.5-latest'),
+                        ClauseEquals(equals='grok-latest'),
+                    ]
+                ),
+                name='Grok 4.5',
+                description="xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+                context_window=500000,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='grok-build-0.1',

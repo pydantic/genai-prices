@@ -22075,9 +22075,6 @@ export const data: Provider[] = [
             {
               equals: 'grok-4.3-latest',
             },
-            {
-              equals: 'grok-latest',
-            },
           ],
         },
         context_window: 1000000,
@@ -22085,6 +22082,40 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.2,
           output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'grok-4.5',
+        name: 'Grok 4.5',
+        description:
+          "xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.5',
+            },
+            {
+              regex: '^grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.5',
+            },
+            {
+              regex: '^x-ai/grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.5-latest',
+            },
+            {
+              equals: 'grok-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
         },
       },
       {
