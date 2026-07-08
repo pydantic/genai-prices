@@ -22075,9 +22075,6 @@ export const data: Provider[] = [
             {
               equals: 'grok-4.3-latest',
             },
-            {
-              equals: 'grok-latest',
-            },
           ],
         },
         context_window: 1000000,
@@ -22108,6 +22105,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'grok-4.5-latest',
+            },
+            {
+              equals: 'grok-latest',
             },
           ],
         },

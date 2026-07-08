@@ -255,7 +255,6 @@ models:
         - equals: x-ai/grok-4.3
         - regex: ^x-ai/grok-4\.3-\d{8}$
         - equals: grok-4.3-latest
-        - equals: grok-latest
     context_window: 1000000
     prices_checked: 2026-05-12
     prices:
@@ -275,6 +274,7 @@ models:
         - equals: x-ai/grok-4.5
         - regex: ^x-ai/grok-4\.5-\d{8}$
         - equals: grok-4.5-latest
+        - equals: grok-latest
     context_window: 500000
     prices_checked: 2026-07-08
     prices:

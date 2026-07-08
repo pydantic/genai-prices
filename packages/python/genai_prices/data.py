@@ -12720,7 +12720,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='x-ai/grok-4.3'),
                         ClauseRegex(regex='^x-ai/grok-4\\.3-\\d{8}$'),
                         ClauseEquals(equals='grok-4.3-latest'),
-                        ClauseEquals(equals='grok-latest'),
                     ]
                 ),
                 name='Grok 4.3',
@@ -12739,6 +12738,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='x-ai/grok-4.5'),
                         ClauseRegex(regex='^x-ai/grok-4\\.5-\\d{8}$'),
                         ClauseEquals(equals='grok-4.5-latest'),
+                        ClauseEquals(equals='grok-latest'),
                     ]
                 ),
                 name='Grok 4.5',
