@@ -71,20 +71,40 @@ fields). Include:
 
 Add a `price_comments` field when a value needs explanation/reference.
 
+**Migrate family-level `-latest` aliases when the new model is the current flagship.** Two kinds of
+`-latest` alias coexist, and they behave differently:
+
+- version-specific (`<id>-latest`, e.g. `grok-4.3-latest`) — always stays on its own entry.
+- family-level / bare (`<provider>-latest`, e.g. `grok-latest`) — means "the current flagship" and
+  should point at whichever model is newest/best right now.
+
+When adding a new flagship, **move the family-level alias off the previous flagship onto the new
+entry** (add it here, delete it there). First verify which model the vendor's alias actually resolves
+to — check the provider docs and, if you can, hit the API and read the response `model` field — then
+match that. Don't assume; the aliasing scheme is provider-specific (some vendors have no bare-family
+alias at all).
+
 ## 5. Build + verify resolution
 
+Use `make build`, not just `make build-prices`. The installed `genai_prices` package (and the JS
+package) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`)
+— NOT `prices/data.json`. `make build-prices` only writes `prices/data.json`, so a `calc_price` check
+run after it verifies **stale** package data and can silently show the wrong result. `make build` runs
+`build-prices` + `package-data` + `inject-providers`.
+
 ```bash
-make build-prices    # regenerates data.json / data_slim.json; fails loudly on schema errors
+make build    # build-prices + package-data + inject-providers
 ```
 
-Confirm the base id, the dated snapshot, and the provider-prefixed dated id all resolve to the new
-entry:
+Confirm the base id, the dated snapshot, the provider-prefixed dated id, and any `-latest` alias you
+touched all resolve to the intended entry (include the previous flagship to prove its version-specific
+`-latest` didn't move):
 
 ```bash
 uv run python -c "
 from genai_prices import calc_price, Usage
 u = Usage(input_tokens=1000, output_tokens=1000)
-for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>']:
+for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>', '<provider>-latest', '<prev-id>-latest']:
     r = calc_price(u, m, provider_id='<provider_id>')
     print(m, '->', r.model.id, r.model.prices.input_mtok, r.model.prices.output_mtok)
 "
@@ -107,7 +127,8 @@ gh pr create --base main --title "Add <Provider> <Model> pricing" --body "..."
 ```
 
 Never force-push. PR body: pricing table, sources (provider docs + OpenRouter for cache rate), and
-scope notes (e.g. single variant / no cache-write, with the one-line reason).
+scope notes (e.g. single variant / no cache-write / any `-latest` alias you moved, each with its
+one-line reason).
 
 ## Provider rollout timing
 
