@@ -89,7 +89,7 @@ make check-for-price-discrepancies     # Check for price discrepancies
 
 - Tests use pytest with coverage reporting
 - Test files are in `tests/` directory
-- Use `make test-all-python` to test across Python 3.10-3.13
+- Use `make test-all-python` to test across Python 3.10-3.14
 
 ### Code Style
 
