@@ -130,6 +130,9 @@ Never force-push. PR body: pricing table, sources (provider docs + OpenRouter fo
 scope notes (e.g. single variant / no cache-write / any `-latest` alias you moved, each with its
 one-line reason).
 
+After pushing, don't go idle — poll until CI is green and every reviewer comment (cubic included) is
+addressed or dismissed (see `AGENTS.md`). Unresolved review threads mean the PR isn't mergeable.
+
 ## Provider rollout timing
 
 OpenRouter usually lists new models day-one — add them in the same PR. Bedrock / Vertex lag; poll and
