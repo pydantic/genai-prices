@@ -22088,6 +22088,37 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'grok-4.5',
+        name: 'Grok 4.5',
+        description:
+          "xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.5',
+            },
+            {
+              regex: '^grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.5',
+            },
+            {
+              regex: '^x-ai/grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.5-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'grok-build-0.1',
         name: 'Grok Build 0.1',
         description:
