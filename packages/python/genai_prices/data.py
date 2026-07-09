@@ -6698,6 +6698,39 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
             ),
             ModelInfo(
+                id='gpt-5.6-luna',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-luna'), ClauseEquals(equals='gpt-5-6-luna')]),
+                name='GPT-5.6 Luna',
+                description='GPT-5.6 model optimized for cost-sensitive workloads.',
+                context_window=1050000,
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='gpt-5.6-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.6-sol'),
+                        ClauseEquals(equals='gpt-5-6-sol'),
+                        ClauseEquals(equals='gpt-5.6'),
+                        ClauseEquals(equals='gpt-5-6'),
+                    ]
+                ),
+                name='GPT-5.6 Sol',
+                description='Frontier model for complex professional work.',
+                context_window=1050000,
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+            ),
+            ModelInfo(
+                id='gpt-5.6-terra',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-terra'), ClauseEquals(equals='gpt-5-6-terra')]),
+                name='GPT-5.6 Terra',
+                description='GPT-5.6 model that balances intelligence and cost.',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('15')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-audio',
                 match=ClauseOr(
                     or_=[
