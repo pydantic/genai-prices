@@ -11760,6 +11760,75 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.6-luna',
+        name: 'GPT-5.6 Luna',
+        description: 'GPT-5.6 model optimized for cost-sensitive workloads.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-luna',
+            },
+            {
+              equals: 'gpt-5-6-luna',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.1,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'gpt-5.6-sol',
+        name: 'GPT-5.6 Sol',
+        description: 'Frontier model for complex professional work.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-sol',
+            },
+            {
+              equals: 'gpt-5-6-sol',
+            },
+            {
+              equals: 'gpt-5.6',
+            },
+            {
+              equals: 'gpt-5-6',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 0.5,
+          output_mtok: 30,
+        },
+      },
+      {
+        id: 'gpt-5.6-terra',
+        name: 'GPT-5.6 Terra',
+        description: 'GPT-5.6 model that balances intelligence and cost.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-terra',
+            },
+            {
+              equals: 'gpt-5-6-terra',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'gpt-audio',
         name: 'GPT Audio',
         description:
