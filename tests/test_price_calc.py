@@ -257,6 +257,20 @@ def test_openrouter_modern_dated_aliases_price():
             Decimal('0.00016'),
             Decimal('0.00056'),
         ),
+        (
+            'openai/gpt-5.2-20251211',
+            'openai/gpt-5.2',
+            Decimal('0.00175'),
+            Decimal('0.0014'),
+            Decimal('0.00315'),
+        ),
+        (
+            'openai/gpt-5.2-pro-20251211',
+            'openai/gpt-5.2-pro',
+            Decimal('0.021'),
+            Decimal('0.0168'),
+            Decimal('0.0378'),
+        ),
     ]:
         price = calc_price(
             Usage(input_tokens=1_000, output_tokens=100),
@@ -268,6 +282,35 @@ def test_openrouter_modern_dated_aliases_price():
         assert price.input_price == input_price
         assert price.output_price == output_price
         assert price.total_price == total_price
+
+
+@pytest.mark.parametrize(
+    'model_ref,model_id,input_price,output_price,total_price',
+    [
+        ('openai/gpt-5.2-20251211', 'gpt-5.2', Decimal('0.00175'), Decimal('0.0014'), Decimal('0.00315')),
+        ('openai/gpt-5-2-20251211', 'gpt-5.2', Decimal('0.00175'), Decimal('0.0014'), Decimal('0.00315')),
+        ('openai/gpt-5.2-pro-20251211', 'gpt-5.2-pro', Decimal('0.021'), Decimal('0.0168'), Decimal('0.0378')),
+        ('openai/gpt-5-2-pro-20251211', 'gpt-5.2-pro', Decimal('0.021'), Decimal('0.0168'), Decimal('0.0378')),
+    ],
+)
+def test_litellm_openrouter_compact_dated_ref_price(
+    model_ref: str,
+    model_id: str,
+    input_price: Decimal,
+    output_price: Decimal,
+    total_price: Decimal,
+):
+    price = calc_price(
+        Usage(input_tokens=1_000, output_tokens=100),
+        model_ref=model_ref,
+        provider_id='litellm',
+    )
+
+    assert price.provider.id == 'openai'
+    assert price.model.id == model_id
+    assert price.input_price == input_price
+    assert price.output_price == output_price
+    assert price.total_price == total_price
 
 
 @pytest.mark.parametrize('model_ref', ['deepseek/deepseek-v3.2', 'google/gemini-2.5-flash-lite'])
