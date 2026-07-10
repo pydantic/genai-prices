@@ -8,6 +8,10 @@ resolution-markers = [
     "python_full_version < '3.11' and platform_python_implementation != 'PyPy'",
 ]
 
+[options]
+exclude-newer = "0001-01-01T00:00:00Z" # This has no effect and is included for backwards compatibility when using relative exclude-newer values.
+exclude-newer-span = "P7D"
+
 [manifest]
 members = [
     "genai-prices",
@@ -313,7 +317,7 @@ wheels = [
 
 [[package]]
 name = "genai-prices"
-version = "0.0.70"
+version = "0.0.71"
 source = { editable = "packages/python" }
 dependencies = [
     { name = "httpx2" },
