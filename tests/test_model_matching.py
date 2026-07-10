@@ -650,6 +650,10 @@ def test_litellm_provider_id():
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
 
+    provider, model = snapshot.find_provider_model('openai/gpt-5.2-20251211', None, 'litellm', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-5.2'
+
 
 def test_litellm_unknown_prefix_falls_back_to_model_matching_error():
     snapshot = DataSnapshot(providers=providers, from_auto_update=False)
