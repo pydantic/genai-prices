@@ -10493,6 +10493,8 @@ export const data: Provider[] = [
     id: 'openai',
     name: 'OpenAI',
     pricing_urls: [
+      'https://developers.openai.com/api/docs/pricing',
+      'https://developers.openai.com/api/docs/guides/prompt-caching',
       'https://platform.openai.com/docs/pricing',
       'https://openai.com/api/pricing/',
       'https://platform.openai.com/docs/models',
@@ -10529,6 +10531,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
             path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
             required: false,
@@ -10558,6 +10565,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
             required: false,
           },
           {
@@ -11774,10 +11786,45 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
         prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.1,
-          output_mtok: 6,
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 272000,
+                price: 9,
+              },
+            ],
+          },
         },
       },
       {
@@ -11801,10 +11848,45 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
         prices: {
-          input_mtok: 5,
-          cache_read_mtok: 0.5,
-          output_mtok: 30,
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 45,
+              },
+            ],
+          },
         },
       },
       {
@@ -11822,10 +11904,45 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
         prices: {
-          input_mtok: 2.5,
-          cache_read_mtok: 0.25,
-          output_mtok: 15,
+          input_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 6.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 22.5,
+              },
+            ],
+          },
         },
       },
       {

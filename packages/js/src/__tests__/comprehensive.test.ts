@@ -196,6 +196,24 @@ describe('Comprehensive API Tests', () => {
     })
   })
 
+  describe('calcPrice - GPT-5.6 tiered cache pricing', () => {
+    it('should apply long-context rates to every token bucket', () => {
+      const usage: Usage = {
+        cache_read_tokens: 50_000,
+        cache_write_tokens: 100_000,
+        input_tokens: 300_000,
+        output_tokens: 10_000,
+      }
+
+      const result = calcPrice(usage, 'gpt-5.6-sol', { providerId: 'openai' })
+
+      expect(result).not.toBeNull()
+      expect(result!.input_price).toBeCloseTo(2.8)
+      expect(result!.output_price).toBeCloseTo(0.45)
+      expect(result!.total_price).toBeCloseTo(3.25)
+    })
+  })
+
   describe('calcPrice - Multiple Models', () => {
     it('should calculate prices for multiple models', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
