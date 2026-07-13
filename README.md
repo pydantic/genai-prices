@@ -58,13 +58,13 @@ The following providers are currently supported:
 - [Mistral](prices/providers/mistral.yml) - 31 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 12 models
 - [Novita](prices/providers/novita.yml) - 34 models
-- [OpenAI](prices/providers/openai.yml) - 82 models
+- [OpenAI](prices/providers/openai.yml) - 85 models
 - [OpenRouter](prices/providers/openrouter.yml) - 687 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
 - [Voyage AI](prices/providers/voyageai.yml) - 22 models
-- [X AI](prices/providers/x_ai.yml) - 16 models
+- [X AI](prices/providers/x_ai.yml) - 17 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
 [comment]: <> (providers-end)

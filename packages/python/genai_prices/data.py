@@ -6186,6 +6186,8 @@ providers: list[Provider] = [
         name='OpenAI',
         api_pattern='https://api\\.openai\\.com',
         pricing_urls=[
+            'https://developers.openai.com/api/docs/pricing',
+            'https://developers.openai.com/api/docs/guides/prompt-caching',
             'https://platform.openai.com/docs/pricing',
             'https://openai.com/api/pricing/',
             'https://platform.openai.com/docs/models',
@@ -6200,6 +6202,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(
                         path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
@@ -6218,6 +6223,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
                     ),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
@@ -6850,6 +6858,63 @@ providers: list[Provider] = [
                 description='Version of GPT-5.5 that produces smarter and more precise responses.',
                 context_window=1000000,
                 prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('180')),
+            ),
+            ModelInfo(
+                id='gpt-5.6-luna',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-luna'), ClauseEquals(equals='gpt-5-6-luna')]),
+                name='GPT-5.6 Luna',
+                description='GPT-5.6 model optimized for cost-sensitive workloads.',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('9'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.6-sol',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.6-sol'),
+                        ClauseEquals(equals='gpt-5-6-sol'),
+                        ClauseEquals(equals='gpt-5.6'),
+                        ClauseEquals(equals='gpt-5-6'),
+                    ]
+                ),
+                name='GPT-5.6 Sol',
+                description='Frontier model for complex professional work.',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('6.25'), tiers=[Tier(start=272000, price=Decimal('12.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]),
+                    output_mtok=TieredPrices(base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-5.6-terra',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-terra'), ClauseEquals(equals='gpt-5-6-terra')]),
+                name='GPT-5.6 Terra',
+                description='GPT-5.6 model that balances intelligence and cost.',
+                context_window=1050000,
+                price_comments='Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('3.125'), tiers=[Tier(start=272000, price=Decimal('6.25'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.25'), tiers=[Tier(start=272000, price=Decimal('0.5'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('22.5'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-audio',
@@ -12874,7 +12939,6 @@ providers: list[Provider] = [
                         ClauseEquals(equals='x-ai/grok-4.3'),
                         ClauseRegex(regex='^x-ai/grok-4\\.3-\\d{8}$'),
                         ClauseEquals(equals='grok-4.3-latest'),
-                        ClauseEquals(equals='grok-latest'),
                     ]
                 ),
                 name='Grok 4.3',
@@ -12883,6 +12947,23 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1.25'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.5')
                 ),
+            ),
+            ModelInfo(
+                id='grok-4.5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='grok-4.5'),
+                        ClauseRegex(regex='^grok-4\\.5-\\d{8}$'),
+                        ClauseEquals(equals='x-ai/grok-4.5'),
+                        ClauseRegex(regex='^x-ai/grok-4\\.5-\\d{8}$'),
+                        ClauseEquals(equals='grok-4.5-latest'),
+                        ClauseEquals(equals='grok-latest'),
+                    ]
+                ),
+                name='Grok 4.5',
+                description="xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+                context_window=500000,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='grok-build-0.1',

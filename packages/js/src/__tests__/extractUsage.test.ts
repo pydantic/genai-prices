@@ -118,6 +118,46 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract cache write tokens with chat apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-5.6-sol',
+        usage: {
+          completion_tokens: 300,
+          prompt_tokens: 2006,
+          prompt_tokens_details: { cache_write_tokens: 1920, cached_tokens: 0 },
+        },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'chat')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 1920,
+        input_tokens: 2006,
+        output_tokens: 300,
+      })
+    })
+
+    it('should extract cache write tokens with responses apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-5.6-sol',
+        usage: {
+          input_tokens: 2006,
+          input_tokens_details: { cache_write_tokens: 1920, cached_tokens: 0 },
+          output_tokens: 300,
+        },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 1920,
+        input_tokens: 2006,
+        output_tokens: 300,
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',

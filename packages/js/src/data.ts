@@ -10754,6 +10754,8 @@ export const data: Provider[] = [
     id: 'openai',
     name: 'OpenAI',
     pricing_urls: [
+      'https://developers.openai.com/api/docs/pricing',
+      'https://developers.openai.com/api/docs/guides/prompt-caching',
       'https://platform.openai.com/docs/pricing',
       'https://openai.com/api/pricing/',
       'https://platform.openai.com/docs/models',
@@ -10790,6 +10792,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
             path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
             required: false,
@@ -10819,6 +10826,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
             required: false,
           },
           {
@@ -12018,6 +12030,180 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 30,
           output_mtok: 180,
+        },
+      },
+      {
+        id: 'gpt-5.6-luna',
+        name: 'GPT-5.6 Luna',
+        description: 'GPT-5.6 model optimized for cost-sensitive workloads.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-luna',
+            },
+            {
+              equals: 'gpt-5-6-luna',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 272000,
+                price: 9,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-5.6-sol',
+        name: 'GPT-5.6 Sol',
+        description: 'Frontier model for complex professional work.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-sol',
+            },
+            {
+              equals: 'gpt-5-6-sol',
+            },
+            {
+              equals: 'gpt-5.6',
+            },
+            {
+              equals: 'gpt-5-6',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 45,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-5.6-terra',
+        name: 'GPT-5.6 Terra',
+        description: 'GPT-5.6 model that balances intelligence and cost.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-terra',
+            },
+            {
+              equals: 'gpt-5-6-terra',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+        prices: {
+          input_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 6.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 22.5,
+              },
+            ],
+          },
         },
       },
       {
@@ -22336,9 +22522,6 @@ export const data: Provider[] = [
             {
               equals: 'grok-4.3-latest',
             },
-            {
-              equals: 'grok-latest',
-            },
           ],
         },
         context_window: 1000000,
@@ -22346,6 +22529,40 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.2,
           output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'grok-4.5',
+        name: 'Grok 4.5',
+        description:
+          "xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.5',
+            },
+            {
+              regex: '^grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.5',
+            },
+            {
+              regex: '^x-ai/grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.5-latest',
+            },
+            {
+              equals: 'grok-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
         },
       },
       {

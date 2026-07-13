@@ -2,6 +2,8 @@
 name: OpenAI
 id: openai
 pricing_urls:
+  - https://developers.openai.com/api/docs/pricing
+  - https://developers.openai.com/api/docs/guides/prompt-caching
   - https://platform.openai.com/docs/pricing
   - https://openai.com/api/pricing/
   - https://platform.openai.com/docs/models
@@ -14,7 +16,7 @@ model_match:
 provider_match:
   contains: openai
 extractors:
-  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/completion_usage.py
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/completion_usage.py
   - api_flavor: chat
     root: usage
     mappings:
@@ -22,6 +24,9 @@ extractors:
         dest: input_tokens
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: [prompt_tokens_details, audio_tokens]
         dest: input_audio_tokens
@@ -31,7 +36,7 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
-  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/responses/response_usage.py
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/responses/response_usage.py
   - api_flavor: responses
     root: usage
     mappings:
@@ -39,6 +44,9 @@ extractors:
         dest: input_tokens
       - path: [input_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: output_tokens
         dest: output_tokens
@@ -825,6 +833,113 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 180
+
+  - id: gpt-5.6-luna
+    name: GPT-5.6 Luna
+    description: GPT-5.6 model optimized for cost-sensitive workloads.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-luna
+        - equals: gpt-5-6-luna
+    context_window: 1050000
+    prices_checked: 2026-07-10
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Ref:
+      https://developers.openai.com/api/docs/guides/prompt-caching
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 272000
+            price: 9
+
+  - id: gpt-5.6-sol
+    name: GPT-5.6 Sol
+    description: Frontier model for complex professional work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-sol
+        - equals: gpt-5-6-sol
+        - equals: gpt-5.6
+        - equals: gpt-5-6
+    context_window: 1050000
+    prices_checked: 2026-07-10
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Ref:
+      https://developers.openai.com/api/docs/guides/prompt-caching
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 272000
+            price: 12.5
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
+
+  - id: gpt-5.6-terra
+    name: GPT-5.6 Terra
+    description: GPT-5.6 model that balances intelligence and cost.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-terra
+        - equals: gpt-5-6-terra
+    context_window: 1050000
+    prices_checked: 2026-07-10
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Ref:
+      https://developers.openai.com/api/docs/guides/prompt-caching
+    prices:
+      input_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_write_mtok:
+        base: 3.125
+        tiers:
+          - start: 272000
+            price: 6.25
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.5
 
   - id: gpt-audio
     name: GPT Audio
