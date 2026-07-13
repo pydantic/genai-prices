@@ -291,6 +291,16 @@ def test_provider_parsing_preserves_tiered_model_prices() -> None:
     assert price.input_mtok.tiers[0].price == Decimal('2')
 
 
+def test_model_price_normalization_preserves_instances_and_normalizes_conditional_lists() -> None:
+    price = types.ModelPrice(input_mtok=Decimal('1'))
+    assert types._normalize_prices_field(price) is price
+
+    normalized = types._normalize_prices_field([{'constraint': None, 'prices': {'input_mtok': 1}}])
+    assert isinstance(normalized, list)
+    assert isinstance(normalized[0]['prices'], types.ModelPrice)
+    assert normalized[0]['prices'].input_mtok == Decimal('1')
+
+
 def test_custom_model_price_constructor_accepts_custom_fields() -> None:
     price = CustomModelPrice(
         input_mtok=Decimal('1'),

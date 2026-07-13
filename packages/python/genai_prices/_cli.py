@@ -673,8 +673,6 @@ def _format_model_prices(model_price: ModelPrice, *, split_lines: bool, use_colo
     parts = Text()
     for unit in _iter_model_price_units(model_price):
         value = getattr(model_price, unit.price_key)
-        if value is None:
-            continue
         if parts:
             parts.append('\n' if split_lines else ', ')
 

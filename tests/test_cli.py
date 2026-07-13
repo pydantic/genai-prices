@@ -24,13 +24,16 @@ from genai_prices._cli import (
     _render_calc_error,
     _should_split_model_price_columns,
     _suggest_models,
+    _unit_display_name,
+    _unit_for_price_key,
+    _unit_per_label,
     cli_logic,
 )
 from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
 from genai_prices.data_units import unit_data
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, PriceCalculation, Provider, TieredPrices
-from genai_prices.units import UnitRegistry, _set_registry
+from genai_prices.units import UnitDef, UnitRegistry, _set_registry
 
 
 def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: Collection[str] = frozenset()) -> str:
@@ -613,6 +616,30 @@ def test_collect_model_price_fields_uses_effective_registry_order() -> None:
         _set_registry(None)
 
     assert fields == ['sausage_mtok', 'input_mtok']
+
+
+def test_collect_model_price_fields_appends_unregistered_price_keys() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
+
+    assert _collect_model_price_fields([_price_calculation(price)]) == ['input_mtok', 'hovercraft_mtok']
+
+
+def test_unknown_price_field_fallbacks() -> None:
+    assert _price_field_label('hovercraft_mtok') == 'Hovercraft'
+    assert _unit_for_price_key('hovercraft_mtok') is None
+
+
+@pytest.mark.parametrize(
+    ('unit', 'display_name', 'per_label'),
+    [
+        (UnitDef('audio_seconds', 'audio_second', 1, {'family': 'time', 'modality': 'audio'}), 'Audio', '1'),
+        (UnitDef('characters', 'characters_million', 1_000_000, {'family': 'characters'}), 'Characters', 'M'),
+        (UnitDef('images', 'images_kcount', 1_000, {'family': 'images'}), 'Images', 'K'),
+    ],
+)
+def test_unit_label_fallbacks(unit: UnitDef, display_name: str, per_label: str) -> None:
+    assert _unit_display_name(unit) == display_name
+    assert _unit_per_label(unit) == per_label
 
 
 def test_calc_table_split_columns_includes_dynamic_price_column(

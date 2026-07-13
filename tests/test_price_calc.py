@@ -303,6 +303,13 @@ def test_model_price_str_tiered_prices_include_dollar_prefix():
     assert str(model_price) == '$2.5/input MTok (+tiers)'
 
 
+def test_model_price_str_requests_and_private_state() -> None:
+    model_price = ModelPrice(requests_kcount=Decimal('2'))
+    object.__setattr__(model_price, '_private_state', Decimal('3'))
+
+    assert str(model_price) == '$2 / K requests'
+
+
 def test_calc_price_rejects_unregistered_dynamic_extra() -> None:
     price = ModelPrice(hovercraft_mtok=Decimal('1'))
 
