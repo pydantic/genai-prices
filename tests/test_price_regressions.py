@@ -58,6 +58,49 @@ def test_model_info_uses_first_conditional_price_when_none_are_active() -> None:
     assert model.get_prices(datetime(2029, 1, 1)).input_mtok == Decimal('1')
 
 
+@pytest.mark.parametrize(
+    'model_price,usage,message',
+    [
+        # Impossible usage is rejected by the registry's leaf decomposition (a descendant usage key
+        # exceeding its ancestor yields a negative leaf value). Prices carry full ancestor coverage so
+        # validation reaches the usage check rather than failing earlier on missing ancestor prices.
+        (
+            ModelPrice(
+                input_mtok=Decimal('1'),
+                cache_read_mtok=Decimal('2'),
+                input_audio_mtok=Decimal('3'),
+                cache_audio_read_mtok=Decimal('4'),
+            ),
+            Usage(input_tokens=10, cache_read_tokens=5, input_audio_tokens=1, cache_audio_read_tokens=2),
+            r'cache_audio_read_tokens \(2\) cannot exceed input_audio_tokens \(1\)',
+        ),
+        (
+            ModelPrice(
+                input_mtok=Decimal('1'),
+                cache_read_mtok=Decimal('2'),
+                input_audio_mtok=Decimal('3'),
+                cache_audio_read_mtok=Decimal('4'),
+            ),
+            Usage(input_tokens=10, cache_read_tokens=1, input_audio_tokens=5, cache_audio_read_tokens=2),
+            r'cache_audio_read_tokens \(2\) cannot exceed cache_read_tokens \(1\)',
+        ),
+        (
+            ModelPrice(input_mtok=Decimal('1'), cache_write_mtok=Decimal('1')),
+            Usage(input_tokens=1, cache_write_tokens=2),
+            r'cache_write_tokens \(2\) cannot exceed input_tokens \(1\)',
+        ),
+        (
+            ModelPrice(output_mtok=Decimal('1'), output_audio_mtok=Decimal('1')),
+            Usage(output_tokens=1, output_audio_tokens=2),
+            r'output_audio_tokens \(2\) cannot exceed output_tokens \(1\)',
+        ),
+    ],
+)
+def test_model_price_rejects_impossible_overlapping_usage(model_price: ModelPrice, usage: Usage, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        model_price.calc_price(usage)
+
+
 def test_standard_price_parity_handles_simple_input_output_tokens() -> None:
     price = ModelPrice(input_mtok=Decimal('1.25'), output_mtok=Decimal('3')).calc_price(
         Usage(input_tokens=2_000, output_tokens=500)

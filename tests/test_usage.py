@@ -77,6 +77,34 @@ def test_usage_equality_operates_on_reported_values() -> None:
     assert Usage(input_tokens=0) == Usage(input_tokens=0)
 
 
+def test_usage_assigning_values_dict_bypasses_reported_storage() -> None:
+    usage = Usage(input_tokens=1)
+
+    usage._values = {'output_tokens': 5}
+
+    assert usage._values == {'output_tokens': 5}
+    assert usage.output_tokens == 5
+
+
+def test_usage_reported_value_returns_stored_or_zero() -> None:
+    usage = Usage(input_tokens=7)
+
+    assert usage.reported_value('input_tokens') == 7
+    assert usage.reported_value('output_tokens') == 0
+
+
+def test_usage_radd_with_zero_returns_self_for_sum() -> None:
+    usage = Usage(input_tokens=1)
+
+    assert usage.__radd__(0) == usage
+
+
+def test_usage_radd_with_non_usage_non_zero_is_not_implemented() -> None:
+    assert Usage(input_tokens=1).__radd__(5) is NotImplemented
+    with pytest.raises(TypeError):
+        _ = 5 + Usage(input_tokens=1)
+
+
 def test_usage_repr_uses_registry_order() -> None:
     assert repr(Usage(input_tokens=10, cache_write_tokens=1, cache_read_tokens=0, output_tokens=2)) == (
         'Usage(input_tokens=10, output_tokens=2, cache_read_tokens=0, cache_write_tokens=1)'

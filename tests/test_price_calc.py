@@ -39,6 +39,85 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_input_price'),
+    [
+        ('gpt-5.6-sol', Decimal('0.00625')),
+        ('gpt-5.6-terra', Decimal('0.003125')),
+        ('gpt-5.6-luna', Decimal('0.00125')),
+    ],
+)
+def test_gpt_5_6_cache_write_price(model_ref: str, expected_input_price: Decimal):
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_write_tokens=1_000),
+        model_ref=model_ref,
+        provider_id='openai',
+    )
+
+    assert price.input_price == expected_input_price
+    assert price.output_price == Decimal(0)
+    assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'short_write_rate', 'long_write_rate'),
+    [
+        ('gpt-5.6-sol', Decimal('6.25'), Decimal('12.5')),
+        ('gpt-5.6-terra', Decimal('3.125'), Decimal('6.25')),
+        ('gpt-5.6-luna', Decimal('1.25'), Decimal('2.5')),
+    ],
+)
+def test_gpt_5_6_cache_write_price_context_boundary(
+    model_ref: str,
+    short_write_rate: Decimal,
+    long_write_rate: Decimal,
+):
+    for tokens, rate in ((272_000, short_write_rate), (272_001, long_write_rate)):
+        price = calc_price(
+            Usage(input_tokens=tokens, cache_write_tokens=tokens),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+
+        expected_input_price = rate * tokens / 1_000_000
+        assert price.input_price == expected_input_price
+        assert price.output_price == Decimal(0)
+        assert price.total_price == expected_input_price
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'input_rate', 'cache_write_rate', 'cache_read_rate', 'output_rate'),
+    [
+        ('gpt-5.6-sol', Decimal('10'), Decimal('12.5'), Decimal('1'), Decimal('45')),
+        ('gpt-5.6-terra', Decimal('5'), Decimal('6.25'), Decimal('0.5'), Decimal('22.5')),
+        ('gpt-5.6-luna', Decimal('2'), Decimal('2.5'), Decimal('0.2'), Decimal('9')),
+    ],
+)
+def test_gpt_5_6_long_context_mixed_price(
+    model_ref: str,
+    input_rate: Decimal,
+    cache_write_rate: Decimal,
+    cache_read_rate: Decimal,
+    output_rate: Decimal,
+):
+    price = calc_price(
+        Usage(
+            input_tokens=300_000,
+            cache_write_tokens=100_000,
+            cache_read_tokens=50_000,
+            output_tokens=10_000,
+        ),
+        model_ref=model_ref,
+        provider_id='openai',
+    )
+
+    expected_input_price = (input_rate * 150_000 + cache_write_rate * 100_000 + cache_read_rate * 50_000) / 1_000_000
+    expected_output_price = output_rate * 10_000 / 1_000_000
+    assert price.input_price == expected_input_price
+    assert price.output_price == expected_output_price
+    assert price.total_price == expected_input_price + expected_output_price
+
+
 def test_sync_success_with_url():
     price = calc_price(
         Usage(input_tokens=1000, output_tokens=100, cache_write_tokens=20, cache_read_tokens=30),
@@ -404,6 +483,9 @@ EXAMPLES: list[tuple[str, str]] = [
     ('openai', 'o3-mini-2025-01-31'),
     ('openai', 'gpt-5.4'),
     ('openai', 'gpt-5.4-pro'),
+    ('openai', 'gpt-5.6-sol'),
+    ('openai', 'gpt-5.6-terra'),
+    ('openai', 'gpt-5.6-luna'),
     ('openai', 'text-embedding-3-small'),
 ]
 

@@ -21,14 +21,18 @@ from genai_prices.units import _get_registry, _set_registry
 
 pytestmark = pytest.mark.anyio
 
-PROVIDER_ARRAY_PAYLOAD = (
-    b'{"units":{'
-    b'"input_tokens":{"per":1000000,"price_key":"input_mtok","dimensions":{"family":"tokens","direction":"input"}},'
-    b'"output_tokens":{"per":1000000,"price_key":"output_mtok","dimensions":{"family":"tokens","direction":"output"}}},'
-    b'"providers":[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
-    b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
-    b'"prices":{"input_mtok":2.5,"output_mtok":10}}]}]}'
-)
+
+def _wrapped_payload(*, providers_json: str | None = None, units_json: str | None = None) -> bytes:
+    providers_json = providers_json or (
+        '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
+        '"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
+        '"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
+    )
+    units_json = units_json or (
+        '{"input_tokens":{"per":1000000,"price_key":"input_mtok","dimensions":{"family":"tokens","direction":"input"}},'
+        '"output_tokens":{"per":1000000,"price_key":"output_mtok","dimensions":{"family":"tokens","direction":"output"}}}'
+    )
+    return f'{{"units":{units_json},"providers":{providers_json}}}'.encode()
 
 
 class NullUpdatePrices(UpdatePrices):
@@ -44,7 +48,7 @@ class CountingNullUpdatePrices(UpdatePrices):
         return None
 
 
-def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
+def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = _wrapped_payload()) -> None:
     class Response:
         def __init__(self, content: bytes) -> None:
             self.content = content
@@ -61,19 +65,6 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
         return Response(content)
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
-
-
-def _wrapped_payload(*, providers_json: str | None = None, units_json: str | None = None) -> bytes:
-    providers_json = providers_json or (
-        '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
-        '"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
-        '"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
-    )
-    units_json = units_json or (
-        '{"input_tokens":{"per":1000000,"price_key":"input_mtok","dimensions":{"family":"tokens","direction":"input"}},'
-        '"output_tokens":{"per":1000000,"price_key":"output_mtok","dimensions":{"family":"tokens","direction":"output"}}}'
-    )
-    return f'{{"units":{units_json},"providers":{providers_json}}}'.encode()
 
 
 def test_update_prices_fetch_parses_wrapped_payload_and_installs_registry(monkeypatch: pytest.MonkeyPatch):
@@ -119,79 +110,8 @@ def test_update_prices_fetch_rejects_malformed_wrapped_payload_without_registry_
     assert _get_registry() is previous
 
 
-def test_update_prices_stop_restores_bundled_registry(monkeypatch: pytest.MonkeyPatch) -> None:
-    _set_registry(None)
-    bundled = _get_registry()
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
-    update_prices = UpdatePrices(url='https://example.test/prices.json')
-    snapshot = update_prices.fetch()
-
-    try:
-        data_snapshot.set_custom_snapshot(snapshot)
-        assert _get_registry() is not bundled
-        assert data_snapshot._custom_snapshot is snapshot
-
-        update_prices.stop()
-
-        assert _get_registry() is bundled
-        assert data_snapshot._custom_snapshot is None
-    finally:
-        _set_registry(None)
-        data_snapshot.set_custom_snapshot(None)
-
-
-def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
-    _set_registry(None)
-    bundled = _get_registry()
-    fetch_started = threading.Event()
-    allow_fetch_return = threading.Event()
-    stop_errors: list[BaseException] = []
-
-    class Response:
-        content = _wrapped_payload()
-
-        def raise_for_status(self) -> None:
-            pass
-
-    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
-        assert url == 'https://example.test/prices.json'
-        assert timeout is not None
-        fetch_started.set()
-        assert allow_fetch_return.wait(timeout=5)
-        return Response()
-
-    def stop_update_prices(update_prices: UpdatePrices) -> None:
-        try:
-            update_prices.stop()
-        except BaseException as exc:
-            stop_errors.append(exc)
-
-    monkeypatch.setattr(httpx2, 'get', fake_get)
-    update_prices = UpdatePrices(url='https://example.test/prices.json', update_interval=3600)
-    update_prices.start()
-    try:
-        assert fetch_started.wait(timeout=5)
-
-        stop_thread = threading.Thread(target=stop_update_prices, args=(update_prices,))
-        stop_thread.start()
-        assert update_prices._stop_event.wait(timeout=5)
-        allow_fetch_return.set()
-        stop_thread.join(timeout=5)
-
-        assert not stop_thread.is_alive()
-        if stop_errors:
-            raise stop_errors[0]
-        assert _get_registry() is bundled
-        assert data_snapshot._custom_snapshot is None
-    finally:
-        allow_fetch_return.set()
-        update_prices.stop()
-        _set_registry(None)
-        data_snapshot.set_custom_snapshot(None)
-
-
 def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _wrapped_payload())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices() as update_prices:
         update_prices.wait()
@@ -205,7 +125,7 @@ def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
 
 
 def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _wrapped_payload())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices():
         wait_prices_updated_sync()
@@ -219,7 +139,7 @@ def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
 
 
 async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _wrapped_payload())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices():
         await wait_prices_updated_async()
@@ -259,12 +179,35 @@ def test_update_prices_continues_after_interval_until_stopped():
         update_prices.stop()
 
 
-def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_update_prices_stop_restores_bundled_registry(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_registry(None)
+    bundled = _get_registry()
+    _mock_update_prices_get(monkeypatch, _wrapped_payload())
+    update_prices = UpdatePrices(url='https://example.test/prices.json')
+    snapshot = update_prices.fetch()
+
+    try:
+        data_snapshot.set_custom_snapshot(snapshot)
+        assert _get_registry() is not bundled
+        assert data_snapshot._custom_snapshot is snapshot
+
+        update_prices.stop()
+
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        _set_registry(None)
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_registry(None)
+    bundled = _get_registry()
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
 
     class Response:
-        content = PROVIDER_ARRAY_PAYLOAD
+        content = _wrapped_payload()
 
         def raise_for_status(self) -> None:
             pass
@@ -287,10 +230,13 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
             assert update_prices._stop_event.wait(timeout=5)
             allow_fetch_return.set()
             stop_future.result(timeout=5)
+
+        assert _get_registry() is bundled
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()
         update_prices.stop()
+        _set_registry(None)
         data_snapshot.set_custom_snapshot(None)
 
 
@@ -316,11 +262,10 @@ def test_update_prices_failed_stop():
 
 
 def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _wrapped_payload())
     with UpdatePrices():
         with pytest.raises(
             RuntimeError,
             match='UpdatePrices global task already started, only one UpdatePrices can be active at a time',
         ):
-            with UpdatePrices():
-                pass
+            UpdatePrices().start()

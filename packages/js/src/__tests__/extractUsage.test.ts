@@ -118,6 +118,46 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract cache write tokens with chat apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-5.6-sol',
+        usage: {
+          completion_tokens: 300,
+          prompt_tokens: 2006,
+          prompt_tokens_details: { cache_write_tokens: 1920, cached_tokens: 0 },
+        },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'chat')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 1920,
+        input_tokens: 2006,
+        output_tokens: 300,
+      })
+    })
+
+    it('should extract cache write tokens with responses apiFlavor', () => {
+      const responseData = {
+        model: 'gpt-5.6-sol',
+        usage: {
+          input_tokens: 2006,
+          input_tokens_details: { cache_write_tokens: 1920, cached_tokens: 0 },
+          output_tokens: 300,
+        },
+      }
+
+      const { usage } = extractUsage(openaiProvider, responseData, 'responses')
+
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        cache_write_tokens: 1920,
+        input_tokens: 2006,
+        output_tokens: 300,
+      })
+    })
+
     it('should error if not apiFlavor is provided', () => {
       const responseData = {
         model: 'gpt-5',
@@ -159,6 +199,32 @@ describe('extractUsage', () => {
         input_tokens: 4819,
         output_audio_tokens: 23,
         output_tokens: 1906,
+      })
+    })
+  })
+
+  describe('Cohere provider', () => {
+    const cohereProvider: Provider = data.find((provider) => provider.id === 'cohere')!
+
+    it('should extract raw token usage with tokens apiFlavor', () => {
+      const responseData = {
+        id: 'chatcmpl-00000000-0000-0000-0000-000000000000',
+        message: { content: [{ text: 'Done.', type: 'text' }], role: 'assistant' },
+        model: 'command-r-plus',
+        usage: {
+          billed_units: { input_tokens: 13, output_tokens: 8 },
+          cached_tokens: 0,
+          tokens: { input_tokens: 542, output_tokens: 8 },
+        },
+      }
+
+      const { model, usage } = extractUsage(cohereProvider, responseData, 'tokens')
+
+      expect(model).toBe('command-r-plus')
+      expect(usage).toEqual({
+        cache_read_tokens: 0,
+        input_tokens: 542,
+        output_tokens: 8,
       })
     })
   })
@@ -433,6 +499,26 @@ describe('extractUsage', () => {
 
       expect(model).toBeNull()
       expect(usage).toEqual({ input_tokens: 406, output_tokens: 53 })
+    })
+
+    it('should extract Converse usage with cache write tokens (real observed body)', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 0, cacheWriteInputTokens: 11207, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 0, cache_write_tokens: 11207, input_tokens: 11216, output_tokens: 5 })
+    })
+
+    it('should extract Converse usage with cache read tokens', () => {
+      const responseData = {
+        usage: { cacheReadInputTokens: 11207, cacheWriteInputTokens: 0, inputTokens: 9, outputTokens: 5 },
+      }
+
+      const { usage } = extractUsage(bedrockProvider, responseData)
+
+      expect(usage).toEqual({ cache_read_tokens: 11207, cache_write_tokens: 0, input_tokens: 11216, output_tokens: 5 })
     })
   })
 })

@@ -2,6 +2,8 @@
 name: OpenAI
 id: openai
 pricing_urls:
+  - https://developers.openai.com/api/docs/pricing
+  - https://developers.openai.com/api/docs/guides/prompt-caching
   - https://platform.openai.com/docs/pricing
   - https://openai.com/api/pricing/
   - https://platform.openai.com/docs/models
@@ -14,7 +16,7 @@ model_match:
 provider_match:
   contains: openai
 extractors:
-  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/completion_usage.py
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/completion_usage.py
   - api_flavor: chat
     root: usage
     mappings:
@@ -22,6 +24,9 @@ extractors:
         dest: input_tokens
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: [prompt_tokens_details, audio_tokens]
         dest: input_audio_tokens
@@ -31,7 +36,7 @@ extractors:
         required: false
       - path: completion_tokens
         dest: output_tokens
-  # https://github.com/openai/openai-python/blob/v1.99.6/src/openai/types/responses/response_usage.py
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/responses/response_usage.py
   - api_flavor: responses
     root: usage
     mappings:
@@ -39,6 +44,9 @@ extractors:
         dest: input_tokens
       - path: [input_tokens_details, cached_tokens]
         dest: cache_read_tokens
+        required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
         required: false
       - path: output_tokens
         dest: output_tokens
@@ -722,7 +730,8 @@ models:
     match:
       equals: gpt-5.4-image-2
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 8
       cache_read_mtok: 2
@@ -825,18 +834,129 @@ models:
       input_mtok: 30
       output_mtok: 180
 
+  - id: gpt-5.6-luna
+    name: GPT-5.6 Luna
+    description: GPT-5.6 model optimized for cost-sensitive workloads.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-luna
+        - equals: gpt-5-6-luna
+    context_window: 1050000
+    prices_checked: 2026-07-10
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Ref:
+      https://developers.openai.com/api/docs/guides/prompt-caching
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 6
+        tiers:
+          - start: 272000
+            price: 9
+
+  - id: gpt-5.6-sol
+    name: GPT-5.6 Sol
+    description: Frontier model for complex professional work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-sol
+        - equals: gpt-5-6-sol
+        - equals: gpt-5.6
+        - equals: gpt-5-6
+    context_window: 1050000
+    prices_checked: 2026-07-10
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Ref:
+      https://developers.openai.com/api/docs/guides/prompt-caching
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_write_mtok:
+        base: 6.25
+        tiers:
+          - start: 272000
+            price: 12.5
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
+
+  - id: gpt-5.6-terra
+    name: GPT-5.6 Terra
+    description: GPT-5.6 model that balances intelligence and cost.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-terra
+        - equals: gpt-5-6-terra
+    context_window: 1050000
+    prices_checked: 2026-07-10
+    price_comments: >-
+      Cache writes are billed at 1.25x the uncached input rate. Ref:
+      https://developers.openai.com/api/docs/guides/prompt-caching
+    prices:
+      input_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_write_mtok:
+        base: 3.125
+        tiers:
+          - start: 272000
+            price: 6.25
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.5
+
   - id: gpt-audio
     name: GPT Audio
     description: >-
       The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder
       for more natural-sounding voices and maintains better voice consistency.
     match:
-      equals: gpt-audio
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+      or:
+        - equals: gpt-audio
+        - equals: gpt-audio-2025-08-28
+        - equals: gpt-audio-1.5
+    prices_checked: 2026-06-26
     prices:
       input_mtok: 2.5
+      input_audio_mtok: 32
       output_mtok: 10
+      output_audio_mtok: 64
 
   - id: gpt-audio-mini
     name: GPT Audio Mini
@@ -844,12 +964,16 @@ models:
       A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices
       and maintains better voice consistency.
     match:
-      equals: gpt-audio-mini
-    prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+      or:
+        - equals: gpt-audio-mini
+        - equals: gpt-audio-mini-2025-10-06
+        - equals: gpt-audio-mini-2025-12-15
+    prices_checked: 2026-06-26
     prices:
       input_mtok: 0.6
+      input_audio_mtok: 10
       output_mtok: 2.4
+      output_audio_mtok: 20
 
   - id: gpt-chat-latest
     name: GPT Chat Latest
@@ -859,11 +983,51 @@ models:
     match:
       equals: gpt-chat-latest
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 30
+
+  - id: gpt-image-1-mini
+    name: GPT Image 1 Mini
+    description: >-
+      A cost-efficient image generation model from OpenAI with text input pricing.
+    match:
+      or:
+        - equals: gpt-image-1-mini
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.2
+
+  - id: gpt-image-1.5
+    name: GPT Image 1.5
+    description: >-
+      An improved image generation model from OpenAI supporting text input and output pricing.
+    match:
+      or:
+        - equals: gpt-image-1.5
+        - equals: gpt-image-1.5-2025-12-16
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-image-2
+    name: GPT Image 2
+    description: >-
+      OpenAI's latest image generation model with text input pricing.
+    match:
+      or:
+        - equals: gpt-image-2
+        - equals: gpt-image-2-2026-04-21
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 1.25
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -873,7 +1037,8 @@ models:
     match:
       equals: gpt-oss-120b
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.039
       output_mtok: 0.18
@@ -886,7 +1051,8 @@ models:
     match:
       equals: gpt-oss-20b
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.029
       output_mtok: 0.14
@@ -899,7 +1065,8 @@ models:
     match:
       equals: gpt-oss-safeguard-20b
     prices_checked: 2026-06-09
-    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
     prices:
       input_mtok: 0.075
       cache_read_mtok: 0.037
@@ -910,6 +1077,7 @@ models:
       or:
         - equals: gpt-realtime
         - equals: gpt-realtime-2025-08-28
+        - equals: gpt-realtime-1.5
     price_comments: Missing image token prices which we don't support yet
     prices:
       input_mtok: 4
@@ -919,9 +1087,26 @@ models:
       output_mtok: 16
       output_audio_mtok: 64
 
+  - id: gpt-realtime-2
+    match:
+      or:
+        - equals: gpt-realtime-2
+    price_comments: Missing image token prices which we don't support yet
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.4
+      output_mtok: 24
+      input_audio_mtok: 32
+      cache_audio_read_mtok: 0.4
+      output_audio_mtok: 64
+
   - id: gpt-realtime-mini
     match:
-      equals: gpt-realtime-mini
+      or:
+        - equals: gpt-realtime-mini
+        - equals: gpt-realtime-mini-2025-12-15
+        - equals: gpt-realtime-mini-2025-10-06
     price_comments: Missing image token prices which we don't support yet
     prices:
       input_mtok: 0.6

@@ -1238,7 +1238,7 @@ def test_set_registry_swaps_and_restores_bundled_registry() -> None:
 
 def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
     def fail_get_snapshot() -> None:
-        raise AssertionError('get_snapshot should not be called')
+        raise AssertionError('get_snapshot should not be called')  # pragma: no cover
 
     monkeypatch.setattr('genai_prices.data_snapshot.get_snapshot', fail_get_snapshot)
     _set_registry(None)

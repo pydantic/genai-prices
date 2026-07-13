@@ -113,20 +113,47 @@ jobs:
 
       - run: npm run ci
 
+  # Fail the PR if the package version is decreased relative to the base branch,
+  # or if the python/js version files disagree. Guards against an old release-prep
+  # commit being accidentally replayed onto an advanced `main` (see PR #428).
+  version-guard:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          # fetch the base branch too so we can read its version
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+      - run: uv sync --only-dev
+      - run: uv run --no-sync python .github/scripts/check_version_not_downgraded.py "${BASE_SHA}"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js]
+    needs: [pre-commit, test-python, coverage, test-js, version-guard]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}
+          # version-guard only runs on pull_request; it is (correctly) skipped on
+          # push/tag runs, so don't let that skip fail the gate.
+          allowed-skips: version-guard
 
   release-pypi:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    # Not success(): version-guard is skipped on tag runs, and a skipped job anywhere
+    # in the needs chain makes success() false, silently skipping the release jobs
+    # (the v0.0.70 tag hit this). An explicit status function is required, otherwise
+    # an implicit success() is still applied to the expression.
+    if: ${{ !cancelled() && needs.check.result == 'success' && startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     environment:
       name: release-pypi
@@ -155,7 +182,11 @@ jobs:
 
   release-npm:
     needs: [check]
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    # Not success(): version-guard is skipped on tag runs, and a skipped job anywhere
+    # in the needs chain makes success() false, silently skipping the release jobs
+    # (the v0.0.70 tag hit this). An explicit status function is required, otherwise
+    # an implicit success() is still applied to the expression.
+    if: ${{ !cancelled() && needs.check.result == 'success' && startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
     environment:
       name: release-npm

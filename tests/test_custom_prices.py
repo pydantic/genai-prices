@@ -211,6 +211,10 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     assert price.output_price == Decimal('0')
     assert price.total_price == Decimal('7')
 
+    # A non-BonusUsage skips the bonus branch, returning only the super() prices.
+    plain_price = model.calc_price(types.Usage(input_tokens=1_000_000), provider)
+    assert plain_price.total_price == Decimal('1')
+
 
 def test_base_model_price_accepts_registry_price_kwargs() -> None:
     price = types.ModelPrice(

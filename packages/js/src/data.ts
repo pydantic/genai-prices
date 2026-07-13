@@ -741,7 +741,7 @@ export const data: Provider[] = [
     id: 'aws',
     name: 'AWS Bedrock',
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
-    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com/',
+    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
     provider_match: {
       or: [
         {
@@ -762,6 +762,26 @@ export const data: Provider[] = [
             path: 'inputTokens',
             dest: 'input_tokens',
             required: true,
+          },
+          {
+            path: 'cacheReadInputTokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheWriteInputTokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheReadInputTokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'cacheWriteInputTokens',
+            dest: 'cache_write_tokens',
+            required: false,
           },
           {
             path: 'outputTokens',
@@ -986,42 +1006,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-opus-4-6',
         },
         prices: {
-          input_mtok: {
-            base: 5,
-            tiers: [
-              {
-                start: 200000,
-                price: 10,
-              },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.25,
-            tiers: [
-              {
-                start: 200000,
-                price: 12.5,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 1,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 25,
-            tiers: [
-              {
-                start: 200000,
-                price: 37.5,
-              },
-            ],
-          },
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
         },
       },
       {
@@ -1078,42 +1066,10 @@ export const data: Provider[] = [
           contains: 'global.anthropic.claude-sonnet-4-6',
         },
         prices: {
-          input_mtok: {
-            base: 3,
-            tiers: [
-              {
-                start: 200000,
-                price: 6,
-              },
-            ],
-          },
-          cache_write_mtok: {
-            base: 3.75,
-            tiers: [
-              {
-                start: 200000,
-                price: 7.5,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.3,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.6,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 200000,
-                price: 22.5,
-              },
-            ],
-          },
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
@@ -1880,42 +1836,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: {
-            base: 5.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 11,
-              },
-            ],
-          },
-          cache_write_mtok: {
-            base: 6.875,
-            tiers: [
-              {
-                start: 200000,
-                price: 13.75,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.55,
-            tiers: [
-              {
-                start: 200000,
-                price: 1.1,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 27.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 41.25,
-              },
-            ],
-          },
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
         },
       },
       {
@@ -2091,42 +2015,10 @@ export const data: Provider[] = [
           ],
         },
         prices: {
-          input_mtok: {
-            base: 3.3,
-            tiers: [
-              {
-                start: 200000,
-                price: 6.6,
-              },
-            ],
-          },
-          cache_write_mtok: {
-            base: 4.125,
-            tiers: [
-              {
-                start: 200000,
-                price: 8.25,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 0.33,
-            tiers: [
-              {
-                start: 200000,
-                price: 0.66,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 16.5,
-            tiers: [
-              {
-                start: 200000,
-                price: 24.75,
-              },
-            ],
-          },
+          input_mtok: 3.3,
+          cache_write_mtok: 4.125,
+          cache_read_mtok: 0.33,
+          output_mtok: 16.5,
         },
       },
       {
@@ -2777,7 +2669,7 @@ export const data: Provider[] = [
     id: 'cohere',
     name: 'Cohere',
     pricing_urls: ['https://cohere.com/pricing'],
-    api_pattern: 'https://api\\.cohere\\.ai',
+    api_pattern: 'https://api\\.cohere\\.(?:ai|com)',
     model_match: {
       starts_with: 'command-',
     },
@@ -2799,6 +2691,28 @@ export const data: Provider[] = [
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'tokens',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: ['tokens', 'input_tokens'],
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['tokens', 'output_tokens'],
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'cached_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
           },
         ],
       },
@@ -5129,6 +5043,21 @@ export const data: Provider[] = [
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
           },
         ],
       },
@@ -9698,11 +9627,37 @@ export const data: Provider[] = [
         match: {
           equals: 'minimax-m3',
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against MiniMax pricing when native API pricing is published.',
+        context_window: 1000000,
+        price_comments:
+          'Prices from MiniMax pay-as-you-go page (https://platform.minimax.io/docs/guides/pricing-paygo, 2026-07-01), standard service tier "Permanent 50% off" effective rate. Inputs over 512K tokens bill at 2x per MiniMax\'s length-based tiering.',
         prices: {
-          input_mtok: 0.3,
-          cache_read_mtok: 0.06,
-          output_mtok: 1.2,
+          input_mtok: {
+            base: 0.3,
+            tiers: [
+              {
+                start: 512000,
+                price: 0.6,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.06,
+            tiers: [
+              {
+                start: 512000,
+                price: 0.12,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 1.2,
+            tiers: [
+              {
+                start: 512000,
+                price: 2.4,
+              },
+            ],
+          },
         },
       },
     ],
@@ -10799,6 +10754,8 @@ export const data: Provider[] = [
     id: 'openai',
     name: 'OpenAI',
     pricing_urls: [
+      'https://developers.openai.com/api/docs/pricing',
+      'https://developers.openai.com/api/docs/guides/prompt-caching',
       'https://platform.openai.com/docs/pricing',
       'https://openai.com/api/pricing/',
       'https://platform.openai.com/docs/models',
@@ -10835,6 +10792,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
             path: ['prompt_tokens_details', 'audio_tokens'],
             dest: 'input_audio_tokens',
             required: false,
@@ -10864,6 +10826,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
             required: false,
           },
           {
@@ -12066,17 +12033,202 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-5.6-luna',
+        name: 'GPT-5.6 Luna',
+        description: 'GPT-5.6 model optimized for cost-sensitive workloads.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-luna',
+            },
+            {
+              equals: 'gpt-5-6-luna',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 272000,
+                price: 9,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-5.6-sol',
+        name: 'GPT-5.6 Sol',
+        description: 'Frontier model for complex professional work.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-sol',
+            },
+            {
+              equals: 'gpt-5-6-sol',
+            },
+            {
+              equals: 'gpt-5.6',
+            },
+            {
+              equals: 'gpt-5-6',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+        prices: {
+          input_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 6.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 12.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 30,
+            tiers: [
+              {
+                start: 272000,
+                price: 45,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-5.6-terra',
+        name: 'GPT-5.6 Terra',
+        description: 'GPT-5.6 model that balances intelligence and cost.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-5.6-terra',
+            },
+            {
+              equals: 'gpt-5-6-terra',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Cache writes are billed at 1.25x the uncached input rate. Ref: https://developers.openai.com/api/docs/guides/prompt-caching',
+        prices: {
+          input_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 3.125,
+            tiers: [
+              {
+                start: 272000,
+                price: 6.25,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.5,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 22.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-audio',
         name: 'GPT Audio',
         description:
           "The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder for more natural-sounding voices and maintains better voice consistency.",
         match: {
-          equals: 'gpt-audio',
+          or: [
+            {
+              equals: 'gpt-audio',
+            },
+            {
+              equals: 'gpt-audio-2025-08-28',
+            },
+            {
+              equals: 'gpt-audio-1.5',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
+          input_audio_mtok: 32,
+          output_audio_mtok: 64,
         },
       },
       {
@@ -12085,12 +12237,23 @@ export const data: Provider[] = [
         description:
           'A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices and maintains better voice consistency.',
         match: {
-          equals: 'gpt-audio-mini',
+          or: [
+            {
+              equals: 'gpt-audio-mini',
+            },
+            {
+              equals: 'gpt-audio-mini-2025-10-06',
+            },
+            {
+              equals: 'gpt-audio-mini-2025-12-15',
+            },
+          ],
         },
-        price_comments: 'Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.',
         prices: {
           input_mtok: 0.6,
           output_mtok: 2.4,
+          input_audio_mtok: 10,
+          output_audio_mtok: 20,
         },
       },
       {
@@ -12106,6 +12269,61 @@ export const data: Provider[] = [
           input_mtok: 5,
           cache_read_mtok: 0.5,
           output_mtok: 30,
+        },
+      },
+      {
+        id: 'gpt-image-1-mini',
+        name: 'GPT Image 1 Mini',
+        description: 'A cost-efficient image generation model from OpenAI with text input pricing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-1-mini',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+        },
+      },
+      {
+        id: 'gpt-image-1.5',
+        name: 'GPT Image 1.5',
+        description: 'An improved image generation model from OpenAI supporting text input and output pricing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-1.5',
+            },
+            {
+              equals: 'gpt-image-1.5-2025-12-16',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-image-2',
+        name: 'GPT Image 2',
+        description: "OpenAI's latest image generation model with text input pricing.",
+        match: {
+          or: [
+            {
+              equals: 'gpt-image-2',
+            },
+            {
+              equals: 'gpt-image-2-2026-04-21',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
         },
       },
       {
@@ -12161,6 +12379,9 @@ export const data: Provider[] = [
             {
               equals: 'gpt-realtime-2025-08-28',
             },
+            {
+              equals: 'gpt-realtime-1.5',
+            },
           ],
         },
         price_comments: "Missing image token prices which we don't support yet",
@@ -12174,9 +12395,38 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-realtime-2',
+        match: {
+          or: [
+            {
+              equals: 'gpt-realtime-2',
+            },
+          ],
+        },
+        price_comments: "Missing image token prices which we don't support yet",
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.4,
+          output_mtok: 24,
+          input_audio_mtok: 32,
+          cache_audio_read_mtok: 0.4,
+          output_audio_mtok: 64,
+        },
+      },
+      {
         id: 'gpt-realtime-mini',
         match: {
-          equals: 'gpt-realtime-mini',
+          or: [
+            {
+              equals: 'gpt-realtime-mini',
+            },
+            {
+              equals: 'gpt-realtime-mini-2025-12-15',
+            },
+            {
+              equals: 'gpt-realtime-mini-2025-10-06',
+            },
+          ],
         },
         price_comments: "Missing image token prices which we don't support yet",
         prices: {
@@ -22272,9 +22522,6 @@ export const data: Provider[] = [
             {
               equals: 'grok-4.3-latest',
             },
-            {
-              equals: 'grok-latest',
-            },
           ],
         },
         context_window: 1000000,
@@ -22282,6 +22529,40 @@ export const data: Provider[] = [
           input_mtok: 1.25,
           cache_read_mtok: 0.2,
           output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'grok-4.5',
+        name: 'Grok 4.5',
+        description:
+          "xAI's most intelligent and fastest flagship model, well-suited for general-purpose use including coding and chat. Supports text and image inputs with text outputs, function calling, structured outputs, and reasoning.",
+        match: {
+          or: [
+            {
+              equals: 'grok-4.5',
+            },
+            {
+              regex: '^grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'x-ai/grok-4.5',
+            },
+            {
+              regex: '^x-ai/grok-4\\.5-\\d{8}$',
+            },
+            {
+              equals: 'grok-4.5-latest',
+            },
+            {
+              equals: 'grok-latest',
+            },
+          ],
+        },
+        context_window: 500000,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
         },
       },
       {

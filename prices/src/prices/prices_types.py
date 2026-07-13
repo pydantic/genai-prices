@@ -14,11 +14,13 @@ from pydantic import (
     Field,
     HttpUrl,
     PlainSerializer,
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
     Tag,
     TypeAdapter,
     ValidationInfo,
     WithJsonSchema,
-    field_serializer,
+    WrapSerializer,
     field_validator,
 )
 
@@ -152,6 +154,19 @@ class UsageExtractor(_Model):
     """Mappings from used to build usage."""
 
 
+def serialize_prices(
+    value: ModelPrice | list[ConditionalPrice], _handler: SerializerFunctionWrapHandler, info: SerializationInfo
+):
+    # Serialize each union member on its own. Under the `ModelPrice | list[ConditionalPrice]` union,
+    # pydantic-core coerces whole-number `Decimal` prices to float (because `ModelPrice` has typed
+    # `extra='allow'`); dumping the concrete member directly keeps whole numbers as ints.
+    # No return annotation: WrapSerializer would otherwise adopt it as the serialization JSON schema
+    # and collapse the detailed `prices` schema to a generic object.
+    if isinstance(value, list):
+        return [cp.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none) for cp in value]
+    return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
+
+
 class ModelInfo(_Model):
     """Information about an LLM model"""
 
@@ -167,7 +182,7 @@ class ModelInfo(_Model):
     """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
-    prices: ModelPrice | list[ConditionalPrice]
+    prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]
     """Set of prices for using this model.
 
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
@@ -205,16 +220,6 @@ class ModelInfo(_Model):
             if sum(p.constraint is None for p in prices) != 1:
                 raise ValueError('When multiple prices are provided, exactly one price must not have a constraint')
         return prices
-
-    @field_serializer('prices', when_used='json', return_type='ModelPrice | list[ConditionalPrice]')
-    def _serialize_prices(self, prices: ModelPrice | list[ConditionalPrice]) -> Any:
-        # Serialize each member directly. Pydantic's smart-union serializer bypasses the DollarPrice
-        # serializer here, emitting whole-number prices as floats (10.0 instead of 10). The explicit
-        # `return_type` keeps the generated JSON schema; callers pass `warnings=False` to silence the
-        # benign dict-vs-model serializer warning this raises.
-        if isinstance(prices, list):
-            return [entry.model_dump(mode='json', by_alias=True, exclude_none=True) for entry in prices]
-        return prices.model_dump(mode='json', by_alias=True, exclude_none=True)
 
     def is_free(self) -> bool:
         if isinstance(self.prices, list):
