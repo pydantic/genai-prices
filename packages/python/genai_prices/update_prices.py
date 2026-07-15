@@ -40,7 +40,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
 
     Returns:
         True if prices were updated. False if no updater is running, the timeout elapsed, or
-        another waiter already observed the current failure.
+        another `wait()` or `stop()` call already observed the current failure.
     """
     with _lock:
         update_prices = _global_update_prices
@@ -59,7 +59,7 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 
     Returns:
         True if prices were updated. False if no updater is running, the timeout elapsed, or
-        another waiter already observed the current failure.
+        another `wait()` or `stop()` call already observed the current failure.
     """
     return await asyncio.to_thread(wait_prices_updated_sync, timeout)
 
@@ -163,7 +163,8 @@ class UpdatePrices:
         """Wait for the shared background updater's first completed attempt.
 
         A failed attempt is raised once process-wide. Returns `False` if this instance is not
-        started, the timeout elapses, or another waiter already observed the current failure.
+        started, the timeout elapses, or another `wait()` or `stop()` call already observed the
+        current failure.
 
         Args:
             timeout: The maximum time to wait for prices to be updated in seconds.
