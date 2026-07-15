@@ -13,9 +13,17 @@ from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
 from genai_prices.update_prices import UpdatePrices
 
 
-@dataclass
 class CustomModelPrice(types.ModelPrice):
     sausage_price: Decimal | None = None
+
+    def __init__(
+        self,
+        *,
+        sausage_price: Decimal | None = None,
+        **prices: Decimal | types.TieredPrices | None,
+    ) -> None:
+        super().__init__(**prices)
+        self.sausage_price = sausage_price
 
     def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
         price = super().calc_price(usage)
@@ -172,9 +180,17 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
         input_tokens: int
         bonus_units: int
 
-    @dataclass
     class BonusModelPrice(types.ModelPrice):
         bonus_price: Decimal | None = None
+
+        def __init__(
+            self,
+            *,
+            bonus_price: Decimal | None = None,
+            **prices: Decimal | types.TieredPrices | None,
+        ) -> None:
+            super().__init__(**prices)
+            self.bonus_price = bonus_price
 
         def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
             price = super().calc_price(usage)
@@ -200,59 +216,92 @@ def test_custom_price_override_gets_original_usage_and_super_prices_registered_f
     assert plain_price.total_price == Decimal('1')
 
 
-def test_base_model_price_stores_dynamic_price_kwargs() -> None:
+def test_base_model_price_accepts_registry_price_kwargs() -> None:
     price = types.ModelPrice(
         input_mtok=Decimal('1'),
         cache_image_read_mtok=Decimal('0.5'),
     )
 
     assert price.input_mtok == Decimal('1')
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
     assert price.cache_image_read_mtok == Decimal('0.5')
 
 
 def test_provider_parsing_preserves_dynamic_model_price_keys() -> None:
-    providers = types.providers_schema.validate_json(
-        json.dumps(
-            [
-                {
-                    'id': 'testing',
-                    'name': 'Testing',
-                    'api_pattern': 'testing',
-                    'models': [
-                        {
-                            'id': 'model',
-                            'match': {'equals': 'model'},
-                            'prices': {
-                                'input_mtok': 1,
-                                'cache_image_read_mtok': 0.5,
-                            },
-                        }
-                    ],
-                }
-            ]
+    providers = types._providers_from_raw(
+        json.loads(
+            json.dumps(
+                [
+                    {
+                        'id': 'testing',
+                        'name': 'Testing',
+                        'api_pattern': 'testing',
+                        'models': [
+                            {
+                                'id': 'model',
+                                'match': {'equals': 'model'},
+                                'prices': {
+                                    'input_mtok': 1,
+                                    'cache_image_read_mtok': 0.5,
+                                },
+                            }
+                        ],
+                    }
+                ]
+            )
         )
     )
 
     price = providers[0].models[0].prices
     assert isinstance(price, types.ModelPrice)
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
+    assert price.input_mtok == Decimal('1')
     assert price.cache_image_read_mtok == Decimal('0.5')
 
 
-def test_dynamic_model_price_assignment_and_deletion() -> None:
-    price = types.ModelPrice()
+def test_provider_parsing_preserves_tiered_model_prices() -> None:
+    providers = types._providers_from_raw(
+        json.loads(
+            json.dumps(
+                [
+                    {
+                        'id': 'testing',
+                        'name': 'Testing',
+                        'api_pattern': 'testing',
+                        'models': [
+                            {
+                                'id': 'model',
+                                'match': {'equals': 'model'},
+                                'prices': {
+                                    'input_mtok': {
+                                        'base': 1,
+                                        'tiers': [{'start': 100_000, 'price': 2}],
+                                    },
+                                },
+                            }
+                        ],
+                    }
+                ]
+            )
+        )
+    )
 
-    price.cache_image_read_mtok = Decimal('0.5')
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
-    assert price.cache_image_read_mtok == Decimal('0.5')
-
-    del price.cache_image_read_mtok
-    assert price._extra_prices == {}
-    assert price.cache_image_read_mtok is None
+    price = providers[0].models[0].prices
+    assert isinstance(price, types.ModelPrice)
+    assert isinstance(price.input_mtok, types.TieredPrices)
+    assert price.input_mtok.base == Decimal('1')
+    assert price.input_mtok.tiers[0].price == Decimal('2')
 
 
-def test_custom_model_price_constructor_still_accepts_declared_custom_fields() -> None:
+def test_model_price_normalization_preserves_instances_and_normalizes_conditional_lists() -> None:
+    price = types.ModelPrice(input_mtok=Decimal('1'))
+    assert types._normalize_prices_field(price) is price
+
+    normalized = types._normalize_prices_field([{'constraint': None, 'prices': {'input_mtok': 1}}])
+    assert isinstance(normalized, list)
+    assert isinstance(normalized[0]['prices'], types.ModelPrice)
+    assert normalized[0]['prices'].input_mtok == Decimal('1')
+
+
+def test_custom_model_price_constructor_accepts_custom_fields() -> None:
     price = CustomModelPrice(
         input_mtok=Decimal('1'),
         output_mtok=Decimal('2'),
@@ -262,50 +311,3 @@ def test_custom_model_price_constructor_still_accepts_declared_custom_fields() -
     assert price.input_mtok == Decimal('1')
     assert price.output_mtok == Decimal('2')
     assert price.sausage_price == Decimal('3')
-
-
-def test_custom_model_price_constructor_defers_undeclared_dynamic_keys_to_phase_4() -> None:
-    with pytest.raises(TypeError, match='cache_image_read_mtok'):
-        CustomModelPrice(
-            input_mtok=Decimal('1'),
-            cache_image_read_mtok=Decimal('0.5'),  # pyright: ignore[reportCallIssue]
-            sausage_price=Decimal('3'),
-        )
-
-
-def test_model_price_constructor_restores_stored_extra_prices() -> None:
-    price = types.ModelPrice(
-        input_mtok=Decimal('1'),
-        _extra_prices={'cache_image_read_mtok': Decimal('0.5')},  # pyright: ignore[reportArgumentType]
-    )
-
-    assert price._extra_prices == {'cache_image_read_mtok': Decimal('0.5')}
-    assert price.cache_image_read_mtok == Decimal('0.5')
-
-
-def test_model_price_constructor_rejects_non_mapping_stored_extra_prices() -> None:
-    with pytest.raises(TypeError, match='_extra_prices must be a mapping'):
-        types.ModelPrice(_extra_prices=[('cache_image_read_mtok', Decimal('0.5'))])  # pyright: ignore[reportArgumentType]
-
-
-def test_store_unknown_price_keys_passes_through_non_dict_input() -> None:
-    sentinel = object()
-
-    assert types.ModelPrice._store_unknown_price_keys(sentinel) is sentinel  # pyright: ignore[reportCallIssue]
-
-
-def test_model_price_delattr_declared_field_and_unset_registered_key() -> None:
-    price = types.ModelPrice(input_mtok=Decimal('1'))
-
-    del price.input_mtok
-    assert price.input_mtok is None
-
-    with pytest.raises(AttributeError, match='cache_image_read_mtok'):
-        del price.cache_image_read_mtok
-
-
-def test_model_price_is_free_handles_non_decimal_extra_price() -> None:
-    price = types.ModelPrice()
-    price.cache_image_read_mtok = 0
-
-    assert price.is_free() is True

@@ -27,7 +27,7 @@ function setProviderData(data: ProviderDataPayload) {
     return
   }
   if (typeof data === 'object' && 'then' in data) {
-    providerDataPromise = data
+    const updatePromise = data
       .then((data) => {
         if (data === null) {
           return providerData
@@ -35,9 +35,12 @@ function setProviderData(data: ProviderDataPayload) {
         return activateProviderData(data)
       })
       .catch((error: unknown) => {
-        providerDataPromise = Promise.resolve(providerData)
+        if (providerDataPromise === updatePromise) {
+          providerDataPromise = Promise.resolve(providerData)
+        }
         throw error
       })
+    providerDataPromise = updatePromise
   } else {
     providerDataPromise = Promise.resolve(activateProviderData(data))
   }
@@ -51,6 +54,8 @@ function activateProviderData(data: Exclude<ProviderDataValue, null>): Provider[
   }
 
   if (typeof data === 'object' && isWrappedProviderData(data)) {
+    // Published unit data is trusted to evolve compatibly. We only roll back if
+    // this payload's providers fail activation; no registry-history diff is enforced.
     const candidateRegistry = new UnitRegistry(data.units)
     const previousRegistry = getActiveRegistry()
     setActiveRegistry(candidateRegistry)
