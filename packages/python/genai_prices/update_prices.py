@@ -39,7 +39,8 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
         timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
 
     Returns:
-        True if prices were updated, False if no updater is running or the timeout elapsed.
+        True if prices were updated. False if no updater is running, the timeout elapsed, or
+        another waiter already observed the current failure.
     """
     with _lock:
         update_prices = _global_update_prices
@@ -57,7 +58,8 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
         timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
 
     Returns:
-        True if prices were updated, False if no updater is running or the timeout elapsed.
+        True if prices were updated. False if no updater is running, the timeout elapsed, or
+        another waiter already observed the current failure.
     """
     return await asyncio.to_thread(wait_prices_updated_sync, timeout)
 
