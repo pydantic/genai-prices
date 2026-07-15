@@ -26,74 +26,37 @@ def _default_request_timeout() -> httpx2.Timeout:
     return httpx2.Timeout(timeout=10, connect=5)
 
 
-# There is exactly one price snapshot per process (data_snapshot.set_custom_snapshot is a global),
-# so "updating prices" is inherently a singleton activity. Every `UpdatePrices` is therefore not an
-# updater of its own but a *claim* on one shared, process-wide updater guarded by `_lock`: starting
-# any instance acquires a claim (ref-count++), and the background thread stops only when the last
-# claim is released.
-#
-# Note: like any daemon thread, the updater does not survive os.fork() - a child process (e.g. a
-# gunicorn worker with preload_app=True) inherits the bookkeeping but not the running thread.
-_updater: _BackgroundUpdater | None = None
-_ref_count = 0
-_lock = threading.RLock()
-
-_STOPPED_THREAD_JOIN_TIMEOUT = 5.0
-
-
-def _join_stopped_updater_thread(thread: threading.Thread | None) -> None:
-    """Give a stopped updater thread a short grace period to exit, then abandon it.
-
-    Called outside `_lock` so a thread blocked on an in-flight fetch never stalls other updater
-    API calls. Abandonment is safe: the thread is a daemon, it exits as soon as the fetch
-    completes, and a stopped updater can never install its result (see `_install_snapshot`).
-    """
-    if thread is None:
-        return
-    thread.join(timeout=_STOPPED_THREAD_JOIN_TIMEOUT)
-    if thread.is_alive():
-        logger.warning(
-            'genai-prices background updater thread did not exit within %.0f seconds (a fetch is '
-            'likely in flight); abandoning the daemon thread. It will exit once the fetch '
-            'completes, without updating prices.',
-            _STOPPED_THREAD_JOIN_TIMEOUT,
-        )
+# Price calculations use one process-wide snapshot, so independent consumers must share the
+# updater that owns it. The lock only protects updater lifecycle; calculating prices is unaffected.
+_global_update_prices: UpdatePrices | None = None
+_lock = threading.Lock()
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
     """Synchronously wait for prices to be updated by the shared background updater.
 
-    Never raises: if the update attempt failed, this returns False - the error is logged on the
-    `genai-prices` logger.
-
     Args:
-        timeout: The maximum time to wait for prices to be updated. Defaults to None which waits
-            indefinitely.
+        timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
 
     Returns:
-        True if prices were updated, False otherwise (including when the update failed, or when no
-        updater is running).
+        True if prices were updated, False if no updater is running or the timeout elapsed.
     """
     with _lock:
-        updater = _updater
+        update_prices = _global_update_prices
 
-    if updater is not None:
-        return updater._wait_updated(timeout)  # pyright: ignore[reportPrivateUsage]
+    if update_prices is not None:
+        return update_prices._wait_for_update(timeout)  # pyright: ignore[reportPrivateUsage]
     return False
 
 
 async def wait_prices_updated_async(timeout: float | None = None) -> bool:
     """Asynchronously wait for prices to be updated by the shared background updater.
 
-    Never raises: if the update attempt failed, this returns False - the error is logged on the
-    `genai-prices` logger.
-
     Args:
         timeout: The maximum time to wait for prices to be updated. Defaults to None which waits indefinitely.
 
     Returns:
-        True if prices were updated, False otherwise (including when the update failed, or when no
-        updater is running).
+        True if prices were updated, False if no updater is running or the timeout elapsed.
     """
     return await asyncio.to_thread(wait_prices_updated_sync, timeout)
 
@@ -102,17 +65,10 @@ async def wait_prices_updated_async(timeout: float | None = None) -> bool:
 class UpdatePrices:
     """Periodically update price data by downloading it in a background daemon thread.
 
-    A single shared, process-wide updater backs every `UpdatePrices` instance: starting an instance
-    is a *claim* on that one updater, not a private thread. It is therefore safe to create and start
-    `UpdatePrices` from anywhere - including from several libraries in the same process. The first
-    `start()` launches the updater; later ones join it and bump a reference count; the background
-    thread stops (and prices revert to the bundled data) only when the **last** started instance is
-    stopped.
-
-    Configuration is first-wins: the first instance to start fixes `url`, `update_interval` and
-    `request_timeout` for the updater's lifetime. Starting another instance with different settings
-    logs a warning and joins the running updater; its settings are ignored. Application authors who
-    need a custom URL should start their instance early, before any library does.
+    A single process-wide updater backs every compatible `UpdatePrices` instance. The first
+    `start()` starts it, later calls from other instances acquire shared ownership, and the last
+    matching `stop()` stops it. Starting an instance twice or starting one with configuration that
+    differs from the active updater raises `RuntimeError`.
 
     Can be used as a context manager (`with UpdatePrices(): ...`) or by calling `start()`/`stop()`.
     """
@@ -123,230 +79,98 @@ class UpdatePrices:
     """The URL to fetch prices from."""
     request_timeout: httpx2.Timeout = field(default_factory=_default_request_timeout)
     """The timeout for HTTP requests."""
-    _claimed: bool = field(default=False, init=False)
-    _updater: _BackgroundUpdater | None = field(default=None, init=False)
+    _stop_event: threading.Event = field(default_factory=threading.Event, repr=False)
+    _prices_updated: threading.Event = field(default_factory=threading.Event, repr=False)
+    _thread: threading.Thread | None = field(default=None, init=False, repr=False)
+    _background_exc: Exception | None = field(default=None, init=False, repr=False)
+    _updater: UpdatePrices | None = field(default=None, init=False, repr=False)
+    _claims: int = field(default=0, init=False, repr=False)
+    _observed_background_exc: Exception | None = field(default=None, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
-        """Acquire this instance's claim on the shared background updater.
-
-        The first claim starts the updater; later claims join it. Starting the same instance twice
-        raises `RuntimeError`. This does not wait for the download unless `wait` is passed: until
-        the first fetch completes, price calculations keep using the bundled data.
+        """Acquire shared ownership of the process-wide background updater.
 
         Args:
             wait: Whether to wait for prices to be updated before returning; if an int/float is
                 passed wait that many seconds, if `True` wait for 30 seconds.
         """
-        global _updater, _ref_count
+        global _global_update_prices
 
         with _lock:
-            if self._claimed:
+            if self._updater is not None:
                 raise RuntimeError('UpdatePrices background task already started')
 
-            if _updater is None:
-                updater = _BackgroundUpdater(
-                    url=self.url, update_interval=self.update_interval, request_timeout=self.request_timeout
+            update_prices = _global_update_prices
+            if update_prices is None:
+                self._start_background_task()
+                update_prices = _global_update_prices = self
+            elif (
+                update_prices.url != self.url
+                or update_prices.update_interval != self.update_interval
+                or update_prices.request_timeout != self.request_timeout
+            ):
+                raise RuntimeError(
+                    'UpdatePrices background task already started with different configuration: '
+                    f'url={update_prices.url!r}, update_interval={update_prices.update_interval!r}, '
+                    f'request_timeout={update_prices.request_timeout!r}'
                 )
-                _updater = updater
-                _ref_count = 1
-                try:
-                    updater._start_thread()  # pyright: ignore[reportPrivateUsage]
-                except Exception:
-                    _updater = None
-                    _ref_count = 0
-                    raise
-            else:
-                if (
-                    _updater.url != self.url
-                    or _updater.update_interval != self.update_interval
-                    or _updater.request_timeout != self.request_timeout
-                ):
-                    logger.warning(
-                        'A genai-prices background updater is already running (url=%r, update_interval=%r, '
-                        'request_timeout=%r); ignoring the different configuration of this UpdatePrices '
-                        '(url=%r, update_interval=%r, request_timeout=%r) and joining the existing updater. '
-                        'Start the updater before any other caller if you need custom settings.',
-                        _updater.url,
-                        _updater.update_interval,
-                        _updater.request_timeout,
-                        self.url,
-                        self.update_interval,
-                        self.request_timeout,
-                    )
-                _ref_count += 1
 
-            self._claimed = True
-            self._updater = _updater
+            update_prices._claims += 1
+            self._updater = update_prices
+            self._observed_background_exc = None
 
         if wait:
             self.wait(timeout=30 if wait is True else wait)
 
     def stop(self):
-        """Release this instance's claim on the shared background updater.
+        """Release this instance's ownership of the shared background updater.
 
-        Stops the updater (reverting prices to the bundled data) only if this was the last open
-        claim; a claim held by another caller keeps it running. A no-op if this instance was never
-        started or has already been stopped.
-
-        Never raises: a stored background fetch error is logged instead - use `wait()` if you want
-        the error raised. Returns promptly; if a fetch is in flight the daemon thread is given a
-        short grace period to exit before being abandoned with a warning log, and its result is
-        discarded - a stopped updater can never install prices afterwards.
+        The updater stops and bundled prices are restored only after the last owner releases it.
+        This is a no-op if this instance is not started. As before, the last `stop()` waits for an
+        in-flight fetch to finish and raises an unobserved background exception.
         """
-        global _updater, _ref_count
+        global _global_update_prices
 
         with _lock:
-            if not self._claimed:
+            update_prices = self._updater
+            if update_prices is None:
                 return
-            self._claimed = False
 
-            updater = self._updater
+            observed_background_exc = self._observed_background_exc
             self._updater = None
-            if updater is None or _updater is not updater:
+            self._observed_background_exc = None
+            update_prices._claims -= 1
+            if update_prices._claims > 0:
                 return
 
-            _ref_count -= 1
-            if _ref_count > 0:
-                return
-
-            _updater = None
-            _ref_count = 0
-            thread = updater._stop_and_detach()  # pyright: ignore[reportPrivateUsage]
-
-        # Join outside the lock so a thread blocked on an in-flight fetch never stalls other
-        # updater API calls; re-publication is already fenced off by _stop_and_detach().
-        _join_stopped_updater_thread(thread)
-        exc = updater._background_exc  # pyright: ignore[reportPrivateUsage]
-        if exc:
-            updater._background_exc = None  # pyright: ignore[reportPrivateUsage]
-            logger.error('Error from genai-prices background updater while stopping', exc_info=exc)
+            assert _global_update_prices is update_prices
+            try:
+                # Keep ownership published until the thread exits. This makes a concurrent start
+                # wait instead of creating a second worker while the first is still fetching.
+                update_prices._stop_background_task(observed_background_exc)
+            finally:
+                _global_update_prices = None
 
     def wait(self, timeout: float | None = None) -> bool:
-        """Wait for prices to be updated by the shared background updater.
+        """Wait for the shared background updater's first completed attempt.
 
-        Raises the stored exception if the update attempt failed. Returns False if this instance is
-        not currently started.
+        A failed attempt is raised once by each owning instance. Further waits return `False`
+        until a later attempt succeeds. Returns `False` if this instance is not started.
 
         Args:
-            timeout: The maximum time to wait for the prices to be updated in seconds.
+            timeout: The maximum time to wait for prices to be updated in seconds.
         """
-        updater = self._updater
-        if updater is None:
+        update_prices = self._updater
+        if update_prices is None:
             return False
-        return updater._wait_raising(timeout)  # pyright: ignore[reportPrivateUsage]
 
-    def fetch(self) -> data_snapshot.DataSnapshot | None:
-        """Fetch the latest provider data from the configured URL (does not start a background task)."""
-        return _BackgroundUpdater(
-            url=self.url, update_interval=self.update_interval, request_timeout=self.request_timeout
-        ).fetch()
-
-    def __enter__(self):
-        self.start()
-        return self
-
-    def __exit__(self, *_args: object):
-        self.stop()
-
-
-@dataclass
-class _BackgroundUpdater:
-    """The single process-wide updater. Internal: consumers interact via `UpdatePrices`."""
-
-    url: str
-    update_interval: float
-    request_timeout: httpx2.Timeout
-    _stop_event: threading.Event = field(default_factory=threading.Event)
-    _prices_updated: threading.Event = field(default_factory=threading.Event)
-    _thread: threading.Thread | None = field(default=None)
-    _background_exc: Exception | None = field(default=None)
-    _update_succeeded: bool = field(default=False)
-
-    def _start_thread(self) -> None:
-        if self._thread is not None:
-            raise RuntimeError('genai-prices background task already started')
-
-        self._prices_updated.clear()
-        self._stop_event.clear()
-        self._background_exc = None
-        self._update_succeeded = False
-        self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
-        self._thread.start()
-
-    def _wait_updated(self, timeout: float | None) -> bool:
-        # Never raises and does not consume the stored background exception: failures are already
-        # logged by the background task, and the exception stays stored for stop() to surface.
-        return self._prices_updated.wait(timeout=timeout) and self._update_succeeded
-
-    def _wait_raising(self, timeout: float | None) -> bool:
-        # Like _wait_updated, but raises (and consumes) the stored background exception - the
-        # behaviour of UpdatePrices.wait().
-        prices_updated = self._prices_updated.wait(timeout=timeout)
-        exc = self._background_exc
-        if exc:
-            self._background_exc = None
-            raise exc
-        return prices_updated and self._update_succeeded
-
-    def _stop_and_detach(self) -> threading.Thread | None:
-        """Signal the background thread to stop and revert prices to the bundled data.
-
-        Called with the module `_lock` held. Does not join; returns the (possibly still draining)
-        thread so the caller can wait on it after releasing `_lock`. Setting the stop event before
-        clearing the snapshot, both ordered against `_install_snapshot` via `_lock`, guarantees an
-        in-flight fetch can finish but can never install its result afterwards.
-        """
-        thread = self._thread
-        self._thread = None
-        self._stop_event.set()
-        data_snapshot.set_custom_snapshot(None)
-        return thread
-
-    def _background_task(self) -> None:
-        logger.info('Starting genai-prices background task')
         try:
-            while True:
-                try:
-                    installed = self._update_prices()
-                    self._background_exc = None
-                    # Reflect whether the snapshot was actually installed: a fetch discarded by the
-                    # stop fence (see _install_snapshot) must not report success to waiters. Set
-                    # before signaling the event so waiters observing the event see the flag.
-                    self._update_succeeded = installed
-                    self._prices_updated.set()
-                except Exception as e:
-                    self._background_exc = e
-                    self._prices_updated.set()
-                    logger.exception('Error updating genai-prices in the background')
-                if self._stop_event.wait(self.update_interval):
-                    break
-
-        finally:
-            logger.info('genai-prices background task stopped')
-
-    def _update_prices(self) -> bool:
-        start = time()
-        snapshot = self.fetch()
-        interval = time() - start
-        if snapshot:
-            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
-        else:
-            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
-
-        return self._install_snapshot(snapshot)
-
-    def _install_snapshot(self, snapshot: data_snapshot.DataSnapshot | None) -> bool:
-        # Fencing check: never publish after stop. The stop path sets _stop_event and then clears
-        # the snapshot under `_lock` (see _stop_and_detach), so taking the same lock here and
-        # re-checking the event makes publish-after-stop impossible rather than merely unlikely.
-        # Returns whether the snapshot was installed, so a discarded fetch is not reported as a
-        # successful update to waiters.
-        with _lock:
-            if self._stop_event.is_set():
-                logger.info('genai-prices updater was stopped during the fetch; discarding the fetched snapshot')
+            return update_prices._wait_for_update(timeout)
+        except Exception as exc:
+            if self._observed_background_exc is exc:
                 return False
-            data_snapshot.set_custom_snapshot(snapshot)
-            return True
+            self._observed_background_exc = exc
+            raise
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
@@ -355,3 +179,69 @@ class _BackgroundUpdater:
         r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, *_args: object):
+        self.stop()
+
+    def _start_background_task(self) -> None:
+        assert self._thread is None
+        self._prices_updated.clear()
+        self._stop_event.clear()
+        self._background_exc = None
+        self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
+        try:
+            self._thread.start()
+        except Exception:
+            self._thread = None
+            raise
+
+    def _stop_background_task(self, observed_background_exc: Exception | None) -> None:
+        self._stop_event.set()
+        if self._thread is not None:
+            self._thread.join()
+            self._thread = None
+
+        # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
+        data_snapshot.set_custom_snapshot(None)
+        exc = self._background_exc
+        self._background_exc = None
+        if exc is not None and exc is not observed_background_exc:
+            raise exc
+
+    def _wait_for_update(self, timeout: float | None) -> bool:
+        prices_updated = self._prices_updated.wait(timeout=timeout)
+        if self._background_exc is not None:
+            raise self._background_exc
+        return prices_updated
+
+    def _background_task(self) -> None:
+        logger.info('Starting genai-prices background task')
+        try:
+            while True:
+                try:
+                    self._update_prices()
+                    self._background_exc = None
+                    self._prices_updated.set()
+                except Exception as e:
+                    self._background_exc = e
+                    self._prices_updated.set()
+                    logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
+                if self._stop_event.wait(self.update_interval):
+                    break
+        finally:
+            logger.info('genai-prices background task stopped')
+
+    def _update_prices(self):
+        start = time()
+        snapshot = self.fetch()
+        interval = time() - start
+        if snapshot:
+            logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
+        else:
+            logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
+
+        data_snapshot.set_custom_snapshot(snapshot)
