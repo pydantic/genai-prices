@@ -22,6 +22,7 @@
 - Support for variable daily prices, e.g. we support calculating deepseek prices even with off-peak pricing
 - tiered pricing support for Gemini models where you pay a separate price for very large contexts
 - support for [identifying price discrepancies](prices/README.md) from other sources
+- provider-independent model token limits from [models.dev](https://models.dev)
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
 - TODO: API and web UI
@@ -144,3 +145,5 @@ This project would not be possible without the following existing data sources:
 While none of these sources had exactly what we needed (hence creating this project), they (especially helicone) were used to populate some of the initial price database, and we continue to pull price updates from them.
 
 Thanks to all those projects!
+
+Model metadata is derived from [models.dev](https://models.dev), distributed under its MIT license.

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 from genai_prices.data import providers
+from prices.utils import package_dir, root_dir
 
 
 def test_deprecated_models_present_with_flag():
@@ -62,3 +63,10 @@ def test_remote_payloads_remain_provider_arrays():
         assert isinstance(payload, list)
         assert payload
         assert all(isinstance(provider, dict) for provider in payload)
+
+
+def test_model_metadata_has_single_packaged_artifact():
+    packaged_path = root_dir / 'packages' / 'python' / 'genai_prices' / '_model_metadata.json'
+
+    assert packaged_path.is_file()
+    assert not (package_dir / 'model_metadata.json').exists()
