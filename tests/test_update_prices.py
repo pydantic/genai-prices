@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import concurrent.futures
 import threading
 from collections.abc import Callable
@@ -17,6 +19,7 @@ from genai_prices import (
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
+from genai_prices.units import _get_registry
 from genai_prices.update_prices import DEFAULT_UPDATE_URL
 
 pytestmark = pytest.mark.anyio
@@ -26,6 +29,10 @@ PROVIDER_ARRAY_PAYLOAD = (
     b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
     b'"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
 )
+
+
+def _provider_array(*, providers_json: str | None = None) -> bytes:
+    return providers_json.encode() if providers_json is not None else PROVIDER_ARRAY_PAYLOAD
 
 
 class NullUpdatePrices(UpdatePrices):
@@ -72,6 +79,90 @@ def test_update_prices_fetch_parses_provider_array(monkeypatch: pytest.MonkeyPat
     provider, model = prices.find_provider_model('gpt-4o-mini', None, 'openai', None)
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
+
+
+def test_update_prices_fetch_preserves_registry_when_provider_parsing_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    previous = _get_registry()
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json='[{"id":"missing-required-fields"}]'))
+
+    with pytest.raises(Exception):
+        UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert _get_registry() is previous
+
+
+@pytest.mark.parametrize('content', [b'{"providers":[]}', b'null', b'"providers"', b'1'])
+def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
+    monkeypatch: pytest.MonkeyPatch, content: bytes
+) -> None:
+    previous = _get_registry()
+    _mock_update_prices_get(monkeypatch, content)
+
+    with pytest.raises(ValueError, match='Expected fetched prices payload to be a provider array'):
+        UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert _get_registry() is previous
+
+
+def test_update_prices_fetch_parses_provider_array_without_registry_change(monkeypatch: pytest.MonkeyPatch) -> None:
+    bundled = _get_registry()
+    _mock_update_prices_get(monkeypatch)
+
+    prices = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert prices is not None
+    assert prices.from_auto_update is True
+    provider, model = prices.find_provider_model('gpt-4o', None, 'openai', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o'
+    assert _get_registry() is bundled
+
+
+def test_update_prices_fetch_provider_array_warns_for_invalid_extractor_without_state_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundled = _get_registry()
+    previous_snapshot = data_snapshot.DataSnapshot([], from_auto_update=False)
+    data_snapshot.set_custom_snapshot(previous_snapshot)
+    providers_json = (
+        '[{"id":"broken","name":"Broken","api_pattern":"https://broken\\\\.example",'
+        '"extractors":[{"root":"usage","mappings":['
+        '{"path":"tokens","dest":"imaginary_tokens","required":false}]}],"models":[]}]'
+    )
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
+
+    try:
+        with pytest.warns(
+            UserWarning,
+            match='Unsupported extractor destination for standard extraction: imaginary_tokens',
+        ):
+            prices = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+        assert prices is not None
+        assert prices.find_provider(None, 'broken', None).id == 'broken'
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is previous_snapshot
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_model_prices(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundled = _get_registry()
+    providers_json = (
+        '[{"id":"testing","name":"Testing","api_pattern":"https://testing\\\\.example",'
+        '"models":[{"id":"unused-invalid-price","match":{"equals":"unused-invalid-price"},'
+        '"prices":{"cache_image_write_mtok":1}}]}]'
+    )
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
+
+    prices = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert prices is not None
+    _, model = prices.find_provider_model('unused-invalid-price', None, 'testing', None)
+    assert model.id == 'unused-invalid-price'
+    assert _get_registry() is bundled
 
 
 def test_update_prices_context_manager_updates_and_restores_snapshot(monkeypatch: pytest.MonkeyPatch):
@@ -536,6 +627,7 @@ def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.Mo
     allow_fetch_return = threading.Event()
     interruption_observed = threading.Event()
     join_interruption_observed = threading.Event()
+    publication_interruption_observed = threading.Event()
 
     class BlockingUpdatePrices(UpdatePrices):
         def fetch(self) -> data_snapshot.DataSnapshot | None:
@@ -551,6 +643,7 @@ def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.Mo
     thread = update_prices._thread
     original_wait = state.background_stopped.wait
     original_join = thread.join
+    original_notify_all = update_prices_module._lifecycle.notify_all
 
     def interrupt_once(timeout: float | None = None) -> bool:
         if not interruption_observed.is_set():
@@ -564,17 +657,25 @@ def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.Mo
             raise RuntimeError('join interrupted')
         original_join(timeout)
 
+    def interrupt_publication_once() -> None:
+        if not publication_interruption_observed.is_set():
+            publication_interruption_observed.set()
+            raise RuntimeError('publication interrupted')
+        original_notify_all()
+
     monkeypatch.setattr(state.background_stopped, 'wait', interrupt_once)
     monkeypatch.setattr(thread, 'join', interrupt_join_once)
+    monkeypatch.setattr(update_prices_module._lifecycle, 'notify_all', interrupt_publication_once)
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             stop_future = executor.submit(update_prices.stop)
             assert interruption_observed.wait(timeout=5)
             allow_fetch_return.set()
-            with pytest.raises(RuntimeError, match='join interrupted'):
+            with pytest.raises(RuntimeError, match='publication interrupted'):
                 stop_future.result(timeout=5)
             assert join_interruption_observed.is_set()
+            assert publication_interruption_observed.is_set()
 
         assert update_prices._thread is None
         assert update_prices._active_config is None
