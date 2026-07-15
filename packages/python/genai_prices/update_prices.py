@@ -29,7 +29,7 @@ def _default_request_timeout() -> httpx2.Timeout:
 # Price calculations use one process-wide snapshot, so independent consumers must share the
 # updater that owns it. The lock only protects updater lifecycle; calculating prices is unaffected.
 _global_update_prices: UpdatePrices | None = None
-_lock = threading.Lock()
+_lifecycle = threading.Condition()
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -42,7 +42,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
         True if prices were updated. False if no updater is running, the timeout elapsed, or
         another `wait()` or `stop()` call already observed the current failure.
     """
-    with _lock:
+    with _lifecycle:
         update_prices = _global_update_prices
         if update_prices is None:
             return False
@@ -69,6 +69,7 @@ class _UpdateState:
     """Outcome state for one start/stop lifecycle, kept separate so old waiters cannot cross a restart."""
 
     prices_updated: threading.Event = field(default_factory=threading.Event)
+    background_stopped: threading.Event = field(default_factory=threading.Event)
     lock: threading.Lock = field(default_factory=threading.Lock)
     background_exc: Exception | None = None
     failed: bool = False
@@ -108,11 +109,19 @@ class UpdatePrices:
         """
         global _global_update_prices
 
-        with _lock:
+        with _lifecycle:
+            # Zero claims is the stopping state: keep the worker published until its thread exits.
+            while (update_prices := _global_update_prices) is not None and update_prices._claims == 0:
+                # A fetch override can call updater APIs. Raising on the worker avoids waiting for
+                # itself to exit; callers on other threads wait so shutdown and restart cannot overlap.
+                if threading.current_thread() is update_prices._thread:
+                    raise RuntimeError('UpdatePrices background task is stopping')
+                _lifecycle.wait()
+
+            # Another caller may have started this instance while we waited for shutdown.
             if self._updater is not None:
                 raise RuntimeError('UpdatePrices background task already started')
 
-            update_prices = _global_update_prices
             if update_prices is None:
                 self._start_background_task()
                 update_prices = _global_update_prices = self
@@ -139,10 +148,15 @@ class UpdatePrices:
         """
         global _global_update_prices
 
-        with _lock:
+        stop_update_prices: UpdatePrices | None = None
+        with _lifecycle:
             update_prices = self._updater
             if update_prices is None:
                 return
+            if update_prices._claims == 1 and threading.current_thread() is update_prices._thread:
+                # Joining the current worker would fail and could expose a replacement before this
+                # fetch returns, so reject its attempt to release the final claim without changing state.
+                raise RuntimeError('UpdatePrices background task cannot stop itself')
 
             state = update_prices._state
             self._updater = None
@@ -150,14 +164,22 @@ class UpdatePrices:
 
             if update_prices._claims == 0:
                 assert _global_update_prices is update_prices
-                try:
-                    # Keep ownership published until the thread exits. This makes a concurrent start
-                    # wait instead of creating a second worker while the first is still fetching.
-                    update_prices._stop_background_task()
-                finally:
-                    _global_update_prices = None
+                stop_update_prices = update_prices
 
-            update_prices._raise_background_failure(state)
+            if stop_update_prices is None:
+                update_prices._raise_background_failure(state)
+                return
+
+        # Wait outside the lifecycle lock so a supported fetch() override can re-enter updater APIs.
+        interrupted = stop_update_prices._stop_background_task(state)
+        with _lifecycle:
+            assert _global_update_prices is stop_update_prices
+            _global_update_prices = None
+            _lifecycle.notify_all()
+
+        if interrupted is not None:
+            raise interrupted
+        stop_update_prices._raise_background_failure(state)
 
     def wait(self, timeout: float | None = None) -> bool:
         """Wait for the shared background updater's first completed attempt.
@@ -169,7 +191,7 @@ class UpdatePrices:
         Args:
             timeout: The maximum time to wait for prices to be updated in seconds.
         """
-        with _lock:
+        with _lifecycle:
             update_prices = self._updater
             if update_prices is None:
                 return False
@@ -212,15 +234,30 @@ class UpdatePrices:
             self._active_config = None
             raise
 
-    def _stop_background_task(self) -> None:
+    def _stop_background_task(self, state: _UpdateState) -> BaseException | None:
         self._stop_event.set()
         assert self._thread is not None
-        self._thread.join()
+        thread = self._thread
+        interrupted: BaseException | None = None
+        while not state.background_stopped.is_set():
+            try:
+                state.background_stopped.wait()
+            except BaseException as exc:
+                # Publishing a replacement before this worker exits would allow overlapping fetches.
+                # Finish the blocking shutdown, then preserve the caller's interruption.
+                interrupted = exc
+        while True:
+            try:
+                thread.join()
+                break
+            except BaseException as exc:
+                interrupted = exc
         self._thread = None
         self._active_config = None
 
         # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
         data_snapshot.set_custom_snapshot(None)
+        return interrupted
 
     @staticmethod
     def _wait_for_update(state: _UpdateState, timeout: float | None) -> bool:
@@ -242,8 +279,8 @@ class UpdatePrices:
             raise exc
 
     def _background_task(self, state: _UpdateState) -> None:
-        logger.info('Starting genai-prices background task')
         try:
+            logger.info('Starting genai-prices background task')
             while True:
                 try:
                     self._update_prices()
@@ -261,6 +298,7 @@ class UpdatePrices:
                 if self._stop_event.wait(self._active_config[1]):
                     break
         finally:
+            state.background_stopped.set()
             logger.info('genai-prices background task stopped')
 
     def _update_prices(self):
