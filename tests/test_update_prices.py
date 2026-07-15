@@ -98,6 +98,26 @@ def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
     assert wait_prices_updated_sync(timeout=0) is False
 
 
+def test_wait_prices_updated_sync_reports_failure_once(monkeypatch: pytest.MonkeyPatch):
+    def fail(*_args: object, **_kwargs: object) -> None:
+        raise httpx2.ConnectError('down')
+
+    monkeypatch.setattr(httpx2, 'get', fail)
+    update_prices = UpdatePrices()
+    update_prices.start()
+    try:
+        with pytest.raises(httpx2.ConnectError, match='down'):
+            wait_prices_updated_sync(timeout=5)
+        assert wait_prices_updated_sync(timeout=0) is False
+    finally:
+        # The process-wide wait observed the failure for every active owner.
+        update_prices.stop()
+
+
+def test_unstarted_instance_wait_returns_false():
+    assert UpdatePrices().wait(timeout=0) is False
+
+
 async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch)
     with UpdatePrices():
@@ -177,12 +197,13 @@ def test_unstarted_instance_cannot_release_another_owner(monkeypatch: pytest.Mon
 
 def test_overridden_fetch_drives_shared_updater():
     first = CountingNullUpdatePrices()
-    second = UpdatePrices()
+    second = CountingNullUpdatePrices()
     first.start(wait=True)
     second.start()
     try:
         assert first.count == 1
         assert second.wait(timeout=0)
+        assert second.count == 0
     finally:
         first.stop()
         second.stop()
@@ -235,6 +256,43 @@ def test_last_stop_raises_unobserved_failure(monkeypatch: pytest.MonkeyPatch):
 
     with pytest.raises(httpx2.ConnectError, match='network down'):
         update_prices.stop()
+
+
+def test_non_last_stop_raises_unobserved_failure_and_releases_owner(monkeypatch: pytest.MonkeyPatch):
+    def fail(*_args: object, **_kwargs: object) -> None:
+        raise httpx2.ConnectError('down')
+
+    monkeypatch.setattr(httpx2, 'get', fail)
+    first = UpdatePrices()
+    second = UpdatePrices()
+    first.start()
+    second.start()
+
+    with pytest.raises(httpx2.ConnectError, match='down'):
+        first.stop()
+    assert first.wait(timeout=0) is False
+
+    try:
+        with pytest.raises(httpx2.ConnectError, match='down'):
+            second.wait(timeout=5)
+    finally:
+        second.stop()
+
+
+def test_released_worker_owner_cannot_change_active_configuration():
+    first = NullUpdatePrices()
+    second = NullUpdatePrices()
+    third = NullUpdatePrices()
+    first.start(wait=True)
+    second.start()
+    first.stop()
+    first.url = 'https://example.test/changed.json'
+
+    try:
+        third.start()
+        third.stop()
+    finally:
+        second.stop()
 
 
 def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
