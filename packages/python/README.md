@@ -122,42 +122,25 @@ print(p)
 update_prices.stop()
 ```
 
-A single shared, process-wide updater backs every `UpdatePrices` instance, so it is safe to create and start them
-from anywhere — including from several libraries in the same process. Starting an instance is a **claim** on that
-one updater, not a private thread: the first `start()` launches it, later ones join it, and the background thread
-stops (reverting prices to the data bundled with the installed package) only when the **last** started instance is
-stopped.
+A single shared, process-wide updater backs every `UpdatePrices` instance. Starting an instance acquires shared
+ownership rather than creating a private thread: the first `start()` launches the updater, compatible later
+instances join it, and the last `stop()` shuts it down and restores the data bundled with the installed package.
+This lets libraries such as Logfire and Pydantic AI opt in independently without creating duplicate threads.
 
-**For libraries and integrations** (e.g. Logfire, Pydantic AI): create one `UpdatePrices()` with no arguments,
-`start()` it at startup, and `stop()` it on shutdown. If several libraries do this they share the one updater
-rather than spawning duplicate threads, and each one's claim independently keeps it alive until stopped. Leave
-configuration to the application.
+The active updater's `url`, `update_interval`, and `request_timeout` must match. A second instance with different
+settings raises `RuntimeError` instead of silently ignoring its configuration. Applications that need custom
+settings should start their updater before integrations initialize and retain it until shutdown.
 
-**For application authors** who need a custom URL or refresh interval: pass them, and start early in startup,
-before the libraries initialize:
-
-```py
-UpdatePrices(url='https://my-mirror.example/prices.json', update_interval=1800).start()
-```
-
-Configuration is **first-wins**: the first instance to start fixes `url`, `update_interval` and `request_timeout`
-for the updater's lifetime. Starting another instance with different settings logs a warning on the `genai-prices`
-logger and joins the running updater; its settings are ignored. Starting early ensures your configuration is the
-one that takes effect.
-
-`stop()` is idempotent and never raises — a background fetch error is logged instead (use `wait()` if you want it
-raised). Stopping the last claim reverts prices to the bundled data immediately. If a fetch is in flight, the
-daemon thread is given a short grace period to exit and is otherwise abandoned with a warning log: it exits once
-the fetch completes, and its result is discarded — a stopped updater can never install prices afterwards. Other
-updater API calls are never blocked, and `calc_price` is always unaffected.
+The last `stop()` keeps the existing shutdown behavior: it waits for an in-flight fetch to finish, then restores
+the bundled snapshot. If the background fetch failed and that owner has not already observed the exception via
+`wait()`, `stop()` raises it. `calc_price()` does not acquire the updater lifecycle lock.
 
 `start()` does not wait for the download (unless you pass `wait`). Until the first fetch completes, `calc_price`
 keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
 missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
 data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
 short-lived script), pass `wait` to `start()`, or call `wait_prices_updated_sync()` /
-`wait_prices_updated_async()` — these never raise and return `False` if the update failed (the error is logged on
-the `genai-prices` logger), so your calculations simply fall back to the bundled data.
+`wait_prices_updated_async()`. Fetch failures are raised by these methods, matching `UpdatePrices.wait()`.
 
 You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
 `wait_prices_updated_sync`:
