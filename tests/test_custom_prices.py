@@ -9,27 +9,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, data, types
 from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
-
-
-class _CustomSnapshotSource:
-    """Test helper that installs a custom snapshot for the duration of a `with` block.
-
-    Replaces subclassing the (deprecated) UpdatePrices: these tests only need a custom snapshot
-    active, not a background updater thread. Subclasses implement `fetch()`.
-    """
-
-    def fetch(self) -> DataSnapshot | None:
-        raise NotImplementedError
-
-    def __enter__(self) -> _CustomSnapshotSource:
-        set_custom_snapshot(self.fetch())
-        return self
-
-    def wait(self, _timeout: float | None = None) -> bool:
-        return True
-
-    def __exit__(self, *_args: object) -> None:
-        set_custom_snapshot(None)
+from genai_prices.update_prices import UpdatePrices
 
 
 @dataclass
@@ -44,7 +24,7 @@ class CustomModelPrice(types.ModelPrice):
         return price
 
 
-class AltUpdatePrices(_CustomSnapshotSource):
+class AltUpdatePrices(UpdatePrices):
     def fetch(self) -> DataSnapshot | None:
         custom_providers = [
             types.Provider(
@@ -74,7 +54,7 @@ class AltUpdatePrices(_CustomSnapshotSource):
         return DataSnapshot(providers=custom_providers, from_auto_update=False)
 
 
-class ExtraUpdatePrices(_CustomSnapshotSource):
+class ExtraUpdatePrices(UpdatePrices):
     def fetch(self) -> DataSnapshot | None:
         providers = deepcopy(data.providers)
         openai = next(provider for provider in providers if provider.id == 'openai')

@@ -5,30 +5,17 @@ from decimal import Decimal
 import pytest
 from inline_snapshot import snapshot
 
-from genai_prices import Usage, calc_price, data_snapshot, types
+from genai_prices import Usage, calc_price, types
 from genai_prices.data_snapshot import DataSnapshot
+from genai_prices.update_prices import UpdatePrices
 
 pytestmark = pytest.mark.anyio
 
 
-class MultiTierUpdatePrices:
-    """Test helper that installs a multi-tier pricing snapshot for the duration of a `with` block.
+class MultiTierUpdatePrices(UpdatePrices):
+    """Custom UpdatePrices that injects a multi-tier pricing model for testing."""
 
-    These tests only need a custom snapshot to be active, not a real background updater thread, so
-    this sets the snapshot directly rather than going through the (deprecated) UpdatePrices class.
-    """
-
-    def __enter__(self) -> MultiTierUpdatePrices:
-        data_snapshot.set_custom_snapshot(self._build_snapshot())
-        return self
-
-    def wait(self, _timeout: float | None = None) -> bool:
-        return True
-
-    def __exit__(self, *_args: object) -> None:
-        data_snapshot.set_custom_snapshot(None)
-
-    def _build_snapshot(self) -> DataSnapshot:
+    def fetch(self) -> DataSnapshot | None:
         """Create a mock provider with a multi-tier pricing model.
 
         Pricing structure (threshold-based with different tiers for input vs output):
