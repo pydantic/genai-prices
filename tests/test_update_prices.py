@@ -103,15 +103,18 @@ def test_wait_prices_updated_sync_reports_failure_once(monkeypatch: pytest.Monke
         raise httpx2.ConnectError('down')
 
     monkeypatch.setattr(httpx2, 'get', fail)
-    update_prices = UpdatePrices()
-    update_prices.start()
+    first = UpdatePrices()
+    second = UpdatePrices()
+    first.start()
+    second.start()
     try:
         with pytest.raises(httpx2.ConnectError, match='down'):
             wait_prices_updated_sync(timeout=5)
         assert wait_prices_updated_sync(timeout=0) is False
     finally:
-        # The process-wide wait observed the failure for every active owner.
-        update_prices.stop()
+        # The process-wide wait consumed the shared failure before either owner stopped.
+        first.stop()
+        second.stop()
 
 
 def test_unstarted_instance_wait_returns_false():
@@ -221,7 +224,7 @@ def test_update_prices_continues_after_interval_until_stopped():
         update_prices.stop()
 
 
-def test_each_owner_observes_failed_update(monkeypatch: pytest.MonkeyPatch):
+def test_shared_failure_is_observed_once(monkeypatch: pytest.MonkeyPatch):
     def fail(*_args: object, **_kwargs: object) -> None:
         raise httpx2.ConnectError('down')
 
@@ -233,13 +236,46 @@ def test_each_owner_observes_failed_update(monkeypatch: pytest.MonkeyPatch):
     try:
         with pytest.raises(httpx2.ConnectError, match='down'):
             first.wait(timeout=5)
-        with pytest.raises(httpx2.ConnectError, match='down'):
-            second.wait(timeout=5)
-        assert first.wait(timeout=0) is False
         assert second.wait(timeout=0) is False
+        assert first.wait(timeout=0) is False
     finally:
         first.stop()
         second.stop()
+
+
+def test_repeated_failure_with_same_exception_is_observed_each_time():
+    shared_error = RuntimeError('reused failure')
+    second_fetch_started = threading.Event()
+    release_second_fetch = threading.Event()
+
+    class RepeatedFailureUpdatePrices(UpdatePrices):
+        attempts = 0
+
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            self.attempts += 1
+            if self.attempts == 2:
+                second_fetch_started.set()
+                assert release_second_fetch.wait(timeout=5)
+                self._stop_event.set()
+            raise shared_error
+
+    update_prices = RepeatedFailureUpdatePrices(update_interval=0.001)
+    update_prices.start()
+    try:
+        with pytest.raises(RuntimeError) as first_error:
+            update_prices.wait(timeout=5)
+        assert first_error.value is shared_error
+
+        assert second_fetch_started.wait(timeout=5)
+        update_prices._state.prices_updated.clear()
+        release_second_fetch.set()
+
+        with pytest.raises(RuntimeError) as second_error:
+            update_prices.wait(timeout=5)
+        assert second_error.value is shared_error
+    finally:
+        release_second_fetch.set()
+        update_prices.stop()
 
 
 def test_last_stop_raises_unobserved_failure(monkeypatch: pytest.MonkeyPatch):
@@ -273,8 +309,7 @@ def test_non_last_stop_raises_unobserved_failure_and_releases_owner(monkeypatch:
     assert first.wait(timeout=0) is False
 
     try:
-        with pytest.raises(httpx2.ConnectError, match='down'):
-            second.wait(timeout=5)
+        assert second.wait(timeout=0) is False
     finally:
         second.stop()
 
@@ -287,12 +322,68 @@ def test_released_worker_owner_cannot_change_active_configuration():
     second.start()
     first.stop()
     first.url = 'https://example.test/changed.json'
+    first.request_timeout.read = 777
 
     try:
         third.start()
         third.stop()
     finally:
         second.stop()
+
+
+def test_wait_does_not_cross_same_instance_restart(monkeypatch: pytest.MonkeyPatch):
+    old_error = RuntimeError('old lifecycle failed')
+    wait_returned = threading.Event()
+    release_old_wait = threading.Event()
+    new_fetch_started = threading.Event()
+    release_new_fetch = threading.Event()
+
+    class RestartableUpdatePrices(UpdatePrices):
+        fail = True
+
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            if self.fail:
+                raise old_error
+            new_fetch_started.set()
+            assert release_new_fetch.wait(timeout=5)
+            return None
+
+    class PausedEvent:
+        def __init__(self, event: threading.Event) -> None:
+            self.event = event
+
+        def wait(self, timeout: float | None = None) -> bool:
+            result = self.event.wait(timeout)
+            wait_returned.set()
+            assert release_old_wait.wait(timeout=5)
+            return result
+
+    update_prices = RestartableUpdatePrices()
+    update_prices.start()
+    old_state = update_prices._state
+    assert old_state.prices_updated.wait(timeout=5)
+    monkeypatch.setattr(old_state, 'prices_updated', PausedEvent(old_state.prices_updated))
+
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            old_wait = executor.submit(update_prices.wait, 5)
+            assert wait_returned.wait(timeout=5)
+            with pytest.raises(RuntimeError) as stop_error:
+                update_prices.stop()
+            assert stop_error.value is old_error
+
+            update_prices.fail = False
+            update_prices.start()
+            assert new_fetch_started.wait(timeout=5)
+            release_old_wait.set()
+            assert old_wait.result(timeout=5) is False
+
+        release_new_fetch.set()
+        assert update_prices.wait(timeout=5)
+    finally:
+        release_old_wait.set()
+        release_new_fetch.set()
+        update_prices.stop()
 
 
 def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
