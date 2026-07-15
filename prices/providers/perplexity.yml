@@ -83,6 +83,18 @@ models:
       input_mtok: 3
       output_mtok: 15
 
+  - id: sonar-pro-search
+    name: Sonar Pro Search
+    description: >-
+      Sonar Pro Search is Perplexity's advanced agentic search system for deeper reasoning and analysis.
+    match:
+      equals: sonar-pro-search
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against Perplexity pricing when native API pricing is published.
+    prices:
+      input_mtok: 3
+      output_mtok: 15
+
   - id: sonar-reasoning
     name: Sonar Reasoning
     description: >-

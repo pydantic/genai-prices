@@ -27,6 +27,7 @@ dev = [
     "ruff>=0.12.3",
     "boto3-stubs[bedrock,pricing]>=1.40.75",
     "boto3>=1.40.75",
+    "packaging>=25.0",
 ]
 
 [tool.uv.workspace]
@@ -35,7 +36,7 @@ members = ["prices", "packages/python"]
 [tool.ruff]
 line-length = 120
 target-version = "py310"
-include = ["prices/src/**/*.py", "packages/python/**/*.py", "tests/**/*.py"]
+include = ["prices/src/**/*.py", "packages/python/**/*.py", "tests/**/*.py", ".github/scripts/**/*.py"]
 
 [tool.ruff.lint]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
@@ -77,6 +78,7 @@ skip_covered = true
 show_missing = true
 ignore_errors = true
 precision = 2
+fail_under = 100
 exclude_lines = [
     'pragma: no cover',
     'raise NotImplementedError',
@@ -101,7 +103,7 @@ reportIgnoreCommentWithoutRule = true
 reportUnusedParameter = true
 reportIncompatibleUnannotatedOverride = true
 reportImplicitAbstractClass = true
-include = ["prices/src", "packages/python", "tests"]
+include = ["prices/src", "packages/python", "tests", ".github/scripts"]
 venv = ".venv"
 executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
 

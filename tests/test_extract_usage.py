@@ -1,5 +1,4 @@
 import re
-from collections.abc import Mapping
 from decimal import Decimal
 from typing import Any
 
@@ -19,18 +18,8 @@ from genai_prices.types import (
 )
 
 
-class MyMapping(Mapping[str, Any]):
-    def __init__(self, **data: Any):
-        self._data = data
-
-    def __getitem__(self, key: str) -> Any:
-        return self._data[key]
-
-    def __iter__(self) -> Any:
-        return iter(self._data)
-
-    def __len__(self) -> int:
-        return len(self._data)
+class MyMapping(dict[str, Any]):
+    pass
 
 
 @pytest.mark.parametrize(
@@ -134,6 +123,94 @@ def test_openai():
         provider.extract_usage(response_data)
 
 
+@pytest.mark.parametrize(
+    ('api_flavor', 'usage_data'),
+    [
+        (
+            'chat',
+            {
+                'prompt_tokens': 2_006,
+                'prompt_tokens_details': {'cached_tokens': 0, 'cache_write_tokens': 1_920},
+                'completion_tokens': 300,
+            },
+        ),
+        (
+            'responses',
+            {
+                'input_tokens': 2_006,
+                'input_tokens_details': {'cached_tokens': 0, 'cache_write_tokens': 1_920},
+                'output_tokens': 300,
+            },
+        ),
+    ],
+)
+def test_openai_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
+    response_data = {'model': 'gpt-5.6-sol', 'usage': usage_data}
+    extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor=api_flavor)
+
+    assert extracted_usage.usage == Usage(
+        input_tokens=2_006,
+        cache_write_tokens=1_920,
+        cache_read_tokens=0,
+        output_tokens=300,
+    )
+    assert extracted_usage.calc_price().total_price == Decimal('0.02143')
+
+
+def test_mistral():
+    provider = next(provider for provider in providers if provider.id == 'mistral')
+    assert provider.name == 'Mistral'
+    assert provider.extractors is not None
+    # Mistral nests prompt-cache hits under `prompt_tokens_details.cached_tokens`.
+    # https://docs.mistral.ai/studio-api/conversations/advanced/prompt-caching
+    response_data = {
+        'model': 'mistral-large-2512',
+        'usage': {
+            'prompt_tokens': 1013,
+            'completion_tokens': 30,
+            'total_tokens': 1043,
+            'prompt_tokens_details': {'cached_tokens': 1008},
+        },
+    }
+    usage = provider.extract_usage(response_data)
+    assert usage == snapshot(('mistral-large-2512', Usage(input_tokens=1013, cache_read_tokens=1008, output_tokens=30)))
+
+    extracted_usage = extract_usage(response_data, provider_id='mistral')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=1013, cache_read_tokens=1008, output_tokens=30))
+    assert extracted_usage.provider.name == snapshot('Mistral')
+    # The 1008 cached tokens are billed at `cache_read_mtok` (10% of the input rate), not the full
+    # input rate: (1013 - 1008) * 0.5 + 1008 * 0.05 + 30 * 1.5, all per Mtok.
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0000979'))
+
+    # The nested mapping is optional: responses without prompt caching still extract cleanly.
+    response_data_no_cache = {
+        'model': 'mistral-large-2512',
+        'usage': {'prompt_tokens': 10, 'completion_tokens': 5, 'total_tokens': 15},
+    }
+    assert provider.extract_usage(response_data_no_cache) == snapshot(
+        ('mistral-large-2512', Usage(input_tokens=10, output_tokens=5))
+    )
+
+
+def test_groq_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'groq')
+    response_data = {
+        'model': 'llama-3.3-70b-versatile',
+        'usage': {
+            'prompt_tokens': 19038,
+            'completion_tokens': 135,
+            'prompt_tokens_details': {'cached_tokens': 18944},
+            'completion_tokens_details': {'reasoning_tokens': 94},
+        },
+    }
+    model, usage = provider.extract_usage(response_data)
+    assert model == 'llama-3.3-70b-versatile'
+    assert usage == Usage(input_tokens=19038, output_tokens=135, cache_read_tokens=18944)
+
+    extracted_usage = extract_usage(response_data, provider_id='groq')
+    assert extracted_usage.usage == Usage(input_tokens=19038, output_tokens=135, cache_read_tokens=18944)
+
+
 def test_openrouter_chat_cache_write_tokens():
     provider = next(provider for provider in providers if provider.id == 'openrouter')
     assert provider.name == 'OpenRouter'
@@ -188,6 +265,90 @@ def test_openrouter_chat_cache_write_tokens():
         response_data, provider_api_url='https://openrouter.ai/api/v1', api_flavor='chat'
     )
     assert extracted_usage_by_url.usage == extracted_usage.usage
+
+
+cohere_chat_response_data = {
+    'id': 'chatcmpl-00000000-0000-0000-0000-000000000000',
+    'message': {'role': 'assistant', 'content': [{'type': 'text', 'text': 'Done.'}]},
+    'usage': {
+        'billed_units': {'input_tokens': 13, 'output_tokens': 8},
+        'tokens': {'input_tokens': 542, 'output_tokens': 8},
+        'cached_tokens': 0,
+    },
+    'model': 'command-r-plus',
+}
+
+
+def test_cohere_default_flavor_uses_billed_units_and_prices():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    usage = provider.extract_usage(cohere_chat_response_data)
+    assert usage == snapshot(('command-r-plus', Usage(input_tokens=13, output_tokens=8)))
+
+    extracted_usage = extract_usage(cohere_chat_response_data, provider_id='cohere')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=13, output_tokens=8))
+    assert extracted_usage.provider.name == snapshot('Cohere')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('command-r-plus')
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0001125'))
+
+
+def test_cohere_tokens_flavor_extracts_raw_tokens_and_cache():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    # Recorded Cohere JSON fixtures in tests/dataset/usages.json serialize these token fields as integers.
+    usage = provider.extract_usage(cohere_chat_response_data, api_flavor='tokens')
+    assert usage == snapshot(('command-r-plus', Usage(input_tokens=542, cache_read_tokens=0, output_tokens=8)))
+
+    extracted_usage = extract_usage(cohere_chat_response_data, provider_id='cohere', api_flavor='tokens')
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=542, cache_read_tokens=0, output_tokens=8))
+    assert extracted_usage.provider.name == snapshot('Cohere')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('command-r-plus')
+
+    # the v2 SDK talks to api.cohere.com, the old pattern only matched api.cohere.ai
+    extracted_usage_by_url = extract_usage(
+        cohere_chat_response_data, provider_api_url='https://api.cohere.com', api_flavor='tokens'
+    )
+    assert extracted_usage_by_url.provider.name == snapshot('Cohere')
+    assert extracted_usage_by_url.usage == snapshot(Usage(input_tokens=542, cache_read_tokens=0, output_tokens=8))
+
+
+def test_cohere_tokens_flavor_extracts_cached_tokens_without_tokens_object():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    response_data = {
+        'model': 'command-r-plus',
+        'usage': {
+            'billed_units': {'input_tokens': 13, 'output_tokens': 8},
+            'cached_tokens': 37,
+        },
+    }
+
+    usage = provider.extract_usage(response_data, api_flavor='tokens')
+    assert usage == snapshot(('command-r-plus', Usage(cache_read_tokens=37)))
+
+
+def test_cohere_tokens_flavor_errors_without_tokens_or_cached_tokens():
+    provider = next(provider for provider in providers if provider.id == 'cohere')
+    assert provider.name == 'Cohere'
+    assert provider.extractors is not None
+
+    response_data = {
+        'model': 'command-r-plus',
+        'usage': {
+            'billed_units': {'input_tokens': 13, 'output_tokens': 8},
+        },
+    }
+
+    with pytest.raises(ValueError, match='No usage information found at usage'):
+        provider.extract_usage(response_data, api_flavor='tokens')
 
 
 def test_extracted_usage_calc_price_requires_model():
@@ -257,6 +418,36 @@ def test_usage_extractor_errors_when_required_nested_path_has_wrong_type():
         extractor.extract({'model': 'test-model', 'usage': {'totals': 1}})
 
 
+def test_usage_extractor_errors_when_required_array_match_path_has_wrong_type():
+    extractor = UsageExtractor(
+        root=['usage', ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'data'],
+        mappings=[UsageExtractorMapping(path='tokenCount', dest='input_audio_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Expected .* value to be a sequence, got dict'):
+        extractor.extract({'model': 'test-model', 'usage': {'modality': 'AUDIO', 'tokenCount': 1}})
+
+
+def test_usage_extractor_errors_when_required_array_match_finds_no_item():
+    extractor = UsageExtractor(
+        root=['usage', ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'data'],
+        mappings=[UsageExtractorMapping(path='tokenCount', dest='input_audio_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Unable to find item at .*'):
+        extractor.extract({'model': 'test-model', 'usage': [{'modality': 'TEXT', 'data': {'tokenCount': 1}}]})
+
+
+def test_usage_extractor_errors_when_required_nested_key_is_missing():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens')],
+    )
+
+    with pytest.raises(ValueError, match='Missing value at `usage.totals`'):
+        extractor.extract({'model': 'test-model', 'usage': {}})
+
+
 def test_usage_extractor_skips_optional_nested_path_with_wrong_type():
     extractor = UsageExtractor(
         root='usage',
@@ -269,6 +460,63 @@ def test_usage_extractor_skips_optional_nested_path_with_wrong_type():
     assert extractor.extract({'model': 'test-model', 'usage': {'totals': 1, 'output_tokens': 2}}) == (
         'test-model',
         Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_skips_optional_nested_path_with_missing_parent():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['totals', 'input_tokens'], dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_skips_optional_float_value():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'prompt_tokens': 13.0, 'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_skips_optional_nested_path_after_wrong_type_parent():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['totals', 'nested', 'input_tokens'], dest='input_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'totals': 1, 'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
+def test_usage_extractor_accepts_sequence_root_path():
+    extractor = UsageExtractor(
+        root=['outer', 'usage'],
+        mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens')],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'outer': {'usage': {'input_tokens': 3}}}) == (
+        'test-model',
+        Usage(input_tokens=3),
     )
 
 
@@ -383,14 +631,67 @@ def test_gemini_response_thoughtless():
 
 def test_bedrock():
     provider = next(provider for provider in providers if provider.id == 'aws')
-    response_data = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
-    usage = provider.extract_usage(response_data)
+    assert provider.name == 'AWS Bedrock'
+    assert provider.extractors is not None
+
+    response_data_cache_write = {
+        'usage': {'cacheReadInputTokens': 0, 'cacheWriteInputTokens': 11207, 'inputTokens': 9, 'outputTokens': 5}
+    }
+    usage = provider.extract_usage(response_data_cache_write)
+    assert usage == snapshot(
+        (None, Usage(input_tokens=11216, cache_write_tokens=11207, cache_read_tokens=0, output_tokens=5))
+    )
+
+    extracted_usage = extract_usage(response_data_cache_write, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=11216, cache_write_tokens=11207, cache_read_tokens=0, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
+
+    response_data_cache_read = {
+        'usage': {'cacheReadInputTokens': 11207, 'cacheWriteInputTokens': 0, 'inputTokens': 9, 'outputTokens': 5}
+    }
+    usage = provider.extract_usage(response_data_cache_read)
+    assert usage == snapshot(
+        (None, Usage(input_tokens=11216, cache_write_tokens=0, cache_read_tokens=11207, output_tokens=5))
+    )
+
+    extracted_usage = extract_usage(response_data_cache_read, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=11216, cache_write_tokens=0, cache_read_tokens=11207, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model == snapshot(None)
+
+    response_data_no_cache = {'usage': {'inputTokens': 406, 'outputTokens': 53}}
+    usage = provider.extract_usage(response_data_no_cache)
     assert usage == snapshot((None, Usage(input_tokens=406, output_tokens=53)))
 
-    extracted_usage = extract_usage(response_data, provider_id='aws')
+    extracted_usage = extract_usage(response_data_no_cache, provider_id='aws')
     assert extracted_usage.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
     assert extracted_usage.provider.name == snapshot('AWS Bedrock')
     assert extracted_usage.model == snapshot(None)
+
+    # boto3 endpoint URLs have no trailing slash
+    extracted_usage_by_url = extract_usage(
+        response_data_no_cache, provider_api_url='https://bedrock-runtime.us-east-1.amazonaws.com'
+    )
+    assert extracted_usage_by_url.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage_by_url.usage == snapshot(Usage(input_tokens=406, output_tokens=53))
+
+    response_data_pricing = {
+        'model': 'amazon.nova-lite-v1:0',
+        'usage': {'cacheReadInputTokens': 1504, 'cacheWriteInputTokens': 0, 'inputTokens': 13, 'outputTokens': 5},
+    }
+    extracted_usage = extract_usage(response_data_pricing, provider_id='aws')
+    assert extracted_usage.usage == snapshot(
+        Usage(input_tokens=1517, cache_write_tokens=0, cache_read_tokens=1504, output_tokens=5)
+    )
+    assert extracted_usage.provider.name == snapshot('AWS Bedrock')
+    assert extracted_usage.model is not None
+    assert extracted_usage.model.id == snapshot('amazon.nova-lite-v1:0')
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.00002454'))
 
 
 anthropic_response_data = {
@@ -445,6 +746,23 @@ def test_extractor_accumulates_repeated_destination_string_with_zero_values() ->
     )
 
 
+def test_array_match_skips_non_mapping_items_before_match() -> None:
+    extractor = UsageExtractor(
+        root=['usage', ArrayMatch(type='array-match', field='modality', match=ClauseEquals('AUDIO')), 'data'],
+        mappings=[UsageExtractorMapping(path='tokenCount', dest='input_audio_tokens')],
+    )
+
+    assert extractor.extract(
+        {
+            'model': 'test-model',
+            'usage': [None, {'modality': None}, {'modality': 'AUDIO', 'data': {'tokenCount': 9}}],
+        }
+    ) == (
+        'test-model',
+        Usage(input_audio_tokens=9),
+    )
+
+
 def test_extractor_ignores_unknown_response_extras() -> None:
     extractor = UsageExtractor(
         root='usage',
@@ -487,12 +805,28 @@ def test_accumulate_extracted_usage():
         _ = extracted + None
     with pytest.raises(ValueError):
         _ = extracted + extract_usage(anthropic_response_data, provider_id='anthropic')
+    with pytest.raises(ValueError, match='providers do not match'):
+        _ = extracted + ExtractedUsage(
+            usage=Usage(input_tokens=1),
+            model=extracted.model,
+            provider=Provider(id='other', name='Other', api_pattern='https://other.example'),
+            auto_update_timestamp=None,
+        )
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(input_tokens=100 * 2, output_tokens=162 * 2)
+    assert repr(double_extracted) == snapshot(
+        "ExtractedUsage(usage=Usage(input_tokens=200, cache_write_tokens=None, cache_read_tokens=None, output_tokens=324, input_audio_tokens=None, cache_audio_read_tokens=None, output_audio_tokens=None), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
+    )
+    assert repr(double_extracted.calc_price()) == snapshot(
+        "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $0.03/cache read MTok, $2.5/output MTok, $1/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
+    )
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20
     )
     assert Usage(input_audio_tokens=10) + Usage(input_tokens=10) == Usage(input_audio_tokens=10, input_tokens=10)
+    assert Usage(input_tokens=1).__radd__(Usage(output_tokens=2)) == Usage(input_tokens=1, output_tokens=2)
+    with pytest.raises(TypeError):
+        _ = Usage() + 1
 
 
 def test_xai_native():

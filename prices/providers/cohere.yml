@@ -3,7 +3,7 @@ name: Cohere
 id: cohere
 pricing_urls:
   - https://cohere.com/pricing
-api_pattern: 'https://api\.cohere\.ai'
+api_pattern: 'https://api\.cohere\.(?:ai|com)'
 model_match:
   starts_with: "command-"
 provider_match:
@@ -17,6 +17,22 @@ extractors:
         dest: input_tokens
       - path: output_tokens
         dest: output_tokens
+  # https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage.py#L14
+  # and https://github.com/cohere-ai/cohere-python/blob/5.16.3/src/cohere/types/usage_tokens.py
+  - api_flavor: tokens
+    root: usage
+    mappings:
+      - path: [tokens, input_tokens]
+        dest: input_tokens
+        required: false
+      - path: [tokens, output_tokens]
+        dest: output_tokens
+        required: false
+      # Assumes tokens.input_tokens includes cached tokens (Cohere docs do not specify).
+      # Currently price-neutral: no Cohere model has cache_read_mtok pricing. Revisit if that changes.
+      - path: cached_tokens
+        dest: cache_read_tokens
+        required: false
   # https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/embed_by_type_response.py#L30
   # and https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/api_meta.py#L15
   # and https://github.com/cohere-ai/cohere-python/blob/v5.16.3/src/cohere/types/api_meta_billed_units.py

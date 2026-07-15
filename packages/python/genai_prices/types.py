@@ -667,14 +667,14 @@ class ModelPrice:
                 input_audio_tokens - priced_cache_audio_read_tokens - cache_audio_read_tokens_priced_as_cache_read
             )
 
-        if priced_audio_input_tokens < 0:  # pragma: no cover
+        if priced_audio_input_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than input_audio_tokens')
 
         priced_cache_read_tokens = 0
         if self.cache_read_mtok is not None:
             priced_cache_read_tokens = cache_read_tokens - priced_cache_audio_read_tokens
 
-        if priced_cache_read_tokens < 0:  # pragma: no cover
+        if priced_cache_read_tokens < 0:
             raise ValueError('cache_audio_read_tokens cannot be greater than cache_read_tokens')
 
         priced_cache_write_tokens = cache_write_tokens if self.cache_write_mtok is not None else 0
@@ -689,7 +689,7 @@ class ModelPrice:
                 - priced_cache_audio_read_tokens
             )
 
-        if priced_text_input_tokens < 0:  # pragma: no cover
+        if priced_text_input_tokens < 0:
             raise ValueError('Uncached text input tokens cannot be negative')
 
         input_price += calc_mtok_price(self.input_mtok, priced_text_input_tokens, total_input_tokens)
@@ -704,7 +704,7 @@ class ModelPrice:
                 output_audio_tokens if self.output_audio_mtok is not None else 0
             )
 
-        if priced_text_output_tokens < 0:  # pragma: no cover
+        if priced_text_output_tokens < 0:
             raise ValueError('output_audio_tokens cannot be greater than output_tokens')
 
         output_price += calc_mtok_price(self.output_mtok, priced_text_output_tokens, total_input_tokens)

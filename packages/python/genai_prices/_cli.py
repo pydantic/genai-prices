@@ -19,6 +19,7 @@ try:
     from pydantic_settings import (
         BaseSettings,
         CliApp,
+        CliExplicitFlag,
         CliPositionalArg,
         CliSettingsSource,
         CliSubCommand,
@@ -33,7 +34,7 @@ try:
     from rich.table import Table
     from rich.text import Text
     from rich_argparse import RichHelpFormatter
-except ModuleNotFoundError as exc:
+except ModuleNotFoundError as exc:  # pragma: no cover
     package = (exc.name or '').split('.')[0]
     if package in {'pydantic_settings', 'rich', 'rich_argparse'}:
         print(
@@ -118,7 +119,7 @@ class _ToggleCliSettingsSource(CliSettingsSource[Any]):
     def _convert_bool_flag(self, kwargs: dict[str, Any], field_info: FieldInfo, model_default: Any) -> None:
         if kwargs.get('metavar') == 'bool' and self.cli_implicit_flags:
             del kwargs['metavar']
-            if kwargs.get('required'):
+            if kwargs.get('required'):  # pragma: no cover
                 kwargs['action'] = argparse.BooleanOptionalAction
             else:
                 kwargs['action'] = 'store_false' if model_default is True else 'store_true'
@@ -146,7 +147,8 @@ class CalcCLI(_CLIBase):
         validation_alias=AliasChoices('T', 'table'),
         description='Whether to use wide table output with one row per model.',
     )
-    no_color: bool = Field(
+    # CliExplicitFlag avoids BooleanOptionalAction, whose `--no-`-prefixed names argparse rejects on Python 3.14.
+    no_color: CliExplicitFlag[bool] = Field(
         False,
         validation_alias=AliasChoices('n', 'no-color'),
         description='Whether to disable colors in calc output.',
@@ -273,8 +275,8 @@ def cli_logic(args_list: Sequence[str] | None = None) -> int:
     if isinstance(sub, ListCLI):
         return list_models(sub, plain=cli.plain)
 
-    _build_root_parser().print_help()
-    return 1
+    _build_root_parser().print_help()  # pragma: no cover
+    return 1  # pragma: no cover
 
 
 def _parse_cli(args_list: Sequence[str] | None) -> CLIRoot:
@@ -732,4 +734,4 @@ def _format_model_suggestion(suggestion: str) -> Text:
         text = Text(provider_id, style=_provider_style(provider_id))
         text.append(f':{model_id}')
         return text
-    return Text(suggestion)
+    return Text(suggestion)  # pragma: no cover

@@ -13,6 +13,21 @@ extractors:
         dest: input_tokens
       - path: completion_tokens
         dest: output_tokens
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
 
 models:
   - id: deepseek-r1-distill-llama-70b

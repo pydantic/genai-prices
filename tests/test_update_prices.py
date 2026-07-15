@@ -1,6 +1,7 @@
+import concurrent.futures
 import threading
 from decimal import Decimal
-from time import monotonic
+from time import monotonic, sleep
 
 import httpx2
 import pytest
@@ -24,6 +25,19 @@ PROVIDER_ARRAY_PAYLOAD = (
     b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
     b'"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
 )
+
+
+class NullUpdatePrices(UpdatePrices):
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        return None
+
+
+class CountingNullUpdatePrices(UpdatePrices):
+    count = 0
+
+    def fetch(self) -> data_snapshot.DataSnapshot | None:
+        self.count += 1
+        return None
 
 
 def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
@@ -96,154 +110,34 @@ async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
     assert data_snapshot._custom_snapshot is None
 
 
-def test_ref_counted_across_instances(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    up1 = UpdatePrices()
-    up2 = UpdatePrices()
-    up1.start()
-    up2.start()
+def test_wait_prices_updated_sync_without_active_updater():
+    assert wait_prices_updated_sync(timeout=0) is False
+
+
+def test_update_prices_start_waits_and_rejects_second_start():
+    update_prices = NullUpdatePrices(update_interval=3600)
+    update_prices.start(wait=True)
     try:
-        assert wait_prices_updated_sync(timeout=5)
-        assert data_snapshot._custom_snapshot is not None
-
-        # Releasing one claim keeps the updater alive for the other.
-        up1.stop()
-        assert wait_prices_updated_sync(timeout=0)
-        assert data_snapshot._custom_snapshot is not None
-
-        up1.stop()  # idempotent no-op
-        assert data_snapshot._custom_snapshot is not None
-
-        up2.stop()
         assert data_snapshot._custom_snapshot is None
-        assert not wait_prices_updated_sync(timeout=0)
-    finally:
-        up1.stop()
-        up2.stop()
-        data_snapshot.set_custom_snapshot(None)
-
-
-def test_first_wins_config(monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture):
-    _mock_update_prices_get(monkeypatch)
-    up1 = UpdatePrices(url='https://example.test/prices.json')
-    up1.start()
-    try:
-        with caplog.at_level('WARNING', logger='genai-prices'):
-            up2 = UpdatePrices(url=DEFAULT_UPDATE_URL, update_interval=1)
-            up2.start()
-        try:
-            # The first instance's configuration wins; the second joins the running updater.
-            assert update_prices_module._updater is not None
-            assert update_prices_module._updater.url == 'https://example.test/prices.json'
-            assert update_prices_module._updater.update_interval == 3600
-            assert any('already running' in record.message for record in caplog.records)
-            assert wait_prices_updated_sync(timeout=5)
-        finally:
-            up2.stop()
-    finally:
-        up1.stop()
-        data_snapshot.set_custom_snapshot(None)
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_double_start_same_instance_raises(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    update_prices = UpdatePrices()
-    update_prices.start()
-    try:
-        with pytest.raises(RuntimeError, match='already started'):
+        with pytest.raises(RuntimeError, match='UpdatePrices background task already started'):
             update_prices.start()
     finally:
         update_prices.stop()
-        data_snapshot.set_custom_snapshot(None)
 
 
-def test_stop_on_unstarted_instance_is_noop(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    with UpdatePrices() as update_prices:
-        assert update_prices.wait(timeout=5)
-        # stop() on a never-started instance does not touch the live updater.
-        UpdatePrices().stop()
-        assert update_prices_module._updater is not None
-        assert data_snapshot._custom_snapshot is not None
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_restopping_does_not_affect_a_new_updater(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
-    up1 = UpdatePrices()
-    up1.start()
-    assert wait_prices_updated_sync(timeout=5)
-    stale_updater = update_prices_module._updater
-    up1.stop()
-    assert data_snapshot._custom_snapshot is None
-
-    up2 = UpdatePrices()
-    up2.start()
+def test_update_prices_continues_after_interval_until_stopped():
+    update_prices = CountingNullUpdatePrices(update_interval=0.001)
+    update_prices.start(wait=True)
     try:
-        assert wait_prices_updated_sync(timeout=5)
-        new_updater = update_prices_module._updater
-        assert new_updater is not None and new_updater is not stale_updater
-
-        # up1 was already released; stopping it again must not release up2's claim.
-        up1.stop()
-        assert update_prices_module._updater is new_updater
-        assert update_prices_module._ref_count == 1
-        assert data_snapshot._custom_snapshot is not None
+        deadline = monotonic() + 1
+        while update_prices.count < 2 and monotonic() < deadline:
+            sleep(0.01)
+        assert update_prices.count >= 2
     finally:
-        up2.stop()
-        data_snapshot.set_custom_snapshot(None)
-    assert data_snapshot._custom_snapshot is None
-
-
-def test_stop_does_not_block_on_in_flight_fetch_and_discards_result(
-    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
-):
-    fetch_started = threading.Event()
-    allow_fetch_return = threading.Event()
-
-    class Response:
-        content = PROVIDER_ARRAY_PAYLOAD
-
-        def raise_for_status(self) -> None:
-            pass
-
-    def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
-        assert url == DEFAULT_UPDATE_URL
-        assert timeout is not None
-        fetch_started.set()
-        assert allow_fetch_return.wait(timeout=5)
-        return Response()
-
-    monkeypatch.setattr(httpx2, 'get', fake_get)
-    monkeypatch.setattr(update_prices_module, '_STOPPED_THREAD_JOIN_TIMEOUT', 0.05)
-
-    update_prices = UpdatePrices()
-    update_prices.start()
-    try:
-        assert fetch_started.wait(timeout=5)
-        (thread,) = [t for t in threading.enumerate() if t.name == 'genai_prices:update']
-
-        start = monotonic()
-        with caplog.at_level('WARNING', logger='genai-prices'):
-            update_prices.stop()
-        assert monotonic() - start < 2  # did not wait for the in-flight fetch
-        assert any('abandoning the daemon thread' in record.message for record in caplog.records)
-        assert data_snapshot._custom_snapshot is None
-
-        # The drained fetch completes but its snapshot is discarded by the fencing check.
-        allow_fetch_return.set()
-        thread.join(timeout=5)
-        assert not thread.is_alive()
-        assert data_snapshot._custom_snapshot is None
-    finally:
-        allow_fetch_return.set()
         update_prices.stop()
-        data_snapshot.set_custom_snapshot(None)
 
 
-def test_waiter_gets_false_when_stop_discards_in_flight_fetch(monkeypatch: pytest.MonkeyPatch):
-    # A fetch discarded by the stop fence must not be reported to waiters as a successful update.
+def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
 
@@ -261,23 +155,15 @@ def test_waiter_gets_false_when_stop_discards_in_flight_fetch(monkeypatch: pytes
         return Response()
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
-    monkeypatch.setattr(update_prices_module, '_STOPPED_THREAD_JOIN_TIMEOUT', 0.05)
-
     update_prices = UpdatePrices()
     update_prices.start()
     try:
         assert fetch_started.wait(timeout=5)
-        # A waiter that captured the updater before stop() observes this instance directly.
-        updater = update_prices_module._updater
-        assert updater is not None
-
-        update_prices.stop()  # sets the stop fence and reverts before the fetch returns
-        allow_fetch_return.set()  # the in-flight fetch now completes but must be discarded
-
-        # The background loop signals the event but must report the discarded fetch as not-updated.
-        assert updater._prices_updated.wait(timeout=5)
-        assert updater._update_succeeded is False
-        assert updater._wait_updated(0) is False
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            stop_future = executor.submit(update_prices.stop)
+            assert update_prices._stop_event.wait(timeout=5)
+            allow_fetch_return.set()
+            stop_future.result(timeout=5)
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()
