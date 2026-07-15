@@ -536,6 +536,7 @@ def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.Mo
     allow_fetch_return = threading.Event()
     interruption_observed = threading.Event()
     join_interruption_observed = threading.Event()
+    publication_interruption_observed = threading.Event()
 
     class BlockingUpdatePrices(UpdatePrices):
         def fetch(self) -> data_snapshot.DataSnapshot | None:
@@ -551,6 +552,7 @@ def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.Mo
     thread = update_prices._thread
     original_wait = state.background_stopped.wait
     original_join = thread.join
+    original_notify_all = update_prices_module._lifecycle.notify_all
 
     def interrupt_once(timeout: float | None = None) -> bool:
         if not interruption_observed.is_set():
@@ -564,17 +566,25 @@ def test_interrupted_stop_finishes_cleanup_before_raising(monkeypatch: pytest.Mo
             raise RuntimeError('join interrupted')
         original_join(timeout)
 
+    def interrupt_publication_once() -> None:
+        if not publication_interruption_observed.is_set():
+            publication_interruption_observed.set()
+            raise RuntimeError('publication interrupted')
+        original_notify_all()
+
     monkeypatch.setattr(state.background_stopped, 'wait', interrupt_once)
     monkeypatch.setattr(thread, 'join', interrupt_join_once)
+    monkeypatch.setattr(update_prices_module._lifecycle, 'notify_all', interrupt_publication_once)
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             stop_future = executor.submit(update_prices.stop)
             assert interruption_observed.wait(timeout=5)
             allow_fetch_return.set()
-            with pytest.raises(RuntimeError, match='join interrupted'):
+            with pytest.raises(RuntimeError, match='publication interrupted'):
                 stop_future.result(timeout=5)
             assert join_interruption_observed.is_set()
+            assert publication_interruption_observed.is_set()
 
         assert update_prices._thread is None
         assert update_prices._active_config is None

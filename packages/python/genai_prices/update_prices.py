@@ -172,10 +172,17 @@ class UpdatePrices:
 
         # Wait outside the lifecycle lock so a supported fetch() override can re-enter updater APIs.
         interrupted = stop_update_prices._stop_background_task(state)
-        with _lifecycle:
-            assert _global_update_prices is stop_update_prices
-            _global_update_prices = None
-            _lifecycle.notify_all()
+        while True:
+            try:
+                with _lifecycle:
+                    if _global_update_prices is stop_update_prices:
+                        _global_update_prices = None
+                    _lifecycle.notify_all()
+                break
+            except BaseException as exc:
+                # Final publication is idempotent. Complete it before preserving an interruption,
+                # otherwise starters could remain asleep behind a worker that has already exited.
+                interrupted = exc
 
         if interrupted is not None:
             raise interrupted
