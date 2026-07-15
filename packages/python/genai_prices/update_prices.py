@@ -45,7 +45,7 @@ def wait_prices_updated_sync(timeout: float | None = None) -> bool:
         update_prices = _global_update_prices
 
     if update_prices is not None:
-        return update_prices._wait_for_update(timeout)  # pyright: ignore[reportPrivateUsage]
+        return update_prices._wait_for_global_update(timeout)  # pyright: ignore[reportPrivateUsage]
     return False
 
 
@@ -83,9 +83,12 @@ class UpdatePrices:
     _prices_updated: threading.Event = field(default_factory=threading.Event, repr=False)
     _thread: threading.Thread | None = field(default=None, init=False, repr=False)
     _background_exc: Exception | None = field(default=None, init=False, repr=False)
+    _outcome_lock: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
     _updater: UpdatePrices | None = field(default=None, init=False, repr=False)
-    _claims: int = field(default=0, init=False, repr=False)
+    _owners: list[UpdatePrices] = field(default_factory=list, init=False, repr=False)
     _observed_background_exc: Exception | None = field(default=None, init=False, repr=False)
+    _global_observed_background_exc: Exception | None = field(default=None, init=False, repr=False)
+    _active_config: tuple[str, float, httpx2.Timeout] | None = field(default=None, init=False, repr=False)
 
     def start(self, *, wait: bool | float = False):
         """Acquire shared ownership of the process-wide background updater.
@@ -104,18 +107,15 @@ class UpdatePrices:
             if update_prices is None:
                 self._start_background_task()
                 update_prices = _global_update_prices = self
-            elif (
-                update_prices.url != self.url
-                or update_prices.update_interval != self.update_interval
-                or update_prices.request_timeout != self.request_timeout
-            ):
+            elif update_prices._active_config != (self.url, self.update_interval, self.request_timeout):
+                assert update_prices._active_config is not None
+                url, update_interval, request_timeout = update_prices._active_config
                 raise RuntimeError(
                     'UpdatePrices background task already started with different configuration: '
-                    f'url={update_prices.url!r}, update_interval={update_prices.update_interval!r}, '
-                    f'request_timeout={update_prices.request_timeout!r}'
+                    f'url={url!r}, update_interval={update_interval!r}, request_timeout={request_timeout!r}'
                 )
 
-            update_prices._claims += 1
+            update_prices._owners.append(self)
             self._updater = update_prices
             self._observed_background_exc = None
 
@@ -126,36 +126,39 @@ class UpdatePrices:
         """Release this instance's ownership of the shared background updater.
 
         The updater stops and bundled prices are restored only after the last owner releases it.
-        This is a no-op if this instance is not started. As before, the last `stop()` waits for an
-        in-flight fetch to finish and raises an unobserved background exception.
+        This is a no-op if this instance is not started. Each owner raises a background exception
+        it has not already observed; the last owner also waits for an in-flight fetch to finish.
         """
         global _global_update_prices
 
+        exc: Exception | None = None
         with _lock:
             update_prices = self._updater
             if update_prices is None:
                 return
 
-            observed_background_exc = self._observed_background_exc
             self._updater = None
-            self._observed_background_exc = None
-            update_prices._claims -= 1
-            if update_prices._claims > 0:
-                return
+            update_prices._owners = [owner for owner in update_prices._owners if owner is not self]
+            if update_prices._owners:
+                exc = update_prices._unobserved_failure(self)
+            else:
+                assert _global_update_prices is update_prices
+                try:
+                    # Keep ownership published until the thread exits. This makes a concurrent start
+                    # wait instead of creating a second worker while the first is still fetching.
+                    update_prices._stop_background_task()
+                    exc = update_prices._unobserved_failure(self)
+                finally:
+                    _global_update_prices = None
 
-            assert _global_update_prices is update_prices
-            try:
-                # Keep ownership published until the thread exits. This makes a concurrent start
-                # wait instead of creating a second worker while the first is still fetching.
-                update_prices._stop_background_task(observed_background_exc)
-            finally:
-                _global_update_prices = None
+        if exc is not None:
+            raise exc
 
     def wait(self, timeout: float | None = None) -> bool:
         """Wait for the shared background updater's first completed attempt.
 
-        A failed attempt is raised once by each owning instance. Further waits return `False`
-        until a later attempt succeeds. Returns `False` if this instance is not started.
+        A failed attempt is raised once by each owning instance. Returns `False` if this instance
+        is not started or the timeout elapses.
 
         Args:
             timeout: The maximum time to wait for prices to be updated in seconds.
@@ -164,19 +167,18 @@ class UpdatePrices:
         if update_prices is None:
             return False
 
-        try:
-            return update_prices._wait_for_update(timeout)
-        except Exception as exc:
-            if self._observed_background_exc is exc:
-                return False
-            self._observed_background_exc = exc
-            raise
+        return update_prices._wait_for_owner(self, timeout)
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
         from . import data
 
-        r = httpx2.get(self.url, timeout=self.request_timeout)
+        if self._active_config is None:
+            url, request_timeout = self.url, self.request_timeout
+        else:
+            url, _, request_timeout = self._active_config
+
+        r = httpx2.get(url, timeout=request_timeout)
         r.raise_for_status()
         return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)
 
@@ -191,32 +193,64 @@ class UpdatePrices:
         assert self._thread is None
         self._prices_updated.clear()
         self._stop_event.clear()
-        self._background_exc = None
+        self._active_config = (self.url, self.update_interval, self.request_timeout)
+        with self._outcome_lock:
+            self._background_exc = None
+            self._global_observed_background_exc = None
         self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
         try:
             self._thread.start()
         except Exception:
             self._thread = None
+            self._active_config = None
             raise
 
-    def _stop_background_task(self, observed_background_exc: Exception | None) -> None:
+    def _stop_background_task(self) -> None:
         self._stop_event.set()
-        if self._thread is not None:
-            self._thread.join()
-            self._thread = None
+        assert self._thread is not None
+        self._thread.join()
+        self._thread = None
+        self._active_config = None
 
         # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
         data_snapshot.set_custom_snapshot(None)
-        exc = self._background_exc
-        self._background_exc = None
-        if exc is not None and exc is not observed_background_exc:
-            raise exc
 
-    def _wait_for_update(self, timeout: float | None) -> bool:
+    def _wait_for_global_update(self, timeout: float | None) -> bool:
         prices_updated = self._prices_updated.wait(timeout=timeout)
-        if self._background_exc is not None:
-            raise self._background_exc
+        with self._outcome_lock:
+            exc = self._background_exc
+            if exc is not None:
+                if exc is self._global_observed_background_exc:
+                    return False
+                self._global_observed_background_exc = exc
+                # The process-wide helper observes the failure on behalf of all current owners.
+                for owner in self._owners:
+                    owner._observed_background_exc = exc
+                raise exc
         return prices_updated
+
+    def _wait_for_owner(self, owner: UpdatePrices, timeout: float | None) -> bool:
+        prices_updated = self._prices_updated.wait(timeout=timeout)
+        with self._outcome_lock:
+            exc = self._background_exc
+            if exc is not None:
+                if exc is owner._observed_background_exc:
+                    return False
+                owner._observed_background_exc = exc
+                self._global_observed_background_exc = exc
+                raise exc
+        return prices_updated
+
+    def _unobserved_failure(self, owner: UpdatePrices) -> Exception | None:
+        with self._outcome_lock:
+            exc = self._background_exc
+            if exc is None or exc is owner._observed_background_exc:
+                return None
+            owner._observed_background_exc = exc
+            # Preserve the original relationship where an instance wait also consumed the
+            # process-wide helper's view of that failure.
+            self._global_observed_background_exc = exc
+            return exc
 
     def _background_task(self) -> None:
         logger.info('Starting genai-prices background task')
@@ -224,13 +258,16 @@ class UpdatePrices:
             while True:
                 try:
                     self._update_prices()
-                    self._background_exc = None
-                    self._prices_updated.set()
+                    with self._outcome_lock:
+                        self._background_exc = None
+                        self._prices_updated.set()
                 except Exception as e:
-                    self._background_exc = e
-                    self._prices_updated.set()
+                    with self._outcome_lock:
+                        self._background_exc = e
+                        self._prices_updated.set()
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
-                if self._stop_event.wait(self.update_interval):
+                assert self._active_config is not None
+                if self._stop_event.wait(self._active_config[1]):
                     break
         finally:
             logger.info('genai-prices background task stopped')

@@ -128,12 +128,17 @@ instances join it, and the last `stop()` shuts it down and restores the data bun
 This lets libraries such as Logfire and Pydantic AI opt in independently without creating duplicate threads.
 
 The active updater's `url`, `update_interval`, and `request_timeout` must match. A second instance with different
-settings raises `RuntimeError` instead of silently ignoring its configuration. Applications that need custom
-settings should start their updater before integrations initialize and retain it until shutdown.
+settings raises `RuntimeError` instead of silently ignoring its configuration. The first owner also supplies the
+`fetch()` implementation, so subclasses continue to work while later instances are ownership claims only.
+Applications that need custom behavior should start their updater before integrations initialize and retain it
+until shutdown.
 
 The last `stop()` keeps the existing shutdown behavior: it waits for an in-flight fetch to finish, then restores
-the bundled snapshot. If the background fetch failed and that owner has not already observed the exception via
-`wait()`, `stop()` raises it. `calc_price()` does not acquire the updater lifecycle lock.
+the bundled snapshot. Background failures are raised once per owner by `wait()` or `stop()`; a process-wide wait
+observes the failure for every current owner. `calc_price()` does not acquire either updater lock.
+
+As with other background threads, start the updater only after calling `os.fork()`; inheriting a running updater
+in a child process is unsupported.
 
 `start()` does not wait for the download (unless you pass `wait`). Until the first fetch completes, `calc_price`
 keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
