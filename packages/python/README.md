@@ -134,8 +134,8 @@ Applications that need custom behavior should start their updater before integra
 until shutdown.
 
 The last `stop()` keeps the existing shutdown behavior: it waits for an in-flight fetch to finish, then restores
-the bundled snapshot. Background failures are raised once per owner by `wait()` or `stop()`; a process-wide wait
-observes the failure for every current owner. `calc_price()` does not acquire either updater lock.
+the bundled snapshot. Background failures remain process-wide and are raised once by the first `wait()` or
+`stop()` that observes them. `calc_price()` does not acquire either updater lock.
 
 As with other background threads, start the updater only after calling `os.fork()`; inheriting a running updater
 in a child process is unsupported.
