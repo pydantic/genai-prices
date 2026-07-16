@@ -10091,6 +10091,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        description:
+          "Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
+        match: {
+          equals: 'kimi-k3',
+        },
+        context_window: 1048576,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'moonshot-v1-128k',
         name: 'Moonshot V1 128K',
         match: {
@@ -17021,6 +17037,27 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           cache_read_mtok: 0.16,
           output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-20260715',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'Ref: https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
