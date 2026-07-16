@@ -1,0 +1,19 @@
+specs/data-driven-unit-registry/phase-3-shared-data-contract/code-spec.md
+  s_89e20c1f72b099::t_ce6f823739f708 69,71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "0ff4525bd9a5ea4623b2ff871dddf0c010f2222a",
+  "prompts": {},
+  "sessions": {
+    "s_89e20c1f72b099": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f6ac5-7075-7903-80f8-144ccf376637",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
