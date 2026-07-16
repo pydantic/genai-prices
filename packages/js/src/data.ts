@@ -3748,6 +3748,21 @@ export const data: Provider[] = [
             dest: 'input_tokens',
             required: false,
           },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
         ],
       },
       {
