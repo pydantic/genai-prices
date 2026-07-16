@@ -17045,6 +17045,8 @@ export const data: Provider[] = [
         match: {
           equals: 'moonshotai/kimi-k3',
         },
+        context_window: 1048576,
+        price_comments: 'Ref: https://openrouter.ai/api/v1/models',
         prices: {
           input_mtok: 3,
           cache_read_mtok: 0.3,

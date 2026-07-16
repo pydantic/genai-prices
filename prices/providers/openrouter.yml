@@ -3148,6 +3148,9 @@ models:
     name: Kimi K3
     match:
       equals: moonshotai/kimi-k3
+    context_window: 1048576
+    prices_checked: "2026-07-16"
+    price_comments: "Ref: https://openrouter.ai/api/v1/models"
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30
