@@ -10076,6 +10076,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        description:
+          "Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
+        match: {
+          equals: 'kimi-k3',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'moonshot-v1-128k',
         name: 'Moonshot V1 128K',
         match: {
