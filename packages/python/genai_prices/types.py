@@ -194,10 +194,7 @@ AbstractUsage = object
 class Usage:
     """Simple token usage container."""
 
-    _values: dict[str, int]
-
     def __init__(self, **kwargs: int | None) -> None:
-        object.__setattr__(self, '_values', {})
         reported_usage_keys = _reported_usage_keys()
         unknown_keys = kwargs.keys() - reported_usage_keys
         if unknown_keys:
@@ -220,18 +217,13 @@ class Usage:
         return cls(**values)
 
     def __setattr__(self, name: str, value: int | None) -> None:
-        if name == '_values':
-            object.__setattr__(self, name, value)
-        elif name in _reported_usage_keys():
+        if name in _reported_usage_keys():
             self._store_values({name: value})
         else:
             object.__setattr__(self, name, value)
 
     def __getattr__(self, name: str) -> int:
         if name in _reported_usage_keys():
-            if name in self._values:
-                return self._values[name]
-
             return self._infer_missing_value(name)
 
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
@@ -239,21 +231,27 @@ class Usage:
     def _store_values(self, values: Mapping[str, int | None]) -> None:
         for key, value in values.items():
             if value is None:
-                self._values.pop(key, None)
+                self.__dict__.pop(key, None)
             else:
-                self._values[key] = value
+                self.__dict__[key] = value
+
+    def _reported_values(self) -> dict[str, int]:
+        reported_usage_keys = _reported_usage_keys()
+        return {key: cast(int, value) for key, value in self.__dict__.items() if key in reported_usage_keys}
 
     def reported_value(self, usage_key: str) -> int:
-        return self._values.get(usage_key, 0)
+        return self._reported_values().get(usage_key, 0)
 
     def __add__(self, other: Usage | Any) -> Usage:
         if not isinstance(other, Usage):
             return NotImplemented
 
+        self_values = self._reported_values()
+        other_values = other._reported_values()
         return Usage(
             **{
-                key: self._values.get(key, 0) + other._values.get(key, 0)
-                for key in self._values.keys() | other._values.keys()
+                key: self_values.get(key, 0) + other_values.get(key, 0)
+                for key in self_values.keys() | other_values.keys()
             }
         )
 
@@ -268,14 +266,15 @@ class Usage:
         if not isinstance(other, Usage):
             return NotImplemented
 
-        return self._values == other._values
+        return self._reported_values() == other._reported_values()
 
     def __repr__(self) -> str:
         values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
         return f'Usage({values})'
 
     def _ordered_values(self) -> list[tuple[str, int]]:
-        return [(key, self._values[key]) for key in _reported_usage_key_order() if key in self._values]
+        values = self._reported_values()
+        return [(key, values[key]) for key in _reported_usage_key_order() if key in values]
 
     def _infer_missing_value(self, usage_key: str) -> int:
         from genai_prices.decompose import is_descendant_or_self
@@ -283,9 +282,10 @@ class Usage:
 
         registry = _get_registry()
         requested_unit = registry.units[usage_key]
+        reported_values = self._reported_values()
         descendant_keys = [
             unit.usage_key
-            for reported_key, value in self._values.items()
+            for reported_key, value in reported_values.items()
             if value > 0
             and (unit := registry.units.get(reported_key)) is not None
             and unit is not requested_unit
@@ -296,7 +296,7 @@ class Usage:
                 requested_unit,
                 [
                     unit
-                    for reported_key, value in self._values.items()
+                    for reported_key, value in reported_values.items()
                     if value > 0 and (unit := registry.units.get(reported_key)) is not None
                 ],
             )

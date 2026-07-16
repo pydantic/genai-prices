@@ -147,7 +147,7 @@ def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider:
         extracted = extract_usage(body, provider_id=provider.id, api_flavor=flavor)
         assert extracted.model and extracted.model.is_match(model_ref)
         assert usage == extracted.usage
-    usage_dict = {k: v for k, v in usage._values.items() if v}
+    usage_dict = {k: v for k, v in usage.__dict__.items() if v}
     return Case(provider.id, flavor, model_ref, usage_dict)
 
 
