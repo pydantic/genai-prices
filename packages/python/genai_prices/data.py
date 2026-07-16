@@ -9812,7 +9812,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='moonshotai/kimi-k3',
-                match=ClauseEquals(equals='moonshotai/kimi-k3'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='moonshotai/kimi-k3'), ClauseEquals(equals='moonshotai/kimi-k3-20260715')]
+                ),
                 name='Kimi K3',
                 context_window=1048576,
                 price_comments='Ref: https://openrouter.ai/api/v1/models',
