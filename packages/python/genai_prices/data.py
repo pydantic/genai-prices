@@ -444,26 +444,97 @@ providers: list[Provider] = [
         name='Avian',
         api_pattern='https://api\\.avian\\.io',
         pricing_urls=['https://avian.io/pricing/'],
+        price_comments='Refreshed 2026-07-16 from https://avian.io/pricing/ (issue #322). Avian\'s current lineup is DeepSeek V4/V3.2, GLM-5/5.1, MiniMax M2.5 and Kimi K2.5/K2.6; the Meta Llama models are no longer listed on the pricing page and are marked deprecated. The pricing table\'s "Cache" column is mapped to cache_read_mtok. Model ids follow Avian\'s documented request format (e.g. model="DeepSeek-V3.2" on https://avian.io).',
         models=[
+            ModelInfo(
+                id='DeepSeek-V3.2',
+                match=ClauseEquals(equals='DeepSeek-V3.2'),
+                name='DeepSeek V3.2',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.23'), cache_read_mtok=Decimal('0.012'), output_mtok=Decimal('0.33')
+                ),
+            ),
+            ModelInfo(
+                id='DeepSeek-V4-Flash',
+                match=ClauseEquals(equals='DeepSeek-V4-Flash'),
+                name='DeepSeek V4 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0945'), cache_read_mtok=Decimal('0.0189'), output_mtok=Decimal('0.189')
+                ),
+            ),
+            ModelInfo(
+                id='DeepSeek-V4-Pro',
+                match=ClauseEquals(equals='DeepSeek-V4-Pro'),
+                name='DeepSeek V4 Pro',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.305'), cache_read_mtok=Decimal('0.10875'), output_mtok=Decimal('2.61')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5',
+                match=ClauseEquals(equals='GLM-5'),
+                name='GLM-5',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('2.55')
+                ),
+            ),
+            ModelInfo(
+                id='GLM-5.1',
+                match=ClauseEquals(equals='GLM-5.1'),
+                name='GLM-5.1',
+                prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('3.2')),
+            ),
+            ModelInfo(
+                id='Kimi-K2.5',
+                match=ClauseEquals(equals='Kimi-K2.5'),
+                name='Kimi K2.5',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.225'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='Kimi-K2.6',
+                match=ClauseEquals(equals='Kimi-K2.6'),
+                name='Kimi K2.6',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.95'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4')
+                ),
+            ),
             ModelInfo(
                 id='Meta-Llama-3.1-405B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.1-405B-Instruct'),
+                price_comments='No longer listed on https://avian.io/pricing/ as of 2026-07-16.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('1.5')),
             ),
             ModelInfo(
                 id='Meta-Llama-3.1-70B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.1-70B-Instruct'),
+                price_comments='No longer listed on https://avian.io/pricing/ as of 2026-07-16.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='Meta-Llama-3.1-8B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.1-8B-Instruct'),
+                price_comments='No longer listed on https://avian.io/pricing/ as of 2026-07-16.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='Meta-Llama-3.3-70B-Instruct',
                 match=ClauseEquals(equals='Meta-Llama-3.3-70B-Instruct'),
+                price_comments='No longer listed on https://avian.io/pricing/ as of 2026-07-16.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
+            ),
+            ModelInfo(
+                id='MiniMax-M2.5',
+                match=ClauseEquals(equals='MiniMax-M2.5'),
+                name='MiniMax M2.5',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('1.08')
+                ),
             ),
         ],
     ),
