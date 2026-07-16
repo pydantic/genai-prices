@@ -33,7 +33,7 @@ The following providers are currently supported:
 [comment]: <> (providers-start)
 
 - [Anthropic](prices/providers/anthropic.yml) - 22 models
-- [Avian](prices/providers/avian.yml) - 4 models
+- [Avian](prices/providers/avian.yml) - 12 models
 - [AWS Bedrock](prices/providers/aws.yml) - 79 models
 - [Microsoft Azure](prices/providers/azure.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
