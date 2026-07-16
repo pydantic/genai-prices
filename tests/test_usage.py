@@ -23,6 +23,7 @@ def _active_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
 def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:
     usage = Usage(input_tokens=100, output_tokens=None)
 
+    assert usage.__dict__ == {'input_tokens': 100}
     assert usage.input_tokens == 100
     assert usage.output_tokens == 0
 
@@ -43,7 +44,10 @@ def test_usage_assignment_preserves_regular_object_attributes() -> None:
     usage.imaginary_tokens = 1
 
     assert usage.imaginary_tokens == 1
-    assert 'imaginary_tokens' not in usage._values
+    assert usage.__dict__ == {'imaginary_tokens': 1}
+    assert usage == Usage()
+    assert repr(usage) == 'Usage()'
+    assert usage + Usage(input_tokens=2) == Usage(input_tokens=2)
 
 
 def test_usage_assignment_updates_registered_reported_values() -> None:
@@ -51,10 +55,10 @@ def test_usage_assignment_updates_registered_reported_values() -> None:
 
     usage.input_tokens = 100
     assert usage.input_tokens == 100
-    assert usage._values['input_tokens'] == 100
+    assert usage.__dict__['input_tokens'] == 100
 
     usage.input_tokens = None
-    assert 'input_tokens' not in usage._values
+    assert 'input_tokens' not in usage.__dict__
     assert usage.input_tokens == 0
 
 
@@ -77,12 +81,12 @@ def test_usage_equality_operates_on_reported_values() -> None:
     assert Usage(input_tokens=0) == Usage(input_tokens=0)
 
 
-def test_usage_assigning_values_dict_bypasses_reported_storage() -> None:
+def test_usage_assigning_instance_dict_replaces_reported_storage() -> None:
     usage = Usage(input_tokens=1)
 
-    usage._values = {'output_tokens': 5}
+    usage.__dict__ = {'output_tokens': 5}
 
-    assert usage._values == {'output_tokens': 5}
+    assert usage.__dict__ == {'output_tokens': 5}
     assert usage.output_tokens == 5
 
 
@@ -195,8 +199,8 @@ def test_usage_safe_missing_read_returns_zero_without_reporting() -> None:
 
     assert usage.input_tokens == 0
     assert usage.cache_read_tokens == 0
-    assert 'input_tokens' not in usage._values
-    assert 'cache_read_tokens' not in usage._values
+    assert 'input_tokens' not in usage.__dict__
+    assert 'cache_read_tokens' not in usage.__dict__
 
 
 def test_usage_missing_join_read_rejects_overlapping_ancestors() -> None:
