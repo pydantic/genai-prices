@@ -5827,6 +5827,7 @@ providers: list[Provider] = [
                 name='Kimi K3',
                 description="Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
                 context_window=1048576,
+                price_comments='Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
@@ -9808,6 +9809,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('3.5')
                 ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3',
+                match=ClauseEquals(equals='moonshotai/kimi-k3'),
+                name='Kimi K3',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='moonshotai/kimi-vl-a3b-thinking:free',

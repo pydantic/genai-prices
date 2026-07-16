@@ -3144,6 +3144,15 @@ models:
       cache_read_mtok: 0.16
       output_mtok: 3.50
 
+  - id: moonshotai/kimi-k3
+    name: Kimi K3
+    match:
+      equals: moonshotai/kimi-k3
+    prices:
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
+
   - id: "moonshotai/kimi-vl-a3b-thinking:free"
     match:
       equals: "moonshotai/kimi-vl-a3b-thinking:free"

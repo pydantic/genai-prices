@@ -161,6 +161,7 @@ models:
       equals: kimi-k3
     context_window: 1048576
     prices_checked: "2026-07-16"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
     prices:
       input_mtok: 3.00
       cache_read_mtok: 0.30

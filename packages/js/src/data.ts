@@ -10099,6 +10099,7 @@ export const data: Provider[] = [
           equals: 'kimi-k3',
         },
         context_window: 1048576,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
         prices: {
           input_mtok: 3,
           cache_read_mtok: 0.3,
@@ -17036,6 +17037,18 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           cache_read_mtok: 0.16,
           output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'moonshotai/kimi-k3',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
