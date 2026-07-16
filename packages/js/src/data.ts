@@ -695,92 +695,8 @@ export const data: Provider[] = [
     pricing_urls: ['https://avian.io/pricing/'],
     api_pattern: 'https://api\\.avian\\.io',
     price_comments:
-      'Refreshed 2026-07-16 from https://avian.io/pricing/ (issue #322). Avian\'s current lineup is DeepSeek V4/V3.2, GLM-5/5.1, MiniMax M2.5 and Kimi K2.5/K2.6; the Meta Llama models are no longer listed on the pricing page and are marked deprecated. The pricing table\'s "Cache" column is mapped to cache_read_mtok. Model ids follow Avian\'s documented request format (e.g. model="DeepSeek-V3.2" on https://avian.io).',
+      'Refreshed 2026-07-16 from https://avian.io/pricing/ (issue #322). Avian\'s current lineup is DeepSeek V4/V3.2, GLM-5/5.1, MiniMax M2.5 and Kimi K2.5/K2.6; the Meta Llama models are no longer listed on the pricing page and are marked deprecated. The pricing table\'s "Cache" column is mapped to cache_read_mtok. Canonical model ids are the provider-prefixed forms from https://avian.io/docs/ and https://avian.io/models/ (e.g. deepseek/deepseek-v3.2); the unprefixed forms shown in the homepage example (e.g. DeepSeek-V3.2) are kept as match aliases.',
     models: [
-      {
-        id: 'DeepSeek-V3.2',
-        name: 'DeepSeek V3.2',
-        match: {
-          equals: 'DeepSeek-V3.2',
-        },
-        prices: {
-          input_mtok: 0.23,
-          cache_read_mtok: 0.012,
-          output_mtok: 0.33,
-        },
-      },
-      {
-        id: 'DeepSeek-V4-Flash',
-        name: 'DeepSeek V4 Flash',
-        match: {
-          equals: 'DeepSeek-V4-Flash',
-        },
-        prices: {
-          input_mtok: 0.0945,
-          cache_read_mtok: 0.0189,
-          output_mtok: 0.189,
-        },
-      },
-      {
-        id: 'DeepSeek-V4-Pro',
-        name: 'DeepSeek V4 Pro',
-        match: {
-          equals: 'DeepSeek-V4-Pro',
-        },
-        prices: {
-          input_mtok: 1.305,
-          cache_read_mtok: 0.10875,
-          output_mtok: 2.61,
-        },
-      },
-      {
-        id: 'GLM-5',
-        name: 'GLM-5',
-        match: {
-          equals: 'GLM-5',
-        },
-        prices: {
-          input_mtok: 0.95,
-          cache_read_mtok: 0.2,
-          output_mtok: 2.55,
-        },
-      },
-      {
-        id: 'GLM-5.1',
-        name: 'GLM-5.1',
-        match: {
-          equals: 'GLM-5.1',
-        },
-        prices: {
-          input_mtok: 1,
-          cache_read_mtok: 0.2,
-          output_mtok: 3.2,
-        },
-      },
-      {
-        id: 'Kimi-K2.5',
-        name: 'Kimi K2.5',
-        match: {
-          equals: 'Kimi-K2.5',
-        },
-        prices: {
-          input_mtok: 0.45,
-          cache_read_mtok: 0.225,
-          output_mtok: 2.2,
-        },
-      },
-      {
-        id: 'Kimi-K2.6',
-        name: 'Kimi K2.6',
-        match: {
-          equals: 'Kimi-K2.6',
-        },
-        prices: {
-          input_mtok: 0.95,
-          cache_read_mtok: 0.16,
-          output_mtok: 4,
-        },
-      },
       {
         id: 'Meta-Llama-3.1-405B-Instruct',
         match: {
@@ -830,15 +746,155 @@ export const data: Provider[] = [
         deprecated: true,
       },
       {
-        id: 'MiniMax-M2.5',
+        id: 'deepseek/deepseek-v3.2',
+        name: 'DeepSeek V3.2',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v3.2',
+            },
+            {
+              equals: 'DeepSeek-V3.2',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.23,
+          cache_read_mtok: 0.012,
+          output_mtok: 0.33,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-flash',
+        name: 'DeepSeek V4 Flash',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-flash',
+            },
+            {
+              equals: 'DeepSeek-V4-Flash',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.0945,
+          cache_read_mtok: 0.0189,
+          output_mtok: 0.189,
+        },
+      },
+      {
+        id: 'deepseek/deepseek-v4-pro',
+        name: 'DeepSeek V4 Pro',
+        match: {
+          or: [
+            {
+              equals: 'deepseek/deepseek-v4-pro',
+            },
+            {
+              equals: 'DeepSeek-V4-Pro',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 1.305,
+          cache_read_mtok: 0.10875,
+          output_mtok: 2.61,
+        },
+      },
+      {
+        id: 'minimax/minimax-m2.5',
         name: 'MiniMax M2.5',
         match: {
-          equals: 'MiniMax-M2.5',
+          or: [
+            {
+              equals: 'minimax/minimax-m2.5',
+            },
+            {
+              equals: 'MiniMax-M2.5',
+            },
+          ],
         },
         prices: {
           input_mtok: 0.27,
           cache_read_mtok: 0.15,
           output_mtok: 1.08,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.5',
+        name: 'Kimi K2.5',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.5',
+            },
+            {
+              equals: 'Kimi-K2.5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.225,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k2.6',
+        name: 'Kimi K2.6',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k2.6',
+            },
+            {
+              equals: 'Kimi-K2.6',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.16,
+          output_mtok: 4,
+        },
+      },
+      {
+        id: 'z-ai/glm-5',
+        name: 'GLM-5',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5',
+            },
+            {
+              equals: 'GLM-5',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 0.95,
+          cache_read_mtok: 0.2,
+          output_mtok: 2.55,
+        },
+      },
+      {
+        id: 'z-ai/glm-5.1',
+        name: 'GLM-5.1',
+        match: {
+          or: [
+            {
+              equals: 'z-ai/glm-5.1',
+            },
+            {
+              equals: 'GLM-5.1',
+            },
+          ],
+        },
+        prices: {
+          input_mtok: 1,
+          cache_read_mtok: 0.2,
+          output_mtok: 3.2,
         },
       },
     ],
