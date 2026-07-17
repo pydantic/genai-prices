@@ -4,6 +4,7 @@ import type { RawUnitsDict } from '../types'
 
 import { unitData } from '../dataUnits'
 import {
+  dimensionKey,
   getActiveRegistry,
   getAllPriceKeys,
   getAllUsageKeys,
@@ -95,7 +96,7 @@ describe('UnitRegistry', () => {
 
     expect(inputAudio.dimensions.family).toBe('tokens')
     expect(inputAudio.per).toBe(1_000_000)
-    expect(registry.unitsByDimension.get('direction=input\0family=tokens\0modality=audio')).toBe(inputAudio)
+    expect(registry.unitsByDimension.get(dimensionKey({ direction: 'input', family: 'tokens', modality: 'audio' }))).toBe(inputAudio)
   })
 
   it('indexes ancestor usage keys', () => {

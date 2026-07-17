@@ -105,10 +105,7 @@ export function setActiveRegistry(registry: null | UnitRegistry): void {
 }
 
 export function dimensionKey(dimensions: Record<string, string>): string {
-  return Object.entries(dimensions)
-    .sort(([left], [right]) => left.localeCompare(right))
-    .map(([key, value]) => `${key}=${value}`)
-    .join('\0')
+  return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
 }
 
 export function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
