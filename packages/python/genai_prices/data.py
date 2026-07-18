@@ -1516,6 +1516,8 @@ providers: list[Provider] = [
         pricing_urls=[
             'https://www.cerebras.ai/pricing#pricing',
             'https://inference-docs.cerebras.ai/models/openai-oss',
+            'https://inference-docs.cerebras.ai/models/gemma-4-31b',
+            'https://inference-docs.cerebras.ai/models/zai-glm-47',
         ],
         model_match=ClauseContains(contains='cerebras'),
         provider_match=ClauseContains(contains='cerebras'),
@@ -1531,6 +1533,21 @@ providers: list[Provider] = [
             )
         ],
         models=[
+            ModelInfo(
+                id='gemma-4-31b',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemma-4-31b'),
+                        ClauseStartsWith(starts_with='cerebras/gemma-4-31b'),
+                        ClauseStartsWith(starts_with='cerebras:gemma-4-31b'),
+                    ]
+                ),
+                name='Gemma 4 31B',
+                description="Google's Gemma 4 31B open model for chat, instruction following, and multilingual tasks, served with fast inference on Cerebras hardware (~1,850 tokens/second).",
+                context_window=131072,
+                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+                prices=ModelPrice(input_mtok=Decimal('0.99'), output_mtok=Decimal('1.49')),
+            ),
             ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseOr(
@@ -1558,7 +1575,8 @@ providers: list[Provider] = [
                 name='Llama 3.3 70B',
                 description="Meta's enhanced 70B model delivering 405B-level accuracy. Optimized for chat, coding, instruction following, mathematics, and reasoning with high-speed inference on Cerebras hardware (~2,100 tokens/second).",
                 context_window=128000,
-                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 128k context.',
+                price_comments='No longer listed in the Cerebras Inference docs as of 2026-07-17.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.85'), output_mtok=Decimal('1.2')),
             ),
             ModelInfo(
@@ -1573,7 +1591,8 @@ providers: list[Provider] = [
                 name='Llama 3.1 8B',
                 description="Meta's Llama 3.1 8B model for general-purpose tasks including chat, coding, and instruction following. Optimized for fast inference on Cerebras hardware (~2,200 tokens/second).",
                 context_window=32768,
-                price_comments='Developer tier pricing. Free tier: 8k context, Paid tier: 32k context.',
+                price_comments='No longer listed in the Cerebras Inference docs as of 2026-07-17.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
@@ -1588,7 +1607,8 @@ providers: list[Provider] = [
                 name='Qwen 3 32B',
                 description="Qwen's 32B parameter model with enhanced reasoning and coding capabilities. Supports both standard and reasoning modes for complex tasks, with fast inference speeds on Cerebras hardware (~2,600 tokens/second).",
                 context_window=131072,
-                price_comments='Developer tier pricing. Free tier: 65k context, Paid tier: 131k context.',
+                price_comments='No longer listed in the Cerebras Inference docs as of 2026-07-17.',
+                deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.4'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
@@ -1597,6 +1617,21 @@ providers: list[Provider] = [
                 name='qwen-3-coder-480b',
                 price_comments='Seems to be no longer available on cerebras, here to help with tests',
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='zai-glm-4.7',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='zai-glm-4.7'),
+                        ClauseStartsWith(starts_with='cerebras/zai-glm-4.7'),
+                        ClauseStartsWith(starts_with='cerebras:zai-glm-4.7'),
+                    ]
+                ),
+                name='Z.ai GLM 4.7',
+                description="Z.ai's GLM 4.7, a 355 billion parameter model with reasoning enabled by default, served with fast inference on Cerebras hardware (~1,000 tokens/second).",
+                context_window=131072,
+                price_comments='Developer tier pricing. Free tier: 64k context, Paid tier: 131k context. Cerebras has scheduled this model for deprecation on 2026-08-17.',
+                prices=ModelPrice(input_mtok=Decimal('2.25'), output_mtok=Decimal('2.75')),
             ),
         ],
     ),
