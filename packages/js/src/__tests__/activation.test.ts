@@ -7,6 +7,16 @@ import { data } from '../data'
 import { getActiveRegistry, getUnit, setActiveRegistry, UnitRegistry } from '../units'
 
 describe('provider activation', () => {
+  it('passes the v2 provider-array URL to the storage factory', () => {
+    let remoteDataUrl: string | undefined
+
+    updatePrices((options) => {
+      remoteDataUrl = options.remoteDataUrl
+    })
+
+    expect(remoteDataUrl).toBe('https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json')
+  })
+
   it('validates embedded provider data during startup and keeps it active', () => {
     expect(findProvider({ providerId: 'anthropic' })?.id).toBe('anthropic')
   })

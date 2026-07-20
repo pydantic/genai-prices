@@ -15,7 +15,7 @@ import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFall
 import { getActiveRegistry, setActiveRegistry, UnitRegistry } from './units'
 import { validateExtractorDestinations } from './validation'
 
-export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
+export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json'
 
 let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
