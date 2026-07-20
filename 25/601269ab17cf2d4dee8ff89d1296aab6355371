@@ -1,0 +1,22 @@
+packages/python/genai_prices/update_prices.py
+  s_a763cfcc7eef32::t_308df32fabb7a7 173-176
+tests/test_update_prices.py
+  s_a763cfcc7eef32::t_308df32fabb7a7 38-46,122-178
+  s_a763cfcc7eef32::t_03c5f89bb5cc8c 179-180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "25601269ab17cf2d4dee8ff89d1296aab6355371",
+  "prompts": {},
+  "sessions": {
+    "s_a763cfcc7eef32": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f805c-fea8-7271-ba0a-ec5474113739",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
