@@ -23,19 +23,6 @@ from genai_prices.update_prices import DEFAULT_UPDATE_URL
 pytestmark = pytest.mark.anyio
 
 
-def _wrapped_payload(*, providers_json: str | None = None, units_json: str | None = None) -> bytes:
-    providers_json = providers_json or (
-        '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
-        '"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
-        '"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
-    )
-    units_json = units_json or (
-        '{"input_tokens":{"per":1000000,"price_key":"input_mtok","dimensions":{"family":"tokens","direction":"input"}},'
-        '"output_tokens":{"per":1000000,"price_key":"output_mtok","dimensions":{"family":"tokens","direction":"output"}}}'
-    )
-    return f'{{"units":{units_json},"providers":{providers_json}}}'.encode()
-
-
 def _provider_array(*, providers_json: str | None = None) -> bytes:
     providers_json = providers_json or (
         '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
@@ -58,7 +45,7 @@ class CountingNullUpdatePrices(UpdatePrices):
         return None
 
 
-def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = _wrapped_payload()) -> None:
+def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = _provider_array()) -> None:
     class Response:
         def __init__(self, content: bytes) -> None:
             self.content = content
@@ -83,29 +70,10 @@ def test_default_update_url_points_to_v2_provider_array() -> None:
     )
 
 
-def test_update_prices_fetch_parses_wrapped_payload_and_installs_registry(monkeypatch: pytest.MonkeyPatch):
-    _set_registry(None)
-    bundled = _get_registry()
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
-
-    snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
-
-    try:
-        assert snapshot is not None
-        assert snapshot.from_auto_update is True
-        provider, model = snapshot.find_provider_model('gpt-4o', None, 'openai', None)
-        assert provider.id == 'openai'
-        assert model.id == 'gpt-4o'
-        assert _get_registry() is not bundled
-        assert set(_get_registry().units) == {'input_tokens', 'output_tokens'}
-    finally:
-        _set_registry(None)
-
-
-def test_update_prices_fetch_restores_registry_when_provider_parsing_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_update_prices_fetch_preserves_registry_when_provider_parsing_fails(monkeypatch: pytest.MonkeyPatch) -> None:
     _set_registry(None)
     previous = _get_registry()
-    _mock_update_prices_get(monkeypatch, _wrapped_payload(providers_json='[{"id":"missing-required-fields"}]'))
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json='[{"id":"missing-required-fields"}]'))
 
     with pytest.raises(Exception):
         UpdatePrices(url='https://example.test/prices.json').fetch()
@@ -113,14 +81,15 @@ def test_update_prices_fetch_restores_registry_when_provider_parsing_fails(monke
     assert _get_registry() is previous
 
 
-def test_update_prices_fetch_rejects_malformed_wrapped_payload_without_registry_change(
-    monkeypatch: pytest.MonkeyPatch,
+@pytest.mark.parametrize('content', [b'{"providers":[]}', b'null', b'"providers"', b'1'])
+def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
+    monkeypatch: pytest.MonkeyPatch, content: bytes
 ) -> None:
     _set_registry(None)
     previous = _get_registry()
-    _mock_update_prices_get(monkeypatch, b'{"providers":[]}')
+    _mock_update_prices_get(monkeypatch, content)
 
-    with pytest.raises(ValueError, match='Expected fetched prices payload'):
+    with pytest.raises(ValueError, match='Expected fetched prices payload to be a provider array'):
         UpdatePrices(url='https://example.test/prices.json').fetch()
 
     assert _get_registry() is previous
@@ -186,7 +155,7 @@ def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_mod
 
 
 def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
+    _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices() as update_prices:
         update_prices.wait()
@@ -200,7 +169,7 @@ def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
 
 
 def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
+    _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices():
         wait_prices_updated_sync()
@@ -214,7 +183,7 @@ def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
 
 
 async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
+    _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices():
         await wait_prices_updated_async()
@@ -254,16 +223,16 @@ def test_update_prices_continues_after_interval_until_stopped():
         update_prices.stop()
 
 
-def test_update_prices_stop_restores_bundled_registry(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_update_prices_stop_preserves_bundled_registry(monkeypatch: pytest.MonkeyPatch) -> None:
     _set_registry(None)
     bundled = _get_registry()
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
+    _mock_update_prices_get(monkeypatch, _provider_array())
     update_prices = UpdatePrices(url='https://example.test/prices.json')
     snapshot = update_prices.fetch()
 
     try:
         data_snapshot.set_custom_snapshot(snapshot)
-        assert _get_registry() is not bundled
+        assert _get_registry() is bundled
         assert data_snapshot._custom_snapshot is snapshot
 
         update_prices.stop()
@@ -282,7 +251,7 @@ def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch:
     allow_fetch_return = threading.Event()
 
     class Response:
-        content = _wrapped_payload()
+        content = _provider_array()
 
         def raise_for_status(self) -> None:
             pass
@@ -337,7 +306,7 @@ def test_update_prices_failed_stop():
 
 
 def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch, _wrapped_payload())
+    _mock_update_prices_get(monkeypatch, _provider_array())
     with UpdatePrices():
         with pytest.raises(
             RuntimeError,
