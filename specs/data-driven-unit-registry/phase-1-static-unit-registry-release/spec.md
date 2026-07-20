@@ -35,6 +35,9 @@ Model prices must use registered price keys and include required ancestor and jo
 **Every priced usage value lands in exactly one bucket.** _(from "Price data is complete while usage data may be incomplete")_
 Dimension-driven decomposition must not double-count, drop, or guess the placement of usage. Contradictory reported values may remain inert until a requested read or selected price set requires interpreting them; impossible exclusive buckets then raise a user-facing data error.
 
+**Repo-authored prices avoid redundant equal-rate descendants.** _(from "Price data is complete while usage data may be incomplete", "Every priced usage value lands in exactly one bucket")_
+A model includes a child-unit price when its rate differs from the ancestor catch-all or when join coverage requires the explicit child. It does not duplicate an equal-rate child merely to describe the model's modality. This is a checked-in pricing-data convention, not a runtime rejection rule for custom prices.
+
 **`requests_kcount` remains an explicit one-request pricing exception.** _(from "Units are repo-defined data used by handwritten runtime code")_
 The registry represents usage key `requests`, price key `requests_kcount`, `per: 1_000`, and `family: requests`, but callers and extractors do not report it. Pricing supplies one request per calculation and includes its cost only in the total.
 
@@ -62,10 +65,15 @@ Generated editor schemas expose registry price keys and extractor destinations f
 **CLI price presentation is registry-driven.** _(from "Python `ModelPrice` uses direct public attribute storage", "Units are repo-defined data used by handwritten runtime code")_
 CLI field discovery, labels, normalization display, and value formatting use stored price keys plus unit metadata. Existing output stays familiar, and a repo-defined unit appears without a new hardcoded CLI branch.
 
-**The existing v1 JSON artifacts do not change in Phase 1.** _(from "Phase 1 must be independently shippable and releasable", "Phase 1 preserves supported consumer behavior")_
-This branch restores `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, and `prices/data_slim.schema.json` to their pre-branch contents. Existing package versions continue using the existing `data.json` URL and provider-array contract without seeing new unit keys, extractor destinations, or a wrapped root.
+**The existing v1 JSON artifacts are pinned in Phase 1.** _(from "Phase 1 must be independently shippable and releasable", "Phase 1 preserves supported consumer behavior")_
+This branch restores the four files below to their exact blobs at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c`; the hashes make the baseline reproducible even if branch names move. Existing package versions continue using the existing `data.json` URL and provider-array contract without seeing new unit keys, extractor destinations, or a wrapped root.
 
-**Phase 1 publishes provider-array `data_v2.json`.** _(from "The existing v1 JSON artifacts do not change in Phase 1", "Pricing accuracy is the Phase 1 product outcome")_
+- `prices/data.json`: SHA-256 `1941f414dc96f4a73dc78a4a5de3f8fdff76140e3edcf586f5b6408ec4c3cc79`
+- `prices/data_slim.json`: SHA-256 `6e74a8b8ff87a006da329262a339e47c8d5df28829e07c76cafdbe2af9df0333`
+- `prices/data.schema.json`: SHA-256 `af9ebea4214da05756b6a95f7befe33b0e73ac9e218eada6b7800ab8915744fb`
+- `prices/data_slim.schema.json`: SHA-256 `6356b78d316f9ffb2a20e79c635620ae87ead977be8e989f28383fb840ba3ba9`
+
+**Phase 1 publishes provider-array `data_v2.json`.** _(from "The existing v1 JSON artifacts are pinned in Phase 1", "Pricing accuracy is the Phase 1 product outcome")_
 The v2 artifact keeps the same top-level provider-array shape as v1 but may contain prices and extractor destinations for every unit bundled with Phase 1. Its schema is published separately as `data_v2.schema.json`; it does not contain unit definitions or runtime performance state.
 
 **Phase 1 auto-updaters use only `data_v2.json`.** _(from "Phase 1 publishes provider-array `data_v2.json`", "The Phase 1 registry is static for the lifetime of the installed package")_
