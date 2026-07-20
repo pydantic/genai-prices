@@ -20,7 +20,7 @@ __all__ = (
 )
 
 logger = logging.getLogger('genai-prices')
-DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
+DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
 _global_update_prices: UpdatePrices | None = None
 
 

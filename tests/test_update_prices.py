@@ -18,6 +18,7 @@ from genai_prices import (
     wait_prices_updated_sync,
 )
 from genai_prices.units import _get_registry, _set_registry
+from genai_prices.update_prices import DEFAULT_UPDATE_URL
 
 pytestmark = pytest.mark.anyio
 
@@ -68,12 +69,18 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = _w
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
         assert url in {
             'https://example.test/prices.json',
-            'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json',
+            'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json',
         }
         assert timeout is not None
         return Response(content)
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
+
+
+def test_default_update_url_points_to_v2_provider_array() -> None:
+    assert DEFAULT_UPDATE_URL == (
+        'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
+    )
 
 
 def test_update_prices_fetch_parses_wrapped_payload_and_installs_registry(monkeypatch: pytest.MonkeyPatch):
