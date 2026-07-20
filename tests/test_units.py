@@ -873,13 +873,16 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     from genai_prices import types as runtime_types
 
     units = {
-        'input_tokens': {
+        'transient_tokens': {
             'per': 1_000_000,
-            'price_key': 'input_mtok',
-            'dimensions': {'family': 'tokens', 'direction': 'input'},
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient'},
         },
     }
-    provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'transient_mtok': '1'}),
+        extractors=[_build_extractor('transient_tokens')],
+    )
     provider_data = build_types.providers_schema.dump_python(
         [provider],
         mode='json',
@@ -906,6 +909,26 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     assert generated_units == units
 
 
+def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry({})
+    invalid_provider = object()
+    invalid_extractor = object()
+    raw_providers: list[Any] = [
+        invalid_provider,
+        {'id': 'without-extractors'},
+        {'id': 'with-extractors', 'extractors': [invalid_extractor, {'mappings': []}]},
+    ]
+
+    assert runtime_types._inject_extractor_registry({}, registry) == {}
+    injected = runtime_types._inject_extractor_registry(raw_providers, registry)
+    assert injected[0] is invalid_provider
+    assert injected[1] == {'id': 'without-extractors'}
+    assert injected[2]['extractors'][0] is invalid_extractor
+    assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+
 def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -926,7 +949,7 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
     py_package_dir.mkdir()
     monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
 
-    def fail_runtime_provider_validation(_provider_data: Any) -> list[runtime_types.Provider]:
+    def fail_runtime_provider_validation(_provider_data: Any, _registry: UnitRegistry) -> list[runtime_types.Provider]:
         raise RuntimeProviderValidationError('sentinel runtime provider validation failure')
 
     monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
