@@ -35,6 +35,15 @@ def _wrapped_payload(*, providers_json: str | None = None, units_json: str | Non
     return f'{{"units":{units_json},"providers":{providers_json}}}'.encode()
 
 
+def _provider_array(*, providers_json: str | None = None) -> bytes:
+    providers_json = providers_json or (
+        '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
+        '"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
+        '"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
+    )
+    return providers_json.encode()
+
+
 class NullUpdatePrices(UpdatePrices):
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         return None
@@ -108,6 +117,65 @@ def test_update_prices_fetch_rejects_malformed_wrapped_payload_without_registry_
         UpdatePrices(url='https://example.test/prices.json').fetch()
 
     assert _get_registry() is previous
+
+
+def test_update_prices_fetch_parses_provider_array_without_registry_change(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_registry(None)
+    bundled = _get_registry()
+    _mock_update_prices_get(monkeypatch, _provider_array())
+
+    snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert snapshot is not None
+    assert snapshot.from_auto_update is True
+    provider, model = snapshot.find_provider_model('gpt-4o', None, 'openai', None)
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o'
+    assert _get_registry() is bundled
+
+
+def test_update_prices_fetch_provider_array_rejects_invalid_extractor_without_state_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _set_registry(None)
+    bundled = _get_registry()
+    previous_snapshot = data_snapshot.DataSnapshot([], from_auto_update=False)
+    data_snapshot.set_custom_snapshot(previous_snapshot)
+    providers_json = (
+        '[{"id":"broken","name":"Broken","api_pattern":"https://broken\\\\.example",'
+        '"extractors":[{"root":"usage","mappings":['
+        '{"path":"tokens","dest":"imaginary_tokens","required":false}]}],"models":[]}]'
+    )
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
+
+    try:
+        with pytest.raises(ValueError, match='Invalid extractor destination: imaginary_tokens'):
+            UpdatePrices(url='https://example.test/prices.json').fetch()
+
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is previous_snapshot
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_model_prices(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _set_registry(None)
+    bundled = _get_registry()
+    providers_json = (
+        '[{"id":"testing","name":"Testing","api_pattern":"https://testing\\\\.example",'
+        '"models":[{"id":"unused-invalid-price","match":{"equals":"unused-invalid-price"},'
+        '"prices":{"cache_image_write_mtok":1}}]}]'
+    )
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
+
+    snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert snapshot is not None
+    _, model = snapshot.find_provider_model('unused-invalid-price', None, 'testing', None)
+    assert model.id == 'unused-invalid-price'
+    assert _get_registry() is bundled
 
 
 def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):

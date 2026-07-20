@@ -170,6 +170,10 @@ class UpdatePrices:
         r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         raw_payload = json.loads(r.content)
+        if isinstance(raw_payload, list):
+            providers = _providers_from_raw(raw_payload)
+            return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+
         if not isinstance(raw_payload, dict) or 'units' not in raw_payload or 'providers' not in raw_payload:
             raise ValueError('Expected fetched prices payload to contain units and providers')
 
