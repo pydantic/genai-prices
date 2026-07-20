@@ -17,9 +17,8 @@ export function normalizeUsage(obj: unknown, registry: UnitRegistry = getActiveR
   return usage
 }
 
-export function getUsageValue(usage: NormalizedUsage, usageKey: string): number {
+export function getUsageValue(usage: NormalizedUsage, usageKey: string, registry: UnitRegistry = getActiveRegistry()): number {
   if (usageKey === 'requests') return 1
-  const registry = getActiveRegistry()
   const requestedUnit = unitForUsageKey(registry, usageKey)
 
   const storedValue = validateOptionalUsageValue(usageKey, usage[usageKey])
