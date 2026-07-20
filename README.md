@@ -37,7 +37,7 @@ The following providers are currently supported:
 - [AWS Bedrock](prices/providers/aws.yml) - 79 models
 - [Microsoft Azure](prices/providers/azure.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 5 models
-- [Cohere](prices/providers/cohere.yml) - 6 models
+- [Cohere](prices/providers/cohere.yml) - 9 models
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
 - [Fireworks](prices/providers/fireworks.yml) - 24 models

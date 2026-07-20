@@ -2731,6 +2731,39 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'c4ai-aya-expanse-32b',
+        name: 'Aya Expanse 32B',
+        description:
+          'Aya Expanse is a highly performant 32B multilingual model, designed to rival monolingual performance through innovations in instruction tuning with data arbitrage, preference training, and model merging. Serves 23 languages.',
+        match: {
+          contains: 'aya-expanse-32b',
+        },
+        context_window: 128000,
+        price_comments:
+          'https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens for input and $1.50/1M tokens for output.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'c4ai-aya-expanse-8b',
+        name: 'Aya Expanse 8B',
+        description:
+          'Aya Expanse is a highly performant 8B multilingual model, designed to rival monolingual performance through innovations in instruction tuning with data arbitrage, preference training, and model merging. Serves 23 languages.',
+        match: {
+          contains: 'aya-expanse-8b',
+        },
+        context_window: 8192,
+        price_comments:
+          'Retired 2026-04-04 per https://docs.cohere.com/docs/models; last published price kept for historical usage. https://cohere.com/pricing FAQ: Aya Expanse models (8B and 32B) on the API are charged at $0.50/1M tokens for input and $1.50/1M tokens for output.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+        deprecated: true,
+      },
+      {
         id: 'command',
         name: 'Command',
         description:
@@ -2755,6 +2788,22 @@ export const data: Provider[] = [
           input_mtok: 2.5,
           output_mtok: 10,
         },
+      },
+      {
+        id: 'command-light',
+        name: 'Command Light',
+        description: 'A smaller, faster version of Command. Almost as capable, but a lot faster.',
+        match: {
+          starts_with: 'command-light',
+        },
+        context_window: 4096,
+        price_comments:
+          'Deprecated 2025-09-15 per https://docs.cohere.com/docs/models; still billable for existing customers. https://cohere.com/pricing FAQ: Command-light pricing is $0.30/1M tokens for input and $0.60/1M tokens for output.',
+        prices: {
+          input_mtok: 0.3,
+          output_mtok: 0.6,
+        },
+        deprecated: true,
       },
       {
         id: 'command-r',
