@@ -1213,18 +1213,13 @@ def test_generated_python_unit_data_builds_registry() -> None:
 
 
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
-def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
+def test_v1_remote_payload_roots_are_provider_arrays(filename: str) -> None:
     payload_obj = json.loads((Path(__file__).parent.parent / filename).read_text())
 
-    assert isinstance(payload_obj, dict)
-    payload = cast(dict[str, Any], payload_obj)
-    assert set(payload) == {'units', 'providers'}
-    providers = cast(list[object], payload['providers'])
-    units = cast(dict[str, Any], payload['units'])
+    assert isinstance(payload_obj, list)
+    providers = cast(list[object], payload_obj)
     assert providers
     assert all(isinstance(provider, dict) for provider in providers)
-    assert units['cache_image_write_tokens']['price_key'] == 'cache_image_write_mtok'
-    assert units['cache_image_write_tokens']['dimensions']['family'] == 'tokens'
 
 
 def test_data_snapshot_has_no_unit_registry_field() -> None:
