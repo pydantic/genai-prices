@@ -858,7 +858,7 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     assert generated_units == units
 
 
-def test_package_python_data_clears_active_registry_if_runtime_provider_validation_fails(
+def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     from genai_prices import types as runtime_types
@@ -866,7 +866,7 @@ def test_package_python_data_clears_active_registry_if_runtime_provider_validati
     class RuntimeProviderValidationError(RuntimeError):
         pass
 
-    _set_registry(None)
+    bundled_registry = _get_registry()
     units = {
         'transient_tokens': {
             'per': 1_000_000,
@@ -883,13 +883,11 @@ def test_package_python_data_clears_active_registry_if_runtime_provider_validati
 
     monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
 
-    try:
-        with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
-            package_data.package_python_data([], units)
+    with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
+        package_data.package_python_data([], units)
 
-        assert 'transient_tokens' not in _get_registry().units
-    finally:
-        _set_registry(None)
+    assert _get_registry() is bundled_registry
+    assert 'transient_tokens' not in bundled_registry.units
 
 
 def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
