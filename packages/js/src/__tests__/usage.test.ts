@@ -71,7 +71,7 @@ describe('normalizeUsage', () => {
     expect(usage).not.toHaveProperty('input_tokens')
   })
 
-  it('normalizes against the active registry reported usage keys', () => {
+  it('normalizes against explicit registry reported usage keys', () => {
     const registry = new UnitRegistry({
       widgets: {
         dimensions: { family: 'widgets' },
@@ -79,19 +79,17 @@ describe('normalizeUsage', () => {
       },
     })
 
-    try {
-      setActiveRegistry(registry)
-      expect(
-        normalizeUsage({
+    expect(
+      normalizeUsage(
+        {
           input_tokens: 100,
           widgets: 7,
-        })
-      ).toEqual({
-        widgets: 7,
-      })
-    } finally {
-      setActiveRegistry(null)
-    }
+        },
+        registry
+      )
+    ).toEqual({
+      widgets: 7,
+    })
   })
 })
 

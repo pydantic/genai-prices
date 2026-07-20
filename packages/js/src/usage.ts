@@ -4,10 +4,9 @@ import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
 export type NormalizedUsage = Usage
 
-export function normalizeUsage(obj: unknown): NormalizedUsage {
+export function normalizeUsage(obj: unknown, registry: UnitRegistry = getActiveRegistry()): NormalizedUsage {
   if (!isPlainObject(obj)) return {}
 
-  const registry = getActiveRegistry()
   const usage: NormalizedUsage = {}
   for (const usageKey of registry.reportedUsageKeys) {
     const value = obj[usageKey]
