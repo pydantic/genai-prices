@@ -1,0 +1,22 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_4d15758959b91d::t_6fa52fb84da67a 53,62
+  s_4d15758959b91d::t_2dea148a780566 12,17,21,32,38-40,44-45,51,54
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_4d15758959b91d::t_77f43d9e40c3ef 6,24,26-27,30,35-36,40-41,47,49-50,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "3e78138c77908750d1d794fc073eb7d2abafc54a",
+  "prompts": {},
+  "sessions": {
+    "s_4d15758959b91d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f7f6b-e474-7911-b42a-55e38908595c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
