@@ -738,12 +738,42 @@ def test_package_generation_no_longer_reloads_units_yml() -> None:
     assert references == set()
 
 
-def test_package_payload_rejects_legacy_provider_arrays(tmp_path: Path) -> None:
-    data_path = tmp_path / 'data.json'
-    data_path.write_text('[]')
+def test_package_provider_data_rejects_non_array_root(tmp_path: Path) -> None:
+    data_path = tmp_path / 'data_v2.json'
+    data_path.write_text('{"providers": []}')
 
-    with pytest.raises(ValueError, match=r'Expected .* to contain \{units, providers\}'):
-        package_data._load_package_payload(data_path)
+    with pytest.raises(ValueError, match=r'Expected .* to contain a provider array'):
+        package_data._load_provider_data(data_path)
+
+
+def test_package_data_loads_providers_and_units_independently(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    provider_data: list[package_data.JsonData] = [{'id': 'testing', 'name': 'Testing', 'models': []}]
+    units: dict[str, Any] = {
+        'widgets': {
+            'per': 1_000,
+            'dimensions': {'family': 'widgets'},
+        }
+    }
+    (tmp_path / 'data_v2.json').write_text(json.dumps(provider_data))
+    calls: list[tuple[str, list[package_data.JsonData], dict[str, Any]]] = []
+
+    def generate_python(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
+        calls.append(('python', providers, raw_units))
+
+    def generate_typescript(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
+        calls.append(('typescript', providers, raw_units))
+
+    monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
+    monkeypatch.setattr(package_data, 'load_units', lambda: units)
+    monkeypatch.setattr(package_data, 'package_python_data', generate_python)
+    monkeypatch.setattr(package_data, 'package_ts_data', generate_typescript)
+
+    package_data.package_data()
+
+    assert calls == [
+        ('python', provider_data, units),
+        ('typescript', provider_data, units),
+    ]
 
 
 def test_package_data_accepts_valid_provider_model_prices() -> None:

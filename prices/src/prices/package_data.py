@@ -7,16 +7,19 @@ from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeAlias, cast
 
+from .build import load_units
 from .prices_types import ModelPrice, providers_schema as build_providers_schema
 from .utils import package_dir as this_package_dir, root_dir
 
 if TYPE_CHECKING:
     from genai_prices.units import UnitRegistry
 
+JsonData: TypeAlias = 'None | int | float | str | list[JsonData] | dict[str, JsonData]'
+
 
 def package_data():
-    data_path = this_package_dir / 'data.json'
-    provider_data, units = _load_package_payload(data_path)
+    provider_data = _load_provider_data(this_package_dir / 'data_v2.json')
+    units = load_units()
     package_python_data(provider_data, units)
     package_ts_data(provider_data, units)
 
@@ -65,12 +68,12 @@ unit_data: dict[str, Any] = {units!r}
     print(f'Data successfully written to {data_units_py.relative_to(root_dir)}')
 
 
-def _load_package_payload(data_path: Path) -> tuple[Any, dict[str, Any]]:
+def _load_provider_data(data_path: Path) -> list[JsonData]:
     payload = json.loads(data_path.read_bytes())
-    if isinstance(payload, dict) and 'units' in payload and 'providers' in payload:
-        return cast(Any, payload['providers']), cast(dict[str, Any], payload['units'])
+    if isinstance(payload, list):
+        return cast(list[JsonData], payload)
 
-    raise ValueError(f'Expected {data_path} to contain {{units, providers}}')
+    raise ValueError(f'Expected {data_path} to contain a provider array')
 
 
 def _format_generated_python_data(path: Path, *, post_process_provider_reprs: bool = False) -> None:
@@ -190,9 +193,6 @@ export const unitData: RawUnitsDict = {json.dumps(units, indent=2, ensure_ascii=
     )
     print(f'Data successfully written to {data_ts.relative_to(root_dir)}')
     print(f'Data successfully written to {data_units_ts.relative_to(root_dir)}')
-
-
-JsonData: TypeAlias = 'None | int | float | str | list[JsonData] | dict[str, JsonData]'
 
 
 def fix_ts_constraints(json_data: JsonData) -> None:
