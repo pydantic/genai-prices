@@ -21,8 +21,14 @@ A repo-defined unit is declared once and propagated to Python, JavaScript, autho
 **The registry is a usage-keyed dimension graph.** _(from "Units are data, not handwritten runtime fields")_
 Each unit has a usage key, a price key, a normalization factor, and dimensions including a required `family` value. `price_key` defaults to the usage key. Dimension containment defines ancestors; compatible dimension unions define joins and overlap.
 
+**Dimension axes remain unit-local and general.** _(from "The registry is a usage-keyed dimension graph")_
+Unit dimension mappings are the only declaration of dimension keys and values; there is no separate allowed-dimension schema. Families may represent tokens, requests, characters, duration, tool calls, or future reported quantities that use `usage * price / normalization`, provided their actual unit graph satisfies the shared structural rules.
+
 **Registry construction promotes raw data into immutable indexes.** _(from "The registry is a usage-keyed dimension graph")_
 `UnitRegistry` turns raw unit dictionaries into `UnitDef` objects and indexes usage keys, price keys, dimension sets, ancestors, joins, reported keys, and registry order. Runtime code derives behavior from those indexes rather than generated code fields.
+
+**Registry identities and normalization are safe and unambiguous.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into immutable indexes")_
+Usage keys, price keys, and full dimension sets are globally unique. Public keys use the shared ASCII identifier subset, do not begin with `_`, and are neither Python/JavaScript keywords nor prototype-like hazards such as `__proto__`, `prototype`, or `constructor`. Every unit in one `family` dimension value uses the same normalization factor.
 
 **Registry-aware pricing is dimension-driven.** _(from "The registry is a usage-keyed dimension graph", "Every priced usage value lands in exactly one bucket")_
 Only units priced by the selected model become exclusive buckets. Each bucket's usage is multiplied by its price and divided by its unit normalization. Dimension filters aggregate input, output, and total costs. The detailed shared semantics are in [algorithm](algorithm.md) and [examples](examples.md).
@@ -32,6 +38,9 @@ A priced ancestor receives the remainder not claimed by more-specific priced uni
 
 **Ancestor and join coverage are required.** _(from "Validation exists to protect pricing semantics", "The registry is a usage-keyed dimension graph")_
 Pricing a specific unit requires its registered ancestors. Pricing compatible incomparable units requires their registered intersection. Registry interval closure and join-closedness ensure the graph contains the structural units needed for these price rules.
+
+**Structural closure has exact data-level definitions.** _(from "Ancestor and join coverage are required")_
+For interval closure, if `A` is an ancestor of `B`, every dimension set made by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` exists as a unit. For join-closedness, the union of every pair of compatible units' dimension sets exists as a unit. Built-in token symmetry is a repo-data choice, including omission of nonsensical combinations such as output cache reads; arbitrary future families need only satisfy these structural definitions for the units they define.
 
 **Usage remains explicit-only.** _(from "Price data must be complete while usage data may be incomplete")_
 Stored values return directly. Safely missing registered values read as zero without becoming reported. Missing ancestors or overlaps raise when positive related reports would require inference. Contradictions remain inert until a read or selected price set must interpret them.
@@ -47,6 +56,9 @@ Existing calculation APIs, price and usage attributes, provider/model lookup, cu
 
 **Manual custom Python pricing remains supported.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing")_
 Custom `ModelPrice` subclasses may inspect their own state and the original usage object. Standard registry pricing considers registered price fields without consuming unrelated custom fields.
+
+**Provider data changes stay limited to pricing requirements.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing", "Price data must be complete while usage data may be incomplete")_
+Registry work does not rename or restructure provider YAML for its own sake. Provider-data changes repair real completeness or accuracy gaps, including an explicit repeated price when ancestor or join coverage requires one.
 
 **Generated outputs contain data, not runtime state.** _(from "Units are data, not handwritten runtime fields")_
 Generated provider modules, unit modules, JSON artifacts, and schemas may contain raw provider, unit, and price data. They do not contain validation markers, trust flags, fingerprints, cached plans, or generated pricing behavior.
