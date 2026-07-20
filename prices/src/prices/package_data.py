@@ -16,17 +16,17 @@ if TYPE_CHECKING:
 
 def package_data():
     data_path = this_package_dir / 'data.json'
-    package_python_data(data_path)
+    provider_data, units = _load_package_payload(data_path)
+    package_python_data(provider_data, units)
     package_ts_data(data_path)
 
 
-def package_python_data(data_path: Path):
+def package_python_data(provider_data: Any, units: dict[str, Any]):
     """Prep python package data."""
 
     from genai_prices import types as runtime_types
     from genai_prices.units import _set_registry  # pyright: ignore[reportPrivateUsage]
 
-    provider_data, units = _load_package_payload(data_path)
     registry = load_unit_registry(units)
     _set_registry(registry)
     try:

@@ -819,7 +819,7 @@ def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.Mo
         build_module.build()
 
 
-def test_package_python_data_accepts_wrapped_payload_without_units_yml(
+def test_package_python_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     from genai_prices import types as runtime_types
@@ -832,18 +832,13 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
-    payload = {
-        'units': units,
-        'providers': build_types.providers_schema.dump_python(
-            [provider],
-            mode='json',
-            by_alias=True,
-            exclude_none=True,
-            warnings=False,
-        ),
-    }
-    data_path = tmp_path / 'data.json'
-    data_path.write_text(json.dumps(payload))
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
 
     py_package_dir = tmp_path / 'genai_prices'
     py_package_dir.mkdir()
@@ -855,7 +850,7 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
 
     monkeypatch.setattr(package_data, '_format_generated_python_data', skip_format_generated_python_data)
 
-    package_data.package_python_data(data_path)
+    package_data.package_python_data(provider_data, units)
 
     assert (py_package_dir / 'data.py').exists()
     unit_data_content = (py_package_dir / 'data_units.py').read_text()
@@ -879,10 +874,6 @@ def test_package_python_data_clears_active_registry_if_runtime_provider_validati
             'dimensions': {'family': 'transient'},
         },
     }
-    payload: dict[str, Any] = {'units': units, 'providers': []}
-    data_path = tmp_path / 'data.json'
-    data_path.write_text(json.dumps(payload))
-
     py_package_dir = tmp_path / 'genai_prices'
     py_package_dir.mkdir()
     monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
@@ -894,7 +885,7 @@ def test_package_python_data_clears_active_registry_if_runtime_provider_validati
 
     try:
         with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
-            package_data.package_python_data(data_path)
+            package_data.package_python_data([], units)
 
         assert 'transient_tokens' not in _get_registry().units
     finally:
