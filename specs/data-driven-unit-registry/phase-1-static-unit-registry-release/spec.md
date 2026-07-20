@@ -1,6 +1,7 @@
 # Phase 1: Static Unit Registry Release
 
-**Code-level architecture is in [code-spec](code-spec.md).**
+**Phase 1 implementation follows the linked code-level architecture.**
+Code-level architecture is in [code-spec](code-spec.md).
 
 **Phase 1 preserves the shared registry and pricing invariants.**
 The [root specification](../spec.md) remains authoritative for exact unit identity and normalization rules, dimension containment and closure, explicit-only usage, complete price coverage, decomposition, cost aggregation, request and tiered-price exceptions, compatibility, and generated-output purity. Phase 1 changes delivery and runtime lifecycle boundaries without weakening those semantics.
