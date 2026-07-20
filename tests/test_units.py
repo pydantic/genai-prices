@@ -890,7 +890,7 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
     assert 'transient_tokens' not in bundled_registry.units
 
 
-def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
+def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     units = {
@@ -901,18 +901,13 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
-    payload = {
-        'units': units,
-        'providers': build_types.providers_schema.dump_python(
-            [provider],
-            mode='json',
-            by_alias=True,
-            exclude_none=True,
-            warnings=False,
-        ),
-    }
-    data_path = tmp_path / 'data.json'
-    data_path.write_text(json.dumps(payload))
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
 
     js_src_dir = tmp_path / 'packages' / 'js' / 'src'
     js_src_dir.mkdir(parents=True)
@@ -930,7 +925,7 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
 
     monkeypatch.setattr(subprocess, 'run', skip_prettier)
 
-    package_data.package_ts_data(data_path)
+    package_data.package_ts_data(provider_data, units)
 
     assert (js_src_dir / 'data.ts').exists()
     unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
