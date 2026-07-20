@@ -83,10 +83,12 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 
 Price data is available in the following files:
 
-- [`prices/data.json`](prices/data.json) - JSON file with all prices
-- [`prices/data.schema.json`](prices/data.schema.json) - JSON Schema for `prices/data.json`
-- [`prices/data_slim.json`](prices/data_slim.json) - JSON file long fields like descriptions removed and free models removed
-- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - JSON Schema for `prices/data_slim.json`
+- [`prices/data_v2.json`](prices/data_v2.json) - current generated provider array for packages that bundle the static unit registry
+- [`prices/data_v2.schema.json`](prices/data_v2.schema.json) - JSON Schema for `prices/data_v2.json`
+- [`prices/data.json`](prices/data.json) - pinned v1 compatibility data with all prices and unit definitions
+- [`prices/data.schema.json`](prices/data.schema.json) - pinned v1 JSON Schema for `prices/data.json`
+- [`prices/data_slim.json`](prices/data_slim.json) - pinned slim v1 compatibility data with long fields and free models removed
+- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - pinned v1 JSON Schema for `prices/data_slim.json`
 
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.
