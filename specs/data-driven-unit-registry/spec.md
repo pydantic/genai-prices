@@ -28,7 +28,7 @@ Unit dimension mappings are the only declaration of dimension keys and values; t
 `UnitRegistry` turns raw unit dictionaries into `UnitDef` objects and indexes usage keys, price keys, dimension sets, ancestors, joins, reported keys, and registry order. Runtime code derives behavior from those indexes rather than generated code fields.
 
 **Registry identities and normalization are safe and unambiguous.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into immutable indexes")_
-Usage keys, price keys, and full dimension sets are globally unique. Public keys use the shared ASCII identifier subset, do not begin with `_`, and are neither Python/JavaScript keywords nor prototype-like hazards such as `__proto__`, `prototype`, or `constructor`. Every unit in one `family` dimension value uses the same normalization factor.
+Usage keys, price keys, and full dimension sets are globally unique. Public keys match `[A-Za-z][A-Za-z0-9_]*`, are neither Python nor JavaScript keywords, and are not any of the exact prototype hazards `__proto__`, `prototype`, or `constructor`. Every unit in one `family` dimension value uses the same normalization factor.
 
 **Registry-aware pricing is dimension-driven.** _(from "The registry is a usage-keyed dimension graph", "Every priced usage value lands in exactly one bucket")_
 Only units priced by the selected model become exclusive buckets. Each bucket's usage is multiplied by its price and divided by its unit normalization. Dimension filters aggregate input, output, and total costs. The detailed shared semantics are in [algorithm](algorithm.md) and [examples](examples.md).
@@ -40,7 +40,10 @@ A priced ancestor receives the remainder not claimed by more-specific priced uni
 Pricing a specific unit requires its registered ancestors. Pricing compatible incomparable units requires their registered intersection. Registry interval closure and join-closedness ensure the graph contains the structural units needed for these price rules.
 
 **Structural closure has exact data-level definitions.** _(from "Ancestor and join coverage are required")_
-For interval closure, if `A` is an ancestor of `B`, every dimension set made by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` exists as a unit. For join-closedness, the union of every pair of compatible units' dimension sets exists as a unit. Built-in token symmetry is a repo-data choice, including omission of nonsensical combinations such as output cache reads; arbitrary future families need only satisfy these structural definitions for the units they define.
+For interval closure, if `A` is an ancestor of `B`, every dimension set made by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` exists as a unit. For join-closedness, the union of every pair of compatible units' dimension sets exists as a unit.
+
+**Built-in token symmetry is a data choice, not a validation law.**
+The built-in token family defines input, output, cache-read, cache-write, and supported modality patterns consistently where those concepts make sense, while omitting nonsensical combinations such as output cache reads. Arbitrary future families need only satisfy the structural definitions for the units they actually define.
 
 **Usage remains explicit-only.** _(from "Price data must be complete while usage data may be incomplete")_
 Stored values return directly. Safely missing registered values read as zero without becoming reported. Missing ancestors or overlaps raise when positive related reports would require inference. Contradictions remain inert until a read or selected price set must interpret them.

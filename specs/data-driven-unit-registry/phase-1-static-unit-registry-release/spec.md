@@ -2,6 +2,9 @@
 
 **Code-level architecture is in [code-spec](code-spec.md).**
 
+**Phase 1 preserves the shared registry and pricing invariants.**
+The [root specification](../spec.md) remains authoritative for exact unit identity and normalization rules, dimension containment and closure, explicit-only usage, complete price coverage, decomposition, cost aggregation, request and tiered-price exceptions, compatibility, and generated-output purity. Phase 1 changes delivery and runtime lifecycle boundaries without weakening those semantics.
+
 **Phase 1 must be independently shippable and releasable.**
 It delivers meaningful pricing improvements without requiring runtime-updated unit definitions, cache machinery, or a breaking change to the existing auto-update artifact.
 
