@@ -34,7 +34,7 @@ def load_units() -> dict[str, Any]:
 
 
 def build():
-    """Build providers/.schema.json and data.json and data_schema.json."""
+    """Build the provider authoring schema and v2 price data with its JSON Schema."""
     units = load_units()
 
     # write the schema JSON file used by the yaml language server

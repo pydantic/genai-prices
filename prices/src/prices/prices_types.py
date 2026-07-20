@@ -199,7 +199,7 @@ class ModelInfo(_Model):
     deprecated: bool | None = None
     """Flag indicating this model is deprecated by the provider but still functional."""
     removed: bool = Field(default=False, exclude=True)
-    """Flag indicating this model has been removed and is no longer available. Excluded from data.json."""
+    """Flag indicating this model has been removed and is no longer available. Excluded from generated price data."""
 
     def is_match(self, model_id: str) -> bool:
         return self.match.is_match(model_id)
