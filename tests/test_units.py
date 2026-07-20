@@ -26,7 +26,7 @@ from genai_prices.types import (
     _collect_model_price_units,
     _compute_registry_priced_counts,
 )
-from genai_prices.units import UnitRegistry, _get_registry, _set_registry
+from genai_prices.units import UnitRegistry, _get_registry
 from prices import build as build_module, export_validation, package_data, prices_types as build_types
 from prices.export_validation import validate_export_payload, validate_units
 
@@ -99,7 +99,7 @@ def _custom_price_key_registry() -> UnitRegistry:
 
 
 @contextmanager
-def _active_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
+def _use_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
     registry = UnitRegistry(raw_units)
     with patch('genai_prices.units._get_registry', return_value=registry):
         yield registry
@@ -539,7 +539,7 @@ def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
-    with _active_registry(_custom_price_key_units()):
+    with _use_registry(_custom_price_key_units()):
         assert ModelPrice().sausage_mtok is None
 
 
@@ -1239,7 +1239,6 @@ def test_bundled_snapshot_lookup_helpers_still_work() -> None:
 
 
 def test_get_registry_returns_generated_unit_data_registry() -> None:
-    _set_registry(None)
     registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
@@ -1248,19 +1247,13 @@ def test_get_registry_returns_generated_unit_data_registry() -> None:
     assert _get_registry() is registry
 
 
-def test_set_registry_swaps_and_restores_bundled_registry() -> None:
-    _set_registry(None)
+def test_constructed_registry_is_independent_from_bundled_singleton() -> None:
     bundled = _get_registry()
     custom = _custom_price_key_registry()
 
-    try:
-        _set_registry(custom)
-        assert _get_registry() is custom
-
-        _set_registry(None)
-        assert _get_registry() is bundled
-    finally:
-        _set_registry(None)
+    assert custom is not bundled
+    assert custom.units != bundled.units
+    assert _get_registry() is bundled
 
 
 def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1268,7 +1261,6 @@ def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pyte
         raise AssertionError('get_snapshot should not be called')  # pragma: no cover
 
     monkeypatch.setattr('genai_prices.data_snapshot.get_snapshot', fail_get_snapshot)
-    _set_registry(None)
     registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
@@ -1288,7 +1280,7 @@ def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> Non
     )
 
 
-def test_custom_snapshots_do_not_borrow_active_registry() -> None:
+def test_custom_snapshots_do_not_carry_a_registry() -> None:
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
     assert not hasattr(snapshot, 'unit_registry')
@@ -1304,8 +1296,7 @@ def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
         set_custom_snapshot(None)
 
 
-def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
-    _set_registry(None)
+def test_set_custom_snapshot_does_not_touch_bundled_registry() -> None:
     registry = _get_registry()
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
@@ -1317,7 +1308,6 @@ def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
         assert _get_registry() is registry
     finally:
         set_custom_snapshot(None)
-        _set_registry(None)
 
 
 def test_model_price_validation_runs_on_base_calc_not_snapshot_activation() -> None:

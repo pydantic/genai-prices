@@ -17,7 +17,7 @@ from genai_prices import (
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
-from genai_prices.units import _get_registry, _set_registry
+from genai_prices.units import _get_registry
 from genai_prices.update_prices import DEFAULT_UPDATE_URL
 
 pytestmark = pytest.mark.anyio
@@ -71,7 +71,6 @@ def test_default_update_url_points_to_v2_provider_array() -> None:
 
 
 def test_update_prices_fetch_preserves_registry_when_provider_parsing_fails(monkeypatch: pytest.MonkeyPatch) -> None:
-    _set_registry(None)
     previous = _get_registry()
     _mock_update_prices_get(monkeypatch, _provider_array(providers_json='[{"id":"missing-required-fields"}]'))
 
@@ -85,7 +84,6 @@ def test_update_prices_fetch_preserves_registry_when_provider_parsing_fails(monk
 def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
     monkeypatch: pytest.MonkeyPatch, content: bytes
 ) -> None:
-    _set_registry(None)
     previous = _get_registry()
     _mock_update_prices_get(monkeypatch, content)
 
@@ -96,7 +94,6 @@ def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
 
 
 def test_update_prices_fetch_parses_provider_array_without_registry_change(monkeypatch: pytest.MonkeyPatch) -> None:
-    _set_registry(None)
     bundled = _get_registry()
     _mock_update_prices_get(monkeypatch, _provider_array())
 
@@ -113,7 +110,6 @@ def test_update_prices_fetch_parses_provider_array_without_registry_change(monke
 def test_update_prices_fetch_provider_array_rejects_invalid_extractor_without_state_changes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _set_registry(None)
     bundled = _get_registry()
     previous_snapshot = data_snapshot.DataSnapshot([], from_auto_update=False)
     data_snapshot.set_custom_snapshot(previous_snapshot)
@@ -137,7 +133,6 @@ def test_update_prices_fetch_provider_array_rejects_invalid_extractor_without_st
 def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_model_prices(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _set_registry(None)
     bundled = _get_registry()
     providers_json = (
         '[{"id":"testing","name":"Testing","api_pattern":"https://testing\\\\.example",'
@@ -224,7 +219,6 @@ def test_update_prices_continues_after_interval_until_stopped():
 
 
 def test_update_prices_stop_preserves_bundled_registry(monkeypatch: pytest.MonkeyPatch) -> None:
-    _set_registry(None)
     bundled = _get_registry()
     _mock_update_prices_get(monkeypatch, _provider_array())
     update_prices = UpdatePrices(url='https://example.test/prices.json')
@@ -244,7 +238,6 @@ def test_update_prices_stop_preserves_bundled_registry(monkeypatch: pytest.Monke
 
 
 def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
-    _set_registry(None)
     bundled = _get_registry()
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
@@ -295,7 +288,6 @@ def test_update_prices_failed():
 @pytest.mark.default_cassette('fail.yaml')
 @pytest.mark.vcr()
 def test_update_prices_failed_stop():
-    _set_registry(None)
     bundled = _get_registry()
     assert data_snapshot._custom_snapshot is None
     update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
