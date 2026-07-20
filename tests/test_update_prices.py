@@ -240,7 +240,6 @@ def test_update_prices_stop_preserves_bundled_registry(monkeypatch: pytest.Monke
         assert _get_registry() is bundled
         assert data_snapshot._custom_snapshot is None
     finally:
-        _set_registry(None)
         data_snapshot.set_custom_snapshot(None)
 
 
@@ -280,7 +279,6 @@ def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch:
     finally:
         allow_fetch_return.set()
         update_prices.stop()
-        _set_registry(None)
         data_snapshot.set_custom_snapshot(None)
 
 
@@ -297,11 +295,14 @@ def test_update_prices_failed():
 @pytest.mark.default_cassette('fail.yaml')
 @pytest.mark.vcr()
 def test_update_prices_failed_stop():
+    _set_registry(None)
+    bundled = _get_registry()
     assert data_snapshot._custom_snapshot is None
     update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
     update_prices.start()
     with pytest.raises(httpx2.HTTPStatusError):
         update_prices.stop()
+    assert _get_registry() is bundled
     assert data_snapshot._custom_snapshot is None
 
 

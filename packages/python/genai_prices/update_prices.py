@@ -117,9 +117,6 @@ class UpdatePrices:
             self._thread = None
         # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
         data_snapshot.set_custom_snapshot(None)
-        from .units import _set_registry  # pyright: ignore[reportPrivateUsage]
-
-        _set_registry(None)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
