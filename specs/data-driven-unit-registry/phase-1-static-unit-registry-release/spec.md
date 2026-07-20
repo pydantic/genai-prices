@@ -8,6 +8,9 @@ It delivers meaningful pricing improvements without requiring runtime-updated un
 **Pricing accuracy is the Phase 1 product outcome.**
 Repo-defined units, including image and other modality-specific token units, must work end to end in Python and JavaScript. The release includes the pricing-data corrections required by complete ancestor and overlap pricing.
 
+**Phase 1 must avoid an unreasonable pricing hot-path regression.**
+The registry may add structural work needed for correctness, but ordinary calculations should not repeatedly rediscover the same per-call facts. Representative benchmarks guide a small stateless cleanup; matching or beating the old implementation at every price shape is not a release requirement.
+
 **Phase 1 preserves supported consumer behavior unless accurate registry pricing makes that impossible.**
 Existing calculation entry points, provider/model lookup, tiered prices, request pricing, permissive raw Python usage objects, JavaScript plain usage objects, custom Python `ModelPrice` overrides, custom provider snapshots, and familiar price/usage attribute access remain supported. Fixed dataclass introspection for `Usage` and incomplete fallback pricing for overlapping units are not preserved because they conflict with registry-shaped storage or accurate bucket assignment.
 
@@ -17,7 +20,7 @@ Existing calculation entry points, provider/model lookup, tiered prices, request
 **Manual Python pricing extensions remain supported.** _(from "Phase 1 preserves supported consumer behavior")_
 Custom `ModelPrice` subclasses may override `calc_price()` and inspect custom fields on the original usage object. Base registry validation does not treat subclass-only custom state as a price unless the bundled registry names that field as a price key.
 
-**Units are repo-defined data used by handwritten runtime code.** _(from "Pricing accuracy is the Phase 1 product outcome")_
+**Units are repo-defined data used by handwritten runtime code.**
 `prices/units.yml` defines usage-keyed units with a normalization factor, an optional distinct price key, and dimension assignments including a required `family` dimension. Generated language-native data carries those definitions into both packages; handwritten runtime modules derive behavior through `UnitRegistry` rather than generated fields or hardcoded unit-name branches.
 
 **The Phase 1 registry is static for the lifetime of the installed package.** _(from "Phase 1 must be independently shippable and releasable", "Units are repo-defined data used by handwritten runtime code")_
@@ -85,7 +88,7 @@ Ordinary provider, model, and price-value updates may continue within the unit a
 **Generated package providers and units have separate inputs.** _(from "Phase 1 publishes provider-array `data_v2.json`", "The Phase 1 registry is static for the lifetime of the installed package")_
 Package generation reads providers from the v2 provider array and generates unit modules from the checked-in unit source. Generated `data.py` / `data.ts` contain providers, while `data_units.py` / `dataUnits.ts` contain raw unit definitions. None contains cache state, trust markers, fingerprints, or generated behavior.
 
-**Phase 1 removes repeated structural work from the pricing hot path.** _(from "Phase 1 must be independently shippable and releasable", "Model prices are still validated on use")_
+**Phase 1 removes repeated structural work from the pricing hot path.** _(from "Phase 1 must avoid an unreasonable pricing hot-path regression", "Model prices are still validated on use")_
 The registry refactor must not repeatedly scan the whole bundled registry to rediscover the same current model-price facts. This is a stateless cleanup, not a cache: each calculation derives its effective non-null price entries and corresponding units once, validates that structure, and reuses it for decomposition, tier detection, normalization, and aggregation.
 
 **JavaScript model validation materializes key and unit collections once.** _(from "Phase 1 removes repeated structural work from the pricing hot path")_
