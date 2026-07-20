@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Provider, ProviderDataValue, RawUnitsDict, WrappedProviderData } from '../types'
+import type { Provider, ProviderDataValue } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
-import { getActiveRegistry, getUnit, setActiveRegistry, UnitRegistry } from '../units'
+import { getActiveRegistry, getUnit } from '../units'
 
 describe('provider activation', () => {
   it('passes the v2 provider-array URL to the storage factory', () => {
@@ -22,6 +22,7 @@ describe('provider activation', () => {
   })
 
   it('validates synchronous custom provider data before replacing active data', async () => {
+    const registry = getActiveRegistry()
     const validProvider = providerFixture('valid-provider')
     updatePrices(({ setProviderData }) => {
       setProviderData([validProvider])
@@ -35,6 +36,7 @@ describe('provider activation', () => {
       })
     }).toThrow('Invalid extractor destination for invalid-provider/default mapping 0: input_mtok')
     expect(findProvider({ providerId: 'valid-provider' })?.id).toBe('valid-provider')
+    expect(getActiveRegistry()).toBe(registry)
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
@@ -122,88 +124,39 @@ describe('provider activation', () => {
     })
   })
 
-  it('activates wrapped provider data and units synchronously', async () => {
-    const beforeRegistry = getActiveRegistry()
-    const wrappedProvider = providerFixture('wrapped-provider')
-
-    try {
-      updatePrices(({ setProviderData }) => {
-        setProviderData(wrappedProviderData([wrappedProvider]))
-      })
-
-      await expect(waitForUpdate()).resolves.toEqual([wrappedProvider])
-      expect(findProvider({ providerId: 'wrapped-provider' })?.id).toBe('wrapped-provider')
-      expect(getActiveRegistry()).not.toBe(beforeRegistry)
-      expect(getActiveRegistry().units.size).toBe(1)
-      expect(getUnit('input_tokens').priceKey).toBe('input_mtok')
-    } finally {
-      setActiveRegistry(null)
-      updatePrices(({ setProviderData }) => {
-        setProviderData(data)
-      })
-    }
-  })
-
-  it('activates wrapped provider data and units asynchronously', async () => {
-    const wrappedProvider = providerFixture('async-wrapped-provider')
-
-    try {
-      updatePrices(({ setProviderData }) => {
-        setProviderData(Promise.resolve(wrappedProviderData([wrappedProvider])))
-      })
-
-      await expect(waitForUpdate()).resolves.toEqual([wrappedProvider])
-      expect(findProvider({ providerId: 'async-wrapped-provider' })?.id).toBe('async-wrapped-provider')
-      expect(getActiveRegistry().units.size).toBe(1)
-    } finally {
-      setActiveRegistry(null)
-      updatePrices(({ setProviderData }) => {
-        setProviderData(data)
-      })
-    }
-  })
-
-  it('restores the previous registry and providers when wrapped provider validation fails', () => {
+  it('keeps providers and the generated registry unchanged when provider data is null', () => {
     const stableProvider = providerFixture('stable-provider')
     updatePrices(({ setProviderData }) => {
       setProviderData([stableProvider])
     })
-    const previousRegistry = getActiveRegistry()
+    const registry = getActiveRegistry()
 
-    expect(() => {
-      updatePrices(({ setProviderData }) => {
-        setProviderData(wrappedProviderData([providerFixture('invalid-wrapped-provider', 'input_mtok')]))
-      })
-    }).toThrow('Invalid extractor destination for invalid-wrapped-provider/default mapping 0: input_mtok')
-    expect(getActiveRegistry()).toBe(previousRegistry)
+    updatePrices(({ setProviderData }) => {
+      setProviderData(null)
+    })
+
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+    expect(getActiveRegistry()).toBe(registry)
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
     })
   })
 
-  it('keeps active registry unchanged when provider data is null', () => {
-    const customRegistry = new UnitRegistry(wrappedUnits)
-    setActiveRegistry(customRegistry)
-
-    try {
-      updatePrices(({ setProviderData }) => {
-        setProviderData(null)
-      })
-
-      expect(getActiveRegistry()).toBe(customRegistry)
-    } finally {
-      setActiveRegistry(null)
-    }
-  })
-
   it('throws for invalid provider data payload shapes', () => {
+    const stableProvider = providerFixture('stable-provider')
+    updatePrices(({ setProviderData }) => {
+      setProviderData([stableProvider])
+    })
+    const registry = getActiveRegistry()
+
     expect(() => {
       updatePrices(({ setProviderData }) => {
-        setProviderData('garbage' as unknown as WrappedProviderData)
+        setProviderData('garbage' as unknown as ProviderDataValue)
       })
-    }).toThrow('Expected null, Provider[], or { units, providers }')
+    }).toThrow('Expected null or Provider[]')
+    expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+    expect(getActiveRegistry()).toBe(registry)
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
@@ -258,20 +211,5 @@ function providerFixture(providerId: string, dest = 'input_tokens'): Provider {
     id: providerId,
     models: [],
     name: providerId,
-  }
-}
-
-const wrappedUnits: RawUnitsDict = {
-  input_tokens: {
-    dimensions: { direction: 'input', family: 'tokens' },
-    per: 1_000_000,
-    price_key: 'input_mtok',
-  },
-}
-
-function wrappedProviderData(providers: Provider[]): WrappedProviderData {
-  return {
-    providers,
-    units: wrappedUnits,
   }
 }
