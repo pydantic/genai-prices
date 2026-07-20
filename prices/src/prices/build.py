@@ -65,6 +65,7 @@ def build():
         provider.exclude_removed()
     validate_export_payload(providers, units)
     write_prices(providers, units, 'data.json')
+    write_prices(providers, units, 'data_v2.json', wrapped=False)
     for provider in providers:
         provider.exclude_free()
     write_prices(providers, units, 'data_slim.json', slim=True)
@@ -72,8 +73,12 @@ def build():
 
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
     """Build the provider YAML authoring schema from validated unit registry data."""
-    registry = validate_units(raw_units)
     json_schema = simplify_json_schema(Provider.model_json_schema())
+    return _add_unit_vocabulary_to_schema(json_schema, raw_units)
+
+
+def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[str, Any]) -> dict[str, Any]:
+    registry = validate_units(raw_units)
 
     model_price_schema = cast(dict[str, Any], json_schema['$defs']['ModelPrice'])
     model_price_properties = cast(dict[str, Any], model_price_schema['properties'])
@@ -89,7 +94,14 @@ def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
     return json_schema
 
 
-def write_prices(providers: list[Provider], units: dict[str, Any], prices_file: str, *, slim: bool = False):
+def write_prices(
+    providers: list[Provider],
+    units: dict[str, Any],
+    prices_file: str,
+    *,
+    slim: bool = False,
+    wrapped: bool = True,
+):
     print('')
     prices_json_path = package_dir / prices_file
 
@@ -106,7 +118,11 @@ def write_prices(providers: list[Provider], units: dict[str, Any], prices_file: 
         providers_json_schema['$defs']['ModelInfo']['properties'].pop('description')
         providers_json_schema['$defs']['ModelInfo']['properties'].pop('price_comments')
 
-    data_json_schema = _wrapped_prices_schema(providers_json_schema)
+    data_json_schema = (
+        _wrapped_prices_schema(providers_json_schema)
+        if wrapped
+        else _add_unit_vocabulary_to_schema(providers_json_schema, units)
+    )
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
@@ -131,7 +147,8 @@ def write_prices(providers: list[Provider], units: dict[str, Any], prices_file: 
         exclude=exclude,
         warnings=False,
     )
-    json_data = pydantic_core.to_json({'units': units, 'providers': provider_data}) + b'\n'
+    payload = {'units': units, 'providers': provider_data} if wrapped else provider_data
+    json_data = pydantic_core.to_json(payload) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:

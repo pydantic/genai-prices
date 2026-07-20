@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from typing import Any, cast
 
 from genai_prices import data as genai_data, data_units as genai_data_units
 from genai_prices.data import providers
@@ -67,6 +68,28 @@ def test_remote_payloads_are_wrapped_objects():
         assert isinstance(payload['providers'], list)
         assert payload['providers']
         assert all(isinstance(provider, dict) for provider in payload['providers'])
+
+
+def test_v2_remote_payload_is_provider_array_with_static_unit_vocabulary():
+    """V2 publishes current providers without embedding mutable unit registry state."""
+    from prices.utils import package_dir
+
+    payload = cast(list[dict[str, Any]], json.loads((package_dir / 'data_v2.json').read_bytes()))
+    schema = cast(dict[str, Any], json.loads((package_dir / 'data_v2.schema.json').read_bytes()))
+
+    assert isinstance(payload, list)
+    assert payload
+    assert all(isinstance(provider, dict) for provider in payload)
+    assert schema['type'] == 'array'
+
+    model_price_schema = schema['$defs']['ModelPrice']
+    assert 'cache_image_write_mtok' in model_price_schema['properties']
+    extractor_destinations = schema['$defs']['UsageExtractorMapping']['properties']['dest']['enum']
+    assert 'input_image_tokens' in extractor_destinations
+
+    google = next(provider for provider in payload if provider['id'] == 'google')
+    destinations = {mapping['dest'] for extractor in google['extractors'] for mapping in extractor['mappings']}
+    assert 'input_image_tokens' in destinations
 
 
 def test_python_unit_data_is_separate_from_provider_data():
