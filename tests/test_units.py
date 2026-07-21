@@ -53,6 +53,11 @@ TOKEN_USAGE_KEYS = {
     'output_video_tokens',
     'cache_video_read_tokens',
     'cache_video_write_tokens',
+    'output_reasoning_tokens',
+    'output_text_reasoning_tokens',
+    'output_audio_reasoning_tokens',
+    'output_image_reasoning_tokens',
+    'output_video_reasoning_tokens',
 }
 
 TOKEN_PRICE_KEYS = {
@@ -76,6 +81,11 @@ TOKEN_PRICE_KEYS = {
     'output_video_mtok',
     'cache_video_read_mtok',
     'cache_video_write_mtok',
+    'output_reasoning_mtok',
+    'output_text_reasoning_mtok',
+    'output_audio_reasoning_mtok',
+    'output_image_reasoning_mtok',
+    'output_video_reasoning_mtok',
 }
 
 
@@ -170,9 +180,13 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
         direction = dimensions['direction']
         cache = dimensions.get('cache')
         modality = dimensions.get('modality')
+        reasoning = dimensions.get('reasoning')
         if cache is None:
             expected_stem = f'{direction}_{modality}' if modality is not None else direction
+            if reasoning:
+                expected_stem = f'{expected_stem}_reasoning'
         else:
+            assert reasoning is None
             expected_stem = f'cache_{modality}_{cache}' if modality is not None else f'cache_{cache}'
 
         assert usage_key == f'{expected_stem}_tokens'
@@ -232,7 +246,7 @@ def test_unit_registry_constructs_current_units() -> None:
     registry = UnitRegistry(load_units())
 
     assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
-    assert len(registry.units) == 21
+    assert len(registry.units) == len(TOKEN_USAGE_KEYS) + 1
     assert registry._all_usage_keys == frozenset(TOKEN_USAGE_KEYS | {'requests'})
     assert registry._all_price_keys == frozenset(TOKEN_PRICE_KEYS | {'requests_kcount'})
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
@@ -348,6 +362,18 @@ def test_unit_registry_join_lookup_returns_registered_cache_write_overlap() -> N
     assert (
         registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens'])
         is registry.units['cache_audio_write_tokens']
+    )
+
+
+def test_unit_registry_join_lookup_returns_registered_reasoning_modality_overlap() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert (
+        registry.find_join(registry.units['output_text_tokens'], registry.units['output_reasoning_tokens'])
+        is registry.units['output_text_reasoning_tokens']
+    )
+    assert registry._ancestor_usage_keys['output_text_reasoning_tokens'] == frozenset(
+        {'output_tokens', 'output_text_tokens', 'output_reasoning_tokens'}
     )
 
 
@@ -723,6 +749,34 @@ def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
         'input_audio_tokens': 200,
         'input_tokens': 400,
     }
+
+
+def test_compute_registry_priced_counts_handles_reasoning_modality_overlap() -> None:
+    with _use_registry(load_units()) as registry:
+        resolved_prices = _collect_resolved_model_prices(
+            ModelPrice(
+                output_mtok=Decimal('1'),
+                output_text_mtok=Decimal('2'),
+                output_reasoning_mtok=Decimal('3'),
+                output_text_reasoning_mtok=Decimal('4'),
+            ),
+            registry,
+        )
+
+        assert _compute_registry_priced_counts(
+            resolved_prices,
+            Usage(
+                output_tokens=100,
+                output_text_tokens=60,
+                output_reasoning_tokens=30,
+                output_text_reasoning_tokens=20,
+            ),
+        ) == {
+            'output_tokens': 30,
+            'output_text_tokens': 40,
+            'output_reasoning_tokens': 10,
+            'output_text_reasoning_tokens': 20,
+        }
 
 
 def test_compute_registry_priced_counts_handles_one_request_count() -> None:
@@ -1319,7 +1373,7 @@ def test_generated_python_unit_data_builds_registry() -> None:
     registry = UnitRegistry(data_units.unit_data)
 
     assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
-    assert len(registry.units) == 21
+    assert len(registry.units) == len(TOKEN_USAGE_KEYS) + 1
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
 
 

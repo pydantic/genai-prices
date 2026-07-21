@@ -26,6 +26,11 @@ const tokenUsageKeys = [
   'output_video_tokens',
   'cache_video_read_tokens',
   'cache_video_write_tokens',
+  'output_reasoning_tokens',
+  'output_text_reasoning_tokens',
+  'output_audio_reasoning_tokens',
+  'output_image_reasoning_tokens',
+  'output_video_reasoning_tokens',
 ]
 
 const tokenPriceKeys = [
@@ -49,6 +54,11 @@ const tokenPriceKeys = [
   'output_video_mtok',
   'cache_video_read_mtok',
   'cache_video_write_mtok',
+  'output_reasoning_mtok',
+  'output_text_reasoning_mtok',
+  'output_audio_reasoning_mtok',
+  'output_image_reasoning_mtok',
+  'output_video_reasoning_mtok',
 ]
 
 describe('UnitRegistry', () => {
@@ -57,7 +67,7 @@ describe('UnitRegistry', () => {
 
     expect(new Set(tokenUsageKeys.map((usageKey) => registry.getUnit(usageKey)?.usageKey))).toEqual(new Set(tokenUsageKeys))
     expect(registry.getUnit('requests')?.priceKey).toBe('requests_kcount')
-    expect(registry.getAllUsageKeys().size).toBe(21)
+    expect(registry.getAllUsageKeys().size).toBe(tokenUsageKeys.length + 1)
     expect(registry.getUnitForPriceKey('input_mtok')).toBe(registry.getUnit('input_tokens'))
     expect(registry.getUnitForPriceKey('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.getAllUsageKeys()).toContain('input_tokens')
@@ -96,6 +106,20 @@ describe('UnitRegistry', () => {
       new Set(['cache_read_tokens', 'input_audio_tokens', 'input_tokens'])
     )
     expect(registry.ancestorUsageKeys('requests')).toEqual(new Set())
+  })
+
+  it('indexes reasoning-modality joins', () => {
+    const registry = new UnitRegistry(unitData)
+    const text = registry.getUnit('output_text_tokens')
+    const reasoning = registry.getUnit('output_reasoning_tokens')
+    expect(text).toBeDefined()
+    expect(reasoning).toBeDefined()
+    if (!text || !reasoning) throw new Error('Expected generated reasoning units')
+
+    expect(registry.findJoin(text, reasoning)).toBe(registry.getUnit('output_text_reasoning_tokens'))
+    expect(registry.ancestorUsageKeys('output_text_reasoning_tokens')).toEqual(
+      new Set(['output_reasoning_tokens', 'output_text_tokens', 'output_tokens'])
+    )
   })
 
   it('keeps construction independent of generated data fixtures', () => {

@@ -143,6 +143,16 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'input_video_mtok',
   },
+  output_audio_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'audio',
+      reasoning: 'true',
+    },
+    per: 1000000,
+    price_key: 'output_audio_reasoning_mtok',
+  },
   output_audio_tokens: {
     dimensions: {
       direction: 'output',
@@ -152,6 +162,16 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'output_audio_mtok',
   },
+  output_image_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'image',
+      reasoning: 'true',
+    },
+    per: 1000000,
+    price_key: 'output_image_reasoning_mtok',
+  },
   output_image_tokens: {
     dimensions: {
       direction: 'output',
@@ -160,6 +180,25 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'output_image_mtok',
+  },
+  output_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      reasoning: 'true',
+    },
+    per: 1000000,
+    price_key: 'output_reasoning_mtok',
+  },
+  output_text_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'text',
+      reasoning: 'true',
+    },
+    per: 1000000,
+    price_key: 'output_text_reasoning_mtok',
   },
   output_text_tokens: {
     dimensions: {
@@ -177,6 +216,16 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'output_mtok',
+  },
+  output_video_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'video',
+      reasoning: 'true',
+    },
+    per: 1000000,
+    price_key: 'output_video_reasoning_mtok',
   },
   output_video_tokens: {
     dimensions: {
