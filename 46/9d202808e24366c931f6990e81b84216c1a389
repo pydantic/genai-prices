@@ -1,0 +1,21 @@
+pyproject.toml
+  s_9a77f4b5186062::t_e51e3e33db73b1 34
+  s_9a77f4b5186062::t_ee0177fc2283d8 33
+  s_9a77f4b5186062::t_30b2f1d0082d8d 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "469d202808e24366c931f6990e81b84216c1a389",
+  "prompts": {},
+  "sessions": {
+    "s_9a77f4b5186062": {
+      "agent_id": {
+        "tool": "github-copilot-jetbrains",
+        "id": "1784548060583",
+        "model": "unknown"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
