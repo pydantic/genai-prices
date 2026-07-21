@@ -3,12 +3,13 @@ import { describe, expect, it } from 'vitest'
 import type { Provider, UsageExtractorMapping } from '../types'
 
 import { data } from '../data'
-import { UnitRegistry } from '../units'
+import { getActiveRegistry, UnitRegistry } from '../units'
 import {
   validateAncestorCoverage,
   validateExtractorDestinations,
   validateJoinCoverage,
   validateModelPrice,
+  validatePricedUnits,
   validatePriceKeys,
 } from '../validation'
 
@@ -112,6 +113,66 @@ describe('validateModelPrice', () => {
       validateModelPrice(['input_mtok', 'cache_read_mtok', 'input_audio_mtok'])
     }).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
   })
+
+  it('materializes single-pass price keys once', () => {
+    expect(() => {
+      validateModelPrice(oneShotPriceKeys(['input_mtok', 'cache_read_mtok']))
+    }).not.toThrow()
+  })
+})
+
+describe('validatePricedUnits', () => {
+  it('accepts valid resolved units including request-only pricing', () => {
+    const registry = getActiveRegistry()
+
+    expect(() => {
+      validatePricedUnits(
+        [requiredUnit(registry, 'input_mtok'), requiredUnit(registry, 'cache_read_mtok'), requiredUnit(registry, 'requests_kcount')],
+        registry
+      )
+    }).not.toThrow()
+    expect(() => {
+      validatePricedUnits([requiredUnit(registry, 'requests_kcount')], registry)
+    }).not.toThrow()
+  })
+
+  it('rejects missing ancestor and join prices with key-based error parity', () => {
+    const registry = getActiveRegistry()
+    const missingAncestorKeys = ['cache_read_mtok']
+    const missingJoinKeys = ['input_mtok', 'cache_read_mtok', 'input_audio_mtok']
+
+    expect(
+      validationError(() => {
+        validatePricedUnits(resolveUnits(registry, missingAncestorKeys), registry)
+      })
+    ).toBe(
+      validationError(() => {
+        validateModelPrice(missingAncestorKeys, registry)
+      })
+    )
+    expect(
+      validationError(() => {
+        validatePricedUnits(resolveUnits(registry, missingJoinKeys), registry)
+      })
+    ).toBe(
+      validationError(() => {
+        validateModelPrice(missingJoinKeys, registry)
+      })
+    )
+  })
+
+  it('validates units from an explicit custom registry', () => {
+    const registry = new UnitRegistry({
+      widgets: {
+        dimensions: { family: 'widgets' },
+        per: 1,
+      },
+    })
+
+    expect(() => {
+      validatePricedUnits([requiredUnit(registry, 'widgets')], registry)
+    }).not.toThrow()
+  })
 })
 
 describe('validateExtractorDestinations', () => {
@@ -187,4 +248,24 @@ function oneShotPriceKeys(keys: string[]): Iterable<string> {
       return keys[Symbol.iterator]()
     },
   }
+}
+
+function requiredUnit(registry: UnitRegistry, priceKey: string) {
+  const unit = registry.unitsByPriceKey.get(priceKey)
+  if (!unit) throw new Error(`Missing test unit for ${priceKey}`)
+  return unit
+}
+
+function resolveUnits(registry: UnitRegistry, priceKeys: string[]) {
+  return priceKeys.map((priceKey) => requiredUnit(registry, priceKey))
+}
+
+function validationError(validate: () => void): string {
+  try {
+    validate()
+  } catch (error) {
+    if (error instanceof Error) return error.message
+    throw error
+  }
+  throw new Error('Expected validation to fail')
 }

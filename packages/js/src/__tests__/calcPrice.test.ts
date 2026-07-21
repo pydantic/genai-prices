@@ -1,15 +1,71 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import type { ModelPrice, Usage } from '../types'
+import type { ModelPrice, TieredPrices, Usage } from '../types'
 
-import { calcPrice } from '../engine'
-import { UnitRegistry } from '../units'
+import { calcPrice, collectResolvedModelPrices } from '../engine'
+import { getActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
 
 function mtok(rate: number, tokens: number): number {
   return (rate * tokens) / MILLION
 }
+
+describe('collectResolvedModelPrices', () => {
+  const registry = getActiveRegistry()
+
+  it('handles empty and ordinary model prices', () => {
+    expect(collectResolvedModelPrices({}, registry)).toEqual([])
+    expect(collectResolvedModelPrices({ input_mtok: 1, output_mtok: 2 }, registry)).toEqual([
+      { price: 1, unit: registry.units.get('input_tokens') },
+      { price: 2, unit: registry.units.get('output_tokens') },
+    ])
+  })
+
+  it('retains overlap and request prices', () => {
+    expect(
+      collectResolvedModelPrices(
+        {
+          cache_audio_read_mtok: 4,
+          cache_read_mtok: 2,
+          input_audio_mtok: 3,
+          input_mtok: 1,
+          requests_kcount: 0.5,
+        },
+        registry
+      )
+    ).toEqual([
+      { price: 4, unit: registry.units.get('cache_audio_read_tokens') },
+      { price: 2, unit: registry.units.get('cache_read_tokens') },
+      { price: 3, unit: registry.units.get('input_audio_tokens') },
+      { price: 1, unit: registry.units.get('input_tokens') },
+      { price: 0.5, unit: registry.units.get('requests') },
+    ])
+  })
+
+  it('retains tiered prices and ignores undefined entries', () => {
+    const tieredPrice: TieredPrices = {
+      base: 1,
+      tiers: [{ price: 2, start: 100_000 }],
+    }
+
+    expect(collectResolvedModelPrices({ input_mtok: tieredPrice, output_mtok: undefined }, registry)).toEqual([
+      { price: tieredPrice, unit: registry.units.get('input_tokens') },
+    ])
+  })
+
+  it('uses the explicit registry and rejects unknown keys', () => {
+    const customRegistry = new UnitRegistry({
+      widgets: {
+        dimensions: { family: 'widgets' },
+        per: 1,
+      },
+    })
+
+    expect(collectResolvedModelPrices({ widgets: 2 }, customRegistry)).toEqual([{ price: 2, unit: customRegistry.units.get('widgets') }])
+    expect(() => collectResolvedModelPrices({ input_mtok: 1 }, customRegistry)).toThrow('Unknown price key: input_mtok')
+  })
+})
 
 describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
@@ -254,6 +310,33 @@ describe('Core Price Calculation Function', () => {
         output_price: 0,
         total_price: 44,
       })
+    })
+
+    it('should read and resolve each current model price once', () => {
+      const registry = getActiveRegistry()
+      const modelPrice: ModelPrice = {}
+      let priceReads = 0
+      Object.defineProperty(modelPrice, 'input_mtok', {
+        enumerable: true,
+        get: () => {
+          priceReads++
+          return 2
+        },
+      })
+      const unitLookup = vi.spyOn(registry.unitsByPriceKey, 'get')
+
+      try {
+        expect(calcPrice({ input_tokens: MILLION }, modelPrice, registry)).toEqual({
+          input_price: 2,
+          output_price: 0,
+          total_price: 2,
+        })
+        expect(priceReads).toBe(1)
+        expect(unitLookup).toHaveBeenCalledOnce()
+        expect(unitLookup).toHaveBeenCalledWith('input_mtok')
+      } finally {
+        unitLookup.mockRestore()
+      }
     })
 
     it('should reject missing ancestor prices before pricing', () => {

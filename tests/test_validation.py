@@ -11,6 +11,7 @@ from genai_prices.validation import (
     validate_join_coverage,
     validate_model_price,
     validate_price_keys,
+    validate_priced_units,
 )
 
 from .unit_registry_helpers import load_units
@@ -145,6 +146,80 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
         validate_model_price({'input_mtok', 'cache_write_mtok', 'input_audio_mtok'}, registry)
 
 
+def test_validate_priced_units_accepts_valid_units() -> None:
+    registry = UnitRegistry(load_units())
+
+    validate_priced_units(
+        [
+            registry.units['input_tokens'],
+            registry.units['cache_read_tokens'],
+            registry.units['requests'],
+        ],
+        registry,
+    )
+
+
+def test_validate_priced_units_rejects_missing_ancestor() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
+        validate_priced_units([registry.units['cache_read_tokens']], registry)
+
+
+def test_validate_priced_units_rejects_missing_join() -> None:
+    registry = UnitRegistry(load_units())
+    priced_units = [
+        registry.units['input_tokens'],
+        registry.units['cache_read_tokens'],
+        registry.units['input_audio_tokens'],
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match='Missing join price for cache_read_tokens and input_audio_tokens: cache_audio_read_tokens',
+    ):
+        validate_priced_units(priced_units, registry)
+
+
+def test_validate_priced_units_accepts_request_only() -> None:
+    registry = UnitRegistry(load_units())
+
+    validate_priced_units([registry.units['requests']], registry)
+
+
+def test_validate_priced_units_accepts_explicit_custom_registry_units() -> None:
+    registry = UnitRegistry(
+        {
+            'characters': {
+                'per': 1_000,
+                'price_key': 'characters_kcount',
+                'dimensions': {'family': 'characters'},
+            }
+        }
+    )
+
+    validate_priced_units([registry.units['characters']], registry)
+
+
+@pytest.mark.parametrize(
+    'price_keys',
+    [
+        {'cache_read_mtok'},
+        {'input_mtok', 'cache_read_mtok', 'input_audio_mtok'},
+    ],
+)
+def test_resolved_and_key_model_price_validation_errors_match(price_keys: set[str]) -> None:
+    registry = UnitRegistry(load_units())
+    priced_units = [registry.unit_for_price_key(price_key) for price_key in price_keys]
+
+    with pytest.raises(ValueError) as key_error:
+        validate_model_price(price_keys, registry)
+    with pytest.raises(ValueError) as unit_error:
+        validate_priced_units(priced_units, registry)
+
+    assert str(unit_error.value) == str(key_error.value)
+
+
 def test_bundled_provider_model_prices_pass_registry_validation() -> None:
     registry = UnitRegistry(data_units.unit_data)
     failures: list[str] = []
@@ -172,7 +247,7 @@ def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -
 
     validate_extractor_destinations(
         {'input_tokens', 'cache_read_tokens', 'cache_audio_read_tokens'},
-        registry.reported_usage_keys(),
+        registry.reported_usage_keys,
     )
 
 
@@ -180,18 +255,18 @@ def test_validate_extractor_destinations_rejects_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Invalid extractor destination: input_mtok'):
-        validate_extractor_destinations({'input_mtok'}, registry.reported_usage_keys())
+        validate_extractor_destinations({'input_mtok'}, registry.reported_usage_keys)
 
 
 def test_validate_extractor_destinations_rejects_unknown_strings() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Invalid extractor destination: imaginary_tokens'):
-        validate_extractor_destinations({'imaginary_tokens'}, registry.reported_usage_keys())
+        validate_extractor_destinations({'imaginary_tokens'}, registry.reported_usage_keys)
 
 
 def test_validate_extractor_destinations_rejects_pricing_only_requests() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Invalid extractor destination: requests'):
-        validate_extractor_destinations({'requests'}, registry.reported_usage_keys())
+        validate_extractor_destinations({'requests'}, registry.reported_usage_keys)
