@@ -16,7 +16,7 @@ Maintain `prices/units.yml` as the source registry. Each unit carries `per`, opt
 
 `DataSnapshot` remains provider-only. `set_custom_snapshot(snapshot: DataSnapshot | None) -> None` replaces or clears only provider data; snapshots do not carry or replace the bundled registry, and activation does not bulk-validate model prices. Standard base pricing continues validating only the selected model price on use.
 
-`UnitRegistry.__init__` and the TypeScript constructor precompute usage-key, price-key, dimension, ancestor, join, all-key, reported-key, and reported-key-order indexes. Python stores `reported_usage_keys: frozenset[str]` and `reported_usage_keys_in_order: tuple[str, ...]` once instead of recreating them for every `Usage` operation. JavaScript internal validation reads stored relationship sets directly when it does not need a defensive public copy.
+`UnitRegistry.__init__` and the TypeScript constructor precompute usage-key, price-key, dimension, ancestor, join, all-key, reported-key, and reported-key-order indexes. Python exposes `units` as a read-only mapping and stores protected `_reported_usage_keys: frozenset[str]` and `_reported_usage_keys_in_order: tuple[str, ...]` indexes once instead of recreating them for every `Usage` operation. JavaScript internal validation reads stored relationship sets directly when it does not need a defensive public copy.
 
 **Generated provider and unit modules remain separate.** _(implements "Generated package providers and units have separate inputs")_
 `prices/src/prices/package_data.py` generates:
