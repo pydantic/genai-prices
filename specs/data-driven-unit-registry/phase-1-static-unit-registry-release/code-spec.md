@@ -28,8 +28,8 @@ Maintain `prices/units.yml` as the source registry. Each unit carries `per`, opt
 
 Generated provider files do not embed registries, and generated unit files do not import provider data. Generated files contain data only.
 
-**V1 remote artifacts are restored to the pinned baseline and are no longer build outputs.** _(implements "The existing v1 JSON artifacts are pinned in Phase 1")_
-Restore `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, and `prices/data_slim.schema.json` from commit `ba8093719f296a3672ff4b2fc848a122e92a049c` and assert the four prose-spec SHA-256 digests in an artifact regression test. `prices/src/prices/build.py` and `prices/src/prices/package_data.py` must not open those paths for writing. Existing URLs and old package behavior remain unchanged.
+**V1 remote artifacts are no longer build outputs.** _(implements "The existing v1 JSON artifacts remain outside Phase 1 build output")_
+`prices/src/prices/build.py` and `prices/src/prices/package_data.py` must not open `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, or `prices/data_slim.schema.json` for writing. Existing URLs, provider-array contracts, and old package behavior remain unchanged.
 
 **The build emits a separate v2 provider array with a frozen unit vocabulary.** _(implements "Phase 1 publishes provider-array `data_v2.json`", "The v2 unit vocabulary is frozen")_
 `prices/src/prices/build.py` writes current publishable providers to `prices/data_v2.json` with the same top-level array shape as v1 and writes `prices/data_v2.schema.json` from the provider model plus the Phase 1 registry's allowed price and extractor keys. `prices/src/prices/package_data.py::package_data()` reads providers from `data_v2.json` and units independently from `prices/units.yml`. Neither v2 artifact contains `units`, validation state, or cached plans, and no slim v2 artifact is generated. Before Phase 2 exists, price releases may update v2 only when every price key and extractor destination is accepted by its checked-in schema; adding a unit requires v3 instead.

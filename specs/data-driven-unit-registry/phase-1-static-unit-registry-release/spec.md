@@ -81,15 +81,10 @@ CLI field discovery, labels, normalization display, and value formatting use sto
 **Phase 1 preserves the existing CLI surface.** _(from "Phase 1 preserves supported consumer behavior", "CLI price presentation is registry-driven")_
 CLI flag names and option semantics supported at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c` remain unchanged. Output for that baseline's legacy unit vocabulary remains familiar while registry-defined fields extend it.
 
-**The existing v1 JSON artifacts are pinned in Phase 1.** _(from "Phase 1 must be independently shippable and releasable", "Phase 1 preserves supported consumer behavior")_
-This branch restores the four files below to their exact blobs at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c`; the hashes make the baseline reproducible even if branch names move. Existing package versions continue using the existing `data.json` URL and provider-array contract without seeing new unit keys, extractor destinations, or a wrapped root.
+**The existing v1 JSON artifacts remain outside Phase 1 build output.** _(from "Phase 1 must be independently shippable and releasable", "Phase 1 preserves supported consumer behavior")_
+The Phase 1 build does not rewrite `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, or `prices/data_slim.schema.json`. Existing package versions continue using the existing `data.json` URL and provider-array contract without seeing new unit keys, extractor destinations, or a wrapped root.
 
-- `prices/data.json`: SHA-256 `1941f414dc96f4a73dc78a4a5de3f8fdff76140e3edcf586f5b6408ec4c3cc79`
-- `prices/data_slim.json`: SHA-256 `6e74a8b8ff87a006da329262a339e47c8d5df28829e07c76cafdbe2af9df0333`
-- `prices/data.schema.json`: SHA-256 `af9ebea4214da05756b6a95f7befe33b0e73ac9e218eada6b7800ab8915744fb`
-- `prices/data_slim.schema.json`: SHA-256 `6356b78d316f9ffb2a20e79c635620ae87ead977be8e989f28383fb840ba3ba9`
-
-**Phase 1 publishes provider-array `data_v2.json`.** _(from "The existing v1 JSON artifacts are pinned in Phase 1", "Pricing accuracy is the Phase 1 product outcome")_
+**Phase 1 publishes provider-array `data_v2.json`.** _(from "The existing v1 JSON artifacts remain outside Phase 1 build output", "Pricing accuracy is the Phase 1 product outcome")_
 The v2 artifact keeps the same top-level provider-array shape as v1 but may contain prices and extractor destinations for every unit bundled with Phase 1. Its schema is published separately as `data_v2.schema.json`; it does not contain unit definitions or runtime performance state.
 
 **Phase 1 auto-updaters use only `data_v2.json`.** _(from "Phase 1 publishes provider-array `data_v2.json`", "The Phase 1 registry is static for the lifetime of the installed package")_
@@ -108,7 +103,7 @@ The registry refactor must not repeatedly scan the whole bundled registry to red
 Composed validation helpers may remain independently callable, but standard `calcPrice(...)` does not repeatedly validate, copy, and resolve the same iterable while checking keys, ancestors, and joins.
 
 **Tests prove the complete releasable contract.** _(from "Phase 1 must be independently shippable and releasable")_
-Coverage includes registry construction and publication validation; duplicate usage, price, and dimension identities; exact interval and join closure; public-name rejection; Python/JavaScript pricing parity; new modality and image-token prices; explicit-only and contradictory usage behavior; dynamic and misspelled price keys; custom Python pricing; flat and tiered raw-provider normalization; extractor destinations; built-in naming conventions; authoring schemas; CLI display of legacy and new registered prices; generated provider/unit separation and purity; unchanged v1 artifacts; provider-array v2 generation; no eager model-price validation during provider activation; v2 auto-update without registry replacement; rollback of failed provider activation; and alignment with the shared examples.
+Coverage includes registry construction and publication validation; duplicate usage, price, and dimension identities; exact interval and join closure; public-name rejection; Python/JavaScript pricing parity; new modality and image-token prices; explicit-only and contradictory usage behavior; dynamic and misspelled price keys; custom Python pricing; flat and tiered raw-provider normalization; extractor destinations; built-in naming conventions; authoring schemas; CLI display of legacy and new registered prices; generated provider/unit separation and purity; the v1 provider-array contract; provider-array v2 generation; no eager model-price validation during provider activation; v2 auto-update without registry replacement; rollback of failed provider activation; and alignment with the shared examples.
 
 **Phase 1 deliberately excludes runtime-updated units and performance caches.** _(from "Phase 1 must be independently shippable and releasable", "The Phase 1 registry is static for the lifetime of the installed package", "Phase 1 removes repeated structural work from the pricing hot path")_
 It does not ship wrapped provider/unit payloads, active-registry replacement, registry rollback, runtime custom units, validation identities, weak-reference caches, price-key fingerprints stored as state, decomposition plans, or decomposition caches. These exclusions keep the release smaller without blocking Phase 2's versioned unit-update contract.
