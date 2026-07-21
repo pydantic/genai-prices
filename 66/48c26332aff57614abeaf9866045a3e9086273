@@ -1,0 +1,47 @@
+packages/js/src/__tests__/validation.test.ts
+  s_3b10c54cabc835::t_db14fe3c6b35fa 254
+packages/js/src/__tests__/generatedData.test.ts
+  s_3b10c54cabc835::t_db14fe3c6b35fa 47-50
+packages/js/src/units.ts
+  s_3b10c54cabc835::t_32231cc8029700 6-12,15-21,25-26,30,32-36,39-40,43,49,67-69,71-73,76-77,80,98,102
+  s_3b10c54cabc835::t_3133f40d217ca5 81,83-85,87-89
+  s_3b10c54cabc835::t_945081301c453d 55,64,75,79
+  s_3b10c54cabc835::t_5b564189e98015 92-95
+packages/js/src/__tests__/calcPrice.test.ts
+  s_3b10c54cabc835::t_db14fe3c6b35fa 20-21,38-42,53,65,326
+packages/js/src/__tests__/decompose.test.ts
+  s_3b10c54cabc835::t_db14fe3c6b35fa 3-4,6,42,60,78,94,109,124,131-136
+packages/js/src/__tests__/units.test.ts
+  s_3b10c54cabc835::t_3133f40d217ca5 65-66,132,192-193
+  s_3b10c54cabc835::t_2a242ecc349c9f 6,58-64,77-78,83,89,98,113,121-131,133-137,143-144,157-159,163-164,167-168,172-175,178-179,183,187,191
+packages/js/src/types.ts
+  s_3b10c54cabc835::t_32231cc8029700 69-72
+packages/js/src/decompose.ts
+  s_3b10c54cabc835::t_5b43c9566ab7c3 15
+packages/js/src/engine.ts
+  s_3b10c54cabc835::t_5b43c9566ab7c3 27,86
+packages/js/src/validation.ts
+  s_3b10c54cabc835::t_5b43c9566ab7c3 7,22,25,83
+  s_3b10c54cabc835::t_3133f40d217ca5 71
+packages/js/src/__tests__/activation.test.ts
+  s_3b10c54cabc835::t_db14fe3c6b35fa 7,109,119-120
+packages/js/src/usage.ts
+  s_3b10c54cabc835::t_3133f40d217ca5 11
+  s_3b10c54cabc835::t_5b43c9566ab7c3 90,98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "6648c26332aff57614abeaf9866045a3e9086273",
+  "prompts": {},
+  "sessions": {
+    "s_3b10c54cabc835": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f84ed-4023-7a23-9675-55634192a29b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
