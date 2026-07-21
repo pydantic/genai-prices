@@ -1,0 +1,28 @@
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/spec.md
+  s_8199dd74cd04be::t_dd217796693502 13,72-73,108
+specs/data-driven-unit-registry/spec.md
+  s_8199dd74cd04be::t_dd217796693502 45-47,49
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+  s_8199dd74cd04be::t_dd217796693502 9,71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "e2317f949650b41fd6e041eccb9562fe991f667e",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
