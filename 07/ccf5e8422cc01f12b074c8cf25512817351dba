@@ -1,0 +1,31 @@
+packages/js/src/data.ts
+  s_8199dd74cd04be::t_ca2ebe391ee5f4 18595,21049,21139,21143
+packages/python/genai_prices/data.py
+  s_8199dd74cd04be::t_ca2ebe391ee5f4 10695-10697,12148,12196-12199
+prices/data_v2.json
+  s_8199dd74cd04be::t_ca2ebe391ee5f4 1
+prices/providers/openrouter.yml
+  s_8199dd74cd04be::t_b51d2096517685 4018
+tests/test_price_calc.py
+  s_8199dd74cd04be::t_9fe3d710dc7e1e 371-372,380-381
+  s_8199dd74cd04be::t_5cdec671eb5647 363-370,373-374
+  s_8199dd74cd04be::t_47c90371c0806e 375-379,382-383
+prices/providers/perplexity.yml
+  s_8199dd74cd04be::t_5cdec671eb5647 5,81-82,86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "07ccf5e8422cc01f12b074c8cf25512817351dba",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
