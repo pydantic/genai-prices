@@ -1,0 +1,23 @@
+prices/providers/openai.yml
+  s_3b10c54cabc835::t_5c2d33c2da949e 382-383,422-423,452-453
+packages/python/genai_prices/data.py
+  s_3b10c54cabc835::t_ac6c928bf134f6 1461,6490,6520,6542,7790,8938,9457,10949,10967
+prices/data_v2.json
+  s_3b10c54cabc835::t_ac6c928bf134f6 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "e8977b7cb2b64779e42f243ec42ff3437872366c",
+  "prompts": {},
+  "sessions": {
+    "s_3b10c54cabc835": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f84ed-4023-7a23-9675-55634192a29b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
