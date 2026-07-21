@@ -24,7 +24,7 @@ export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: Uni
   for (const [priceKey, price] of Object.entries(modelPrice)) {
     if (price === undefined) continue
 
-    const unit = registry.unitsByPriceKey.get(priceKey)
+    const unit = registry.getUnitForPriceKey(priceKey)
     if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
     resolvedPrices.push({ price, unit })
   }
@@ -83,7 +83,7 @@ export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRe
   const hasTieredPrice = resolvedPrices.some(({ price }) => isTieredPrice(price))
   const totalInputTokens = hasTieredPrice ? getUsageValue(usage, 'input_tokens', registry) : 0
   const pricedUsageKeys = new Set(resolvedPrices.filter(({ unit }) => unit.usageKey !== 'requests').map(({ unit }) => unit.usageKey))
-  const leafValues = computeLeafValues(pricedUsageKeys, usage, registry.units, registry)
+  const leafValues = computeLeafValues(pricedUsageKeys, usage, registry)
   if (resolvedPrices.some(({ unit }) => unit.usageKey === 'requests')) {
     leafValues.requests = 1
   }

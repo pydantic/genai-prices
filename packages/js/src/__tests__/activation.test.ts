@@ -4,7 +4,7 @@ import type { Provider, ProviderDataValue } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
-import { getActiveRegistry, getUnit } from '../units'
+import { getActiveRegistry } from '../units'
 
 describe('provider activation', () => {
   it('passes the v2 provider-array URL to the storage factory', () => {
@@ -106,7 +106,7 @@ describe('provider activation', () => {
 
   it('preserves provider-array update compatibility and the generated unit registry', async () => {
     const beforeRegistry = getActiveRegistry()
-    const beforeInputUnit = getUnit('input_tokens')
+    const beforeInputUnit = beforeRegistry.getUnit('input_tokens')
     const arrayProvider = providerFixture('array-provider')
 
     updatePrices(({ setProviderData }) => {
@@ -116,8 +116,8 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).resolves.toEqual([arrayProvider])
     expect(findProvider({ providerId: 'array-provider' })?.id).toBe('array-provider')
     expect(getActiveRegistry()).toBe(beforeRegistry)
-    expect(getUnit('input_tokens')).toBe(beforeInputUnit)
-    expect(getUnit('requests').priceKey).toBe('requests_kcount')
+    expect(getActiveRegistry().getUnit('input_tokens')).toBe(beforeInputUnit)
+    expect(getActiveRegistry().getUnit('requests')?.priceKey).toBe('requests_kcount')
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)

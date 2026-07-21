@@ -66,10 +66,10 @@ export interface RawUnitData {
 export type RawUnitsDict = Record<string, RawUnitData>
 
 export interface UnitDef {
-  dimensions: Record<string, string>
-  per: number
-  priceKey: string
-  usageKey: string
+  readonly dimensions: Readonly<Record<string, string>>
+  readonly per: number
+  readonly priceKey: string
+  readonly usageKey: string
 }
 
 export interface UsageExtractor {

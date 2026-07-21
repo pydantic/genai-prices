@@ -251,7 +251,7 @@ function oneShotPriceKeys(keys: string[]): Iterable<string> {
 }
 
 function requiredUnit(registry: UnitRegistry, priceKey: string) {
-  const unit = registry.unitsByPriceKey.get(priceKey)
+  const unit = registry.getUnitForPriceKey(priceKey)
   if (!unit) throw new Error(`Missing test unit for ${priceKey}`)
   return unit
 }

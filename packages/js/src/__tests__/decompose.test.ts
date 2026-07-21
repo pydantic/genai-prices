@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
+import type { UnitDef } from '../types'
+
 import { computeLeafValues } from '../decompose'
-import { getActiveRegistry, getUnit, isDescendantOrSelf } from '../units'
+import { getActiveRegistry, isDescendantOrSelf } from '../units'
 import { normalizeUsage } from '../usage'
 
 describe('isDescendantOrSelf', () => {
@@ -37,7 +39,7 @@ describe('computeLeafValues', () => {
           cache_read_tokens: 250,
           input_tokens: 1_000,
         }),
-        getActiveRegistry().units
+        getActiveRegistry()
       )
     ).toEqual({
       cache_read_tokens: 250,
@@ -55,7 +57,7 @@ describe('computeLeafValues', () => {
           input_audio_tokens: 300,
           input_tokens: 1_000,
         }),
-        getActiveRegistry().units
+        getActiveRegistry()
       )
     ).toEqual({
       cache_audio_read_tokens: 100,
@@ -73,7 +75,7 @@ describe('computeLeafValues', () => {
           output_audio_tokens: 200,
           output_tokens: 700,
         }),
-        getActiveRegistry().units
+        getActiveRegistry()
       )
     ).toEqual({
       output_audio_tokens: 200,
@@ -89,7 +91,7 @@ describe('computeLeafValues', () => {
           cache_read_tokens: 80,
           input_tokens: 100,
         }),
-        getActiveRegistry().units
+        getActiveRegistry()
       )
     ).toEqual({
       input_tokens: 100,
@@ -104,7 +106,7 @@ describe('computeLeafValues', () => {
           cache_read_tokens: 200,
           input_tokens: 100,
         }),
-        getActiveRegistry().units
+        getActiveRegistry()
       )
     ).toThrow('Invalid usage data: cache_read_tokens (200) cannot exceed input_tokens (100)')
   })
@@ -119,10 +121,16 @@ describe('computeLeafValues', () => {
           input_audio_tokens: 80,
           input_tokens: 100,
         }),
-        getActiveRegistry().units
+        getActiveRegistry()
       )
     ).toThrow(
       'Invalid usage data: more-specific usage for cache_read_tokens, input_audio_tokens totals 160, which exceeds input_tokens (100)'
     )
   })
 })
+
+function getUnit(usageKey: string): UnitDef {
+  const unit = getActiveRegistry().getUnit(usageKey)
+  if (!unit) throw new Error(`Missing test unit for ${usageKey}`)
+  return unit
+}

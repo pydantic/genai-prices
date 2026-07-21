@@ -44,9 +44,9 @@ describe('generated data split', () => {
   it('constructs a runtime UnitRegistry from generated raw unit data', () => {
     const registry = new UnitRegistry(unitData)
 
-    expect(registry.units.get('input_tokens')?.priceKey).toBe('input_mtok')
-    expect(registry.units.size).toBe(21)
-    expect(registry.unitsByPriceKey.get('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
-    expect(registry.unitsByPriceKey.get('requests_kcount')?.usageKey).toBe('requests')
+    expect(registry.getUnit('input_tokens')?.priceKey).toBe('input_mtok')
+    expect(registry.getAllUsageKeys().size).toBe(21)
+    expect(registry.getUnitForPriceKey('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
+    expect(registry.getUnitForPriceKey('requests_kcount')?.usageKey).toBe('requests')
   })
 })

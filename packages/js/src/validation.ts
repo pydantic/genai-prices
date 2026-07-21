@@ -4,7 +4,7 @@ import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
 export function validatePriceKeys(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
   for (const priceKey of priceKeys) {
-    if (!registry.unitsByPriceKey.has(priceKey)) {
+    if (!registry.getUnitForPriceKey(priceKey)) {
       throw new Error(`Unknown price key: ${priceKey}`)
     }
   }
@@ -19,11 +19,10 @@ function validateResolvedAncestorCoverage(pricedUnits: readonly UnitDef[], regis
   const pricedKeys = new Set(pricedUnits.map((unit) => unit.priceKey))
 
   for (const unit of pricedUnits) {
-    const ancestorUsageKeys = registry.ancestorUsageKeysByUsageKey.get(unit.usageKey)
-    if (!ancestorUsageKeys) throw new Error(`Unknown unit usage key: ${unit.usageKey}`)
+    const ancestorUsageKeys = registry.ancestorUsageKeys(unit.usageKey)
 
     for (const ancestorUsageKey of ancestorUsageKeys) {
-      const ancestor = registry.units.get(ancestorUsageKey)
+      const ancestor = registry.getUnit(ancestorUsageKey)
       if (ancestor && !pricedKeys.has(ancestor.priceKey)) {
         throw new Error(`Missing ancestor price key ${ancestor.priceKey} for ${unit.priceKey}`)
       }
@@ -69,7 +68,7 @@ export function validateExtractorDestinations(providerData: Provider[], registry
   for (const provider of providerData) {
     for (const extractor of provider.extractors ?? []) {
       for (const [mappingIndex, mapping] of extractor.mappings.entries()) {
-        if (!registry.reportedUsageKeys.has(mapping.dest)) {
+        if (!registry.isReportedUsageKey(mapping.dest)) {
           throw new Error(
             `Invalid extractor destination for ${provider.id}/${extractor.api_flavor} mapping ${mappingIndex.toString()}: ${mapping.dest}`
           )
@@ -81,7 +80,7 @@ export function validateExtractorDestinations(providerData: Provider[], registry
 
 function getUnitsForPriceKeys(priceKeys: Iterable<string>, registry: UnitRegistry): UnitDef[] {
   return [...new Set(priceKeys)].map((priceKey) => {
-    const unit = registry.unitsByPriceKey.get(priceKey)
+    const unit = registry.getUnitForPriceKey(priceKey)
     if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
     return unit
   })

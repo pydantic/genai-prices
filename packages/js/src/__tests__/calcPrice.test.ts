@@ -17,8 +17,8 @@ describe('collectResolvedModelPrices', () => {
   it('handles empty and ordinary model prices', () => {
     expect(collectResolvedModelPrices({}, registry)).toEqual([])
     expect(collectResolvedModelPrices({ input_mtok: 1, output_mtok: 2 }, registry)).toEqual([
-      { price: 1, unit: registry.units.get('input_tokens') },
-      { price: 2, unit: registry.units.get('output_tokens') },
+      { price: 1, unit: registry.getUnit('input_tokens') },
+      { price: 2, unit: registry.getUnit('output_tokens') },
     ])
   })
 
@@ -35,11 +35,11 @@ describe('collectResolvedModelPrices', () => {
         registry
       )
     ).toEqual([
-      { price: 4, unit: registry.units.get('cache_audio_read_tokens') },
-      { price: 2, unit: registry.units.get('cache_read_tokens') },
-      { price: 3, unit: registry.units.get('input_audio_tokens') },
-      { price: 1, unit: registry.units.get('input_tokens') },
-      { price: 0.5, unit: registry.units.get('requests') },
+      { price: 4, unit: registry.getUnit('cache_audio_read_tokens') },
+      { price: 2, unit: registry.getUnit('cache_read_tokens') },
+      { price: 3, unit: registry.getUnit('input_audio_tokens') },
+      { price: 1, unit: registry.getUnit('input_tokens') },
+      { price: 0.5, unit: registry.getUnit('requests') },
     ])
   })
 
@@ -50,7 +50,7 @@ describe('collectResolvedModelPrices', () => {
     }
 
     expect(collectResolvedModelPrices({ input_mtok: tieredPrice, output_mtok: undefined }, registry)).toEqual([
-      { price: tieredPrice, unit: registry.units.get('input_tokens') },
+      { price: tieredPrice, unit: registry.getUnit('input_tokens') },
     ])
   })
 
@@ -62,7 +62,7 @@ describe('collectResolvedModelPrices', () => {
       },
     })
 
-    expect(collectResolvedModelPrices({ widgets: 2 }, customRegistry)).toEqual([{ price: 2, unit: customRegistry.units.get('widgets') }])
+    expect(collectResolvedModelPrices({ widgets: 2 }, customRegistry)).toEqual([{ price: 2, unit: customRegistry.getUnit('widgets') }])
     expect(() => collectResolvedModelPrices({ input_mtok: 1 }, customRegistry)).toThrow('Unknown price key: input_mtok')
   })
 })
@@ -323,7 +323,7 @@ describe('Core Price Calculation Function', () => {
           return 2
         },
       })
-      const unitLookup = vi.spyOn(registry.unitsByPriceKey, 'get')
+      const unitLookup = vi.spyOn(registry, 'getUnitForPriceKey')
 
       try {
         expect(calcPrice({ input_tokens: MILLION }, modelPrice, registry)).toEqual({

@@ -3,56 +3,56 @@ import type { RawUnitsDict, UnitDef } from './types'
 import { unitData } from './dataUnits'
 
 export class UnitRegistry {
-  allPriceKeys: Set<string>
-  allUsageKeys: Set<string>
-  ancestorUsageKeysByUsageKey: Map<string, Set<string>>
-  reportedUsageKeys: Set<string>
-  units: Map<string, UnitDef>
-  unitsByDimension: Map<string, UnitDef>
-  unitsByPriceKey: Map<string, UnitDef>
+  readonly #allPriceKeys: Set<string>
+  readonly #allUsageKeys: Set<string>
+  readonly #ancestorUsageKeysByUsageKey: Map<string, Set<string>>
+  readonly #reportedUsageKeys: Set<string>
+  readonly #units: Map<string, UnitDef>
+  readonly #unitsByDimension: Map<string, UnitDef>
+  readonly #unitsByPriceKey: Map<string, UnitDef>
 
   constructor(raw: RawUnitsDict) {
-    this.ancestorUsageKeysByUsageKey = new Map()
-    this.allPriceKeys = new Set()
-    this.allUsageKeys = new Set()
-    this.reportedUsageKeys = new Set()
-    this.units = new Map()
-    this.unitsByDimension = new Map()
-    this.unitsByPriceKey = new Map()
+    this.#ancestorUsageKeysByUsageKey = new Map()
+    this.#allPriceKeys = new Set()
+    this.#allUsageKeys = new Set()
+    this.#reportedUsageKeys = new Set()
+    this.#units = new Map()
+    this.#unitsByDimension = new Map()
+    this.#unitsByPriceKey = new Map()
 
     for (const [usageKey, rawUnit] of Object.entries(raw)) {
       const priceKey = rawUnit.price_key ?? usageKey
-      const unit: UnitDef = {
-        dimensions: { ...rawUnit.dimensions },
+      const unit: UnitDef = Object.freeze({
+        dimensions: Object.freeze({ ...rawUnit.dimensions }),
         per: rawUnit.per,
         priceKey,
         usageKey,
-      }
+      })
 
-      this.allPriceKeys.add(priceKey)
-      this.allUsageKeys.add(usageKey)
-      this.units.set(usageKey, unit)
-      this.unitsByPriceKey.set(priceKey, unit)
-      this.unitsByDimension.set(dimensionKey(unit.dimensions), unit)
+      this.#allPriceKeys.add(priceKey)
+      this.#allUsageKeys.add(usageKey)
+      this.#units.set(usageKey, unit)
+      this.#unitsByPriceKey.set(priceKey, unit)
+      this.#unitsByDimension.set(dimensionKey(unit.dimensions), unit)
     }
 
-    for (const [usageKey, unit] of this.units) {
-      this.ancestorUsageKeysByUsageKey.set(
+    for (const [usageKey, unit] of this.#units) {
+      this.#ancestorUsageKeysByUsageKey.set(
         usageKey,
         new Set(
-          [...this.units.values()]
+          [...this.#units.values()]
             .filter((maybeAncestor) => maybeAncestor !== unit && isDimensionSubset(maybeAncestor, unit))
             .map((maybeAncestor) => maybeAncestor.usageKey)
         )
       )
       if (usageKey !== 'requests') {
-        this.reportedUsageKeys.add(usageKey)
+        this.#reportedUsageKeys.add(usageKey)
       }
     }
   }
 
   ancestorUsageKeys(usageKey: string): Set<string> {
-    const ancestorUsageKeys = this.ancestorUsageKeysByUsageKey.get(usageKey)
+    const ancestorUsageKeys = this.#ancestorUsageKeysByUsageKey.get(usageKey)
     if (!ancestorUsageKeys) {
       throw new Error(`Unknown unit usage key: ${usageKey}`)
     }
@@ -61,7 +61,31 @@ export class UnitRegistry {
 
   findJoin(left: UnitDef, right: UnitDef): undefined | UnitDef {
     if (!isCompatible(left, right)) return undefined
-    return this.unitsByDimension.get(dimensionKey({ ...left.dimensions, ...right.dimensions }))
+    return this.#unitsByDimension.get(dimensionKey({ ...left.dimensions, ...right.dimensions }))
+  }
+
+  getAllPriceKeys(): Set<string> {
+    return new Set(this.#allPriceKeys)
+  }
+
+  getAllUsageKeys(): Set<string> {
+    return new Set(this.#allUsageKeys)
+  }
+
+  getUnit(usageKey: string): undefined | UnitDef {
+    return this.#units.get(usageKey)
+  }
+
+  getUnitForPriceKey(priceKey: string): undefined | UnitDef {
+    return this.#unitsByPriceKey.get(priceKey)
+  }
+
+  isReportedUsageKey(usageKey: string): boolean {
+    return this.#reportedUsageKeys.has(usageKey)
+  }
+
+  reportedUsageKeys(): IterableIterator<string> {
+    return this.#reportedUsageKeys.values()
   }
 }
 
@@ -71,35 +95,11 @@ export function getActiveRegistry(): UnitRegistry {
   return generatedRegistry
 }
 
-export function getAllPriceKeys(): Set<string> {
-  return new Set(generatedRegistry.allPriceKeys)
-}
-
-export function getAllUsageKeys(): Set<string> {
-  return new Set(generatedRegistry.allUsageKeys)
-}
-
-export function getUnit(usageKey: string): UnitDef {
-  const unit = generatedRegistry.units.get(usageKey)
-  if (unit) return unit
-  throw new Error(`Unknown unit usage key: ${usageKey}`)
-}
-
-export function getUnitForPriceKey(priceKey: string): UnitDef {
-  const unit = generatedRegistry.unitsByPriceKey.get(priceKey)
-  if (unit) return unit
-  throw new Error(`Unknown unit price key: ${priceKey}`)
-}
-
-export function getUsageKeyForPriceKey(priceKey: string): string {
-  return getUnitForPriceKey(priceKey).usageKey
-}
-
-export function dimensionKey(dimensions: Record<string, string>): string {
+function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
   return JSON.stringify(Object.entries(dimensions).sort(([left], [right]) => left.localeCompare(right)))
 }
 
-export function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
+function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
   return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
 }
 
