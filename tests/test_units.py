@@ -249,6 +249,13 @@ def test_unit_registry_sets_unit_per_and_family_dimension() -> None:
     assert input_unit.per == 1_000_000
 
 
+def test_unit_registry_units_mapping_is_immutable() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
+        cast(dict[str, Any], registry.units)['new_unit'] = registry.units['input_tokens']
+
+
 def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
     registry = UnitRegistry(
         {
