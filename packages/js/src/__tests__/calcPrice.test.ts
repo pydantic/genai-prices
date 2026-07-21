@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import type { ModelPrice, TieredPrices, Usage } from '../types'
 
@@ -310,6 +310,33 @@ describe('Core Price Calculation Function', () => {
         output_price: 0,
         total_price: 44,
       })
+    })
+
+    it('should read and resolve each current model price once', () => {
+      const registry = getActiveRegistry()
+      const modelPrice: ModelPrice = {}
+      let priceReads = 0
+      Object.defineProperty(modelPrice, 'input_mtok', {
+        enumerable: true,
+        get: () => {
+          priceReads++
+          return 2
+        },
+      })
+      const unitLookup = vi.spyOn(registry.unitsByPriceKey, 'get')
+
+      try {
+        expect(calcPrice({ input_tokens: MILLION }, modelPrice, registry)).toEqual({
+          input_price: 2,
+          output_price: 0,
+          total_price: 2,
+        })
+        expect(priceReads).toBe(1)
+        expect(unitLookup).toHaveBeenCalledOnce()
+        expect(unitLookup).toHaveBeenCalledWith('input_mtok')
+      } finally {
+        unitLookup.mockRestore()
+      }
     })
 
     it('should reject missing ancestor prices before pricing', () => {
