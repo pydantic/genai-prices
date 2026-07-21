@@ -1,0 +1,21 @@
+README.md
+  s_56f26155a15111::t_88445a71bb9370 123
+benchmarks/README.md
+  s_56f26155a15111::t_88445a71bb9370 1-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "64614cb1456c5f8e80832741b0fdece391801a91",
+  "prompts": {},
+  "sessions": {
+    "s_56f26155a15111": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f84b5-68dd-7000-bae1-d0a811cfa623",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
