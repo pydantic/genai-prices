@@ -924,11 +924,7 @@ def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.Mo
     def fail_export_validation(_providers: list[build_types.Provider], _units: dict[str, Any]) -> UnitRegistry:
         raise ExportValidationError('sentinel export validation failure')
 
-    def fail_schema_generation(_units: dict[str, Any]) -> dict[str, Any]:
-        raise AssertionError('schema generation must happen after export validation')  # pragma: no cover
-
     monkeypatch.setattr(build_module, 'validate_export_payload', fail_export_validation)
-    monkeypatch.setattr(build_module, '_provider_yaml_schema', fail_schema_generation)
 
     with pytest.raises(ExportValidationError, match='sentinel export validation failure'):
         build_module.build()

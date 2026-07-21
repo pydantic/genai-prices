@@ -36,6 +36,12 @@ def load_units() -> dict[str, Any]:
 def build():
     """Build the provider authoring schema and v2 price data with its JSON Schema."""
     units = load_units()
+
+    # write the schema JSON file used by the yaml language server
+    schema_json_path = package_dir / 'providers' / '.schema.json'
+    schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
+    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+
     providers: list[Provider] = []
 
     providers_dir = package_dir / 'providers'
@@ -57,12 +63,6 @@ def build():
     for provider in providers:
         provider.exclude_removed()
     validate_export_payload(providers, units)
-
-    # write the schema JSON file used by the yaml language server
-    schema_json_path = package_dir / 'providers' / '.schema.json'
-    schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
-    print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
-
     write_prices(providers, units, 'data_v2.json')
 
 
