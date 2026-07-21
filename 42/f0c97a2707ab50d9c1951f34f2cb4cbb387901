@@ -1,0 +1,21 @@
+packages/js/src/extractUsage.ts
+  s_3b10c54cabc835::t_d9be1f76d6b161 4,17
+packages/js/src/__tests__/extractUsage.test.ts
+  s_3b10c54cabc835::t_d9be1f76d6b161 265-285
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "42f0c97a2707ab50d9c1951f34f2cb4cbb387901",
+  "prompts": {},
+  "sessions": {
+    "s_3b10c54cabc835": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f84ed-4023-7a23-9675-55634192a29b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
