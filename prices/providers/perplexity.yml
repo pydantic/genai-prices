@@ -7,6 +7,17 @@ api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
   Prices per request vary based on usage, this is not represented here,
   instead we just take the highest price shown for `requests_kcount`.
+extractors:
+  # https://docs.perplexity.ai/api-reference/sonar-post
+  - root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
 models:
   - id: llama-3.1-sonar-large-128k-online
     name: Llama 3.1 Sonar 70B Online

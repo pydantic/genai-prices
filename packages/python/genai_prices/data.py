@@ -1298,6 +1298,11 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='chat',
@@ -1309,6 +1314,11 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(
                         path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
                     ),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
@@ -2339,6 +2349,10 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_text_tokens', required=False),
+                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_reasoning_tokens', required=False),
+                    UsageExtractorMapping(
+                        path='thoughtsTokenCount', dest='output_text_reasoning_tokens', required=False
+                    ),
                     UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tokens', required=False),
                     UsageExtractorMapping(
                         path=[
@@ -2416,6 +2430,11 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
@@ -2956,6 +2975,11 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
                     ),
                 ],
                 api_flavor='default',
@@ -6219,6 +6243,11 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='chat',
@@ -6233,6 +6262,11 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(
                         path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
                     ),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
@@ -7235,6 +7269,11 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
@@ -12106,6 +12145,18 @@ providers: list[Provider] = [
         api_pattern='https://api\\.perplexity\\.ai',
         pricing_urls=['https://docs.perplexity.ai/guides/pricing'],
         price_comments='Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            )
+        ],
         models=[
             ModelInfo(
                 id='llama-3.1-sonar-large-128k-online',
@@ -12730,6 +12781,7 @@ providers: list[Provider] = [
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='cached_prompt_text_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
@@ -12744,6 +12796,11 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(
                         path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
                     ),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],

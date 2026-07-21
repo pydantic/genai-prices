@@ -2112,6 +2112,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -2131,6 +2136,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -3928,6 +3938,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'thoughtsTokenCount',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'thoughtsTokenCount',
+            dest: 'output_text_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'toolUsePromptTokenCount',
             dest: 'input_tokens',
             required: false,
@@ -4069,6 +4089,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -5056,6 +5081,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
         ],
@@ -10822,6 +10852,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -10846,6 +10881,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cache_write_tokens'],
             dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -12767,6 +12807,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -21004,6 +21049,30 @@ export const data: Provider[] = [
     api_pattern: 'https://api\\.perplexity\\.ai',
     price_comments:
       'Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'reasoning_tokens',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'llama-3.1-sonar-large-128k-online',
@@ -22202,6 +22271,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'reasoning_tokens',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -22226,6 +22300,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {

@@ -34,6 +34,9 @@ extractors:
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
         required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
   # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/responses/response_usage.py
@@ -47,6 +50,9 @@ extractors:
         required: false
       - path: [input_tokens_details, cache_write_tokens]
         dest: cache_write_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: output_tokens
         dest: output_tokens

@@ -28,6 +28,11 @@ extractors:
           - audio_tokens
         dest: output_audio_tokens
         required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
 
 models:
   - id: deepseek-r1-distill-llama-70b

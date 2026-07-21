@@ -2257,12 +2257,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00005625",
-            "output_price": "0.01719",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00005625",
             "output_price": "0.01719",
@@ -2283,6 +2277,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 45,
+          "output_tokens": 1719
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00005625",
+            "output_price": "0.01719",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -2293,6 +2301,7 @@
         ],
         "usage": {
           "input_tokens": 45,
+          "output_reasoning_tokens": 1408,
           "output_tokens": 1719
         }
       }
@@ -2329,6 +2338,8 @@
         "usage": {
           "input_text_tokens": 1106,
           "input_tokens": 1106,
+          "output_reasoning_tokens": 1089,
+          "output_text_reasoning_tokens": 1089,
           "output_text_tokens": 1089,
           "output_tokens": 1867
         }
@@ -2373,6 +2384,8 @@
           "input_text_tokens": 33,
           "input_tokens": 33,
           "output_image_tokens": 1120,
+          "output_reasoning_tokens": 529,
+          "output_text_reasoning_tokens": 529,
           "output_text_tokens": 529,
           "output_tokens": 2309
         }
@@ -2410,6 +2423,8 @@
         "usage": {
           "input_text_tokens": 8,
           "input_tokens": 8,
+          "output_reasoning_tokens": 725,
+          "output_text_reasoning_tokens": 725,
           "output_text_tokens": 725,
           "output_tokens": 778
         }
@@ -2966,6 +2981,8 @@
         "usage": {
           "input_text_tokens": 136,
           "input_tokens": 136,
+          "output_reasoning_tokens": 213,
+          "output_text_reasoning_tokens": 213,
           "output_text_tokens": 213,
           "output_tokens": 414
         }
@@ -3010,6 +3027,8 @@
         "usage": {
           "input_text_tokens": 495,
           "input_tokens": 495,
+          "output_reasoning_tokens": 131,
+          "output_text_reasoning_tokens": 131,
           "output_text_tokens": 131,
           "output_tokens": 337
         }
@@ -3226,6 +3245,8 @@
         "usage": {
           "input_text_tokens": 12,
           "input_tokens": 12,
+          "output_reasoning_tokens": 130,
+          "output_text_reasoning_tokens": 130,
           "output_text_tokens": 130,
           "output_tokens": 154
         }
@@ -3263,6 +3284,8 @@
         "usage": {
           "input_text_tokens": 8,
           "input_tokens": 8,
+          "output_reasoning_tokens": 99,
+          "output_text_reasoning_tokens": 99,
           "output_text_tokens": 99,
           "output_tokens": 105
         }
@@ -3611,6 +3634,8 @@
         "usage": {
           "input_text_tokens": 49,
           "input_tokens": 49,
+          "output_reasoning_tokens": 264,
+          "output_text_reasoning_tokens": 264,
           "output_text_tokens": 264,
           "output_tokens": 276
         }
@@ -3646,6 +3671,8 @@
         "usage": {
           "input_text_tokens": 80,
           "input_tokens": 80,
+          "output_reasoning_tokens": 150,
+          "output_text_reasoning_tokens": 150,
           "output_text_tokens": 150,
           "output_tokens": 159
         }
@@ -3771,6 +3798,8 @@
         "usage": {
           "input_text_tokens": 15,
           "input_tokens": 15,
+          "output_reasoning_tokens": 275,
+          "output_text_reasoning_tokens": 275,
           "output_text_tokens": 275,
           "output_tokens": 283
         }
@@ -3808,6 +3837,8 @@
         "usage": {
           "input_text_tokens": 9,
           "input_tokens": 9,
+          "output_reasoning_tokens": 182,
+          "output_text_reasoning_tokens": 182,
           "output_text_tokens": 182,
           "output_tokens": 203
         }
@@ -3845,6 +3876,8 @@
         "usage": {
           "input_text_tokens": 9,
           "input_tokens": 9,
+          "output_reasoning_tokens": 342,
+          "output_text_reasoning_tokens": 342,
           "output_text_tokens": 342,
           "output_tokens": 363
         }
@@ -3882,6 +3915,8 @@
         "usage": {
           "input_text_tokens": 26,
           "input_tokens": 26,
+          "output_reasoning_tokens": 360,
+          "output_text_reasoning_tokens": 360,
           "output_text_tokens": 360,
           "output_tokens": 424
         }
@@ -4146,6 +4181,8 @@
         "usage": {
           "input_text_tokens": 568,
           "input_tokens": 568,
+          "output_reasoning_tokens": 301,
+          "output_text_reasoning_tokens": 301,
           "output_text_tokens": 301,
           "output_tokens": 541
         }
@@ -4271,12 +4308,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00004625",
-            "output_price": "0.00272",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00004625",
             "output_price": "0.00272",
@@ -4297,6 +4328,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 37,
+          "output_tokens": 272
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00004625",
+            "output_price": "0.00272",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -4307,6 +4352,7 @@
         ],
         "usage": {
           "input_tokens": 37,
+          "output_reasoning_tokens": 256,
           "output_tokens": 272
         }
       }
@@ -4341,12 +4387,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00047375",
-            "output_price": "0.00077",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00047375",
             "output_price": "0.00077",
@@ -4367,6 +4407,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 379,
+          "output_tokens": 77
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00047375",
+            "output_price": "0.00077",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -4377,6 +4431,7 @@
         ],
         "usage": {
           "input_tokens": 379,
+          "output_reasoning_tokens": 64,
           "output_tokens": 77
         }
       }
@@ -4413,6 +4468,8 @@
         "usage": {
           "input_text_tokens": 107,
           "input_tokens": 107,
+          "output_reasoning_tokens": 123,
+          "output_text_reasoning_tokens": 123,
           "output_text_tokens": 123,
           "output_tokens": 146
         }
@@ -4499,6 +4556,8 @@
         "usage": {
           "input_text_tokens": 690,
           "input_tokens": 690,
+          "output_reasoning_tokens": 483,
+          "output_text_reasoning_tokens": 483,
           "output_text_tokens": 483,
           "output_tokens": 660
         }
@@ -4543,6 +4602,8 @@
         "usage": {
           "input_text_tokens": 676,
           "input_tokens": 676,
+          "output_reasoning_tokens": 540,
+          "output_text_reasoning_tokens": 540,
           "output_text_tokens": 540,
           "output_tokens": 598
         }
@@ -4622,6 +4683,8 @@
         "usage": {
           "input_text_tokens": 14,
           "input_tokens": 14,
+          "output_reasoning_tokens": 181,
+          "output_text_reasoning_tokens": 181,
           "output_text_tokens": 181,
           "output_tokens": 197
         }
@@ -4874,6 +4937,8 @@
         "usage": {
           "input_text_tokens": 219,
           "input_tokens": 219,
+          "output_reasoning_tokens": 323,
+          "output_text_reasoning_tokens": 323,
           "output_text_tokens": 323,
           "output_tokens": 416
         }
@@ -4959,6 +5024,8 @@
         "usage": {
           "input_text_tokens": 85,
           "input_tokens": 85,
+          "output_reasoning_tokens": 32,
+          "output_text_reasoning_tokens": 32,
           "output_text_tokens": 32,
           "output_tokens": 45
         }
@@ -5076,6 +5143,8 @@
         "usage": {
           "input_text_tokens": 23,
           "input_tokens": 23,
+          "output_reasoning_tokens": 158,
+          "output_text_reasoning_tokens": 158,
           "output_text_tokens": 158,
           "output_tokens": 183
         }
@@ -5113,6 +5182,8 @@
         "usage": {
           "input_text_tokens": 57,
           "input_tokens": 57,
+          "output_reasoning_tokens": 124,
+          "output_text_reasoning_tokens": 124,
           "output_text_tokens": 124,
           "output_tokens": 139
         }
@@ -5150,6 +5221,8 @@
         "usage": {
           "input_text_tokens": 109,
           "input_tokens": 109,
+          "output_reasoning_tokens": 199,
+          "output_text_reasoning_tokens": 199,
           "output_text_tokens": 199,
           "output_tokens": 215
         }
@@ -5187,6 +5260,8 @@
         "usage": {
           "input_text_tokens": 142,
           "input_tokens": 142,
+          "output_reasoning_tokens": 97,
+          "output_text_reasoning_tokens": 97,
           "output_text_tokens": 97,
           "output_tokens": 98
         }
@@ -5393,6 +5468,8 @@
         "usage": {
           "input_text_tokens": 12,
           "input_tokens": 12,
+          "output_reasoning_tokens": 806,
+          "output_text_reasoning_tokens": 806,
           "output_text_tokens": 806,
           "output_tokens": 915
         }
@@ -5522,6 +5599,8 @@
         "usage": {
           "input_text_tokens": 12,
           "input_tokens": 12,
+          "output_reasoning_tokens": 448,
+          "output_text_reasoning_tokens": 448,
           "output_text_tokens": 448,
           "output_tokens": 461
         }
@@ -5629,6 +5708,8 @@
         "usage": {
           "input_text_tokens": 29,
           "input_tokens": 29,
+          "output_reasoning_tokens": 1001,
+          "output_text_reasoning_tokens": 1001,
           "output_text_tokens": 1001,
           "output_tokens": 1737
         }
@@ -5666,6 +5747,8 @@
         "usage": {
           "input_text_tokens": 1280,
           "input_tokens": 1280,
+          "output_reasoning_tokens": 1115,
+          "output_text_reasoning_tokens": 1115,
           "output_text_tokens": 1115,
           "output_tokens": 2073
         }
@@ -5701,6 +5784,8 @@
         "usage": {
           "input_text_tokens": 123,
           "input_tokens": 123,
+          "output_reasoning_tokens": 132,
+          "output_text_reasoning_tokens": 132,
           "output_text_tokens": 132,
           "output_tokens": 144
         }
@@ -5736,6 +5821,8 @@
         "usage": {
           "input_text_tokens": 154,
           "input_tokens": 154,
+          "output_reasoning_tokens": 153,
+          "output_text_reasoning_tokens": 153,
           "output_text_tokens": 153,
           "output_tokens": 166
         }
@@ -5863,6 +5950,8 @@
         "usage": {
           "input_text_tokens": 10,
           "input_tokens": 10,
+          "output_reasoning_tokens": 699,
+          "output_text_reasoning_tokens": 699,
           "output_text_tokens": 699,
           "output_tokens": 818
         }
@@ -5948,6 +6037,8 @@
         "usage": {
           "input_text_tokens": 20,
           "input_tokens": 20,
+          "output_reasoning_tokens": 183,
+          "output_text_reasoning_tokens": 183,
           "output_text_tokens": 183,
           "output_tokens": 199
         }
@@ -6111,6 +6202,8 @@
         "usage": {
           "input_text_tokens": 2,
           "input_tokens": 2,
+          "output_reasoning_tokens": 213,
+          "output_text_reasoning_tokens": 213,
           "output_text_tokens": 213,
           "output_tokens": 222
         }
@@ -6148,6 +6241,8 @@
         "usage": {
           "input_text_tokens": 28,
           "input_tokens": 28,
+          "output_reasoning_tokens": 108,
+          "output_text_reasoning_tokens": 108,
           "output_text_tokens": 108,
           "output_tokens": 126
         }
@@ -6185,6 +6280,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           }
         ],
@@ -6201,6 +6300,55 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 682,
+          "input_tokens": 687,
+          "output_reasoning_tokens": 165,
+          "output_tokens": 240
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "doubleword"
+          },
+          {
+            "api_flavor": "embeddings",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 687
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
             "provider_id": "deepseek"
           },
           {
@@ -6210,14 +6358,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -6277,19 +6417,7 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           },
           {
             "api_flavor": "chat",
@@ -6300,25 +6428,6 @@
           "cache_read_tokens": 682,
           "input_tokens": 687,
           "output_tokens": 240
-        }
-      },
-      {
-        "extractors": [
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "doubleword"
-          },
-          {
-            "api_flavor": "embeddings",
-            "provider_id": "openai"
-          }
-        ],
-        "usage": {
-          "input_tokens": 687
         }
       }
     ],
@@ -6444,6 +6553,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -6504,10 +6617,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -6521,14 +6630,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -6588,6 +6689,42 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 41,
+          "output_tokens": 1457
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -6598,23 +6735,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 41,
+          "output_reasoning_tokens": 704,
           "output_tokens": 1457
         }
       },
@@ -6757,6 +6883,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -6817,10 +6947,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -6834,14 +6960,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -6901,6 +7019,42 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17,
+          "output_tokens": 1515
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -6911,23 +7065,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 17,
+          "output_reasoning_tokens": 704,
           "output_tokens": 1515
         }
       },
@@ -6988,10 +7131,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -7005,14 +7144,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -7072,6 +7203,42 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17,
+          "output_tokens": 2177
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "provider_id": "openai"
           },
           {
@@ -7082,23 +7249,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 17,
+          "output_reasoning_tokens": 960,
           "output_tokens": 2177
         }
       },
@@ -7238,6 +7394,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -7403,6 +7563,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -7562,6 +7726,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -10246,12 +10414,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00002875",
-            "output_price": "0.02211",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00002875",
             "output_price": "0.02211",
@@ -10272,6 +10434,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 23,
+          "output_tokens": 2211
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00002875",
+            "output_price": "0.02211",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -10282,6 +10458,7 @@
         ],
         "usage": {
           "input_tokens": 23,
+          "output_reasoning_tokens": 1920,
           "output_tokens": 2211
         }
       }
@@ -11276,12 +11453,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0000143",
-            "output_price": "0.0098604",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0000143",
             "output_price": "0.0098604",
@@ -11302,6 +11473,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 2241
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0098604",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -11312,6 +11497,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 1856,
           "output_tokens": 2241
         }
       }
@@ -12044,6 +12230,8 @@
         "usage": {
           "input_text_tokens": 9,
           "input_tokens": 9,
+          "output_reasoning_tokens": 545,
+          "output_text_reasoning_tokens": 545,
           "output_text_tokens": 545,
           "output_tokens": 589
         }
@@ -12163,12 +12351,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0000143",
-            "output_price": "0.0089232",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0000143",
             "output_price": "0.0089232",
@@ -12189,6 +12371,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 2028
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0089232",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -12199,6 +12395,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 1664,
           "output_tokens": 2028
         }
       }
@@ -12235,6 +12432,8 @@
         "usage": {
           "input_text_tokens": 801,
           "input_tokens": 801,
+          "output_reasoning_tokens": 794,
+          "output_text_reasoning_tokens": 794,
           "output_text_tokens": 794,
           "output_tokens": 2313
         }
@@ -12396,6 +12595,8 @@
         "usage": {
           "input_text_tokens": 123,
           "input_tokens": 123,
+          "output_reasoning_tokens": 318,
+          "output_text_reasoning_tokens": 318,
           "output_text_tokens": 318,
           "output_tokens": 330
         }
@@ -12431,6 +12632,8 @@
         "usage": {
           "input_text_tokens": 154,
           "input_tokens": 154,
+          "output_reasoning_tokens": 94,
+          "output_text_reasoning_tokens": 94,
           "output_text_tokens": 94,
           "output_tokens": 107
         }
@@ -12468,6 +12671,8 @@
         "usage": {
           "input_text_tokens": 40,
           "input_tokens": 40,
+          "output_reasoning_tokens": 65,
+          "output_text_reasoning_tokens": 65,
           "output_text_tokens": 65,
           "output_tokens": 84
         }
@@ -12505,6 +12710,8 @@
         "usage": {
           "input_text_tokens": 164,
           "input_tokens": 164,
+          "output_reasoning_tokens": 563,
+          "output_text_reasoning_tokens": 563,
           "output_text_tokens": 563,
           "output_tokens": 592
         }
@@ -12845,6 +13052,8 @@
         "usage": {
           "input_text_tokens": 33,
           "input_tokens": 33,
+          "output_reasoning_tokens": 64,
+          "output_text_reasoning_tokens": 64,
           "output_text_tokens": 64,
           "output_tokens": 74
         }
@@ -12887,6 +13096,8 @@
           "input_image_tokens": 1107,
           "input_text_tokens": 78,
           "input_tokens": 1185,
+          "output_reasoning_tokens": 381,
+          "output_text_reasoning_tokens": 381,
           "output_text_tokens": 381,
           "output_tokens": 552
         }
@@ -13349,6 +13560,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -13522,6 +13737,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -13676,6 +13895,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -13842,6 +14065,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -13996,6 +14223,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -14162,6 +14393,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -14316,6 +14551,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -14484,6 +14723,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -14638,6 +14881,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -14802,6 +15049,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -14960,6 +15211,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -15130,6 +15385,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -15201,12 +15460,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000121",
-            "output_price": "0.0035596",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15220,14 +15473,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -15287,6 +15532,44 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 11,
+          "output_tokens": 809
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000121",
+            "output_price": "0.0035596",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000121",
             "output_price": "0.0035596",
             "provider_id": "openai"
@@ -15297,23 +15580,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 11,
+          "output_reasoning_tokens": 768,
           "output_tokens": 809
         }
       },
@@ -15542,6 +15814,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -15613,12 +15889,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000143",
-            "output_price": "0.0010472",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -15632,14 +15902,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -15699,6 +15961,44 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 238
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000143",
+            "output_price": "0.0010472",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000143",
             "output_price": "0.0010472",
             "provider_id": "openai"
@@ -15709,23 +16009,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 192,
           "output_tokens": 238
         }
       },
@@ -15954,6 +16243,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -16125,6 +16418,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -16284,6 +16581,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -16436,6 +16737,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -16606,6 +16911,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -16705,6 +17014,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -16960,6 +17273,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -17128,6 +17445,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -17302,6 +17623,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -17470,6 +17795,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -17644,6 +17973,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -17812,6 +18145,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -17986,6 +18323,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -18154,6 +18495,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -18328,6 +18673,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -18499,6 +18848,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -18664,6 +19017,10 @@
             "input_price": "0.00000666",
             "output_price": "0.00001692",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -18838,6 +19195,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -19006,6 +19367,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -19180,6 +19545,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -19250,12 +19619,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0000143",
-            "output_price": "0.008426",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0000143",
             "output_price": "0.008426",
@@ -19276,6 +19639,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 1915
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.008426",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -19286,6 +19663,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 1600,
           "output_tokens": 1915
         }
       }
@@ -19321,12 +19699,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0006347",
-            "output_price": "0.010208",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -19340,14 +19712,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -19407,6 +19771,44 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 577,
+          "output_tokens": 2320
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0006347",
+            "output_price": "0.010208",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0006347",
             "output_price": "0.010208",
             "provider_id": "openai"
@@ -19417,23 +19819,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 577,
+          "output_reasoning_tokens": 1792,
           "output_tokens": 2320
         }
       },
@@ -19589,6 +19980,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -19754,6 +20149,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -19909,6 +20308,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -20076,6 +20479,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -20250,6 +20657,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -20418,6 +20829,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -20592,6 +21007,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -20760,6 +21179,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -20934,6 +21357,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -21102,6 +21529,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -21276,6 +21707,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -21444,6 +21879,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -21618,6 +22057,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -21777,6 +22220,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -21944,6 +22391,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -22118,6 +22569,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -22286,6 +22741,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -22460,6 +22919,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -22631,6 +23094,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -22702,12 +23169,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.000033",
-            "output_price": "0.0009328",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -22721,14 +23182,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -22788,6 +23241,44 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30,
+          "output_tokens": 212
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.000033",
+            "output_price": "0.0009328",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.000033",
             "output_price": "0.0009328",
             "provider_id": "openai"
@@ -22800,23 +23291,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 30,
+          "output_reasoning_tokens": 192,
           "output_tokens": 212
         }
       },
@@ -23059,6 +23539,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -23230,6 +23714,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -23301,12 +23789,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000077",
-            "output_price": "0.000374",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -23320,14 +23802,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -23387,6 +23861,44 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7,
+          "output_tokens": 85
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000077",
+            "output_price": "0.000374",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000077",
             "output_price": "0.000374",
             "provider_id": "openai"
@@ -23397,23 +23909,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 7,
+          "output_reasoning_tokens": 64,
           "output_tokens": 85
         }
       },
@@ -23569,6 +24070,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -23743,6 +24248,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -23842,6 +24351,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "moonshotai"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -24333,12 +24846,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00002875",
-            "output_price": "0.0203",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00002875",
             "output_price": "0.0203",
@@ -24359,6 +24866,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 23,
+          "output_tokens": 2030
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00002875",
+            "output_price": "0.0203",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -24369,6 +24890,7 @@
         ],
         "usage": {
           "input_tokens": 23,
+          "output_reasoning_tokens": 1728,
           "output_tokens": 2030
         }
       }
@@ -24936,6 +25458,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -25091,6 +25617,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -25157,12 +25687,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0000143",
-            "output_price": "0.0071104",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0000143",
             "output_price": "0.0071104",
@@ -25183,6 +25707,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 1616
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0071104",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -25193,6 +25731,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 1344,
           "output_tokens": 1616
         }
       }
@@ -25316,6 +25855,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -25411,17 +25954,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00248075",
+            "output_price": "0.00638",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 8576,
+          "input_tokens": 9703,
+          "output_reasoning_tokens": 576,
+          "output_tokens": 638
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.00248075",
-            "output_price": "0.00638",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -25741,12 +26294,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0000143",
-            "output_price": "0.0009988",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0000143",
             "output_price": "0.0009988",
@@ -25767,6 +26314,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 227
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000143",
+            "output_price": "0.0009988",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -25777,6 +26338,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 192,
           "output_tokens": 227
         }
       }
@@ -25811,12 +26373,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00281625",
-            "output_price": "0.01755",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00281625",
             "output_price": "0.01755",
@@ -25837,6 +26393,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 2253,
+          "output_tokens": 1755
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00281625",
+            "output_price": "0.01755",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -25847,6 +26417,7 @@
         ],
         "usage": {
           "input_tokens": 2253,
+          "output_reasoning_tokens": 1600,
           "output_tokens": 1755
         }
       }
@@ -25881,12 +26452,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00073375",
-            "output_price": "0.02587",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00073375",
             "output_price": "0.02587",
@@ -25907,6 +26472,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 587,
+          "output_tokens": 2587
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00073375",
+            "output_price": "0.02587",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -25917,6 +26496,7 @@
         ],
         "usage": {
           "input_tokens": 587,
+          "output_reasoning_tokens": 2560,
           "output_tokens": 2587
         }
       }
@@ -25980,17 +26560,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00042625",
+            "output_price": "0.00125",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1280,
+          "input_tokens": 1493,
+          "output_reasoning_tokens": 64,
+          "output_tokens": 125
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.00042625",
-            "output_price": "0.00125",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -26199,17 +26789,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00306375",
+            "output_price": "0.0161",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 8320,
+          "input_tokens": 9939,
+          "output_reasoning_tokens": 1344,
+          "output_tokens": 1610
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.00306375",
-            "output_price": "0.0161",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -26278,17 +26878,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00246875",
+            "output_price": "0.0066",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 8320,
+          "input_tokens": 9463,
+          "output_reasoning_tokens": 512,
+          "output_tokens": 660
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.00246875",
-            "output_price": "0.0066",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -26328,12 +26938,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0013277",
-            "output_price": "0.002354",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0013277",
             "output_price": "0.002354",
@@ -26354,6 +26958,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1207,
+          "output_tokens": 535
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0013277",
+            "output_price": "0.002354",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -26364,6 +26982,7 @@
         ],
         "usage": {
           "input_tokens": 1207,
+          "output_reasoning_tokens": 320,
           "output_tokens": 535
         }
       }
@@ -26398,12 +27017,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0012199",
-            "output_price": "0.0019536",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0012199",
             "output_price": "0.0019536",
@@ -26424,6 +27037,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1109,
+          "output_tokens": 444
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0012199",
+            "output_price": "0.0019536",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -26434,6 +27061,7 @@
         ],
         "usage": {
           "input_tokens": 1109,
+          "output_reasoning_tokens": 320,
           "output_tokens": 444
         }
       }
@@ -26468,12 +27096,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.002265",
-            "output_price": "0.01313",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.002265",
             "output_price": "0.01313",
@@ -26494,6 +27116,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1812,
+          "output_tokens": 1313
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.002265",
+            "output_price": "0.01313",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -26504,6 +27140,7 @@
         ],
         "usage": {
           "input_tokens": 1812,
+          "output_reasoning_tokens": 1152,
           "output_tokens": 1313
         }
       }
@@ -26608,12 +27245,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.000195",
-            "output_price": "0.00924",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.000195",
             "output_price": "0.00924",
@@ -26634,6 +27265,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 77
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.000195",
+            "output_price": "0.00924",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -26644,6 +27289,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 64,
           "output_tokens": 77
         }
       }
@@ -26678,12 +27324,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0011715",
-            "output_price": "0.003344",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0011715",
             "output_price": "0.003344",
@@ -26704,6 +27344,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1065,
+          "output_tokens": 760
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0011715",
+            "output_price": "0.003344",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -26714,6 +27368,7 @@
         ],
         "usage": {
           "input_tokens": 1065,
+          "output_reasoning_tokens": 576,
           "output_tokens": 760
         }
       }
@@ -27168,12 +27823,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00236125",
-            "output_price": "0.01434",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00236125",
             "output_price": "0.01434",
@@ -27194,6 +27843,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1889,
+          "output_tokens": 1434
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00236125",
+            "output_price": "0.01434",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -27204,6 +27867,7 @@
         ],
         "usage": {
           "input_tokens": 1889,
+          "output_reasoning_tokens": 1280,
           "output_tokens": 1434
         }
       }
@@ -27267,17 +27931,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00155625",
+            "output_price": "0.00707",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1920,
+          "input_tokens": 2973,
+          "output_reasoning_tokens": 512,
+          "output_tokens": 707
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.00155625",
-            "output_price": "0.00707",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27346,17 +28020,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0037515",
+            "output_price": "0.01844",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1792,
+          "input_tokens": 4614,
+          "output_reasoning_tokens": 1024,
+          "output_tokens": 1844
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.0037515",
-            "output_price": "0.01844",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27425,17 +28109,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.00211975",
+            "output_price": "0.00577",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 8448,
+          "input_tokens": 9299,
+          "output_reasoning_tokens": 512,
+          "output_tokens": 577
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.00211975",
-            "output_price": "0.00577",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27504,17 +28198,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0022345",
+            "output_price": "0.00439",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 8576,
+          "input_tokens": 9506,
+          "output_reasoning_tokens": 384,
+          "output_tokens": 439
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.0022345",
-            "output_price": "0.00439",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -27838,12 +28542,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0003825",
-            "output_price": "0.03134",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0003825",
             "output_price": "0.03134",
@@ -27864,6 +28562,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 306,
+          "output_tokens": 3134
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0003825",
+            "output_price": "0.03134",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -27874,6 +28586,7 @@
         ],
         "usage": {
           "input_tokens": 306,
+          "output_reasoning_tokens": 2496,
           "output_tokens": 3134
         }
       }
@@ -27908,12 +28621,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00005",
-            "output_price": "0.00148",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00005",
             "output_price": "0.00148",
@@ -27934,6 +28641,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 40,
+          "output_tokens": 148
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00005",
+            "output_price": "0.00148",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -27944,6 +28665,7 @@
         ],
         "usage": {
           "input_tokens": 40,
+          "output_reasoning_tokens": 128,
           "output_tokens": 148
         }
       }
@@ -28048,12 +28770,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00001625",
-            "output_price": "0.00248",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00001625",
             "output_price": "0.00248",
@@ -28074,6 +28790,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 248
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00001625",
+            "output_price": "0.00248",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -28084,6 +28814,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 64,
           "output_tokens": 248
         }
       }
@@ -28118,12 +28849,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0001775",
-            "output_price": "0.00355",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0001775",
             "output_price": "0.00355",
@@ -28144,6 +28869,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 142,
+          "output_tokens": 355
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0001775",
+            "output_price": "0.00355",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -28154,6 +28893,7 @@
         ],
         "usage": {
           "input_tokens": 142,
+          "output_reasoning_tokens": 128,
           "output_tokens": 355
         }
       }
@@ -28407,12 +29147,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.000155",
-            "output_price": "0.01926",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.000155",
             "output_price": "0.01926",
@@ -28433,6 +29167,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 124,
+          "output_tokens": 1926
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.000155",
+            "output_price": "0.01926",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -28443,6 +29191,7 @@
         ],
         "usage": {
           "input_tokens": 124,
+          "output_reasoning_tokens": 1792,
           "output_tokens": 1926
         }
       }
@@ -28865,17 +29614,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0411775",
+            "output_price": "0.0172",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 92160,
+          "input_tokens": 115886,
+          "output_reasoning_tokens": 1472,
+          "output_tokens": 1720
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.0411775",
-            "output_price": "0.0172",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -29265,12 +30024,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0000968",
-            "output_price": "0.0024068",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0000968",
             "output_price": "0.0024068",
@@ -29291,6 +30044,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 88,
+          "output_tokens": 547
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0000968",
+            "output_price": "0.0024068",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -29301,6 +30068,7 @@
         ],
         "usage": {
           "input_tokens": 88,
+          "output_reasoning_tokens": 128,
           "output_tokens": 547
         }
       }
@@ -29335,12 +30103,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00223625",
-            "output_price": "0.01312",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00223625",
             "output_price": "0.01312",
@@ -29361,6 +30123,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 1789,
+          "output_tokens": 1312
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00223625",
+            "output_price": "0.01312",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -29371,6 +30147,7 @@
         ],
         "usage": {
           "input_tokens": 1789,
+          "output_reasoning_tokens": 1152,
           "output_tokens": 1312
         }
       }
@@ -30032,12 +30809,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00001625",
-            "output_price": "0.02199",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00001625",
             "output_price": "0.02199",
@@ -30058,6 +30829,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_tokens": 2199
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00001625",
+            "output_price": "0.02199",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -30068,6 +30853,7 @@
         ],
         "usage": {
           "input_tokens": 13,
+          "output_reasoning_tokens": 1920,
           "output_tokens": 2199
         }
       }
@@ -30102,12 +30888,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.0003925",
-            "output_price": "0.02737",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.0003925",
             "output_price": "0.02737",
@@ -30128,6 +30908,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 314,
+          "output_tokens": 2737
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.0003925",
+            "output_price": "0.02737",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -30138,6 +30932,7 @@
         ],
         "usage": {
           "input_tokens": 314,
+          "output_reasoning_tokens": 2112,
           "output_tokens": 2737
         }
       }
@@ -30172,12 +30967,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00048625",
-            "output_price": "0.00721",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00048625",
             "output_price": "0.00721",
@@ -30198,6 +30987,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 389,
+          "output_tokens": 721
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00048625",
+            "output_price": "0.00721",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -30208,6 +31011,7 @@
         ],
         "usage": {
           "input_tokens": 389,
+          "output_reasoning_tokens": 704,
           "output_tokens": 721
         }
       }
@@ -30312,12 +31116,6 @@
             "provider_id": "aws"
           },
           {
-            "api_flavor": "responses",
-            "input_price": "0.00012875",
-            "output_price": "0.00409",
-            "provider_id": "azure"
-          },
-          {
             "api_flavor": "anthropic",
             "input_price": "0.00012875",
             "output_price": "0.00409",
@@ -30338,6 +31136,20 @@
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
+          }
+        ],
+        "usage": {
+          "input_tokens": 103,
+          "output_tokens": 409
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
+            "input_price": "0.00012875",
+            "output_price": "0.00409",
+            "provider_id": "azure"
           },
           {
             "api_flavor": "responses",
@@ -30348,6 +31160,7 @@
         ],
         "usage": {
           "input_tokens": 103,
+          "output_reasoning_tokens": 384,
           "output_tokens": 409
         }
       }
@@ -30472,6 +31285,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -30654,6 +31471,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -30817,6 +31638,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -30977,6 +31802,10 @@
             "input_price": "0.00038776",
             "output_price": "0.0011766",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -31145,6 +31974,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -31301,6 +32134,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -31469,6 +32306,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -31634,6 +32475,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -31796,6 +32641,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -31978,6 +32827,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -32132,6 +32985,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -32314,6 +33171,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -32493,6 +33354,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -32558,10 +33423,6 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -32577,14 +33438,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -32644,22 +33497,14 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "openai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "ovhcloud"
           },
           {
             "api_flavor": "default",
-            "provider_id": "x-ai"
+            "provider_id": "perplexity"
           },
           {
-            "api_flavor": "chat",
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -32669,6 +33514,39 @@
         ],
         "usage": {
           "input_tokens": 12,
+          "output_tokens": 789
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12,
+          "output_reasoning_tokens": 415,
           "output_tokens": 789
         }
       },
@@ -32820,6 +33698,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -32991,6 +33873,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -33165,6 +34051,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -33333,6 +34223,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -33507,6 +34401,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -33675,6 +34573,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -33849,6 +34751,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -34017,6 +34923,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -34191,6 +35101,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -34359,6 +35273,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -34533,6 +35451,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -34701,6 +35623,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -34875,6 +35801,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -35043,6 +35973,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -35217,6 +36151,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -35385,6 +36323,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -35559,6 +36501,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -35727,6 +36673,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -35901,6 +36851,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -35971,6 +36925,8 @@
         "usage": {
           "input_text_tokens": 383,
           "input_tokens": 383,
+          "output_reasoning_tokens": 125,
+          "output_text_reasoning_tokens": 125,
           "output_text_tokens": 125,
           "output_tokens": 137
         }
@@ -36145,6 +37101,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -36313,6 +37273,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -36487,6 +37451,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -36655,6 +37623,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -36829,6 +37801,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -36997,6 +37973,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -37171,6 +38151,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -37243,6 +38227,8 @@
         "usage": {
           "input_text_tokens": 605,
           "input_tokens": 605,
+          "output_reasoning_tokens": 154,
+          "output_text_reasoning_tokens": 154,
           "output_text_tokens": 154,
           "output_tokens": 168
         }
@@ -37419,6 +38405,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -37587,6 +38577,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -37761,6 +38755,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -37929,6 +38927,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -38103,6 +39105,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -38271,6 +39277,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -38445,6 +39455,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -38613,6 +39627,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -38787,6 +39805,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -38955,6 +39977,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -39129,6 +40155,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -39297,6 +40327,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -39471,6 +40505,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -39639,6 +40677,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -39813,6 +40855,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -39981,6 +41027,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -40155,6 +41205,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -40323,6 +41377,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -40497,6 +41555,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -40665,6 +41727,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -40839,6 +41905,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -41007,6 +42077,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -41181,6 +42255,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -41352,6 +42430,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -41451,17 +42533,27 @@
           },
           {
             "api_flavor": "responses",
+            "input_price": "0.0121425",
+            "output_price": "0.0115",
+            "provider_id": "openai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 3200,
+          "input_tokens": 12594,
+          "output_reasoning_tokens": 1088,
+          "output_tokens": 1150
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "responses",
             "provider_id": "doubleword"
           },
           {
             "api_flavor": "responses",
             "provider_id": "minimax"
-          },
-          {
-            "api_flavor": "responses",
-            "input_price": "0.0121425",
-            "output_price": "0.0115",
-            "provider_id": "openai"
           }
         ],
         "usage": {
@@ -41599,6 +42691,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -41773,6 +42869,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -41941,6 +43041,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -42115,6 +43219,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -42283,6 +43391,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -42457,6 +43569,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -42625,6 +43741,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -42799,6 +43919,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -42967,6 +44091,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -43141,6 +44269,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -43309,6 +44441,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -43483,6 +44619,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -43651,6 +44791,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -43920,6 +45064,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -44028,12 +45176,6 @@
           },
           {
             "api_flavor": "chat",
-            "input_price": "0.0000341",
-            "output_price": "0.0020548",
-            "provider_id": "azure"
-          },
-          {
-            "api_flavor": "chat",
             "provider_id": "cerebras"
           },
           {
@@ -44047,14 +45189,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "fireworks"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "google"
-          },
-          {
-            "api_flavor": "default",
-            "provider_id": "groq"
           },
           {
             "api_flavor": "chat",
@@ -44114,6 +45248,44 @@
           },
           {
             "api_flavor": "chat",
+            "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "x-ai"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "zhipuai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31,
+          "output_tokens": 467
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "input_price": "0.0000341",
+            "output_price": "0.0020548",
+            "provider_id": "azure"
+          },
+          {
+            "api_flavor": "chat",
+            "provider_id": "google"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "groq"
+          },
+          {
+            "api_flavor": "chat",
             "input_price": "0.0000341",
             "output_price": "0.0020548",
             "provider_id": "openai"
@@ -44124,23 +45296,12 @@
           },
           {
             "api_flavor": "chat",
-            "provider_id": "ovhcloud"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "zhipuai"
           }
         ],
         "usage": {
           "input_tokens": 31,
+          "output_reasoning_tokens": 448,
           "output_tokens": 467
         }
       },
@@ -44353,6 +45514,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -44517,6 +45682,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -44691,6 +45860,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -44859,6 +46032,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -45033,6 +46210,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -45201,6 +46382,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -45375,6 +46560,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -45543,6 +46732,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -45717,6 +46910,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -45885,6 +47082,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -46059,6 +47260,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -46230,6 +47435,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -46398,6 +47607,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -46572,6 +47785,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -46740,6 +47957,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -46914,6 +48135,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -47085,6 +48310,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -47253,6 +48482,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -47470,6 +48703,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -47628,6 +48865,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -47790,6 +49031,10 @@
           },
           {
             "api_flavor": "default",
+            "provider_id": "perplexity"
+          },
+          {
+            "api_flavor": "default",
             "provider_id": "x-ai"
           },
           {
@@ -47870,6 +49115,8 @@
         "usage": {
           "input_text_tokens": 7,
           "input_tokens": 7,
+          "output_reasoning_tokens": 53,
+          "output_text_reasoning_tokens": 53,
           "output_text_tokens": 61,
           "output_tokens": 61
         }
@@ -48006,6 +49253,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",
@@ -48200,6 +49451,10 @@
           {
             "api_flavor": "chat",
             "provider_id": "ovhcloud"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "perplexity"
           },
           {
             "api_flavor": "default",

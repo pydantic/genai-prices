@@ -172,6 +172,12 @@ extractors:
       - path: thoughtsTokenCount
         dest: output_text_tokens
         required: false
+      - path: thoughtsTokenCount
+        dest: output_reasoning_tokens
+        required: false
+      - path: thoughtsTokenCount
+        dest: output_text_reasoning_tokens
+        required: false
       - path: toolUsePromptTokenCount
         dest: input_tokens
         required: false
@@ -253,6 +259,9 @@ extractors:
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
         dest: output_tokens

@@ -91,14 +91,14 @@ def test_openai():
             'prompt_tokens': 100,
             'completion_tokens': 200,
             'prompt_tokens_details': {'cached_tokens': None},
-            'completion_tokens_details': None,
+            'completion_tokens_details': {'reasoning_tokens': 120},
         },
     }
     usage = provider.extract_usage(response_data, api_flavor='chat')
-    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200)))
+    assert usage == snapshot(('gpt-4.1', Usage(input_tokens=100, output_tokens=200, output_reasoning_tokens=120)))
 
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='chat')
-    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200, output_reasoning_tokens=120))
     assert extracted_usage.provider.name == snapshot('OpenAI')
     assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('gpt 4.1')
@@ -107,13 +107,13 @@ def test_openai():
 
     response_data = {
         'model': 'gpt-5',
-        'usage': {'input_tokens': 100, 'output_tokens': 200},
+        'usage': {'input_tokens': 100, 'output_tokens': 200, 'output_tokens_details': {'reasoning_tokens': 120}},
     }
     usage = provider.extract_usage(response_data, api_flavor='responses')
-    assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=200)))
+    assert usage == snapshot(('gpt-5', Usage(input_tokens=100, output_tokens=200, output_reasoning_tokens=120)))
 
     extracted_usage = extract_usage(response_data, provider_id='openai', api_flavor='responses')
-    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200))
+    assert extracted_usage.usage == snapshot(Usage(input_tokens=100, output_tokens=200, output_reasoning_tokens=120))
     assert extracted_usage.provider.name == snapshot('OpenAI')
     assert extracted_usage.model is not None
     assert extracted_usage.model.name == snapshot('GPT-5')
@@ -206,10 +206,15 @@ def test_groq_cached_tokens():
     }
     model, usage = provider.extract_usage(response_data)
     assert model == 'llama-3.3-70b-versatile'
-    assert usage == Usage(input_tokens=19038, output_tokens=135, cache_read_tokens=18944)
+    assert usage == Usage(
+        input_tokens=19038,
+        output_tokens=135,
+        cache_read_tokens=18944,
+        output_reasoning_tokens=94,
+    )
 
     extracted_usage = extract_usage(response_data, provider_id='groq')
-    assert extracted_usage.usage == Usage(input_tokens=19038, output_tokens=135, cache_read_tokens=18944)
+    assert extracted_usage.usage == usage
 
 
 def test_openrouter_chat_cache_write_tokens():
@@ -229,6 +234,7 @@ def test_openrouter_chat_cache_write_tokens():
             },
             'completion_tokens_details': {
                 'audio_tokens': 23,
+                'reasoning_tokens': 1200,
             },
         },
     }
@@ -243,6 +249,7 @@ def test_openrouter_chat_cache_write_tokens():
                 output_tokens=1906,
                 input_audio_tokens=17,
                 output_audio_tokens=23,
+                output_reasoning_tokens=1200,
             ),
         )
     )
@@ -256,6 +263,7 @@ def test_openrouter_chat_cache_write_tokens():
             output_tokens=1906,
             input_audio_tokens=17,
             output_audio_tokens=23,
+            output_reasoning_tokens=1200,
         )
     )
     assert extracted_usage.provider.name == snapshot('OpenRouter')
@@ -551,7 +559,17 @@ assert google_provider.extractors is not None
 def test_google():
     usage = google_provider.extract_usage(gemini_response_data)
     assert usage == snapshot(
-        ('gemini-2.5-flash', Usage(input_tokens=100, output_tokens=162, input_text_tokens=75, output_text_tokens=162))
+        (
+            'gemini-2.5-flash',
+            Usage(
+                input_tokens=100,
+                output_tokens=162,
+                input_text_tokens=75,
+                output_text_tokens=162,
+                output_reasoning_tokens=144,
+                output_text_reasoning_tokens=144,
+            ),
+        )
     )
 
 
@@ -585,6 +603,8 @@ def test_google_caching():
             input_audio_tokens=150,
             output_audio_tokens=10,
             cache_audio_read_tokens=129,
+            output_reasoning_tokens=69,
+            output_text_reasoning_tokens=69,
         ),
     )
     assert model is not None
@@ -605,6 +625,8 @@ def test_google_caching_public_extraction_parity():
             input_audio_tokens=150,
             output_audio_tokens=10,
             cache_audio_read_tokens=129,
+            output_reasoning_tokens=69,
+            output_text_reasoning_tokens=69,
         )
     )
     assert extracted_usage.model is not None
@@ -695,6 +717,8 @@ def test_google_extracts_tool_use_modalities_from_details():
             input_audio_tokens=5,
             input_image_tokens=9,
             input_video_tokens=3,
+            output_reasoning_tokens=4,
+            output_text_reasoning_tokens=4,
         ),
     )
 
@@ -924,7 +948,14 @@ def test_pricing_rejects_registered_contradictions_with_registry_message() -> No
 
 def test_accumulate_extracted_usage():
     extracted = extract_usage(gemini_response_data, provider_id='google')
-    assert extracted.usage == Usage(input_tokens=100, output_tokens=162, input_text_tokens=75, output_text_tokens=162)
+    assert extracted.usage == Usage(
+        input_tokens=100,
+        output_tokens=162,
+        input_text_tokens=75,
+        output_text_tokens=162,
+        output_reasoning_tokens=144,
+        output_text_reasoning_tokens=144,
+    )
     with pytest.raises(TypeError):
         _ = extracted + 1
     with pytest.raises(TypeError):
@@ -946,9 +977,11 @@ def test_accumulate_extracted_usage():
         output_tokens=162 * 2,
         input_text_tokens=75 * 2,
         output_text_tokens=162 * 2,
+        output_reasoning_tokens=144 * 2,
+        output_text_reasoning_tokens=144 * 2,
     )
     assert repr(double_extracted) == snapshot(
-        "ExtractedUsage(usage=Usage(input_tokens=200, output_tokens=324, input_text_tokens=150, output_text_tokens=324), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
+        "ExtractedUsage(usage=Usage(input_tokens=200, output_tokens=324, input_text_tokens=150, output_text_tokens=324, output_reasoning_tokens=288, output_text_reasoning_tokens=288), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
     )
     assert repr(double_extracted.calc_price()) == snapshot(
         "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $2.5/output MTok, $0.03/cache read MTok, $1/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
@@ -970,10 +1003,47 @@ def test_xai_native():
             'prompt_tokens': 181,
             'cached_prompt_text_tokens': 162,
             'completion_tokens': 27,
+            'reasoning_tokens': 19,
             'prompt_text_tokens': 181,
             'total_tokens': 208,
         },
     }
     model, usage = provider.extract_usage(response_data)
     assert model == 'grok-4-fast-non-reasoning'
-    assert usage == Usage(input_tokens=181, cache_read_tokens=162, output_tokens=27)
+    assert usage == Usage(input_tokens=181, cache_read_tokens=162, output_tokens=27, output_reasoning_tokens=19)
+
+
+@pytest.mark.parametrize('provider_id', ['azure', 'google', 'x-ai'])
+def test_openai_compatible_reasoning_tokens(provider_id: str):
+    provider = next(provider for provider in providers if provider.id == provider_id)
+    response_data = {
+        'model': 'reasoning-model',
+        'usage': {
+            'prompt_tokens': 10,
+            'completion_tokens': 8,
+            'completion_tokens_details': {'reasoning_tokens': 6},
+        },
+    }
+
+    assert provider.extract_usage(response_data, api_flavor='chat') == (
+        'reasoning-model',
+        Usage(input_tokens=10, output_tokens=8, output_reasoning_tokens=6),
+    )
+
+
+def test_perplexity_reasoning_tokens():
+    provider = next(provider for provider in providers if provider.id == 'perplexity')
+    response_data = {
+        'model': 'sonar-deep-research',
+        'usage': {
+            'prompt_tokens': 10,
+            'completion_tokens': 8,
+            'total_tokens': 18,
+            'reasoning_tokens': 6,
+        },
+    }
+
+    assert provider.extract_usage(response_data) == (
+        'sonar-deep-research',
+        Usage(input_tokens=10, output_tokens=8, output_reasoning_tokens=6),
+    )
