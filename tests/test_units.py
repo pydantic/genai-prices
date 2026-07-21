@@ -181,6 +181,53 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
         assert price_key == f'{expected_stem}_mtok'
 
 
+def test_repo_prices_omit_redundant_equal_rate_descendants() -> None:
+    registry = UnitRegistry(load_units())
+    redundant_prices: list[str] = []
+
+    for provider in data.providers:
+        for model in provider.models:
+            model_prices = (
+                [price.prices for price in model.prices] if isinstance(model.prices, list) else [model.prices]
+            )
+            for price_index, model_price in enumerate(model_prices):
+                resolved_prices = _collect_resolved_model_prices(model_price, registry)
+                prices_by_usage_key = {unit.usage_key: (unit, price_value) for unit, price_value in resolved_prices}
+
+                for unit, price_value in resolved_prices:
+                    ancestor_prices = [
+                        prices_by_usage_key[ancestor_key]
+                        for ancestor_key in registry.ancestor_usage_keys(unit.usage_key)
+                        if ancestor_key in prices_by_usage_key
+                    ]
+                    if not ancestor_prices:
+                        continue
+
+                    closest_depth = max(len(ancestor.dimensions) for ancestor, _ in ancestor_prices)
+                    if not any(
+                        ancestor_price == price_value
+                        for ancestor, ancestor_price in ancestor_prices
+                        if len(ancestor.dimensions) == closest_depth
+                    ):
+                        continue
+
+                    required_by_descendant = any(
+                        unit.usage_key in registry.ancestor_usage_keys(other.usage_key)
+                        for other, _ in resolved_prices
+                        if other is not unit
+                    )
+                    other_units = [other for other, _ in resolved_prices if other is not unit]
+                    required_as_join = any(
+                        registry.find_join(left, right) is unit
+                        for left_index, left in enumerate(other_units)
+                        for right in other_units[left_index + 1 :]
+                    )
+                    if not required_by_descendant and not required_as_join:
+                        redundant_prices.append(f'{provider.id}/{model.id}[{price_index}]:{unit.price_key}')
+
+    assert redundant_prices == []
+
+
 def test_unit_registry_constructs_current_units() -> None:
     registry = UnitRegistry(load_units())
 
