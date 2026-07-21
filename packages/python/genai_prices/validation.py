@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Collection
+
 from genai_prices.units import UnitDef, UnitRegistry
 
 
@@ -21,8 +23,16 @@ def validate_ancestor_coverage(priced_usage_keys: set[str], registry: UnitRegist
 def validate_join_coverage(priced_usage_keys: set[str], registry: UnitRegistry) -> None:
     priced_units = _priced_units(priced_usage_keys, registry)
 
-    for index, first_unit in enumerate(priced_units):
-        for second_unit in priced_units[index + 1 :]:
+    _validate_join_coverage_units(priced_units, priced_usage_keys, registry)
+
+
+def _validate_join_coverage_units(
+    priced_units: Collection[UnitDef], priced_usage_keys: set[str], registry: UnitRegistry
+) -> None:
+    ordered_priced_units = sorted(priced_units, key=lambda unit: unit.usage_key)
+
+    for index, first_unit in enumerate(ordered_priced_units):
+        for second_unit in ordered_priced_units[index + 1 :]:
             if not first_unit.is_compatible_with(second_unit):
                 continue
 
@@ -43,11 +53,28 @@ def _priced_units(priced_usage_keys: set[str], registry: UnitRegistry) -> list[U
 
 
 def validate_model_price(price_keys: set[str], registry: UnitRegistry) -> None:
-    validate_price_keys(price_keys, registry)
+    priced_units: list[UnitDef] = []
+    unknown_price_keys: set[str] = set()
+    for price_key in price_keys:
+        unit = _unit_for_price_key(price_key, registry)
+        if unit is None:
+            unknown_price_keys.add(price_key)
+        else:
+            priced_units.append(unit)
 
-    priced_usage_keys = {registry.unit_for_price_key(price_key).usage_key for price_key in price_keys}
+    if unknown_price_keys:
+        bad_keys = ', '.join(sorted(unknown_price_keys))
+        raise ValueError(f'Unknown price key: {bad_keys}')
+
+    validate_priced_units(priced_units, registry)
+
+
+def validate_priced_units(priced_units: Collection[UnitDef], registry: UnitRegistry) -> None:
+    """Validate ancestor and join coverage for already-resolved priced units."""
+    priced_usage_keys = {unit.usage_key for unit in priced_units}
+
     validate_ancestor_coverage(priced_usage_keys, registry)
-    validate_join_coverage(priced_usage_keys, registry)
+    _validate_join_coverage_units(priced_units, priced_usage_keys, registry)
 
 
 def validate_extractor_destinations(dest_keys: set[str], reported_usage_keys: set[str] | frozenset[str]) -> None:

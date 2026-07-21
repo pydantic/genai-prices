@@ -11,6 +11,7 @@ from genai_prices.validation import (
     validate_join_coverage,
     validate_model_price,
     validate_price_keys,
+    validate_priced_units,
 )
 
 from .unit_registry_helpers import load_units
@@ -143,6 +144,80 @@ def test_validate_model_price_rejects_missing_join_units() -> None:
         match='Missing registered join unit for priced units cache_write_tokens and input_audio_tokens',
     ):
         validate_model_price({'input_mtok', 'cache_write_mtok', 'input_audio_mtok'}, registry)
+
+
+def test_validate_priced_units_accepts_valid_units() -> None:
+    registry = UnitRegistry(load_units())
+
+    validate_priced_units(
+        [
+            registry.units['input_tokens'],
+            registry.units['cache_read_tokens'],
+            registry.units['requests'],
+        ],
+        registry,
+    )
+
+
+def test_validate_priced_units_rejects_missing_ancestor() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
+        validate_priced_units([registry.units['cache_read_tokens']], registry)
+
+
+def test_validate_priced_units_rejects_missing_join() -> None:
+    registry = UnitRegistry(load_units())
+    priced_units = [
+        registry.units['input_tokens'],
+        registry.units['cache_read_tokens'],
+        registry.units['input_audio_tokens'],
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match='Missing join price for cache_read_tokens and input_audio_tokens: cache_audio_read_tokens',
+    ):
+        validate_priced_units(priced_units, registry)
+
+
+def test_validate_priced_units_accepts_request_only() -> None:
+    registry = UnitRegistry(load_units())
+
+    validate_priced_units([registry.units['requests']], registry)
+
+
+def test_validate_priced_units_accepts_explicit_custom_registry_units() -> None:
+    registry = UnitRegistry(
+        {
+            'characters': {
+                'per': 1_000,
+                'price_key': 'characters_kcount',
+                'dimensions': {'family': 'characters'},
+            }
+        }
+    )
+
+    validate_priced_units([registry.units['characters']], registry)
+
+
+@pytest.mark.parametrize(
+    'price_keys',
+    [
+        {'cache_read_mtok'},
+        {'input_mtok', 'cache_read_mtok', 'input_audio_mtok'},
+    ],
+)
+def test_resolved_and_key_model_price_validation_errors_match(price_keys: set[str]) -> None:
+    registry = UnitRegistry(load_units())
+    priced_units = [registry.unit_for_price_key(price_key) for price_key in price_keys]
+
+    with pytest.raises(ValueError) as key_error:
+        validate_model_price(price_keys, registry)
+    with pytest.raises(ValueError) as unit_error:
+        validate_priced_units(priced_units, registry)
+
+    assert str(unit_error.value) == str(key_error.value)
 
 
 def test_bundled_provider_model_prices_pass_registry_validation() -> None:
