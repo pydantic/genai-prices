@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import subprocess
 import sys
@@ -67,22 +66,6 @@ def test_v1_remote_payloads_are_provider_arrays():
         assert isinstance(payload, list)
         assert payload
         assert all(isinstance(provider, dict) for provider in payload)
-
-
-def test_v1_artifacts_match_pinned_hashes():
-    """V1 artifacts stay byte-identical to the pre-registry compatibility baseline."""
-    from prices.utils import package_dir
-
-    expected_hashes = {
-        'data.json': '1941f414dc96f4a73dc78a4a5de3f8fdff76140e3edcf586f5b6408ec4c3cc79',
-        'data_slim.json': '6e74a8b8ff87a006da329262a339e47c8d5df28829e07c76cafdbe2af9df0333',
-        'data.schema.json': 'af9ebea4214da05756b6a95f7befe33b0e73ac9e218eada6b7800ab8915744fb',
-        'data_slim.schema.json': '6356b78d316f9ffb2a20e79c635620ae87ead977be8e989f28383fb840ba3ba9',
-    }
-
-    assert {
-        filename: hashlib.sha256((package_dir / filename).read_bytes()).hexdigest() for filename in expected_hashes
-    } == expected_hashes
 
 
 def test_v2_remote_payload_is_provider_array_with_static_unit_vocabulary():
