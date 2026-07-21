@@ -82,7 +82,7 @@ Existing `data.json` and `data_slim.json` consumers continue receiving their pro
 Phase 1 supports repo-defined bundled units and Phase 2 supports publisher-defined remote units. Neither phase promises arbitrary caller-defined registry mutation as a public runtime feature.
 
 **Validation and decomposition caches remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data")_
-Phase 1 removes repeated scans and allocations without cache lifecycle state. More elaborate validation or decomposition caches require new benchmark evidence and a separate specification; they are not an active numbered phase.
+Phase 1 removes repeated scans and allocations without cache lifecycle state. More elaborate validation or decomposition caches require a separate specification; they are not an active numbered phase.
 
 **Phase-local prose and code specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
 The root spec defines shared invariants and delivery boundaries. Each numbered phase's `spec.md` defines behavior, and its `code-spec.md` defines the corresponding architecture. Later requirements do not expand an earlier phase's release scope.

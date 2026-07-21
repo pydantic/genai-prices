@@ -60,7 +60,7 @@ For every candidate PR after the initial v3 publication, the required compatibil
 Payloads and generated modules contain raw units, providers, and raw prices only. Validation markers, trust flags, fingerprints, cache records, and decomposition plans remain runtime concerns rather than serialized contract fields.
 
 **Phase 2 does not include validation or decomposition caching.**
-Registry replacement may later motivate cache identities and invalidation, but those optimizations require fresh benchmarks and a separate decision. They are not part of enabling atomic unit updates.
+Registry replacement may later motivate cache identities and invalidation, but those optimizations require a separate decision. They are not part of enabling atomic unit updates.
 
 **Tests prove version isolation and atomic activation.** _(from "Existing v1 and v2 update contracts remain stable", "Phase 2 publishes a frozen slim projection of final v2", "Remote v3 activation validates the complete candidate before the swap", "V3 publication is conditional on the compared Git object")_
 Coverage verifies frozen v1/v2 artifacts, the slim v2 projection and schema, wrapped v3 schemas, publisher rejection of removed or changed units, conditional-publication conflicts, matching unit/provider activation, no state change after unit, provider, extractor, promise, or stale-update failure, consistent detached calls and `Usage` operations during replacement, Python restoration of bundled providers while fetched units and detached objects remain usable, use of newly fetched units in both runtimes, and absence of runtime cache state in serialized outputs.
