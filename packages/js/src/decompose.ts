@@ -1,13 +1,15 @@
 import type { UnitDef } from './types'
+import type { UnitRegistry } from './units'
 import type { NormalizedUsage } from './usage'
 
-import { isDescendantOrSelf } from './units'
+import { getActiveRegistry, isDescendantOrSelf } from './units'
 import { getUsageValue } from './usage'
 
 export function computeLeafValues(
   pricedUsageKeys: Set<string>,
   usage: NormalizedUsage,
-  unitsByUsageKey: Map<string, UnitDef>
+  unitsByUsageKey: Map<string, UnitDef>,
+  registry: UnitRegistry = getActiveRegistry()
 ): Record<string, number> {
   const pricedUnits = [...pricedUsageKeys]
     .filter((usageKey) => unitsByUsageKey.has(usageKey))
@@ -22,11 +24,11 @@ export function computeLeafValues(
       if (!isDescendantOrSelf(unit, descendant)) continue
 
       const sign = (Object.keys(descendant.dimensions).length - Object.keys(unit.dimensions).length) % 2 === 0 ? 1 : -1
-      leafValue += sign * getUsageValue(usage, descendant.usageKey)
+      leafValue += sign * getUsageValue(usage, descendant.usageKey, registry)
     }
 
     if (leafValue < 0) {
-      throw new Error(negativeLeafErrorMessage(unit, pricedUnits, usage, leafValue))
+      throw new Error(negativeLeafErrorMessage(unit, pricedUnits, usage, leafValue, registry))
     }
 
     leafValues[unit.usageKey] = leafValue
@@ -35,13 +37,19 @@ export function computeLeafValues(
   return leafValues
 }
 
-function negativeLeafErrorMessage(unit: UnitDef, pricedUnits: UnitDef[], usage: NormalizedUsage, leafValue: number): string {
-  const unitValue = getUsageValue(usage, unit.usageKey)
+function negativeLeafErrorMessage(
+  unit: UnitDef,
+  pricedUnits: UnitDef[],
+  usage: NormalizedUsage,
+  leafValue: number,
+  registry: UnitRegistry
+): string {
+  const unitValue = getUsageValue(usage, unit.usageKey, registry)
   const descendantValues = pricedUnits
     .filter((descendant) => descendant !== unit && isDescendantOrSelf(unit, descendant))
     .map((descendant) => ({
       unit: descendant,
-      value: getUsageValue(usage, descendant.usageKey),
+      value: getUsageValue(usage, descendant.usageKey, registry),
     }))
     .filter(({ value }) => value > 0)
 

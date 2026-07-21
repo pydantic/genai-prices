@@ -66,42 +66,33 @@ export class UnitRegistry {
 }
 
 const generatedRegistry = new UnitRegistry(unitData)
-let activeRegistry = generatedRegistry
 
 export function getActiveRegistry(): UnitRegistry {
-  return activeRegistry
+  return generatedRegistry
 }
 
 export function getAllPriceKeys(): Set<string> {
-  return new Set(activeRegistry.allPriceKeys)
+  return new Set(generatedRegistry.allPriceKeys)
 }
 
 export function getAllUsageKeys(): Set<string> {
-  return new Set(activeRegistry.allUsageKeys)
+  return new Set(generatedRegistry.allUsageKeys)
 }
 
 export function getUnit(usageKey: string): UnitDef {
-  const unit = activeRegistry.units.get(usageKey)
+  const unit = generatedRegistry.units.get(usageKey)
   if (unit) return unit
   throw new Error(`Unknown unit usage key: ${usageKey}`)
 }
 
 export function getUnitForPriceKey(priceKey: string): UnitDef {
-  const unit = activeRegistry.unitsByPriceKey.get(priceKey)
+  const unit = generatedRegistry.unitsByPriceKey.get(priceKey)
   if (unit) return unit
   throw new Error(`Unknown unit price key: ${priceKey}`)
 }
 
 export function getUsageKeyForPriceKey(priceKey: string): string {
   return getUnitForPriceKey(priceKey).usageKey
-}
-
-export function setActiveRegistry(registry: null | UnitRegistry): void {
-  if (registry === null) {
-    activeRegistry = generatedRegistry
-  } else {
-    activeRegistry = registry
-  }
 }
 
 export function dimensionKey(dimensions: Record<string, string>): string {

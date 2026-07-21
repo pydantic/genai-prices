@@ -6,7 +6,6 @@ import logging
 import threading
 from dataclasses import dataclass, field
 from time import time
-from typing import Any, cast
 
 import httpx2
 
@@ -20,7 +19,7 @@ __all__ = (
 )
 
 logger = logging.getLogger('genai-prices')
-DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
+DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
 _global_update_prices: UpdatePrices | None = None
 
 
@@ -118,9 +117,6 @@ class UpdatePrices:
             self._thread = None
         # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
         data_snapshot.set_custom_snapshot(None)
-        from .units import _set_registry  # pyright: ignore[reportPrivateUsage]
-
-        _set_registry(None)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
@@ -165,23 +161,12 @@ class UpdatePrices:
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
         from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
-        from .units import UnitRegistry, _get_registry, _set_registry  # pyright: ignore[reportPrivateUsage]
 
         r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
         raw_payload = json.loads(r.content)
-        if not isinstance(raw_payload, dict) or 'units' not in raw_payload or 'providers' not in raw_payload:
-            raise ValueError('Expected fetched prices payload to contain units and providers')
+        if not isinstance(raw_payload, list):
+            raise ValueError('Expected fetched prices payload to be a provider array')
 
-        # Published unit data is trusted to evolve compatibly. We only need rollback
-        # if this payload's providers fail to parse; no registry-history diff is enforced.
-        candidate_registry = UnitRegistry(cast(dict[str, Any], raw_payload['units']))
-        previous_registry = _get_registry()
-        _set_registry(candidate_registry)
-        try:
-            providers = _providers_from_raw(raw_payload['providers'])
-        except Exception:
-            _set_registry(previous_registry)
-            raise
-
+        providers = _providers_from_raw(raw_payload)
         return data_snapshot.DataSnapshot(providers, from_auto_update=True)

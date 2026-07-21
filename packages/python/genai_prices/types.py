@@ -3,7 +3,7 @@ from __future__ import annotations as _annotations
 import dataclasses
 import re
 from collections.abc import Iterator, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
@@ -11,8 +11,10 @@ from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, c
 import pydantic
 from typing_extensions import TypedDict
 
+from genai_prices.units import UnitRegistry
+
 if TYPE_CHECKING:
-    from genai_prices.units import UnitDef, UnitRegistry
+    from genai_prices.units import UnitDef
 
 __all__ = (
     'ProviderID',
@@ -434,9 +436,10 @@ class UsageExtractor:
     """Name of the API flavor, only needed when a provider has multiple flavors, e.g. OpenAI has `chat` and `responses`."""
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
+    _registry: InitVar[UnitRegistry | None] = None
 
-    def __post_init__(self) -> None:
-        _validate_usage_extractor_destinations(self.mappings)
+    def __post_init__(self, _registry: UnitRegistry | None) -> None:
+        _validate_usage_extractor_destinations(self.mappings, _registry)
 
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
@@ -470,12 +473,14 @@ class UsageExtractor:
         return model_name, Usage(**values)
 
 
-def _validate_usage_extractor_destinations(mappings: Sequence[UsageExtractorMapping]) -> None:
+def _validate_usage_extractor_destinations(
+    mappings: Sequence[UsageExtractorMapping], registry: UnitRegistry | None = None
+) -> None:
     from genai_prices.validation import validate_extractor_destinations
 
     validate_extractor_destinations(
         {mapping.dest for mapping in mappings},
-        _reported_usage_keys(),
+        registry.reported_usage_keys() if registry is not None else _reported_usage_keys(),
     )
 
 
@@ -994,8 +999,38 @@ _providers_schema = pydantic.TypeAdapter(
 )
 
 
-def _providers_from_raw(raw_providers: Any) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
-    return _providers_schema.validate_python(_normalize_model_prices(raw_providers))
+def _providers_from_raw(raw_providers: Any, registry: UnitRegistry | None = None) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+    normalized = _normalize_model_prices(raw_providers)
+    if registry is not None:
+        normalized = _inject_extractor_registry(normalized, registry)
+    return _providers_schema.validate_python(normalized)
+
+
+def _inject_extractor_registry(raw_providers: Any, registry: UnitRegistry) -> Any:
+    if not isinstance(raw_providers, list):
+        return raw_providers
+
+    providers: list[Any] = []
+    for raw_provider in cast(list[Any], raw_providers):
+        if not isinstance(raw_provider, Mapping):
+            providers.append(raw_provider)
+            continue
+
+        provider = dict(cast(Mapping[str, Any], raw_provider))
+        raw_extractors = provider.get('extractors')
+        if isinstance(raw_extractors, list):
+            extractors: list[Any] = []
+            for raw_extractor in cast(list[Any], raw_extractors):
+                if isinstance(raw_extractor, Mapping):
+                    extractor = dict(cast(Mapping[str, Any], raw_extractor))
+                    extractor['_registry'] = registry
+                    extractors.append(extractor)
+                else:
+                    extractors.append(raw_extractor)
+            provider['extractors'] = extractors
+        providers.append(provider)
+
+    return providers
 
 
 def _normalize_model_prices(value: Any) -> Any:

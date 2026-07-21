@@ -89,15 +89,16 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
+`UpdatePrices` can periodically replace the provider and model price data by downloading the v2 provider array from
+GitHub. Updates never replace the static unit registry bundled with the installed package.
 
 Please note:
 
 - this functionality is explicitly opt-in
-- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
+- we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the `data.json` file
-downloaded by `UpdatePrices` is around 26KB when compressed, so is generally very quick to download.
+At the time of writing, the `data_v2.json` provider array downloaded by `UpdatePrices` is around 51KB when compressed,
+so is generally very quick to download.
 
 By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
 

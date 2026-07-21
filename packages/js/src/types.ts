@@ -128,12 +128,7 @@ export interface PriceDataStorage {
   set: (data: string) => Promise<void>
 }
 
-export interface WrappedProviderData {
-  providers: Provider[]
-  units: RawUnitsDict
-}
-
-export type ProviderDataValue = null | Provider[] | WrappedProviderData
+export type ProviderDataValue = null | Provider[]
 export type ProviderDataPayload = Promise<ProviderDataValue> | ProviderDataValue
 
 export interface StorageFactoryParams {

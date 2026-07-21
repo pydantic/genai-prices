@@ -11,7 +11,6 @@ import {
   getUnit,
   getUnitForPriceKey,
   getUsageKeyForPriceKey,
-  setActiveRegistry,
   UnitRegistry,
 } from '../units'
 
@@ -130,14 +129,14 @@ describe('UnitRegistry', () => {
   })
 })
 
-describe('active unit registry', () => {
+describe('generated unit registry', () => {
   it('initializes from generated unit data', () => {
     const active = getActiveRegistry()
     expect(active.units.get('input_tokens')?.priceKey).toBe('input_mtok')
     expect(active.units.get('requests')?.priceKey).toBe('requests_kcount')
   })
 
-  it('sets custom registries and resets to the generated registry', () => {
+  it('keeps a stable generated registry while allowing direct construction', () => {
     const generated = getActiveRegistry()
     const custom = new UnitRegistry({
       widgets: {
@@ -146,17 +145,13 @@ describe('active unit registry', () => {
       },
     })
 
-    setActiveRegistry(custom)
-    expect(getActiveRegistry()).toBe(custom)
-    expect(getActiveRegistry().units.get('widgets')?.priceKey).toBe('widgets')
-
-    setActiveRegistry(null)
     expect(getActiveRegistry()).toBe(generated)
     expect(getActiveRegistry().units.get('input_tokens')?.priceKey).toBe('input_mtok')
+    expect(getActiveRegistry().units.has('widgets')).toBe(false)
+    expect(custom.units.get('widgets')?.priceKey).toBe('widgets')
   })
 
   it('looks up generated units', () => {
-    setActiveRegistry(null)
     expect(getUnit('input_tokens').per).toBe(1_000_000)
     expect(getUnit('requests').per).toBe(1_000)
     expect(getUnit('input_tokens')).toBe(getActiveRegistry().units.get('input_tokens'))
@@ -168,7 +163,6 @@ describe('active unit registry', () => {
   })
 
   it('looks up generated price keys', () => {
-    setActiveRegistry(null)
     expect(getUnitForPriceKey('input_mtok')).toBe(getUnit('input_tokens'))
     expect(getUnitForPriceKey('output_mtok')).toBe(getUnit('output_tokens'))
     expect(getUnitForPriceKey('requests_kcount')).toBe(getUnit('requests'))
@@ -181,17 +175,14 @@ describe('active unit registry', () => {
   })
 
   it('returns the generated full usage-key set', () => {
-    setActiveRegistry(null)
     expect(getAllUsageKeys()).toEqual(new Set(['requests', ...tokenUsageKeys]))
   })
 
   it('returns the generated full price-key set', () => {
-    setActiveRegistry(null)
     expect(getAllPriceKeys()).toEqual(new Set(['requests_kcount', ...tokenPriceKeys]))
   })
 
   it('returns externally reported usage keys without pricing-only requests', () => {
-    setActiveRegistry(null)
     expect(getAllUsageKeys()).toContain('requests')
     expect(getActiveRegistry().reportedUsageKeys).toEqual(new Set(tokenUsageKeys))
     expect(getActiveRegistry().reportedUsageKeys).not.toContain('requests')

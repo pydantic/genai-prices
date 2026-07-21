@@ -26,7 +26,7 @@ from genai_prices.types import (
     _collect_model_price_units,
     _compute_registry_priced_counts,
 )
-from genai_prices.units import UnitRegistry, _get_registry, _set_registry
+from genai_prices.units import UnitRegistry, _get_registry
 from prices import build as build_module, export_validation, package_data, prices_types as build_types
 from prices.export_validation import validate_export_payload, validate_units
 
@@ -99,7 +99,7 @@ def _custom_price_key_registry() -> UnitRegistry:
 
 
 @contextmanager
-def _active_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
+def _use_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
     registry = UnitRegistry(raw_units)
     with patch('genai_prices.units._get_registry', return_value=registry):
         yield registry
@@ -539,7 +539,7 @@ def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
-    with _active_registry(_custom_price_key_units()):
+    with _use_registry(_custom_price_key_units()):
         assert ModelPrice().sausage_mtok is None
 
 
@@ -738,12 +738,42 @@ def test_package_generation_no_longer_reloads_units_yml() -> None:
     assert references == set()
 
 
-def test_package_payload_rejects_legacy_provider_arrays(tmp_path: Path) -> None:
-    data_path = tmp_path / 'data.json'
-    data_path.write_text('[]')
+def test_package_provider_data_rejects_non_array_root(tmp_path: Path) -> None:
+    data_path = tmp_path / 'data_v2.json'
+    data_path.write_text('{"providers": []}')
 
-    with pytest.raises(ValueError, match=r'Expected .* to contain \{units, providers\}'):
-        package_data._load_package_payload(data_path)
+    with pytest.raises(ValueError, match=r'Expected .* to contain a provider array'):
+        package_data._load_provider_data(data_path)
+
+
+def test_package_data_loads_providers_and_units_independently(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    provider_data: list[package_data.JsonData] = [{'id': 'testing', 'name': 'Testing', 'models': []}]
+    units: dict[str, Any] = {
+        'widgets': {
+            'per': 1_000,
+            'dimensions': {'family': 'widgets'},
+        }
+    }
+    (tmp_path / 'data_v2.json').write_text(json.dumps(provider_data))
+    calls: list[tuple[str, list[package_data.JsonData], dict[str, Any]]] = []
+
+    def generate_python(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
+        calls.append(('python', providers, raw_units))
+
+    def generate_typescript(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
+        calls.append(('typescript', providers, raw_units))
+
+    monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
+    monkeypatch.setattr(package_data, 'load_units', lambda: units)
+    monkeypatch.setattr(package_data, 'package_python_data', generate_python)
+    monkeypatch.setattr(package_data, 'package_ts_data', generate_typescript)
+
+    package_data.package_data()
+
+    assert calls == [
+        ('python', provider_data, units),
+        ('typescript', provider_data, units),
+    ]
 
 
 def test_package_data_accepts_valid_provider_model_prices() -> None:
@@ -819,31 +849,47 @@ def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.Mo
         build_module.build()
 
 
-def test_package_python_data_accepts_wrapped_payload_without_units_yml(
+def test_build_writes_only_v2_price_artifacts(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+    writes: list[str] = []
+
+    def record_write(_providers: list[build_types.Provider], _units: dict[str, Any], filename: str) -> None:
+        writes.append(filename)
+
+    monkeypatch.setattr(build_module, 'package_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'root_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'load_units', load_units)
+    monkeypatch.setattr(build_module, 'write_prices', record_write)
+
+    build_module.build()
+
+    assert writes == ['data_v2.json']
+
+
+def test_package_python_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     from genai_prices import types as runtime_types
 
     units = {
-        'input_tokens': {
+        'transient_tokens': {
             'per': 1_000_000,
-            'price_key': 'input_mtok',
-            'dimensions': {'family': 'tokens', 'direction': 'input'},
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient'},
         },
     }
-    provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
-    payload = {
-        'units': units,
-        'providers': build_types.providers_schema.dump_python(
-            [provider],
-            mode='json',
-            by_alias=True,
-            exclude_none=True,
-            warnings=False,
-        ),
-    }
-    data_path = tmp_path / 'data.json'
-    data_path.write_text(json.dumps(payload))
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'transient_mtok': '1'}),
+        extractors=[_build_extractor('transient_tokens')],
+    )
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
 
     py_package_dir = tmp_path / 'genai_prices'
     py_package_dir.mkdir()
@@ -855,7 +901,7 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
 
     monkeypatch.setattr(package_data, '_format_generated_python_data', skip_format_generated_python_data)
 
-    package_data.package_python_data(data_path)
+    package_data.package_python_data(provider_data, units)
 
     assert (py_package_dir / 'data.py').exists()
     unit_data_content = (py_package_dir / 'data_units.py').read_text()
@@ -863,7 +909,27 @@ def test_package_python_data_accepts_wrapped_payload_without_units_yml(
     assert generated_units == units
 
 
-def test_package_python_data_clears_active_registry_if_runtime_provider_validation_fails(
+def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry({})
+    invalid_provider = object()
+    invalid_extractor = object()
+    raw_providers: list[Any] = [
+        invalid_provider,
+        {'id': 'without-extractors'},
+        {'id': 'with-extractors', 'extractors': [invalid_extractor, {'mappings': []}]},
+    ]
+
+    assert runtime_types._inject_extractor_registry({}, registry) == {}
+    injected = runtime_types._inject_extractor_registry(raw_providers, registry)
+    assert injected[0] is invalid_provider
+    assert injected[1] == {'id': 'without-extractors'}
+    assert injected[2]['extractors'][0] is invalid_extractor
+    assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+
+def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     from genai_prices import types as runtime_types
@@ -871,7 +937,7 @@ def test_package_python_data_clears_active_registry_if_runtime_provider_validati
     class RuntimeProviderValidationError(RuntimeError):
         pass
 
-    _set_registry(None)
+    bundled_registry = _get_registry()
     units = {
         'transient_tokens': {
             'per': 1_000_000,
@@ -879,29 +945,23 @@ def test_package_python_data_clears_active_registry_if_runtime_provider_validati
             'dimensions': {'family': 'transient'},
         },
     }
-    payload: dict[str, Any] = {'units': units, 'providers': []}
-    data_path = tmp_path / 'data.json'
-    data_path.write_text(json.dumps(payload))
-
     py_package_dir = tmp_path / 'genai_prices'
     py_package_dir.mkdir()
     monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
 
-    def fail_runtime_provider_validation(_provider_data: Any) -> list[runtime_types.Provider]:
+    def fail_runtime_provider_validation(_provider_data: Any, _registry: UnitRegistry) -> list[runtime_types.Provider]:
         raise RuntimeProviderValidationError('sentinel runtime provider validation failure')
 
     monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
 
-    try:
-        with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
-            package_data.package_python_data(data_path)
+    with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
+        package_data.package_python_data([], units)
 
-        assert 'transient_tokens' not in _get_registry().units
-    finally:
-        _set_registry(None)
+    assert _get_registry() is bundled_registry
+    assert 'transient_tokens' not in bundled_registry.units
 
 
-def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
+def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     units = {
@@ -912,18 +972,13 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
-    payload = {
-        'units': units,
-        'providers': build_types.providers_schema.dump_python(
-            [provider],
-            mode='json',
-            by_alias=True,
-            exclude_none=True,
-            warnings=False,
-        ),
-    }
-    data_path = tmp_path / 'data.json'
-    data_path.write_text(json.dumps(payload))
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
 
     js_src_dir = tmp_path / 'packages' / 'js' / 'src'
     js_src_dir.mkdir(parents=True)
@@ -941,7 +996,7 @@ def test_package_ts_data_accepts_wrapped_payload_without_units_yml(
 
     monkeypatch.setattr(subprocess, 'run', skip_prettier)
 
-    package_data.package_ts_data(data_path)
+    package_data.package_ts_data(provider_data, units)
 
     assert (js_src_dir / 'data.ts').exists()
     unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
@@ -1181,18 +1236,13 @@ def test_generated_python_unit_data_builds_registry() -> None:
 
 
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
-def test_remote_payload_roots_are_wrapped_objects(filename: str) -> None:
+def test_v1_remote_payload_roots_are_provider_arrays(filename: str) -> None:
     payload_obj = json.loads((Path(__file__).parent.parent / filename).read_text())
 
-    assert isinstance(payload_obj, dict)
-    payload = cast(dict[str, Any], payload_obj)
-    assert set(payload) == {'units', 'providers'}
-    providers = cast(list[object], payload['providers'])
-    units = cast(dict[str, Any], payload['units'])
+    assert isinstance(payload_obj, list)
+    providers = cast(list[object], payload_obj)
     assert providers
     assert all(isinstance(provider, dict) for provider in providers)
-    assert units['cache_image_write_tokens']['price_key'] == 'cache_image_write_mtok'
-    assert units['cache_image_write_tokens']['dimensions']['family'] == 'tokens'
 
 
 def test_data_snapshot_has_no_unit_registry_field() -> None:
@@ -1212,7 +1262,6 @@ def test_bundled_snapshot_lookup_helpers_still_work() -> None:
 
 
 def test_get_registry_returns_generated_unit_data_registry() -> None:
-    _set_registry(None)
     registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
@@ -1221,19 +1270,13 @@ def test_get_registry_returns_generated_unit_data_registry() -> None:
     assert _get_registry() is registry
 
 
-def test_set_registry_swaps_and_restores_bundled_registry() -> None:
-    _set_registry(None)
+def test_constructed_registry_is_independent_from_bundled_singleton() -> None:
     bundled = _get_registry()
     custom = _custom_price_key_registry()
 
-    try:
-        _set_registry(custom)
-        assert _get_registry() is custom
-
-        _set_registry(None)
-        assert _get_registry() is bundled
-    finally:
-        _set_registry(None)
+    assert custom is not bundled
+    assert custom.units != bundled.units
+    assert _get_registry() is bundled
 
 
 def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1241,7 +1284,6 @@ def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pyte
         raise AssertionError('get_snapshot should not be called')  # pragma: no cover
 
     monkeypatch.setattr('genai_prices.data_snapshot.get_snapshot', fail_get_snapshot)
-    _set_registry(None)
     registry = _get_registry()
 
     assert isinstance(registry, UnitRegistry)
@@ -1261,7 +1303,7 @@ def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> Non
     )
 
 
-def test_custom_snapshots_do_not_borrow_active_registry() -> None:
+def test_custom_snapshots_do_not_carry_a_registry() -> None:
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
     assert not hasattr(snapshot, 'unit_registry')
@@ -1277,8 +1319,7 @@ def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
         set_custom_snapshot(None)
 
 
-def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
-    _set_registry(None)
+def test_set_custom_snapshot_does_not_touch_bundled_registry() -> None:
     registry = _get_registry()
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
@@ -1290,7 +1331,6 @@ def test_set_custom_snapshot_does_not_touch_active_registry_cache() -> None:
         assert _get_registry() is registry
     finally:
         set_custom_snapshot(None)
-        _set_registry(None)
 
 
 def test_model_price_validation_runs_on_base_calc_not_snapshot_activation() -> None:
