@@ -3,19 +3,16 @@ import type {
   PriceOptions,
   Provider,
   ProviderDataPayload,
-  ProviderDataValue,
   ProviderFindOptions,
   StorageFactoryParams,
   Usage,
-  WrappedProviderData,
 } from './types'
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
-import { getActiveRegistry, setActiveRegistry, UnitRegistry } from './units'
 import { validateExtractorDestinations } from './validation'
 
-export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
+export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json'
 
 let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
@@ -46,34 +43,14 @@ function setProviderData(data: ProviderDataPayload) {
   }
 }
 
-function activateProviderData(data: Exclude<ProviderDataValue, null>): Provider[] {
-  if (Array.isArray(data)) {
-    validateExtractorDestinations(data)
-    providerData = data
-    return data
+function activateProviderData(data: Provider[]): Provider[] {
+  if (!Array.isArray(data)) {
+    throw new Error('Expected null or Provider[]')
   }
 
-  if (typeof data === 'object' && isWrappedProviderData(data)) {
-    // Published unit data is trusted to evolve compatibly. We only roll back if
-    // this payload's providers fail activation; no registry-history diff is enforced.
-    const candidateRegistry = new UnitRegistry(data.units)
-    const previousRegistry = getActiveRegistry()
-    setActiveRegistry(candidateRegistry)
-    try {
-      validateExtractorDestinations(data.providers)
-      providerData = data.providers
-      return data.providers
-    } catch (error) {
-      setActiveRegistry(previousRegistry)
-      throw error
-    }
-  }
-
-  throw new Error('Expected null, Provider[], or { units, providers }')
-}
-
-function isWrappedProviderData(data: object): data is WrappedProviderData {
-  return 'providers' in data && 'units' in data
+  validateExtractorDestinations(data)
+  providerData = data
+  return data
 }
 
 function onCalc(cb: () => void) {

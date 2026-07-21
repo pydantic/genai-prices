@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { setActiveRegistry, UnitRegistry } from '../units'
+import { UnitRegistry } from '../units'
 import { getUsageValue, normalizeUsage } from '../usage'
 
 describe('normalizeUsage', () => {
@@ -71,7 +71,7 @@ describe('normalizeUsage', () => {
     expect(usage).not.toHaveProperty('input_tokens')
   })
 
-  it('normalizes against the active registry reported usage keys', () => {
+  it('normalizes against explicit registry reported usage keys', () => {
     const registry = new UnitRegistry({
       widgets: {
         dimensions: { family: 'widgets' },
@@ -79,19 +79,17 @@ describe('normalizeUsage', () => {
       },
     })
 
-    try {
-      setActiveRegistry(registry)
-      expect(
-        normalizeUsage({
+    expect(
+      normalizeUsage(
+        {
           input_tokens: 100,
           widgets: 7,
-        })
-      ).toEqual({
-        widgets: 7,
-      })
-    } finally {
-      setActiveRegistry(null)
-    }
+        },
+        registry
+      )
+    ).toEqual({
+      widgets: 7,
+    })
   })
 })
 
@@ -145,7 +143,7 @@ describe('getUsageValue', () => {
     expect(getUsageValue({ requests: 500 }, 'requests')).toBe(1)
   })
 
-  it('returns one for pricing-only requests when the active registry has no requests unit', () => {
+  it('returns one for pricing-only requests when an explicit registry has no requests unit', () => {
     const registry = new UnitRegistry({
       input_tokens: {
         dimensions: { direction: 'input', family: 'tokens' },
@@ -154,12 +152,7 @@ describe('getUsageValue', () => {
       },
     })
 
-    try {
-      setActiveRegistry(registry)
-      expect(getUsageValue({}, 'requests')).toBe(1)
-    } finally {
-      setActiveRegistry(null)
-    }
+    expect(getUsageValue({}, 'requests', registry)).toBe(1)
   })
 
   it('raises for missing ancestors with positive reported descendants', () => {
@@ -214,7 +207,7 @@ describe('getUsageValue', () => {
     expect(getUsageValue(usage, 'cache_audio_read_tokens')).toBe(0)
   })
 
-  it('reads values from the active registry indexes', () => {
+  it('reads values from explicit registry indexes', () => {
     const registry = new UnitRegistry({
       premium_widgets: {
         dimensions: {
@@ -231,17 +224,15 @@ describe('getUsageValue', () => {
       },
     })
 
-    try {
-      setActiveRegistry(registry)
-      const usage = normalizeUsage({
+    const usage = normalizeUsage(
+      {
         premium_widgets: 3,
         widgets: 10,
-      })
+      },
+      registry
+    )
 
-      expect(getUsageValue(usage, 'widgets')).toBe(10)
-      expect(getUsageValue(usage, 'premium_widgets')).toBe(3)
-    } finally {
-      setActiveRegistry(null)
-    }
+    expect(getUsageValue(usage, 'widgets', registry)).toBe(10)
+    expect(getUsageValue(usage, 'premium_widgets', registry)).toBe(3)
   })
 })

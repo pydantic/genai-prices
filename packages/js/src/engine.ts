@@ -1,6 +1,6 @@
 import { computeLeafValues } from './decompose'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
-import { getActiveRegistry, getUnitForPriceKey } from './units'
+import { getActiveRegistry, UnitRegistry } from './units'
 import { getUsageValue } from './usage'
 import { validateModelPrice } from './validation'
 
@@ -42,22 +42,25 @@ function calcUnitPrice(price: number | TieredPrices | undefined, count: number |
   return (calcTieredPrice(price, count, totalInputTokens) * 1_000_000) / per
 }
 
-export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
+export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRegistry = getActiveRegistry()): ModelPriceCalculationResult {
   const effectivePriceKeys = Object.entries(modelPrice)
     .filter(([, price]) => price !== undefined)
     .map(([priceKey]) => priceKey)
-  validateModelPrice(effectivePriceKeys)
+  validateModelPrice(effectivePriceKeys, registry)
 
   let inputPrice = 0
   let outputPrice = 0
   let totalOnlyPrice = 0
 
   const hasTieredPrice = effectivePriceKeys.some((priceKey) => isTieredPrice(modelPrice[priceKey]))
-  const totalInputTokens = hasTieredPrice ? getUsageValue(usage, 'input_tokens') : 0
-  const registry = getActiveRegistry()
-  const pricedUnits = effectivePriceKeys.map((priceKey) => getUnitForPriceKey(priceKey))
+  const totalInputTokens = hasTieredPrice ? getUsageValue(usage, 'input_tokens', registry) : 0
+  const pricedUnits = effectivePriceKeys.map((priceKey) => {
+    const unit = registry.unitsByPriceKey.get(priceKey)
+    if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
+    return unit
+  })
   const pricedUsageKeys = new Set(pricedUnits.filter((unit) => unit.usageKey !== 'requests').map((unit) => unit.usageKey))
-  const leafValues = computeLeafValues(pricedUsageKeys, usage, registry.units)
+  const leafValues = computeLeafValues(pricedUsageKeys, usage, registry.units, registry)
   if (pricedUnits.some((unit) => unit.usageKey === 'requests')) {
     leafValues.requests = 1
   }

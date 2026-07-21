@@ -28,15 +28,15 @@ lint: ## Lint the code
 	uv run ruff check
 
 .PHONY: build-prices
-build-prices: ## Build JSON Schema for data and validate and write data to prices/data.json
+build-prices: ## Validate providers and build the authoring schema and v2 price data
 	uv run -m prices build
 
 .PHONY: package-data
-package-data: ## Prepare data for packages
+package-data: ## Build static unit registries and v2 provider data for packages
 	uv run -m prices package_data
 
 .PHONY: build
-build: build-prices package-data inject-providers ## Build prices and package data
+build: build-prices package-data inject-providers ## Build v2 prices, package data, and the provider inventory
 
 .PHONY: collapse-models
 collapse-models: ## Collapse duplicate similar models

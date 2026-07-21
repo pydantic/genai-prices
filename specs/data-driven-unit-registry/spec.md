@@ -1,147 +1,88 @@
 # Data-Driven Unit Registry
 
 **The goal is to calculate prices as accurately as possible for a given request.**
-This is the reason the system exists. Every phase improves pricing accuracy given the usage information and provider pricing information available at runtime.
+Every release improves pricing accuracy given the usage information and provider pricing information available to that installed package.
 
-**Correct pricing semantics beat algorithmic convenience.** _(from "The goal is to calculate prices as accurately as possible")_
-The decomposition algorithm is an implementation detail. A provider's commercial pricing shape must be represented explicitly, even when that requires intermediate units and repeated numeric prices. A tidy result that misprices a provider's model is not acceptable.
+**Correct pricing semantics beat algorithmic convenience.** _(from "The goal is to calculate prices as accurately as possible for a given request")_
+A provider's commercial pricing shape must be represented explicitly, even when that requires intermediate units and repeated numeric prices. A tidy implementation that misprices a model is not acceptable.
 
-**Price data must be complete; usage data may be incomplete.** _(from "The goal is to calculate prices as accurately as possible")_
-Price data is authored or published by us and can be validated before use. Usage data comes from callers and provider APIs, so it can be partial. Runtime code should use reported facts when they are enough to price accurately and raise rather than guess when required usage is omitted.
+**Price data must be complete while usage data may be incomplete.** _(from "The goal is to calculate prices as accurately as possible for a given request")_
+Repo-authored prices can be validated before publication. Caller and provider usage may be partial, so runtime code uses reported facts when sufficient and raises rather than guessing when required usage is omitted.
 
-**Every usage value must land in exactly one pricing bucket.** _(from "Price data must be complete; usage data may be incomplete")_
-When a model prices overlapping units such as all input tokens and cached input tokens, each token count is assigned to one priced bucket. The system must not double-count or drop usage.
+**Every priced usage value lands in exactly one bucket.** _(from "Price data must be complete while usage data may be incomplete")_
+When units overlap, decomposition must not double-count, drop, or arbitrarily assign usage.
 
-**Validation exists to protect pricing semantics.** _(from "Correct pricing semantics beat algorithmic convenience", "Price data must be complete; usage data may be incomplete")_
-Validation rejects data that is incomplete, ambiguous, or impossible to price accurately. Registry structural closure, price ancestor coverage, and price join coverage are semantic completeness rules, not arbitrary algorithm requirements.
+**Validation exists to protect pricing semantics.** _(from "Correct pricing semantics beat algorithmic convenience", "Price data must be complete while usage data may be incomplete")_
+Registry structure, price ancestor coverage, price join coverage, and extractor destinations are completeness rules. User-facing errors describe invalid keys, incomplete prices, missing required usage, or contradictory usage rather than internal decomposition machinery.
 
-**Units are data, not code.**
-A pricing unit is defined once in data and propagated to every runtime. Adding a repo-defined unit should mean editing registry data and prices, not adding handwritten Python fields, TypeScript unions, schema literals, extractor unions, and subtraction logic.
+**Units are data, not handwritten runtime fields.**
+A repo-defined unit is declared once and propagated to Python, JavaScript, authoring schemas, validation, extraction, pricing, and display without copying ordinary unit names into each handwritten module.
 
-**Derive, don't duplicate.** _(from "Units are data, not code")_
-Field names, validation rules, containment relationships, price-key resolution, extractor destinations, and display metadata should be derived from the registry wherever practical.
+**The registry is a usage-keyed dimension graph.** _(from "Units are data, not handwritten runtime fields")_
+Each unit has a usage key, a price key, a normalization factor, and dimensions including a required `family` value. `price_key` defaults to the usage key. Dimension containment defines ancestors; compatible dimension unions define joins and overlap.
 
-**Backward compatibility is preserved unless clearly impractical.** _(from "Units are data, not code")_
-Existing consumer patterns such as `model_price.input_mtok`, `usage.input_tokens`, custom `ModelPrice` subclasses, `calc_price(usage)`, `UpdatePrices.fetch()`, and `set_custom_snapshot(...)` remain supported unless preserving an implementation detail would block registry-defined units.
+**Dimension axes remain unit-local and general.** _(from "The registry is a usage-keyed dimension graph")_
+Unit dimension mappings are the only declaration of dimension keys and values; there is no separate allowed-dimension schema. Families may represent tokens, requests, characters, duration, tool calls, or future reported quantities that use `usage * price / normalization`, provided their actual unit graph satisfies the shared structural rules.
 
-**Public API signatures remain stable.** _(from "Backward compatibility is preserved unless clearly impractical")_
-`set_custom_snapshot(DataSnapshot | None)`, `UpdatePrices.fetch() -> DataSnapshot | None`, `calc_price(...)`, `DataSnapshot.calc(...)`, and `ModelInfo.calc_price(...)` keep their callable shape. `DataSnapshot` remains a provider-data snapshot; the active unit registry is process-global runtime state.
+**Registry construction promotes raw data into immutable indexes.** _(from "The registry is a usage-keyed dimension graph")_
+`UnitRegistry` turns raw unit dictionaries into `UnitDef` objects and indexes usage keys, price keys, dimension sets, ancestors, joins, reported keys, and registry order. Runtime code derives behavior from those indexes rather than generated code fields.
 
-**Manual custom pricing remains supported.** _(from "Backward compatibility is preserved unless clearly impractical")_
-Python custom `ModelPrice` subclasses can keep overriding `calc_price()` and inspecting arbitrary fields on the original usage object. Registry validation must not reject subclass-only custom fields unless their names are also registered price keys.
+**Registry identities and normalization are safe and unambiguous.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into immutable indexes")_
+Usage keys, price keys, and full dimension sets are globally unique. Public keys match `[A-Za-z][A-Za-z0-9_]*`, are neither Python nor JavaScript keywords, and are not any of the exact prototype hazards `__proto__`, `prototype`, or `constructor`. Every unit in one `family` dimension value uses the same normalization factor.
 
-**Do not generate behavior into handwritten modules.** _(from "Units are data, not code", "Derive, don't duplicate")_
-Generated outputs may include provider data, generated schemas, and small generated units-data modules. Handwritten runtime modules remain handwritten and use runtime registry lookups instead of generated fields.
+**Registry-aware pricing is dimension-driven.** _(from "The registry is a usage-keyed dimension graph", "Every priced usage value lands in exactly one bucket")_
+Only units priced by the selected model become exclusive buckets. Each bucket's usage is multiplied by its price and divided by its unit normalization. Dimension filters aggregate input, output, and total costs. The detailed shared semantics are in [algorithm](algorithm.md) and [examples](examples.md).
 
-**Provider YAML churn is limited to real data gaps.** _(from "Backward compatibility is preserved unless clearly impractical", "Price data must be complete; usage data may be incomplete")_
-The registry work should not rename or restructure provider YAML for its own sake. Provider data changes are justified when validation exposes a real completeness bug or when an explicit repeated price is needed to represent a commercial fallback unambiguously.
+**Unspecified dimensions are catch-alls.** _(from "Registry-aware pricing is dimension-driven")_
+A priced ancestor receives the remainder not claimed by more-specific priced units. An unpriced reported descendant stays inside that ancestor when the necessary ancestor usage was explicitly reported; runtime code does not synthesize omitted parent totals.
 
-**The registry model is a data-defined unit graph used by every runtime.** _(from "Units are data, not code", "Derive, don't duplicate")_
-A registry contains units keyed by usage key. Each unit has a price key, a normalization factor such as `per: 1_000_000`, and dimension assignments. The `family` dimension is required on every unit and participates in ordinary dimension comparisons.
+**Ancestor and join coverage are required.** _(from "Validation exists to protect pricing semantics", "The registry is a usage-keyed dimension graph")_
+Pricing a specific unit requires its registered ancestors. Pricing compatible incomparable units requires their registered intersection. Registry interval closure and join-closedness ensure the graph contains the structural units needed for these price rules.
 
-**Registry construction promotes raw data into indexed runtime objects.** _(from "The registry model is a data-defined unit graph used by every runtime")_
-Raw unit data stays plain data until a runtime constructs the registry. Construction promotes usage-key dict keys into `UnitDef.usage_key`, defaults missing `price_key` to the usage key, and builds lookup indexes for usage keys, price keys, dimension sets, ancestors, and joins.
+**Structural closure has exact data-level definitions.** _(from "Ancestor and join coverage are required")_
+For interval closure, if `A` is an ancestor of `B`, every dimension set made by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` exists as a unit. For join-closedness, the union of every pair of compatible units' dimension sets exists as a unit.
 
-**The system is general across dimensions.** _(from "The registry model is a data-defined unit graph used by every runtime")_
-Any reported quantity with the shape `usage_value * price / normalization_factor` can be represented: tokens, requests, characters, duration, tool calls, or future units. Tokens are the first complex area because they overlap across direction, modality, and cache dimensions.
+**Built-in token symmetry is a data choice, not a validation law.**
+The built-in token family defines input, output, cache-read, cache-write, and supported modality patterns consistently where those concepts make sense, while omitting nonsensical combinations such as output cache reads. Arbitrary future families need only satisfy the structural definitions for the units they actually define.
 
-**Usage keys and price keys have different jobs.** _(from "The registry model is a data-defined unit graph used by every runtime")_
-The usage key names the reported count, such as `input_tokens`. The price key names the model-price/provider-YAML field, such as `input_mtok`. `price_key` defaults to the usage key only when the names are the same.
+**Usage remains explicit-only.** _(from "Price data must be complete while usage data may be incomplete")_
+Stored values return directly. Safely missing registered values read as zero without becoming reported. Missing ancestors or overlaps raise when positive related reports would require inference. Contradictions remain inert until a read or selected price set must interpret them.
 
-**Naming optimizes for writability.** _(from "Usage keys and price keys have different jobs", "Backward compatibility is preserved unless clearly impractical")_
-Built-in token names should remain inferable from nearby examples: cached modality units use `cache_{modality}_{op}`, non-cached modality units use `{direction}_{modality}`, token price keys use `_mtok`, and token usage keys use `_tokens`. These are repo data conventions, not runtime validation laws.
+**Request pricing remains an explicit exception.** _(from "The registry is a usage-keyed dimension graph")_
+Usage key `requests`, price key `requests_kcount`, `family: requests`, and `per: 1_000` represent one request supplied by pricing code. `requests` is not caller usage or an extractor destination.
 
-**Dimensions define specificity and overlap.** _(from "The registry model is a data-defined unit graph used by every runtime")_
-Dimension assignments define containment. A unit is an ancestor of another unit when its dimensions are a subset of the other's dimensions. Units with conflicting dimension values, including conflicting `family` values, do not overlap.
+**Tiered pricing behavior is preserved.** _(from "Correct pricing semantics beat algorithmic convenience")_
+Existing threshold-based `TieredPrices` semantics remain unchanged. A selected tiered price reads `input_tokens` through the same explicit-only usage rules.
 
-**Dimension keys and values are unit-local.** _(from "Dimensions define specificity and overlap")_
-There is no separate declaration of allowed dimension keys or values. Structural validation decides whether the resulting graph is usable. A stricter optional dimension schema can be added later if typo protection becomes worth the extra authoring surface.
+**Backward compatibility is preserved unless it conflicts with accurate registry pricing.**
+Existing calculation APIs, price and usage attributes, provider/model lookup, custom snapshots, Python custom pricing overrides, JavaScript plain objects, tiered prices, and request pricing remain supported. Fixed-field introspection and incomplete overlap fallbacks are not promises when they conflict with data-driven units or complete pricing.
 
-**Registry-aware pricing decomposes usage by dimensions.** _(from "Dimensions define specificity and overlap", "Every usage value must land in exactly one pricing bucket")_
-For each model, only units with prices participate in decomposition. The runtime computes each priced unit's exclusive usage value from the dimension graph, multiplies it by the stored price, divides by the unit's `per`, and aggregates costs. The shared behavior is detailed in [algorithm](algorithm.md) and [examples](examples.md).
+**Manual custom Python pricing remains supported.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing")_
+Custom `ModelPrice` subclasses may inspect their own state and the original usage object. Standard registry pricing considers registered price fields without consuming unrelated custom fields.
 
-**Only priced units become buckets.** _(from "Registry-aware pricing decomposes usage by dimensions")_
-If a model does not price a more-specific reported unit, that reported value remains inside the nearest priced ancestor when an explicit ancestor is available. Descendant-only reports do not become implicit parent totals; pricing raises rather than guessing when a required priced ancestor or overlap is omitted.
+**Provider data changes stay limited to pricing requirements.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing", "Price data must be complete while usage data may be incomplete")_
+Registry work does not rename or restructure provider YAML for its own sake. Provider-data changes repair real completeness or accuracy gaps, including an explicit repeated price when ancestor or join coverage requires one.
 
-**Unspecified dimensions are catch-alls.** _(from "Only priced units become buckets")_
-`input_tokens` has `{family: tokens, direction: input}` but no `modality`, so it prices the remainder of all input tokens not claimed by more-specific priced units. Repeated numeric prices are allowed when a commercial fallback must be explicit.
+**Generated outputs contain data, not runtime state.** _(from "Units are data, not handwritten runtime fields")_
+Generated provider modules, unit modules, JSON artifacts, and schemas may contain raw provider, unit, and price data. They do not contain validation markers, trust flags, fingerprints, cached plans, or generated pricing behavior.
 
-**Costs are aggregable by dimension filters.** _(from "Registry-aware pricing decomposes usage by dimensions")_
-After decomposition, each priced unit has an exclusive usage value and cost. `input_price` sums units whose dimensions include `{direction: input}`, `output_price` sums `{direction: output}`, and `total_price` includes every priced unit. Units without `direction`, including `requests`, contribute only to `total_price`.
+**Remote contracts are versioned instead of repurposed.**
+Every package version keeps fetching a payload shape and unit vocabulary it understands. A new contract uses a new URL rather than changing the artifact consumed by already released auto-updaters.
 
-**`requests_kcount` is an explicit one-request pricing exception.** _(from "The system is general across dimensions")_
-The existing request-count price is represented as usage key `requests`, price key `requests_kcount`, `dimensions.family: requests`, and `per: 1_000`. It is not caller-supplied usage, not an extractor destination, and not a template for arbitrary synthetic usage sources.
+**The v1 provider artifacts remain unchanged by this work.** _(from "Remote contracts are versioned instead of repurposed")_
+Existing `data.json` and `data_slim.json` consumers continue receiving their provider-array contract and original unit vocabulary. The registry release does not wrap or add new unit-related fields to those artifacts.
 
-**Tiered prices are preserved, not redesigned.** _(from "Backward compatibility is preserved unless clearly impractical")_
-The existing `TieredPrices` mechanism remains threshold-based. The threshold input is `usage.input_tokens` read through the same missing-usage rules as ordinary access. Missing or ambiguous threshold reads follow the same explicit-only usage contract.
+**Phase 1 delivers a releasable static registry through provider-array v2 data.** _(from "Remote contracts are versioned instead of repurposed", "Registry construction promotes raw data into immutable indexes")_
+[Phase 1: Static Unit Registry Release](phase-1-static-unit-registry-release/spec.md) ([code spec](phase-1-static-unit-registry-release/code-spec.md)) consolidates the completed Python, JavaScript, shared-registry, and polish work. Installed packages construct one bundled registry, auto-update providers from same-shape `data_v2.json`, include new modality pricing, and remove obvious repeated hot-path scans without cache state.
 
-**Usage inference remains out of scope.** _(from "Price data must be complete; usage data may be incomplete", "Derive, don't duplicate")_
-Runtime code does not synthesize missing registered usage values from descendants. It stores reported values, returns zero for safely absent reads, and raises when a direct read or pricing calculation would require guessing an omitted ancestor or overlap.
+**Phase 2 adds auto-updating unit definitions through wrapped v3 data.** _(from "Remote contracts are versioned instead of repurposed", "Phase 1 delivers a releasable static registry through provider-array v2 data")_
+[Phase 2: Auto-Updating Unit Definitions](phase-2-auto-updating-units/spec.md) ([code spec](phase-2-auto-updating-units/code-spec.md)) is a future independent PR. It publishes `data_v3.json` with units and providers, activates them atomically, and preserves v1/v2 URLs. It is not required for the Phase 1 release.
 
-**Raw usage objects remain permissive.** _(from "Backward compatibility is preserved unless clearly impractical")_
-Callers can pass existing supported raw usage objects. Runtime wrapping reads known externally reported usage attributes and ignores unknown extras so custom pricing overrides can still inspect non-registry fields on the original object.
+**Runtime custom units remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+Phase 1 supports repo-defined bundled units and Phase 2 supports publisher-defined remote units. Neither phase promises arbitrary caller-defined registry mutation as a public runtime feature.
 
-**Unit definitions must travel with prices.** _(from "Units are data, not code", "The registry model is a data-defined unit graph used by every runtime")_
-Runtime clients can fetch updated prices before the next package release. A fetched price payload must not contain prices for units the client cannot parse, so runtime price payloads carry unit definitions with provider prices.
+**Validation and decomposition caches remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data")_
+Phase 1 removes repeated scans and allocations without cache lifecycle state. More elaborate validation or decomposition caches require new benchmark evidence and a separate specification; they are not an active numbered phase.
 
-**There is one source registry and no standalone runtime units artifact.** _(from "Unit definitions must travel with prices")_
-The checked-in source for built-in units is `prices/units.yml`. Runtime packages load generated language-native unit data at startup, and runtime auto-updates load units from the same fetched payload as providers.
-
-**There is one active runtime unit registry.** _(from "There is one source registry and no standalone runtime units artifact", "Public API signatures remain stable")_
-Runtime code reads unit definitions from a process-global registry. Trusted remote update payloads can replace the global registry while the matching provider data is parsed or activated; failed provider parsing or activation restores the previous registry.
-
-**Registry evolution is trusted to be compatible.** _(from "There is one active runtime unit registry", "Unit definitions must travel with prices")_
-Changes to `prices/units.yml` are expected to be safe across published versions. Maintainers should add units or make compatible updates that preserve the meaning of existing usage keys, price keys, dimensions, and normalization factors for existing provider data. A newer registry may contain units that older provider data does not use; that is harmless because pricing only considers the selected model's priced units.
-
-**No lifecycle enforces registry-history compatibility.** _(from "Registry evolution is trusted to be compatible")_
-Build/export validation and runtime activation validate the current payload shape and provider references; they do not compare the registry to previous releases, enforce append-only diffs, reject deletions as a versioning policy, or pin each `DataSnapshot` to the exact registry object active when it was parsed. Destructive registry changes are an authoring mistake to avoid in `prices/units.yml`, not a build-time or runtime compatibility mechanism.
-
-**Validation is split by lifecycle boundary.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into indexed runtime objects", "No lifecycle enforces registry-history compatibility")_
-Build/export validation validates structural unit rules, provider model prices, and extractor destinations before publishing generated data. Runtime registry construction parses and indexes trusted unit data; it does not repeat publication-time unit validation for bundled or fetched payloads. Runtime fetches install trusted units, then parse provider data. Standard pricing validates the selected model price before use until Phase 5 adds safe runtime caches.
-
-**ModelPrice construction stays context-free.** _(from "Validation is split by lifecycle boundary", "Manual custom pricing remains supported")_
-Constructing a `ModelPrice` does not validate price keys, ancestor coverage, or join coverage because construction can happen before the relevant global registry is installed. Candidate dynamic price keys are accepted into model-price storage and accepted or rejected later at build/export or one-model validation time.
-
-**Usage keys and price keys are globally unique public runtime names.** _(from "Validation exists to protect pricing semantics")_
-A usage key identifies one unit across the registry and can become a usage attribute or extractor destination. A price key maps one-to-one to a unit and can become a provider YAML key or model-price attribute. Build/export validation rejects ambiguous, duplicate, private, or unsafe public names.
-
-**Unit dimension sets are globally unique.** _(from "Validation exists to protect pricing semantics")_
-Two units cannot have identical full dimension assignments. The required `family` dimension is part of that full dimension set.
-
-**Ancestor coverage is required.** _(from "Validation exists to protect pricing semantics")_
-Pricing a specific unit requires pricing its registered ancestors. If a model prices `cache_read_tokens`, it must also price `input_tokens`.
-
-**Join coverage is required for overlapping priced units.** _(from "Validation exists to protect pricing semantics")_
-If a model prices two compatible overlapping units, it must price their intersection too. Pricing both `cache_read_tokens` and `input_audio_tokens` requires pricing `cache_audio_read_tokens`.
-
-**Registry interval closure and join-closedness are distinct.** _(from "Validation exists to protect pricing semantics")_
-Interval closure says comparable units cannot skip structurally important intermediate dimension sets. Join-closedness says compatible overlapping units must have an explicit intersection unit in the registry. Price join coverage then says a model that prices overlapping parents must price that intersection.
-
-For interval closure, if unit `A` is an ancestor of unit `B`, every dimension set formed by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` must also exist as a unit. For join-closedness, two units are compatible when they have no conflicting value for the same dimension key; their join is the union of both dimension sets and must exist in the complete registry.
-
-**The built-in token registry is symmetric by data choice, not by validation law.** _(from "Registry interval closure and join-closedness are distinct")_
-The complete built-in token family dimension value should define the valid input/output/cache-read/cache-write patterns consistently across token modalities where those concepts make sense, while excluding nonsensical combinations such as output cache reads. Future family dimension values do not need every dimension value to have the same shape; they only need to satisfy the structural rules for the units they actually define.
-
-**Extractor destinations are externally reported usage keys.** _(from "Units are data, not code", "Derive, don't duplicate")_
-Extractor mappings target usage keys that can be reported by provider APIs. They do not target price keys, arbitrary strings, or pricing-only units such as `requests`.
-
-**Errors describe data problems, not algorithms.** _(from "Validation exists to protect pricing semantics", "Usage inference remains out of scope")_
-User-facing errors should talk about unknown keys, missing registered prices, required ancestor or join prices, missing usage needed for a read or pricing, or contradictory usage. They should not mention internal decomposition machinery.
-
-**The work now has three active numbered phases.** _(from "Backward compatibility is preserved unless clearly impractical", "Unit definitions must travel with prices")_
-Historical Phases 1 through 3 have been consolidated into current Phase 3. Old Phases 1 and 2 were implementation slices toward the completed core, and old Phase 3's shared payload work is now part of the same core phase.
-
-**Phase order is the review contract.** _(from "The work now has three active numbered phases")_
-Each active phase should be reviewable and shippable after the previous phase. Later phases can influence earlier APIs only where an earlier phase must preserve an extension point; they must not pull their implementation work forward.
-
-**Phase-local code specs are the implementation source of truth.** _(from "The work now has three active numbered phases", "Phase order is the review contract")_
-There is no top-level code spec. Use the phase-local prose spec plus the matching phase-local code spec.
-
-**Phase 3 is the consolidated core registry and shared contract.** _(from "Phase order is the review contract")_
-[Phase 3: Core Registry and Shared Data Contract](phase-3-shared-data-contract/spec.md) ([code spec](phase-3-shared-data-contract/code-spec.md)) covers Python registry-backed pricing, JavaScript registry-backed pricing, wrapped `units` plus `providers` payloads, dynamic registered price keys, and use-time validation before Phase 5.
-
-**Phase 4 hardens authoring and compatibility surfaces.** _(from "Phase order is the review contract")_
-[Phase 4: Polish and Compatibility Hardening](phase-4-polish-compat-hardening/spec.md) ([code spec](phase-4-polish-compat-hardening/code-spec.md)) adds generated provider-YAML schema/autocomplete, registry-driven CLI price presentation, and simpler Python runtime `ModelPrice` storage plus internal raw-provider normalization.
-
-**Phase 5 adds runtime validation performance optimizations.** _(from "Phase order is the review contract")_
-[Phase 5: Runtime Validation Performance Optimization](phase-5-runtime-validation-performance/spec.md) ([code spec](phase-5-runtime-validation-performance/code-spec.md)) adds benchmark-backed global validation caches and any benchmark-backed decomposition caches without changing accepted data shapes, validation rules, decomposition semantics, generated payloads, or public API behavior.
+**Phase-local prose and code specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+The root spec defines shared invariants and delivery boundaries. Each numbered phase's `spec.md` defines behavior, and its `code-spec.md` defines the corresponding architecture. Later requirements do not expand an earlier phase's release scope.

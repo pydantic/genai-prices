@@ -3,10 +3,12 @@ from __future__ import annotations
 import io
 import subprocess
 import sys
-from collections.abc import Callable, Collection
+from collections.abc import Callable, Collection, Iterator
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from dirty_equals import IsStr
@@ -33,7 +35,13 @@ from genai_prices.data import providers
 from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
 from genai_prices.data_units import unit_data
 from genai_prices.types import ClauseEquals, ModelInfo, ModelPrice, PriceCalculation, Provider, TieredPrices
-from genai_prices.units import UnitDef, UnitRegistry, _set_registry
+from genai_prices.units import UnitDef, UnitRegistry
+
+
+@contextmanager
+def _use_registry(registry: UnitRegistry) -> Iterator[None]:
+    with patch('genai_prices.units._get_registry', return_value=registry):
+        yield
 
 
 def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: Collection[str] = frozenset()) -> str:
@@ -184,7 +192,7 @@ def test_calc_plain_model_prices_use_cli_formatter(capsys: pytest.CaptureFixture
         'price_key': 'sausage_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
     }
-    _set_registry(UnitRegistry(custom_units))
+    registry = UnitRegistry(custom_units)
     set_custom_snapshot(
         DataSnapshot(
             providers=[
@@ -205,11 +213,11 @@ def test_calc_plain_model_prices_use_cli_formatter(capsys: pytest.CaptureFixture
         )
     )
     try:
-        assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'testing:sausage']) == 0
-        out, err = capsys.readouterr()
+        with _use_registry(registry):
+            assert cli_logic(['--plain', 'calc', '--input-tokens', '1000', 'testing:sausage']) == 0
+            out, err = capsys.readouterr()
     finally:
         set_custom_snapshot(None)
-        _set_registry(None)
 
     assert '  Model Prices: $1/input MTok, $2/input sausage MTok\n' in out
     assert err == ''
@@ -497,21 +505,17 @@ def test_price_field_label_uses_bundled_registry_metadata() -> None:
 
 
 def test_price_field_label_uses_custom_registry_metadata() -> None:
-    _set_registry(
-        UnitRegistry(
-            {
-                'sausage_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'sausage_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
-                }
+    registry = UnitRegistry(
+        {
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
             }
-        )
+        }
     )
-    try:
+    with _use_registry(registry):
         assert _price_field_label('sausage_mtok') == 'Input Sausage/MTok'
-    finally:
-        _set_registry(None)
 
 
 def test_format_model_prices_uses_bundled_registry_metadata() -> None:
@@ -533,27 +537,23 @@ def test_format_model_prices_preserves_tier_text() -> None:
 
 
 def test_format_model_prices_uses_custom_registry_metadata() -> None:
-    _set_registry(
-        UnitRegistry(
-            {
-                'input_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-                'sausage_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'sausage_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
-                },
-            }
-        )
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+        }
     )
-    try:
+    with _use_registry(registry):
         price = ModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'))
         formatted = _format_model_prices(price, split_lines=True, use_color=False)
-    finally:
-        _set_registry(None)
 
     assert formatted.plain == '$1/input MTok\n$2/input sausage MTok'
 
@@ -572,48 +572,40 @@ def test_format_model_price_value_preserves_tier_text() -> None:
 
 
 def test_format_model_price_value_uses_custom_registry_metadata() -> None:
-    _set_registry(
-        UnitRegistry(
-            {
-                'sausage_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'sausage_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
-                }
+    registry = UnitRegistry(
+        {
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
             }
-        )
+        }
     )
-    try:
+    with _use_registry(registry):
         price = ModelPrice(sausage_mtok=Decimal('2'))
         formatted = _format_model_price_value(price, 'sausage_mtok', use_color=False)
-    finally:
-        _set_registry(None)
 
     assert formatted.plain == '$2'
 
 
 def test_collect_model_price_fields_uses_effective_registry_order() -> None:
-    _set_registry(
-        UnitRegistry(
-            {
-                'sausage_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'sausage_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
-                },
-                'input_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-            }
-        )
+    registry = UnitRegistry(
+        {
+            'sausage_tokens': {
+                'per': 1_000_000,
+                'price_key': 'sausage_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+            },
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+        }
     )
-    try:
+    with _use_registry(registry):
         price = ModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2'))
         fields = _collect_model_price_fields([_price_calculation(price)])
-    finally:
-        _set_registry(None)
 
     assert fields == ['sausage_mtok', 'input_mtok']
 
@@ -651,7 +643,7 @@ def test_calc_table_split_columns_includes_dynamic_price_column(
         'price_key': 'sausage_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
     }
-    _set_registry(UnitRegistry(custom_units))
+    registry = UnitRegistry(custom_units)
     set_custom_snapshot(
         DataSnapshot(
             providers=[
@@ -673,11 +665,11 @@ def test_calc_table_split_columns_includes_dynamic_price_column(
     )
     monkeypatch.setenv('COLUMNS', '240')
     try:
-        assert cli_logic(['calc', '--no-color', '--table', '--input-tokens', '1000', 'testing:sausage']) == 0
-        out, err = capsys.readouterr()
+        with _use_registry(registry):
+            assert cli_logic(['calc', '--no-color', '--table', '--input-tokens', '1000', 'testing:sausage']) == 0
+            out, err = capsys.readouterr()
     finally:
         set_custom_snapshot(None)
-        _set_registry(None)
 
     assert 'Input Sausage/MTok' in out
     assert '$2' in out

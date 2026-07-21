@@ -27,7 +27,7 @@ Audio tokens are much more expensive than text. The catch-all unit `input_tokens
     output_mtok: 32
 ```
 
-Catch-all convention: unit `input_tokens` priced by `input_mtok` is text since there's no `input_text_mtok`. Unit `output_tokens` priced by `output_mtok` is the image/unknown-output catch-all because image is the default output modality. Do not duplicate `output_image_mtok` when it has the same rate as `output_mtok`; add a child output price only when that modality has a different rate or when an overlap join needs an explicit price. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_tokens` catch-all at $32/M.
+Catch-all convention: unit `input_tokens` priced by `input_mtok` is text since there's no `input_text_mtok`. Unit `output_tokens` priced by `output_mtok` is the image/unknown-output catch-all because image is the default output modality. Following Phase 1's repo-authored pricing convention, `output_image_mtok` is omitted because it has the same rate as `output_mtok`; a child output price is present only when that modality has a different rate or when an overlap join needs an explicit price. If someone sends only `{input_tokens: 1000, output_tokens: 500}` with no breakdown, all output tokens land in the `output_tokens` catch-all at $32/M.
 
 ## Multimodal Input — Google Gemini 2.5 Pro
 

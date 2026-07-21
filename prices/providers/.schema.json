@@ -324,7 +324,7 @@
         },
         "removed": {
           "default": false,
-          "description": "Flag indicating this model has been removed and is no longer available. Excluded from data.json.",
+          "description": "Flag indicating this model has been removed and is no longer available. Excluded from generated price data.",
           "title": "Removed",
           "type": "boolean"
         }

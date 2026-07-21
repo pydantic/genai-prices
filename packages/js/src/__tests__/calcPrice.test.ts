@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { ModelPrice, Usage } from '../types'
 
 import { calcPrice } from '../engine'
-import { setActiveRegistry, UnitRegistry } from '../units'
+import { UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
 
@@ -236,28 +236,24 @@ describe('Core Price Calculation Function', () => {
         },
       })
 
-      try {
-        setActiveRegistry(registry)
-        const result = calcPrice(
-          {
-            ignored_telemetry_units: 999,
-            premium_widgets: 3,
-            widgets: 10,
-          },
-          {
-            premium_widgets: 10,
-            widgets: 2,
-          }
-        )
+      const result = calcPrice(
+        {
+          ignored_telemetry_units: 999,
+          premium_widgets: 3,
+          widgets: 10,
+        },
+        {
+          premium_widgets: 10,
+          widgets: 2,
+        },
+        registry
+      )
 
-        expect(result).toMatchObject({
-          input_price: 0,
-          output_price: 0,
-          total_price: 44,
-        })
-      } finally {
-        setActiveRegistry(null)
-      }
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 44,
+      })
     })
 
     it('should reject missing ancestor prices before pricing', () => {
