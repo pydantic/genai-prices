@@ -10,7 +10,7 @@ from dataclasses import fields
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -771,17 +771,18 @@ def test_model_price_calculation_does_not_use_registry_scanning_collectors(
 ) -> None:
     from genai_prices import types as runtime_types
 
-    def fail(*_args: object) -> None:
-        pytest.fail('standard calculation used a registry-scanning collector')
-
-    monkeypatch.setattr(runtime_types, '_collect_effective_model_price_keys', fail)
-    monkeypatch.setattr(runtime_types, '_collect_model_price_units', fail)
+    collect_effective_keys = Mock(side_effect=AssertionError('standard calculation scanned effective price keys'))
+    collect_model_price_units = Mock(side_effect=AssertionError('standard calculation scanned model price units'))
+    monkeypatch.setattr(runtime_types, '_collect_effective_model_price_keys', collect_effective_keys)
+    monkeypatch.setattr(runtime_types, '_collect_model_price_units', collect_model_price_units)
 
     assert ModelPrice(input_mtok=Decimal('2')).calc_price(Usage(input_tokens=1_000_000)) == {
         'input_price': Decimal('2'),
         'output_price': Decimal('0'),
         'total_price': Decimal('2'),
     }
+    collect_effective_keys.assert_not_called()
+    collect_model_price_units.assert_not_called()
 
 
 def test_build_loads_units() -> None:
