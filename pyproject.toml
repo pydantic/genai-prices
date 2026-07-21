@@ -30,6 +30,9 @@ dev = [
     "packaging>=25.0",
 ]
 
+[tool.uv]
+exclude-newer = "1 week"
+
 [tool.uv.workspace]
 members = ["prices", "packages/python"]
 
