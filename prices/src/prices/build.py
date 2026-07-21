@@ -84,7 +84,7 @@ def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[
     extractor_mapping_schema = cast(dict[str, Any], json_schema['$defs']['UsageExtractorMapping'])
     extractor_mapping_properties = cast(dict[str, Any], extractor_mapping_schema['properties'])
     dest_schema = cast(dict[str, Any], extractor_mapping_properties['dest'])
-    dest_schema['enum'] = sorted(registry.reported_usage_keys())
+    dest_schema['enum'] = sorted(registry.reported_usage_keys)
 
     return json_schema
 

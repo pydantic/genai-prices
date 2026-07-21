@@ -480,7 +480,7 @@ def _validate_usage_extractor_destinations(
 
     validate_extractor_destinations(
         {mapping.dest for mapping in mappings},
-        registry.reported_usage_keys() if registry is not None else _reported_usage_keys(),
+        registry.reported_usage_keys if registry is not None else _reported_usage_keys(),
     )
 
 
@@ -593,17 +593,13 @@ def _type_name(v: Any) -> str:
 def _reported_usage_keys() -> frozenset[str]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
-    # Phase 5 should benchmark/cache this active-registry key set and the
-    # corresponding registry-order tuple once registry validation identities exist.
-    return _get_registry().reported_usage_keys()
+    return _get_registry().reported_usage_keys
 
 
 def _reported_usage_key_order() -> tuple[str, ...]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
-    registry = _get_registry()
-    reported_keys = registry.reported_usage_keys()
-    return tuple(key for key in registry.units if key in reported_keys)
+    return _get_registry().reported_usage_keys_in_order
 
 
 def _raw_usage_value(obj: object, key: str) -> int | None:
@@ -856,11 +852,10 @@ def _iter_priced_registered_units(model_price: ModelPrice, registry: UnitRegistr
 
 
 def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry) -> Iterator[tuple[str, object]]:
-    registry_price_keys = {unit.price_key for unit in registry.units.values()}
     for key, value in model_price.__dict__.items():
         if key.startswith('_'):
             continue
-        if type(model_price) is not ModelPrice and key not in registry_price_keys:
+        if type(model_price) is not ModelPrice and key not in registry.all_price_keys:
             continue
         yield key, value
 

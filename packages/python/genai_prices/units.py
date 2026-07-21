@@ -19,6 +19,10 @@ class UnitDef:
 
 class UnitRegistry:
     units: dict[str, UnitDef]
+    all_usage_keys: frozenset[str]
+    all_price_keys: frozenset[str]
+    reported_usage_keys: frozenset[str]
+    reported_usage_keys_in_order: tuple[str, ...]
     _units_by_price_key: dict[str, UnitDef]
     _units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef]
     _ancestor_usage_keys: dict[str, frozenset[str]]
@@ -52,13 +56,14 @@ class UnitRegistry:
                 if maybe_ancestor is not unit and _is_dimension_subset(maybe_ancestor, unit)
             )
 
+        self.all_usage_keys = frozenset(self.units)
+        self.all_price_keys = frozenset(self._units_by_price_key)
+        self.reported_usage_keys_in_order = tuple(usage_key for usage_key in self.units if usage_key != 'requests')
+        self.reported_usage_keys = frozenset(self.reported_usage_keys_in_order)
+
     def unit_for_price_key(self, price_key: str) -> UnitDef:
         """Return the registered unit priced by price_key."""
         return self._units_by_price_key[price_key]
-
-    def reported_usage_keys(self) -> frozenset[str]:
-        """Return registered keys callers may report, excluding the pricing-only requests unit."""
-        return frozenset(usage_key for usage_key in self.units if usage_key != 'requests')
 
     def ancestor_usage_keys(self, usage_key: str) -> frozenset[str]:
         return self._ancestor_usage_keys[usage_key]

@@ -184,6 +184,8 @@ def test_unit_registry_constructs_current_units() -> None:
 
     assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
     assert len(registry.units) == 21
+    assert registry.all_usage_keys == frozenset(TOKEN_USAGE_KEYS | {'requests'})
+    assert registry.all_price_keys == frozenset(TOKEN_PRICE_KEYS | {'requests_kcount'})
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
     assert registry.unit_for_price_key('requests_kcount') is registry.units['requests']
@@ -296,13 +298,26 @@ def test_unit_registry_join_lookup_returns_registered_cache_write_overlap() -> N
 def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
     registry = UnitRegistry(load_units())
 
-    assert registry.reported_usage_keys() == frozenset(TOKEN_USAGE_KEYS)
+    assert registry.reported_usage_keys == frozenset(TOKEN_USAGE_KEYS)
 
 
 def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> None:
     registry = UnitRegistry(load_units())
 
-    assert 'requests' not in registry.reported_usage_keys()
+    assert 'requests' not in registry.reported_usage_keys
+
+
+def test_unit_registry_key_indexes_are_immutable_and_reused() -> None:
+    raw_units = load_units()
+    registry = UnitRegistry(raw_units)
+
+    assert isinstance(registry.all_usage_keys, frozenset)
+    assert isinstance(registry.all_price_keys, frozenset)
+    assert isinstance(registry.reported_usage_keys, frozenset)
+    assert isinstance(registry.reported_usage_keys_in_order, tuple)
+    assert registry.reported_usage_keys_in_order == tuple(key for key in raw_units if key != 'requests')
+    assert registry.reported_usage_keys is registry.reported_usage_keys
+    assert registry.reported_usage_keys_in_order is registry.reported_usage_keys_in_order
 
 
 def test_validate_units_rejects_missing_family_dimension() -> None:
