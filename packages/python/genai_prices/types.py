@@ -835,12 +835,6 @@ def _collect_resolved_model_prices(
     )
 
 
-def _collect_model_price_units(  # pyright: ignore[reportUnusedFunction]
-    model_price: ModelPrice, registry: UnitRegistry
-) -> tuple[UnitDef, ...]:
-    return tuple(_iter_priced_registered_units(model_price, registry))
-
-
 def _compute_registry_priced_counts(
     resolved_prices: Sequence[tuple[UnitDef, Decimal | TieredPrices]], usage: Usage
 ) -> dict[str, int]:
