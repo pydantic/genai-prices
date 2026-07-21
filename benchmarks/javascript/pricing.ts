@@ -3,10 +3,16 @@ import { performance } from 'node:perf_hooks'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
 
-import type { ModelPrice, ModelPriceCalculationResult, PriceCalculationResult, Provider, Usage } from '../src/types'
+import type {
+  ModelPrice,
+  ModelPriceCalculationResult,
+  PriceCalculationResult,
+  Provider,
+  Usage,
+} from '../../packages/js/src/types'
 
-import { calcPrice as calcPricePublic, updatePrices } from '../src/api'
-import { calcPrice as calcPriceDirect } from '../src/engine'
+import { calcPrice as calcPricePublic, updatePrices } from '../../packages/js/src/api'
+import { calcPrice as calcPriceDirect } from '../../packages/js/src/engine'
 
 const DEFAULT_ITERATIONS = 10_000
 const DEFAULT_SAMPLES = 5
@@ -44,10 +50,17 @@ function priceResult(result: PriceCalculationResult): ModelPriceCalculationResul
   }
 }
 
-function assertPriceResult(actual: ModelPriceCalculationResult, expected: ModelPriceCalculationResult, label: string): void {
+function assertPriceResult(
+  actual: ModelPriceCalculationResult,
+  expected: ModelPriceCalculationResult,
+  label: string,
+): void {
   for (const field of ['input_price', 'output_price', 'total_price'] as const) {
     const difference = Math.abs(actual[field] - expected[field])
-    assert.ok(difference <= Number.EPSILON, `${label} ${field} ${actual[field].toString()} != ${expected[field].toString()}`)
+    assert.ok(
+      difference <= Number.EPSILON,
+      `${label} ${field} ${actual[field].toString()} != ${expected[field].toString()}`,
+    )
   }
 }
 
@@ -139,7 +152,11 @@ function assertExpectedResults(benchmarkCase: BenchmarkCase): void {
     providerId: 'benchmark',
     timestamp: BENCHMARK_TIMESTAMP,
   })
-  assertPriceResult(priceResult(publicCalculation), benchmarkCase.expected, `${benchmarkCase.name} public result changed`)
+  assertPriceResult(
+    priceResult(publicCalculation),
+    benchmarkCase.expected,
+    `${benchmarkCase.name} public result changed`,
+  )
 }
 
 function runIterations(operation: () => unknown, iterations: number): void {
@@ -152,7 +169,7 @@ function measure(
   caseName: string,
   pathName: string,
   operation: () => unknown,
-  { iterations, samples, warmupIterations }: BenchmarkSettings
+  { iterations, samples, warmupIterations }: BenchmarkSettings,
 ): BenchmarkResult {
   runIterations(operation, warmupIterations)
 
@@ -200,7 +217,14 @@ function runBenchmarks(settings: BenchmarkSettings): BenchmarkResult[] {
 
   const results: BenchmarkResult[] = []
   for (const benchmarkCase of cases) {
-    results.push(measure(benchmarkCase.name, 'direct', () => calcPriceDirect(benchmarkCase.usage, benchmarkCase.modelPrice), settings))
+    results.push(
+      measure(
+        benchmarkCase.name,
+        'direct',
+        () => calcPriceDirect(benchmarkCase.usage, benchmarkCase.modelPrice),
+        settings,
+      ),
+    )
     results.push(
       measure(
         benchmarkCase.name,
@@ -210,8 +234,8 @@ function runBenchmarks(settings: BenchmarkSettings): BenchmarkResult[] {
             providerId: 'benchmark',
             timestamp: BENCHMARK_TIMESTAMP,
           }),
-        settings
-      )
+        settings,
+      ),
     )
   }
   return results
@@ -247,12 +271,12 @@ function main(): void {
 
   console.log(`Node ${process.version} (V8 ${process.versions.v8})`)
   console.log(
-    `iterations=${settings.iterations.toString()} samples=${settings.samples.toString()} warmup_iterations=${settings.warmupIterations.toString()}`
+    `iterations=${settings.iterations.toString()} samples=${settings.samples.toString()} warmup_iterations=${settings.warmupIterations.toString()}`,
   )
   console.log('case                                      path      median ns/op      min ns/op      max ns/op')
   for (const result of results) {
     console.log(
-      `${result.caseName.padEnd(41)} ${result.pathName.padEnd(7)} ${result.medianNsPerOp.toFixed(1).padStart(13)} ${result.minNsPerOp.toFixed(1).padStart(14)} ${result.maxNsPerOp.toFixed(1).padStart(14)}`
+      `${result.caseName.padEnd(41)} ${result.pathName.padEnd(7)} ${result.medianNsPerOp.toFixed(1).padStart(13)} ${result.minNsPerOp.toFixed(1).padStart(14)} ${result.maxNsPerOp.toFixed(1).padStart(14)}`,
     )
   }
 }
