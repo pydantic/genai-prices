@@ -87,6 +87,23 @@ price = extracted_usage.calc_price()
 print(price.total_price)
 ```
 
+### `get_model_metadata`
+
+`get_model_metadata` returns provider-independent model token limits without requiring price data or making a
+network request. The model reference must be a canonical models.dev ID.
+
+```py
+from genai_prices import get_model_metadata
+
+metadata = get_model_metadata('anthropic/claude-sonnet-4-5')
+assert metadata is not None
+assert metadata.context_window == 200_000
+assert metadata.max_output_tokens == 64_000
+```
+
+The lookup is case-insensitive and returns `None` when token-limit metadata is unavailable. It is backed by a
+single bundled snapshot, so normal imports and lookups do not make network requests.
+
 ### `UpdatePrices`
 
 `UpdatePrices` can be used to periodically update the price data by downloading it from GitHub

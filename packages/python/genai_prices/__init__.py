@@ -5,11 +5,21 @@ from importlib.metadata import version as _metadata_version
 from typing import Any, overload
 
 from . import data_snapshot, types
+from .model_metadata import ModelMetadata, get_model_metadata
 from .types import Usage
 from .update_prices import UpdatePrices, wait_prices_updated_async, wait_prices_updated_sync
 
 __version__ = _metadata_version('genai_prices')
-__all__ = 'Usage', 'calc_price', 'UpdatePrices', 'wait_prices_updated_sync', 'wait_prices_updated_async', '__version__'
+__all__ = (
+    'Usage',
+    'ModelMetadata',
+    'calc_price',
+    'get_model_metadata',
+    'UpdatePrices',
+    'wait_prices_updated_sync',
+    'wait_prices_updated_async',
+    '__version__',
+)
 
 
 @overload

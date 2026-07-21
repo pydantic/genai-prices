@@ -1,0 +1,79 @@
+name: Update model metadata
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-model-metadata
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true
+          python-version: "3.13"
+
+      - run: uv sync --frozen --all-packages
+
+      - name: Update metadata
+        run: make update-model-metadata | tee "$RUNNER_TEMP/model-metadata-update.txt"
+
+      - name: Validate generated data
+        run: |
+          make lint
+          make typecheck
+          npx prettier --check packages/python/genai_prices/_model_metadata.json
+          uv run pytest tests/test_model_metadata.py tests/test_source_models_dev.py
+
+      - name: Open or update pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: automation/update-model-metadata
+        run: |
+          if git diff --quiet; then
+            echo "Model metadata is already current"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          gh auth setup-git
+          git fetch origin "$BRANCH:refs/remotes/origin/$BRANCH" || true
+          git switch -c "$BRANCH"
+          git add packages/python/genai_prices/_model_metadata.json
+          git commit -m "chore: update model metadata"
+          git push --force-with-lease origin "HEAD:refs/heads/$BRANCH"
+
+          {
+            echo "Refresh provider-independent model token limits from models.dev."
+            echo
+            echo '```text'
+            cat "$RUNNER_TEMP/model-metadata-update.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/model-metadata-pr-body.md"
+
+          pr_number="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" \
+              --title "chore: update model metadata" \
+              --body-file "$RUNNER_TEMP/model-metadata-pr-body.md"
+          else
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "chore: update model metadata" \
+              --body-file "$RUNNER_TEMP/model-metadata-pr-body.md"
+          fi

@@ -35,6 +35,10 @@ build-prices: ## Build JSON Schema for data and validate and write data to price
 package-data: ## Prepare data for packages
 	uv run -m prices package_data
 
+.PHONY: update-model-metadata
+update-model-metadata: ## Update bundled model metadata from models.dev
+	uv run -m prices update_model_metadata
+
 .PHONY: build
 build: build-prices package-data inject-providers ## Build prices and package data
 
