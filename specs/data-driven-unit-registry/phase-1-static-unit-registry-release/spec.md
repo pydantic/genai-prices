@@ -49,7 +49,7 @@ A model includes a child-unit price when its rate differs from the ancestor catc
 The registry represents usage key `requests`, price key `requests_kcount`, `per: 1_000`, and `family: requests`, but callers and extractors do not report it. Pricing supplies one request per calculation and includes its cost only in the total.
 
 **Build/export validation is the authoritative publication boundary.** _(from "Price data is complete while usage data may be incomplete", "`UnitRegistry` is immutable indexed metadata after construction")_
-Publication validates registry structure, public key safety, unique usage/price/dimension identities, interval closure, join-closedness, provider price-key and coverage rules, and extractor destinations before generated artifacts are written. Runtime registry construction trusts generated package unit data and indexes it without repeating publication validation.
+Publication validates registry structure, public key safety, unique usage/price/dimension identities, interval closure, join-closedness, provider price-key and coverage rules, and extractor destinations. Runtime registry construction trusts generated package unit data and indexes it without repeating publication validation.
 
 **Model prices are still validated on use.** _(from "Build/export validation is the authoritative publication boundary", "Manual Python pricing extensions remain supported")_
 Construction can precede or bypass publication validation for custom objects, so standard base pricing validates the selected model price against the bundled registry before decomposition. Phase 1 does not attach trust flags or validation markers to generated data.
