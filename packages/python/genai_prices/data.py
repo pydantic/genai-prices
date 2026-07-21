@@ -10692,7 +10692,9 @@ providers: list[Provider] = [
             ModelInfo(
                 id='perplexity/sonar-deep-research',
                 match=ClauseEquals(equals='perplexity/sonar-deep-research'),
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'), output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')
+                ),
             ),
             ModelInfo(
                 id='perplexity/sonar-pro',
@@ -12143,7 +12145,7 @@ providers: list[Provider] = [
         id='perplexity',
         name='Perplexity',
         api_pattern='https://api\\.perplexity\\.ai',
-        pricing_urls=['https://docs.perplexity.ai/guides/pricing'],
+        pricing_urls=['https://docs.perplexity.ai/docs/getting-started/pricing'],
         price_comments='Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
         extractors=[
             UsageExtractor(
@@ -12191,7 +12193,10 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar-deep-research'),
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('8')),
+                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'), output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')
+                ),
             ),
             ModelInfo(
                 id='sonar-pro',

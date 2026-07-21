@@ -18592,6 +18592,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 8,
+          output_reasoning_mtok: 3,
         },
       },
       {
@@ -21045,7 +21046,7 @@ export const data: Provider[] = [
   {
     id: 'perplexity',
     name: 'Perplexity',
-    pricing_urls: ['https://docs.perplexity.ai/guides/pricing'],
+    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing'],
     api_pattern: 'https://api\\.perplexity\\.ai',
     price_comments:
       'Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
@@ -21135,9 +21136,11 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-deep-research',
         },
+        price_comments: 'Perplexity lists reasoning tokens separately at $3 per million tokens.',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
+          output_reasoning_mtok: 3,
         },
       },
       {

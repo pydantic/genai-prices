@@ -4015,6 +4015,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 8
+      output_reasoning_mtok: 3
 
   - id: perplexity/sonar-pro
     match:

@@ -2,7 +2,7 @@
 name: Perplexity
 id: perplexity
 pricing_urls:
-  - https://docs.perplexity.ai/guides/pricing
+  - https://docs.perplexity.ai/docs/getting-started/pricing
 api_pattern: 'https://api\.perplexity\.ai'
 price_comments: >-
   Prices per request vary based on usage, this is not represented here,
@@ -78,9 +78,12 @@ models:
       health, and current events.
     match:
       equals: sonar-deep-research
+    prices_checked: 2026-07-21
+    price_comments: Perplexity lists reasoning tokens separately at $3 per million tokens.
     prices:
       input_mtok: 2
       output_mtok: 8
+      output_reasoning_mtok: 3
 
   - id: sonar-pro
     name: Sonar Pro
