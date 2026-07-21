@@ -66,11 +66,11 @@ Image is the default modality. The ancestor prices are the image/unknown-modalit
 - id: gpt-4o-transcribe
   prices:
     input_mtok: 2.5
-    input_audio_mtok: 2.5
+    input_audio_mtok: 6
     output_mtok: 10
 ```
 
-Audio in (audio tokens), text out (output tokens). Unit `input_tokens` (`input_mtok`) and unit `input_audio_tokens` (`input_audio_mtok`) are the same price — this model only takes audio input, but the catch-all ancestor is required.
+Audio in (audio tokens), text out (output tokens). Unit `input_audio_tokens` (`input_audio_mtok`) has a distinct rate, while the catch-all ancestor `input_tokens` (`input_mtok`) remains required by ancestor coverage.
 
 ## Simple Decomposition Walkthrough
 
