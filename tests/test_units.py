@@ -593,6 +593,10 @@ def test_model_price_str_includes_dynamic_extras() -> None:
     assert str(price) == '$1/input MTok, $0.5/cache image read MTok'
 
 
+def test_model_price_str_includes_unregistered_candidate_keys() -> None:
+    assert str(ModelPrice(hovercraft_mtok=Decimal('1'))) == '$1/hovercraft MTok'
+
+
 def test_collect_resolved_model_prices_handles_empty_price() -> None:
     registry = UnitRegistry(load_units())
 
