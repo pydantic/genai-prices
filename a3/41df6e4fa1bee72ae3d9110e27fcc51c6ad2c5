@@ -1,0 +1,60 @@
+packages/python/genai_prices/data_units.py
+  s_8199dd74cd04be::t_0d89ddc774b6cb 111,116,121,126,131
+  s_8199dd74cd04be::t_2086dbb2728202 108-110,112-115,117-120,122-125,127-130,132
+prices/units.yml
+  s_9a77f4b5186062::t_c3f3ead25274cd 81
+  s_8199dd74cd04be::t_709d66cc7f5192 85-87,89-91,93-95,97-99
+  s_8199dd74cd04be::t_9b4842f6fc52d7 84,88,92,96,100
+  s_9a77f4b5186062::t_bf72ed25bc9b7a 82
+  s_8199dd74cd04be::t_2d1722a526faf1 83
+prices/data_v2.schema.json
+  s_8199dd74cd04be::t_2086dbb2728202 547-596,940,942,944-945,948
+packages/js/src/__tests__/generatedData.test.ts
+  s_8199dd74cd04be::t_ee691addfa22e8 28-32,53
+tests/test_units.py
+  s_8199dd74cd04be::t_ee20fdb4886194 755-764,766-779
+  s_8199dd74cd04be::t_709d66cc7f5192 56-60,84-88,183,186-187,189,368-379,754,765
+  s_8199dd74cd04be::t_8917556b70fc9c 249,1376
+  s_8199dd74cd04be::t_fd8e17a48f8b00 780-781
+prices/providers/.schema.json
+  s_8199dd74cd04be::t_2086dbb2728202 571-620,831,833,835-836,839
+packages/js/src/__tests__/units.test.ts
+  s_8199dd74cd04be::t_ee691addfa22e8 29-33,57-61,70,111-120,122
+  s_8199dd74cd04be::t_8dcf0dd04c8fed 121
+  s_8199dd74cd04be::t_5aace1af5d2d88 123-124
+packages/js/src/__tests__/decompose.test.ts
+  s_8199dd74cd04be::t_ee691addfa22e8 86-88,90-92,95-100,103-105
+  s_8199dd74cd04be::t_8dcf0dd04c8fed 89,93-94,101-102
+packages/js/src/dataUnits.ts
+  s_8199dd74cd04be::t_0d89ddc774b6cb 151,170,188,198,225
+  s_8199dd74cd04be::t_2086dbb2728202 146-150,152-155,165-169,171-174,184-187,189-197,199-202,220-224,226-229
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "a341df6e4fa1bee72ae3d9110e27fcc51c6ad2c5",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_9a77f4b5186062": {
+      "agent_id": {
+        "tool": "github-copilot-jetbrains",
+        "id": "1784548060583",
+        "model": "unknown"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
