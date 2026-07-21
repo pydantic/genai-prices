@@ -714,17 +714,19 @@ def test_collect_resolved_model_prices_excludes_subclass_only_state() -> None:
 
 def test_compute_registry_priced_counts_handles_parent_child_token_counts() -> None:
     registry = UnitRegistry(load_units())
-    units = _collect_model_price_units(ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry)
+    resolved_prices = _collect_resolved_model_prices(
+        ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry
+    )
 
     assert _compute_registry_priced_counts(
-        units,
+        resolved_prices,
         Usage(input_tokens=1_000, cache_read_tokens=250),
     ) == {'cache_read_tokens': 250, 'input_tokens': 750}
 
 
 def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
     registry = UnitRegistry(load_units())
-    units = _collect_model_price_units(
+    resolved_prices = _collect_resolved_model_prices(
         ModelPrice(
             input_mtok=Decimal('1'),
             cache_read_mtok=Decimal('2'),
@@ -735,7 +737,7 @@ def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
     )
 
     assert _compute_registry_priced_counts(
-        units,
+        resolved_prices,
         Usage(
             input_tokens=1_000,
             cache_read_tokens=400,
@@ -752,16 +754,34 @@ def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
 
 def test_compute_registry_priced_counts_handles_one_request_count() -> None:
     registry = UnitRegistry(load_units())
-    units = _collect_model_price_units(ModelPrice(requests_kcount=Decimal('1')), registry)
+    resolved_prices = _collect_resolved_model_prices(ModelPrice(requests_kcount=Decimal('1')), registry)
 
-    assert _compute_registry_priced_counts(units, Usage()) == {'requests': 1}
+    assert _compute_registry_priced_counts(resolved_prices, Usage()) == {'requests': 1}
 
 
 def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_only_prices() -> None:
     registry = UnitRegistry(load_units())
-    units = _collect_model_price_units(ModelPrice(requests_kcount=Decimal('1')), registry)
+    resolved_prices = _collect_resolved_model_prices(ModelPrice(requests_kcount=Decimal('1')), registry)
 
-    assert set(_compute_registry_priced_counts(units, Usage(input_tokens=100))) == {'requests'}
+    assert set(_compute_registry_priced_counts(resolved_prices, Usage(input_tokens=100))) == {'requests'}
+
+
+def test_model_price_calculation_does_not_use_registry_scanning_collectors(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from genai_prices import types as runtime_types
+
+    def fail(*_args: object) -> None:
+        pytest.fail('standard calculation used a registry-scanning collector')
+
+    monkeypatch.setattr(runtime_types, '_collect_effective_model_price_keys', fail)
+    monkeypatch.setattr(runtime_types, '_collect_model_price_units', fail)
+
+    assert ModelPrice(input_mtok=Decimal('2')).calc_price(Usage(input_tokens=1_000_000)) == {
+        'input_price': Decimal('2'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('2'),
+    }
 
 
 def test_build_loads_units() -> None:

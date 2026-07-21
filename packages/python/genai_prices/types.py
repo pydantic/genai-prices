@@ -700,25 +700,27 @@ class ModelPrice:
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
-        from genai_prices.validation import validate_model_price
+        from genai_prices.validation import validate_priced_units
 
         registry = _get_registry()
-        validate_model_price(_collect_effective_model_price_keys(self, registry), registry)
+        resolved_prices = _collect_resolved_model_prices(self, registry)
+        validate_priced_units(tuple(unit for unit, _ in resolved_prices), registry)
 
         usage_data = Usage.from_raw(usage)
-        priced_units = _collect_model_price_units(self, registry)
-        priced_counts = _compute_registry_priced_counts(priced_units, usage_data)
+        priced_counts = _compute_registry_priced_counts(resolved_prices, usage_data)
 
         input_price = Decimal(0)
         output_price = Decimal(0)
         total_price = Decimal(0)
         # Reading input_tokens can trigger lazy inference errors; only do it when
         # tiered pricing actually needs the threshold.
-        total_input_tokens = usage_data.input_tokens if _model_price_uses_tiered_prices(self, registry) else 0
+        total_input_tokens = (
+            usage_data.input_tokens if any(isinstance(price, TieredPrices) for _, price in resolved_prices) else 0
+        )
 
-        for unit in priced_units:
+        for unit, price in resolved_prices:
             unit_price = calc_unit_price(
-                getattr(self, unit.price_key),
+                price,
                 priced_counts[unit.usage_key],
                 total_input_tokens,
                 unit.per,
@@ -808,11 +810,13 @@ def calc_unit_price(
     return unit_price / per
 
 
-def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitRegistry) -> set[str]:
+def _collect_effective_model_price_keys(  # pyright: ignore[reportUnusedFunction]
+    model_price: ModelPrice, registry: UnitRegistry
+) -> set[str]:
     return set(_iter_effective_model_price_keys(model_price, registry))
 
 
-def _collect_resolved_model_prices(  # pyright: ignore[reportUnusedFunction]
+def _collect_resolved_model_prices(
     model_price: ModelPrice, registry: UnitRegistry
 ) -> tuple[tuple[UnitDef, Decimal | TieredPrices], ...]:
     stored_prices = [
@@ -831,25 +835,22 @@ def _collect_resolved_model_prices(  # pyright: ignore[reportUnusedFunction]
     )
 
 
-def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegistry) -> bool:
-    return any(
-        isinstance(getattr(model_price, price_key), TieredPrices)
-        for price_key in _iter_effective_model_price_keys(model_price, registry)
-    )
-
-
-def _collect_model_price_units(model_price: ModelPrice, registry: UnitRegistry) -> tuple[UnitDef, ...]:
+def _collect_model_price_units(  # pyright: ignore[reportUnusedFunction]
+    model_price: ModelPrice, registry: UnitRegistry
+) -> tuple[UnitDef, ...]:
     return tuple(_iter_priced_registered_units(model_price, registry))
 
 
-def _compute_registry_priced_counts(priced_units: Sequence[UnitDef], usage: Usage) -> dict[str, int]:
+def _compute_registry_priced_counts(
+    resolved_prices: Sequence[tuple[UnitDef, Decimal | TieredPrices]], usage: Usage
+) -> dict[str, int]:
     from genai_prices.decompose import compute_leaf_values
 
     counts: dict[str, int] = {}
-    priced_units_by_usage_key = {unit.usage_key: unit for unit in priced_units if unit.usage_key != 'requests'}
+    priced_units_by_usage_key = {unit.usage_key: unit for unit, _ in resolved_prices if unit.usage_key != 'requests'}
     if priced_units_by_usage_key:
         counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key))
-    if any(unit.usage_key == 'requests' for unit in priced_units):
+    if any(unit.usage_key == 'requests' for unit, _ in resolved_prices):
         counts['requests'] = 1
 
     return counts
