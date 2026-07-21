@@ -84,11 +84,17 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
     input_cache_read: Decimal | None = None
 
     def model_price(self) -> ModelPrice:
+        reasoning_price = (
+            mtok(self.internal_reasoning)
+            if self.internal_reasoning is not None and self.internal_reasoning != self.completion
+            else None
+        )
         return ModelPrice(
             input_mtok=mtok(self.prompt),
             cache_write_mtok=mtok(self.input_cache_write),
             cache_read_mtok=mtok(self.input_cache_read),
             output_mtok=mtok(self.completion),
+            **({'output_reasoning_mtok': reasoning_price} if reasoning_price is not None else {}),
         )
 
     def has_negative_price(self) -> bool:
