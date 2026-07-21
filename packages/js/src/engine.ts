@@ -1,8 +1,35 @@
 import { computeLeafValues } from './decompose'
-import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import {
+  MatchLogic,
+  ModelInfo,
+  ModelPrice,
+  ModelPriceCalculationResult,
+  Provider,
+  ProviderFindOptions,
+  TieredPrices,
+  UnitDef,
+  Usage,
+} from './types'
 import { getActiveRegistry, UnitRegistry } from './units'
 import { getUsageValue } from './usage'
 import { validateModelPrice } from './validation'
+
+export type ResolvedPrice = Readonly<{
+  price: number | TieredPrices
+  unit: UnitDef
+}>
+
+export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: UnitRegistry): ResolvedPrice[] {
+  const resolvedPrices: ResolvedPrice[] = []
+  for (const [priceKey, price] of Object.entries(modelPrice)) {
+    if (price === undefined) continue
+
+    const unit = registry.unitsByPriceKey.get(priceKey)
+    if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
+    resolvedPrices.push({ price, unit })
+  }
+  return resolvedPrices
+}
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
