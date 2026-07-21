@@ -487,6 +487,21 @@ def test_usage_extractor_skips_optional_nested_path_with_missing_parent():
     )
 
 
+def test_usage_extractor_skips_optional_nested_path_with_null_parent():
+    extractor = UsageExtractor(
+        root='usage',
+        mappings=[
+            UsageExtractorMapping(path=['details', 'reasoning_tokens'], dest='output_reasoning_tokens', required=False),
+            UsageExtractorMapping(path='output_tokens', dest='output_tokens'),
+        ],
+    )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {'details': None, 'output_tokens': 2}}) == (
+        'test-model',
+        Usage(output_tokens=2),
+    )
+
+
 def test_usage_extractor_skips_optional_float_value():
     extractor = UsageExtractor(
         root='usage',
