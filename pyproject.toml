@@ -39,7 +39,13 @@ members = ["prices", "packages/python"]
 [tool.ruff]
 line-length = 120
 target-version = "py310"
-include = ["prices/src/**/*.py", "packages/python/**/*.py", "tests/**/*.py", ".github/scripts/**/*.py"]
+include = [
+    "prices/src/**/*.py",
+    "packages/python/**/*.py",
+    "benchmarks/**/*.py",
+    "tests/**/*.py",
+    ".github/scripts/**/*.py",
+]
 
 [tool.ruff.lint]
 extend-select = ["Q", "RUF100", "C90", "UP", "I"]
@@ -106,7 +112,7 @@ reportIgnoreCommentWithoutRule = true
 reportUnusedParameter = true
 reportIncompatibleUnannotatedOverride = true
 reportImplicitAbstractClass = true
-include = ["prices/src", "packages/python", "tests", ".github/scripts"]
+include = ["prices/src", "packages/python", "benchmarks", "tests", ".github/scripts"]
 venv = ".venv"
 executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
 

@@ -129,7 +129,7 @@ Otherwise, to contribute:
 The repository includes lightweight, non-gating benchmarks for pricing-call overhead. Run them from the repository root:
 
 ```bash
-uv run --package genai-prices python packages/python/benchmarks/pricing.py
+uv run --package genai-prices python benchmarks/python/pricing.py
 npm run benchmark:pricing --workspace=packages/js
 ```
 
@@ -154,7 +154,7 @@ and runtime/tool versions. Save the raw output locally, labelled by revision, fo
 benchmark_output_dir="ignoreme/generated/$(date +%F)"
 mkdir -p "$benchmark_output_dir"
 
-uv run --package genai-prices python packages/python/benchmarks/pricing.py \
+uv run --package genai-prices python benchmarks/python/pricing.py \
   | tee "$benchmark_output_dir/python-$(git rev-parse --short HEAD).txt"
 npm run benchmark:pricing --workspace=packages/js \
   | tee "$benchmark_output_dir/javascript-$(git rev-parse --short HEAD).txt"
