@@ -120,6 +120,7 @@ dramatically improve the experience for developers using your API!
 Otherwise, to contribute:
 
 - See [`prices/README.md`](prices) for instructions on how to contribute to the price data.
+- See [`benchmarks/README.md`](benchmarks) for the pricing performance benchmark workflow.
 - Feel free to submit pull requests or issues about the Python and JS packages.
 - If you need a library for another language, please create an issue, we'd be happy to discuss building it, hosting it here,
   or helping you maintain it elsewhere.

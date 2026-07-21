@@ -23,6 +23,7 @@
     "erasableSyntaxOnly": true
   },
   "include": [
+    "../../benchmarks/javascript/**/*.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "eslint.config.mjs",

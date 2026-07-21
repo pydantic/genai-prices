@@ -42,6 +42,7 @@
     "genai-prices": "dist/cli.js"
   },
   "scripts": {
+    "benchmark:pricing": "tsx ../../benchmarks/javascript/pricing.ts",
     "build": "vite build && npm run build:cli",
     "build:cli": "vite build --config vite.config-cli.ts",
     "dev": "vite build --watch",
