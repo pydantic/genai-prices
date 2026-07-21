@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from genai_prices import data, data_units
-from genai_prices.types import ConditionalPrice, _collect_effective_model_price_keys
+from genai_prices.types import ConditionalPrice
 from genai_prices.units import UnitRegistry
 from genai_prices.validation import (
     validate_ancestor_coverage,
@@ -233,7 +233,7 @@ def test_bundled_provider_model_prices_pass_registry_validation() -> None:
                     if isinstance(maybe_conditional_price, ConditionalPrice)
                     else maybe_conditional_price
                 )
-                price_keys = _collect_effective_model_price_keys(price, registry)
+                price_keys = {key for key, value in price.__dict__.items() if value is not None}
                 try:
                     validate_model_price(price_keys, registry)
                 except ValueError as exc:  # pragma: no cover

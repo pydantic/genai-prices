@@ -23,7 +23,6 @@ from genai_prices.types import (
     Provider,
     TieredPrices,
     Usage,
-    _collect_effective_model_price_keys,
     _collect_resolved_model_prices,
     _compute_registry_priced_counts,
 )
@@ -557,50 +556,11 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
         )
 
 
-def test_collect_effective_model_price_keys_reads_base_price_keys() -> None:
-    registry = UnitRegistry(load_units())
-
-    assert _collect_effective_model_price_keys(
-        ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')), registry
-    ) == {'input_mtok', 'output_mtok'}
-
-
-def test_collect_effective_model_price_keys_ignores_none_values() -> None:
-    registry = UnitRegistry(load_units())
-
-    assert _collect_effective_model_price_keys(ModelPrice(input_mtok=Decimal('1'), output_mtok=None), registry) == {
-        'input_mtok'
-    }
-
-
-def test_collect_effective_model_price_keys_reads_registered_dynamic_keys() -> None:
-    registry = UnitRegistry(load_units())
-    price = ModelPrice(
-        cache_image_read_mtok=Decimal('0.5'),
-    )
-
-    assert _collect_effective_model_price_keys(price, registry) == {'cache_image_read_mtok'}
-
-
 def test_model_price_stores_dynamic_prices_as_attributes() -> None:
     price = ModelPrice(input_mtok=Decimal('1'))
 
     assert price.__dict__ == {'input_mtok': Decimal('1')}
     assert '_extra_prices' not in price.__dict__
-
-
-def test_collect_effective_model_price_keys_includes_unregistered_candidates_for_validation() -> None:
-    registry = UnitRegistry(load_units())
-    price = ModelPrice(hovercraft_mtok=Decimal('1'))
-
-    assert _collect_effective_model_price_keys(price, registry) == {'hovercraft_mtok'}
-
-
-def test_collect_effective_model_price_keys_ignores_none_dynamic_keys() -> None:
-    registry = UnitRegistry(load_units())
-    price = ModelPrice(cache_image_read_mtok=None)
-
-    assert _collect_effective_model_price_keys(price, registry) == set()
 
 
 def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
@@ -768,20 +728,19 @@ def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_on
     assert set(_compute_registry_priced_counts(resolved_prices, Usage(input_tokens=100))) == {'requests'}
 
 
-def test_model_price_calculation_does_not_use_registry_scanning_collectors(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    from genai_prices import types as runtime_types
+def test_model_price_calculation_resolves_each_stored_price_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    registry = UnitRegistry(load_units())
+    unit_lookup = Mock(wraps=registry.unit_for_price_key)
+    monkeypatch.setattr(registry, 'unit_for_price_key', unit_lookup)
 
-    collect_effective_keys = Mock(side_effect=AssertionError('standard calculation scanned effective price keys'))
-    monkeypatch.setattr(runtime_types, '_collect_effective_model_price_keys', collect_effective_keys)
+    with patch('genai_prices.units._get_registry', return_value=registry):
+        assert ModelPrice(input_mtok=Decimal('2')).calc_price(Usage(input_tokens=1_000_000)) == {
+            'input_price': Decimal('2'),
+            'output_price': Decimal('0'),
+            'total_price': Decimal('2'),
+        }
 
-    assert ModelPrice(input_mtok=Decimal('2')).calc_price(Usage(input_tokens=1_000_000)) == {
-        'input_price': Decimal('2'),
-        'output_price': Decimal('0'),
-        'total_price': Decimal('2'),
-    }
-    collect_effective_keys.assert_not_called()
+    unit_lookup.assert_called_once_with('input_mtok')
 
 
 def test_build_loads_units() -> None:

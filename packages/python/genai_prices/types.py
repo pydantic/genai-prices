@@ -810,12 +810,6 @@ def calc_unit_price(
     return unit_price / per
 
 
-def _collect_effective_model_price_keys(  # pyright: ignore[reportUnusedFunction]
-    model_price: ModelPrice, registry: UnitRegistry
-) -> set[str]:
-    return set(_iter_effective_model_price_keys(model_price, registry))
-
-
 def _collect_resolved_model_prices(
     model_price: ModelPrice, registry: UnitRegistry
 ) -> tuple[tuple[UnitDef, Decimal | TieredPrices], ...]:
