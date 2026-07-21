@@ -126,7 +126,7 @@ def validate_provider_model_prices(providers: Iterable[object], registry: UnitRe
 def validate_provider_extractor_destinations(providers: Iterable[object], registry: UnitRegistry) -> None:
     from genai_prices.validation import validate_extractor_destinations
 
-    reported_usage_keys = registry.reported_usage_keys
+    reported_usage_keys = registry._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
     for provider in providers:
         provider_id = cast(str, getattr(provider, 'id'))
         extractors = getattr(provider, 'extractors', None)

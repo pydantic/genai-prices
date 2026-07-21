@@ -20,10 +20,10 @@ class UnitDef:
 
 class UnitRegistry:
     units: Mapping[str, UnitDef]
-    all_usage_keys: frozenset[str]
-    all_price_keys: frozenset[str]
-    reported_usage_keys: frozenset[str]
-    reported_usage_keys_in_order: tuple[str, ...]
+    _all_usage_keys: frozenset[str]
+    _all_price_keys: frozenset[str]
+    _reported_usage_keys: frozenset[str]
+    _reported_usage_keys_in_order: tuple[str, ...]
     _units_by_price_key: dict[str, UnitDef]
     _units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef]
     _ancestor_usage_keys: dict[str, frozenset[str]]
@@ -58,10 +58,10 @@ class UnitRegistry:
             )
 
         self.units = MappingProxyType(units)
-        self.all_usage_keys = frozenset(units)
-        self.all_price_keys = frozenset(self._units_by_price_key)
-        self.reported_usage_keys_in_order = tuple(usage_key for usage_key in units if usage_key != 'requests')
-        self.reported_usage_keys = frozenset(self.reported_usage_keys_in_order)
+        self._all_usage_keys = frozenset(units)
+        self._all_price_keys = frozenset(self._units_by_price_key)
+        self._reported_usage_keys_in_order = tuple(usage_key for usage_key in units if usage_key != 'requests')
+        self._reported_usage_keys = frozenset(self._reported_usage_keys_in_order)
 
     def unit_for_price_key(self, price_key: str) -> UnitDef:
         """Return the registered unit priced by price_key."""

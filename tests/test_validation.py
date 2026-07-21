@@ -247,7 +247,7 @@ def test_validate_extractor_destinations_accepts_current_reported_usage_keys() -
 
     validate_extractor_destinations(
         {'input_tokens', 'cache_read_tokens', 'cache_audio_read_tokens'},
-        registry.reported_usage_keys,
+        registry._reported_usage_keys,
     )
 
 
@@ -255,18 +255,18 @@ def test_validate_extractor_destinations_rejects_price_keys() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Invalid extractor destination: input_mtok'):
-        validate_extractor_destinations({'input_mtok'}, registry.reported_usage_keys)
+        validate_extractor_destinations({'input_mtok'}, registry._reported_usage_keys)
 
 
 def test_validate_extractor_destinations_rejects_unknown_strings() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Invalid extractor destination: imaginary_tokens'):
-        validate_extractor_destinations({'imaginary_tokens'}, registry.reported_usage_keys)
+        validate_extractor_destinations({'imaginary_tokens'}, registry._reported_usage_keys)
 
 
 def test_validate_extractor_destinations_rejects_pricing_only_requests() -> None:
     registry = UnitRegistry(load_units())
 
     with pytest.raises(ValueError, match='Invalid extractor destination: requests'):
-        validate_extractor_destinations({'requests'}, registry.reported_usage_keys)
+        validate_extractor_destinations({'requests'}, registry._reported_usage_keys)

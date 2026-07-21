@@ -480,7 +480,7 @@ def _validate_usage_extractor_destinations(
 
     validate_extractor_destinations(
         {mapping.dest for mapping in mappings},
-        registry.reported_usage_keys if registry is not None else _reported_usage_keys(),
+        registry._reported_usage_keys if registry is not None else _reported_usage_keys(),  # pyright: ignore[reportPrivateUsage]
     )
 
 
@@ -593,13 +593,13 @@ def _type_name(v: Any) -> str:
 def _reported_usage_keys() -> frozenset[str]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
-    return _get_registry().reported_usage_keys
+    return _get_registry()._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
 
 
 def _reported_usage_key_order() -> tuple[str, ...]:
     from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
-    return _get_registry().reported_usage_keys_in_order
+    return _get_registry()._reported_usage_keys_in_order  # pyright: ignore[reportPrivateUsage]
 
 
 def _raw_usage_value(obj: object, key: str) -> int | None:
@@ -818,7 +818,11 @@ def _collect_resolved_model_prices(
         for price_key, value in _iter_model_price_attr_items(model_price, registry)
         if value is not None
     ]
-    unknown_price_keys = {price_key for price_key, _ in stored_prices if price_key not in registry.all_price_keys}
+    unknown_price_keys = {
+        price_key
+        for price_key, _ in stored_prices
+        if price_key not in registry._all_price_keys  # pyright: ignore[reportPrivateUsage]
+    }
     if unknown_price_keys:
         bad_keys = ', '.join(sorted(unknown_price_keys))
         raise ValueError(f'Unknown price key: {bad_keys}')
@@ -863,7 +867,7 @@ def _iter_model_price_attr_items(model_price: ModelPrice, registry: UnitRegistry
     for key, value in model_price.__dict__.items():
         if key.startswith('_'):
             continue
-        if type(model_price) is not ModelPrice and key not in registry.all_price_keys:
+        if type(model_price) is not ModelPrice and key not in registry._all_price_keys:  # pyright: ignore[reportPrivateUsage]
             continue
         yield key, value
 
