@@ -11,13 +11,18 @@ export function validatePriceKeys(priceKeys: Iterable<string>, registry: UnitReg
 }
 
 export function validateAncestorCoverage(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
-  const effectivePriceKeys = [...priceKeys]
-  validatePriceKeys(effectivePriceKeys, registry)
-  const pricedKeys = new Set(effectivePriceKeys)
-  const pricedUnits = getUnitsForPriceKeys(pricedKeys, registry)
+  const pricedUnits = getUnitsForPriceKeys(priceKeys, registry)
+  validateResolvedAncestorCoverage(pricedUnits, registry)
+}
+
+function validateResolvedAncestorCoverage(pricedUnits: readonly UnitDef[], registry: UnitRegistry): void {
+  const pricedKeys = new Set(pricedUnits.map((unit) => unit.priceKey))
 
   for (const unit of pricedUnits) {
-    for (const ancestorUsageKey of registry.ancestorUsageKeys(unit.usageKey)) {
+    const ancestorUsageKeys = registry.ancestorUsageKeysByUsageKey.get(unit.usageKey)
+    if (!ancestorUsageKeys) throw new Error(`Unknown unit usage key: ${unit.usageKey}`)
+
+    for (const ancestorUsageKey of ancestorUsageKeys) {
       const ancestor = registry.units.get(ancestorUsageKey)
       if (ancestor && !pricedKeys.has(ancestor.priceKey)) {
         throw new Error(`Missing ancestor price key ${ancestor.priceKey} for ${unit.priceKey}`)
@@ -27,10 +32,12 @@ export function validateAncestorCoverage(priceKeys: Iterable<string>, registry: 
 }
 
 export function validateJoinCoverage(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
-  const effectivePriceKeys = [...priceKeys]
-  validatePriceKeys(effectivePriceKeys, registry)
-  const pricedKeys = new Set(effectivePriceKeys)
-  const pricedUnits = getUnitsForPriceKeys(pricedKeys, registry)
+  const pricedUnits = getUnitsForPriceKeys(priceKeys, registry)
+  validateResolvedJoinCoverage(pricedUnits, registry)
+}
+
+function validateResolvedJoinCoverage(pricedUnits: readonly UnitDef[], registry: UnitRegistry): void {
+  const pricedKeys = new Set(pricedUnits.map((unit) => unit.priceKey))
 
   for (let leftIndex = 0; leftIndex < pricedUnits.length; leftIndex++) {
     for (let rightIndex = leftIndex + 1; rightIndex < pricedUnits.length; rightIndex++) {
@@ -50,10 +57,12 @@ export function validateJoinCoverage(priceKeys: Iterable<string>, registry: Unit
 }
 
 export function validateModelPrice(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
-  const effectivePriceKeys = [...priceKeys]
-  validatePriceKeys(effectivePriceKeys, registry)
-  validateAncestorCoverage(effectivePriceKeys, registry)
-  validateJoinCoverage(effectivePriceKeys, registry)
+  validatePricedUnits(getUnitsForPriceKeys(priceKeys, registry), registry)
+}
+
+export function validatePricedUnits(pricedUnits: readonly UnitDef[], registry: UnitRegistry): void {
+  validateResolvedAncestorCoverage(pricedUnits, registry)
+  validateResolvedJoinCoverage(pricedUnits, registry)
 }
 
 export function validateExtractorDestinations(providerData: Provider[], registry: UnitRegistry = getActiveRegistry()): void {
@@ -70,8 +79,8 @@ export function validateExtractorDestinations(providerData: Provider[], registry
   }
 }
 
-function getUnitsForPriceKeys(priceKeys: Set<string>, registry: UnitRegistry): UnitDef[] {
-  return [...priceKeys].map((priceKey) => {
+function getUnitsForPriceKeys(priceKeys: Iterable<string>, registry: UnitRegistry): UnitDef[] {
+  return [...new Set(priceKeys)].map((priceKey) => {
     const unit = registry.unitsByPriceKey.get(priceKey)
     if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
     return unit
