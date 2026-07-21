@@ -223,7 +223,9 @@ def test_repo_prices_omit_redundant_equal_rate_descendants() -> None:
                         for right in other_units[left_index + 1 :]
                     )
                     if not required_by_descendant and not required_as_join:
-                        redundant_prices.append(f'{provider.id}/{model.id}[{price_index}]:{unit.price_key}')
+                        redundant_prices.append(  # pragma: no cover
+                            f'{provider.id}/{model.id}[{price_index}]:{unit.price_key}'
+                        )
 
     assert redundant_prices == []
 
