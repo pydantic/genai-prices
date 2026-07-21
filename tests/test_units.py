@@ -21,9 +21,11 @@ from genai_prices.types import (
     ModelInfo,
     ModelPrice,
     Provider,
+    TieredPrices,
     Usage,
     _collect_effective_model_price_keys,
     _collect_model_price_units,
+    _collect_resolved_model_prices,
     _compute_registry_priced_counts,
 )
 from genai_prices.units import UnitRegistry, _get_registry
@@ -627,6 +629,87 @@ def test_collect_model_price_units_handles_registered_custom_fields() -> None:
     units = _collect_model_price_units(CustomModelPrice(input_mtok=Decimal('1'), sausage_mtok=Decimal('2')), registry)
 
     assert {unit.usage_key for unit in units} == {'input_tokens', 'sausage_tokens'}
+
+
+def test_collect_resolved_model_prices_handles_empty_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(), registry) == ()
+
+
+def test_collect_resolved_model_prices_retains_units_and_current_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    resolved_prices = _collect_resolved_model_prices(
+        ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+        registry,
+    )
+
+    assert resolved_prices == (
+        (registry.units['input_tokens'], Decimal('1')),
+        (registry.units['output_tokens'], Decimal('2')),
+    )
+
+
+def test_collect_resolved_model_prices_handles_dynamic_registered_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(cache_image_read_mtok=Decimal('0.5')), registry) == (
+        (registry.units['cache_image_read_tokens'], Decimal('0.5')),
+    )
+
+
+def test_collect_resolved_model_prices_ignores_none_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(input_mtok=None), registry) == ()
+
+
+def test_collect_resolved_model_prices_rejects_unknown_base_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.raises(ValueError, match='Unknown price key: hovercraft_mtok'):
+        _collect_resolved_model_prices(ModelPrice(hovercraft_mtok=Decimal('1')), registry)
+
+
+def test_collect_resolved_model_prices_handles_request_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(requests_kcount=Decimal('3')), registry) == (
+        (registry.units['requests'], Decimal('3')),
+    )
+
+
+def test_collect_resolved_model_prices_retains_tiered_price() -> None:
+    registry = UnitRegistry(load_units())
+    tiered_price = TieredPrices(base=Decimal('1'), tiers=[])
+
+    assert _collect_resolved_model_prices(ModelPrice(input_mtok=tiered_price), registry) == (
+        (registry.units['input_tokens'], tiered_price),
+    )
+
+
+def test_collect_resolved_model_prices_includes_registered_subclass_price() -> None:
+    registry = _custom_price_key_registry()
+
+    class CustomModelPrice(ModelPrice):
+        pass
+
+    assert _collect_resolved_model_prices(CustomModelPrice(sausage_mtok=Decimal('2')), registry) == (
+        (registry.units['sausage_tokens'], Decimal('2')),
+    )
+
+
+def test_collect_resolved_model_prices_excludes_subclass_only_state() -> None:
+    registry = UnitRegistry(load_units())
+
+    class CustomModelPrice(ModelPrice):
+        pass
+
+    assert _collect_resolved_model_prices(
+        CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('2')),
+        registry,
+    ) == ((registry.units['input_tokens'], Decimal('1')),)
 
 
 def test_compute_registry_priced_counts_handles_parent_child_token_counts() -> None:

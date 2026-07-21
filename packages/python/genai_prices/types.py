@@ -812,6 +812,25 @@ def _collect_effective_model_price_keys(model_price: ModelPrice, registry: UnitR
     return set(_iter_effective_model_price_keys(model_price, registry))
 
 
+def _collect_resolved_model_prices(  # pyright: ignore[reportUnusedFunction]
+    model_price: ModelPrice, registry: UnitRegistry
+) -> tuple[tuple[UnitDef, Decimal | TieredPrices], ...]:
+    stored_prices = [
+        (price_key, value)
+        for price_key, value in _iter_model_price_attr_items(model_price, registry)
+        if value is not None
+    ]
+    unknown_price_keys = {price_key for price_key, _ in stored_prices if price_key not in registry.all_price_keys}
+    if unknown_price_keys:
+        bad_keys = ', '.join(sorted(unknown_price_keys))
+        raise ValueError(f'Unknown price key: {bad_keys}')
+
+    return tuple(
+        (registry.unit_for_price_key(price_key), cast(Decimal | TieredPrices, value))
+        for price_key, value in stored_prices
+    )
+
+
 def _model_price_uses_tiered_prices(model_price: ModelPrice, registry: UnitRegistry) -> bool:
     return any(
         isinstance(getattr(model_price, price_key), TieredPrices)
