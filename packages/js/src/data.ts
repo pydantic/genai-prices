@@ -3948,6 +3948,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'toolUsePromptTokenCount',
+            dest: 'input_tool_tokens',
+            required: false,
+          },
+          {
             path: [
               'toolUsePromptTokensDetails',
               {
@@ -3960,6 +3965,21 @@ export const data: Provider[] = [
               'tokenCount',
             ],
             dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_text_tool_tokens',
             required: false,
           },
           {
@@ -3984,12 +4004,42 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_audio_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'IMAGE',
                 },
               },
               'tokenCount',
             ],
             dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tool_tokens',
             required: false,
           },
           {
@@ -4014,12 +4064,42 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'VIDEO',
                 },
               },
               'tokenCount',
             ],
             dest: 'input_video_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_video_tool_tokens',
             required: false,
           },
         ],

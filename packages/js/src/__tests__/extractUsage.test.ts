@@ -409,6 +409,7 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         input_text_tokens: 75,
         input_tokens: 100,
+        input_tool_tokens: 25,
         output_reasoning_tokens: 144,
         output_text_tokens: 18,
         output_tokens: 162,
@@ -476,10 +477,15 @@ describe('extractUsage', () => {
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
         input_audio_tokens: 5,
+        input_audio_tool_tokens: 5,
         input_image_tokens: 9,
+        input_image_tool_tokens: 9,
         input_text_tokens: 20,
+        input_text_tool_tokens: 10,
         input_tokens: 35,
+        input_tool_tokens: 25,
         input_video_tokens: 3,
+        input_video_tool_tokens: 3,
         output_reasoning_tokens: 4,
         output_text_tokens: 3,
         output_tokens: 7,

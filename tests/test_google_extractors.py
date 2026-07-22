@@ -12,6 +12,7 @@ class GoogleUsageMetadataSource(NamedTuple):
     count_destinations: tuple[str, ...]
     detail_direction: str | None = None
     detail_stem: str | None = None
+    detail_token_type: str | None = None
 
     @property
     def count_path(self) -> str:
@@ -46,7 +47,9 @@ def _google_default_extractor_expected_signatures() -> set[GoogleExtractorMappin
         # Thinking tokens have no detail array. Their text-rate price does not establish a text modality.
         GoogleUsageMetadataSource('thoughts', ('output_tokens', 'output_reasoning_tokens')),
         # Tool-use prompt tokens are additional prompt/input context, including their modality breakdown.
-        GoogleUsageMetadataSource('toolUsePrompt', ('input_tokens',), 'input'),
+        GoogleUsageMetadataSource(
+            'toolUsePrompt', ('input_tokens', 'input_tool_tokens'), 'input', detail_token_type='tool'
+        ),
     )
 
     signatures: set[GoogleExtractorMappingSignature] = set()
@@ -68,13 +71,22 @@ def _google_detail_signatures(source: GoogleUsageMetadataSource) -> set[GoogleEx
 
     assert source.detail_direction is not None
     modalities = ('TEXT', 'AUDIO', 'IMAGE', 'DOCUMENT', 'VIDEO')
-    return {
+    signatures = {
         _google_optional_extractor_mapping(
             (source.detail_path, modality, 'tokenCount'),
             _google_modality_detail_dest(source.detail_direction, modality),
         )
         for modality in modalities
     }
+    if source.detail_token_type is not None:
+        signatures.update(
+            _google_optional_extractor_mapping(
+                (source.detail_path, modality, 'tokenCount'),
+                _google_modality_detail_dest(source.detail_direction, modality, source.detail_token_type),
+            )
+            for modality in modalities
+        )
+    return signatures
 
 
 def _google_optional_extractor_mapping(path: str | tuple[str, ...], dest: str) -> GoogleExtractorMappingSignature:
@@ -98,9 +110,10 @@ def _google_extractor_path_signature(path: str | Sequence[str | ArrayMatch]) -> 
     return array_name, array_match.match.equals, leaf
 
 
-def _google_modality_detail_dest(direction: str, modality: str) -> str:
+def _google_modality_detail_dest(direction: str, modality: str, token_type: str | None = None) -> str:
     # Google can report DOCUMENT in ModalityTokenCount, but PDF/page tokens are image-priced.
     usage_modality = 'image' if modality == 'DOCUMENT' else modality.lower()
     if direction == 'cache_read':
         return f'cache_{usage_modality}_read_tokens'
-    return f'{direction}_{usage_modality}_tokens'
+    token_type_suffix = f'_{token_type}' if token_type is not None else ''
+    return f'{direction}_{usage_modality}{token_type_suffix}_tokens'

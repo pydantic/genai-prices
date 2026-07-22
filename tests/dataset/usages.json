@@ -2797,7 +2797,9 @@
         ],
         "usage": {
           "input_text_tokens": 215,
+          "input_text_tool_tokens": 161,
           "input_tokens": 215,
+          "input_tool_tokens": 161,
           "output_text_tokens": 141,
           "output_tokens": 141
         }
@@ -2974,7 +2976,9 @@
         ],
         "usage": {
           "input_text_tokens": 136,
+          "input_text_tool_tokens": 119,
           "input_tokens": 136,
+          "input_tool_tokens": 119,
           "output_reasoning_tokens": 213,
           "output_tokens": 414
         }
@@ -3018,7 +3022,9 @@
         ],
         "usage": {
           "input_text_tokens": 495,
+          "input_text_tool_tokens": 286,
           "input_tokens": 495,
+          "input_tool_tokens": 286,
           "output_reasoning_tokens": 131,
           "output_tokens": 337
         }
@@ -4154,7 +4160,9 @@
         ],
         "usage": {
           "input_text_tokens": 568,
+          "input_text_tool_tokens": 319,
           "input_tokens": 568,
+          "input_tool_tokens": 319,
           "output_reasoning_tokens": 301,
           "output_tokens": 541
         }
@@ -4525,7 +4533,9 @@
         ],
         "usage": {
           "input_text_tokens": 690,
+          "input_text_tool_tokens": 675,
           "input_tokens": 690,
+          "input_tool_tokens": 675,
           "output_reasoning_tokens": 483,
           "output_tokens": 660
         }
@@ -4569,7 +4579,9 @@
         ],
         "usage": {
           "input_text_tokens": 676,
+          "input_text_tool_tokens": 637,
           "input_tokens": 676,
+          "input_tool_tokens": 637,
           "output_reasoning_tokens": 540,
           "output_tokens": 598
         }
@@ -11042,7 +11054,9 @@
         ],
         "usage": {
           "input_text_tokens": 44,
+          "input_text_tool_tokens": 31,
           "input_tokens": 44,
+          "input_tool_tokens": 31,
           "output_text_tokens": 35,
           "output_tokens": 35
         }

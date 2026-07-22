@@ -2355,6 +2355,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_reasoning_tokens', required=False),
                     UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tool_tokens', required=False),
                     UsageExtractorMapping(
                         path=[
                             'toolUsePromptTokensDetails',
@@ -2362,6 +2363,15 @@ providers: list[Provider] = [
                             'tokenCount',
                         ],
                         dest='input_text_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='input_text_tool_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
@@ -2376,10 +2386,28 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='input_audio_tool_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
                             'tokenCount',
                         ],
                         dest='input_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tool_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
@@ -2394,10 +2422,28 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tool_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
                             'tokenCount',
                         ],
                         dest='input_video_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='input_video_tool_tokens',
                         required=False,
                     ),
                 ],

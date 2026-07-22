@@ -666,6 +666,7 @@ def test_google():
                 output_tokens=162,
                 input_text_tokens=75,
                 output_text_tokens=18,
+                input_tool_tokens=25,
                 output_reasoning_tokens=144,
             ),
         )
@@ -812,8 +813,13 @@ def test_google_extracts_tool_use_modalities_from_details():
             input_text_tokens=20,
             output_text_tokens=3,
             input_audio_tokens=5,
+            input_audio_tool_tokens=5,
             input_image_tokens=9,
+            input_image_tool_tokens=9,
             input_video_tokens=3,
+            input_video_tool_tokens=3,
+            input_tool_tokens=25,
+            input_text_tool_tokens=10,
             output_reasoning_tokens=4,
         ),
     )
@@ -1049,6 +1055,7 @@ def test_accumulate_extracted_usage():
         output_tokens=162,
         input_text_tokens=75,
         output_text_tokens=18,
+        input_tool_tokens=25,
         output_reasoning_tokens=144,
     )
     with pytest.raises(TypeError):
