@@ -1,0 +1,62 @@
+.github/workflows/agentic-price-check-google-mistral.md
+  s_8199dd74cd04be::t_8096005e45f075 1-164
+prices/data_v2.json
+  s_8199dd74cd04be::t_f1ba15aba3b3af 1
+.github/workflows/agentics-maintenance.yml
+  s_8199dd74cd04be::t_8096005e45f075 1-615
+.prettierignore
+  s_8199dd74cd04be::t_8096005e45f075 9-14
+README.md
+  s_8199dd74cd04be::t_f1ba15aba3b3af 44
+.github/workflows/agentic-price-check-openai-anthropic.md
+  s_8199dd74cd04be::t_8096005e45f075 1-176
+.github/aw/actions-lock.json
+  s_8199dd74cd04be::t_8096005e45f075 1-14
+packages/js/src/data.ts
+  s_8199dd74cd04be::t_8096005e45f075 4912-4922,4933-4966
+AGENTS.md
+  s_8199dd74cd04be::t_8096005e45f075 1-109
+prices/data.json
+  s_8199dd74cd04be::t_8096005e45f075 1
+.pre-commit-config.yaml
+  s_8199dd74cd04be::t_8096005e45f075 30-34
+prices/data_slim.json
+  s_8199dd74cd04be::t_8096005e45f075 1
+prices/providers/google.yml
+  s_8199dd74cd04be::t_8096005e45f075 849-852,863-893
+  s_8199dd74cd04be::t_6d014008ed84b2 894
+.claude/skills/add-price-model/SKILL.md
+  s_8199dd74cd04be::t_8096005e45f075 1-139
+.gitignore
+  s_8199dd74cd04be::t_8096005e45f075 13-16
+packages/python/pyproject.toml
+  s_8199dd74cd04be::t_8096005e45f075 2
+.github/workflows/AGENTIC_PRICE_CHECK.md
+  s_8199dd74cd04be::t_8096005e45f075 1-69
+.gitattributes
+  s_8199dd74cd04be::t_8096005e45f075 1
+packages/python/genai_prices/data.py
+  s_8199dd74cd04be::t_8096005e45f075 2916-2922,2929-2950
+.github/workflows/agentic-price-check-google-mistral.lock.yml
+  s_8199dd74cd04be::t_d76de52f7e186e 1-1295
+.github/workflows/agentic-price-check-openai-anthropic.lock.yml
+  s_8199dd74cd04be::t_e69c2d1213676c 1-1295
+CLAUDE.md
+  s_8199dd74cd04be::t_f46f055f0604f0 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "0d9c589bb465e0de0d57a2edc49d17c29888c6e9",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
