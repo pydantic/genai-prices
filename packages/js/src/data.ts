@@ -21356,6 +21356,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'citation_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'citation_tokens',
+            dest: 'output_citation_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -21425,11 +21435,13 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-deep-research',
         },
-        price_comments: 'Perplexity lists reasoning tokens separately at $3 per million tokens.',
+        price_comments:
+          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search-query billing is not represented.',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
           output_reasoning_mtok: 3,
+          output_citation_mtok: 2,
         },
       },
       {

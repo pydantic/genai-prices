@@ -1132,21 +1132,27 @@ def test_openai_compatible_reasoning_tokens(provider_id: str):
     )
 
 
-def test_perplexity_additive_reasoning_tokens():
+def test_perplexity_additive_output_categories():
     response_data = {
         'model': 'sonar-deep-research',
         'usage': {
-            'prompt_tokens': 10,
-            'completion_tokens': 8,
-            'total_tokens': 18,
-            'reasoning_tokens': 6,
+            'prompt_tokens': 33,
+            'completion_tokens': 11_395,
+            'total_tokens': 11_428,
+            'citation_tokens': 19_028,
+            'reasoning_tokens': 193_947,
         },
     }
 
     extracted = extract_usage(response_data, provider_id='perplexity')
 
-    assert extracted.usage == Usage(input_tokens=10, output_tokens=14, output_reasoning_tokens=6)
+    assert extracted.usage == Usage(
+        input_tokens=33,
+        output_tokens=224_370,
+        output_reasoning_tokens=193_947,
+        output_citation_tokens=19_028,
+    )
     price = extracted.calc_price()
-    assert price.input_price == Decimal('0.00002')
-    assert price.output_price == Decimal('0.000082')
-    assert price.total_price == Decimal('0.000102')
+    assert price.input_price == Decimal('0.000066')
+    assert price.output_price == Decimal('0.711057')
+    assert price.total_price == Decimal('0.711123')

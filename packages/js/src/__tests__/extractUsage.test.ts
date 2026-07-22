@@ -206,14 +206,15 @@ describe('extractUsage', () => {
   describe('Perplexity provider', () => {
     const perplexityProvider: Provider = data.find((provider) => provider.id === 'perplexity')!
 
-    it('should add separately reported reasoning to aggregate output', () => {
+    it('should add separately reported output categories to aggregate output', () => {
       const responseData = {
         model: 'sonar-deep-research',
         usage: {
-          completion_tokens: 8,
-          prompt_tokens: 10,
-          reasoning_tokens: 6,
-          total_tokens: 18,
+          citation_tokens: 19028,
+          completion_tokens: 11395,
+          prompt_tokens: 33,
+          reasoning_tokens: 193947,
+          total_tokens: 11428,
         },
       }
 
@@ -221,16 +222,17 @@ describe('extractUsage', () => {
 
       expect(model).toBe('sonar-deep-research')
       expect(usage).toEqual({
-        input_tokens: 10,
-        output_reasoning_tokens: 6,
-        output_tokens: 14,
+        input_tokens: 33,
+        output_citation_tokens: 19028,
+        output_reasoning_tokens: 193947,
+        output_tokens: 224370,
       })
 
       const price = calcPrice(usage, model!, { provider: perplexityProvider })
       expect(price).not.toBeNull()
-      expect(price!.input_price).toBeCloseTo(0.00002, 12)
-      expect(price!.output_price).toBeCloseTo(0.000082, 12)
-      expect(price!.total_price).toBeCloseTo(0.000102, 12)
+      expect(price!.input_price).toBeCloseTo(0.000066, 12)
+      expect(price!.output_price).toBeCloseTo(0.711057, 12)
+      expect(price!.total_price).toBeCloseTo(0.711123, 12)
     })
   })
 
