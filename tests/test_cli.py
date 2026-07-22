@@ -501,6 +501,7 @@ def test_price_field_label_uses_bundled_registry_metadata() -> None:
     assert _price_field_label('input_mtok') == 'Input/MTok'
     assert _price_field_label('cache_read_mtok') == 'Input Cache Read/MTok'
     assert _price_field_label('cache_audio_read_mtok') == 'Input Audio Cache Read/MTok'
+    assert _price_field_label('web_searches_kcount') == 'Web Searches/K'
     assert _price_field_label('requests_kcount') == 'Requests/K'
 
 

@@ -615,17 +615,11 @@ def _price_field_label(field_name: str) -> str:
 
 def _unit_display_name(unit: UnitDef) -> str:
     dimensions = unit.dimensions
-    cache = dimensions.get('cache')
     direction = dimensions.get('direction')
     modality = dimensions.get('modality')
     parts: list[str]
     if dimensions.get('family') == 'requests':
         parts = ['requests']
-    elif cache is not None:
-        parts = ['cache']
-        if modality is not None:
-            parts.append(modality)
-        parts.append(cache)
     else:
         parts = []
         if direction is not None:
@@ -633,7 +627,7 @@ def _unit_display_name(unit: UnitDef) -> str:
         if modality is not None:
             parts.append(modality)
 
-    handled_dimensions = {'family', 'direction', 'modality', 'cache'}
+    handled_dimensions = {'family', 'direction', 'modality'}
     parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
     if not parts:
         parts.append(unit.usage_key)
