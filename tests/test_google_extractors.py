@@ -43,11 +43,8 @@ def _google_default_extractor_expected_signatures() -> set[GoogleExtractorMappin
         GoogleUsageMetadataSource('prompt', ('input_tokens',), 'input'),
         GoogleUsageMetadataSource('cachedContent', ('cache_read_tokens',), 'cache_read', detail_stem='cache'),
         GoogleUsageMetadataSource('candidates', ('output_tokens',), 'output'),
-        # Thinking tokens have no detail array, but Google prices them as text output.
-        GoogleUsageMetadataSource(
-            'thoughts',
-            ('output_tokens', 'output_text_tokens', 'output_reasoning_tokens', 'output_text_reasoning_tokens'),
-        ),
+        # Thinking tokens have no detail array. Their text-rate price does not establish a text modality.
+        GoogleUsageMetadataSource('thoughts', ('output_tokens', 'output_reasoning_tokens')),
         # Tool-use prompt tokens are additional prompt/input context, including their modality breakdown.
         GoogleUsageMetadataSource('toolUsePrompt', ('input_tokens',), 'input'),
     )

@@ -37,10 +37,8 @@ def test_google_image_models_price_unclassified_output_as_text(
 ) -> None:
     usage = Usage(
         output_tokens=2_309,
-        output_text_tokens=529,
         output_image_tokens=1_120,
         output_reasoning_tokens=529,
-        output_text_reasoning_tokens=529,
     )
 
     price = calc_price(usage, model_ref=model_ref, provider_id='google')

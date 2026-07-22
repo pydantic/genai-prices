@@ -2348,11 +2348,7 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
-                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_text_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_reasoning_tokens', required=False),
-                    UsageExtractorMapping(
-                        path='thoughtsTokenCount', dest='output_text_reasoning_tokens', required=False
-                    ),
                     UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tokens', required=False),
                     UsageExtractorMapping(
                         path=[

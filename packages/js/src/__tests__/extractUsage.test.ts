@@ -379,8 +379,7 @@ describe('extractUsage', () => {
         input_text_tokens: 75,
         input_tokens: 100,
         output_reasoning_tokens: 144,
-        output_text_reasoning_tokens: 144,
-        output_text_tokens: 162,
+        output_text_tokens: 18,
         output_tokens: 162,
       })
     })
@@ -417,8 +416,7 @@ describe('extractUsage', () => {
         input_text_tokens: 14002,
         input_tokens: 14152,
         output_reasoning_tokens: 69,
-        output_text_reasoning_tokens: 69,
-        output_text_tokens: 119,
+        output_text_tokens: 50,
         output_tokens: 119,
       })
     })
@@ -452,8 +450,7 @@ describe('extractUsage', () => {
         input_tokens: 35,
         input_video_tokens: 3,
         output_reasoning_tokens: 4,
-        output_text_reasoning_tokens: 4,
-        output_text_tokens: 7,
+        output_text_tokens: 3,
         output_tokens: 7,
       })
     })
