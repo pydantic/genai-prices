@@ -178,16 +178,20 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
         assert price_key.endswith('_mtok')
 
         direction = dimensions['direction']
-        cache = dimensions.get('cache')
         modality = dimensions.get('modality')
-        reasoning = dimensions.get('reasoning')
-        if cache is None:
+        token_type = dimensions.get('token_type')
+        if token_type is None:
             expected_stem = f'{direction}_{modality}' if modality is not None else direction
-            if reasoning:
-                expected_stem = f'{expected_stem}_reasoning'
+        elif token_type in {'cache_read', 'cache_write'}:
+            assert direction == 'input'
+            cache_operation = token_type.removeprefix('cache_')
+            expected_stem = (
+                f'cache_{modality}_{cache_operation}' if modality is not None else f'cache_{cache_operation}'
+            )
         else:
-            assert reasoning is None
-            expected_stem = f'cache_{modality}_{cache}' if modality is not None else f'cache_{cache}'
+            expected_stem = (
+                f'{direction}_{modality}_{token_type}' if modality is not None else f'{direction}_{token_type}'
+            )
 
         assert usage_key == f'{expected_stem}_tokens'
         assert price_key == f'{expected_stem}_mtok'
@@ -555,7 +559,7 @@ def test_validate_units_accepts_bundled_units() -> None:
         'family': 'tokens',
         'direction': 'input',
         'modality': 'audio',
-        'cache': 'read',
+        'token_type': 'cache_read',
     }
 
 

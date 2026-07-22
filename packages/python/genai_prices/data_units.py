@@ -18,12 +18,12 @@ unit_data: dict[str, Any] = {
     'cache_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_read'},
     },
     'cache_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write'},
     },
     'input_text_tokens': {
         'per': 1000000,
@@ -38,12 +38,12 @@ unit_data: dict[str, Any] = {
     'cache_text_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_text_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'cache_read'},
     },
     'cache_text_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_text_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'cache_write'},
     },
     'input_audio_tokens': {
         'per': 1000000,
@@ -58,12 +58,12 @@ unit_data: dict[str, Any] = {
     'cache_audio_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_audio_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'cache_read'},
     },
     'cache_audio_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_audio_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'cache_write'},
     },
     'input_image_tokens': {
         'per': 1000000,
@@ -78,12 +78,12 @@ unit_data: dict[str, Any] = {
     'cache_image_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_image_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'cache_read'},
     },
     'cache_image_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_image_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'cache_write'},
     },
     'input_video_tokens': {
         'per': 1000000,
@@ -98,37 +98,37 @@ unit_data: dict[str, Any] = {
     'cache_video_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_video_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'cache_read'},
     },
     'cache_video_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_video_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'cache_write'},
     },
     'output_reasoning_tokens': {
         'per': 1000000,
         'price_key': 'output_reasoning_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'output', 'reasoning': 'true'},
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'token_type': 'reasoning'},
     },
     'output_text_reasoning_tokens': {
         'per': 1000000,
         'price_key': 'output_text_reasoning_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'text', 'reasoning': 'true'},
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'text', 'token_type': 'reasoning'},
     },
     'output_audio_reasoning_tokens': {
         'per': 1000000,
         'price_key': 'output_audio_reasoning_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio', 'reasoning': 'true'},
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio', 'token_type': 'reasoning'},
     },
     'output_image_reasoning_tokens': {
         'per': 1000000,
         'price_key': 'output_image_reasoning_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'image', 'reasoning': 'true'},
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'image', 'token_type': 'reasoning'},
     },
     'output_video_reasoning_tokens': {
         'per': 1000000,
         'price_key': 'output_video_reasoning_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'reasoning': 'true'},
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'reasoning'},
     },
     'requests': {'per': 1000, 'price_key': 'requests_kcount', 'dimensions': {'family': 'requests'}},
 }
