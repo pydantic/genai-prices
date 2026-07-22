@@ -54,6 +54,9 @@ The built-in token family defines input, output, cache-read, cache-write, reason
 **Usage remains explicit-only.** _(from "Price data must be complete while usage data may be incomplete")_
 Stored values return directly. Safely missing registered values read as zero without becoming reported. Missing ancestors or overlaps raise when positive related reports would require inference. Contradictions remain inert until a read or selected price set must interpret them.
 
+**Commercial price categories do not imply reported usage dimensions.** _(from "Usage remains explicit-only", "Correct pricing semantics beat algorithmic convenience")_
+A provider saying that reasoning is billed at its text rate does not establish that the provider's reasoning count has text modality. Extractors record a reasoning/modality intersection only when the response contract reports or defines that intersection; pricing can still leave unclassified reasoning in a text-rate ancestor catch-all.
+
 **Request pricing remains an explicit exception.** _(from "The registry is a usage-keyed dimension graph")_
 Usage key `requests`, price key `requests_kcount`, `family: requests`, and `per: 1_000` represent one request supplied by pricing code. `requests` is not caller usage or an extractor destination.
 

@@ -70,7 +70,7 @@ Image is the default modality only because this hypothetical provider defines th
     output_image_mtok: 120
 ```
 
-Google can report `candidatesTokenCount: 1780` with only `IMAGE: 1120` in `candidatesTokensDetails`. The 660-token remainder is ordinary text even though no `TEXT` detail is present. If `thoughtsTokenCount` adds 529 text reasoning tokens, normalized output is `output_tokens: 2309`, `output_image_tokens: 1120`, and the explicitly known reasoning/text intersections. Pricing selects only the output ancestor and image child: 1120 tokens receive the image rate, while the 1189-token ancestor remainder receives the text/thinking rate. Extraction does not invent `output_text_tokens: 1189`; the catch-all handles the omitted detail without turning an inference into reported usage.
+Google can report `candidatesTokenCount: 1780` with only `IMAGE: 1120` in `candidatesTokensDetails`. The 660-token remainder is ordinary text even though no `TEXT` detail is present. If `thoughtsTokenCount` adds 529 reasoning tokens, normalized output is `output_tokens: 2309`, `output_image_tokens: 1120`, and `output_reasoning_tokens: 529`. It does not include `output_text_tokens` or `output_text_reasoning_tokens`: Google bills thoughts at the text rate but does not report their modality, and the missing candidate remainder is not a reported text count. Pricing selects only the output ancestor and image child: 1120 tokens receive the image rate, while the 1189-token ancestor remainder receives the text/thinking rate. The catch-all handles omitted detail without turning an inference into reported usage.
 
 ## Transcription — OpenAI
 

@@ -12,6 +12,7 @@ It delivers meaningful pricing improvements without requiring runtime-updated un
 **Pricing accuracy is the Phase 1 product outcome.**
 Repo-defined units, including image, reasoning, and other modality-specific token units, must work end to end in Python and JavaScript. The built-in token graph includes aggregate output reasoning plus text, audio, image, and video reasoning intersections. The release includes the pricing-data corrections required by complete ancestor and overlap pricing, including distinct reasoning rates when a provider publishes them.
 For provider usage with a partial modality breakdown, the ancestor price represents the documented omitted/default remainder and reported non-default modalities use explicit child prices; extraction does not fabricate missing modality counts.
+The rate used to bill a reported reasoning count does not by itself assign that count a modality; reasoning/modality intersections require provider-reported semantics.
 
 **Phase 1 must avoid an unreasonable pricing hot-path regression.**
 The registry may add structural work needed for correctness, but ordinary calculations should not repeatedly rediscover the same per-call facts. Phase 1 includes only a small stateless cleanup of the obvious repeated work.
