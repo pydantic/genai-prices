@@ -1,6 +1,6 @@
 ---
-emoji: "🏷️"
-name: "Price Check: OpenAI & Anthropic"
+emoji: '🏷️'
+name: 'Price Check: OpenAI & Anthropic'
 description: "Compare the recorded OpenAI and Anthropic model prices against each provider's official pricing page and file one rolling issue listing any discrepancies."
 on:
   workflow_dispatch:
@@ -17,17 +17,17 @@ checkout:
   fetch-depth: 1
 tools:
   bash:
-    - "cat:*"
-    - "ls:*"
-    - "rg:*"
+    - 'cat:*'
+    - 'ls:*'
+    - 'rg:*'
   web-fetch:
 safe-outputs:
   threat-detection: false
   noop:
   create-issue:
     max: 1
-    title-prefix: "[price-check/openai-anthropic] "
-    close-older-key: "[price-check/openai-anthropic]"
+    title-prefix: '[price-check/openai-anthropic] '
+    close-older-key: '[price-check/openai-anthropic]'
     close-older-issues: true
     expires: 30d
 timeout-minutes: 20
@@ -89,11 +89,13 @@ read <page>" is a good outcome.
    a model you can confidently match by name.
 
 ### OpenAI
+
 - YAML: `prices/providers/openai.yml`
 - Fetch: <https://developers.openai.com/api/docs/pricing>
 - Fallback only if a model is absent above: <https://platform.openai.com/docs/pricing>
 
 ### Anthropic
+
 - YAML: `prices/providers/anthropic.yml`
 - Fetch: <https://www.anthropic.com/pricing#api>
 - Fallback only if a model is absent above: <https://docs.anthropic.com/en/docs/about-claude/models/overview>
@@ -128,7 +130,7 @@ If you confirmed one or more discrepancies, file **one** issue. Title:
 `OpenAI/Anthropic price discrepancies`. Body: a short table —
 
 | Provider | Model (YAML id) | Field | Recorded (YAML) | Official page | Page URL |
-|---|---|---|---|---|---|
+| -------- | --------------- | ----- | --------------- | ------------- | -------- |
 
 Add the exact page URL, and where you converted units show the arithmetic. Keep
 it terse and factual: the maintainer will edit the YAML `prices:` and bump

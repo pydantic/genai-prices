@@ -6,10 +6,10 @@ pricing page** and file a GitHub issue when they diverge. This complements the
 existing aggregator-based checks (`make check-for-price-discrepancies`, which
 uses LiteLLM / OpenRouter / etc.) by reading the authoritative source directly.
 
-| Workflow | Providers | Issue |
-|---|---|---|
-| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic | `[price-check/openai-anthropic] …` |
-| `agentic-price-check-google-mistral.md` | Google (Gemini), Mistral | `[price-check/google-mistral] …` |
+| Workflow                                  | Providers                | Issue                              |
+| ----------------------------------------- | ------------------------ | ---------------------------------- |
+| `agentic-price-check-openai-anthropic.md` | OpenAI, Anthropic        | `[price-check/openai-anthropic] …` |
+| `agentic-price-check-google-mistral.md`   | Google (Gemini), Mistral | `[price-check/google-mistral] …`   |
 
 Each agent is told the **exact pricing URL** to fetch per provider (it does not
 browse the site), reads the recorded `prices:` from the YAML, and compares. It
@@ -29,7 +29,7 @@ manual closing. If nothing diverges (or a page can't be read) the agent no-ops.
    (the workflows are gated on it, so they stay dormant until you do). Run:
    `gh variable set AGENTIC_WORKFLOWS_ENABLED --body true`.
 3. Trigger a manual run to smoke-test: the **Actions** tab → each workflow →
-   *Run workflow*, or `gh workflow run agentic-price-check-openai-anthropic.lock.yml`.
+   _Run workflow_, or `gh workflow run agentic-price-check-openai-anthropic.lock.yml`.
 
 They otherwise run weekly (Mondays).
 

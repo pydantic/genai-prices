@@ -1,6 +1,6 @@
 ---
-emoji: "🏷️"
-name: "Price Check: Google & Mistral"
+emoji: '🏷️'
+name: 'Price Check: Google & Mistral'
 description: "Compare the recorded Google (Gemini) and Mistral model prices against each provider's official pricing page and file one rolling issue listing any discrepancies."
 on:
   workflow_dispatch:
@@ -17,17 +17,17 @@ checkout:
   fetch-depth: 1
 tools:
   bash:
-    - "cat:*"
-    - "ls:*"
-    - "rg:*"
+    - 'cat:*'
+    - 'ls:*'
+    - 'rg:*'
   web-fetch:
 safe-outputs:
   threat-detection: false
   noop:
   create-issue:
     max: 1
-    title-prefix: "[price-check/google-mistral] "
-    close-older-key: "[price-check/google-mistral]"
+    title-prefix: '[price-check/google-mistral] '
+    close-older-key: '[price-check/google-mistral]'
     close-older-issues: true
     expires: 30d
 timeout-minutes: 20
@@ -87,6 +87,7 @@ read <page>" is a good outcome.
    a model you can confidently match by name.
 
 ### Google (Gemini)
+
 - YAML: `prices/providers/google.yml`
 - Fetch: <https://ai.google.dev/gemini-api/docs/pricing>
 - Note: Gemini prices can be **tiered by prompt size** (e.g. a different rate
@@ -94,6 +95,7 @@ read <page>" is a good outcome.
   and ignore the large-context tier unless the YAML records it explicitly.
 
 ### Mistral
+
 - YAML: `prices/providers/mistral.yml`
 - Fetch: <https://mistral.ai/pricing#api-pricing>
 
@@ -127,7 +129,7 @@ If you confirmed one or more discrepancies, file **one** issue. Title:
 `Google/Mistral price discrepancies`. Body: a short table —
 
 | Provider | Model (YAML id) | Field | Recorded (YAML) | Official page | Page URL |
-|---|---|---|---|---|---|
+| -------- | --------------- | ----- | --------------- | ------------- | -------- |
 
 Add the exact page URL, and where you converted units show the arithmetic. Keep
 it terse and factual: the maintainer will edit the YAML `prices:` and bump
