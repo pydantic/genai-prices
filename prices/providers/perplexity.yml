@@ -14,6 +14,9 @@ extractors:
       - path: prompt_tokens
         dest: input_tokens
       - path: reasoning_tokens
+        dest: output_tokens
+        required: false
+      - path: reasoning_tokens
         dest: output_reasoning_tokens
         required: false
       - path: completion_tokens

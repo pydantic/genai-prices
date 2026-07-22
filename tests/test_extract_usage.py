@@ -1125,8 +1125,7 @@ def test_openai_compatible_reasoning_tokens(provider_id: str):
     )
 
 
-def test_perplexity_reasoning_tokens():
-    provider = next(provider for provider in providers if provider.id == 'perplexity')
+def test_perplexity_additive_reasoning_tokens():
     response_data = {
         'model': 'sonar-deep-research',
         'usage': {
@@ -1137,7 +1136,10 @@ def test_perplexity_reasoning_tokens():
         },
     }
 
-    assert provider.extract_usage(response_data) == (
-        'sonar-deep-research',
-        Usage(input_tokens=10, output_tokens=8, output_reasoning_tokens=6),
-    )
+    extracted = extract_usage(response_data, provider_id='perplexity')
+
+    assert extracted.usage == Usage(input_tokens=10, output_tokens=14, output_reasoning_tokens=6)
+    price = extracted.calc_price()
+    assert price.input_price == Decimal('0.00002')
+    assert price.output_price == Decimal('0.000082')
+    assert price.total_price == Decimal('0.000102')

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { extractUsage } from '../index'
+import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 
@@ -200,6 +200,37 @@ describe('extractUsage', () => {
         output_audio_tokens: 23,
         output_tokens: 1906,
       })
+    })
+  })
+
+  describe('Perplexity provider', () => {
+    const perplexityProvider: Provider = data.find((provider) => provider.id === 'perplexity')!
+
+    it('should add separately reported reasoning to aggregate output', () => {
+      const responseData = {
+        model: 'sonar-deep-research',
+        usage: {
+          completion_tokens: 8,
+          prompt_tokens: 10,
+          reasoning_tokens: 6,
+          total_tokens: 18,
+        },
+      }
+
+      const { model, usage } = extractUsage(perplexityProvider, responseData)
+
+      expect(model).toBe('sonar-deep-research')
+      expect(usage).toEqual({
+        input_tokens: 10,
+        output_reasoning_tokens: 6,
+        output_tokens: 14,
+      })
+
+      const price = calcPrice(usage, model!, { provider: perplexityProvider })
+      expect(price).not.toBeNull()
+      expect(price!.input_price).toBeCloseTo(0.00002, 12)
+      expect(price!.output_price).toBeCloseTo(0.000082, 12)
+      expect(price!.total_price).toBeCloseTo(0.000102, 12)
     })
   })
 

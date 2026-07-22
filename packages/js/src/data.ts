@@ -21267,6 +21267,11 @@ export const data: Provider[] = [
           },
           {
             path: 'reasoning_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'reasoning_tokens',
             dest: 'output_reasoning_tokens',
             required: false,
           },

@@ -12315,6 +12315,7 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='reasoning_tokens', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
