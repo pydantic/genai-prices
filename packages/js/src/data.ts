@@ -4534,6 +4534,9 @@ export const data: Provider[] = [
             {
               starts_with: 'gemini-3.5-flash-preview',
             },
+            {
+              starts_with: 'gemini-3.5-flash-20',
+            },
           ],
         },
         context_window: 1000000,
@@ -4566,7 +4569,7 @@ export const data: Provider[] = [
         id: 'gemini-3.6-flash',
         name: 'Gemini 3.6 Flash',
         description:
-          "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+          "Google's latest model that balances speed with intelligence to deliver strong performance in agentic and multimodal tasks.",
         match: {
           starts_with: 'gemini-3.6-flash',
         },

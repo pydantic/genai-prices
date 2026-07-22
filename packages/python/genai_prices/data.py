@@ -2677,6 +2677,7 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gemini-3.5-flash'),
                         ClauseEquals(equals='gemini-3.5-flash-latest'),
                         ClauseStartsWith(starts_with='gemini-3.5-flash-preview'),
+                        ClauseStartsWith(starts_with='gemini-3.5-flash-20'),
                     ]
                 ),
                 name='Gemini 3.5 Flash',
@@ -2700,7 +2701,7 @@ providers: list[Provider] = [
                 id='gemini-3.6-flash',
                 match=ClauseStartsWith(starts_with='gemini-3.6-flash'),
                 name='Gemini 3.6 Flash',
-                description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+                description="Google's latest model that balances speed with intelligence to deliver strong performance in agentic and multimodal tasks.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
                 prices=ModelPrice(
