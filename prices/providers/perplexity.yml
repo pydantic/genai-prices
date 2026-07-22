@@ -90,7 +90,7 @@ models:
       health, and current events.
     match:
       equals: sonar-deep-research
-    prices_checked: 2026-07-21
+    prices_checked: 2026-07-22
     price_comments: >-
       Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens.
       Search queries cost $5 per thousand.
