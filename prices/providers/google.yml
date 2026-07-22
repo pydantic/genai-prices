@@ -664,8 +664,8 @@ models:
       Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.
     match:
       or:
+        - equals: gemini-3-pro-image
         - starts_with: gemini-3-pro-image-preview
-        - equals: gemini-3-pro-image-preview
     context_window: 1000000
     prices_checked: 2026-07-22
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at
@@ -710,7 +710,9 @@ models:
       Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately
       from image output tokens.
     match:
-      starts_with: gemini-3.1-flash-image-preview
+      or:
+        - equals: gemini-3.1-flash-image
+        - starts_with: gemini-3.1-flash-image-preview
     context_window: 1000000
     prices_checked: 2026-07-22
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per
@@ -727,7 +729,7 @@ models:
       Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale.
       Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.
     match:
-      starts_with: gemini-3.1-flash-lite
+      regex: ^gemini-3\.1-flash-lite(?!-image)
     context_window: 1000000
     prices_checked: 2026-05-12
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing.
@@ -737,6 +739,34 @@ models:
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.05
       output_mtok: 1.5
+
+  - id: gemini-3.1-flash-lite-image
+    name: Gemini 3.1 Flash Lite Image
+    description: >-
+      Google's low-latency, cost-efficient image generation and editing model.
+    match:
+      starts_with: gemini-3.1-flash-lite-image
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite-image.
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.5
+      output_image_mtok: 30
+
+  - id: gemini-3.1-flash-live-preview
+    name: Gemini 3.1 Flash Live Preview
+    description: Google's low-latency audio-to-audio model with multimodal input support.
+    match:
+      starts_with: gemini-3.1-flash-live-preview
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-live-preview.
+    prices:
+      input_mtok: 0.75
+      input_audio_mtok: 3
+      input_image_mtok: 1
+      input_video_mtok: 1
+      output_mtok: 4.5
+      output_audio_mtok: 12
 
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
@@ -784,6 +814,20 @@ models:
       equals: gemini-embedding-001
     prices:
       input_mtok: 0.15
+
+  - id: gemini-embedding-2
+    name: Gemini Embedding 2
+    description: Google's multimodal embedding model for text, images, audio, video, and documents.
+    match:
+      equals: gemini-embedding-2
+    context_window: 8192
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2.
+    prices:
+      input_mtok: 0.2
+      input_image_mtok: 0.45
+      input_audio_mtok: 6.5
+      input_video_mtok: 12
 
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
@@ -850,6 +894,18 @@ models:
       input_audio_mtok: 3
       output_mtok: 2
       output_audio_mtok: 12
+
+  - id: gemini-omni-flash-preview
+    name: Gemini Omni Flash Preview
+    description: Google's video generation and editing model with multimodal input.
+    match:
+      starts_with: gemini-omni-flash-preview
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-omni-flash-preview.
+    prices:
+      input_mtok: 1.5
+      output_mtok: 9
+      output_video_mtok: 17.5
 
   - id: gemini-pro
     name: gemini 1.0 pro

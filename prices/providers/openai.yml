@@ -56,6 +56,61 @@ extractors:
         required: false
       - path: output_tokens
         dest: output_tokens
+  # https://platform.openai.com/docs/api-reference/realtime-server-events/response/done
+  - api_flavor: realtime
+    root: [response, usage]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        required: false
+      - path: [input_token_details, text_tokens]
+        dest: input_text_tokens
+        required: false
+      - path: [input_token_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [input_token_details, image_tokens]
+        dest: input_image_tokens
+        required: false
+      - path: [input_token_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, text_tokens]
+        dest: cache_text_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, audio_tokens]
+        dest: cache_audio_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, image_tokens]
+        dest: cache_image_read_tokens
+        required: false
+      - path: [output_token_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_token_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+        required: false
+  # https://developers.openai.com/api/reference/resources/images#imagesresponse
+  - api_flavor: images
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, text_tokens]
+        dest: input_text_tokens
+      - path: [input_tokens_details, image_tokens]
+        dest: input_image_tokens
+      - path: output_tokens
+        dest: output_tokens
+      - path: [output_tokens_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_tokens_details, image_tokens]
+        dest: output_image_tokens
+        required: false
   # https://github.com/openai/openai-python/blob/v2.3.0/src/openai/types/create_embedding_response.py
   - api_flavor: embeddings
     root: usage
@@ -993,6 +1048,22 @@ models:
       cache_read_mtok: 0.5
       output_mtok: 30
 
+  - id: gpt-image-1
+    name: GPT Image 1
+    description: OpenAI's previous image generation model.
+    match:
+      equals: gpt-image-1
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-1.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 10
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2.5
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 40
+
   - id: gpt-image-1-mini
     name: GPT Image 1 Mini
     description: >-
@@ -1000,10 +1071,16 @@ models:
     match:
       or:
         - equals: gpt-image-1-mini
-    prices_checked: 2026-06-26
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-1-mini.
     prices:
       input_mtok: 2
+      input_image_mtok: 2.5
       cache_read_mtok: 0.2
+      cache_image_read_mtok: 0.25
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 8
 
   - id: gpt-image-1.5
     name: GPT Image 1.5
@@ -1013,11 +1090,15 @@ models:
       or:
         - equals: gpt-image-1.5
         - equals: gpt-image-1.5-2025-12-16
-    prices_checked: 2026-06-26
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-1.5.
     prices:
       input_mtok: 5
+      input_image_mtok: 8
       cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
       output_mtok: 10
+      output_image_mtok: 32
 
   - id: gpt-image-2
     name: GPT Image 2
@@ -1027,10 +1108,16 @@ models:
       or:
         - equals: gpt-image-2
         - equals: gpt-image-2-2026-04-21
-    prices_checked: 2026-06-26
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-image-2.
     prices:
       input_mtok: 5
+      input_image_mtok: 8
       cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -1081,12 +1168,15 @@ models:
         - equals: gpt-realtime
         - equals: gpt-realtime-2025-08-28
         - equals: gpt-realtime-1.5
-    price_comments: Missing image token prices which we don't support yet
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime.
     prices:
       input_mtok: 4
       cache_read_mtok: 0.4
       input_audio_mtok: 32
       cache_audio_read_mtok: 0.4
+      input_image_mtok: 5
+      cache_image_read_mtok: 0.5
       output_mtok: 16
       output_audio_mtok: 64
 
@@ -1094,28 +1184,35 @@ models:
     match:
       or:
         - equals: gpt-realtime-2
-    price_comments: Missing image token prices which we don't support yet
-    prices_checked: 2026-06-26
+        - equals: gpt-realtime-2.1
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.
+    prices_checked: 2026-07-22
     prices:
       input_mtok: 4
       cache_read_mtok: 0.4
       output_mtok: 24
       input_audio_mtok: 32
       cache_audio_read_mtok: 0.4
+      input_image_mtok: 5
+      cache_image_read_mtok: 0.5
       output_audio_mtok: 64
 
   - id: gpt-realtime-mini
     match:
       or:
         - equals: gpt-realtime-mini
+        - equals: gpt-realtime-2.1-mini
         - equals: gpt-realtime-mini-2025-12-15
         - equals: gpt-realtime-mini-2025-10-06
-    price_comments: Missing image token prices which we don't support yet
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini.
     prices:
       input_mtok: 0.6
       cache_read_mtok: 0.06
       input_audio_mtok: 10
       cache_audio_read_mtok: 0.3
+      input_image_mtok: 0.8
+      cache_image_read_mtok: 0.08
       output_mtok: 2.4
       output_audio_mtok: 20
 

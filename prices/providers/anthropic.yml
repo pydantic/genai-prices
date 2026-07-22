@@ -28,6 +28,9 @@ extractors:
       - path: cache_read_input_tokens
         dest: cache_read_tokens
         required: false
+      - path: [output_tokens_details, thinking_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: output_tokens
         dest: output_tokens
   # https://platform.claude.com/docs/en/api/openai-sdk#response-fields

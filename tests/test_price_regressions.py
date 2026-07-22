@@ -26,7 +26,9 @@ def mtok(rate: str, tokens: int) -> Decimal:
     ('model_ref', 'text_rate', 'image_rate'),
     [
         ('gemini-2.5-flash-image', '2.5', '30'),
+        ('gemini-3-pro-image', '12', '120'),
         ('gemini-3-pro-image-preview', '12', '120'),
+        ('gemini-3.1-flash-image', '3', '60'),
         ('gemini-3.1-flash-image-preview', '3', '60'),
     ],
 )
@@ -46,6 +48,102 @@ def test_google_image_models_price_unclassified_output_as_text(
     expected_output = mtok(text_rate, 1_189) + mtok(image_rate, 1_120)
     assert price.output_price == expected_output
     assert price.total_price == expected_output
+
+
+def test_openai_image_model_prices_overlapping_input_modalities_and_cache() -> None:
+    usage = Usage(
+        input_tokens=1_000,
+        output_tokens=600,
+        cache_read_tokens=200,
+        input_image_tokens=300,
+        output_image_tokens=500,
+        cache_image_read_tokens=50,
+    )
+
+    price = calc_price(usage, model_ref='gpt-image-1.5', provider_id='openai')
+
+    expected_input = mtok('5', 550) + mtok('8', 250) + mtok('1.25', 150) + mtok('2', 50)
+    expected_output = mtok('10', 100) + mtok('32', 500)
+    assert price.input_price == expected_input
+    assert price.output_price == expected_output
+    assert price.total_price == expected_input + expected_output
+
+
+def test_openai_realtime_prices_image_and_cached_image_input() -> None:
+    usage = Usage(
+        input_tokens=1_000,
+        output_tokens=500,
+        cache_read_tokens=400,
+        input_audio_tokens=250,
+        output_audio_tokens=300,
+        input_image_tokens=150,
+        cache_audio_read_tokens=100,
+        cache_image_read_tokens=50,
+    )
+
+    price = calc_price(usage, model_ref='gpt-realtime-2.1', provider_id='openai')
+
+    expected_input = (
+        mtok('4', 350) + mtok('32', 150) + mtok('5', 100) + mtok('0.4', 250) + mtok('0.4', 100) + mtok('0.5', 50)
+    )
+    expected_output = mtok('24', 200) + mtok('64', 300)
+    assert price.input_price == expected_input
+    assert price.output_price == expected_output
+    assert price.total_price == expected_input + expected_output
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'usage', 'expected_input', 'expected_output'),
+    [
+        (
+            'gemini-3.1-flash-lite-image',
+            Usage(input_tokens=1_000, output_tokens=2_000, output_image_tokens=1_000),
+            mtok('0.25', 1_000),
+            mtok('1.5', 1_000) + mtok('30', 1_000),
+        ),
+        (
+            'gemini-3.1-flash-live-preview',
+            Usage(
+                input_tokens=1_000,
+                output_tokens=500,
+                input_audio_tokens=200,
+                output_audio_tokens=300,
+                input_image_tokens=100,
+                input_video_tokens=100,
+            ),
+            mtok('0.75', 600) + mtok('3', 200) + mtok('1', 100) + mtok('1', 100),
+            mtok('4.5', 200) + mtok('12', 300),
+        ),
+        (
+            'gemini-embedding-2',
+            Usage(
+                input_tokens=1_000,
+                input_audio_tokens=200,
+                input_image_tokens=100,
+                input_video_tokens=100,
+            ),
+            mtok('0.2', 600) + mtok('6.5', 200) + mtok('0.45', 100) + mtok('12', 100),
+            Decimal('0'),
+        ),
+        (
+            'gemini-omni-flash-preview',
+            Usage(input_tokens=1_000, output_tokens=500, output_video_tokens=300),
+            mtok('1.5', 1_000),
+            mtok('9', 200) + mtok('17.5', 300),
+        ),
+    ],
+)
+def test_new_google_multimodal_model_prices(
+    model_ref: str,
+    usage: Usage,
+    expected_input: Decimal,
+    expected_output: Decimal,
+) -> None:
+    price = calc_price(usage, model_ref=model_ref, provider_id='google')
+
+    assert price.input_price == expected_input
+    assert price.output_price == expected_output
+    assert price.total_price == expected_input + expected_output
 
 
 def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:

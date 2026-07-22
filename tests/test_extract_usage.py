@@ -81,6 +81,23 @@ def test_extract_usage_ok(response_data: Any, expected_model: str, expected_usag
     assert extracted_usage.calc_price().total_price == expected_price
 
 
+def test_anthropic_native_thinking_tokens():
+    provider = next(provider for provider in providers if provider.id == 'anthropic')
+    response_data = {
+        'model': 'claude-sonnet-4-20250514',
+        'usage': {
+            'input_tokens': 10,
+            'output_tokens': 8,
+            'output_tokens_details': {'thinking_tokens': 6},
+        },
+    }
+
+    assert provider.extract_usage(response_data) == (
+        'claude-sonnet-4-20250514',
+        Usage(input_tokens=10, output_tokens=8, output_reasoning_tokens=6),
+    )
+
+
 def test_openai():
     provider = next(provider for provider in providers if provider.id == 'openai')
     assert provider.name == 'OpenAI'
@@ -156,6 +173,74 @@ def test_openai_cache_write_tokens(api_flavor: str, usage_data: dict[str, Any]):
         output_tokens=300,
     )
     assert extracted_usage.calc_price().total_price == Decimal('0.02143')
+
+
+def test_openai_realtime_usage_modalities():
+    provider = next(provider for provider in providers if provider.id == 'openai')
+    response_data = {
+        'type': 'response.done',
+        'response': {
+            'usage': {
+                'input_tokens': 1_000,
+                'input_token_details': {
+                    'text_tokens': 600,
+                    'audio_tokens': 250,
+                    'image_tokens': 150,
+                    'cached_tokens': 400,
+                    'cached_tokens_details': {
+                        'text_tokens': 250,
+                        'audio_tokens': 100,
+                        'image_tokens': 50,
+                    },
+                },
+                'output_tokens': 500,
+                'output_token_details': {'text_tokens': 200, 'audio_tokens': 300},
+            }
+        },
+    }
+
+    assert provider.extract_usage(response_data, api_flavor='realtime') == (
+        None,
+        Usage(
+            input_tokens=1_000,
+            output_tokens=500,
+            cache_read_tokens=400,
+            input_text_tokens=600,
+            output_text_tokens=200,
+            input_audio_tokens=250,
+            output_audio_tokens=300,
+            input_image_tokens=150,
+            cache_text_read_tokens=250,
+            cache_audio_read_tokens=100,
+            cache_image_read_tokens=50,
+        ),
+    )
+
+
+def test_openai_image_usage_modalities():
+    provider = next(provider for provider in providers if provider.id == 'openai')
+    usage_data = {
+        'input_tokens': 100,
+        'input_tokens_details': {'text_tokens': 70, 'image_tokens': 30},
+        'output_tokens': 600,
+        'output_tokens_details': {'text_tokens': 100, 'image_tokens': 500},
+    }
+    expected_usage = Usage(
+        input_tokens=100,
+        output_tokens=600,
+        input_text_tokens=70,
+        output_text_tokens=100,
+        input_image_tokens=30,
+        output_image_tokens=500,
+    )
+
+    assert provider.extract_usage({'usage': usage_data}, api_flavor='images') == (None, expected_usage)
+
+    with pytest.raises(ValueError, match='input_tokens_details'):
+        provider.extract_usage(
+            {'usage': {'input_tokens': 100, 'output_tokens': 600}},
+            api_flavor='images',
+        )
 
 
 def test_mistral():
