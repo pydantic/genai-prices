@@ -1,0 +1,34 @@
+prices/providers/anthropic.yml
+  s_8199dd74cd04be::t_360f54d3e1abd6 31-33,82,99,118,176,194,230,247,265,300,309,330,351,370,402,435,444,467,475
+tests/test_extract_usage.py
+  s_8199dd74cd04be::t_ff3ee2dcaad712 1144,1156,1161
+packages/python/genai_prices/data.py
+  s_8199dd74cd04be::t_8b5253b5074265 30-31,78,97,118,172,193,214,233,254,283,293,317,339,361,382,409,419,445,455,12417,12458,12464
+  s_8199dd74cd04be::t_9bc7fb196a4eee 29
+packages/js/src/__tests__/extractUsage.test.ts
+  s_8199dd74cd04be::t_ff3ee2dcaad712 215,230,237
+packages/js/src/data.ts
+  s_8199dd74cd04be::t_8b5253b5074265 46-50,128,152,182,247,276,305,328,357,420,433,466,497,529,584,641,654,689,702,21435-21439,21511,21517
+tests/test_end_to_end.py
+  s_8199dd74cd04be::t_ff3ee2dcaad712 78-104
+prices/providers/perplexity.yml
+  s_8199dd74cd04be::t_360f54d3e1abd6 28-30,96,102
+prices/data_v2.json
+  s_8199dd74cd04be::t_8b5253b5074265 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "3a4df1fe3a5e738e6939a75607e0072b97cf3203",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
