@@ -163,6 +163,24 @@ def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
     }
 
 
+def test_anthropic_prices_one_hour_cache_writes_at_the_ttl_rate() -> None:
+    price = calc_price(
+        Usage(
+            input_tokens=300_000,
+            cache_write_tokens=200_000,
+            cache_write_5m_tokens=100_000,
+            cache_write_1h_tokens=100_000,
+        ),
+        model_ref='claude-sonnet-4-5',
+        provider_id='anthropic',
+    )
+
+    expected_input = mtok('6', 100_000) + mtok('7.5', 100_000) + mtok('12', 100_000)
+    assert price.input_price == expected_input
+    assert price.output_price == Decimal(0)
+    assert price.total_price == expected_input
+
+
 def test_model_info_uses_first_conditional_price_when_none_are_active() -> None:
     model = ModelInfo(
         id='future-model',

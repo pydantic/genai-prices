@@ -25,6 +25,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_5m_input_tokens'],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_1h_input_tokens'],
+                        dest='cache_write_1h_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(
                         path=['server_tool_use', 'web_search_requests'], dest='web_searches', required=False
@@ -75,6 +85,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
                     output_mtok=Decimal('4'),
+                    cache_write_1h_mtok=Decimal('1.6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -94,6 +105,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -115,6 +127,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -129,6 +142,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
                     output_mtok=Decimal('1.25'),
+                    cache_write_1h_mtok=Decimal('0.5'),
                 ),
             ),
             ModelInfo(
@@ -142,6 +156,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    cache_write_1h_mtok=Decimal('30'),
                 ),
             ),
             ModelInfo(
@@ -155,6 +170,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(
@@ -169,6 +185,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('1'),
                     output_mtok=Decimal('50'),
+                    cache_write_1h_mtok=Decimal('20'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -190,6 +207,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('5'),
+                    cache_write_1h_mtok=Decimal('2'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -211,6 +229,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    cache_write_1h_mtok=Decimal('30'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -230,6 +249,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    cache_write_1h_mtok=Decimal('30'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -251,6 +271,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -280,6 +301,9 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
+                            cache_write_1h_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('20'))]
+                            ),
                             web_searches_kcount=Decimal('10'),
                         )
                     ),
@@ -290,6 +314,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('6.25'),
                             cache_read_mtok=Decimal('0.5'),
                             output_mtok=Decimal('25'),
+                            cache_write_1h_mtok=Decimal('10'),
                             web_searches_kcount=Decimal('10'),
                         ),
                     ),
@@ -314,6 +339,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -336,6 +362,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -358,6 +385,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -379,6 +407,9 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
+                    ),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -406,6 +437,9 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
+                            cache_write_1h_mtok=TieredPrices(
+                                base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
+                            ),
                             web_searches_kcount=Decimal('10'),
                         )
                     ),
@@ -416,6 +450,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            cache_write_1h_mtok=Decimal('6'),
                             web_searches_kcount=Decimal('10'),
                         ),
                     ),
@@ -442,6 +477,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
                             output_mtok=Decimal('10'),
+                            cache_write_1h_mtok=Decimal('4'),
                             web_searches_kcount=Decimal('10'),
                         )
                     ),
@@ -452,6 +488,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            cache_write_1h_mtok=Decimal('6'),
                             web_searches_kcount=Decimal('10'),
                         ),
                     ),

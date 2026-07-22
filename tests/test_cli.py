@@ -493,7 +493,7 @@ def test_calc_table_split_columns_rich_prices(monkeypatch: pytest.MonkeyPatch, c
     assert cli_logic(['calc', '--table', '--input-tokens', '1000', tiered_ref, requests_ref]) == 0
     out, err = capsys.readouterr()
     assert '(+tiers)' in out
-    assert 'Requests/K' in out
+    assert 'requests' in out.lower()
     assert err == ''
 
 

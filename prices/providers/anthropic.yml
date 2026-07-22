@@ -25,6 +25,12 @@ extractors:
       - path: cache_creation_input_tokens
         dest: cache_write_tokens
         required: false
+      - path: [cache_creation, ephemeral_5m_input_tokens]
+        dest: cache_write_5m_tokens
+        required: false
+      - path: [cache_creation, ephemeral_1h_input_tokens]
+        dest: cache_write_1h_tokens
+        required: false
       - path: cache_read_input_tokens
         dest: cache_read_tokens
         required: false
@@ -77,6 +83,7 @@ models:
     prices:
       input_mtok: 0.8
       cache_write_mtok: 1
+      cache_write_1h_mtok: 1.6
       cache_read_mtok: 0.08
       output_mtok: 4
       web_searches_kcount: 10
@@ -94,6 +101,7 @@ models:
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
       cache_read_mtok: 0.3
       output_mtok: 15
       web_searches_kcount: 10
@@ -113,6 +121,7 @@ models:
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
       cache_read_mtok: 0.3
       output_mtok: 15
       web_searches_kcount: 10
@@ -127,6 +136,7 @@ models:
     prices:
       input_mtok: 0.25
       cache_write_mtok: 0.3
+      cache_write_1h_mtok: 0.5
       cache_read_mtok: 0.03
       output_mtok: 1.25
 
@@ -141,6 +151,7 @@ models:
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
+      cache_write_1h_mtok: 30
       cache_read_mtok: 1.5
       output_mtok: 75
 
@@ -155,6 +166,7 @@ models:
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
       cache_read_mtok: 0.3
       output_mtok: 15
 
@@ -172,6 +184,7 @@ models:
       input_mtok: 10
       cache_read_mtok: 1.0
       cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
       output_mtok: 50
       web_searches_kcount: 10
 
@@ -189,6 +202,7 @@ models:
     prices:
       input_mtok: 1
       cache_write_mtok: 1.25
+      cache_write_1h_mtok: 2
       cache_read_mtok: 0.10
       output_mtok: 5
       web_searches_kcount: 10
@@ -225,6 +239,7 @@ models:
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
+      cache_write_1h_mtok: 30
       cache_read_mtok: 1.5
       output_mtok: 75
       web_searches_kcount: 10
@@ -242,6 +257,7 @@ models:
     prices:
       input_mtok: 15
       cache_write_mtok: 18.75
+      cache_write_1h_mtok: 30
       cache_read_mtok: 1.5
       output_mtok: 75
       web_searches_kcount: 10
@@ -260,6 +276,7 @@ models:
     prices:
       input_mtok: 5
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       cache_read_mtok: 0.50
       output_mtok: 25
       web_searches_kcount: 10
@@ -292,6 +309,11 @@ models:
             tiers:
               - start: 200000
                 price: 12.50
+          cache_write_1h_mtok:
+            base: 10
+            tiers:
+              - start: 200000
+                price: 20
           output_mtok:
             base: 25
             tiers:
@@ -305,6 +327,7 @@ models:
           input_mtok: 5
           cache_read_mtok: 0.50
           cache_write_mtok: 6.25
+          cache_write_1h_mtok: 10
           output_mtok: 25
           web_searches_kcount: 10
 
@@ -326,6 +349,7 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.50
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       output_mtok: 25
       web_searches_kcount: 10
 
@@ -347,6 +371,7 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.50
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       output_mtok: 25
       web_searches_kcount: 10
 
@@ -365,6 +390,7 @@ models:
     prices:
       input_mtok: 3
       cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
       cache_read_mtok: 0.3
       output_mtok: 15
       web_searches_kcount: 10
@@ -394,6 +420,11 @@ models:
         tiers:
           - start: 200000
             price: 7.50
+      cache_write_1h_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
       output_mtok:
         base: 15
         tiers:
@@ -427,6 +458,11 @@ models:
             tiers:
               - start: 200000
                 price: 7.50
+          cache_write_1h_mtok:
+            base: 6
+            tiers:
+              - start: 200000
+                price: 12
           output_mtok:
             base: 15
             tiers:
@@ -440,6 +476,7 @@ models:
           input_mtok: 3
           cache_read_mtok: 0.30
           cache_write_mtok: 3.75
+          cache_write_1h_mtok: 6
           output_mtok: 15
           web_searches_kcount: 10
 
@@ -463,6 +500,7 @@ models:
           input_mtok: 2
           cache_read_mtok: 0.20
           cache_write_mtok: 2.50
+          cache_write_1h_mtok: 4
           output_mtok: 10
           web_searches_kcount: 10
       - constraint:
@@ -471,6 +509,7 @@ models:
           input_mtok: 3
           cache_read_mtok: 0.30
           cache_write_mtok: 3.75
+          cache_write_1h_mtok: 6
           output_mtok: 15
           web_searches_kcount: 10
 
