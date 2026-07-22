@@ -36,6 +36,9 @@ Only units priced by the selected model become exclusive buckets. Each bucket's 
 **Unspecified dimensions are catch-alls.** _(from "Registry-aware pricing is dimension-driven")_
 A priced ancestor receives the remainder not claimed by more-specific priced units. An unpriced reported descendant stays inside that ancestor when the necessary ancestor usage was explicitly reported; runtime code does not synthesize omitted parent totals.
 
+**Catch-all rates follow the provider's unclassified remainder.** _(from "Unspecified dimensions are catch-alls", "Correct pricing semantics beat algorithmic convenience")_
+Provider pricing data assigns an ancestor's rate from what remains unclassified in that provider's usage shape, not from the model's headline modality. When an aggregate output count contains mixed output and its detail array reports image tokens while omitting ordinary text, `output_mtok` carries the text rate and `output_image_mtok` carries the image rate. The unclassified remainder is then priced as text without fabricating an `output_text_tokens` report.
+
 **Ancestor and join coverage are required.** _(from "Validation exists to protect pricing semantics", "The registry is a usage-keyed dimension graph")_
 Pricing a specific unit requires its registered ancestors. Pricing compatible incomparable units requires their registered intersection. Registry interval closure and join-closedness ensure the graph contains the structural units needed for these price rules.
 

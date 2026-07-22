@@ -58,7 +58,19 @@ Separate rates per modality. The catch-all unit `input_tokens` priced by `input_
     output_text_mtok: 10
 ```
 
-Image is the default modality. The ancestor prices are the image/unknown-modality catch-alls, and only text is priced as an exception. Someone sending `input_tokens: 1000` with no breakdown pays the image rate ($5). Someone sending `input_tokens: 1000` and `input_text_tokens: 300` gets 300 at text ($2) and 700 at the input catch-all rate ($5). The same pattern applies to output: `output_text_tokens` gets the text rate, while the remaining `output_tokens` leaf gets the image/unknown-output rate.
+Image is the default modality only because this hypothetical provider defines the unclassified remainder as image. The ancestor prices are therefore the image/unknown-modality catch-alls, and only text is priced as an exception. Someone sending `input_tokens: 1000` with no breakdown pays the image rate ($5). Someone sending `input_tokens: 1000` and `input_text_tokens: 300` gets 300 at text ($2) and 700 at the input catch-all rate ($5). The same pattern applies to output. This representation is not appropriate merely because a model generates images; a provider whose mixed aggregate omits text from its modality details needs text as the catch-all instead.
+
+## Mixed Text and Image Output — Google Gemini 3 Pro Image
+
+```yaml
+- id: gemini-3-pro-image-preview
+  prices:
+    input_mtok: 2
+    output_mtok: 12
+    output_image_mtok: 120
+```
+
+Google can report `candidatesTokenCount: 1780` with only `IMAGE: 1120` in `candidatesTokensDetails`. The 660-token remainder is ordinary text even though no `TEXT` detail is present. If `thoughtsTokenCount` adds 529 text reasoning tokens, normalized output is `output_tokens: 2309`, `output_image_tokens: 1120`, and the explicitly known reasoning/text intersections. Pricing selects only the output ancestor and image child: 1120 tokens receive the image rate, while the 1189-token ancestor remainder receives the text/thinking rate. Extraction does not invent `output_text_tokens: 1189`; the catch-all handles the omitted detail without turning an inference into reported usage.
 
 ## Transcription — OpenAI
 
