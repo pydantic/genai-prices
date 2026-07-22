@@ -569,6 +569,56 @@
             }
           ]
         },
+        "input_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "input_text_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "input_audio_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "input_image_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "input_video_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
         "output_reasoning_mtok": {
           "anyOf": [
             {
@@ -610,6 +660,56 @@
           ]
         },
         "output_video_reasoning_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "output_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "output_text_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "output_audio_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "output_image_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "output_video_citation_mtok": {
           "anyOf": [
             {
               "type": "number"
@@ -824,18 +924,28 @@
             "cache_video_write_tokens",
             "cache_write_tokens",
             "input_audio_tokens",
+            "input_audio_tool_tokens",
             "input_image_tokens",
+            "input_image_tool_tokens",
             "input_text_tokens",
+            "input_text_tool_tokens",
             "input_tokens",
+            "input_tool_tokens",
             "input_video_tokens",
+            "input_video_tool_tokens",
+            "output_audio_citation_tokens",
             "output_audio_reasoning_tokens",
             "output_audio_tokens",
+            "output_citation_tokens",
+            "output_image_citation_tokens",
             "output_image_reasoning_tokens",
             "output_image_tokens",
             "output_reasoning_tokens",
+            "output_text_citation_tokens",
             "output_text_reasoning_tokens",
             "output_text_tokens",
             "output_tokens",
+            "output_video_citation_tokens",
             "output_video_reasoning_tokens",
             "output_video_tokens"
           ]

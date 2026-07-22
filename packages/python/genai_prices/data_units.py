@@ -105,6 +105,31 @@ unit_data: dict[str, Any] = {
         'price_key': 'cache_video_write_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'cache_write'},
     },
+    'input_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'tool'},
+    },
+    'input_text_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_text_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'tool'},
+    },
+    'input_audio_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_audio_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'tool'},
+    },
+    'input_image_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_image_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'tool'},
+    },
+    'input_video_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_video_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'tool'},
+    },
     'output_reasoning_tokens': {
         'per': 1000000,
         'price_key': 'output_reasoning_mtok',
@@ -129,6 +154,31 @@ unit_data: dict[str, Any] = {
         'per': 1000000,
         'price_key': 'output_video_reasoning_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'reasoning'},
+    },
+    'output_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'token_type': 'citation'},
+    },
+    'output_text_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_text_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'text', 'token_type': 'citation'},
+    },
+    'output_audio_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_audio_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio', 'token_type': 'citation'},
+    },
+    'output_image_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_image_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'image', 'token_type': 'citation'},
+    },
+    'output_video_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_video_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'citation'},
     },
     'requests': {'per': 1000, 'price_key': 'requests_kcount', 'dimensions': {'family': 'requests'}},
 }

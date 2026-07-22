@@ -26,11 +26,21 @@ const tokenUsageKeys = [
   'output_video_tokens',
   'cache_video_read_tokens',
   'cache_video_write_tokens',
+  'input_tool_tokens',
+  'input_text_tool_tokens',
+  'input_audio_tool_tokens',
+  'input_image_tool_tokens',
+  'input_video_tool_tokens',
   'output_reasoning_tokens',
   'output_text_reasoning_tokens',
   'output_audio_reasoning_tokens',
   'output_image_reasoning_tokens',
   'output_video_reasoning_tokens',
+  'output_citation_tokens',
+  'output_text_citation_tokens',
+  'output_audio_citation_tokens',
+  'output_image_citation_tokens',
+  'output_video_citation_tokens',
 ]
 
 const tokenPriceKeys = [
@@ -54,11 +64,21 @@ const tokenPriceKeys = [
   'output_video_mtok',
   'cache_video_read_mtok',
   'cache_video_write_mtok',
+  'input_tool_mtok',
+  'input_text_tool_mtok',
+  'input_audio_tool_mtok',
+  'input_image_tool_mtok',
+  'input_video_tool_mtok',
   'output_reasoning_mtok',
   'output_text_reasoning_mtok',
   'output_audio_reasoning_mtok',
   'output_image_reasoning_mtok',
   'output_video_reasoning_mtok',
+  'output_citation_mtok',
+  'output_text_citation_mtok',
+  'output_audio_citation_mtok',
+  'output_image_citation_mtok',
+  'output_video_citation_mtok',
 ]
 
 describe('UnitRegistry', () => {
@@ -120,6 +140,22 @@ describe('UnitRegistry', () => {
     expect(registry.ancestorUsageKeys('output_text_reasoning_tokens')).toEqual(
       new Set(['output_reasoning_tokens', 'output_text_tokens', 'output_tokens'])
     )
+  })
+
+  it('rejects joins between distinct token types', () => {
+    const registry = new UnitRegistry(unitData)
+    const cacheRead = registry.getUnit('cache_read_tokens')
+    const tool = registry.getUnit('input_tool_tokens')
+    const reasoning = registry.getUnit('output_reasoning_tokens')
+    const citation = registry.getUnit('output_citation_tokens')
+    expect(cacheRead).toBeDefined()
+    expect(tool).toBeDefined()
+    expect(reasoning).toBeDefined()
+    expect(citation).toBeDefined()
+    if (!cacheRead || !tool || !reasoning || !citation) throw new Error('Expected generated token-type units')
+
+    expect(registry.findJoin(cacheRead, tool)).toBeUndefined()
+    expect(registry.findJoin(reasoning, citation)).toBeUndefined()
   })
 
   it('keeps construction independent of generated data fixtures', () => {

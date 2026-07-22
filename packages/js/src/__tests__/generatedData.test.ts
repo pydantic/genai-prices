@@ -25,11 +25,21 @@ const tokenUsageKeys = [
   'output_video_tokens',
   'cache_video_read_tokens',
   'cache_video_write_tokens',
+  'input_tool_tokens',
+  'input_text_tool_tokens',
+  'input_audio_tool_tokens',
+  'input_image_tool_tokens',
+  'input_video_tool_tokens',
   'output_reasoning_tokens',
   'output_text_reasoning_tokens',
   'output_audio_reasoning_tokens',
   'output_image_reasoning_tokens',
   'output_video_reasoning_tokens',
+  'output_citation_tokens',
+  'output_text_citation_tokens',
+  'output_audio_citation_tokens',
+  'output_image_citation_tokens',
+  'output_video_citation_tokens',
 ]
 
 describe('generated data split', () => {

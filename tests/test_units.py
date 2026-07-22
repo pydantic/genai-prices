@@ -53,11 +53,21 @@ TOKEN_USAGE_KEYS = {
     'output_video_tokens',
     'cache_video_read_tokens',
     'cache_video_write_tokens',
+    'input_tool_tokens',
+    'input_text_tool_tokens',
+    'input_audio_tool_tokens',
+    'input_image_tool_tokens',
+    'input_video_tool_tokens',
     'output_reasoning_tokens',
     'output_text_reasoning_tokens',
     'output_audio_reasoning_tokens',
     'output_image_reasoning_tokens',
     'output_video_reasoning_tokens',
+    'output_citation_tokens',
+    'output_text_citation_tokens',
+    'output_audio_citation_tokens',
+    'output_image_citation_tokens',
+    'output_video_citation_tokens',
 }
 
 TOKEN_PRICE_KEYS = {
@@ -81,11 +91,21 @@ TOKEN_PRICE_KEYS = {
     'output_video_mtok',
     'cache_video_read_mtok',
     'cache_video_write_mtok',
+    'input_tool_mtok',
+    'input_text_tool_mtok',
+    'input_audio_tool_mtok',
+    'input_image_tool_mtok',
+    'input_video_tool_mtok',
     'output_reasoning_mtok',
     'output_text_reasoning_mtok',
     'output_audio_reasoning_mtok',
     'output_image_reasoning_mtok',
     'output_video_reasoning_mtok',
+    'output_citation_mtok',
+    'output_text_citation_mtok',
+    'output_audio_citation_mtok',
+    'output_image_citation_mtok',
+    'output_video_citation_mtok',
 }
 
 
@@ -334,6 +354,13 @@ def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
 
     assert registry.units['cache_read_tokens'].is_compatible_with(registry.units['input_audio_tokens'])
     assert registry.units['input_audio_tokens'].is_compatible_with(registry.units['cache_read_tokens'])
+
+
+def test_unit_registry_compatibility_rejects_distinct_token_types() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert not registry.units['cache_read_tokens'].is_compatible_with(registry.units['input_tool_tokens'])
+    assert not registry.units['output_reasoning_tokens'].is_compatible_with(registry.units['output_citation_tokens'])
 
 
 def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
