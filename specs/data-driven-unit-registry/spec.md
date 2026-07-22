@@ -65,6 +65,9 @@ A provider saying that reasoning is billed at its text rate does not establish t
 **Request pricing remains an explicit exception.** _(from "The registry is a usage-keyed dimension graph")_
 Usage key `requests`, price key `requests_kcount`, `family: requests`, and `per: 1_000` represent one request supplied by pricing code. `requests` is not caller usage or an extractor destination.
 
+**Web searches are reportable tool calls.** _(from "The registry is a usage-keyed dimension graph", "Correct pricing semantics beat algorithmic convenience")_
+Usage key `web_searches`, price key `web_searches_kcount`, `family: tool_calls`, and `per: 1_000` represent provider-reported billable web searches. Extractors map a provider's documented search count to this unit. Because the unit has no input or output direction, its price contributes to total cost without being assigned to input or output cost.
+
 **Tiered pricing behavior is preserved.** _(from "Correct pricing semantics beat algorithmic convenience")_
 Existing threshold-based `TieredPrices` semantics remain unchanged. A selected tiered price reads `input_tokens` through the same explicit-only usage rules.
 

@@ -50,6 +50,9 @@ A model includes a child-unit price when its rate differs from the ancestor catc
 **`requests_kcount` remains an explicit one-request pricing exception.** _(from "Units are repo-defined data used by handwritten runtime code")_
 The registry represents usage key `requests`, price key `requests_kcount`, `per: 1_000`, and `family: requests`, but callers and extractors do not report it. Pricing supplies one request per calculation and includes its cost only in the total.
 
+**`web_searches_kcount` prices reported web searches.** _(from "Units are repo-defined data used by handwritten runtime code", "Pricing accuracy is the Phase 1 product outcome")_
+The registry represents usage key `web_searches`, price key `web_searches_kcount`, `per: 1_000`, and `family: tool_calls`. Provider extractors may report it from documented usage fields. It has no direction dimension, so standard pricing includes it in total cost but not input or output cost.
+
 **Build/export validation is the authoritative publication boundary.** _(from "Price data is complete while usage data may be incomplete", "`UnitRegistry` is immutable indexed metadata after construction")_
 Publication validates registry structure, public key safety, unique usage/price/dimension identities, interval closure, join-closedness, provider price-key and coverage rules, and extractor destinations. Runtime registry construction trusts generated package unit data and indexes it without repeating publication validation.
 
