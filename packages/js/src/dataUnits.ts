@@ -11,6 +11,38 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'cache_audio_read_mtok',
   },
+  cache_audio_write_1h_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '1h',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_audio_write_1h_mtok',
+  },
+  cache_audio_write_5m_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_audio_write_5m_mtok',
+  },
   cache_audio_write_tokens: {
     dimensions: {
       direction: 'input',
@@ -30,6 +62,38 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'cache_image_read_mtok',
+  },
+  cache_image_write_1h_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '1h',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_image_write_1h_mtok',
+  },
+  cache_image_write_5m_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_image_write_5m_mtok',
   },
   cache_image_write_tokens: {
     dimensions: {
@@ -60,6 +124,38 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'cache_text_read_mtok',
   },
+  cache_text_write_1h_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '1h',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_text_write_1h_mtok',
+  },
+  cache_text_write_5m_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_text_write_5m_mtok',
+  },
   cache_text_write_tokens: {
     dimensions: {
       direction: 'input',
@@ -80,6 +176,38 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'cache_video_read_mtok',
   },
+  cache_video_write_1h_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '1h',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_video_write_1h_mtok',
+  },
+  cache_video_write_5m_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_video_write_5m_mtok',
+  },
   cache_video_write_tokens: {
     dimensions: {
       direction: 'input',
@@ -89,6 +217,36 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'cache_video_write_mtok',
+  },
+  cache_write_1h_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '1h',
+      direction: 'input',
+      family: 'tokens',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_write_1h_mtok',
+  },
+  cache_write_5m_tokens: {
+    dimension_requirements: {
+      cache_ttl: {
+        token_type: 'cache_write',
+      },
+    },
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_write_5m_mtok',
   },
   cache_write_tokens: {
     dimensions: {

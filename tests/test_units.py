@@ -37,22 +37,32 @@ TOKEN_USAGE_KEYS = {
     'output_tokens',
     'cache_read_tokens',
     'cache_write_tokens',
+    'cache_write_5m_tokens',
+    'cache_write_1h_tokens',
     'input_text_tokens',
     'output_text_tokens',
     'cache_text_read_tokens',
     'cache_text_write_tokens',
+    'cache_text_write_5m_tokens',
+    'cache_text_write_1h_tokens',
     'input_audio_tokens',
     'output_audio_tokens',
     'cache_audio_read_tokens',
     'cache_audio_write_tokens',
+    'cache_audio_write_5m_tokens',
+    'cache_audio_write_1h_tokens',
     'input_image_tokens',
     'output_image_tokens',
     'cache_image_read_tokens',
     'cache_image_write_tokens',
+    'cache_image_write_5m_tokens',
+    'cache_image_write_1h_tokens',
     'input_video_tokens',
     'output_video_tokens',
     'cache_video_read_tokens',
     'cache_video_write_tokens',
+    'cache_video_write_5m_tokens',
+    'cache_video_write_1h_tokens',
     'input_tool_tokens',
     'input_text_tool_tokens',
     'input_audio_tool_tokens',
@@ -75,22 +85,32 @@ TOKEN_PRICE_KEYS = {
     'output_mtok',
     'cache_read_mtok',
     'cache_write_mtok',
+    'cache_write_5m_mtok',
+    'cache_write_1h_mtok',
     'input_text_mtok',
     'output_text_mtok',
     'cache_text_read_mtok',
     'cache_text_write_mtok',
+    'cache_text_write_5m_mtok',
+    'cache_text_write_1h_mtok',
     'input_audio_mtok',
     'output_audio_mtok',
     'cache_audio_read_mtok',
     'cache_audio_write_mtok',
+    'cache_audio_write_5m_mtok',
+    'cache_audio_write_1h_mtok',
     'input_image_mtok',
     'output_image_mtok',
     'cache_image_read_mtok',
     'cache_image_write_mtok',
+    'cache_image_write_5m_mtok',
+    'cache_image_write_1h_mtok',
     'input_video_mtok',
     'output_video_mtok',
     'cache_video_read_mtok',
     'cache_video_write_mtok',
+    'cache_video_write_5m_mtok',
+    'cache_video_write_1h_mtok',
     'input_tool_mtok',
     'input_text_tool_mtok',
     'input_audio_tool_mtok',
@@ -209,6 +229,7 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
         direction = dimensions['direction']
         modality = dimensions.get('modality')
         token_type = dimensions.get('token_type')
+        cache_ttl = dimensions.get('cache_ttl')
         if token_type is None:
             expected_stem = f'{direction}_{modality}' if modality is not None else direction
         elif token_type in {'cache_read', 'cache_write'}:
@@ -217,6 +238,8 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
             expected_stem = (
                 f'cache_{modality}_{cache_operation}' if modality is not None else f'cache_{cache_operation}'
             )
+            if cache_ttl is not None:
+                expected_stem = f'{expected_stem}_{cache_ttl}'
         else:
             expected_stem = (
                 f'{direction}_{modality}_{token_type}' if modality is not None else f'{direction}_{token_type}'
@@ -678,6 +701,16 @@ def test_validate_units_accepts_bundled_units() -> None:
         'direction': 'input',
         'modality': 'audio',
         'token_type': 'cache_read',
+    }
+    assert registry.units['cache_audio_write_1h_tokens'].dimensions == {
+        'family': 'tokens',
+        'direction': 'input',
+        'modality': 'audio',
+        'token_type': 'cache_write',
+        'cache_ttl': '1h',
+    }
+    assert registry.units['cache_audio_write_1h_tokens'].dimension_requirements == {
+        'cache_ttl': {'token_type': 'cache_write'}
     }
 
 

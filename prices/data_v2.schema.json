@@ -415,6 +415,26 @@
           "description": "price in USD per thousand requests",
           "title": "Requests Kcount"
         },
+        "cache_write_5m_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_write_1h_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
         "input_text_mtok": {
           "anyOf": [
             {
@@ -455,7 +475,47 @@
             }
           ]
         },
+        "cache_text_write_5m_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_text_write_1h_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
         "cache_audio_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_audio_write_5m_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_audio_write_1h_mtok": {
           "anyOf": [
             {
               "type": "number"
@@ -505,6 +565,26 @@
             }
           ]
         },
+        "cache_image_write_5m_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_image_write_1h_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
         "input_video_mtok": {
           "anyOf": [
             {
@@ -536,6 +616,26 @@
           ]
         },
         "cache_video_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_video_write_5m_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
+        },
+        "cache_video_write_1h_mtok": {
           "anyOf": [
             {
               "type": "number"
@@ -1033,14 +1133,24 @@
           "type": "string",
           "enum": [
             "cache_audio_read_tokens",
+            "cache_audio_write_1h_tokens",
+            "cache_audio_write_5m_tokens",
             "cache_audio_write_tokens",
             "cache_image_read_tokens",
+            "cache_image_write_1h_tokens",
+            "cache_image_write_5m_tokens",
             "cache_image_write_tokens",
             "cache_read_tokens",
             "cache_text_read_tokens",
+            "cache_text_write_1h_tokens",
+            "cache_text_write_5m_tokens",
             "cache_text_write_tokens",
             "cache_video_read_tokens",
+            "cache_video_write_1h_tokens",
+            "cache_video_write_5m_tokens",
             "cache_video_write_tokens",
+            "cache_write_1h_tokens",
+            "cache_write_5m_tokens",
             "cache_write_tokens",
             "input_audio_tokens",
             "input_audio_tool_tokens",
