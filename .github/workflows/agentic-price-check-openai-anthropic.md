@@ -51,11 +51,10 @@ network:
   allowed:
     - defaults
     - api.fireworks.ai
-    - developers.openai.com
     - platform.openai.com
-    - openai.com
+    - developers.openai.com
+    - docs.claude.com
     - www.anthropic.com
-    - anthropic.com
     - docs.anthropic.com
 ---
 
@@ -91,13 +90,13 @@ read <page>" is a good outcome.
 ### OpenAI
 
 - YAML: `prices/providers/openai.yml`
-- Fetch: <https://developers.openai.com/api/docs/pricing>
-- Fallback only if a model is absent above: <https://platform.openai.com/docs/pricing>
+- Fetch: <https://platform.openai.com/docs/pricing>
+- Fallback only if a model is absent above: <https://developers.openai.com/api/docs/pricing>
 
 ### Anthropic
 
 - YAML: `prices/providers/anthropic.yml`
-- Fetch: <https://www.anthropic.com/pricing#api>
+- Fetch: <https://docs.claude.com/en/docs/about-claude/pricing>
 - Fallback only if a model is absent above: <https://docs.anthropic.com/en/docs/about-claude/models/overview>
 
 ## Matching models

@@ -97,7 +97,8 @@ read <page>" is a good outcome.
 ### Mistral
 
 - YAML: `prices/providers/mistral.yml`
-- Fetch: <https://mistral.ai/pricing#api-pricing>
+- Fetch: <https://docs.mistral.ai/deployment/laplateforme/pricing/>
+- Fallback only if a model is absent above: <https://docs.mistral.ai/getting-started/models/models_overview/>
 
 ## Matching models
 

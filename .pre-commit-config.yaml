@@ -27,6 +27,11 @@ repos:
     rev: v1.24.1
     hooks:
       - id: zizmor
+        # gh-aw compiles the agentic-workflow *.md sources into these generated
+        # *.lock.yml / maintenance workflows; don't security-lint generated code
+        # (the only findings are low-confidence template-injection on gh-aw's own
+        # `vars` expansions, which are maintainer-set, not attacker-controllable).
+        exclude: '^\.github/workflows/(.*\.lock\.yml|agentics-maintenance\.yml)$'
 
   - repo: local
     hooks:
