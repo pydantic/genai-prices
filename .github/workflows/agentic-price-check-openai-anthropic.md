@@ -22,8 +22,8 @@ tools:
     - 'rg:*'
   web-fetch:
 safe-outputs:
-  threat-detection: false
   noop:
+    report-as-issue: false
   create-issue:
     max: 1
     title-prefix: '[price-check/openai-anthropic] '
@@ -89,6 +89,11 @@ Every number in `prices:` is **USD per 1,000,000 tokens**. The fields you check:
 A few entries are tiered, e.g. `input_mtok: {base: 3, tiers: [{start: 200000, price: 6}]}`.
 Use the `base` value (here `3`) and set the tiers aside.
 
+A model's `prices:` can also be a list of records, some wrapped in a `constraint:`
+(e.g. `start_date`). Use the record that applies on the run date — the one whose
+`start_date` is the most recent date on or before today (a record with no `constraint`
+is the default) — and read that record's fields.
+
 Note the `id` and `input_mtok` / `output_mtok` of every model so you know what to
 look for on the page.
 
@@ -129,22 +134,30 @@ Compare the standard on-demand rate. If the page also has Batch, Flex, Priority,
 fine-tuning, or Fast-mode tables, read the standard model-pricing table for the
 comparison and leave those alone.
 
-A model where the page's rate differs from the YAML is a discrepancy to report. When
-a YAML model has no matching row on the page, move to the next model.
+Match a page row to a YAML model only when its id or name identifies that exact record
+unambiguously; if a row could be more than one record, skip it. Report each discrepancy
+under the model's canonical YAML `id`. A model where the matched page rate differs from
+the YAML is a discrepancy to report. When a YAML model has no matching row on the page,
+move to the next model.
 
 ## Step 4 — file the issue (or noop)
 
-If you found one or more discrepancies, file **one** issue titled
-`OpenAI/Anthropic price discrepancies`, with a table — one row per differing field:
+Collect every confirmed discrepancy from both providers first, then decide:
+
+- **One or more discrepancies** — file **one** issue titled
+  `OpenAI/Anthropic price discrepancies`, with a table, one row per differing field. If
+  a provider's page was unreadable this run, still file the discrepancies you did
+  confirm and add a line naming the unread page — never drop a real difference because
+  the other page failed to load.
 
 | Provider | Model (YAML id) | Field         | Recorded (YAML) | Official page | Page URL                                          |
 | -------- | --------------- | ------------- | --------------- | ------------- | ------------------------------------------------- |
 | OpenAI   | gpt-4o          | `output_mtok` | 10              | 12            | https://developers.openai.com/api/docs/pricing.md |
 
-Where you converted units, show the arithmetic in that row. End the body with the
-date you ran, e.g. "Checked 2026-07-22." A maintainer uses this to update the YAML
-`prices:` and bump `prices_checked`.
+Where you converted units, show the arithmetic in that row. End the body with the date
+you ran, e.g. "Checked 2026-07-22." A maintainer uses this to update the YAML `prices:`
+and bump `prices_checked`.
 
-If every recorded price matches, or a page returned no readable prices, call
-`safeoutputs noop` with a one-line reason, e.g. "All OpenAI + Anthropic prices match
-their official pages" or "OpenAI page returned no prices; all Anthropic prices match".
+- **Zero confirmed discrepancies** — call `safeoutputs noop` with a one-line reason,
+  naming any page that would not load, e.g. "All OpenAI + Anthropic prices match" or
+  "All OpenAI prices match; Anthropic page returned no prices."
