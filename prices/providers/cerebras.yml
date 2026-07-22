@@ -4,6 +4,8 @@ id: cerebras
 pricing_urls:
   - https://www.cerebras.ai/pricing#pricing
   - https://inference-docs.cerebras.ai/models/openai-oss
+  - https://inference-docs.cerebras.ai/models/gemma-4-31b
+  - https://inference-docs.cerebras.ai/models/zai-glm-47
 api_pattern: 'https://api\.cerebras\.ai'
 model_match:
   contains: cerebras
@@ -22,6 +24,23 @@ extractors:
         dest: output_tokens
 
 models:
+  - id: gemma-4-31b
+    name: Gemma 4 31B
+    description: >-
+      Google's Gemma 4 31B open model for chat, instruction following, and multilingual
+      tasks, served with fast inference on Cerebras hardware (~1,850 tokens/second).
+    match:
+      or:
+        - equals: gemma-4-31b
+        - starts_with: cerebras/gemma-4-31b
+        - starts_with: cerebras:gemma-4-31b
+    context_window: 131072
+    prices_checked: 2026-07-17
+    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
+    prices:
+      input_mtok: 0.99
+      output_mtok: 1.49
+
   - id: gpt-oss-120b
     name: GPT-OSS 120B
     description: >-
@@ -34,7 +53,7 @@ models:
         - starts_with: cerebras/gpt-oss-120b
         - starts_with: cerebras:gpt-oss-120b
     context_window: 131072
-    prices_checked: 2025-11-06
+    prices_checked: 2026-07-17
     price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
     prices:
       input_mtok: 0.35
@@ -51,9 +70,10 @@ models:
         - equals: llama-3.3-70b
         - starts_with: cerebras/llama-3.3-70b
         - starts_with: cerebras:llama-3.3-70b
+    deprecated: true
     context_window: 128000
     prices_checked: 2025-11-07
-    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 128k context."
+    price_comments: No longer listed in the Cerebras Inference docs as of 2026-07-17.
     prices:
       input_mtok: 0.85
       output_mtok: 1.20
@@ -69,9 +89,10 @@ models:
         - equals: llama3.1-8b
         - starts_with: cerebras/llama3.1-8b
         - starts_with: cerebras:llama3.1-8b
+    deprecated: true
     context_window: 32768
     prices_checked: 2025-11-07
-    price_comments: "Developer tier pricing. Free tier: 8k context, Paid tier: 32k context."
+    price_comments: No longer listed in the Cerebras Inference docs as of 2026-07-17.
     prices:
       input_mtok: 0.10
       output_mtok: 0.10
@@ -87,9 +108,10 @@ models:
         - equals: qwen-3-32b
         - starts_with: cerebras/qwen-3-32b
         - starts_with: cerebras:qwen-3-32b
+    deprecated: true
     context_window: 131072
     prices_checked: 2025-11-07
-    price_comments: "Developer tier pricing. Free tier: 65k context, Paid tier: 131k context."
+    price_comments: No longer listed in the Cerebras Inference docs as of 2026-07-17.
     prices:
       input_mtok: 0.40
       output_mtok: 0.80
@@ -100,3 +122,22 @@ models:
       equals: qwen-3-coder-480b
     price_comments: Seems to be no longer available on cerebras, here to help with tests
     prices: {}
+
+  - id: zai-glm-4.7
+    name: Z.ai GLM 4.7
+    description: >-
+      Z.ai's GLM 4.7, a 355 billion parameter model with reasoning enabled by default,
+      served with fast inference on Cerebras hardware (~1,000 tokens/second).
+    match:
+      or:
+        - equals: zai-glm-4.7
+        - starts_with: cerebras/zai-glm-4.7
+        - starts_with: cerebras:zai-glm-4.7
+    context_window: 131072
+    prices_checked: 2026-07-17
+    price_comments: >-
+      Developer tier pricing. Free tier: 64k context, Paid tier: 131k context.
+      Cerebras has scheduled this model for deprecation on 2026-08-17.
+    prices:
+      input_mtok: 2.25
+      output_mtok: 2.75
