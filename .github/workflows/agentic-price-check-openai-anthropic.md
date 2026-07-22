@@ -53,8 +53,8 @@ network:
     - api.fireworks.ai
     - platform.openai.com
     - developers.openai.com
+    - platform.claude.com
     - docs.claude.com
-    - www.anthropic.com
     - docs.anthropic.com
 ---
 
@@ -96,7 +96,7 @@ read <page>" is a good outcome.
 ### Anthropic
 
 - YAML: `prices/providers/anthropic.yml`
-- Fetch: <https://docs.claude.com/en/docs/about-claude/pricing>
+- Fetch: <https://platform.claude.com/docs/en/about-claude/pricing> (the "Model pricing" table). Compare against the **Base Input Tokens** and **Output Tokens** columns, and the cache columns if the YAML records them.
 - Fallback only if a model is absent above: <https://docs.anthropic.com/en/docs/about-claude/models/overview>
 
 ## Matching models

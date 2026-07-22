@@ -18,20 +18,11 @@ issue always reflects the current state: fix a price in the YAML and the next ru
 drops it; a provider raises a price and it reappears. No duplicate issues, no
 manual closing. If nothing diverges (or a page can't be read) the agent no-ops.
 
-## Enabling (maintainer, one time)
-
-1. **Add the LLM secret.** The engine is Claude Code via Fireworks (matching the
-   pydantic/platform fleet). Add a repo secret `FIREWORKS_API_KEY`. To use
-   Anthropic directly instead, edit the `engine:` block in both `.md` files to
-   `ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}` (drop the
-   `ANTHROPIC_BASE_URL` / `api-target` lines) and recompile.
-2. **Turn them on.** Set repo variable `AGENTIC_WORKFLOWS_ENABLED` to `true`
-   (the workflows are gated on it, so they stay dormant until you do). Run:
-   `gh variable set AGENTIC_WORKFLOWS_ENABLED --body true`.
-3. Trigger a manual run to smoke-test: the **Actions** tab → each workflow →
-   _Run workflow_, or `gh workflow run agentic-price-check-openai-anthropic.lock.yml`.
-
-They otherwise run weekly (Mondays).
+They run weekly (Mondays) and on manual dispatch, gated on the
+`AGENTIC_WORKFLOWS_ENABLED` repo variable, with the engine keyed on the
+`FIREWORKS_API_KEY` secret (Claude Code via Fireworks, minimax-m3, matching the
+pydantic/platform fleet). To use Anthropic directly instead, point the `engine:`
+block in both `.md` files at `ANTHROPIC_API_KEY` and recompile.
 
 ## Editing / extending
 
