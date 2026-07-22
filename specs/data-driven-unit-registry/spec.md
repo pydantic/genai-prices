@@ -39,6 +39,8 @@ A priced ancestor receives the remainder not claimed by more-specific priced uni
 **Catch-all rates follow the provider's unclassified remainder.** _(from "Unspecified dimensions are catch-alls", "Correct pricing semantics beat algorithmic convenience")_
 Provider pricing data assigns an ancestor's rate from what remains unclassified in that provider's usage shape, not from the model's headline modality. When an aggregate output count contains mixed output and its detail array reports image tokens while omitting ordinary text, `output_mtok` carries the text rate and `output_image_mtok` carries the image rate. The unclassified remainder is then priced as text without fabricating an `output_text_tokens` report.
 
+When an endpoint defines an aggregate count as entirely one modality, the ancestor may carry that modality's rate even when the extractor also reports the explicit modality descendant. An equal-rate descendant price remains redundant unless another priced descendant or join requires it. For example, an image endpoint whose `output_tokens` are defined as image tokens may use the image rate as `output_mtok`, report both `output_tokens` and `output_image_tokens`, and omit `output_image_mtok` when the rates would be equal.
+
 **Ancestor and join coverage are required.** _(from "Validation exists to protect pricing semantics", "The registry is a usage-keyed dimension graph")_
 Pricing a specific unit requires its registered ancestors. Pricing compatible incomparable units requires their registered intersection. Registry interval closure and join-closedness ensure the graph contains the structural units needed for these price rules.
 
