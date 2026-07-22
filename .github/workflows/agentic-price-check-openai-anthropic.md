@@ -22,6 +22,13 @@ tools:
     - 'rg:*'
   web-fetch:
 safe-outputs:
+  # Disabled: the detection sub-agent runs its own minimax call through a separate
+  # credit guardrail that can't be satisfied for a BYOK model (a positive cap rejects
+  # the unpriced minimax with HTTP 400; -1 is rejected as "maxAiCredits must be > 0").
+  # With minimax it can never produce a verdict, so it stamped a false "threat detected
+  # / could not be parsed" banner on every issue. Re-enable if the engine moves to a
+  # model gh-aw prices.
+  threat-detection: false
   noop:
     report-as-issue: false
   create-issue:
