@@ -1,0 +1,37 @@
+prices/units.yml
+  s_8199dd74cd04be::t_052526ce4015ea 141-144
+packages/js/src/__tests__/calcPrice.test.ts
+  s_8199dd74cd04be::t_d6e5c28962beab 268-277
+packages/js/src/__tests__/units.test.ts
+  s_8199dd74cd04be::t_db4cada815276e 84-85,91,93,238,247,251,256-257
+tests/test_units.py
+  s_8199dd74cd04be::t_2c28b5968370eb 111-114,179,191-195,281-284,287,424,853,1416-1417,1419
+packages/js/src/dataUnits.ts
+  s_8199dd74cd04be::t_72535567610712 344-350
+prices/data_v2.schema.json
+  s_8199dd74cd04be::t_72535567610712 697-706,1069-1070
+packages/js/src/__tests__/generatedData.test.ts
+  s_8199dd74cd04be::t_db4cada815276e 45-46,55,57-58,67,69
+tests/test_price_regressions.py
+  s_8199dd74cd04be::t_d6e5c28962beab 340-349
+packages/python/genai_prices/data_units.py
+  s_8199dd74cd04be::t_72535567610712 183
+prices/providers/.schema.json
+  s_8199dd74cd04be::t_72535567610712 721-730,960-961
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "d842ae67e9d34e0c22abfd22015fe9a9db078ffc",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
