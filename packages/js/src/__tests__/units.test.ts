@@ -161,6 +161,32 @@ describe('UnitRegistry', () => {
     expect(registry.findJoin(reasoning, citation)).toBeUndefined()
   })
 
+  it('honors conditional dimension requirements when checking compatibility', () => {
+    const registry = new UnitRegistry({
+      cache_read_tokens: {
+        dimensions: { direction: 'input', family: 'tokens', token_type: 'cache_read' },
+        per: 1_000_000,
+      },
+      cache_write_1h_tokens: {
+        dimension_requirements: { cache_ttl: { token_type: 'cache_write' } },
+        dimensions: {
+          cache_ttl: '1h',
+          direction: 'input',
+          family: 'tokens',
+          token_type: 'cache_write',
+        },
+        per: 1_000_000,
+      },
+    })
+    const cacheRead = registry.getUnit('cache_read_tokens')
+    const cacheWrite1h = registry.getUnit('cache_write_1h_tokens')
+    expect(cacheRead).toBeDefined()
+    expect(cacheWrite1h).toBeDefined()
+    if (!cacheRead || !cacheWrite1h) throw new Error('Expected conditional-dimension units')
+
+    expect(registry.findJoin(cacheWrite1h, cacheRead)).toBeUndefined()
+  })
+
   it('keeps construction independent of generated data fixtures', () => {
     const raw: RawUnitsDict = {
       billable_calls: {
@@ -195,6 +221,7 @@ describe('UnitRegistry', () => {
     expect(registry.isReportedUsageKey('input_tokens')).toBe(true)
     expect(Object.isFrozen(inputUnit)).toBe(true)
     expect(Object.isFrozen(inputUnit.dimensions)).toBe(true)
+    expect(Object.isFrozen(inputUnit.dimensionRequirements)).toBe(true)
     expect(() => Object.assign(inputUnit.dimensions, { family: 'changed' })).toThrow(TypeError)
     expect(registry.getUnit('input_tokens')?.dimensions.family).toBe('tokens')
   })

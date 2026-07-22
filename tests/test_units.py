@@ -373,6 +373,30 @@ def test_unit_registry_compatibility_rejects_distinct_token_types() -> None:
     assert not registry.units['output_reasoning_tokens'].is_compatible_with(registry.units['output_citation_tokens'])
 
 
+def test_unit_registry_compatibility_honors_conditional_dimension_requirements() -> None:
+    registry = UnitRegistry(
+        {
+            'cache_read_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_read'},
+            },
+            'cache_write_1h_tokens': {
+                'per': 1_000_000,
+                'dimensions': {
+                    'family': 'tokens',
+                    'direction': 'input',
+                    'token_type': 'cache_write',
+                    'cache_ttl': '1h',
+                },
+                'dimension_requirements': {'cache_ttl': {'token_type': 'cache_write'}},
+            },
+        }
+    )
+
+    assert not registry.units['cache_write_1h_tokens'].is_compatible_with(registry.units['cache_read_tokens'])
+    assert registry.find_join(registry.units['cache_write_1h_tokens'], registry.units['cache_read_tokens']) is None
+
+
 def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
     registry = UnitRegistry(load_units())
 
@@ -559,6 +583,63 @@ def test_validate_units_rejects_skipped_intermediate_dimension_sets() -> None:
                     'price_key': 'cache_video_read_mtok',
                     'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
                 },
+            }
+        )
+
+
+def test_validate_units_skips_intermediate_sets_for_unsatisfied_dimension_requirements() -> None:
+    registry = validate_units(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write'},
+            },
+            'cache_write_1h_tokens': {
+                'per': 1_000_000,
+                'dimensions': {
+                    'family': 'tokens',
+                    'direction': 'input',
+                    'token_type': 'cache_write',
+                    'cache_ttl': '1h',
+                },
+                'dimension_requirements': {'cache_ttl': {'token_type': 'cache_write'}},
+            },
+        }
+    )
+
+    assert registry.ancestor_usage_keys('cache_write_1h_tokens') == frozenset({'input_tokens', 'cache_write_tokens'})
+
+
+@pytest.mark.parametrize(
+    ('dimensions', 'requirements', 'message'),
+    [
+        (
+            {'family': 'tokens', 'direction': 'input'},
+            {'cache_ttl': {'token_type': 'cache_write'}},
+            'Dimension requirement trigger cache_ttl is not a dimension of unit cache_write_1h_tokens',
+        ),
+        (
+            {'family': 'tokens', 'direction': 'input', 'cache_ttl': '1h'},
+            {'cache_ttl': {'token_type': 'cache_write'}},
+            'Unsatisfied dimension requirement for unit cache_write_1h_tokens: token_type=cache_write',
+        ),
+    ],
+)
+def test_validate_units_rejects_invalid_dimension_requirements(
+    dimensions: dict[str, str], requirements: dict[str, dict[str, str]], message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        validate_units(
+            {
+                'cache_write_1h_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': dimensions,
+                    'dimension_requirements': requirements,
+                }
             }
         )
 

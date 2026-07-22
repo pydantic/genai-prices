@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, cast
 
@@ -12,10 +12,24 @@ class UnitDef:
     price_key: str
     per: int
     dimensions: dict[str, str]
+    dimension_requirements: dict[str, dict[str, str]] = field(default_factory=dict)
 
     def is_compatible_with(self, other: UnitDef) -> bool:
         """Return whether two units can overlap without conflicting dimensions."""
-        return all(other.dimensions.get(key, value) == value for key, value in self.dimensions.items())
+        if not all(other.dimensions.get(key, value) == value for key, value in self.dimensions.items()):
+            return False
+
+        combined_dimensions = self.dimensions | other.dimensions
+        return self.requirements_are_satisfied_by(combined_dimensions) and other.requirements_are_satisfied_by(
+            combined_dimensions
+        )
+
+    def requirements_are_satisfied_by(self, dimensions: Mapping[str, str]) -> bool:
+        """Return whether dimensions honor this unit's conditional requirements."""
+        return all(
+            conditional_key not in dimensions or required.items() <= dimensions.items()
+            for conditional_key, required in self.dimension_requirements.items()
+        )
 
 
 class UnitRegistry:
@@ -37,11 +51,18 @@ class UnitRegistry:
 
         for usage_key, raw_unit in (raw_units or {}).items():
             dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
+            dimension_requirements = {
+                conditional_key: dict(required)
+                for conditional_key, required in cast(
+                    Mapping[str, Mapping[str, str]], raw_unit.get('dimension_requirements', {})
+                ).items()
+            }
             unit = UnitDef(
                 usage_key=usage_key,
                 price_key=cast(str, raw_unit.get('price_key', usage_key)),
                 per=cast(int, raw_unit['per']),
                 dimensions=dimensions,
+                dimension_requirements=dimension_requirements,
             )
 
             dimension_set = _dimension_set(unit)

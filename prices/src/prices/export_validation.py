@@ -93,6 +93,9 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
         if family_value is None:
             raise ValueError(f'Missing required family dimension for unit {usage_key}')
 
+        dimension_requirements = cast(Mapping[str, Mapping[str, str]], raw_unit.get('dimension_requirements', {}))
+        _validate_dimension_requirements(usage_key, dimensions, dimension_requirements)
+
         existing_per = per_by_family.setdefault(family_value, per)
         if existing_per != per:
             raise ValueError(
@@ -131,6 +134,21 @@ def _validate_public_key(kind: str, key: str) -> None:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is reserved')
 
 
+def _validate_dimension_requirements(
+    usage_key: str,
+    dimensions: Mapping[str, str],
+    dimension_requirements: Mapping[str, Mapping[str, str]],
+) -> None:
+    for conditional_key, required_dimensions in dimension_requirements.items():
+        if conditional_key not in dimensions:
+            raise ValueError(f'Dimension requirement trigger {conditional_key} is not a dimension of unit {usage_key}')
+        if not required_dimensions.items() <= dimensions.items():
+            missing = ', '.join(
+                f'{key}={value}' for key, value in sorted(required_dimensions.items() - dimensions.items())
+            )
+            raise ValueError(f'Unsatisfied dimension requirement for unit {usage_key}: {missing}')
+
+
 def _validate_interval_closure(registry: UnitRegistry) -> None:
     units_by_dimension = registry._units_by_dimension  # pyright: ignore[reportPrivateUsage]
     for ancestor in registry.units.values():
@@ -142,6 +160,8 @@ def _validate_interval_closure(registry: UnitRegistry) -> None:
             for size in range(1, len(added_dimensions)):
                 for added_subset in combinations(added_dimensions, size):
                     required_dimensions = frozenset(ancestor.dimensions.items() | set(added_subset))
+                    if not descendant.requirements_are_satisfied_by(dict(required_dimensions)):
+                        continue
                     if required_dimensions in units_by_dimension:
                         continue
 

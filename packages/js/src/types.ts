@@ -58,6 +58,7 @@ export interface UsageExtractorMapping {
 }
 
 export interface RawUnitData {
+  dimension_requirements?: Record<string, Record<string, string>>
   dimensions: Record<string, string>
   per: number
   price_key?: string
@@ -66,6 +67,7 @@ export interface RawUnitData {
 export type RawUnitsDict = Record<string, RawUnitData>
 
 export interface UnitDef {
+  readonly dimensionRequirements: Readonly<Record<string, Readonly<Record<string, string>>>>
   readonly dimensions: Readonly<Record<string, string>>
   readonly per: number
   readonly priceKey: string
