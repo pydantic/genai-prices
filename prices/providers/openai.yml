@@ -361,15 +361,27 @@ models:
     match:
       or:
         - equals: gpt-4o
-        - equals: gpt-4o-2024-05-13
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
     context_window: 128000
-    prices_checked: 2025-07-04
+    prices_checked: 2026-07-22
     prices:
       input_mtok: 2.5
       cache_read_mtok: 1.25
       output_mtok: 10
+
+  - id: gpt-4o-2024-05-13
+    name: gpt 4o (2024-05-13)
+    description: >-
+      Original GPT-4o snapshot (2024-05-13), retained at its launch pricing,
+      which is higher than later gpt-4o snapshots and has no prompt-cache rate.
+    match:
+      equals: gpt-4o-2024-05-13
+    context_window: 128000
+    prices_checked: 2026-07-22
+    prices:
+      input_mtok: 5
+      output_mtok: 15
 
   - id: gpt-4o-audio-preview
     name: gpt 4o audio preview

@@ -9553,8 +9553,8 @@ export const data: Provider[] = [
           equals: 'devstral-small',
         },
         prices: {
-          input_mtok: 0.06,
-          output_mtok: 0.12,
+          input_mtok: 0.1,
+          output_mtok: 0.3,
         },
       },
       {
@@ -9880,8 +9880,8 @@ export const data: Provider[] = [
           equals: 'mixtral-8x22b-instruct',
         },
         prices: {
-          input_mtok: 0.9,
-          output_mtok: 0.9,
+          input_mtok: 2,
+          output_mtok: 6,
         },
       },
       {
@@ -9953,7 +9953,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.01,
-          output_mtok: 0.3,
+          output_mtok: 0.4,
         },
       },
     ],
@@ -11111,9 +11111,6 @@ export const data: Provider[] = [
               equals: 'gpt-4o',
             },
             {
-              equals: 'gpt-4o-2024-05-13',
-            },
-            {
               equals: 'gpt-4o-2024-08-06',
             },
             {
@@ -11126,6 +11123,20 @@ export const data: Provider[] = [
           input_mtok: 2.5,
           cache_read_mtok: 1.25,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gpt-4o-2024-05-13',
+        name: 'gpt 4o (2024-05-13)',
+        description:
+          'Original GPT-4o snapshot (2024-05-13), retained at its launch pricing, which is higher than later gpt-4o snapshots and has no prompt-cache rate.',
+        match: {
+          equals: 'gpt-4o-2024-05-13',
+        },
+        context_window: 128000,
+        prices: {
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
