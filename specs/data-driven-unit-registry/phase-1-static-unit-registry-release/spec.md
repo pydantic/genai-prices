@@ -81,9 +81,10 @@ Generated editor schemas expose registry price keys and extractor destinations f
 
 **CLI price presentation is registry-driven.** _(from "Python `ModelPrice` uses direct public attribute storage", "Units are repo-defined data used by handwritten runtime code")_
 CLI field discovery, labels, normalization display, and value formatting use stored price keys plus unit metadata. A repo-defined unit appears without a new hardcoded CLI branch.
+Exact derived label wording is not a compatibility contract and may change when internal dimensions are reorganized, even when usage and price keys remain stable.
 
 **Phase 1 preserves the existing CLI surface.** _(from "Phase 1 preserves supported consumer behavior", "CLI price presentation is registry-driven")_
-CLI flag names and option semantics supported at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c` remain unchanged. Output for that baseline's legacy unit vocabulary remains familiar while registry-defined fields extend it.
+CLI flag names and option semantics supported at target-main commit `ba8093719f296a3672ff4b2fc848a122e92a049c` remain unchanged. Registry-defined fields extend the output, whose dimension-derived labels need not preserve exact baseline wording.
 
 **The existing v1 JSON artifacts remain outside Phase 1 build output.** _(from "Phase 1 must be independently shippable and releasable", "Phase 1 preserves supported consumer behavior")_
 The Phase 1 build does not rewrite `prices/data.json`, `prices/data_slim.json`, `prices/data.schema.json`, or `prices/data_slim.schema.json`. Existing package versions continue using the existing `data.json` URL and provider-array contract without seeing new unit keys, extractor destinations, or a wrapped root.
