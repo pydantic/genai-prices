@@ -39,13 +39,17 @@ gh extension install github/gh-aw --pin v0.82.2   # once; the version pin matter
 gh aw compile                                     # regenerates the .lock.yml files
 ```
 
-**Compile with gh-aw v0.82.2 (pinned on purpose).** Newer gh-aw (v0.82.13+) compiles the
-api-proxy with token-steering and AI-credits cost accounting that rejects any model it has
-no pricing entry for (`HTTP 400 unknown_model_ai_credits`). The Fireworks `minimax-m3`
-model isn't in gh-aw's pricing catalog, so a newer compiler makes every run fail before it
-fetches a page. v0.82.2 predates that accounting and is the version the pydantic/platform
-minimax fleet runs on. Recompiling with a newer version silently reintroduces the failure
-until `minimax-m3` is added to gh-aw's pricing table (or a fallback price is configured).
+**Compile with gh-aw v0.82.2, and keep the `max-ai-credits: -1` frontmatter.** gh-aw's
+api-proxy meters AI credits and rejects any model with no pricing entry (`HTTP 400
+unknown_model_ai_credits`); the Fireworks `minimax-m3` model isn't in gh-aw's pricing
+catalog. The workflows set `max-ai-credits: -1` / `max-daily-ai-credits: -1`, and the
+firewall that gh-aw v0.82.2 pins (0.27.22) **drops `maxAiCredits` entirely when it is -1**,
+so the guardrail never runs and the model is allowed. This is the exact configuration the
+pydantic/platform minimax fleet uses. Two independent things must both hold, and each
+breaks it on its own: **(1)** removing the `max-ai-credits` lines restores the default
+credit cap and the 400; **(2)** recompiling with a newer gh-aw (firewall 0.27.35) no longer
+drops the `-1`, so it re-enforces and 400s. Until `minimax-m3` is added to gh-aw's pricing
+catalog, both the version pin and the `max-ai-credits` lines are load-bearing.
 
 To cover more providers, copy one of the `.md` files, then update **every** piece of
 provider-specific text: the `name`, `description`, and `emoji` frontmatter; the
