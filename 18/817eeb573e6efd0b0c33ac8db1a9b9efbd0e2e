@@ -1,0 +1,32 @@
+prices/providers/perplexity.yml
+  s_8199dd74cd04be::t_2c62cbce74272e 17-18
+  s_8199dd74cd04be::t_0bca2084cdb018 16
+prices/data_v2.json
+  s_8199dd74cd04be::t_2cca9743509545 1
+tests/test_extract_usage.py
+  s_8199dd74cd04be::t_2c62cbce74272e 1128,1139-1145
+packages/python/genai_prices/data.py
+  s_8199dd74cd04be::t_2cca9743509545 12318
+packages/js/src/__tests__/extractUsage.test.ts
+  s_8199dd74cd04be::t_ad6a72bc56b7a7 7,206-233
+  s_8199dd74cd04be::t_c43e2edeb839b6 234-236
+packages/js/src/data.ts
+  s_8199dd74cd04be::t_2cca9743509545 21270-21272
+  s_8199dd74cd04be::t_f756c136e35712 21268-21269
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "18817eeb573e6efd0b0c33ac8db1a9b9efbd0e2e",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
