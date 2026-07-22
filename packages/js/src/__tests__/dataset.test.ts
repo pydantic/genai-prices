@@ -104,6 +104,7 @@ describe('dataset', () => {
             } else {
               expect(extractor.input_price).toBeUndefined()
               expect(extractor.output_price).toBeUndefined()
+              expect(extractor.total_price).toBeUndefined()
             }
           }
           for (const key of Object.keys(extracted.usage)) {
