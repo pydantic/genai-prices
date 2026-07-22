@@ -89,17 +89,19 @@ def test_anthropic_web_searches():
     )
 
     extracted_usage = extract_usage(response, provider_id='anthropic')
-    assert extracted_usage.usage == Usage(
-        input_tokens=100,
-        cache_write_tokens=0,
-        cache_read_tokens=0,
-        output_tokens=50,
-        web_searches=2,
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=100,
+            cache_write_tokens=0,
+            cache_read_tokens=0,
+            output_tokens=50,
+            web_searches=2,
+        )
     )
     price = extracted_usage.calc_price()
-    assert price.input_price == Decimal('0.0003')
-    assert price.output_price == Decimal('0.00075')
-    assert price.total_price == Decimal('0.02105')
+    assert price.input_price == snapshot(Decimal('0.0003'))
+    assert price.output_price == snapshot(Decimal('0.00075'))
+    assert price.total_price == snapshot(Decimal('0.02105'))
 
 
 def test_openai_without_caching():
