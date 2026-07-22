@@ -1,0 +1,36 @@
+packages/js/src/__tests__/extractUsage.test.ts
+  s_8199dd74cd04be::t_0e3968fecc7ed1 480,482,484,486,488
+packages/js/src/data.ts
+  s_8199dd74cd04be::t_754b06a307f3eb 3950-3954,3970-3984,4000-4014,4030-4044,4060-4074,4090-4104
+tests/test_extract_usage.py
+  s_8199dd74cd04be::t_75c0872899de43 669
+  s_8199dd74cd04be::t_f90397ae3a3347 816,818,820-822,1058
+tests/test_google_extractors.py
+  s_8199dd74cd04be::t_6cb342216a80d4 113
+  s_8199dd74cd04be::t_0e3968fecc7ed1 15,50-52,74,81-87
+  s_8199dd74cd04be::t_7f869a1be630a8 88-89,118-119
+prices/providers/google.yml
+  s_8199dd74cd04be::t_0e3968fecc7ed1 178-180,190-198,208-216,226-234,244-252,262-270
+prices/data_v2.json
+  s_8199dd74cd04be::t_a17ac463512fe3 1
+tests/dataset/usages.json
+  s_8199dd74cd04be::t_418d8ba5d3685d 2800,2802,2979,2981,3025,3027,4163,4165,4536,4538,4582,4584,11057,11059
+packages/python/genai_prices/data.py
+  s_8199dd74cd04be::t_754b06a307f3eb 2358,2368-2376,2386-2394,2404-2412,2422-2430,2440-2448
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "e7e1f0157b9c6071a5fedb1b1cedcc5d4fe3d35f",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
