@@ -35,9 +35,17 @@ These are gh-aw workflows: the `.md` is the source, the `.lock.yml` is compiled
 output — **never edit the `.lock.yml` by hand**. After editing a `.md`:
 
 ```bash
-gh extension install github/gh-aw   # once
-gh aw compile                       # regenerates the .lock.yml files
+gh extension install github/gh-aw --pin v0.82.2   # once; the version pin matters, see below
+gh aw compile                                     # regenerates the .lock.yml files
 ```
+
+**Compile with gh-aw v0.82.2 (pinned on purpose).** Newer gh-aw (v0.82.13+) compiles the
+api-proxy with token-steering and AI-credits cost accounting that rejects any model it has
+no pricing entry for (`HTTP 400 unknown_model_ai_credits`). The Fireworks `minimax-m3`
+model isn't in gh-aw's pricing catalog, so a newer compiler makes every run fail before it
+fetches a page. v0.82.2 predates that accounting and is the version the pydantic/platform
+minimax fleet runs on. Recompiling with a newer version silently reintroduces the failure
+until `minimax-m3` is added to gh-aw's pricing table (or a fallback price is configured).
 
 To cover more providers, copy one of the `.md` files, then update **every** piece of
 provider-specific text: the `name`, `description`, and `emoji` frontmatter; the
