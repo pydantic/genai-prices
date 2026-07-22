@@ -108,6 +108,10 @@ TOKEN_PRICE_KEYS = {
     'output_video_citation_mtok',
 }
 
+REPORTABLE_USAGE_KEYS = TOKEN_USAGE_KEYS | {'web_searches'}
+ALL_USAGE_KEYS = REPORTABLE_USAGE_KEYS | {'requests'}
+ALL_PRICE_KEYS = TOKEN_PRICE_KEYS | {'web_searches_kcount', 'requests_kcount'}
+
 
 def _custom_price_key_units() -> dict[str, Any]:
     return {
@@ -172,7 +176,7 @@ def _build_extractor_mapping(path: str, dest: str, *, required: bool = True) -> 
 def test_units_yml_defines_current_python_unit_surface() -> None:
     raw_units = load_units()
 
-    assert set(raw_units) == TOKEN_USAGE_KEYS | {'requests'}
+    assert set(raw_units) == ALL_USAGE_KEYS
 
     token_units = {usage_key: raw_units[usage_key] for usage_key in TOKEN_USAGE_KEYS}
     assert {unit['per'] for unit in token_units.values()} == {1_000_000}
@@ -183,6 +187,11 @@ def test_units_yml_defines_current_python_unit_surface() -> None:
     assert request_unit['per'] == 1_000
     assert request_unit['dimensions'] == {'family': 'requests'}
     assert request_unit['price_key'] == 'requests_kcount'
+
+    web_search_unit = raw_units['web_searches']
+    assert web_search_unit['per'] == 1_000
+    assert web_search_unit['dimensions'] == {'family': 'tool_calls'}
+    assert web_search_unit['price_key'] == 'web_searches_kcount'
 
 
 def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
@@ -269,12 +278,13 @@ def test_repo_prices_omit_redundant_equal_rate_descendants() -> None:
 def test_unit_registry_constructs_current_units() -> None:
     registry = UnitRegistry(load_units())
 
-    assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
-    assert len(registry.units) == len(TOKEN_USAGE_KEYS) + 1
-    assert registry._all_usage_keys == frozenset(TOKEN_USAGE_KEYS | {'requests'})
-    assert registry._all_price_keys == frozenset(TOKEN_PRICE_KEYS | {'requests_kcount'})
+    assert set(registry.units) == ALL_USAGE_KEYS
+    assert len(registry.units) == len(ALL_USAGE_KEYS)
+    assert registry._all_usage_keys == frozenset(ALL_USAGE_KEYS)
+    assert registry._all_price_keys == frozenset(ALL_PRICE_KEYS)
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
+    assert registry.unit_for_price_key('web_searches_kcount') is registry.units['web_searches']
     assert registry.unit_for_price_key('requests_kcount') is registry.units['requests']
 
 
@@ -411,7 +421,7 @@ def test_unit_registry_join_lookup_returns_registered_reasoning_modality_overlap
 def test_unit_registry_reported_usage_keys_include_public_token_keys() -> None:
     registry = UnitRegistry(load_units())
 
-    assert registry._reported_usage_keys == frozenset(TOKEN_USAGE_KEYS)
+    assert registry._reported_usage_keys == frozenset(REPORTABLE_USAGE_KEYS)
 
 
 def test_unit_registry_reported_usage_keys_exclude_pricing_only_requests() -> None:
@@ -840,7 +850,7 @@ def test_model_price_calculation_resolves_each_stored_price_once(monkeypatch: py
 
 
 def test_build_loads_units() -> None:
-    assert set(build_module.load_units()) == TOKEN_USAGE_KEYS | {'requests'}
+    assert set(build_module.load_units()) == ALL_USAGE_KEYS
 
 
 def test_package_data_surfaces_registry_structural_errors(
@@ -1403,9 +1413,10 @@ def test_package_data_extractor_validation_reports_multiple_invalid_destinations
 def test_generated_python_unit_data_builds_registry() -> None:
     registry = UnitRegistry(data_units.unit_data)
 
-    assert set(registry.units) == TOKEN_USAGE_KEYS | {'requests'}
-    assert len(registry.units) == len(TOKEN_USAGE_KEYS) + 1
+    assert set(registry.units) == ALL_USAGE_KEYS
+    assert len(registry.units) == len(ALL_USAGE_KEYS)
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
+    assert registry.unit_for_price_key('web_searches_kcount').usage_key == 'web_searches'
 
 
 @pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])

@@ -265,6 +265,16 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should price reported web searches only in total', () => {
+      const result = calcPrice({ web_searches: 2 }, { web_searches_kcount: 10 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.02,
+      })
+    })
+
     it('should ignore caller-provided requests usage values', () => {
       const result = calcPrice({ requests: 500 }, { requests_kcount: 0.5 })
 

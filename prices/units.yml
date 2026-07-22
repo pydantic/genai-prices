@@ -138,6 +138,10 @@ output_video_citation_tokens:
   per: 1_000_000
   price_key: output_video_citation_mtok
   dimensions: { family: tokens, direction: output, modality: video, token_type: citation }
+web_searches:
+  per: 1_000
+  price_key: web_searches_kcount
+  dimensions: { family: tool_calls }
 requests:
   per: 1_000
   price_key: requests_kcount

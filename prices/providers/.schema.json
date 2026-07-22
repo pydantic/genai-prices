@@ -718,6 +718,16 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ]
+        },
+        "web_searches_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ]
         }
       },
       "title": "ModelPrice",
@@ -947,7 +957,8 @@
             "output_tokens",
             "output_video_citation_tokens",
             "output_video_reasoning_tokens",
-            "output_video_tokens"
+            "output_video_tokens",
+            "web_searches"
           ]
         },
         "required": {

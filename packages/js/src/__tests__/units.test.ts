@@ -81,13 +81,16 @@ const tokenPriceKeys = [
   'output_video_citation_mtok',
 ]
 
+const reportableUsageKeys = [...tokenUsageKeys, 'web_searches']
+
 describe('UnitRegistry', () => {
   it('constructs generated flat units into indexed runtime objects', () => {
     const registry = new UnitRegistry(unitData)
 
     expect(new Set(tokenUsageKeys.map((usageKey) => registry.getUnit(usageKey)?.usageKey))).toEqual(new Set(tokenUsageKeys))
+    expect(registry.getUnit('web_searches')?.priceKey).toBe('web_searches_kcount')
     expect(registry.getUnit('requests')?.priceKey).toBe('requests_kcount')
-    expect(registry.getAllUsageKeys().size).toBe(tokenUsageKeys.length + 1)
+    expect(registry.getAllUsageKeys().size).toBe(reportableUsageKeys.length + 1)
     expect(registry.getUnitForPriceKey('input_mtok')).toBe(registry.getUnit('input_tokens'))
     expect(registry.getUnitForPriceKey('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.getAllUsageKeys()).toContain('input_tokens')
@@ -232,6 +235,7 @@ describe('generated unit registry', () => {
     const registry = getActiveRegistry()
     expect(registry.getUnitForPriceKey('input_mtok')).toBe(registry.getUnit('input_tokens'))
     expect(registry.getUnitForPriceKey('output_mtok')).toBe(registry.getUnit('output_tokens'))
+    expect(registry.getUnitForPriceKey('web_searches_kcount')).toBe(registry.getUnit('web_searches'))
     expect(registry.getUnitForPriceKey('requests_kcount')).toBe(registry.getUnit('requests'))
   })
 
@@ -240,16 +244,17 @@ describe('generated unit registry', () => {
   })
 
   it('returns the generated full usage-key set', () => {
-    expect(getActiveRegistry().getAllUsageKeys()).toEqual(new Set(['requests', ...tokenUsageKeys]))
+    expect(getActiveRegistry().getAllUsageKeys()).toEqual(new Set(['requests', ...reportableUsageKeys]))
   })
 
   it('returns the generated full price-key set', () => {
-    expect(getActiveRegistry().getAllPriceKeys()).toEqual(new Set(['requests_kcount', ...tokenPriceKeys]))
+    expect(getActiveRegistry().getAllPriceKeys()).toEqual(new Set(['requests_kcount', 'web_searches_kcount', ...tokenPriceKeys]))
   })
 
   it('returns externally reported usage keys without pricing-only requests', () => {
     expect(getActiveRegistry().getAllUsageKeys()).toContain('requests')
-    expect(new Set(getActiveRegistry().reportedUsageKeys())).toEqual(new Set(tokenUsageKeys))
+    expect(new Set(getActiveRegistry().reportedUsageKeys())).toEqual(new Set(reportableUsageKeys))
+    expect(getActiveRegistry().isReportedUsageKey('web_searches')).toBe(true)
     expect(getActiveRegistry().isReportedUsageKey('requests')).toBe(false)
   })
 })

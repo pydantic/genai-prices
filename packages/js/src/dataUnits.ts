@@ -341,4 +341,11 @@ export const unitData: RawUnitsDict = {
     per: 1000,
     price_key: 'requests_kcount',
   },
+  web_searches: {
+    dimensions: {
+      family: 'tool_calls',
+    },
+    per: 1000,
+    price_key: 'web_searches_kcount',
+  },
 }

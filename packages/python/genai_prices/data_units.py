@@ -180,5 +180,6 @@ unit_data: dict[str, Any] = {
         'price_key': 'output_video_citation_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'citation'},
     },
+    'web_searches': {'per': 1000, 'price_key': 'web_searches_kcount', 'dimensions': {'family': 'tool_calls'}},
     'requests': {'per': 1000, 'price_key': 'requests_kcount', 'dimensions': {'family': 'requests'}},
 }

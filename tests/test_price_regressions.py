@@ -337,6 +337,16 @@ def test_model_price_prices_requests_only_in_total() -> None:
     }
 
 
+def test_model_price_prices_reported_web_searches_only_in_total() -> None:
+    price = ModelPrice(web_searches_kcount=Decimal('10')).calc_price(Usage(web_searches=2))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.02'),
+    }
+
+
 def test_request_price_regression_counts_one_request_per_price_calculation() -> None:
     price = ModelPrice(requests_kcount=Decimal('12')).calc_price(Usage(input_tokens=1_000, output_tokens=500))
 
