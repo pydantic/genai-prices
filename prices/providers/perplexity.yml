@@ -25,6 +25,9 @@ extractors:
       - path: citation_tokens
         dest: output_citation_tokens
         required: false
+      - path: num_search_queries
+        dest: web_searches
+        required: false
       - path: completion_tokens
         dest: output_tokens
 models:
@@ -90,12 +93,13 @@ models:
     prices_checked: 2026-07-21
     price_comments: >-
       Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens.
-      Search-query billing is not represented.
+      Search queries cost $5 per thousand.
     prices:
       input_mtok: 2
       output_mtok: 8
       output_reasoning_mtok: 3
       output_citation_mtok: 2
+      web_searches_kcount: 5
 
   - id: sonar-pro
     name: Sonar Pro

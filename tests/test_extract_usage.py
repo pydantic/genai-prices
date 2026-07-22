@@ -1141,6 +1141,7 @@ def test_perplexity_additive_output_categories():
             'completion_tokens': 11_395,
             'total_tokens': 11_428,
             'citation_tokens': 19_028,
+            'num_search_queries': 21,
             'reasoning_tokens': 193_947,
         },
     }
@@ -1152,8 +1153,9 @@ def test_perplexity_additive_output_categories():
         output_tokens=224_370,
         output_reasoning_tokens=193_947,
         output_citation_tokens=19_028,
+        web_searches=21,
     )
     price = extracted.calc_price()
     assert price.input_price == Decimal('0.000066')
     assert price.output_price == Decimal('0.711057')
-    assert price.total_price == Decimal('0.711123')
+    assert price.total_price == Decimal('0.816123')

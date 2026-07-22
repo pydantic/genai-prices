@@ -212,6 +212,7 @@ describe('extractUsage', () => {
         usage: {
           citation_tokens: 19028,
           completion_tokens: 11395,
+          num_search_queries: 21,
           prompt_tokens: 33,
           reasoning_tokens: 193947,
           total_tokens: 11428,
@@ -226,13 +227,14 @@ describe('extractUsage', () => {
         output_citation_tokens: 19028,
         output_reasoning_tokens: 193947,
         output_tokens: 224370,
+        web_searches: 21,
       })
 
       const price = calcPrice(usage, model!, { provider: perplexityProvider })
       expect(price).not.toBeNull()
       expect(price!.input_price).toBeCloseTo(0.000066, 12)
       expect(price!.output_price).toBeCloseTo(0.711057, 12)
-      expect(price!.total_price).toBeCloseTo(0.711123, 12)
+      expect(price!.total_price).toBeCloseTo(0.816123, 12)
     })
   })
 

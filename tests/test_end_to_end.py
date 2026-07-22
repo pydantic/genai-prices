@@ -75,6 +75,33 @@ def test_anthropic_caching_read():
     assert price.total_price == snapshot(Decimal('0.0462513'))
 
 
+def test_anthropic_web_searches():
+    response = dict(
+        model='claude-3-7-sonnet-20250219',
+        usage=dict(
+            cache_creation_input_tokens=0,
+            cache_read_input_tokens=0,
+            input_tokens=100,
+            output_tokens=50,
+            server_tool_use={'web_search_requests': 2},
+            service_tier='standard',
+        ),
+    )
+
+    extracted_usage = extract_usage(response, provider_id='anthropic')
+    assert extracted_usage.usage == Usage(
+        input_tokens=100,
+        cache_write_tokens=0,
+        cache_read_tokens=0,
+        output_tokens=50,
+        web_searches=2,
+    )
+    price = extracted_usage.calc_price()
+    assert price.input_price == Decimal('0.0003')
+    assert price.output_price == Decimal('0.00075')
+    assert price.total_price == Decimal('0.02105')
+
+
 def test_openai_without_caching():
     response = dict(
         model='gpt-4.1-2025-04-14',

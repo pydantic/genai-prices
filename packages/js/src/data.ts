@@ -44,6 +44,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['server_tool_use', 'web_search_requests'],
+            dest: 'web_searches',
+            required: false,
+          },
+          {
             path: ['output_tokens_details', 'thinking_tokens'],
             dest: 'output_reasoning_tokens',
             required: false,
@@ -120,6 +125,7 @@ export const data: Provider[] = [
           cache_write_mtok: 1,
           cache_read_mtok: 0.08,
           output_mtok: 4,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -143,6 +149,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -172,6 +179,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -236,6 +244,7 @@ export const data: Provider[] = [
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -264,6 +273,7 @@ export const data: Provider[] = [
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -292,6 +302,7 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -314,6 +325,7 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -342,6 +354,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -404,6 +417,7 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              web_searches_kcount: 10,
             },
           },
           {
@@ -416,6 +430,7 @@ export const data: Provider[] = [
               cache_write_mtok: 6.25,
               cache_read_mtok: 0.5,
               output_mtok: 25,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -448,6 +463,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -478,6 +494,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -509,6 +526,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -563,6 +581,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 10,
         },
       },
       {
@@ -619,6 +638,7 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              web_searches_kcount: 10,
             },
           },
           {
@@ -631,6 +651,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -665,6 +686,7 @@ export const data: Provider[] = [
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
               output_mtok: 10,
+              web_searches_kcount: 10,
             },
           },
           {
@@ -677,6 +699,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -21410,6 +21433,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'num_search_queries',
+            dest: 'web_searches',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -21480,12 +21508,13 @@ export const data: Provider[] = [
           equals: 'sonar-deep-research',
         },
         price_comments:
-          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search-query billing is not represented.',
+          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
           output_reasoning_mtok: 3,
           output_citation_mtok: 2,
+          web_searches_kcount: 5,
         },
       },
       {

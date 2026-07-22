@@ -27,6 +27,9 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(
+                        path=['server_tool_use', 'web_search_requests'], dest='web_searches', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['output_tokens_details', 'thinking_tokens'],
                         dest='output_reasoning_tokens',
                         required=False,
@@ -72,6 +75,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
                     output_mtok=Decimal('4'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -90,6 +94,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -110,6 +115,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -163,6 +169,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('1'),
                     output_mtok=Decimal('50'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -183,6 +190,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('5'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -203,6 +211,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -221,6 +230,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -241,6 +251,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -269,6 +280,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -278,6 +290,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('6.25'),
                             cache_read_mtok=Decimal('0.5'),
                             output_mtok=Decimal('25'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -301,6 +314,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -322,6 +336,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -343,6 +358,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -363,6 +379,7 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -389,6 +406,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -398,6 +416,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -423,6 +442,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
                             output_mtok=Decimal('10'),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -432,6 +452,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -12393,6 +12414,7 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
                     UsageExtractorMapping(path='citation_tokens', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='citation_tokens', dest='output_citation_tokens', required=False),
+                    UsageExtractorMapping(path='num_search_queries', dest='web_searches', required=False),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
@@ -12433,12 +12455,13 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar-deep-research'),
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
-                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search-query billing is not represented.',
+                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'),
                     output_mtok=Decimal('8'),
                     output_reasoning_mtok=Decimal('3'),
                     output_citation_mtok=Decimal('2'),
+                    web_searches_kcount=Decimal('5'),
                 ),
             ),
             ModelInfo(
