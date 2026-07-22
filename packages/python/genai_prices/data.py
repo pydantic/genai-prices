@@ -5527,7 +5527,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='devstral-small'),
                 name='Devstral Small',
                 description='Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).',
-                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.12')),
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='devstral-small:free',
@@ -5704,7 +5704,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mixtral-8x22b-instruct'),
                 name='Mixtral 8x22B Instruct',
                 description="Mistral's official instruct fine-tuned version of Mixtral 8x22B. It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include:\n- strong math, coding, and reasoning\n- large context length (64k)\n- fluency in English, French, Italian, German, and Spanish",
-                prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
                 id='mixtral-8x7b',
@@ -5736,7 +5736,7 @@ providers: list[Provider] = [
                 name='Voxtral Small 24B 2507',
                 description='Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.3')
+                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.4')
                 ),
             ),
         ],
@@ -6354,7 +6354,6 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='gpt-4o'),
-                        ClauseEquals(equals='gpt-4o-2024-05-13'),
                         ClauseEquals(equals='gpt-4o-2024-08-06'),
                         ClauseEquals(equals='gpt-4o-2024-11-20'),
                     ]
@@ -6365,6 +6364,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('10')
                 ),
+            ),
+            ModelInfo(
+                id='gpt-4o-2024-05-13',
+                match=ClauseEquals(equals='gpt-4o-2024-05-13'),
+                name='gpt 4o (2024-05-13)',
+                description='Original GPT-4o snapshot (2024-05-13), retained at its launch pricing, which is higher than later gpt-4o snapshots and has no prompt-cache rate.',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='gpt-4o-audio-preview',
