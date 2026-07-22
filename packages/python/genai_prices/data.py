@@ -2694,8 +2694,10 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash Image',
                 description="Google's specialized image generation model optimized for fast, high-quality image generation. Outputs images at 1024x1024 resolution, with each image consuming 1290 output tokens.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.',
-                prices=ModelPrice(input_mtok=Decimal('0.3'), output_mtok=Decimal('30')),
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), output_mtok=Decimal('2.5'), output_image_mtok=Decimal('30')
+                ),
             ),
             ModelInfo(
                 id='gemini-2.5-flash-lite',
@@ -2778,8 +2780,8 @@ providers: list[Provider] = [
                 name='Gemini 3 Pro Image Preview',
                 description="Google's image generation model optimized for high-quality image generation. Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Unknown modality output tokens are assumed to be image tokens.',
-                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('120'), output_text_mtok=Decimal('12')),
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.',
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('12'), output_image_mtok=Decimal('120')),
             ),
             ModelInfo(
                 id='gemini-3-pro-preview',
@@ -2803,8 +2805,8 @@ providers: list[Provider] = [
                 name='Gemini 3.1 Flash Image Preview',
                 description="Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
-                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('60')),
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per 1M tokens and is the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('3'), output_image_mtok=Decimal('60')),
             ),
             ModelInfo(
                 id='gemini-3.1-flash-lite',

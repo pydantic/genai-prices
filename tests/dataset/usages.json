@@ -2376,7 +2376,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.000066",
-            "output_price": "0.219948",
+            "output_price": "0.148668",
             "provider_id": "google"
           }
         ],
@@ -2634,7 +2634,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000054",
-            "output_price": "0.00144",
+            "output_price": "0.00012",
             "provider_id": "google"
           }
         ],
@@ -2675,7 +2675,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.000003",
-            "output_price": "0.03912",
+            "output_price": "0.038735",
             "provider_id": "google"
           }
         ],
@@ -3471,7 +3471,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000027",
-            "output_price": "0.03885",
+            "output_price": "0.0387125",
             "provider_id": "google"
           }
         ],
@@ -3999,7 +3999,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.0000051",
-            "output_price": "0.04008",
+            "output_price": "0.038815",
             "provider_id": "google"
           }
         ],
@@ -4762,7 +4762,7 @@
           {
             "api_flavor": "default",
             "input_price": "0.000003",
-            "output_price": "0.03909",
+            "output_price": "0.0387325",
             "provider_id": "google"
           }
         ],

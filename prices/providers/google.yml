@@ -564,13 +564,14 @@ models:
         - equals: gemini-2.5-flash-image
         - equals: gemini-2.5-flash-image-preview
     context_window: 1000000
-    prices_checked: 2025-11-04
+    prices_checked: 2026-07-22
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at
       $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
-      model.
+      model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.
     prices:
       input_mtok: 0.3
-      output_mtok: 30.0
+      output_mtok: 2.5
+      output_image_mtok: 30
 
   - id: gemini-2.5-flash-lite
     name: Gemini 2.5 Flash Lite
@@ -672,14 +673,14 @@ models:
         - starts_with: gemini-3-pro-image-preview
         - equals: gemini-3-pro-image-preview
     context_window: 1000000
-    prices_checked: 2025-12-19
+    prices_checked: 2026-07-22
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at
       $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.
-      Unknown modality output tokens are assumed to be image tokens.
+      Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.
     prices:
       input_mtok: 2
-      output_mtok: 120
-      output_text_mtok: 12
+      output_mtok: 12
+      output_image_mtok: 120
 
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
@@ -717,12 +718,14 @@ models:
     match:
       starts_with: gemini-3.1-flash-image-preview
     context_window: 1000000
-    prices_checked: 2026-03-04
-    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens.
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per
+      1M tokens and is the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens.
       Preview model - pricing may change.
     prices:
       input_mtok: 0.5
-      output_mtok: 60
+      output_mtok: 3
+      output_image_mtok: 60
 
   - id: gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite

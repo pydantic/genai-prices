@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from genai_prices import Usage
+from genai_prices import Usage, calc_price
 from genai_prices.types import (
     ClauseEquals,
     ConditionalPrice,
@@ -20,6 +20,34 @@ THOUSAND = Decimal(1_000)
 
 def mtok(rate: str, tokens: int) -> Decimal:
     return Decimal(rate) * tokens / MILLION
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'text_rate', 'image_rate'),
+    [
+        ('gemini-2.5-flash-image', '2.5', '30'),
+        ('gemini-3-pro-image-preview', '12', '120'),
+        ('gemini-3.1-flash-image-preview', '3', '60'),
+    ],
+)
+def test_google_image_models_price_unclassified_output_as_text(
+    model_ref: str,
+    text_rate: str,
+    image_rate: str,
+) -> None:
+    usage = Usage(
+        output_tokens=2_309,
+        output_text_tokens=529,
+        output_image_tokens=1_120,
+        output_reasoning_tokens=529,
+        output_text_reasoning_tokens=529,
+    )
+
+    price = calc_price(usage, model_ref=model_ref, provider_id='google')
+
+    expected_output = mtok(text_rate, 1_189) + mtok(image_rate, 1_120)
+    assert price.output_price == expected_output
+    assert price.total_price == expected_output
 
 
 def test_model_price_decomposition_matches_current_text_cache_pricing() -> None:
