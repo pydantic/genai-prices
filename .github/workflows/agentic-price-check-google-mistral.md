@@ -59,47 +59,77 @@ network:
 
 # Price Check: Google & Mistral
 
-Compare the model prices this repo records for **Google (Gemini)** and
-**Mistral** against each provider's official pricing page, and file one issue
-listing the differences. The issue is replaced each run, so report the current
-state.
+Compare the model prices this repo records for **Google (Gemini)** and **Mistral**
+against each provider's official pricing page, and file one issue listing every
+price that differs. The issue is replaced on each run, so build it fresh from what
+you find this run. Do Google first, then Mistral; the four steps below apply to each.
 
-For each provider:
+## Step 1 — read the recorded prices
 
-1. Read the recorded prices: `cat prices/providers/<file>.yml`. Each model has an
-   `id`, a `match`, and a `prices:` block of USD-per-million-token rates:
-   `input_mtok`, `output_mtok`, and sometimes `cache_read_mtok` /
-   `cache_write_mtok`.
-2. `web-fetch` the provider's pricing page (the exact URL below).
-3. Match each YAML model to its row on the page by API id / name (YAML
-   `gemini-2.5-flash` ↔ "Gemini 2.5 Flash"; YAML `mistral-large-latest` ↔
-   "Mistral Large"), then compare `input_mtok` and `output_mtok`, plus the cache
-   rates when both sides list them.
-4. Convert every page price to USD per 1M tokens before comparing: "$3 / MTok" and
-   "$0.003 / 1K" both equal `input_mtok: 3`. Use the standard on-demand rate; where
-   a model is tiered by prompt size (Gemini charges more above ~200K tokens) or
-   batched, use the standard tier unless the YAML records the tier.
-5. Report a model when the page's rate differs from the YAML, using only prices you
-   can read directly off the page. Match a YAML model to its page row where you can;
-   where you can't, move on.
+Run `cat prices/providers/google.yml` (then `mistral.yml`). Under `models:` each
+entry has an `id`, a `match`, and a `prices:` block. Every number is **USD per
+1,000,000 tokens**. The fields you check:
+
+- `input_mtok` — standard **text** input price
+- `output_mtok` — output price
+- `cache_read_mtok` — cached input price (check only when the page lists one)
+- `input_audio_mtok` — audio input price, on Gemini models that have it (compare it to the page's audio input rate, separately from text)
+
+Some Gemini entries are tiered by prompt size, e.g.
+`input_mtok: {base: 1.25, tiers: [{start: 200000, price: 2.5}]}`. Use the `base`
+value (the ≤200K-token rate) and set the tiers aside.
+
+Note each model's `id` and its `input_mtok` / `output_mtok` before you fetch.
+
+## Step 2 — fetch the pricing page
+
+`web-fetch` the exact URL for that provider (below). If the fetched content contains
+no dollar figures at all, the page did not render for you — record that provider as
+unread and move on; never fill in a number the page didn't give you.
 
 ### Google (Gemini)
 
-- YAML: `prices/providers/google.yml`
 - Page: <https://ai.google.dev/gemini-api/docs/pricing>
+- Prices are the **paid tier**, per 1M tokens. Gemini often quotes a text/image/video
+  input rate and a separate **audio** input rate — compare the text rate to
+  `input_mtok` and the audio rate to `input_audio_mtok`. Where a rate is split by
+  prompt size (e.g. Gemini 2.5 Pro is $1.25 up to 200K tokens and $2.50 above),
+  compare the up-to-200K rate to the YAML `base`.
 
 ### Mistral
 
-- YAML: `prices/providers/mistral.yml`
 - Page: <https://mistral.ai/pricing/api>
+- The API pricing table lists an input and output price per model, per 1M tokens.
 
-## The issue
+## Step 3 — match models and compare
 
-File one issue titled `Google/Mistral price discrepancies` with a table:
+For each YAML model, find its row on the page by id or marketing name: YAML
+`gemini-2.5-flash` is "Gemini 2.5 Flash"; YAML `gemini-2.5-pro` is "Gemini 2.5 Pro";
+YAML `mistral-large-latest` is "Mistral Large"; YAML `codestral` is "Codestral". When
+you find the row, compare each price field the page provides against the YAML.
 
-| Provider | Model (YAML id) | Field | Recorded (YAML) | Official page | Page URL |
-| -------- | --------------- | ----- | --------------- | ------------- | -------- |
+Put every price in USD per 1M tokens before comparing: "$3 / MTok" = `3`,
+"$0.003 / 1K tokens" = `3`, "$3.00" = `3`.
 
-Show the unit conversion where you did one, and end with the date you checked. If
-every price matches, or a page returned no readable prices, call `safeoutputs noop`
-with a one-line reason.
+Compare the standard on-demand rate. If the page also has Batch or provisioned
+tables, read the standard one for the comparison and leave those alone.
+
+A model where the page's rate differs from the YAML is a discrepancy to report. When
+a YAML model has no matching row on the page, move to the next model.
+
+## Step 4 — file the issue (or noop)
+
+If you found one or more discrepancies, file **one** issue titled
+`Google/Mistral price discrepancies`, with a table — one row per differing field:
+
+| Provider | Model (YAML id) | Field         | Recorded (YAML) | Official page | Page URL                                      |
+| -------- | --------------- | ------------- | --------------- | ------------- | --------------------------------------------- |
+| Google   | gemini-2.5-pro  | `output_mtok` | 10              | 12            | https://ai.google.dev/gemini-api/docs/pricing |
+
+Where you converted units, show the arithmetic in that row. End the body with the
+date you ran, e.g. "Checked 2026-07-22." A maintainer uses this to update the YAML
+`prices:` and bump `prices_checked`.
+
+If every recorded price matches, or a page returned no readable prices, call
+`safeoutputs noop` with a one-line reason, e.g. "All Google + Mistral prices match
+their official pages" or "Mistral page returned no prices; all Google prices match".

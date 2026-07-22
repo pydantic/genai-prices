@@ -60,47 +60,91 @@ network:
 
 # Price Check: OpenAI & Anthropic
 
-Compare the model prices this repo records for **OpenAI** and **Anthropic**
-against each provider's official pricing page, and file one issue listing the
-differences. The issue is replaced each run, so report the current state.
+Compare the model prices this repo records for **OpenAI** and **Anthropic** against
+each provider's official pricing page, and file one issue listing every price that
+differs. The issue is replaced on each run, so build it fresh from what you find
+this run. Do OpenAI first, then Anthropic; the four steps below apply to each.
 
-For each provider:
+## Step 1 — read the recorded prices
 
-1. Read the recorded prices: `cat prices/providers/<file>.yml`. Each model has an
-   `id`, a `match`, and a `prices:` block of USD-per-million-token rates:
-   `input_mtok`, `output_mtok`, and sometimes `cache_read_mtok` /
-   `cache_write_mtok`.
-2. `web-fetch` the provider's pricing page (the exact URL below).
-3. Match each YAML model to its row on the page by API id / name (YAML `gpt-4o` ↔
-   "gpt-4o"; YAML `claude-3-5-sonnet` ↔ "Claude Sonnet 3.5"), then compare
-   `input_mtok` and `output_mtok`, plus the cache rates when both sides list them.
-4. Convert every page price to USD per 1M tokens before comparing: "$3 / MTok" and
-   "$0.003 / 1K" both equal `input_mtok: 3`. Use the standard on-demand rate; for a
-   model with tiered / batch / flex pricing, use the standard tier unless the YAML
-   records the tier.
-5. Report a model when the page's rate differs from the YAML, using only prices you
-   can read directly off the page. Match a YAML model to its page row where you can;
-   where you can't, move on.
+Run `cat prices/providers/openai.yml` (then `anthropic.yml`). Under `models:` each
+entry looks like this:
+
+```yaml
+- id: gpt-4o
+  match: { ... }
+  prices:
+    input_mtok: 2.5
+    output_mtok: 10
+    cache_read_mtok: 1.25
+```
+
+Every number in `prices:` is **USD per 1,000,000 tokens**. The fields you check:
+
+- `input_mtok` — standard input price
+- `output_mtok` — output price
+- `cache_read_mtok` — cached / cache-hit input price (check only when the page lists a cache price)
+- `cache_write_mtok` — cache-write price (check only when the page lists one)
+
+A few entries are tiered, e.g. `input_mtok: {base: 3, tiers: [{start: 200000, price: 6}]}`.
+Use the `base` value (here `3`) and set the tiers aside.
+
+Note the `id` and `input_mtok` / `output_mtok` of every model so you know what to
+look for on the page.
+
+## Step 2 — fetch the pricing page
+
+`web-fetch` the exact URL for that provider (below). Both are markdown pages with a
+price table. If the fetched content contains no dollar figures at all, the page did
+not render for you — record that provider as unread and move on; never fill in a
+number the page didn't give you.
 
 ### OpenAI
 
-- YAML: `prices/providers/openai.yml`
 - Page: <https://developers.openai.com/api/docs/pricing.md>
+- This page lists each model as an array: `["gpt-4o", 2.5, 1.25, 10]`, meaning
+  **[model id, input per 1M, cached input per 1M, output per 1M]**. So this row says
+  `gpt-4o` is input $2.5, cached input $1.25, output $10 — compare those to
+  `input_mtok`, `cache_read_mtok`, `output_mtok`.
 
 ### Anthropic
 
-- YAML: `prices/providers/anthropic.yml`
-- Page: <https://platform.claude.com/docs/en/about-claude/pricing.md> — the
-  "Model pricing" table (Base Input Tokens and Output Tokens columns, plus the
-  cache columns).
+- Page: <https://platform.claude.com/docs/en/about-claude/pricing.md>
+- Read the "Model pricing" table. Map its columns to the YAML fields:
+  **Base Input Tokens** → `input_mtok`, **Output Tokens** → `output_mtok`,
+  **5m Cache Writes** → `cache_write_mtok`, **Cache Hits & Refreshes** →
+  `cache_read_mtok`. A cell like "$5 / MTok" means `5`.
 
-## The issue
+## Step 3 — match models and compare
 
-File one issue titled `OpenAI/Anthropic price discrepancies` with a table:
+For each YAML model, find its row on the page by id or marketing name: YAML `gpt-4o`
+is "gpt-4o"; YAML `gpt-4.1-mini` is "gpt-4.1-mini"; YAML `claude-3-5-sonnet` is
+"Claude Sonnet 3.5"; YAML `claude-opus-4-8` is "Claude Opus 4.8". When you find the
+row, compare each price field the page provides against the YAML.
 
-| Provider | Model (YAML id) | Field | Recorded (YAML) | Official page | Page URL |
-| -------- | --------------- | ----- | --------------- | ------------- | -------- |
+Put every price in USD per 1M tokens before comparing: "$3 / MTok" = `3`,
+"$0.003 / 1K tokens" = `3`, "$3.00" = `3`.
 
-Show the unit conversion where you did one, and end with the date you checked. If
-every price matches, or a page returned no readable prices, call `safeoutputs noop`
-with a one-line reason.
+Compare the standard on-demand rate. If the page also has Batch, Flex, Priority,
+fine-tuning, or Fast-mode tables, read the standard model-pricing table for the
+comparison and leave those alone.
+
+A model where the page's rate differs from the YAML is a discrepancy to report. When
+a YAML model has no matching row on the page, move to the next model.
+
+## Step 4 — file the issue (or noop)
+
+If you found one or more discrepancies, file **one** issue titled
+`OpenAI/Anthropic price discrepancies`, with a table — one row per differing field:
+
+| Provider | Model (YAML id) | Field         | Recorded (YAML) | Official page | Page URL                                          |
+| -------- | --------------- | ------------- | --------------- | ------------- | ------------------------------------------------- |
+| OpenAI   | gpt-4o          | `output_mtok` | 10              | 12            | https://developers.openai.com/api/docs/pricing.md |
+
+Where you converted units, show the arithmetic in that row. End the body with the
+date you ran, e.g. "Checked 2026-07-22." A maintainer uses this to update the YAML
+`prices:` and bump `prices_checked`.
+
+If every recorded price matches, or a page returned no readable prices, call
+`safeoutputs noop` with a one-line reason, e.g. "All OpenAI + Anthropic prices match
+their official pages" or "OpenAI page returned no prices; all Anthropic prices match".
