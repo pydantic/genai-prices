@@ -2913,12 +2913,40 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.5-flash',
-                match=ClauseStartsWith(starts_with='gemini-3.5-flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.5-flash'),
+                        ClauseStartsWith(starts_with='gemini-3.5-flash-preview'),
+                        ClauseRegex(regex='^gemini-3\\.5-flash-\\d'),
+                    ]
+                ),
                 name='Gemini 3.5 Flash',
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
                 prices=ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9')),
+            ),
+            ModelInfo(
+                id='gemini-3.5-flash-lite',
+                match=ClauseStartsWith(starts_with='gemini-3.5-flash-lite'),
+                name='Gemini 3.5 Flash Lite',
+                description="Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3.6-flash',
+                match=ClauseStartsWith(starts_with='gemini-3.6-flash'),
+                name='Gemini 3.6 Flash',
+                description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                ),
             ),
             ModelInfo(
                 id='gemini-embedding-001',

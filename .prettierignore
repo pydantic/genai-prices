@@ -6,3 +6,9 @@
 /htmlcov/
 /tests/cassettes/
 /tests/dataset/*.json
+
+# gh-aw generated agentic-workflow files (compiled from the *.md sources via
+# `gh aw compile`) — must stay byte-exact, never reformat.
+/.github/workflows/*.lock.yml
+/.github/workflows/agentics-maintenance.yml
+/.github/aw/
