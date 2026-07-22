@@ -1,0 +1,19 @@
+tests/test_cli.py
+  s_8199dd74cd04be::t_f90397ae3a3347 149,232,245,502-503,529
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "b3cffea7e8def8c7c4e0437ec4c73a79597642a6",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
