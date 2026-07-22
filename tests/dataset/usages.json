@@ -3505,8 +3505,18 @@
             "api_flavor": "default",
             "input_price": "0.032427",
             "output_price": "0.00966",
-            "provider_id": "anthropic"
-          },
+            "provider_id": "anthropic",
+            "total_price": "0.052087"
+          }
+        ],
+        "usage": {
+          "input_tokens": 10809,
+          "output_tokens": 644,
+          "web_searches": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "input_price": "0.032427",
@@ -10510,8 +10520,18 @@
             "api_flavor": "default",
             "input_price": "0.026952",
             "output_price": "0.0078",
-            "provider_id": "anthropic"
-          },
+            "provider_id": "anthropic",
+            "total_price": "0.044752"
+          }
+        ],
+        "usage": {
+          "input_tokens": 8984,
+          "output_tokens": 520,
+          "web_searches": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "input_price": "0.026952",
@@ -10588,8 +10608,18 @@
             "api_flavor": "default",
             "input_price": "0.059577",
             "output_price": "0.00816",
-            "provider_id": "anthropic"
-          },
+            "provider_id": "anthropic",
+            "total_price": "0.077737"
+          }
+        ],
+        "usage": {
+          "input_tokens": 19859,
+          "output_tokens": 544,
+          "web_searches": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "input_price": "0.059577",
@@ -10814,8 +10844,18 @@
             "api_flavor": "default",
             "input_price": "0.048249",
             "output_price": "0.002475",
-            "provider_id": "anthropic"
-          },
+            "provider_id": "anthropic",
+            "total_price": "0.060724"
+          }
+        ],
+        "usage": {
+          "input_tokens": 16083,
+          "output_tokens": 165,
+          "web_searches": 1
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "input_price": "0.0530739",

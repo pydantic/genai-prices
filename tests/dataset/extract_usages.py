@@ -117,9 +117,10 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
         except LookupError:
             pass
         else:
-            assert price.input_price + price.output_price == price.total_price
             extractor_dict['input_price'] = str(price.input_price)
             extractor_dict['output_price'] = str(price.output_price)
+            if price.total_price != price.input_price + price.output_price:
+                extractor_dict['total_price'] = str(price.total_price)
     for other in this_result['extracted']:
         if case.usage_dict == other['usage']:
             other['extractors'].append(extractor_dict)
