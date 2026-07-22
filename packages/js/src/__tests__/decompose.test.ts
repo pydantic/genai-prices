@@ -67,6 +67,24 @@ describe('computeLeafValues', () => {
     })
   })
 
+  it('handles a conditional-dimension chain', () => {
+    expect(
+      computeLeafValues(
+        new Set(['cache_write_1h_tokens', 'cache_write_tokens', 'input_tokens']),
+        normalizeUsage({
+          cache_write_1h_tokens: 100,
+          cache_write_tokens: 300,
+          input_tokens: 400,
+        }),
+        getActiveRegistry()
+      )
+    ).toEqual({
+      cache_write_1h_tokens: 100,
+      cache_write_tokens: 200,
+      input_tokens: 100,
+    })
+  })
+
   it('handles output audio decomposition', () => {
     expect(
       computeLeafValues(

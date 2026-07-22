@@ -13,19 +13,18 @@ def is_descendant_or_self(ancestor: UnitDef, descendant: UnitDef) -> bool:
 def compute_leaf_values(
     priced_usage_keys: set[str], usage: object, units_by_usage_key: Mapping[str, UnitDef]
 ) -> dict[str, int]:
-    priced_units = [
-        units_by_usage_key[usage_key] for usage_key in sorted(priced_usage_keys & units_by_usage_key.keys())
-    ]
+    priced_units = sorted(
+        (units_by_usage_key[usage_key] for usage_key in priced_usage_keys & units_by_usage_key.keys()),
+        key=lambda unit: (-len(unit.dimensions), unit.usage_key),
+    )
     leaf_values: dict[str, int] = {}
 
     for unit in priced_units:
-        leaf_value = 0
+        leaf_value = _usage_value(usage, unit.usage_key)
         for descendant in priced_units:
-            if not is_descendant_or_self(unit, descendant):
+            if descendant is unit or not is_descendant_or_self(unit, descendant):
                 continue
-
-            sign = -1 if (len(descendant.dimensions) - len(unit.dimensions)) % 2 else 1
-            leaf_value += sign * _usage_value(usage, descendant.usage_key)
+            leaf_value -= leaf_values[descendant.usage_key]
 
         if leaf_value < 0:
             raise ValueError(_negative_leaf_error_message(unit, priced_units, usage, leaf_value))

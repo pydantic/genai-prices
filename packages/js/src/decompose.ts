@@ -11,18 +11,23 @@ export function computeLeafValues(
   registry: UnitRegistry = getActiveRegistry()
 ): Record<string, number> {
   const pricedUnits = [...pricedUsageKeys]
-    .sort()
     .map((usageKey) => registry.getUnit(usageKey))
     .filter((unit): unit is UnitDef => unit !== undefined)
+    .sort(
+      (left, right) =>
+        Object.keys(right.dimensions).length - Object.keys(left.dimensions).length || left.usageKey.localeCompare(right.usageKey)
+    )
   const leafValues: Record<string, number> = {}
 
   for (const unit of pricedUnits) {
-    let leafValue = 0
+    let leafValue = getUsageValue(usage, unit.usageKey, registry)
     for (const descendant of pricedUnits) {
-      if (!isDescendantOrSelf(unit, descendant)) continue
-
-      const sign = (Object.keys(descendant.dimensions).length - Object.keys(unit.dimensions).length) % 2 === 0 ? 1 : -1
-      leafValue += sign * getUsageValue(usage, descendant.usageKey, registry)
+      if (descendant === unit || !isDescendantOrSelf(unit, descendant)) continue
+      const descendantLeafValue = leafValues[descendant.usageKey]
+      if (descendantLeafValue === undefined) {
+        throw new Error(`Descendant unit ${descendant.usageKey} was not decomposed before ${unit.usageKey}`)
+      }
+      leafValue -= descendantLeafValue
     }
 
     if (leafValue < 0) {
