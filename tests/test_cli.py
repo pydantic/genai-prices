@@ -146,7 +146,7 @@ def test_calc(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: gpt 4o
-  Model Prices: $2.5/input MTok, $10/output MTok, $1.25/cache read MTok
+  Model Prices: $2.5/input MTok, $10/output MTok, $1.25/input cache read MTok
 Context Window: 128,000
    Input Price: $0.0025
   Output Price: $0.001
@@ -229,7 +229,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: o3
-  Model Prices: $2/input MTok, $8/output MTok, $0.5/cache read MTok
+  Model Prices: $2/input MTok, $8/output MTok, $0.5/input cache read MTok
    Input Price: $0.02
   Output Price: $0
    Total Price: $0.02
@@ -242,7 +242,7 @@ def test_calc_timestamp(capsys: pytest.CaptureFixture[str]):
     assert out == snapshot("""\
       Provider: OpenAI
          Model: o3
-  Model Prices: $10/input MTok, $40/output MTok, $0.5/cache read MTok
+  Model Prices: $10/input MTok, $40/output MTok, $0.5/input cache read MTok
    Input Price: $0.1
   Output Price: $0
    Total Price: $0.1
@@ -499,8 +499,8 @@ def test_calc_table_split_columns_rich_prices(monkeypatch: pytest.MonkeyPatch, c
 
 def test_price_field_label_uses_bundled_registry_metadata() -> None:
     assert _price_field_label('input_mtok') == 'Input/MTok'
-    assert _price_field_label('cache_read_mtok') == 'Cache Read/MTok'
-    assert _price_field_label('cache_audio_read_mtok') == 'Cache Audio Read/MTok'
+    assert _price_field_label('cache_read_mtok') == 'Input Cache Read/MTok'
+    assert _price_field_label('cache_audio_read_mtok') == 'Input Audio Cache Read/MTok'
     assert _price_field_label('requests_kcount') == 'Requests/K'
 
 
@@ -526,7 +526,7 @@ def test_format_model_prices_uses_bundled_registry_metadata() -> None:
     )
 
     assert _format_model_prices(price, split_lines=False, use_color=False).plain == (
-        '$1/input MTok, $0.5/cache read MTok, $12 / K requests'
+        '$1/input MTok, $0.5/input cache read MTok, $12 / K requests'
     )
 
 
