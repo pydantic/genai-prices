@@ -60,81 +60,47 @@ network:
 
 # Price Check: OpenAI & Anthropic
 
-You verify that the model prices this repo records for **OpenAI** and
-**Anthropic** still match each provider's **official** pricing page. Each run you
-produce **one** issue listing every discrepancy you can confirm, or you call
-`safeoutputs noop` when everything matches. That issue is replaced every run
-(close-older), so it always reflects the current state — you never need to dedupe
-against past issues.
+Compare the model prices this repo records for **OpenAI** and **Anthropic**
+against each provider's official pricing page, and file one issue listing the
+differences. The issue is replaced each run, so report the current state.
 
-A wrong discrepancy costs a maintainer real time chasing a phantom price change,
-so **only report a discrepancy you can read directly and unambiguously off the
-official page.** If a page will not load, or its prices are rendered in a way you
-cannot read (some pages are JavaScript apps that `web-fetch` returns empty), say
-so plainly and do **not** guess or infer a price. A clean noop with "could not
-read <page>" is a good outcome.
+For each provider:
 
-## What to check, per provider
-
-1. Read the recorded prices from the YAML with `cat`. Each entry under `models:`
-   has an `id`, a `match`, and a `prices:` block of per-million-token USD rates:
+1. Read the recorded prices: `cat prices/providers/<file>.yml`. Each model has an
+   `id`, a `match`, and a `prices:` block of USD-per-million-token rates:
    `input_mtok`, `output_mtok`, and sometimes `cache_read_mtok` /
-   `cache_write_mtok`. Note each model's `prices_checked` date.
-2. `web-fetch` the provider's official pricing page — the **exact URL below,
-   nothing else**. Do not browse around the site.
-3. For each model in the YAML, find the same model on the page and compare
-   `input_mtok` and `output_mtok` (and the cache rates if the page lists them).
-4. A discrepancy is: the page shows a clearly different number than the YAML for
-   a model you can confidently match by name.
+   `cache_write_mtok`.
+2. `web-fetch` the provider's pricing page (the exact URL below).
+3. Match each YAML model to its row on the page by API id / name (YAML `gpt-4o` ↔
+   "gpt-4o"; YAML `claude-3-5-sonnet` ↔ "Claude Sonnet 3.5"), then compare
+   `input_mtok` and `output_mtok`, plus the cache rates when both sides list them.
+4. Convert every page price to USD per 1M tokens before comparing: "$3 / MTok" and
+   "$0.003 / 1K" both equal `input_mtok: 3`. Use the standard on-demand rate; for a
+   model with tiered / batch / flex pricing, use the standard tier unless the YAML
+   records the tier.
+5. Report a model when the page's rate differs from the YAML, using only prices you
+   can read directly off the page. Match a YAML model to its page row where you can;
+   where you can't, move on.
 
 ### OpenAI
 
 - YAML: `prices/providers/openai.yml`
-- Fetch: <https://platform.openai.com/docs/pricing>
-- Fallback only if a model is absent above: <https://developers.openai.com/api/docs/pricing>
+- Page: <https://developers.openai.com/api/docs/pricing.md>
 
 ### Anthropic
 
 - YAML: `prices/providers/anthropic.yml`
-- Fetch: <https://platform.claude.com/docs/en/about-claude/pricing> (the "Model pricing" table). Compare against the **Base Input Tokens** and **Output Tokens** columns, and the cache columns if the YAML records them.
-- Fallback only if a model is absent above: <https://docs.anthropic.com/en/docs/about-claude/models/overview>
-
-## Matching models
-
-Match by marketing name / API id (YAML `claude-3-5-sonnet` ↔ page "Claude Sonnet
-3.5"; YAML `gpt-4o` ↔ page "gpt-4o"). If you cannot confidently identify which
-page row is a given YAML model, **skip it** — do not force a match.
-
-## Units — read carefully
-
-- YAML `input_mtok: 3` means **$3.00 per 1M input tokens**.
-- Pages may quote per-1K or per-1M tokens. Convert to USD per 1M before
-  comparing: "$3 / MTok" and "$0.003 / 1K tokens" both equal `input_mtok: 3`.
-  Show the conversion arithmetic in the issue whenever you did one.
-
-## What NOT to flag
-
-- The same value written differently ($3.00 vs $3).
-- A model on the page that is not in the YAML (a "missing model" is out of scope
-  for this agent — you only check prices already recorded).
-- A YAML model you cannot find on the page (skip it).
-- Batch / flex / priority / fine-tuning / cached-input promo tiers — compare only
-  the standard on-demand input and output rates, unless the YAML explicitly
-  records that tier.
-- Any price you cannot read cleanly off the page.
+- Page: <https://platform.claude.com/docs/en/about-claude/pricing.md> — the
+  "Model pricing" table (Base Input Tokens and Output Tokens columns, plus the
+  cache columns).
 
 ## The issue
 
-If you confirmed one or more discrepancies, file **one** issue. Title:
-`OpenAI/Anthropic price discrepancies`. Body: a short table —
+File one issue titled `OpenAI/Anthropic price discrepancies` with a table:
 
 | Provider | Model (YAML id) | Field | Recorded (YAML) | Official page | Page URL |
 | -------- | --------------- | ----- | --------------- | ------------- | -------- |
 
-Add the exact page URL, and where you converted units show the arithmetic. Keep
-it terse and factual: the maintainer will edit the YAML `prices:` and bump
-`prices_checked`. End the body with the date you checked.
-
-If every recorded price matches, or you could not confirm any discrepancy, call
-`safeoutputs noop` with a one-line reason (e.g. "all OpenAI + Anthropic prices
-match" or "anthropic.com/pricing rendered empty via web-fetch — could not read").
+Show the unit conversion where you did one, and end with the date you checked. If
+every price matches, or a page returned no readable prices, call `safeoutputs noop`
+with a one-line reason.
