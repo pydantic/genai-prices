@@ -62,8 +62,8 @@ network:
 
 Compare the model prices this repo records for **OpenAI** and **Anthropic** against
 each provider's official pricing page, and file one issue listing every price that
-differs. The issue is replaced on each run, so build it fresh from what you find
-this run. Do OpenAI first, then Anthropic; the four steps below apply to each.
+differs. Do OpenAI first, then Anthropic: Steps 1-3 apply to each provider, and Step 4
+combines both into a single issue (built fresh each run, replacing the previous one).
 
 ## Step 1 — read the recorded prices
 

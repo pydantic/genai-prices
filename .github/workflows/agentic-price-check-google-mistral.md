@@ -61,8 +61,8 @@ network:
 
 Compare the model prices this repo records for **Google (Gemini)** and **Mistral**
 against each provider's official pricing page, and file one issue listing every
-price that differs. The issue is replaced on each run, so build it fresh from what
-you find this run. Do Google first, then Mistral; the four steps below apply to each.
+price that differs. Do Google first, then Mistral: Steps 1-3 apply to each provider, and
+Step 4 combines both into a single issue (built fresh each run, replacing the previous one).
 
 ## Step 1 — read the recorded prices
 
