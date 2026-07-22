@@ -1,0 +1,21 @@
+packages/python/genai_prices/_cli.py
+  s_8199dd74cd04be::t_913ca07c860df2 630
+tests/test_cli.py
+  s_8199dd74cd04be::t_913ca07c860df2 504
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "5f12fedfca5bf3fd9adcbfd321ff854a503f456f",
+  "prompts": {},
+  "sessions": {
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
