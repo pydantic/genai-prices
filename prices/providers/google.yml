@@ -614,7 +614,10 @@ models:
       Google's most intelligent model built for speed, combining frontier intelligence with
       improved reasoning, coding, and multimodal understanding.
     match:
-      starts_with: gemini-3.5-flash
+      or:
+        - equals: gemini-3.5-flash
+        - starts_with: gemini-3.5-flash-preview
+        - regex: '^gemini-3\.5-flash-\d'
     context_window: 1000000
     prices_checked: 2026-05-19
     price_comments:
@@ -624,6 +627,38 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 9
+
+  - id: gemini-3.5-flash-lite
+    name: Gemini 3.5 Flash Lite
+    description: >-
+      Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume,
+      low-latency applications while maintaining strong multimodal capabilities.
+    match:
+      starts_with: gemini-3.5-flash-lite
+    context_window: 1000000
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
+      tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 2.5
+
+  - id: gemini-3.6-flash
+    name: Gemini 3.6 Flash
+    description: >-
+      Google's most intelligent model built for speed, combining frontier intelligence with improved
+      reasoning, coding, and multimodal understanding.
+    match:
+      starts_with: gemini-3.6-flash
+    context_window: 1000000
+    prices_checked: 2026-07-22
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex
+      tiers offer 50% discount. No separate audio input rate documented.
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.15
+      output_mtok: 7.5
 
   - id: gemini-embedding-001
     match:
