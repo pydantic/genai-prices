@@ -6,10 +6,10 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import TYPE_CHECKING, Annotated, Any, Literal, Self, TypeGuard, TypeVar, cast, overload
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
-from typing_extensions import TypedDict
+from typing_extensions import Self, TypedDict
 
 from genai_prices.units import UnitRegistry
 
