@@ -22,14 +22,7 @@ export class UnitRegistry {
 
     for (const [usageKey, rawUnit] of Object.entries(raw)) {
       const priceKey = rawUnit.price_key ?? usageKey
-      const dimensionRequirements = Object.fromEntries(
-        Object.entries(rawUnit.dimension_requirements ?? {}).map(([conditionalKey, required]) => [
-          conditionalKey,
-          Object.freeze({ ...required }),
-        ])
-      )
       const unit: UnitDef = Object.freeze({
-        dimensionRequirements: Object.freeze(dimensionRequirements),
         dimensions: Object.freeze({ ...rawUnit.dimensions }),
         per: rawUnit.per,
         priceKey,
@@ -115,17 +108,5 @@ export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): bool
 }
 
 export function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  if (!Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)) {
-    return false
-  }
-
-  const combinedDimensions = { ...left.dimensions, ...right.dimensions }
-  return requirementsAreSatisfied(left, combinedDimensions) && requirementsAreSatisfied(right, combinedDimensions)
-}
-
-function requirementsAreSatisfied(unit: UnitDef, dimensions: Readonly<Record<string, string>>): boolean {
-  return Object.entries(unit.dimensionRequirements).every(
-    ([conditionalKey, required]) =>
-      dimensions[conditionalKey] === undefined || Object.entries(required).every(([key, value]) => dimensions[key] === value)
-  )
+  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
 }

@@ -396,30 +396,6 @@ def test_unit_registry_compatibility_rejects_distinct_token_types() -> None:
     assert not registry.units['output_reasoning_tokens'].is_compatible_with(registry.units['output_citation_tokens'])
 
 
-def test_unit_registry_compatibility_honors_conditional_dimension_requirements() -> None:
-    registry = UnitRegistry(
-        {
-            'cache_read_tokens': {
-                'per': 1_000_000,
-                'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_read'},
-            },
-            'cache_write_1h_tokens': {
-                'per': 1_000_000,
-                'dimensions': {
-                    'family': 'tokens',
-                    'direction': 'input',
-                    'token_type': 'cache_write',
-                    'cache_ttl': '1h',
-                },
-                'dimension_requirements': {'cache_ttl': {'token_type': 'cache_write'}},
-            },
-        }
-    )
-
-    assert not registry.units['cache_write_1h_tokens'].is_compatible_with(registry.units['cache_read_tokens'])
-    assert registry.find_join(registry.units['cache_write_1h_tokens'], registry.units['cache_read_tokens']) is None
-
-
 def test_unit_registry_join_lookup_returns_registered_overlap() -> None:
     registry = UnitRegistry(load_units())
 
@@ -694,7 +670,8 @@ def test_validate_units_rejects_compatible_pair_with_missing_join() -> None:
 
 
 def test_validate_units_accepts_bundled_units() -> None:
-    registry = validate_units(load_units())
+    raw_units = load_units()
+    registry = validate_units(raw_units)
 
     assert registry.units['cache_audio_read_tokens'].dimensions == {
         'family': 'tokens',
@@ -709,9 +686,10 @@ def test_validate_units_accepts_bundled_units() -> None:
         'token_type': 'cache_write',
         'cache_ttl': '1h',
     }
-    assert registry.units['cache_audio_write_1h_tokens'].dimension_requirements == {
+    assert raw_units['cache_audio_write_1h_tokens']['dimension_requirements'] == {
         'cache_ttl': {'token_type': 'cache_write'}
     }
+    assert not hasattr(registry.units['cache_audio_write_1h_tokens'], 'dimension_requirements')
 
 
 @pytest.mark.parametrize(
