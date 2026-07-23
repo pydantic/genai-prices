@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { matchLogic, matchModel, matchModelWithFallback, matchProvider } from '../engine'
+import { matchLogic, matchModel, matchModelWithFallback, matchProvider, normalizeCompactDatedRef } from '../engine'
 
 const actualProviders = data
 
@@ -86,6 +86,33 @@ describe('Model Matching with Fallback', () => {
       const model = matchModelWithFallback(azure!, 'gpt-4.1', actualProviders)
       expect(model).toBeDefined()
       expect(model?.id).toBe('gpt-4.1')
+    })
+
+    it('should resolve compact dated refs to the dashed alias', () => {
+      const openai = matchProvider(actualProviders, { providerId: 'openai' })
+      expect(openai).toBeDefined()
+
+      // LiteLLM/OpenRouter emit `gpt-5.2-20251211`, only the dashed form is aliased
+      const compact = matchModelWithFallback(openai!, 'gpt-5.2-20251211', actualProviders)
+      expect(compact?.id).toBe('gpt-5.2')
+      const dashed = matchModelWithFallback(openai!, 'gpt-5.2-2025-12-11', actualProviders)
+      expect(dashed?.id).toBe('gpt-5.2')
+    })
+
+    it('should not normalize refs that match on the compact date form', () => {
+      // Bedrock models match the compact date via `contains`, so they must be returned as-is
+      const aws = matchProvider(actualProviders, { providerId: 'aws' })
+      expect(aws).toBeDefined()
+      const model = matchModelWithFallback(aws!, 'claude-3-5-haiku-20241022', actualProviders)
+      expect(model?.id).toBe('regional.anthropic.claude-3-5-haiku-20241022-v1:0')
+    })
+
+    it('should only normalize valid compact dates', () => {
+      expect(normalizeCompactDatedRef('gpt-5.2-20251211')).toBe('gpt-5.2-2025-12-11')
+      expect(normalizeCompactDatedRef('claude-3-5-haiku-20241022')).toBe('claude-3-5-haiku-2024-10-22')
+      // suffixes that aren't a valid date are left untouched: bad year, then bad month
+      expect(normalizeCompactDatedRef('gpt-4o-12345678')).toBe('gpt-4o-12345678')
+      expect(normalizeCompactDatedRef('gpt-4o-20251301')).toBe('gpt-4o-20251301')
     })
 
     it('should fallback to other providers when model not found directly', () => {

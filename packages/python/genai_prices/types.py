@@ -264,6 +264,19 @@ class Usage:
         return self + other
 
 
+_COMPACT_DATE_RE = re.compile(r'(-)(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(?=-|:|$)')
+
+
+def _normalize_compact_dated_ref(model_ref: str) -> str:
+    """Rewrite a compact date suffix like ``-20251211`` to the canonical ``-2025-12-11`` form.
+
+    LiteLLM and OpenRouter emit compact dated model refs (e.g. ``gpt-5.2-20251211``) that don't
+    match the dashed aliases used in the price data. This is only applied as a fallback when a ref
+    doesn't otherwise match, so models that match on the compact date form are left untouched.
+    """
+    return _COMPACT_DATE_RE.sub(r'\1\2-\3-\4', model_ref)
+
+
 @dataclass
 class Provider:
     """Information about an LLM inference provider"""
@@ -297,6 +310,16 @@ class Provider:
 
     def find_model(self, model_ref: str, *, all_providers: list[Provider] | None = None) -> ModelInfo | None:
         model_ref = model_ref.lower()
+        if model := self._match_model(model_ref, all_providers=all_providers):
+            return model
+        # LiteLLM/OpenRouter emit compact dated refs like `gpt-5.2-20251211`; retry with the
+        # canonical dashed form if the ref didn't match as-is.
+        normalized = _normalize_compact_dated_ref(model_ref)
+        if normalized != model_ref:
+            return self._match_model(normalized, all_providers=all_providers)
+        return None
+
+    def _match_model(self, model_ref: str, *, all_providers: list[Provider] | None = None) -> ModelInfo | None:
         for model in self.models:
             if model.is_match(model_ref):
                 return model
@@ -305,7 +328,7 @@ class Provider:
                 provider = next((p for p in all_providers if p.id == provider_id), None)
                 if provider:
                     # don't pass all_providers when falling back, so we can only have one step of fallback
-                    if model := provider.find_model(model_ref):
+                    if model := provider._match_model(model_ref):
                         return model
         return None
 
