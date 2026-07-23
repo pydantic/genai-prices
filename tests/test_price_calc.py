@@ -6,6 +6,7 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price
 from genai_prices.data import providers
+from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.types import (
     ClauseAnd,
     ClauseContains,
@@ -18,7 +19,10 @@ from genai_prices.types import (
     ModelInfo,
     ModelPrice,
     Provider,
+    Tier,
     TieredPrices,
+    calc_mtok_price,
+    calc_unit_price,
 )
 
 pytestmark = pytest.mark.anyio
@@ -299,6 +303,53 @@ def test_model_price_str_tiered_prices_include_dollar_prefix():
     assert str(model_price) == '$2.5/input MTok (+tiers)'
 
 
+def test_model_price_str_requests_and_private_state() -> None:
+    model_price = ModelPrice(requests_kcount=Decimal('2'))
+    object.__setattr__(model_price, '_private_state', Decimal('3'))
+
+    assert str(model_price) == '$2 / K requests'
+
+
+def test_calc_price_rejects_unregistered_dynamic_extra() -> None:
+    price = ModelPrice(hovercraft_mtok=Decimal('1'))
+
+    with pytest.raises(ValueError, match='Unknown price key: hovercraft_mtok'):
+        price.calc_price(Usage(input_tokens=1))
+
+
+def test_calc_price_rejects_dynamic_descendant_without_ancestors() -> None:
+    price = ModelPrice(cache_image_read_mtok=Decimal('1'))
+
+    with pytest.raises(ValueError, match='Missing ancestor price for cache_image_read_tokens'):
+        price.calc_price(Usage(cache_image_read_tokens=1))
+
+
+def test_set_custom_snapshot_does_not_validate_dynamic_model_prices() -> None:
+    snapshot = DataSnapshot(
+        providers=[
+            Provider(
+                id='testing',
+                name='Testing',
+                api_pattern='testing',
+                models=[
+                    ModelInfo(
+                        id='bad-extra',
+                        match=ClauseEquals('bad-extra'),
+                        prices=ModelPrice(hovercraft_mtok=Decimal('1')),
+                    )
+                ],
+            )
+        ],
+        from_auto_update=False,
+    )
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+    finally:
+        set_custom_snapshot(None)
+
+
 def test_requests_kcount_prices():
     # request count defaults to 1
     price = calc_price(Usage(), model_ref='sonar', provider_id='perplexity')
@@ -307,6 +358,49 @@ def test_requests_kcount_prices():
     assert price.total_price == snapshot(Decimal('0.012'))
     assert price.model.name == snapshot('Sonar')
     assert price.provider.name == snapshot('Perplexity')
+
+
+def test_distinct_output_category_prices_replace_aggregate_output_rate():
+    price = calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
+        model_ref='sonar-deep-research',
+        provider_id='perplexity',
+    )
+
+    # 65 ordinary tokens at $8/MTok + 25 reasoning at $3/MTok + 10 citations at $2/MTok.
+    assert price.output_price == Decimal('0.000615')
+    assert price.total_price == Decimal('0.000615')
+
+
+def test_custom_model_price_can_override_reasoning_rate():
+    price = ModelPrice(output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')).calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25)
+    )
+
+    assert price['output_price'] == Decimal('0.000675')
+    assert price['total_price'] == Decimal('0.000675')
+
+
+def test_calc_unit_price_matches_mtok_wrapper() -> None:
+    assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
+        Decimal('2.5'), 500_000, total_input_tokens=0
+    )
+
+
+def test_calc_unit_price_handles_absent_price_or_count() -> None:
+    assert calc_unit_price(None, 500, total_input_tokens=0, per=1_000) == Decimal(0)
+    assert calc_unit_price(Decimal('2.5'), None, total_input_tokens=0, per=1_000) == Decimal(0)
+
+
+def test_calc_unit_price_handles_tiered_prices() -> None:
+    price = TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('2'))])
+
+    assert calc_unit_price(price, 10, total_input_tokens=100, per=1_000) == Decimal('0.01')
+    assert calc_unit_price(price, 10, total_input_tokens=101, per=1_000) == Decimal('0.02')
+
+
+def test_calc_unit_price_uses_non_million_normalization_factor() -> None:
+    assert calc_unit_price(Decimal('12'), 2, total_input_tokens=0, per=1_000) == Decimal('0.024')
 
 
 def test_price_constraint_before():

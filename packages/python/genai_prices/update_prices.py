@@ -1,6 +1,7 @@
 from __future__ import annotations as _annotations
 
 import asyncio
+import json
 import logging
 import threading
 from dataclasses import dataclass, field
@@ -18,7 +19,7 @@ __all__ = (
 )
 
 logger = logging.getLogger('genai-prices')
-DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
+DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
 _global_update_prices: UpdatePrices | None = None
 
 
@@ -114,7 +115,7 @@ class UpdatePrices:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
-        # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
+        # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
         data_snapshot.set_custom_snapshot(None)
         if self._background_exc:
             exc = self._background_exc
@@ -159,8 +160,13 @@ class UpdatePrices:
 
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
-        from . import data
+        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
 
         r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
-        return data_snapshot.DataSnapshot(data.providers_schema.validate_json(r.content), from_auto_update=True)
+        raw_payload = json.loads(r.content)
+        if not isinstance(raw_payload, list):
+            raise ValueError('Expected fetched prices payload to be a provider array')
+
+        providers = _providers_from_raw(raw_payload)
+        return data_snapshot.DataSnapshot(providers, from_auto_update=True)

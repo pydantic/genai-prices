@@ -52,6 +52,40 @@ def test_anthropic_caching_write():
     assert price.total_price == snapshot(Decimal('0.54377925'))
 
 
+def test_anthropic_caching_write_ttl_breakdown():
+    response = dict(
+        model='claude-sonnet-4-20250514',
+        usage=dict(
+            cache_creation_input_tokens=300,
+            cache_creation=dict(
+                ephemeral_5m_input_tokens=200,
+                ephemeral_1h_input_tokens=100,
+            ),
+            cache_read_input_tokens=0,
+            input_tokens=100,
+            output_tokens=50,
+            server_tool_use=None,
+            service_tier='standard',
+        ),
+    )
+
+    extracted_usage = extract_usage(response, provider_id='anthropic')
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=400,
+            cache_write_tokens=300,
+            cache_write_5m_tokens=200,
+            cache_write_1h_tokens=100,
+            cache_read_tokens=0,
+            output_tokens=50,
+        )
+    )
+    price = extracted_usage.calc_price()
+    assert price.input_price == snapshot(Decimal('0.00165'))
+    assert price.output_price == snapshot(Decimal('0.00075'))
+    assert price.total_price == snapshot(Decimal('0.00240'))
+
+
 def test_anthropic_caching_read():
     response = dict(
         model='claude-3-7-sonnet-20250219',
@@ -75,6 +109,35 @@ def test_anthropic_caching_read():
     assert price.total_price == snapshot(Decimal('0.0462513'))
 
 
+def test_anthropic_web_searches():
+    response = dict(
+        model='claude-3-7-sonnet-20250219',
+        usage=dict(
+            cache_creation_input_tokens=0,
+            cache_read_input_tokens=0,
+            input_tokens=100,
+            output_tokens=50,
+            server_tool_use={'web_search_requests': 2},
+            service_tier='standard',
+        ),
+    )
+
+    extracted_usage = extract_usage(response, provider_id='anthropic')
+    assert extracted_usage.usage == snapshot(
+        Usage(
+            input_tokens=100,
+            cache_write_tokens=0,
+            cache_read_tokens=0,
+            output_tokens=50,
+            web_searches=2,
+        )
+    )
+    price = extracted_usage.calc_price()
+    assert price.input_price == snapshot(Decimal('0.0003'))
+    assert price.output_price == snapshot(Decimal('0.00075'))
+    assert price.total_price == snapshot(Decimal('0.02105'))
+
+
 def test_openai_without_caching():
     response = dict(
         model='gpt-4.1-2025-04-14',
@@ -94,7 +157,14 @@ def test_openai_without_caching():
 
     extracted_usage = extract_usage(response, provider_id='openai', api_flavor='chat')
     assert extracted_usage.usage == snapshot(
-        Usage(input_tokens=131609, cache_read_tokens=0, output_tokens=610, input_audio_tokens=0, output_audio_tokens=0)
+        Usage(
+            input_tokens=131609,
+            cache_read_tokens=0,
+            output_tokens=610,
+            input_audio_tokens=0,
+            output_audio_tokens=0,
+            output_reasoning_tokens=0,
+        )
     )
     price = extracted_usage.calc_price()
     assert price.input_price == snapshot(Decimal('0.263218'))
@@ -127,6 +197,7 @@ def test_openai_caching():
             output_tokens=610,
             input_audio_tokens=0,
             output_audio_tokens=0,
+            output_reasoning_tokens=0,
         )
     )
     price = extracted_usage.calc_price()

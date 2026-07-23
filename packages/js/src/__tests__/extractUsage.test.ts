@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type { Provider } from '../types'
 
 import { data } from '../data'
-import { extractUsage } from '../index'
+import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
 
@@ -19,6 +19,10 @@ describe('extractUsage', () => {
         stop_sequence: null,
         type: 'message',
         usage: {
+          cache_creation: {
+            ephemeral_1h_input_tokens: 23,
+            ephemeral_5m_input_tokens: 100,
+          },
           cache_creation_input_tokens: 123,
           cache_read_input_tokens: 0,
           input_tokens: 504,
@@ -30,12 +34,21 @@ describe('extractUsage', () => {
       const { model, usage } = extractUsage(anthropicProvider, responseData)
 
       expect(model).toBe('claude-sonnet-4-20250514')
+      if (!model) throw new Error('Expected extracted model')
       expect(usage).toEqual({
         cache_read_tokens: 0,
+        cache_write_1h_tokens: 23,
+        cache_write_5m_tokens: 100,
         cache_write_tokens: 123,
         input_tokens: 627,
         output_tokens: 97,
       })
+
+      const price = calcPrice(usage, model, { providerId: 'anthropic' })
+      if (!price) throw new Error('Expected matched Anthropic price')
+      expect(price.input_price).toBeCloseTo(0.002025)
+      expect(price.output_price).toBeCloseTo(0.001455)
+      expect(price.total_price).toBeCloseTo(0.00348)
     })
 
     it('should extract basic usage without cache tokens', () => {
@@ -203,6 +216,41 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('Perplexity provider', () => {
+    const perplexityProvider: Provider = data.find((provider) => provider.id === 'perplexity')!
+
+    it('should add separately reported output categories to aggregate output', () => {
+      const responseData = {
+        model: 'sonar-deep-research',
+        usage: {
+          citation_tokens: 19028,
+          completion_tokens: 11395,
+          num_search_queries: 21,
+          prompt_tokens: 33,
+          reasoning_tokens: 193947,
+          total_tokens: 11428,
+        },
+      }
+
+      const { model, usage } = extractUsage(perplexityProvider, responseData)
+
+      expect(model).toBe('sonar-deep-research')
+      expect(usage).toEqual({
+        input_tokens: 33,
+        output_citation_tokens: 19028,
+        output_reasoning_tokens: 193947,
+        output_tokens: 224370,
+        web_searches: 21,
+      })
+
+      const price = calcPrice(usage, model!, { provider: perplexityProvider })
+      expect(price).not.toBeNull()
+      expect(price!.input_price).toBeCloseTo(0.000066, 12)
+      expect(price!.output_price).toBeCloseTo(0.711057, 12)
+      expect(price!.total_price).toBeCloseTo(0.816123, 12)
+    })
+  })
+
   describe('Cohere provider', () => {
     const cohereProvider: Provider = data.find((provider) => provider.id === 'cohere')!
 
@@ -259,6 +307,27 @@ describe('extractUsage', () => {
 
       expect(() => extractUsage(provider, { model: 'test-model', usage: { totals: 1 } })).toThrow(
         'Expected `usage.totals` value to be a mapping, got number'
+      )
+    })
+
+    it('should reject an invalid destination on a direct custom provider', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [{ dest: 'imaginary_tokens', path: 'tokens', required: true }],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(() => extractUsage(provider, { model: 'test-model', usage: { tokens: 1 } })).toThrow(
+        'Invalid extractor destination for test/default mapping 0: imaginary_tokens'
       )
     })
 
@@ -355,23 +424,13 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
+        input_text_tokens: 75,
         input_tokens: 100,
+        input_tool_tokens: 25,
+        output_reasoning_tokens: 144,
+        output_text_tokens: 18,
         output_tokens: 162,
       })
-    })
-
-    it('should extract tool-use prompt audio tokens', () => {
-      const responseData = {
-        modelVersion: 'gemini-2.5-flash',
-        usageMetadata: {
-          toolUsePromptTokenCount: 25,
-          toolUsePromptTokensDetails: [{ modality: 'AUDIO', tokenCount: 5 }],
-        },
-      }
-      const { model, usage } = extractUsage(googleProvider, responseData)
-
-      expect(model).toBe('gemini-2.5-flash')
-      expect(usage).toEqual({ input_audio_tokens: 5, input_tokens: 25 })
     })
 
     it('should have correct usage with caching', () => {
@@ -401,9 +460,52 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         cache_audio_read_tokens: 129,
         cache_read_tokens: 12239,
+        cache_text_read_tokens: 12110,
         input_audio_tokens: 150,
+        input_text_tokens: 14002,
         input_tokens: 14152,
+        output_reasoning_tokens: 69,
+        output_text_tokens: 50,
         output_tokens: 119,
+      })
+    })
+
+    it('should use tool-use prompt modality details for input modalities', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          candidatesTokenCount: 3,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+          promptTokenCount: 10,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+          thoughtsTokenCount: 4,
+          toolUsePromptTokenCount: 25,
+          toolUsePromptTokensDetails: [
+            { modality: 'TEXT', tokenCount: 10 },
+            { modality: 'AUDIO', tokenCount: 5 },
+            { modality: 'IMAGE', tokenCount: 7 },
+            { modality: 'DOCUMENT', tokenCount: 2 },
+            { modality: 'VIDEO', tokenCount: 3 },
+          ],
+        },
+      }
+      const { model, usage } = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_audio_tokens: 5,
+        input_audio_tool_tokens: 5,
+        input_image_tokens: 9,
+        input_image_tool_tokens: 9,
+        input_text_tokens: 20,
+        input_text_tool_tokens: 10,
+        input_tokens: 35,
+        input_tool_tokens: 25,
+        input_video_tokens: 3,
+        input_video_tool_tokens: 3,
+        output_reasoning_tokens: 4,
+        output_text_tokens: 3,
+        output_tokens: 7,
       })
     })
   })

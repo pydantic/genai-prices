@@ -9,14 +9,18 @@ from annotated_types import Gt, MaxLen
 from pydantic import (
     AfterValidator,
     BaseModel,
+    ConfigDict,
     Discriminator,
     Field,
     HttpUrl,
     PlainSerializer,
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
     Tag,
     TypeAdapter,
     ValidationInfo,
     WithJsonSchema,
+    WrapSerializer,
     field_validator,
 )
 
@@ -120,23 +124,12 @@ class Provider(_Model):
         self.models[:] = [model for model in self.models if not model.is_free()]
 
 
-UsageField = Literal[
-    'input_tokens',
-    'cache_write_tokens',
-    'cache_read_tokens',
-    'output_tokens',
-    'input_audio_tokens',
-    'cache_audio_read_tokens',
-    'output_audio_tokens',
-]
-
-
 class UsageExtractorMapping(_Model):
     """Mappings from used to build usage."""
 
     path: ExtractPath
     """Path to the value to extract"""
-    dest: UsageField
+    dest: str
     """Destination field to store the extracted value.
 
     If multiple mappings point to the same destination, the values are summed.
@@ -161,6 +154,19 @@ class UsageExtractor(_Model):
     """Mappings from used to build usage."""
 
 
+def serialize_prices(
+    value: ModelPrice | list[ConditionalPrice], _handler: SerializerFunctionWrapHandler, info: SerializationInfo
+):
+    # Serialize each union member on its own. Under the `ModelPrice | list[ConditionalPrice]` union,
+    # pydantic-core coerces whole-number `Decimal` prices to float (because `ModelPrice` has typed
+    # `extra='allow'`); dumping the concrete member directly keeps whole numbers as ints.
+    # No return annotation: WrapSerializer would otherwise adopt it as the serialization JSON schema
+    # and collapse the detailed `prices` schema to a generic object.
+    if isinstance(value, list):
+        return [cp.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none) for cp in value]
+    return value.model_dump(mode='json', by_alias=info.by_alias, exclude_none=info.exclude_none)
+
+
 class ModelInfo(_Model):
     """Information about an LLM model"""
 
@@ -176,7 +182,7 @@ class ModelInfo(_Model):
     """Maximum number of input tokens allowed for this model"""
     price_comments: DescriptionField | None = None
     """Comments about the pricing of the model, especially challenges in representing the provider's pricing model."""
-    prices: ModelPrice | list[ConditionalPrice]
+    prices: Annotated[ModelPrice | list[ConditionalPrice], WrapSerializer(serialize_prices, when_used='json')]
     """Set of prices for using this model.
 
     When multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.
@@ -193,7 +199,7 @@ class ModelInfo(_Model):
     deprecated: bool | None = None
     """Flag indicating this model is deprecated by the provider but still functional."""
     removed: bool = Field(default=False, exclude=True)
-    """Flag indicating this model has been removed and is no longer available. Excluded from data.json."""
+    """Flag indicating this model has been removed and is no longer available. Excluded from generated price data."""
 
     def is_match(self, model_id: str) -> bool:
         return self.match.is_match(model_id)
@@ -237,6 +243,10 @@ DollarPrice = Annotated[
 class ModelPrice(_Model):
     """Set of prices for using a model"""
 
+    model_config = ConfigDict(extra='allow')
+
+    __pydantic_extra__: dict[str, DollarPrice | TieredPrices] = Field(init=False)  # pyright: ignore[reportIncompatibleVariableOverride]
+
     input_mtok: DollarPrice | TieredPrices | None = None
     """price in USD per million uncached text input/prompt token"""
 
@@ -262,6 +272,9 @@ class ModelPrice(_Model):
         """Whether all values are zero or unset"""
         for field_name in self.__pydantic_fields__:
             if getattr(self, field_name):
+                return False
+        for value in (self.model_extra or {}).values():
+            if value is not None:
                 return False
         return True
 

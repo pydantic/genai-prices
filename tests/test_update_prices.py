@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import concurrent.futures
 import threading
 from decimal import Decimal
@@ -15,14 +17,19 @@ from genai_prices import (
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
+from genai_prices.units import _get_registry
+from genai_prices.update_prices import DEFAULT_UPDATE_URL
 
 pytestmark = pytest.mark.anyio
 
-PROVIDER_ARRAY_PAYLOAD = (
-    b'[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
-    b'"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
-    b'"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
-)
+
+def _provider_array(*, providers_json: str | None = None) -> bytes:
+    providers_json = providers_json or (
+        '[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
+        '"models":[{"id":"gpt-4o","match":{"equals":"gpt-4o"},'
+        '"prices":{"input_mtok":2.5,"output_mtok":10}}]}]'
+    )
+    return providers_json.encode()
 
 
 class NullUpdatePrices(UpdatePrices):
@@ -38,7 +45,7 @@ class CountingNullUpdatePrices(UpdatePrices):
         return None
 
 
-def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PROVIDER_ARRAY_PAYLOAD) -> None:
+def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = _provider_array()) -> None:
     class Response:
         def __init__(self, content: bytes) -> None:
             self.content = content
@@ -49,7 +56,7 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
         assert url in {
             'https://example.test/prices.json',
-            'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json',
+            'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json',
         }
         assert timeout is not None
         return Response(content)
@@ -57,26 +64,93 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = PR
     monkeypatch.setattr(httpx2, 'get', fake_get)
 
 
-def test_update_prices_fetch_parses_provider_array(monkeypatch: pytest.MonkeyPatch):
-    content = (
-        b'[{"id":"openai","name":"OpenAI","api_pattern":"https://api\\\\.openai\\\\.com",'
-        b'"models":[{"id":"gpt-4o-mini","match":{"equals":"gpt-4o-mini"},'
-        b'"prices":{"input_mtok":0.15,"output_mtok":0.6}}]}]'
+def test_default_update_url_points_to_v2_provider_array() -> None:
+    assert DEFAULT_UPDATE_URL == (
+        'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
     )
 
+
+def test_update_prices_fetch_preserves_registry_when_provider_parsing_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    previous = _get_registry()
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json='[{"id":"missing-required-fields"}]'))
+
+    with pytest.raises(Exception):
+        UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert _get_registry() is previous
+
+
+@pytest.mark.parametrize('content', [b'{"providers":[]}', b'null', b'"providers"', b'1'])
+def test_update_prices_fetch_rejects_non_array_payload_without_registry_change(
+    monkeypatch: pytest.MonkeyPatch, content: bytes
+) -> None:
+    previous = _get_registry()
     _mock_update_prices_get(monkeypatch, content)
+
+    with pytest.raises(ValueError, match='Expected fetched prices payload to be a provider array'):
+        UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert _get_registry() is previous
+
+
+def test_update_prices_fetch_parses_provider_array_without_registry_change(monkeypatch: pytest.MonkeyPatch) -> None:
+    bundled = _get_registry()
+    _mock_update_prices_get(monkeypatch, _provider_array())
 
     snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
 
     assert snapshot is not None
     assert snapshot.from_auto_update is True
-    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
+    provider, model = snapshot.find_provider_model('gpt-4o', None, 'openai', None)
     assert provider.id == 'openai'
-    assert model.id == 'gpt-4o-mini'
+    assert model.id == 'gpt-4o'
+    assert _get_registry() is bundled
+
+
+def test_update_prices_fetch_provider_array_rejects_invalid_extractor_without_state_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundled = _get_registry()
+    previous_snapshot = data_snapshot.DataSnapshot([], from_auto_update=False)
+    data_snapshot.set_custom_snapshot(previous_snapshot)
+    providers_json = (
+        '[{"id":"broken","name":"Broken","api_pattern":"https://broken\\\\.example",'
+        '"extractors":[{"root":"usage","mappings":['
+        '{"path":"tokens","dest":"imaginary_tokens","required":false}]}],"models":[]}]'
+    )
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
+
+    try:
+        with pytest.raises(ValueError, match='Invalid extractor destination: imaginary_tokens'):
+            UpdatePrices(url='https://example.test/prices.json').fetch()
+
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is previous_snapshot
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_model_prices(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundled = _get_registry()
+    providers_json = (
+        '[{"id":"testing","name":"Testing","api_pattern":"https://testing\\\\.example",'
+        '"models":[{"id":"unused-invalid-price","match":{"equals":"unused-invalid-price"},'
+        '"prices":{"cache_image_write_mtok":1}}]}]'
+    )
+    _mock_update_prices_get(monkeypatch, _provider_array(providers_json=providers_json))
+
+    snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+
+    assert snapshot is not None
+    _, model = snapshot.find_provider_model('unused-invalid-price', None, 'testing', None)
+    assert model.id == 'unused-invalid-price'
+    assert _get_registry() is bundled
 
 
 def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices() as update_prices:
         update_prices.wait()
@@ -90,7 +164,7 @@ def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
 
 
 def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices():
         wait_prices_updated_sync()
@@ -104,7 +178,7 @@ def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
 
 
 async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
     with UpdatePrices():
         await wait_prices_updated_async()
@@ -144,12 +218,32 @@ def test_update_prices_continues_after_interval_until_stopped():
         update_prices.stop()
 
 
-def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_update_prices_stop_preserves_bundled_registry(monkeypatch: pytest.MonkeyPatch) -> None:
+    bundled = _get_registry()
+    _mock_update_prices_get(monkeypatch, _provider_array())
+    update_prices = UpdatePrices(url='https://example.test/prices.json')
+    snapshot = update_prices.fetch()
+
+    try:
+        data_snapshot.set_custom_snapshot(snapshot)
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is snapshot
+
+        update_prices.stop()
+
+        assert _get_registry() is bundled
+        assert data_snapshot._custom_snapshot is None
+    finally:
+        data_snapshot.set_custom_snapshot(None)
+
+
+def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch: pytest.MonkeyPatch) -> None:
+    bundled = _get_registry()
     fetch_started = threading.Event()
     allow_fetch_return = threading.Event()
 
     class Response:
-        content = PROVIDER_ARRAY_PAYLOAD
+        content = _provider_array()
 
         def raise_for_status(self) -> None:
             pass
@@ -172,6 +266,8 @@ def test_update_prices_stop_clears_snapshot_after_in_flight_fetch(monkeypatch: p
             assert update_prices._stop_event.wait(timeout=5)
             allow_fetch_return.set()
             stop_future.result(timeout=5)
+
+        assert _get_registry() is bundled
         assert data_snapshot._custom_snapshot is None
     finally:
         allow_fetch_return.set()
@@ -192,20 +288,21 @@ def test_update_prices_failed():
 @pytest.mark.default_cassette('fail.yaml')
 @pytest.mark.vcr()
 def test_update_prices_failed_stop():
+    bundled = _get_registry()
     assert data_snapshot._custom_snapshot is None
     update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
     update_prices.start()
     with pytest.raises(httpx2.HTTPStatusError):
         update_prices.stop()
+    assert _get_registry() is bundled
     assert data_snapshot._custom_snapshot is None
 
 
 def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):
-    _mock_update_prices_get(monkeypatch)
+    _mock_update_prices_get(monkeypatch, _provider_array())
     with UpdatePrices():
         with pytest.raises(
             RuntimeError,
             match='UpdatePrices global task already started, only one UpdatePrices can be active at a time',
         ):
-            with UpdatePrices():
-                pass
+            UpdatePrices().start()

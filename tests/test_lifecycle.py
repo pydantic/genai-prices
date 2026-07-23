@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+from typing import Any, cast
 
+from genai_prices import data as genai_data, data_units as genai_data_units
 from genai_prices.data import providers
 
 
@@ -52,13 +56,91 @@ def test_removed_field_not_in_data_json():
             assert 'removed' not in model, f'removed field found in data.json for model {model["id"]}'
 
 
-def test_remote_payloads_remain_provider_arrays():
-    """Remote JSON payloads stay provider arrays."""
+def test_v1_remote_payloads_are_provider_arrays():
+    """Pinned v1 JSON payloads retain their original provider-array contract."""
     from prices.utils import package_dir
 
     for filename in ('data.json', 'data_slim.json'):
-        payload: list[object] = json.loads((package_dir / filename).read_bytes())
+        payload = cast(list[object], json.loads((package_dir / filename).read_bytes()))
 
         assert isinstance(payload, list)
         assert payload
         assert all(isinstance(provider, dict) for provider in payload)
+
+
+def test_v2_remote_payload_is_provider_array_with_static_unit_vocabulary():
+    """V2 publishes current providers without embedding mutable unit registry state."""
+    from prices.utils import package_dir
+
+    payload = cast(list[dict[str, Any]], json.loads((package_dir / 'data_v2.json').read_bytes()))
+    schema = cast(dict[str, Any], json.loads((package_dir / 'data_v2.schema.json').read_bytes()))
+
+    assert isinstance(payload, list)
+    assert payload
+    assert all(isinstance(provider, dict) for provider in payload)
+    assert schema['type'] == 'array'
+
+    model_price_schema = schema['$defs']['ModelPrice']
+    assert 'cache_image_write_mtok' in model_price_schema['properties']
+    extractor_destinations = schema['$defs']['UsageExtractorMapping']['properties']['dest']['enum']
+    assert 'input_image_tokens' in extractor_destinations
+
+    google = next(provider for provider in payload if provider['id'] == 'google')
+    destinations = {mapping['dest'] for extractor in google['extractors'] for mapping in extractor['mappings']}
+    assert 'input_image_tokens' in destinations
+
+
+def test_python_unit_data_is_separate_from_provider_data():
+    """Unit registry data is bundled separately from provider-heavy Python data."""
+    assert genai_data.__all__ == ('providers',)
+    assert genai_data_units.__all__ == ('unit_data',)
+    assert not hasattr(genai_data, 'unit_data')
+    assert not hasattr(genai_data_units, 'providers')
+    assert isinstance(genai_data_units.unit_data, dict)
+
+
+def test_python_unit_data_import_does_not_import_provider_data():
+    """Importing bundled unit registry data does not import the generated provider list."""
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            "import sys; import genai_prices.data_units; assert 'genai_prices.data' not in sys.modules",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_get_registry_does_not_import_provider_data():
+    """Building the active unit registry does not import the generated provider list."""
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            (
+                'import sys; '
+                'from genai_prices.units import _get_registry; '
+                '_get_registry(); '
+                "assert 'genai_prices.data' not in sys.modules"
+            ),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_generated_provider_data_import_succeeds_with_extractor_validation():
+    """Generated provider data can construct extractors while destination validation is enabled."""
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            'import genai_prices.data; assert genai_prices.data.providers',
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

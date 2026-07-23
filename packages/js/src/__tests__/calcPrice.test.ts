@@ -1,14 +1,71 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import type { ModelPrice, Usage } from '../types'
+import type { ModelPrice, TieredPrices, Usage } from '../types'
 
-import { calcPrice } from '../engine'
+import { calcPrice, collectResolvedModelPrices } from '../engine'
+import { getActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
 
 function mtok(rate: number, tokens: number): number {
   return (rate * tokens) / MILLION
 }
+
+describe('collectResolvedModelPrices', () => {
+  const registry = getActiveRegistry()
+
+  it('handles empty and ordinary model prices', () => {
+    expect(collectResolvedModelPrices({}, registry)).toEqual([])
+    expect(collectResolvedModelPrices({ input_mtok: 1, output_mtok: 2 }, registry)).toEqual([
+      { price: 1, unit: registry.getUnit('input_tokens') },
+      { price: 2, unit: registry.getUnit('output_tokens') },
+    ])
+  })
+
+  it('retains overlap and request prices', () => {
+    expect(
+      collectResolvedModelPrices(
+        {
+          cache_audio_read_mtok: 4,
+          cache_read_mtok: 2,
+          input_audio_mtok: 3,
+          input_mtok: 1,
+          requests_kcount: 0.5,
+        },
+        registry
+      )
+    ).toEqual([
+      { price: 4, unit: registry.getUnit('cache_audio_read_tokens') },
+      { price: 2, unit: registry.getUnit('cache_read_tokens') },
+      { price: 3, unit: registry.getUnit('input_audio_tokens') },
+      { price: 1, unit: registry.getUnit('input_tokens') },
+      { price: 0.5, unit: registry.getUnit('requests') },
+    ])
+  })
+
+  it('retains tiered prices and ignores undefined entries', () => {
+    const tieredPrice: TieredPrices = {
+      base: 1,
+      tiers: [{ price: 2, start: 100_000 }],
+    }
+
+    expect(collectResolvedModelPrices({ input_mtok: tieredPrice, output_mtok: undefined }, registry)).toEqual([
+      { price: tieredPrice, unit: registry.getUnit('input_tokens') },
+    ])
+  })
+
+  it('uses the explicit registry and rejects unknown keys', () => {
+    const customRegistry = new UnitRegistry({
+      widgets: {
+        dimensions: { family: 'widgets' },
+        per: 1,
+      },
+    })
+
+    expect(collectResolvedModelPrices({ widgets: 2 }, customRegistry)).toEqual([{ price: 2, unit: customRegistry.getUnit('widgets') }])
+    expect(() => collectResolvedModelPrices({ input_mtok: 1 }, customRegistry)).toThrow('Unknown price key: input_mtok')
+  })
+})
 
 describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
@@ -54,11 +111,9 @@ describe('Core Price Calculation Function', () => {
       const inputPrice = uncachedInputPrice + cacheWritePrice + cacheReadPrice
       const outputPrice = (500 * 2.0) / 1_000_000
       const totalPrice = inputPrice + outputPrice
-      expect(result).toMatchObject({
-        input_price: inputPrice,
-        output_price: outputPrice,
-        total_price: totalPrice,
-      })
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBeCloseTo(outputPrice, 12)
+      expect(result.total_price).toBeCloseTo(totalPrice, 12)
     })
 
     it('should handle audio tokens correctly', () => {
@@ -70,7 +125,9 @@ describe('Core Price Calculation Function', () => {
       }
       const modelPrice: ModelPrice = {
         input_audio_mtok: 10.0,
+        input_mtok: 1.0,
         output_audio_mtok: 20.0,
+        output_mtok: 2.0,
       }
 
       const result = calcPrice(usage, modelPrice)
@@ -113,6 +170,7 @@ describe('Core Price Calculation Function', () => {
         input_tokens: 1000,
       }
       const modelPrice: ModelPrice = {
+        cache_audio_read_mtok: 2.0,
         cache_read_mtok: 2.0,
         input_audio_mtok: 3.0,
         input_mtok: 1.0,
@@ -121,11 +179,9 @@ describe('Core Price Calculation Function', () => {
       const result = calcPrice(usage, modelPrice)
 
       const inputPrice = mtok(1.0, 400) + mtok(2.0, 400) + mtok(3.0, 200)
-      expect(result).toMatchObject({
-        input_price: inputPrice,
-        output_price: 0,
-        total_price: inputPrice,
-      })
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBe(0)
+      expect(result.total_price).toBeCloseTo(inputPrice, 12)
     })
 
     it('should use provided input tokens for output tier thresholds', () => {
@@ -171,6 +227,198 @@ describe('Core Price Calculation Function', () => {
       })
     })
 
+    it('should preserve mixed cache/audio/request public pricing parity', () => {
+      const result = calcPrice(
+        {
+          cache_audio_read_tokens: 100,
+          cache_read_tokens: 400,
+          input_audio_tokens: 300,
+          input_tokens: 1000,
+          output_audio_tokens: 20,
+          output_tokens: 70,
+        },
+        {
+          cache_audio_read_mtok: 2.0,
+          cache_read_mtok: 2.0,
+          input_audio_mtok: 3.0,
+          input_mtok: 1.0,
+          output_audio_mtok: 20.0,
+          output_mtok: 10.0,
+          requests_kcount: 0.5,
+        }
+      )
+
+      const inputPrice = mtok(1.0, 400) + mtok(2.0, 300) + mtok(3.0, 200) + mtok(2.0, 100)
+      const outputPrice = mtok(10.0, 50) + mtok(20.0, 20)
+      expect(result.input_price).toBeCloseTo(inputPrice, 12)
+      expect(result.output_price).toBeCloseTo(outputPrice, 12)
+      expect(result.total_price).toBeCloseTo(inputPrice + outputPrice + 0.0005, 12)
+    })
+
+    it('should handle request-only pricing', () => {
+      const result = calcPrice({}, { requests_kcount: 0.5 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.0005,
+      })
+    })
+
+    it('should price reported web searches only in total', () => {
+      const result = calcPrice({ web_searches: 2 }, { web_searches_kcount: 10 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.02,
+      })
+    })
+
+    it('should ignore caller-provided requests usage values', () => {
+      const result = calcPrice({ requests: 500 }, { requests_kcount: 0.5 })
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 0.0005,
+      })
+    })
+
+    it('should price custom active-registry usage from the original caller object', () => {
+      const registry = new UnitRegistry({
+        premium_widgets: {
+          dimensions: {
+            class: 'premium',
+            family: 'widgets',
+          },
+          per: 1,
+        },
+        widgets: {
+          dimensions: {
+            family: 'widgets',
+          },
+          per: 1,
+        },
+      })
+
+      const result = calcPrice(
+        {
+          ignored_telemetry_units: 999,
+          premium_widgets: 3,
+          widgets: 10,
+        },
+        {
+          premium_widgets: 10,
+          widgets: 2,
+        },
+        registry
+      )
+
+      expect(result).toMatchObject({
+        input_price: 0,
+        output_price: 0,
+        total_price: 44,
+      })
+    })
+
+    it('should read and resolve each current model price once', () => {
+      const registry = getActiveRegistry()
+      const modelPrice: ModelPrice = {}
+      let priceReads = 0
+      Object.defineProperty(modelPrice, 'input_mtok', {
+        enumerable: true,
+        get: () => {
+          priceReads++
+          return 2
+        },
+      })
+      const unitLookup = vi.spyOn(registry, 'getUnitForPriceKey')
+
+      try {
+        expect(calcPrice({ input_tokens: MILLION }, modelPrice, registry)).toEqual({
+          input_price: 2,
+          output_price: 0,
+          total_price: 2,
+        })
+        expect(priceReads).toBe(1)
+        expect(unitLookup).toHaveBeenCalledOnce()
+        expect(unitLookup).toHaveBeenCalledWith('input_mtok')
+      } finally {
+        unitLookup.mockRestore()
+      }
+    })
+
+    it('should reject missing ancestor prices before pricing', () => {
+      expect(() => calcPrice({ cache_read_tokens: 100 }, { cache_read_mtok: 0.1 })).toThrow(
+        'Missing ancestor price key input_mtok for cache_read_mtok'
+      )
+    })
+
+    it('should reject missing join prices before pricing', () => {
+      expect(() =>
+        calcPrice(
+          {
+            cache_read_tokens: 100,
+            input_audio_tokens: 100,
+            input_tokens: 200,
+          },
+          {
+            cache_read_mtok: 0.1,
+            input_audio_mtok: 10,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Missing join price key cache_audio_read_mtok for cache_read_mtok and input_audio_mtok')
+    })
+
+    it('should reject explicit-only missing usage needed for pricing', () => {
+      expect(() =>
+        calcPrice(
+          {
+            input_audio_tokens: 100,
+          },
+          {
+            input_audio_mtok: 10,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Missing usage value for input_tokens with positive reported descendant input_audio_tokens')
+    })
+
+    it('should ignore unpriced contradictory descendants when parent-only pricing is sufficient', () => {
+      const result = calcPrice(
+        {
+          cache_read_tokens: 200,
+          input_tokens: 100,
+        },
+        {
+          input_mtok: 1,
+        }
+      )
+
+      expect(result).toMatchObject({
+        input_price: 0.0001,
+        output_price: 0,
+        total_price: 0.0001,
+      })
+    })
+
+    it('should reject contradictory usage when affected priced buckets are needed', () => {
+      expect(() =>
+        calcPrice(
+          {
+            cache_read_tokens: 200,
+            input_tokens: 100,
+          },
+          {
+            cache_read_mtok: 0.1,
+            input_mtok: 1,
+          }
+        )
+      ).toThrow('Invalid usage data: cache_read_tokens (200) cannot exceed input_tokens (100)')
+    })
+
     it('should handle tiered pricing with threshold model', () => {
       const usage: Usage = {
         input_tokens: 150000, // 150k tokens
@@ -199,6 +447,12 @@ describe('Core Price Calculation Function', () => {
     })
 
     it.each([
+      {
+        expected: { input_price: 0, output_price: 0, total_price: 0 },
+        modelPrice: {} as ModelPrice,
+        name: 'absent prices',
+        usage: { input_tokens: 1000, output_tokens: 500 } as Usage,
+      },
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
         modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,

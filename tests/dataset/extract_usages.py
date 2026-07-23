@@ -117,9 +117,10 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
         except LookupError:
             pass
         else:
-            assert price.input_price + price.output_price == price.total_price
             extractor_dict['input_price'] = str(price.input_price)
             extractor_dict['output_price'] = str(price.output_price)
+            if price.total_price != price.input_price + price.output_price:
+                extractor_dict['total_price'] = str(price.total_price)
     for other in this_result['extracted']:
         if case.usage_dict == other['usage']:
             other['extractors'].append(extractor_dict)
@@ -147,7 +148,7 @@ def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider:
         extracted = extract_usage(body, provider_id=provider.id, api_flavor=flavor)
         assert extracted.model and extracted.model.is_match(model_ref)
         assert usage == extracted.usage
-    usage_dict = {k: v for k, v in dataclasses.asdict(usage).items() if v}
+    usage_dict = {k: v for k, v in usage.__dict__.items() if v}
     return Case(provider.id, flavor, model_ref, usage_dict)
 
 

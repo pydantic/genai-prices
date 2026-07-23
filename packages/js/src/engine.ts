@@ -1,4 +1,35 @@
-import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
+import { computeLeafValues } from './decompose'
+import {
+  MatchLogic,
+  ModelInfo,
+  ModelPrice,
+  ModelPriceCalculationResult,
+  Provider,
+  ProviderFindOptions,
+  TieredPrices,
+  UnitDef,
+  Usage,
+} from './types'
+import { getActiveRegistry, UnitRegistry } from './units'
+import { getUsageValue } from './usage'
+import { validatePricedUnits } from './validation'
+
+export type ResolvedPrice = Readonly<{
+  price: number | TieredPrices
+  unit: UnitDef
+}>
+
+export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: UnitRegistry): ResolvedPrice[] {
+  const resolvedPrices: ResolvedPrice[] = []
+  for (const [priceKey, price] of Object.entries(modelPrice)) {
+    if (price === undefined) continue
+
+    const unit = registry.getUnitForPriceKey(priceKey)
+    if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
+    resolvedPrices.push({ price, unit })
+  }
+  return resolvedPrices
+}
 
 /**
  * Calculate price using threshold-based (cliff) pricing model.
@@ -30,90 +61,55 @@ function calcTieredPrice(tiered: TieredPrices, tokens: number, totalInputTokens:
   return (applicablePrice * tokens) / 1_000_000
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function calcMtokPrice(
-  price: number | TieredPrices | undefined,
-  tokens: number | undefined,
-  _field: string,
-  totalInputTokens: number
-): number {
-  if (price === undefined || tokens === undefined) return 0
+function calcUnitPrice(price: number | TieredPrices | undefined, count: number | undefined, totalInputTokens: number, per: number): number {
+  if (price === undefined || count === undefined) return 0
   if (typeof price === 'number') {
-    return (price * tokens) / 1_000_000
+    return (price * count) / per
   }
-  return calcTieredPrice(price, tokens, totalInputTokens)
+  return (calcTieredPrice(price, count, totalInputTokens) * 1_000_000) / per
 }
 
-export function calcPrice(usage: Usage, modelPrice: ModelPrice): ModelPriceCalculationResult {
+export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRegistry = getActiveRegistry()): ModelPriceCalculationResult {
+  const resolvedPrices = collectResolvedModelPrices(modelPrice, registry)
+  validatePricedUnits(
+    resolvedPrices.map(({ unit }) => unit),
+    registry
+  )
+
   let inputPrice = 0
   let outputPrice = 0
+  let totalOnlyPrice = 0
 
-  // Calculate total input tokens for tier determination
-  const totalInputTokens = usage.input_tokens ?? 0
-
-  const cacheReadTokens = usage.cache_read_tokens ?? 0
-  const cacheWriteTokens = usage.cache_write_tokens ?? 0
-  const cacheAudioReadTokens = usage.cache_audio_read_tokens ?? 0
-  const inputAudioTokens = usage.input_audio_tokens ?? 0
-  const outputAudioTokens = usage.output_audio_tokens ?? 0
-
-  const pricedCacheAudioReadTokens = modelPrice.cache_audio_read_mtok === undefined ? 0 : cacheAudioReadTokens
-  const cacheAudioReadTokensPricedAsCacheRead =
-    modelPrice.cache_audio_read_mtok === undefined && modelPrice.cache_read_mtok !== undefined ? cacheAudioReadTokens : 0
-
-  let pricedAudioInputTokens = 0
-  if (modelPrice.input_audio_mtok !== undefined) {
-    pricedAudioInputTokens = inputAudioTokens - pricedCacheAudioReadTokens - cacheAudioReadTokensPricedAsCacheRead
-  }
-  if (pricedAudioInputTokens < 0) {
-    throw new Error('cache_audio_read_tokens cannot be greater than input_audio_tokens')
+  const hasTieredPrice = resolvedPrices.some(({ price }) => isTieredPrice(price))
+  const totalInputTokens = hasTieredPrice ? getUsageValue(usage, 'input_tokens', registry) : 0
+  const pricedUsageKeys = new Set(resolvedPrices.filter(({ unit }) => unit.usageKey !== 'requests').map(({ unit }) => unit.usageKey))
+  const leafValues = computeLeafValues(pricedUsageKeys, usage, registry)
+  if (resolvedPrices.some(({ unit }) => unit.usageKey === 'requests')) {
+    leafValues.requests = 1
   }
 
-  let pricedCacheReadTokens = 0
-  if (modelPrice.cache_read_mtok !== undefined) {
-    pricedCacheReadTokens = cacheReadTokens - pricedCacheAudioReadTokens
-  }
-  if (pricedCacheReadTokens < 0) {
-    throw new Error('cache_audio_read_tokens cannot be greater than cache_read_tokens')
-  }
-
-  const pricedCacheWriteTokens = modelPrice.cache_write_mtok === undefined ? 0 : cacheWriteTokens
-
-  let pricedTextInputTokens = 0
-  if (modelPrice.input_mtok !== undefined) {
-    pricedTextInputTokens =
-      totalInputTokens - pricedCacheReadTokens - pricedCacheWriteTokens - pricedAudioInputTokens - pricedCacheAudioReadTokens
-  }
-  if (pricedTextInputTokens < 0) {
-    throw new Error('Uncached text input tokens cannot be negative')
+  for (const { price, unit } of resolvedPrices) {
+    const unitPrice = calcUnitPrice(price, leafValues[unit.usageKey] ?? 0, totalInputTokens, unit.per)
+    if (unit.dimensions.direction === 'input') {
+      inputPrice += unitPrice
+    } else if (unit.dimensions.direction === 'output') {
+      outputPrice += unitPrice
+    } else {
+      totalOnlyPrice += unitPrice
+    }
   }
 
-  inputPrice += calcMtokPrice(modelPrice.input_mtok, pricedTextInputTokens, 'input_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_read_mtok, pricedCacheReadTokens, 'cache_read_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_write_mtok, pricedCacheWriteTokens, 'cache_write_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.input_audio_mtok, pricedAudioInputTokens, 'input_audio_mtok', totalInputTokens)
-  inputPrice += calcMtokPrice(modelPrice.cache_audio_read_mtok, pricedCacheAudioReadTokens, 'cache_audio_read_mtok', totalInputTokens)
-
-  let pricedTextOutputTokens = 0
-  if (modelPrice.output_mtok !== undefined) {
-    pricedTextOutputTokens = (usage.output_tokens ?? 0) - (modelPrice.output_audio_mtok === undefined ? 0 : outputAudioTokens)
-  }
-  if (pricedTextOutputTokens < 0) {
-    throw new Error('output_audio_tokens cannot be greater than output_tokens')
-  }
-  outputPrice += calcMtokPrice(modelPrice.output_mtok, pricedTextOutputTokens, 'output_mtok', totalInputTokens)
-  outputPrice += calcMtokPrice(modelPrice.output_audio_mtok, usage.output_audio_tokens, 'output_audio_mtok', totalInputTokens)
-
-  let totalPrice = inputPrice + outputPrice
-  if (modelPrice.requests_kcount !== undefined) {
-    totalPrice += modelPrice.requests_kcount / 1000
-  }
+  const totalPrice = inputPrice + outputPrice + totalOnlyPrice
 
   return {
     input_price: inputPrice,
     output_price: outputPrice,
     total_price: totalPrice,
   }
+}
+
+function isTieredPrice(price: number | TieredPrices | undefined): price is TieredPrices {
+  return typeof price === 'object'
 }
 
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {

@@ -10,8 +10,9 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { validateExtractorDestinations } from './validation'
 
-export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
+export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json'
 
 let providerData: Provider[] = embeddedData
 let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
@@ -22,18 +23,34 @@ function setProviderData(data: ProviderDataPayload) {
   if (data === null) {
     return
   }
-  if ('then' in data) {
-    providerDataPromise = data
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    data.then((data) => {
-      if (data !== null) {
-        providerData = data
-      }
-    })
+  if (typeof data === 'object' && 'then' in data) {
+    const updatePromise = data
+      .then((data) => {
+        if (data === null) {
+          return providerData
+        }
+        return activateProviderData(data)
+      })
+      .catch((error: unknown) => {
+        if (providerDataPromise === updatePromise) {
+          providerDataPromise = Promise.resolve(providerData)
+        }
+        throw error
+      })
+    providerDataPromise = updatePromise
   } else {
-    providerDataPromise = Promise.resolve(data)
-    providerData = data
+    providerDataPromise = Promise.resolve(activateProviderData(data))
   }
+}
+
+function activateProviderData(data: Provider[]): Provider[] {
+  if (!Array.isArray(data)) {
+    throw new Error('Expected null or Provider[]')
+  }
+
+  validateExtractorDestinations(data)
+  providerData = data
+  return data
 }
 
 function onCalc(cb: () => void) {

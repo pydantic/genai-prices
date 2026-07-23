@@ -1,10 +1,13 @@
 # Pricing data for `genai-prices`
 
-## DO NOT MOVE `data.json` OR `data_slim.json`!
+## Pinned v1 compatibility artifacts
 
-Or associated `.schema.json` files.
+The four v1 files — `data.json`, `data.schema.json`, `data_slim.json`, and `data_slim.schema.json` — are pinned
+compatibility artifacts. Do not move, edit, or regenerate them; existing consumers may depend on both their URLs and
+their frozen content.
 
-These files are downloaded by packages to auto-update prices, so their URLs must not change.
+Current builds generate `data_v2.json`, `data_v2.schema.json`, and the Python and JavaScript package data. The v2 data
+is the provider array consumed by packages that bundle their own static unit registry.
 
 ## Contributing
 
@@ -22,11 +25,12 @@ When you edit the prices of a model, remember to:
 - if relevant, add or update `price_comments` on the provider or model explaining the change and providing a link as a reference,
   if those fields don't make sense, you can also add a comment next to your change
 - have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
-  which will update the `data*.json` files when prices change. You can also run `make build` to update these files manually.
+  which will update the v2 and package data when prices change. You can also run `make build` to update these files manually.
 
 Please do not:
 
-- edit any JSON file directly - they're all built with `make build` and are compact by design
+- edit generated JSON files directly — edit the provider YAML and use `make build` instead
+- modify the four pinned v1 compatibility artifacts
 - add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
 - try to change the schema of providers or models without creating an issue to discuss the changes first
 - add new providers without creating an issue to discuss the changes first, adding models is fine

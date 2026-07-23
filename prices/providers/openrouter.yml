@@ -25,6 +25,9 @@ extractors:
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
         required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
 
@@ -627,7 +630,6 @@ models:
       equals: bytedance/ui-tars-1.5-7b
     prices:
       input_mtok: 0.1
-      cache_read_mtok: 0.1
       output_mtok: 0.2
 
   - id: caller-large
@@ -1919,7 +1921,6 @@ models:
       equals: ibm-granite/granite-4.1-8b
     prices:
       input_mtok: 0.05
-      cache_read_mtok: 0.05
       output_mtok: 0.1
 
   - id: inception/mercury-2
@@ -2561,7 +2562,6 @@ models:
       equals: microsoft/phi-4-mini-instruct
     prices:
       input_mtok: 0.08
-      cache_read_mtok: 0.08
       output_mtok: 0.35
 
   - id: microsoft/phi-4-multimodal-instruct
@@ -4015,6 +4015,7 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 8
+      output_reasoning_mtok: 3
 
   - id: perplexity/sonar-pro
     match:
@@ -4379,7 +4380,6 @@ models:
       equals: qwen/qwen3-235b-a22b-thinking-2507
     prices:
       input_mtok: 0.1
-      cache_read_mtok: 0.1
       output_mtok: 0.1
 
   - id: qwen/qwen3-30b-a3b
@@ -4404,7 +4404,6 @@ models:
       equals: qwen/qwen3-30b-a3b-thinking-2507
     prices:
       input_mtok: 0.08
-      cache_read_mtok: 0.08
       output_mtok: 0.4
 
   - id: qwen/qwen3-32b

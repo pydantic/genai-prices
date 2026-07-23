@@ -1,5 +1,7 @@
 import { matchLogic } from './engine'
 import { ArrayMatch, ExtractPath, Provider, Usage } from './types'
+import { normalizeUsage } from './usage'
+import { validateExtractorDestinations } from './validation'
 
 interface ExtractedUsage {
   model: null | string
@@ -12,6 +14,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
   if (!provider.extractors) {
     throw new Error('No extraction logic defined for this provider')
   }
+  validateExtractorDestinations([provider])
 
   const extractor = provider.extractors.find((e) => e.api_flavor === apiFlavor)
   if (!extractor) {
@@ -42,7 +45,7 @@ export function extractUsage(provider: Provider, responseData: unknown, apiFlavo
     throw new Error(`No usage information found at ${JSON.stringify(extractor.root)}`)
   }
 
-  return { model, usage }
+  return { model, usage: normalizeUsage(usage) }
 }
 
 function extractPath<T>(path: ExtractPath, data: unknown, typeCheck: TypeCheck<T>, required: true, dataPath: (ArrayMatch | string)[]): T

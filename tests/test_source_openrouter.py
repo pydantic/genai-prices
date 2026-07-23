@@ -58,3 +58,27 @@ def test_native_provider_model_info_uses_native_model_id(model_id: str, native_m
     assert model_info.id == native_model_id
     assert model_info.match == ClauseEquals(equals=native_model_id)
     assert model_info.description == 'Test description'
+
+
+@pytest.mark.parametrize(
+    ('reasoning_per_token', 'expected_reasoning_mtok'),
+    [
+        (Decimal('0.000003'), Decimal('3')),
+        (Decimal('0.000002'), None),
+        (None, None),
+    ],
+)
+def test_openrouter_model_price_preserves_only_distinct_reasoning_rate(
+    reasoning_per_token: Decimal | None,
+    expected_reasoning_mtok: Decimal | None,
+):
+    price = OpenRouterPricing(
+        prompt=Decimal('0.000001'),
+        completion=Decimal('0.000002'),
+        internal_reasoning=reasoning_per_token,
+    ).model_price()
+
+    expected = {'input_mtok': Decimal('1'), 'output_mtok': Decimal('2')}
+    if expected_reasoning_mtok is not None:
+        expected['output_reasoning_mtok'] = expected_reasoning_mtok
+    assert price.model_dump(exclude_none=True) == expected
