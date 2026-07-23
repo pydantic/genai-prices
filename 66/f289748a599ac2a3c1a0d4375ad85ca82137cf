@@ -1,0 +1,14 @@
+packages/python/genai_prices/types.py
+  h_d9dd17644dded9 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "66f289748a599ac2a3c1a0d4375ad85ca82137cf",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
