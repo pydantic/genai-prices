@@ -1,0 +1,28 @@
+packages/python/genai_prices/types.py
+  s_ab6e77f33b432a::t_0a82e11bfad541 276
+  s_ab6e77f33b432a::t_1f0cc534ea444e 253
+  h_d9dd17644dded9 9
+  s_ab6e77f33b432a::t_52e6e1e5c8b912 247
+  s_ab6e77f33b432a::t_900f48cfe06ab5 262
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "7072ff42d99ce2b0cc08fa9fb3bd3bcedb290714",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_ab6e77f33b432a": {
+      "agent_id": {
+        "tool": "github-copilot-jetbrains",
+        "id": "1784800848985",
+        "model": "unknown"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
