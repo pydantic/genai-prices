@@ -18,20 +18,23 @@ Registry structure, price ancestor coverage, price join coverage, and extractor 
 **Units are data, not handwritten runtime fields.**
 A repo-defined unit is declared once and propagated to Python, JavaScript, authoring schemas, validation, extraction, pricing, and display without copying ordinary unit names into each handwritten module.
 
+**The runtime compatibility surface is deliberately minimal.**
+Installed packages expose and carry only metadata required to identify units, read usage, validate selected prices, decompose counts, and calculate costs. Build-time convenience does not justify adding fields to generated runtime data or runtime types: even nominally internal fields can constrain future representation changes once shipped.
+
 **The registry is a usage-keyed dimension graph.** _(from "Units are data, not handwritten runtime fields")_
 Each unit has a usage key, a price key, a normalization factor, and dimensions including a required `family` value. `price_key` defaults to the usage key. Dimension containment defines ancestors; compatible dimension unions define joins and overlap.
 
 **Dimension axes remain unit-local and general.** _(from "The registry is a usage-keyed dimension graph")_
 Unit dimension mappings are the only declaration of dimension keys and values; there is no separate allowed-dimension schema. Families may represent tokens, requests, characters, duration, tool calls, or future reported quantities that use `usage * price / normalization`, provided their actual unit graph satisfies the shared structural rules.
 
-**Conditional dimensions preserve meaningful compatibility.** _(from "Dimension axes remain unit-local and general", "Validation exists to protect pricing semantics")_
-A unit may declare `dimension_requirements`, mapping one of its dimension keys to assignments that must accompany that dimension. Requirements constrain compatibility and structural closure without becoming dimensions themselves. They allow a subtype-specific axis to remain data-driven without falsely making it orthogonal to every sibling category. Every unit carrying the conditional dimension repeats the same requirement so its semantics travel with that unit's raw data.
+**Build validation may use replaceable metadata for conditional dimensions.** _(from "Dimension axes remain unit-local and general", "Validation exists to protect pricing semantics", "The runtime compatibility surface is deliberately minimal")_
+The source registry must give publication validation enough information to recognize subtype-specific axes. In particular, a candidate dimension set containing `cache_ttl` is structurally meaningful only with `token_type: cache_write`. The exact source representation and validation technique are build implementation details: `dimension_requirements` is an acceptable current mechanism, but the build may replace it with another approach without changing generated runtime data or package compatibility.
 
 **Built-in token categories are mutually exclusive.** _(from "Dimension axes remain unit-local and general", "Every priced usage value lands in exactly one bucket")_
 The built-in token family uses `token_type` for mutually exclusive commercial categories including cache reads, cache writes, tool-use input, reasoning output, and citation output. Direction and modality remain independent dimensions. Cache writes additionally use `cache_ttl` for provider-reported write duration; `cache_ttl` requires `token_type: cache_write`, so cache durations do not intersect cache reads or tool-use input. Units declare only the directions in which a category is meaningful, so the registry does not require input reasoning or output tool-use counterparts. Omitting `token_type` is the catch-all for tokens not assigned to a more specific priced category.
 
 **Registry construction promotes raw data into immutable indexes.** _(from "The registry is a usage-keyed dimension graph")_
-`UnitRegistry` turns raw unit dictionaries into `UnitDef` objects and indexes usage keys, price keys, dimension sets, ancestors, joins, reported keys, and registry order. Runtime code derives behavior from those indexes rather than generated code fields.
+`UnitRegistry` turns the runtime projection of unit data into `UnitDef` objects and indexes usage keys, price keys, dimension sets, ancestors, joins, reported keys, and registry order. Runtime code derives behavior from those indexes rather than generated code fields or build-only validation metadata.
 
 **Registry identities and normalization are safe and unambiguous.** _(from "Validation exists to protect pricing semantics", "Registry construction promotes raw data into immutable indexes")_
 Usage keys, price keys, and full dimension sets are globally unique. Public keys match `[A-Za-z][A-Za-z0-9_]*`, are neither Python nor JavaScript keywords, and are not any of the exact prototype hazards `__proto__`, `prototype`, or `constructor`. Every unit in one `family` dimension value uses the same normalization factor.
@@ -86,8 +89,8 @@ Custom `ModelPrice` subclasses may inspect their own state and the original usag
 **Provider data changes stay limited to pricing requirements.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing", "Price data must be complete while usage data may be incomplete")_
 Registry work does not rename or restructure provider YAML for its own sake. Provider-data changes repair real completeness or accuracy gaps, including an explicit repeated price when ancestor or join coverage requires one.
 
-**Generated outputs contain data, not runtime state.** _(from "Units are data, not handwritten runtime fields")_
-Generated provider modules, unit modules, JSON artifacts, and schemas may contain raw provider, unit, and price data. They do not contain validation markers, trust flags, fingerprints, cached plans, or generated pricing behavior.
+**Generated runtime outputs contain only runtime-semantic data.** _(from "Units are data, not handwritten runtime fields", "The runtime compatibility surface is deliberately minimal")_
+Generated package unit modules contain only usage identity, price identity, normalization, and dimensions. They omit `dimension_requirements` and any future source-only closure hints, authoring annotations, validation markers, trust flags, fingerprints, or build intermediates. Generated provider modules and runtime JSON artifacts likewise contain provider and price data needed by installed packages, not generated pricing behavior or build-validation machinery. Build-side schemas and diagnostics may retain richer metadata because they are replaceable authoring infrastructure rather than installed runtime contracts.
 
 **Remote contracts are versioned instead of repurposed.**
 Every package version keeps fetching a payload shape and unit vocabulary it understands. A new contract uses a new URL rather than changing the artifact consumed by already released auto-updaters.
