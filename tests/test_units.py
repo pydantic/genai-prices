@@ -1173,7 +1173,8 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
         'transient_tokens': {
             'per': 1_000_000,
             'price_key': 'transient_mtok',
-            'dimensions': {'family': 'transient'},
+            'dimensions': {'family': 'transient', 'tier': 'fast'},
+            'dimension_requirements': {'tier': {'family': 'transient'}},
         },
     }
     provider = _build_provider_prices(
@@ -1203,7 +1204,13 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     assert (py_package_dir / 'data.py').exists()
     unit_data_content = (py_package_dir / 'data_units.py').read_text()
     generated_units = ast.literal_eval(unit_data_content.split('unit_data: dict[str, Any] = ', 1)[1])
-    assert generated_units == units
+    assert generated_units == {
+        'transient_tokens': {
+            'per': 1_000_000,
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient', 'tier': 'fast'},
+        }
+    }
 
 
 def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
@@ -1266,6 +1273,7 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
             'per': 1_000_000,
             'price_key': 'input_mtok',
             'dimensions': {'family': 'tokens', 'direction': 'input'},
+            'dimension_requirements': {'direction': {'family': 'tokens'}},
         },
     }
     provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
@@ -1298,7 +1306,13 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     assert (js_src_dir / 'data.ts').exists()
     unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
     generated_json = unit_data_content.split('export const unitData: RawUnitsDict = ', 1)[1].removesuffix(';\n')
-    assert json.loads(generated_json) == units
+    assert json.loads(generated_json) == {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        }
+    }
 
 
 def test_build_model_price_accepts_typed_extra_price_keys() -> None:
