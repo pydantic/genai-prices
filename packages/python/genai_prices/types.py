@@ -6,7 +6,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
-from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
+from typing import TYPE_CHECKING, Annotated, Any, Literal, Self, TypeGuard, TypeVar, cast, overload
 
 import pydantic
 from typing_extensions import TypedDict
@@ -244,13 +244,13 @@ class Usage:
     def reported_value(self, usage_key: str) -> int:
         return self._reported_values().get(usage_key, 0)
 
-    def __add__(self, other: Usage | Any) -> Usage:
+    def __add__(self, other: Usage | Any) -> Self:
         if not isinstance(other, Usage):
             return NotImplemented
 
         self_values = self._reported_values()
         other_values = other._reported_values()
-        return Usage(
+        return type(self)(
             **{
                 key: self_values.get(key, 0) + other_values.get(key, 0)
                 for key in self_values.keys() | other_values.keys()
@@ -259,6 +259,7 @@ class Usage:
 
     def __radd__(self, other: Usage | int) -> Usage:
         if other == 0:
+            # Allow this to work with sum()
             return self
         if isinstance(other, Usage):
             return other + self
@@ -272,7 +273,7 @@ class Usage:
 
     def __repr__(self) -> str:
         values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
-        return f'Usage({values})'
+        return f'{type(self).__name__}({values})'
 
     def _ordered_values(self) -> list[tuple[str, int]]:
         values = self._reported_values()
