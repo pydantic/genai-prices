@@ -21,6 +21,9 @@ A repo-defined unit is declared once and propagated to Python, JavaScript, autho
 **The runtime compatibility surface is deliberately minimal.**
 Installed packages expose and carry only metadata required to identify units, read usage, validate selected prices, decompose counts, and calculate costs. Build-time convenience does not justify adding fields to generated runtime data or runtime types: even nominally internal fields can constrain future representation changes once shipped.
 
+**Backward compatibility is preserved unless it conflicts with accurate registry pricing.**
+Existing calculation APIs, price and usage attributes, provider/model lookup, custom snapshots, Python custom pricing overrides, JavaScript plain objects, tiered prices, and request pricing remain supported. Fixed-field introspection and incomplete overlap fallbacks are not promises when they conflict with data-driven units or complete pricing.
+
 **The registry is a usage-keyed dimension graph.** _(from "Units are data, not handwritten runtime fields")_
 Each unit has a usage key, a price key, a normalization factor, and dimensions including a required `family` value. `price_key` defaults to the usage key. Dimension containment defines ancestors; compatible dimension unions define joins and overlap.
 
@@ -54,7 +57,7 @@ When an endpoint defines an aggregate count as entirely one modality, the ancest
 Pricing a specific unit requires its registered ancestors. Pricing compatible incomparable units requires their registered intersection. Registry interval closure and join-closedness ensure the graph contains the structural units needed for these price rules.
 
 **Structural closure has exact data-level definitions.** _(from "Ancestor and join coverage are required")_
-For interval closure, if `A` is an ancestor of `B`, every valid dimension set made by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` exists as a unit. A candidate set is valid only when it satisfies `B`'s applicable dimension requirements. For join-closedness, two units are compatible only when their dimension union has no conflicting assignments and satisfies both units' applicable dimension requirements; the union of every compatible pair exists as a unit.
+For interval closure, if `A` is an ancestor of `B`, every valid dimension set made by adding a non-empty proper subset of `B.dimensions - A.dimensions` to `A.dimensions` exists as a unit. Build validation decides validity using the applicable conditional-dimension rule. For join-closedness, two units are compatible only when their dimension union has no conflicting assignments and satisfies the applicable conditional-dimension rules; the union of every compatible pair exists as a unit.
 
 **Registry closure preserves future and custom pricing expressiveness.** _(from "Structural closure has exact data-level definitions", "Backward compatibility is preserved unless it conflicts with accurate registry pricing")_
 Closure applies to registered units even when checked-in provider data does not currently price every unit. Every registered unit exposes a price key that publisher updates and standard custom `ModelPrice` instances may use. A registry that omitted a compatible intersection would advertise price keys that could not be priced together under standard decomposition because no join price key would exist. Publication therefore validates the complete registered graph, while selected-model validation separately requires prices for the ancestors and joins used by that model. Unpriced units do not become calculation buckets, so structural units that a selected model does not price do not add decomposition work.
@@ -79,9 +82,6 @@ Usage key `web_searches`, price key `web_searches_kcount`, `family: tool_calls`,
 
 **Tiered pricing behavior is preserved.** _(from "Correct pricing semantics beat algorithmic convenience")_
 Existing threshold-based `TieredPrices` semantics remain unchanged. A selected tiered price reads `input_tokens` through the same explicit-only usage rules.
-
-**Backward compatibility is preserved unless it conflicts with accurate registry pricing.**
-Existing calculation APIs, price and usage attributes, provider/model lookup, custom snapshots, Python custom pricing overrides, JavaScript plain objects, tiered prices, and request pricing remain supported. Fixed-field introspection and incomplete overlap fallbacks are not promises when they conflict with data-driven units or complete pricing.
 
 **Manual custom Python pricing remains supported.** _(from "Backward compatibility is preserved unless it conflicts with accurate registry pricing")_
 Custom `ModelPrice` subclasses may inspect their own state and the original usage object. Standard registry pricing considers registered price fields without consuming unrelated custom fields.
@@ -110,5 +110,5 @@ Phase 1 supports repo-defined bundled units and Phase 2 supports publisher-defin
 **Validation and decomposition caches remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data")_
 Phase 1 removes repeated scans and allocations without cache lifecycle state. More elaborate validation or decomposition caches require a separate specification; they are not an active numbered phase.
 
-**Phase-local prose and code specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
-The root spec defines shared invariants and delivery boundaries. Each numbered phase's `spec.md` defines behavior, and its `code-spec.md` defines the corresponding architecture. Later requirements do not expand an earlier phase's release scope.
+**Phase prose specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+The root spec defines shared invariants and delivery boundaries, while each numbered phase's `spec.md` contains that phase's complete requirements. A phase's `code-spec.md` is supporting implementation detail: it traces details to prose requirements but cannot introduce a requirement or expand release scope. Later requirements likewise do not expand an earlier phase's release scope.

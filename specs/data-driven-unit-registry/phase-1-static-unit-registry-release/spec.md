@@ -1,7 +1,7 @@
 # Phase 1: Static Unit Registry Release
 
-**Phase 1 implementation follows the linked code-level architecture.**
-Code-level architecture is in [code-spec](code-spec.md).
+**Phase 1 implementation details are documented separately.**
+This prose spec contains the complete Phase 1 requirements. The linked [code spec](code-spec.md) is supporting architecture detail and traceability; it cannot introduce requirements or expand this scope.
 
 **Phase 1 preserves the shared registry and pricing invariants.**
 The [root specification](../spec.md) remains authoritative for exact unit identity and normalization rules, dimension containment and closure, explicit-only usage, complete price coverage, decomposition, cost aggregation, request and tiered-price exceptions, compatibility, and generated-output purity. Phase 1 changes delivery and runtime lifecycle boundaries without weakening those semantics.
@@ -10,8 +10,18 @@ The [root specification](../spec.md) remains authoritative for exact unit identi
 It delivers meaningful pricing improvements without requiring runtime-updated unit definitions, cache machinery, or a breaking change to the existing auto-update artifact.
 
 **Pricing accuracy is the Phase 1 product outcome.**
-Repo-defined units, including image, tool-use, reasoning, citation, cache-write TTL, and other modality-specific token units, must work end to end in Python and JavaScript. Mutually exclusive cache, tool-use, reasoning, and citation categories share a `token_type` dimension, while modality remains independent. `cache_ttl` is conditional on `token_type: cache_write`; unit-local dimension requirements prevent false joins with sibling token categories. The built-in token graph includes each supported aggregate category plus its text, audio, image, and video intersections. The release includes the pricing-data corrections required by complete ancestor and overlap pricing, including distinct reasoning, citation, and cache-write TTL rates when a provider publishes them.
+Phase 1 must improve pricing accuracy for the usage information and provider rates available to installed packages.
+
+**Repo-defined pricing categories work end to end.** _(from "Pricing accuracy is the Phase 1 product outcome")_
+Image, tool-use, reasoning, citation, cache-write TTL, and other modality-specific token units work in Python and JavaScript. Mutually exclusive cache, tool-use, reasoning, and citation categories share a `token_type` dimension, while modality remains independent. The built-in token graph includes each supported aggregate category plus its text, audio, image, and video intersections. The release includes the pricing-data corrections required by complete ancestor and overlap pricing, including distinct reasoning, citation, and cache-write TTL rates when a provider publishes them.
+
+**Cache TTL remains conditional on cache writes.** _(from "Repo-defined pricing categories work end to end")_
+Publication validation treats a candidate dimension set containing `cache_ttl` as structurally valid only when it also contains `token_type: cache_write`. This is a structural rule, not a commitment to any particular source metadata representation.
+
+**Partial provider breakdowns remain explicit.** _(from "Pricing accuracy is the Phase 1 product outcome")_
 For provider usage with a partial modality breakdown, the ancestor price represents the documented omitted/default remainder and reported non-default modalities use explicit child prices; extraction does not fabricate missing modality counts.
+
+**Commercial rates do not assign a reported modality.** _(from "Pricing accuracy is the Phase 1 product outcome")_
 The rate used to bill a reported reasoning count does not by itself assign that count a modality; reasoning/modality intersections require provider-reported semantics.
 
 **Phase 1 must avoid an unreasonable pricing hot-path regression.**
@@ -32,8 +42,8 @@ Custom `ModelPrice` subclasses may override `calc_price()` and inspect custom fi
 **The Phase 1 registry is static for the lifetime of the installed package.** _(from "Phase 1 must be independently shippable and releasable", "Units are repo-defined data used by handwritten runtime code")_
 Each runtime constructs one bundled `UnitRegistry` from `data_units.py` or `dataUnits.ts`. Provider updates and custom provider snapshots do not replace, mutate, reset, or carry a second registry. Supporting remotely updated unit definitions is Phase 2.
 
-**Generated runtime units expose the smallest sufficient shape.** _(from "Units are repo-defined data used by handwritten runtime code", "The Phase 1 registry is static for the lifetime of the installed package")_
-Each generated unit contains only its usage key, price key, normalization factor, and dimensions. Source-only mechanisms used to validate conditional dimensions or closure, including the current `dimension_requirements` representation, are stripped before package generation and do not become Python or JavaScript `UnitDef` fields. This boundary is intentional compatibility protection: the build-side representation may evolve freely while the installed runtime shape changes only when calculation semantics require it.
+**Generated runtime units expose the smallest sufficient shape.** _(from "Phase 1 preserves supported consumer behavior unless accurate registry pricing makes that impossible", "Units are repo-defined data used by handwritten runtime code")_
+Generated unit data is a usage-keyed mapping. Each record contains its normalization factor, dimensions, and `price_key` only when price identity differs from the usage key; the resolved `UnitDef` materializes both identities. Source-only mechanisms used to validate conditional dimensions or closure, including the current `dimension_requirements` representation, are stripped before package generation and do not become Python or JavaScript `UnitDef` fields. This boundary is intentional compatibility protection: the build-side representation may evolve freely while the installed runtime shape changes only when calculation semantics require it.
 
 **`UnitRegistry` is immutable indexed metadata after construction.** _(from "The Phase 1 registry is static for the lifetime of the installed package")_
 Construction promotes raw units into `UnitDef` objects and precomputes indexes for usage keys, price keys, dimension sets, ancestors, joins, all public keys, externally reported usage keys, and their registry order. Runtime code reads those indexes but does not mutate the registry or rebuild derived key collections on ordinary usage and pricing operations.
@@ -105,7 +115,7 @@ New Python and JavaScript packages fetch provider arrays from the v2 URL and act
 Ordinary provider, model, and price-value updates may continue within the unit and extractor vocabulary understood by Phase 1 packages. New unit definitions, price keys, or extractor destination keys wait for the versioned Phase 2 payload rather than appearing later at the v2 URL and breaking an already released v2 parser.
 
 **Generated package providers and units have separate inputs.** _(from "Phase 1 publishes provider-array `data_v2.json`", "The Phase 1 registry is static for the lifetime of the installed package")_
-Package generation reads providers from the v2 provider array and generates unit modules from the checked-in unit source. Generated `data.py` / `data.ts` contain providers, while `data_units.py` / `dataUnits.ts` contain raw unit definitions. None contains cache state, trust markers, fingerprints, or generated behavior.
+Package generation reads providers from the v2 provider array and generates unit modules from the checked-in unit source. Generated `data.py` / `data.ts` contain providers, while `data_units.py` / `dataUnits.ts` contain the runtime projection of unit definitions. None contains source-only validation metadata, cache state, trust markers, fingerprints, or generated behavior.
 
 **Phase 1 removes repeated structural work from the pricing hot path.** _(from "Phase 1 must avoid an unreasonable pricing hot-path regression", "Model prices are still validated on use")_
 The registry refactor must not repeatedly scan the whole bundled registry to rediscover the same current model-price facts. This is a stateless cleanup, not a cache: each calculation derives its effective non-null price entries and corresponding units once, validates that structure, and reuses it for decomposition, tier detection, normalization, and aggregation.
