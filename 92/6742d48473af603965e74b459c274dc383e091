@@ -1,0 +1,47 @@
+tests/test_price_calc.py
+  s_e007c5ed89566f::t_8f37668c67ec07 42-65
+tests/test_extract_usage.py
+  s_e007c5ed89566f::t_513292605587cb 15
+  s_e007c5ed89566f::t_78c2791aea1513 37-43
+  s_e007c5ed89566f::t_8f37668c67ec07 10,28-36,44-54
+  s_e007c5ed89566f::t_7febc17e420b89 55-56
+tests/test_decompose.py
+  s_e007c5ed89566f::t_abdd2f20003890 3-4,99-106
+  s_e007c5ed89566f::t_3c496b250bcce3 107-108
+tests/test_units.py
+  s_e007c5ed89566f::t_ccb325c7606520 2034-2053
+  s_e007c5ed89566f::t_cf201eeeb2f070 998,1000,1005-1008,1013-1016,1021-1024,1032-1064,1420-1456
+  s_e007c5ed89566f::t_a289b32dcbb197 1457-1458
+tests/test_usage.py
+  s_e007c5ed89566f::t_b3534cd38a1a5a 52,132
+  s_e007c5ed89566f::t_abdd2f20003890 40-51,53-59,128,131
+  s_e007c5ed89566f::t_323861f5809727 129-130
+  s_47de40883b950a::t_2c401d6774d6f4 133-134
+tests/test_update_prices.py
+  s_e007c5ed89566f::t_cdaf93fa1fe8a0 15,324-343
+  s_47de40883b950a::t_d011df9c0f7d7a 344-345
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "926742d48473af603965e74b459c274dc383e091",
+  "prompts": {},
+  "sessions": {
+    "s_47de40883b950a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9561-d5d8-7a40-ae39-178aa884ad71",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
