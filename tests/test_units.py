@@ -1066,6 +1066,95 @@ def test_validate_export_payload_returns_validated_unit_registry() -> None:
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
 
 
+def test_validate_unit_evolution_accepts_unchanged_units_and_new_descendant() -> None:
+    previous = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        }
+    }
+    candidate = {
+        **previous,
+        'input_mochaccino_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mochaccino_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input', 'flavor': 'mochaccino'},
+        },
+    }
+
+    export_validation.validate_unit_evolution(previous, candidate)
+
+
+@pytest.mark.parametrize(
+    ('candidate', 'message'),
+    [
+        ({}, 'Published unit removed: input_tokens'),
+        (
+            {'input_tokens': {'per': 1_000, 'price_key': 'input_mtok', 'dimensions': {'family': 'tokens'}}},
+            'Published unit changed: input_tokens',
+        ),
+        (
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'renamed_mtok',
+                    'dimensions': {'family': 'tokens'},
+                }
+            },
+            'Published unit changed: input_tokens',
+        ),
+        (
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                }
+            },
+            'Published unit changed: input_tokens',
+        ),
+    ],
+)
+def test_validate_unit_evolution_rejects_removed_or_changed_units(
+    candidate: dict[str, dict[str, Any]], message: str
+) -> None:
+    previous = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens'},
+        }
+    }
+
+    with pytest.raises(ValueError, match=message):
+        export_validation.validate_unit_evolution(previous, candidate)
+
+
+def test_validate_unit_evolution_rejects_new_ancestor() -> None:
+    previous = {
+        'input_image_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_image_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image'},
+        }
+    }
+    candidate = {
+        **previous,
+        'image_tokens': {
+            'per': 1_000_000,
+            'price_key': 'image_mtok',
+            'dimensions': {'family': 'tokens', 'modality': 'image'},
+        },
+    }
+
+    with pytest.raises(
+        ValueError,
+        match='New unit image_tokens would become an ancestor of published unit input_image_tokens',
+    ):
+        export_validation.validate_unit_evolution(previous, candidate)
+
+
 def test_validate_export_payload_rejects_unknown_price_key() -> None:
     provider = _build_provider_prices(
         build_types.ModelPrice.model_validate({'hovercraft_mtok': '1'}),

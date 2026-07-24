@@ -130,6 +130,49 @@ def validate_export_payload(providers: list[Provider], units: Mapping[str, Mappi
     return registry
 
 
+def validate_unit_evolution(
+    previous_units: Mapping[str, Mapping[str, Any]],
+    candidate_units: Mapping[str, Mapping[str, Any]],
+) -> None:
+    """Require a published unit registry to evolve without changing existing relationships."""
+    for usage_key, previous_unit in previous_units.items():
+        candidate_unit = candidate_units.get(usage_key)
+        if candidate_unit is None:
+            raise ValueError(f'Published unit removed: {usage_key}')
+
+        previous_definition = _resolved_unit_definition(usage_key, previous_unit)
+        candidate_definition = _resolved_unit_definition(usage_key, candidate_unit)
+        if candidate_definition != previous_definition:
+            raise ValueError(
+                f'Published unit changed: {usage_key}: expected {previous_definition!r}, got {candidate_definition!r}'
+            )
+
+    previous_dimensions = {
+        usage_key: frozenset(cast(Mapping[str, str], unit['dimensions']).items())
+        for usage_key, unit in previous_units.items()
+    }
+    for usage_key, candidate_unit in candidate_units.items():
+        if usage_key in previous_units:
+            continue
+
+        candidate_dimensions = frozenset(cast(Mapping[str, str], candidate_unit['dimensions']).items())
+        for previous_usage_key, old_dimensions in previous_dimensions.items():
+            if candidate_dimensions < old_dimensions:
+                raise ValueError(
+                    f'New unit {usage_key} would become an ancestor of published unit {previous_usage_key}'
+                )
+
+
+def _resolved_unit_definition(
+    usage_key: str, raw_unit: Mapping[str, Any]
+) -> tuple[str, int, frozenset[tuple[str, str]]]:
+    return (
+        cast(str, raw_unit.get('price_key', usage_key)),
+        cast(int, raw_unit['per']),
+        frozenset(cast(Mapping[str, str], raw_unit['dimensions']).items()),
+    )
+
+
 def _validate_public_key(kind: str, key: str) -> None:
     if not _PUBLIC_KEY_PATTERN.fullmatch(key):
         raise ValueError(f'Invalid unit {kind} key: {key!r} is not a public identifier')
