@@ -1121,6 +1121,26 @@ def _providers_from_raw(raw_providers: Any, registry: UnitRegistry | None = None
     return _providers_schema.validate_python(normalized)
 
 
+def _validate_provider_price_coverage(  # pyright: ignore[reportUnusedFunction]
+    providers: Sequence[Provider], registry: UnitRegistry
+) -> None:
+    from genai_prices.validation import validate_priced_units
+
+    for provider in providers:
+        for model in provider.models:
+            model_prices = (
+                [model.prices]
+                if isinstance(model.prices, ModelPrice)
+                else [conditional.prices for conditional in model.prices]
+            )
+            for model_price in model_prices:
+                resolved_prices = _collect_resolved_model_prices(model_price, registry)
+                try:
+                    validate_priced_units(tuple(unit for unit, _ in resolved_prices), registry)
+                except ValueError as exc:
+                    raise ValueError(f'Invalid price coverage for {provider.id}/{model.id}: {exc}') from exc
+
+
 def _project_provider_data(raw_providers: Any, registry: UnitRegistry) -> Any:
     unsupported_price_keys: set[str] = set()
     projected = _project_model_prices(raw_providers, registry, unsupported_price_keys)

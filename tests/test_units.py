@@ -1439,6 +1439,89 @@ def test_runtime_provider_projection_omits_unsupported_dynamic_fields_without_mu
     assert conditional_prices[0].prices.__dict__ == {'input_mtok': Decimal('3')}
 
 
+def test_runtime_provider_price_coverage_validates_every_recognized_price_set() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_read_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_read_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+            },
+        }
+    )
+    providers = runtime_types._providers_from_raw(
+        [
+            {
+                'id': 'testing',
+                'name': 'Testing',
+                'api_pattern': 'testing',
+                'models': [
+                    {
+                        'id': 'conditional',
+                        'match': {'equals': 'conditional'},
+                        'prices': [
+                            {'prices': {'input_mtok': 1}},
+                            {'prices': {'cache_read_mtok': 2}},
+                        ],
+                    }
+                ],
+            }
+        ],
+        registry,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid price coverage for testing/conditional: Missing ancestor price for cache_read_tokens: input_tokens',
+    ):
+        runtime_types._validate_provider_price_coverage(providers, registry)
+
+
+def test_runtime_provider_price_coverage_accepts_complete_coverage() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_read_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_read_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+            },
+        }
+    )
+    providers = runtime_types._providers_from_raw(
+        [
+            {
+                'id': 'testing',
+                'name': 'Testing',
+                'api_pattern': 'testing',
+                'models': [
+                    {
+                        'id': 'model',
+                        'match': {'equals': 'model'},
+                        'prices': {'input_mtok': 1, 'cache_read_mtok': 2},
+                    }
+                ],
+            }
+        ],
+        registry,
+    )
+
+    runtime_types._validate_provider_price_coverage(providers, registry)
+
+
 def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
