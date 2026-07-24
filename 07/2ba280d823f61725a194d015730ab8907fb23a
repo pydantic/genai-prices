@@ -1,0 +1,39 @@
+packages/python/genai_prices/update_prices.py
+  s_e007c5ed89566f::t_2bfd81dc89d344 12-14,28-31,73,76,78,87-89,91-94,96-102,119,123-125,127-134,136-137,153,158-159,170,172-182,194,196,199-213
+  s_e007c5ed89566f::t_581459331336ea 191-193
+tests/test_update_prices.py
+  s_e007c5ed89566f::t_c1bffaaba2d56a 208,210-242,245-247,249-251
+  s_e007c5ed89566f::t_7147fb350d0de1 255,269,283,413,433,528
+  s_e007c5ed89566f::t_f8121e726523c5 323-408,454-455,467-501
+  s_e007c5ed89566f::t_581459331336ea 20,58
+  s_e007c5ed89566f::t_f8779182a538ca 409-411,416,418-419,421,423-424
+  s_e007c5ed89566f::t_9d315277026864 4,7,39-43,49-57,59-61,77
+  s_e007c5ed89566f::t_e630500659e48f 96,104,112-123,129,135,137,143,147-148,151,159,161-165,167-172,175,178,184,186-204,207,209
+  s_e007c5ed89566f::t_054c6a30b76575 6
+  s_e007c5ed89566f::t_a07a0ae273249e 243-244,248
+  s_2b1816bec3cbba::t_98c2e58abcbbac 502-503
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "072ba280d823f61725a194d015730ab8907fb23a",
+  "prompts": {},
+  "sessions": {
+    "s_2b1816bec3cbba": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9569-a525-7bb2-b212-ec4ef3e12f5c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
