@@ -1,6 +1,7 @@
 import type {
   ArrayMatch,
   ConditionalPrice,
+  DecodedProviderData,
   ExtractPath,
   MatchLogic,
   ModelInfo,
@@ -11,12 +12,11 @@ import type {
   Tier,
   UsageExtractor,
   UsageExtractorMapping,
-  WrappedProviderData,
 } from './types'
 
 import { TieredPrices } from './types'
 
-export function decodeV2Payload(raw: unknown): WrappedProviderData {
+export function decodeV2Payload(raw: unknown): DecodedProviderData {
   const wrapper = exactObject(raw, ['providers', 'units'], ['providers', 'units'], 'v2 payload')
   const rawProviders = arrayValue(wrapper.providers, 'v2 payload.providers')
   const rawUnits = objectValue(wrapper.units, 'v2 payload.units')

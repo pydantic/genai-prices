@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import type { Provider, ProviderDataValue } from '../types'
+import type { Provider, ProviderDataValue, WireProvider } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
@@ -193,7 +193,7 @@ describe('provider activation', () => {
         price_key: 'widget_kcount',
       },
     }
-    const provider: Provider = {
+    const provider: WireProvider = {
       api_pattern: 'testing',
       id: 'testing',
       models: [
