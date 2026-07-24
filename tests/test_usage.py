@@ -28,14 +28,22 @@ def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:
     assert usage.output_tokens == 0
 
 
-def test_usage_direct_construction_rejects_unknown_keywords() -> None:
-    with pytest.raises(ValueError, match='Unknown usage key: imaginary_tokens'):
-        Usage(imaginary_tokens=1)
+def test_usage_direct_construction_warns_for_unknown_keywords() -> None:
+    with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: imaginary_tokens'):
+        usage = Usage(imaginary_tokens=1)
+
+    assert usage.imaginary_tokens == 1
+    assert usage == Usage()
+    assert repr(usage) == 'Usage()'
 
 
-def test_usage_direct_construction_rejects_pricing_only_requests() -> None:
-    with pytest.raises(ValueError, match='Unknown usage key: requests'):
-        Usage(requests=1)
+def test_usage_direct_construction_warns_for_pricing_only_requests() -> None:
+    with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: requests'):
+        usage = Usage(requests=1)
+
+    assert usage.requests == 1
+    assert usage == Usage()
+    assert repr(usage) == 'Usage()'
 
 
 def test_usage_assignment_preserves_regular_object_attributes() -> None:
@@ -173,9 +181,12 @@ def test_usage_from_raw_skips_explicit_none_values() -> None:
     assert usage == Usage(input_tokens=100)
 
 
-def test_usage_from_raw_does_not_loosen_direct_construction() -> None:
-    with pytest.raises(ValueError, match='Unknown usage key: sausage_tokens'):
-        Usage(input_tokens=100, sausage_tokens=50)
+def test_usage_direct_construction_warns_for_unknown_extras() -> None:
+    with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: sausage_tokens'):
+        usage = Usage(input_tokens=100, sausage_tokens=50)
+
+    assert usage.input_tokens == 100
+    assert usage.sausage_tokens == 50
 
 
 def test_usage_missing_ancestor_read_rejects_positive_descendant() -> None:

@@ -10,7 +10,7 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
-import { validateExtractorDestinations } from './validation'
+import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
@@ -48,7 +48,7 @@ function activateProviderData(data: Provider[]): Provider[] {
     throw new Error('Expected null or Provider[]')
   }
 
-  validateExtractorDestinations(data)
+  warnUnsupportedExtractorDestinations(data)
   providerData = data
   return data
 }
