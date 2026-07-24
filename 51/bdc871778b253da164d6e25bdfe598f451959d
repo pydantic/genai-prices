@@ -1,0 +1,23 @@
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+  s_19839d59d6ccf8::t_26eccf00694d32 77
+specs/data-driven-unit-registry/spec.md
+  s_19839d59d6ccf8::t_26eccf00694d32 28
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/spec.md
+  s_19839d59d6ccf8::t_26eccf00694d32 85,127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "51bdc871778b253da164d6e25bdfe598f451959d",
+  "prompts": {},
+  "sessions": {
+    "s_19839d59d6ccf8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8f81-1154-76d1-8a73-f70a1843679c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
