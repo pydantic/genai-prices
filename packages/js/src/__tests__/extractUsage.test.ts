@@ -355,23 +355,11 @@ describe('extractUsage', () => {
 
       expect(model).toBe('gemini-2.5-flash')
       expect(usage).toEqual({
+        input_text_tokens: 75,
         input_tokens: 100,
+        output_text_tokens: 162,
         output_tokens: 162,
       })
-    })
-
-    it('should extract tool-use prompt audio tokens', () => {
-      const responseData = {
-        modelVersion: 'gemini-2.5-flash',
-        usageMetadata: {
-          toolUsePromptTokenCount: 25,
-          toolUsePromptTokensDetails: [{ modality: 'AUDIO', tokenCount: 5 }],
-        },
-      }
-      const { model, usage } = extractUsage(googleProvider, responseData)
-
-      expect(model).toBe('gemini-2.5-flash')
-      expect(usage).toEqual({ input_audio_tokens: 5, input_tokens: 25 })
     })
 
     it('should have correct usage with caching', () => {
@@ -401,9 +389,45 @@ describe('extractUsage', () => {
       expect(usage).toEqual({
         cache_audio_read_tokens: 129,
         cache_read_tokens: 12239,
+        cache_text_read_tokens: 12110,
         input_audio_tokens: 150,
+        input_text_tokens: 14002,
         input_tokens: 14152,
+        output_text_tokens: 119,
         output_tokens: 119,
+      })
+    })
+
+    it('should use tool-use prompt modality details for input modalities', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          candidatesTokenCount: 3,
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+          promptTokenCount: 10,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 10 }],
+          thoughtsTokenCount: 4,
+          toolUsePromptTokenCount: 25,
+          toolUsePromptTokensDetails: [
+            { modality: 'TEXT', tokenCount: 10 },
+            { modality: 'AUDIO', tokenCount: 5 },
+            { modality: 'IMAGE', tokenCount: 7 },
+            { modality: 'DOCUMENT', tokenCount: 2 },
+            { modality: 'VIDEO', tokenCount: 3 },
+          ],
+        },
+      }
+      const { model, usage } = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({
+        input_audio_tokens: 5,
+        input_image_tokens: 9,
+        input_text_tokens: 20,
+        input_tokens: 35,
+        input_video_tokens: 3,
+        output_text_tokens: 7,
+        output_tokens: 7,
       })
     })
   })

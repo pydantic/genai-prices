@@ -12,16 +12,6 @@ from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data_snapshot import get_snapshot
 from genai_prices.types import Provider, UsageExtractor
 
-LEGACY_USAGE_KEYS = {
-    'cache_audio_read_tokens',
-    'cache_read_tokens',
-    'cache_write_tokens',
-    'input_audio_tokens',
-    'input_tokens',
-    'output_audio_tokens',
-    'output_tokens',
-}
-
 
 @dataclasses.dataclass
 class Case:
@@ -157,9 +147,7 @@ def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider:
         extracted = extract_usage(body, provider_id=provider.id, api_flavor=flavor)
         assert extracted.model and extracted.model.is_match(model_ref)
         assert usage == extracted.usage
-    # Keep the shared Python/JavaScript fixture on the fields both runtimes support.
-    # The JavaScript registry slice removes this projection.
-    usage_dict = {k: v for k, v in usage.__dict__.items() if k in LEGACY_USAGE_KEYS and v}
+    usage_dict = {k: v for k, v in usage.__dict__.items() if v}
     return Case(provider.id, flavor, model_ref, usage_dict)
 
 

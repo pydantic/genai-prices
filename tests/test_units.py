@@ -747,7 +747,6 @@ def test_package_provider_data_rejects_non_array_root(tmp_path: Path) -> None:
 
 
 def test_package_data_loads_providers_and_units_independently(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    provider_data_v1: list[package_data.JsonData] = [{'id': 'v1', 'name': 'V1', 'models': []}]
     provider_data_v2: list[package_data.JsonData] = [{'id': 'v2', 'name': 'V2', 'models': []}]
     units: dict[str, Any] = {
         'widgets': {
@@ -755,7 +754,6 @@ def test_package_data_loads_providers_and_units_independently(monkeypatch: pytes
             'dimensions': {'family': 'widgets'},
         }
     }
-    (tmp_path / 'data.json').write_text(json.dumps(provider_data_v1))
     (tmp_path / 'data_v2.json').write_text(json.dumps(provider_data_v2))
     calls: list[tuple[str, list[package_data.JsonData], dict[str, Any]]] = []
 
@@ -774,7 +772,7 @@ def test_package_data_loads_providers_and_units_independently(monkeypatch: pytes
 
     assert calls == [
         ('python', provider_data_v2, units),
-        ('typescript', provider_data_v1, units),
+        ('typescript', provider_data_v2, units),
     ]
 
 
