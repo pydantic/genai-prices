@@ -68,24 +68,28 @@ def test_v1_remote_payloads_are_provider_arrays():
         assert all(isinstance(provider, dict) for provider in payload)
 
 
-def test_v2_remote_payload_is_provider_array_with_static_unit_vocabulary():
-    """V2 publishes current providers without embedding mutable unit registry state."""
+def test_v2_remote_payload_wraps_providers_with_dynamic_unit_vocabulary():
+    """V2 publishes providers together with their mutable unit registry state."""
     from prices.utils import package_dir
 
-    payload = cast(list[dict[str, Any]], json.loads((package_dir / 'data_v2.json').read_bytes()))
+    payload = cast(dict[str, Any], json.loads((package_dir / 'data_v2.json').read_bytes()))
     schema = cast(dict[str, Any], json.loads((package_dir / 'data_v2.schema.json').read_bytes()))
 
-    assert isinstance(payload, list)
-    assert payload
-    assert all(isinstance(provider, dict) for provider in payload)
-    assert schema['type'] == 'array'
+    assert set(payload) == {'units', 'providers'}
+    assert payload['units']
+    assert payload['providers']
+    assert schema['type'] == 'object'
+    assert schema['required'] == ['units', 'providers']
+    assert schema['additionalProperties'] is False
+    assert schema['properties']['units']['additionalProperties']['additionalProperties'] is False
 
     model_price_schema = schema['$defs']['ModelPrice']
-    assert 'cache_image_write_mtok' in model_price_schema['properties']
-    extractor_destinations = schema['$defs']['UsageExtractorMapping']['properties']['dest']['enum']
-    assert 'input_image_tokens' in extractor_destinations
+    assert isinstance(model_price_schema['additionalProperties'], dict)
+    extractor_destination = schema['$defs']['UsageExtractorMapping']['properties']['dest']
+    assert extractor_destination['type'] == 'string'
+    assert 'enum' not in extractor_destination
 
-    google = next(provider for provider in payload if provider['id'] == 'google')
+    google = next(provider for provider in payload['providers'] if provider['id'] == 'google')
     destinations = {mapping['dest'] for extractor in google['extractors'] for mapping in extractor['mappings']}
     assert 'input_image_tokens' in destinations
 

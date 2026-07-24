@@ -34,7 +34,7 @@ def load_units() -> dict[str, Any]:
 
 
 def build():
-    """Build the provider authoring schema and v2 price data with its JSON Schema."""
+    """Build the provider authoring schema and wrapped v2 price data with its JSON Schema."""
     units = load_units()
 
     # write the schema JSON file used by the yaml language server
@@ -97,10 +97,7 @@ def write_prices(
     print('')
     prices_json_path = package_dir / prices_file
 
-    providers_json_schema = providers_schema.json_schema(mode='serialization')
-    providers_json_schema = simplify_json_schema(providers_json_schema)
-
-    data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)
+    data_json_schema = _wrapped_data_schema()
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
@@ -113,7 +110,7 @@ def write_prices(
         exclude_none=True,
         warnings=False,
     )
-    json_data = pydantic_core.to_json(provider_data) + b'\n'
+    json_data = pydantic_core.to_json({'units': runtime_unit_data(units), 'providers': provider_data}) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:
@@ -149,6 +146,52 @@ def write_prices(
 
 def pretty_providers_json(compact_json: bytes) -> list[str]:
     return pydantic_core.to_json(pydantic_core.from_json(compact_json), indent=2).decode().splitlines(keepends=True)
+
+
+def runtime_unit_data(units: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Strip build-only metadata from units before publishing or packaging."""
+    runtime_units: dict[str, dict[str, Any]] = {}
+    for usage_key, unit in units.items():
+        runtime_unit = {'per': unit['per']}
+        price_key = cast(str, unit.get('price_key', usage_key))
+        if price_key != usage_key:
+            runtime_unit['price_key'] = price_key
+        runtime_unit['dimensions'] = dict(cast(dict[str, str], unit['dimensions']))
+        runtime_units[usage_key] = runtime_unit
+
+    return runtime_units
+
+
+def _wrapped_data_schema() -> dict[str, Any]:
+    providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
+    definitions = providers_json_schema.pop('$defs')
+    return {
+        '$defs': definitions,
+        'additionalProperties': False,
+        'properties': {
+            'units': {
+                'additionalProperties': {
+                    'additionalProperties': False,
+                    'properties': {
+                        'per': {'exclusiveMinimum': 0, 'type': 'integer'},
+                        'price_key': {'type': 'string'},
+                        'dimensions': {
+                            'additionalProperties': {'type': 'string'},
+                            'properties': {'family': {'type': 'string'}},
+                            'required': ['family'],
+                            'type': 'object',
+                        },
+                    },
+                    'required': ['per', 'dimensions'],
+                    'type': 'object',
+                },
+                'type': 'object',
+            },
+            'providers': providers_json_schema,
+        },
+        'required': ['units', 'providers'],
+        'type': 'object',
+    }
 
 
 if __name__ == '__main__':

@@ -947,7 +947,7 @@ def test_build_loads_units() -> None:
     assert set(build_module.load_units()) == ALL_USAGE_KEYS
 
 
-def test_package_data_surfaces_registry_structural_errors(
+def test_build_validation_surfaces_registry_structural_errors(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -969,27 +969,20 @@ prompt_tokens:
         ValueError,
         match='Duplicate unit dimensions: input_tokens and prompt_tokens',
     ):
-        package_data.load_unit_registry(build_module.load_units())
+        export_validation.validate_units(build_module.load_units())
 
 
-def test_package_data_load_unit_registry_delegates_to_export_validator(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_package_data_load_unit_registry_trusts_built_projection() -> None:
     raw_units: dict[str, Any] = {
         'widgets': {
             'per': 1_000_000,
             'dimensions': {'family': 'widgets'},
         }
     }
-    expected_registry = UnitRegistry(raw_units)
-    calls: list[dict[str, Any]] = []
 
-    def validate(raw_units_arg: dict[str, Any]) -> UnitRegistry:
-        calls.append(raw_units_arg)
-        return expected_registry
+    registry = package_data.load_unit_registry(raw_units)
 
-    monkeypatch.setattr(export_validation, 'validate_units', validate)
-
-    assert package_data.load_unit_registry(raw_units) is expected_registry
-    assert calls == [raw_units]
+    assert registry.units['widgets'].per == 1_000_000
 
 
 def test_runtime_packages_do_not_define_unit_publication_validators() -> None:
@@ -1015,15 +1008,17 @@ def test_package_generation_no_longer_reloads_units_yml() -> None:
     assert references == set()
 
 
-def test_package_provider_data_rejects_non_array_root(tmp_path: Path) -> None:
+def test_package_provider_data_rejects_non_wrapped_root(tmp_path: Path) -> None:
     data_path = tmp_path / 'data_v2.json'
-    data_path.write_text('{"providers": []}')
+    data_path.write_text('[]')
 
-    with pytest.raises(ValueError, match=r'Expected .* to contain a provider array'):
-        package_data._load_provider_data(data_path)
+    with pytest.raises(ValueError, match=r'Expected .* to contain exactly units and providers'):
+        package_data._load_wrapped_data(data_path)
 
 
-def test_package_data_loads_providers_and_units_independently(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_package_data_loads_providers_and_units_from_wrapped_v2(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     provider_data: list[package_data.JsonData] = [{'id': 'testing', 'name': 'Testing', 'models': []}]
     units: dict[str, Any] = {
         'widgets': {
@@ -1031,7 +1026,7 @@ def test_package_data_loads_providers_and_units_independently(monkeypatch: pytes
             'dimensions': {'family': 'widgets'},
         }
     }
-    (tmp_path / 'data_v2.json').write_text(json.dumps(provider_data))
+    (tmp_path / 'data_v2.json').write_text(json.dumps({'units': units, 'providers': provider_data}))
     calls: list[tuple[str, list[package_data.JsonData], dict[str, Any]]] = []
 
     def generate_python(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
@@ -1041,7 +1036,6 @@ def test_package_data_loads_providers_and_units_independently(monkeypatch: pytes
         calls.append(('typescript', providers, raw_units))
 
     monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
-    monkeypatch.setattr(package_data, 'load_units', lambda: units)
     monkeypatch.setattr(package_data, 'package_python_data', generate_python)
     monkeypatch.setattr(package_data, 'package_ts_data', generate_typescript)
 
