@@ -14,6 +14,7 @@ from genai_prices import (
     Usage,
     calc_price,
     data_snapshot,
+    runtime_state,
     wait_prices_updated_async,
     wait_prices_updated_sync,
 )
@@ -21,6 +22,14 @@ from genai_prices.units import _get_registry
 from genai_prices.update_prices import DEFAULT_UPDATE_URL
 
 pytestmark = pytest.mark.anyio
+
+
+def _active_snapshot() -> data_snapshot.DataSnapshot:
+    return data_snapshot.get_snapshot()
+
+
+def _bundled_snapshot() -> data_snapshot.DataSnapshot:
+    return runtime_state._bundled_runtime_data().snapshot
 
 
 def _provider_array(*, providers_json: str | None = None) -> bytes:
@@ -130,7 +139,7 @@ def test_update_prices_fetch_provider_array_warns_for_invalid_extractor_without_
         assert snapshot is not None
         assert snapshot.find_provider(None, 'broken', None).id == 'broken'
         assert _get_registry() is bundled
-        assert data_snapshot._custom_snapshot is previous_snapshot
+        assert _active_snapshot() is previous_snapshot
     finally:
         data_snapshot.set_custom_snapshot(None)
 
@@ -156,10 +165,10 @@ def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_mod
 
 def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch, _provider_array())
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
     with UpdatePrices() as update_prices:
         update_prices.wait()
-        assert data_snapshot._custom_snapshot is not None
+        assert _active_snapshot() is not _bundled_snapshot()
         price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
         assert price.input_price == snapshot(Decimal('0.0025'))
         assert price.output_price == snapshot(Decimal('0.001'))
@@ -170,10 +179,10 @@ def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
 
 def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch, _provider_array())
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
     with UpdatePrices():
         wait_prices_updated_sync()
-        assert data_snapshot._custom_snapshot is not None
+        assert _active_snapshot() is not _bundled_snapshot()
         price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
         assert price.input_price == snapshot(Decimal('0.0025'))
         assert price.output_price == snapshot(Decimal('0.001'))
@@ -184,10 +193,10 @@ def test_wait_prices_updated_sync(monkeypatch: pytest.MonkeyPatch):
 
 async def test_wait_prices_updated_async(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch, _provider_array())
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
     with UpdatePrices():
         await wait_prices_updated_async()
-        assert data_snapshot._custom_snapshot is not None
+        assert _active_snapshot() is not _bundled_snapshot()
         price = calc_price(Usage(input_tokens=1000, output_tokens=100), model_ref='gpt-4o', provider_id='openai')
         assert price.input_price == snapshot(Decimal('0.0025'))
         assert price.output_price == snapshot(Decimal('0.001'))
@@ -204,7 +213,7 @@ def test_update_prices_start_waits_and_rejects_second_start():
     update_prices = NullUpdatePrices(update_interval=3600)
     update_prices.start(wait=True)
     try:
-        assert data_snapshot._custom_snapshot is None
+        assert _active_snapshot() is _bundled_snapshot()
         with pytest.raises(RuntimeError, match='UpdatePrices background task already started'):
             update_prices.start()
     finally:
@@ -232,12 +241,12 @@ def test_update_prices_stop_preserves_bundled_registry(monkeypatch: pytest.Monke
     try:
         data_snapshot.set_custom_snapshot(snapshot)
         assert _get_registry() is bundled
-        assert data_snapshot._custom_snapshot is snapshot
+        assert _active_snapshot() is snapshot
 
         update_prices.stop()
 
         assert _get_registry() is bundled
-        assert data_snapshot._custom_snapshot is None
+        assert _active_snapshot() is _bundled_snapshot()
     finally:
         data_snapshot.set_custom_snapshot(None)
 
@@ -273,7 +282,7 @@ def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch:
             stop_future.result(timeout=5)
 
         assert _get_registry() is bundled
-        assert data_snapshot._custom_snapshot is None
+        assert _active_snapshot() is _bundled_snapshot()
     finally:
         allow_fetch_return.set()
         update_prices.stop()
@@ -283,24 +292,24 @@ def test_update_prices_stop_restores_registry_after_in_flight_fetch(monkeypatch:
 @pytest.mark.default_cassette('fail.yaml')
 @pytest.mark.vcr()
 def test_update_prices_failed():
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
     with UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404') as update_prices:
         with pytest.raises(httpx2.HTTPStatusError):
             update_prices.wait()
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
 
 
 @pytest.mark.default_cassette('fail.yaml')
 @pytest.mark.vcr()
 def test_update_prices_failed_stop():
     bundled = _get_registry()
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
     update_prices = UpdatePrices(url='https://demo-endpoints.pydantic.workers.dev/bin?status=404')
     update_prices.start()
     with pytest.raises(httpx2.HTTPStatusError):
         update_prices.stop()
     assert _get_registry() is bundled
-    assert data_snapshot._custom_snapshot is None
+    assert _active_snapshot() is _bundled_snapshot()
 
 
 def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):

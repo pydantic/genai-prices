@@ -3,36 +3,23 @@ from __future__ import annotations as _annotations
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from functools import cache
 from typing import Any
 
 from . import types
 
 __all__ = 'DataSnapshot', 'set_custom_snapshot'
 
-# snapshot set by UpdatePrices, or manually by the user
-_custom_snapshot: DataSnapshot | None = None
-
 
 def get_snapshot() -> DataSnapshot:
-    if _custom_snapshot is not None:
-        return _custom_snapshot
-    return _bundled_snapshot()
+    from .runtime_state import get_runtime_data
+
+    return get_runtime_data().snapshot
 
 
-@cache
-def _bundled_snapshot() -> DataSnapshot:
-    from .data import providers
+def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
+    from .runtime_state import replace_snapshot
 
-    return DataSnapshot(
-        providers=providers,
-        from_auto_update=False,
-    )
-
-
-def set_custom_snapshot(snapshot: DataSnapshot | None):
-    global _custom_snapshot
-    _custom_snapshot = snapshot
+    replace_snapshot(snapshot)
 
 
 @dataclass

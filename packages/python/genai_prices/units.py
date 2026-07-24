@@ -86,16 +86,7 @@ def _is_dimension_subset(maybe_ancestor: UnitDef, unit: UnitDef) -> bool:
     return maybe_ancestor.dimensions.items() <= unit.dimensions.items()
 
 
-_bundled_registry: UnitRegistry | None = None
-
-
 def _get_registry() -> UnitRegistry:  # pyright: ignore[reportUnusedFunction]
-    global _bundled_registry
+    from genai_prices.runtime_state import get_runtime_registry
 
-    if _bundled_registry is not None:
-        return _bundled_registry
-
-    from genai_prices.data_units import unit_data
-
-    _bundled_registry = UnitRegistry(unit_data)
-    return _bundled_registry
+    return get_runtime_registry()

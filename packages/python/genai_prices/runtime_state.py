@@ -20,12 +20,18 @@ _generation = 0
 
 
 @cache
-def _bundled_runtime_data() -> RuntimeData:
-    from .data import providers
+def _bundled_registry() -> UnitRegistry:
     from .data_units import unit_data
 
+    return UnitRegistry(unit_data)
+
+
+@cache
+def _bundled_runtime_data() -> RuntimeData:
+    from .data import providers
+
     return RuntimeData(
-        registry=UnitRegistry(unit_data),
+        registry=_bundled_registry(),
         snapshot=DataSnapshot(providers=providers, from_auto_update=False),
     )
 
@@ -40,6 +46,13 @@ def get_runtime_data() -> RuntimeData:
         if _runtime_data is None:
             _runtime_data = _bundled_runtime_data()
         return _runtime_data
+
+
+def get_runtime_registry() -> UnitRegistry:
+    """Read the active registry without forcing bundled provider construction."""
+    if _runtime_data is not None:
+        return _runtime_data.registry
+    return _bundled_registry()
 
 
 def begin_update() -> int:
