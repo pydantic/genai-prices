@@ -1,1 +1,4 @@
 .github/workflows/*.lock.yml linguist-generated=true merge=ours
+
+prices/data.json linguist-generated=true
+prices/data_slim.json linguist-generated=true
