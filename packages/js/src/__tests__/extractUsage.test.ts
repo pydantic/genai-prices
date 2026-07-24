@@ -335,7 +335,12 @@ describe('extractUsage', () => {
         model: 'test-model',
         usage: {},
       })
+      expect(extractUsage(provider, { model: 'test-model', usage: {} })).toEqual({
+        model: 'test-model',
+        usage: {},
+      })
       expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
+      expect(warn).toHaveBeenCalledTimes(1)
       warn.mockRestore()
     })
 

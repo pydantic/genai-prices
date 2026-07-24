@@ -4,6 +4,7 @@ import type { Provider, ProviderDataValue } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
+import { extractUsage } from '../extractUsage'
 import { getActiveRegistry } from '../units'
 
 afterEach(() => {
@@ -42,6 +43,11 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).resolves.toEqual([provider])
     expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
     expect(findProvider({ providerId: 'future-provider' })?.id).toBe('future-provider')
+    expect(extractUsage(provider, { model: 'future-model', usage: {} })).toEqual({
+      model: 'future-model',
+      usage: {},
+    })
+    expect(warn).toHaveBeenCalledTimes(1)
     expect(getActiveRegistry()).toBe(registry)
     warn.mockRestore()
 
