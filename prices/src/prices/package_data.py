@@ -18,9 +18,10 @@ JsonData: TypeAlias = 'None | int | float | str | list[JsonData] | dict[str, Jso
 
 
 def package_data():
+    provider_data = _load_provider_data(this_package_dir / 'data_v2.json')
     units = load_units()
-    package_python_data(_load_provider_data(this_package_dir / 'data_v2.json'), units)
-    package_ts_data(_load_provider_data(this_package_dir / 'data_v2.json'), units)
+    package_python_data(provider_data, units)
+    package_ts_data(provider_data, units)
 
 
 def package_python_data(provider_data: Any, units: dict[str, Any]):

@@ -13,7 +13,7 @@ interactions:
         user-agent:
           - python-httpx2/2.2.0
       method: GET
-      uri: https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json
+      uri: https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json
     response:
       body:
         string: !!binary |

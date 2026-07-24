@@ -19,7 +19,7 @@ describe('provider activation', () => {
       remoteDataUrl = options.remoteDataUrl
     })
 
-    expect(remoteDataUrl).toBe('https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json')
+    expect(remoteDataUrl).toBe('https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json')
   })
 
   it('validates embedded provider data during startup and keeps it active', () => {
