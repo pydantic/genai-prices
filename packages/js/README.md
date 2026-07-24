@@ -31,10 +31,10 @@ if (result) {
 You can optionally use `updatePrices` to implement logic that can periodically update the data used by `calcPrice`.
 See the `src/examples/browser` directory for an example that implements a local storage-backed auto-update and `src/examples/node-script.ts` for an example of a file-based asynchronous auto-update implementation.
 
-The callback receives `remoteDataUrl`, which points to the v2 provider-array data. Passing the fetched array to
-`setProviderData` replaces provider and model prices only; it never replaces the unit registry bundled with the
-installed package. That unit vocabulary is frozen for the installed v2 package, and remote unit changes would require a
-future versioned payload.
+The callback receives `remoteDataUrl`, which points to wrapped v2 data containing both unit definitions and providers.
+Passing that fetched object to `setProviderData` validates and activates the matching registry and provider data
+atomically. Existing local-storage integrations may still pass a provider array; that compatibility path replaces
+providers only and retains the currently active registry.
 
 `calcPrice` is a synchronous function that uses the currently available data - either the bundled one, or the last data fetched from the `updatePrices` setup. To force `calcPrice` to await potential in-progress data updates started by that setup, await the `waitForUpdate()` return value before calling `calcPrice`.
 

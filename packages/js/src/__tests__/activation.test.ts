@@ -15,7 +15,7 @@ afterEach(() => {
 })
 
 describe('provider activation', () => {
-  it('passes the v2 provider-array URL to the storage factory', () => {
+  it('passes the wrapped v2 URL to the storage factory', () => {
     let remoteDataUrl: string | undefined
 
     updatePrices((options) => {
