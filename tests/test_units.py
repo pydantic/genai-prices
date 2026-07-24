@@ -985,6 +985,36 @@ def test_package_data_load_unit_registry_trusts_built_projection() -> None:
     assert registry.units['widgets'].per == 1_000_000
 
 
+def test_unit_registry_from_untrusted_accepts_published_projection() -> None:
+    registry = UnitRegistry.from_untrusted(build_module.runtime_unit_data(load_units()))
+
+    assert set(registry.units) == ALL_USAGE_KEYS
+
+
+@pytest.mark.parametrize(
+    ('raw_units', 'message'),
+    [
+        ([], 'Unit definitions must be an object'),
+        ({'widgets': []}, 'Unit definition for widgets must be an object'),
+        (
+            {'widgets': {'per': 1_000, 'dimensions': {'family': 'widgets'}, 'unexpected': True}},
+            'Unknown unit definition fields for widgets: unexpected',
+        ),
+        (
+            {'widgets': {'per': True, 'dimensions': {'family': 'widgets'}}},
+            'Unit per for widgets must be a positive integer',
+        ),
+        (
+            {'widgets': {'per': 1_000, 'dimensions': {'family': 1}}},
+            'Unit dimensions for widgets must map strings to strings',
+        ),
+    ],
+)
+def test_unit_registry_from_untrusted_rejects_invalid_shapes(raw_units: object, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        UnitRegistry.from_untrusted(raw_units)
+
+
 def test_runtime_packages_do_not_define_unit_publication_validators() -> None:
     runtime_files = [
         *Path('packages/python/genai_prices').glob('*.py'),
