@@ -9,7 +9,9 @@ from time import time
 
 import httpx2
 
-from . import data_snapshot
+from . import data_snapshot, runtime_state
+from .decode_provider_data import decode_v2_payload
+from .units import UnitRegistry
 
 __all__ = (
     'DEFAULT_UPDATE_URL',
@@ -21,6 +23,10 @@ __all__ = (
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
 _global_update_prices: UpdatePrices | None = None
+
+
+class _UpdaterStoppingError(RuntimeError):
+    pass
 
 
 def wait_prices_updated_sync(timeout: float | None = None) -> bool:
@@ -64,10 +70,12 @@ class UpdatePrices:
     """The timeout for HTTP requests."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
     _prices_updated: threading.Event = field(default_factory=threading.Event)
+    _lifecycle_lock: threading.RLock = field(default_factory=threading.RLock)
     _thread: threading.Thread | None = field(default=None, init=False)
     _background_exc: Exception | None = field(default=None, init=False)
+    _stopping: bool = field(default=False, init=False)
 
-    def start(self, *, wait: bool | float = False):
+    def start(self, *, wait: bool | float = False) -> None:
         """Start the background task.
 
         Args:
@@ -76,20 +84,22 @@ class UpdatePrices:
         """
         global _global_update_prices
 
-        if self._thread is not None:
-            raise RuntimeError('UpdatePrices background task already started')
+        with self._lifecycle_lock:
+            if self._thread is not None:
+                raise RuntimeError('UpdatePrices background task already started')
 
-        if _global_update_prices is not None:
-            raise RuntimeError(
-                'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
-            )
+            if _global_update_prices is not None:
+                raise RuntimeError(
+                    'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+                )
 
-        _global_update_prices = self
-        self._prices_updated.clear()
-        self._stop_event.clear()
-        self._background_exc = None
-        self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
-        self._thread.start()
+            _global_update_prices = self
+            self._stopping = False
+            self._prices_updated.clear()
+            self._stop_event.clear()
+            self._background_exc = None
+            self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
+            self._thread.start()
         if wait:
             self.wait(timeout=30 if wait is True else wait)
 
@@ -106,17 +116,25 @@ class UpdatePrices:
             raise exc
         return prices_updated
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the background task."""
         global _global_update_prices
 
-        _global_update_prices = None
-        if self._thread is not None:
+        with self._lifecycle_lock:
+            self._stopping = True
+            stop_generation = runtime_state.begin_update()
             self._stop_event.set()
-            self._thread.join()
+            thread = self._thread
+            if _global_update_prices is self:
+                _global_update_prices = None
+
+        if thread is not None:
+            thread.join()
+
+        with self._lifecycle_lock:
             self._thread = None
-        # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
-        data_snapshot.set_custom_snapshot(None)
+
+        runtime_state.restore_bundled_providers(stop_generation)
         if self._background_exc:
             exc = self._background_exc
             self._background_exc = None
@@ -132,11 +150,13 @@ class UpdatePrices:
     def _background_task(self) -> None:
         logger.info('Starting genai-prices background task')
         try:
-            while True:
+            while not self._stop_event.is_set():
                 try:
                     self._update_prices()
                     self._prices_updated.set()
                     self._background_exc = None
+                except _UpdaterStoppingError:
+                    break
                 except Exception as e:
                     self._background_exc = e
                     self._prices_updated.set()
@@ -147,26 +167,47 @@ class UpdatePrices:
         finally:
             logger.info('genai-prices background task stopped')
 
-    def _update_prices(self):
+    def _update_prices(self) -> None:
         start = time()
-        snapshot = self.fetch()
+        if type(self).fetch is UpdatePrices.fetch:
+            snapshot = self.fetch()
+        else:
+            generation = self._begin_fetch()
+            snapshot = self.fetch()
+            if snapshot is not None:
+                active = runtime_state.get_runtime_data()
+                runtime_state.activate_runtime_data(
+                    generation,
+                    runtime_state.RuntimeData(registry=active.registry, snapshot=snapshot),
+                )
         interval = time() - start
         if snapshot:
             logger.info('Successfully fetched %d providers in %.2f seconds', len(snapshot.providers), interval)
         else:
             logger.info('Successfully fetched null snapshot in %.2f seconds', interval)
 
-        data_snapshot.set_custom_snapshot(snapshot)
-
     def fetch(self) -> data_snapshot.DataSnapshot | None:
         """Fetches the latest provider data from the configured URL."""
-        from .types import _providers_from_raw  # pyright: ignore[reportPrivateUsage]
+        from .types import (
+            _providers_from_raw,  # pyright: ignore[reportPrivateUsage]
+            _validate_provider_price_coverage,  # pyright: ignore[reportPrivateUsage]
+        )
 
+        generation = self._begin_fetch()
         r = httpx2.get(self.url, timeout=self.request_timeout)
         r.raise_for_status()
-        raw_payload = json.loads(r.content)
-        if not isinstance(raw_payload, list):
-            raise ValueError('Expected fetched prices payload to be a provider array')
+        raw_payload = decode_v2_payload(json.loads(r.content))
+        registry = UnitRegistry.from_untrusted(raw_payload['units'])
+        providers = _providers_from_raw(raw_payload['providers'], registry)
+        _validate_provider_price_coverage(providers, registry)
+        snapshot = data_snapshot.DataSnapshot(providers, from_auto_update=True)
+        candidate = runtime_state.RuntimeData(registry=registry, snapshot=snapshot)
+        if runtime_state.activate_runtime_data(generation, candidate):
+            return snapshot
+        return runtime_state.get_runtime_data().snapshot
 
-        providers = _providers_from_raw(raw_payload)
-        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
+    def _begin_fetch(self) -> int:
+        with self._lifecycle_lock:
+            if self._stopping:
+                raise _UpdaterStoppingError('UpdatePrices is stopping and cannot start another fetch')
+            return runtime_state.begin_update()
