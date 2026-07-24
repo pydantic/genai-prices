@@ -1,10 +1,14 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider, ProviderDataValue } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { getActiveRegistry } from '../units'
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('provider activation', () => {
   it('passes the v2 provider-array URL to the storage factory', () => {

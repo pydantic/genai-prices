@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ModelPrice, TieredPrices, Usage } from '../types'
 
@@ -6,6 +6,10 @@ import { calcPrice, collectResolvedModelPrices } from '../engine'
 import { getActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 function mtok(rate: number, tokens: number): number {
   return (rate * tokens) / MILLION

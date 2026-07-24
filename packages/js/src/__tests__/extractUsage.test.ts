@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider } from '../types'
 
@@ -7,6 +7,10 @@ import { data } from '../data'
 import { calcPrice, extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
