@@ -1015,6 +1015,50 @@ def test_unit_registry_from_untrusted_rejects_invalid_shapes(raw_units: object, 
         UnitRegistry.from_untrusted(raw_units)
 
 
+def test_decode_v2_payload_accepts_published_data() -> None:
+    from genai_prices.decode_provider_data import decode_v2_payload
+
+    raw_payload = json.loads(Path('prices/data_v2.json').read_bytes())
+    decoded = decode_v2_payload(raw_payload)
+
+    assert set(decoded) == {'units', 'providers'}
+    assert decoded['units']
+    assert decoded['providers']
+
+
+@pytest.mark.parametrize(
+    'case',
+    [
+        'wrapper-field',
+        'unit-field',
+        'provider-field',
+        'model-field',
+        'price-value',
+    ],
+)
+def test_decode_v2_payload_rejects_unknown_fields_and_invalid_nested_values(case: str) -> None:
+    from pydantic import ValidationError
+
+    from genai_prices.decode_provider_data import decode_v2_payload
+
+    raw_payload = cast(dict[str, Any], json.loads(Path('prices/data_v2.json').read_bytes()))
+    provider = cast(dict[str, Any], raw_payload['providers'][0])
+    model = cast(dict[str, Any], provider['models'][0])
+    if case == 'wrapper-field':
+        raw_payload['unexpected'] = True
+    elif case == 'unit-field':
+        cast(dict[str, Any], raw_payload['units']['input_tokens'])['unexpected'] = True
+    elif case == 'provider-field':
+        provider['unexpected'] = True
+    elif case == 'model-field':
+        model['unexpected'] = True
+    else:
+        cast(dict[str, Any], model['prices'])['input_mtok'] = '1'
+
+    with pytest.raises(ValidationError):
+        decode_v2_payload(raw_payload)
+
+
 def test_runtime_packages_do_not_define_unit_publication_validators() -> None:
     runtime_files = [
         *Path('packages/python/genai_prices').glob('*.py'),
