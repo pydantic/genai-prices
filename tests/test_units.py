@@ -797,11 +797,13 @@ def test_collect_resolved_model_prices_ignores_none_values() -> None:
     assert _collect_resolved_model_prices(ModelPrice(input_mtok=None), registry) == ()
 
 
-def test_collect_resolved_model_prices_rejects_unknown_base_price() -> None:
+def test_collect_resolved_model_prices_warns_and_ignores_unknown_base_price() -> None:
     registry = UnitRegistry(load_units())
 
-    with pytest.raises(ValueError, match='Unknown price key: hovercraft_mtok'):
-        _collect_resolved_model_prices(ModelPrice(hovercraft_mtok=Decimal('1')), registry)
+    with pytest.warns(UserWarning, match='Unsupported price key for standard pricing: hovercraft_mtok'):
+        resolved_prices = _collect_resolved_model_prices(ModelPrice(hovercraft_mtok=Decimal('1')), registry)
+
+    assert resolved_prices == ()
 
 
 def test_collect_resolved_model_prices_handles_request_price() -> None:
