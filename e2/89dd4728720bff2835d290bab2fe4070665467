@@ -1,0 +1,26 @@
+packages/js/src/__tests__/activation.test.ts
+  s_19839d59d6ccf8::t_4a8cac4cd19597 1,9-11
+  s_19839d59d6ccf8::t_042c760f41bf7f 12
+packages/js/src/__tests__/calcPrice.test.ts
+  s_19839d59d6ccf8::t_4a8cac4cd19597 1,10-12
+  s_19839d59d6ccf8::t_7b5d0981c1b73a 13
+packages/js/src/__tests__/extractUsage.test.ts
+  s_19839d59d6ccf8::t_4a8cac4cd19597 2,11-13
+  s_19839d59d6ccf8::t_1c50bfc2d84520 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e289dd4728720bff2835d290bab2fe4070665467",
+  "prompts": {},
+  "sessions": {
+    "s_19839d59d6ccf8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8f81-1154-76d1-8a73-f70a1843679c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
