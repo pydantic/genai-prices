@@ -1,0 +1,22 @@
+.github/scripts/check_v2_compatibility.py
+  s_e007c5ed89566f::t_c08c6cc767e3de 15,57-69,144-147,150
+  s_e007c5ed89566f::t_2dfdcf24b3cbc9 1-14,16-56,70-143,148-149,151-164
+tests/test_v2_compatibility.py
+  s_e007c5ed89566f::t_e2cbea796244e0 1-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "02cfb83ab777adfe67555f15307bd20ede9684af",
+  "prompts": {},
+  "sessions": {
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
