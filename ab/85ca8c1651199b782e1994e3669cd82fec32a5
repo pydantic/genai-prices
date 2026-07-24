@@ -1,0 +1,19 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_47de40883b950a::t_f576510e96727f 18,47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ab85ca8c1651199b782e1994e3669cd82fec32a5",
+  "prompts": {},
+  "sessions": {
+    "s_47de40883b950a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9561-d5d8-7a40-ae39-178aa884ad71",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
