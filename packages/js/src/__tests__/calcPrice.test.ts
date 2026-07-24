@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ModelPrice, TieredPrices, Usage } from '../types'
 
@@ -6,6 +6,10 @@ import { calcPrice, collectResolvedModelPrices } from '../engine'
 import { getActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 function mtok(rate: number, tokens: number): number {
   return (rate * tokens) / MILLION
@@ -54,20 +58,36 @@ describe('collectResolvedModelPrices', () => {
     ])
   })
 
-  it('uses the explicit registry and rejects unknown keys', () => {
+  it('uses the explicit registry and warns for unknown keys', () => {
     const customRegistry = new UnitRegistry({
       widgets: {
         dimensions: { family: 'widgets' },
         per: 1,
       },
     })
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
     expect(collectResolvedModelPrices({ widgets: 2 }, customRegistry)).toEqual([{ price: 2, unit: customRegistry.getUnit('widgets') }])
-    expect(() => collectResolvedModelPrices({ input_mtok: 1 }, customRegistry)).toThrow('Unknown price key: input_mtok')
+    expect(collectResolvedModelPrices({ input_mtok: 1 }, customRegistry)).toEqual([])
+    expect(warn).toHaveBeenCalledWith('Unsupported price key for standard pricing: input_mtok')
+    warn.mockRestore()
   })
 })
 
 describe('Core Price Calculation Function', () => {
+  it('warns and ignores unsupported usage and price keys', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    expect(calcPrice({ future_tokens: 500, input_tokens: 1_000 }, { future_mtok: 10, input_mtok: 1 } as ModelPrice)).toEqual({
+      input_price: 0.001,
+      output_price: 0,
+      total_price: 0.001,
+    })
+    expect(warn).toHaveBeenNthCalledWith(1, 'Unsupported usage key for standard pricing: future_tokens')
+    expect(warn).toHaveBeenNthCalledWith(2, 'Unsupported price key for standard pricing: future_mtok')
+    warn.mockRestore()
+  })
+
   describe('calcPrice with separated input/output prices', () => {
     it('should calculate input and output prices separately', () => {
       const usage: Usage = {
@@ -276,6 +296,7 @@ describe('Core Price Calculation Function', () => {
     })
 
     it('should ignore caller-provided requests usage values', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
       const result = calcPrice({ requests: 500 }, { requests_kcount: 0.5 })
 
       expect(result).toMatchObject({
@@ -283,6 +304,8 @@ describe('Core Price Calculation Function', () => {
         output_price: 0,
         total_price: 0.0005,
       })
+      expect(warn).toHaveBeenCalledWith('Unsupported usage key for standard pricing: requests')
+      warn.mockRestore()
     })
 
     it('should price custom active-registry usage from the original caller object', () => {
@@ -301,6 +324,7 @@ describe('Core Price Calculation Function', () => {
           per: 1,
         },
       })
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
       const result = calcPrice(
         {
@@ -320,6 +344,8 @@ describe('Core Price Calculation Function', () => {
         output_price: 0,
         total_price: 44,
       })
+      expect(warn).toHaveBeenCalledWith('Unsupported usage key for standard pricing: ignored_telemetry_units')
+      warn.mockRestore()
     })
 
     it('should read and resolve each current model price once', () => {

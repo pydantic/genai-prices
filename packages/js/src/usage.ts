@@ -4,6 +4,15 @@ import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
 export type NormalizedUsage = Usage
 
+export function warnUnsupportedUsageKeys(usage: Usage, registry: UnitRegistry = getActiveRegistry()): void {
+  const unsupportedUsageKeys = Object.keys(usage)
+    .filter((usageKey) => !registry.isReportedUsageKey(usageKey))
+    .sort()
+  if (unsupportedUsageKeys.length) {
+    console.warn(`Unsupported usage key for standard pricing: ${unsupportedUsageKeys.join(', ')}`)
+  }
+}
+
 export function normalizeUsage(obj: unknown, registry: UnitRegistry = getActiveRegistry()): NormalizedUsage {
   if (!isPlainObject(obj)) return {}
 

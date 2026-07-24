@@ -1,10 +1,15 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider, ProviderDataValue } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
+import { extractUsage } from '../extractUsage'
 import { getActiveRegistry } from '../units'
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('provider activation', () => {
   it('passes the v2 provider-array URL to the storage factory', () => {
@@ -21,7 +26,7 @@ describe('provider activation', () => {
     expect(findProvider({ providerId: 'anthropic' })?.id).toBe('anthropic')
   })
 
-  it('validates synchronous custom provider data before replacing active data', async () => {
+  it('warns for unsupported synchronous extractor destinations and activates the data', async () => {
     const registry = getActiveRegistry()
     const validProvider = providerFixture('valid-provider')
     updatePrices(({ setProviderData }) => {
@@ -30,20 +35,28 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).resolves.toEqual([validProvider])
     expect(findProvider({ providerId: 'valid-provider' })?.id).toBe('valid-provider')
 
-    expect(() => {
-      updatePrices(({ setProviderData }) => {
-        setProviderData([providerFixture('invalid-provider', 'input_mtok')])
-      })
-    }).toThrow('Invalid extractor destination for invalid-provider/default mapping 0: input_mtok')
-    expect(findProvider({ providerId: 'valid-provider' })?.id).toBe('valid-provider')
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const provider = providerFixture('future-provider', 'future_tokens')
+    updatePrices(({ setProviderData }) => {
+      setProviderData([provider])
+    })
+    await expect(waitForUpdate()).resolves.toEqual([provider])
+    expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
+    expect(findProvider({ providerId: 'future-provider' })?.id).toBe('future-provider')
+    expect(extractUsage(provider, { model: 'future-model', usage: {} })).toEqual({
+      model: 'future-model',
+      usage: {},
+    })
+    expect(warn).toHaveBeenCalledTimes(1)
     expect(getActiveRegistry()).toBe(registry)
+    warn.mockRestore()
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
     })
   })
 
-  it('validates asynchronous custom provider data before replacing active data', async () => {
+  it('warns for unsupported asynchronous extractor destinations and activates the data', async () => {
     const asyncProvider = providerFixture('async-provider')
     updatePrices(({ setProviderData }) => {
       setProviderData(Promise.resolve([asyncProvider]))
@@ -58,12 +71,15 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
     expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
 
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    const provider = providerFixture('future-async-provider', 'future_tokens')
     updatePrices(({ setProviderData }) => {
-      setProviderData(Promise.resolve([providerFixture('invalid-async-provider', 'requests')]))
+      setProviderData(Promise.resolve([provider]))
     })
-    await expect(waitForUpdate()).rejects.toThrow('Invalid extractor destination for invalid-async-provider/default mapping 0: requests')
-    expect(findProvider({ providerId: 'async-provider' })?.id).toBe('async-provider')
-    await expect(waitForUpdate()).resolves.toEqual([asyncProvider])
+    await expect(waitForUpdate()).resolves.toEqual([provider])
+    expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
+    expect(findProvider({ providerId: 'future-async-provider' })?.id).toBe('future-async-provider')
+    warn.mockRestore()
 
     updatePrices(({ setProviderData }) => {
       setProviderData(data)

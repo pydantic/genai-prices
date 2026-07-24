@@ -2,6 +2,8 @@ import type { Provider, UnitDef } from './types'
 
 import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
+const warnedExtractorDestinations = new WeakMap<Provider, Set<string>>()
+
 export function validatePriceKeys(priceKeys: Iterable<string>, registry: UnitRegistry = getActiveRegistry()): void {
   for (const priceKey of priceKeys) {
     if (!registry.getUnitForPriceKey(priceKey)) {
@@ -75,6 +77,26 @@ export function validateExtractorDestinations(providerData: Provider[], registry
         }
       }
     }
+  }
+}
+
+export function warnUnsupportedExtractorDestinations(providerData: Provider[], registry: UnitRegistry = getActiveRegistry()): void {
+  const unsupportedDestinations = new Set<string>()
+  for (const provider of providerData) {
+    for (const extractor of provider.extractors ?? []) {
+      for (const mapping of extractor.mappings) {
+        if (!registry.isReportedUsageKey(mapping.dest) && !warnedExtractorDestinations.get(provider)?.has(mapping.dest)) {
+          unsupportedDestinations.add(mapping.dest)
+          const warnedDestinations = warnedExtractorDestinations.get(provider) ?? new Set<string>()
+          warnedDestinations.add(mapping.dest)
+          warnedExtractorDestinations.set(provider, warnedDestinations)
+        }
+      }
+    }
+  }
+
+  if (unsupportedDestinations.size) {
+    console.warn(`Unsupported extractor destination for standard extraction: ${[...unsupportedDestinations].sort().join(', ')}`)
   }
 }
 

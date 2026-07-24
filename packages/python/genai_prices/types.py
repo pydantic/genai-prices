@@ -2,8 +2,9 @@ from __future__ import annotations as _annotations
 
 import dataclasses
 import re
+import warnings
 from collections.abc import Iterator, Mapping, Sequence
-from dataclasses import InitVar, dataclass
+from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
@@ -201,7 +202,11 @@ class Usage:
         unknown_keys = kwargs.keys() - reported_usage_keys
         if unknown_keys:
             bad_keys = ', '.join(sorted(unknown_keys))
-            raise ValueError(f'Unknown usage key: {bad_keys}')
+            warnings.warn(
+                f'Unsupported usage key for standard pricing: {bad_keys}',
+                UserWarning,
+                stacklevel=2,
+            )
 
         self._store_values(kwargs)
 
@@ -438,9 +443,22 @@ class UsageExtractor:
     model_path: ExtractPath = 'model'
     """Path to the model name in the response."""
     _registry: InitVar[UnitRegistry | None] = None
+    _reported_usage_keys: frozenset[str] = field(init=False, repr=False, compare=False)
 
     def __post_init__(self, _registry: UnitRegistry | None) -> None:
-        _validate_usage_extractor_destinations(self.mappings, _registry)
+        reported_usage_keys = (
+            _registry._reported_usage_keys if _registry is not None else _reported_usage_keys()  # pyright: ignore[reportPrivateUsage]
+        )
+        object.__setattr__(self, '_reported_usage_keys', reported_usage_keys)
+
+        invalid_destinations = {mapping.dest for mapping in self.mappings} - reported_usage_keys
+        if invalid_destinations:
+            bad_keys = ', '.join(sorted(invalid_destinations))
+            warnings.warn(
+                f'Unsupported extractor destination for standard extraction: {bad_keys}',
+                UserWarning,
+                stacklevel=2,
+            )
 
     def extract(self, response_data: Any) -> tuple[str | None, Usage]:
         """Extract model name and usage information from a response.
@@ -464,25 +482,18 @@ class UsageExtractor:
 
         values: dict[str, int] = {}
         values_set = False
+        supported_mappings = 0
         for mapping in self.mappings:
+            if mapping.dest not in self._reported_usage_keys:
+                continue
+            supported_mappings += 1
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
             if value is not None:
                 values[mapping.dest] = values.get(mapping.dest, 0) + value
                 values_set = True
-        if not values_set:
+        if supported_mappings and not values_set:
             raise ValueError(f'No usage information found at {self.root}')
         return model_name, Usage(**values)
-
-
-def _validate_usage_extractor_destinations(
-    mappings: Sequence[UsageExtractorMapping], registry: UnitRegistry | None = None
-) -> None:
-    from genai_prices.validation import validate_extractor_destinations
-
-    validate_extractor_destinations(
-        {mapping.dest for mapping in mappings},
-        registry._reported_usage_keys if registry is not None else _reported_usage_keys(),  # pyright: ignore[reportPrivateUsage]
-    )
 
 
 E = TypeVar('E')
@@ -826,11 +837,16 @@ def _collect_resolved_model_prices(
     }
     if unknown_price_keys:
         bad_keys = ', '.join(sorted(unknown_price_keys))
-        raise ValueError(f'Unknown price key: {bad_keys}')
+        warnings.warn(
+            f'Unsupported price key for standard pricing: {bad_keys}',
+            UserWarning,
+            stacklevel=3,
+        )
 
     return tuple(
         (registry.unit_for_price_key(price_key), cast(Decimal | TieredPrices, value))
         for price_key, value in stored_prices
+        if price_key not in unknown_price_keys
     )
 
 

@@ -310,11 +310,17 @@ def test_model_price_str_requests_and_private_state() -> None:
     assert str(model_price) == '$2 / K requests'
 
 
-def test_calc_price_rejects_unregistered_dynamic_extra() -> None:
+def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
     price = ModelPrice(hovercraft_mtok=Decimal('1'))
 
-    with pytest.raises(ValueError, match='Unknown price key: hovercraft_mtok'):
-        price.calc_price(Usage(input_tokens=1))
+    with pytest.warns(UserWarning, match='Unsupported price key for standard pricing: hovercraft_mtok'):
+        result = price.calc_price(Usage(input_tokens=1))
+
+    assert result == {
+        'input_price': Decimal(0),
+        'output_price': Decimal(0),
+        'total_price': Decimal(0),
+    }
 
 
 def test_calc_price_rejects_dynamic_descendant_without_ancestors() -> None:

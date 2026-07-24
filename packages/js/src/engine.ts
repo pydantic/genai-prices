@@ -11,7 +11,7 @@ import {
   Usage,
 } from './types'
 import { getActiveRegistry, UnitRegistry } from './units'
-import { getUsageValue } from './usage'
+import { getUsageValue, warnUnsupportedUsageKeys } from './usage'
 import { validatePricedUnits } from './validation'
 
 export type ResolvedPrice = Readonly<{
@@ -21,12 +21,19 @@ export type ResolvedPrice = Readonly<{
 
 export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: UnitRegistry): ResolvedPrice[] {
   const resolvedPrices: ResolvedPrice[] = []
+  const unsupportedPriceKeys: string[] = []
   for (const [priceKey, price] of Object.entries(modelPrice)) {
     if (price === undefined) continue
 
     const unit = registry.getUnitForPriceKey(priceKey)
-    if (!unit) throw new Error(`Unknown price key: ${priceKey}`)
+    if (!unit) {
+      unsupportedPriceKeys.push(priceKey)
+      continue
+    }
     resolvedPrices.push({ price, unit })
+  }
+  if (unsupportedPriceKeys.length) {
+    console.warn(`Unsupported price key for standard pricing: ${unsupportedPriceKeys.sort().join(', ')}`)
   }
   return resolvedPrices
 }
@@ -70,6 +77,7 @@ function calcUnitPrice(price: number | TieredPrices | undefined, count: number |
 }
 
 export function calcPrice(usage: Usage, modelPrice: ModelPrice, registry: UnitRegistry = getActiveRegistry()): ModelPriceCalculationResult {
+  warnUnsupportedUsageKeys(usage, registry)
   const resolvedPrices = collectResolvedModelPrices(modelPrice, registry)
   validatePricedUnits(
     resolvedPrices.map(({ unit }) => unit),
