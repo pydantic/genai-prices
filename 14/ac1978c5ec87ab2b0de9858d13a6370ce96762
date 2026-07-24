@@ -1,0 +1,109 @@
+tests/dataset/extract_usages.py
+  s_47de40883b950a::t_56945b66390fdc 15-24,160-162
+prices/src/prices/package_data.py
+  s_47de40883b950a::t_e4768d1b7b6d53 22-23
+  s_47de40883b950a::t_0a3adba233cf65 1-2,6,8,10-11,14-18,21,26,29,31-35,37,49-58,60-85,97,105-108,110-166,169,173-178,184-185,188,194
+tests/test_update_prices.py
+  s_47de40883b950a::t_47880ce185f0f3 1-2,20-21,25-32,48,67-69,72-87,90-99,104,106-149,153,167,181,221-241,246,269-270,291,297,302,308
+packages/js/src/types.ts
+  s_47de40883b950a::t_0a3adba233cf65 83-91
+packages/python/genai_prices/update_prices.py
+  s_47de40883b950a::t_47880ce185f0f3 4,118,163,167-172
+tests/test_units.py
+  s_47de40883b950a::t_a5ebf55cfeaa3f 750-751,758-759,776-777
+  s_47de40883b950a::t_0a3adba233cf65 1-749,752-757,760-775,778-1373
+Makefile
+  s_47de40883b950a::t_ef5b01efaf452b 31,35,39
+README.md
+  s_47de40883b950a::t_3d73a028c33e77 44
+packages/js/src/dataUnits.ts
+  s_e007c5ed89566f::t_ea8e32d0199384 1-197
+packages/python/genai_prices/_cli.py
+  s_47de40883b950a::t_8aab199cb63c67 7,15-23,363,564-585,606-653,662-663,674-675,679-680,688-713
+packages/python/genai_prices/data.py
+  s_e007c5ed89566f::t_cd8ccd349393ca 2206-2214,2224-2259,2269-2304,2314-2340,2343,2345-2353,2363-2389,2764-2765,2820,2862,2865
+packages/python/genai_prices/data_snapshot.py
+  s_47de40883b950a::t_c0cea054a4cee5 27-30
+packages/python/genai_prices/data_units.py
+  s_e007c5ed89566f::t_d486b54a7522f0 1-109
+packages/python/genai_prices/decompose.py
+  s_47de40883b950a::t_e19cbb8a6444f8 1-62
+packages/python/genai_prices/types.py
+  s_47de40883b950a::t_dde9b97789f223 5-6,9,14-18,193,196-197,199-204,206,208-211,213-217,219,221-225,227-229,231,233-238,240-242,244-245,251-252,255-256,260-336,418,439-442,464,469,473-484,593-615,693-698,700-702,706-707,709-710,712-714,716-728,730,732-736,741-743,745-748,751,759-775,790-797,800,804-805,809,811-865,996-1058
+packages/python/genai_prices/units.py
+  s_47de40883b950a::t_58c9c6848aa92a 1-94
+packages/python/genai_prices/validation.py
+  s_47de40883b950a::t_e67caa9a05c87d 1-64
+prices/data_v2.json
+  s_47de40883b950a::t_e9dc175e3f850f 1
+prices/data_v2.schema.json
+  s_e007c5ed89566f::t_d987f86ce7e7c8 1-916
+prices/providers/google.yml
+  s_47de40883b950a::t_a20f0805c8cc0f 31-39,49-84,94-129,139-165,172-174,178-186,196-222,667-669,673,765,837,840
+prices/src/prices/build.py
+  s_47de40883b950a::t_cfbfb50116e4cd 3,15,29-35,37-39,42,65-89,92-96,100-101,103,109-116
+prices/src/prices/export_validation.py
+  s_47de40883b950a::t_9fb09d2398c937 1-170
+prices/src/prices/prices_types.py
+  s_47de40883b950a::t_62431b71e24902 12,17-18,23,132,157-169,185,202,246-249,276-278
+prices/src/prices/source_huggingface.py
+  s_47de40883b950a::t_543e8d41942940 77-79
+prices/src/prices/source_ovhcloud.py
+  s_47de40883b950a::t_8d20c9e906742b 100-102
+prices/units.yml
+  s_47de40883b950a::t_7591396bbef5d1 1-84
+tests/test_cli.py
+  s_47de40883b950a::t_4532cf43275451 6-7,9,11,21-23,25,29-31,35-44,58-73,149,188-225,232,245,500-678
+tests/test_custom_prices.py
+  s_47de40883b950a::t_ec2c1f1a7b1071 3,19-27,175-313
+tests/test_decompose.py
+  s_47de40883b950a::t_707e4e4b7b9372 1-115
+tests/test_extract_usage.py
+  s_47de40883b950a::t_2b0bae2dd7d565 19,553-554,581-584,587,601-604,607,621-701,719-721,810-818,835-861,908,921,927,944-949,951,954
+tests/test_google_extractors.py
+  s_47de40883b950a::t_52597c7505b527 1-106
+tests/test_lifecycle.py
+  s_47de40883b950a::t_99ce95c3de0052 4-6,8,59-60,64,69-146
+tests/test_package_schema.py
+  s_47de40883b950a::t_42cde0f6057ba8 1-57
+tests/test_price_calc.py
+  s_47de40883b950a::t_9709df9fa9a394 9,22,24-25,306-352,363-384
+tests/test_price_regressions.py
+  s_47de40883b950a::t_61725e886cbe8a 64-66,68-75,78-85,90,95,253-272,277,280-281
+tests/test_provider_array_integration.py
+  s_47de40883b950a::t_f1c5af05f79681 1-66
+tests/test_tiered_pricing.py
+  s_47de40883b950a::t_7decd575111e33 283-324
+tests/test_usage.py
+  s_47de40883b950a::t_1cfb8e8277fc4c 1-216
+tests/test_validation.py
+  s_47de40883b950a::t_1902eca82bb87f 1-197
+tests/unit_registry_helpers.py
+  s_47de40883b950a::t_5df2682aa87de9 1-10
+prices/providers/.schema.json
+  s_e007c5ed89566f::t_1ea68ed0cee56a 327,341-350,441-570,763-764,766-769,771-775,777-786
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "14ac1978c5ec87ab2b0de9858d13a6370ce96762",
+  "prompts": {},
+  "sessions": {
+    "s_47de40883b950a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9561-d5d8-7a40-ae39-178aa884ad71",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
