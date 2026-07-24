@@ -1370,6 +1370,75 @@ def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_sche
     assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
 
 
+def test_runtime_provider_projection_omits_unsupported_dynamic_fields_without_mutating_input() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            }
+        }
+    )
+    raw_providers: list[dict[str, Any]] = [
+        {
+            'id': 'testing',
+            'name': 'Testing',
+            'api_pattern': 'testing',
+            'extractors': [
+                {
+                    'root': 'usage',
+                    'mappings': [
+                        {'path': 'input_tokens', 'dest': 'input_tokens'},
+                        {'path': 'unknown_tokens', 'dest': 'unknown_tokens'},
+                    ],
+                }
+            ],
+            'models': [
+                {
+                    'id': 'model',
+                    'match': {'equals': 'model'},
+                    'prices': {'input_mtok': 1, 'unknown_mtok': 2},
+                },
+                {
+                    'id': 'conditional',
+                    'match': {'equals': 'conditional'},
+                    'prices': [
+                        {
+                            'prices': {'input_mtok': 3, 'another_unknown_mtok': 4},
+                            'constraint': None,
+                        }
+                    ],
+                },
+            ],
+        }
+    ]
+
+    with pytest.warns() as warning_records:
+        providers = runtime_types._providers_from_raw(raw_providers, registry)
+
+    assert [str(record.message) for record in warning_records] == [
+        'Unsupported price key for standard pricing: another_unknown_mtok, unknown_mtok',
+        'Unsupported extractor destination for standard extraction: unknown_tokens',
+    ]
+    raw_models = cast(list[dict[str, Any]], raw_providers[0]['models'])
+    raw_extractors = cast(list[dict[str, Any]], raw_providers[0]['extractors'])
+    assert raw_models[0]['prices'] == {'input_mtok': 1, 'unknown_mtok': 2}
+    assert cast(list[dict[str, Any]], raw_extractors[0]['mappings'])[-1]['dest'] == 'unknown_tokens'
+
+    provider = providers[0]
+    assert provider.extractors is not None
+    assert [mapping.dest for mapping in provider.extractors[0].mappings] == ['input_tokens']
+    direct_prices = provider.models[0].prices
+    assert isinstance(direct_prices, ModelPrice)
+    assert direct_prices.__dict__ == {'input_mtok': Decimal('1')}
+    conditional_prices = provider.models[1].prices
+    assert isinstance(conditional_prices, list)
+    assert conditional_prices[0].prices.__dict__ == {'input_mtok': Decimal('3')}
+
+
 def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

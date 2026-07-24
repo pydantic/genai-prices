@@ -1113,10 +1113,94 @@ _providers_schema = pydantic.TypeAdapter(
 
 
 def _providers_from_raw(raw_providers: Any, registry: UnitRegistry | None = None) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+    if registry is not None:
+        raw_providers = _project_provider_data(raw_providers, registry)
     normalized = _normalize_model_prices(raw_providers)
     if registry is not None:
         normalized = _inject_extractor_registry(normalized, registry)
     return _providers_schema.validate_python(normalized)
+
+
+def _project_provider_data(raw_providers: Any, registry: UnitRegistry) -> Any:
+    unsupported_price_keys: set[str] = set()
+    projected = _project_model_prices(raw_providers, registry, unsupported_price_keys)
+
+    unsupported_destinations: set[str] = set()
+    if isinstance(projected, list):
+        providers: list[Any] = []
+        for raw_provider in cast(list[Any], projected):
+            if not isinstance(raw_provider, Mapping):
+                providers.append(raw_provider)
+                continue
+
+            provider = dict(cast(Mapping[str, Any], raw_provider))
+            raw_extractors = provider.get('extractors')
+            if isinstance(raw_extractors, list):
+                extractors: list[Any] = []
+                for raw_extractor in cast(list[Any], raw_extractors):
+                    if not isinstance(raw_extractor, Mapping):
+                        extractors.append(raw_extractor)
+                        continue
+
+                    extractor = dict(cast(Mapping[str, Any], raw_extractor))
+                    raw_mappings = extractor.get('mappings')
+                    if isinstance(raw_mappings, list):
+                        mappings: list[Any] = []
+                        for raw_mapping in cast(list[Any], raw_mappings):
+                            if not isinstance(raw_mapping, Mapping):
+                                mappings.append(raw_mapping)
+                                continue
+
+                            typed_mapping = cast(Mapping[str, Any], raw_mapping)
+                            destination = cast(str | None, typed_mapping.get('dest'))
+                            if isinstance(destination, str) and destination not in registry._reported_usage_keys:  # pyright: ignore[reportPrivateUsage]
+                                unsupported_destinations.add(destination)
+                                continue
+                            mappings.append(typed_mapping)
+                        extractor['mappings'] = mappings
+                    extractors.append(extractor)
+                provider['extractors'] = extractors
+            providers.append(provider)
+        projected = providers
+
+    if unsupported_price_keys:
+        bad_keys = ', '.join(sorted(unsupported_price_keys))
+        warnings.warn(
+            f'Unsupported price key for standard pricing: {bad_keys}',
+            UserWarning,
+            stacklevel=3,
+        )
+    if unsupported_destinations:
+        bad_keys = ', '.join(sorted(unsupported_destinations))
+        warnings.warn(
+            f'Unsupported extractor destination for standard extraction: {bad_keys}',
+            UserWarning,
+            stacklevel=3,
+        )
+
+    return projected
+
+
+def _project_model_prices(value: Any, registry: UnitRegistry, unsupported_price_keys: set[str]) -> Any:
+    if isinstance(value, list):
+        return [_project_model_prices(item, registry, unsupported_price_keys) for item in cast(list[Any], value)]
+    if not isinstance(value, Mapping):
+        return value
+
+    projected: dict[str, Any] = {}
+    raw_mapping = cast(Mapping[str, Any], value)
+    for key, raw_value in raw_mapping.items():
+        if key == 'prices' and isinstance(raw_value, Mapping):
+            projected_prices: dict[str, Any] = {}
+            for price_key, price_value in cast(Mapping[str, Any], raw_value).items():
+                if price_key in registry._all_price_keys:  # pyright: ignore[reportPrivateUsage]
+                    projected_prices[price_key] = price_value
+                else:
+                    unsupported_price_keys.add(price_key)
+            projected[key] = projected_prices
+        else:
+            projected[key] = _project_model_prices(raw_value, registry, unsupported_price_keys)
+    return projected
 
 
 def _inject_extractor_registry(raw_providers: Any, registry: UnitRegistry) -> Any:
