@@ -317,7 +317,7 @@ wheels = [
 
 [[package]]
 name = "genai-prices"
-version = "0.0.71"
+version = "0.0.72"
 source = { editable = "packages/python" }
 dependencies = [
     { name = "httpx2" },
