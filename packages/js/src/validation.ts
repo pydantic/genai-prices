@@ -78,6 +78,23 @@ export function validateExtractorDestinations(providerData: Provider[], registry
   }
 }
 
+export function warnUnsupportedExtractorDestinations(providerData: Provider[], registry: UnitRegistry = getActiveRegistry()): void {
+  const unsupportedDestinations = new Set<string>()
+  for (const provider of providerData) {
+    for (const extractor of provider.extractors ?? []) {
+      for (const mapping of extractor.mappings) {
+        if (!registry.isReportedUsageKey(mapping.dest)) {
+          unsupportedDestinations.add(mapping.dest)
+        }
+      }
+    }
+  }
+
+  if (unsupportedDestinations.size) {
+    console.warn(`Unsupported extractor destination for standard extraction: ${[...unsupportedDestinations].sort().join(', ')}`)
+  }
+}
+
 function getUnitsForPriceKeys(priceKeys: Iterable<string>, registry: UnitRegistry): UnitDef[] {
   return [...new Set(priceKeys)].map((priceKey) => {
     const unit = registry.getUnitForPriceKey(priceKey)

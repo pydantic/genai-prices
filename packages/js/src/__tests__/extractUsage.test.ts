@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import type { Provider } from '../types'
 
@@ -310,13 +310,13 @@ describe('extractUsage', () => {
       )
     })
 
-    it('should reject an invalid destination on a direct custom provider', () => {
+    it('should warn and skip an unsupported destination before reading its required path', () => {
       const provider: Provider = {
         api_pattern: 'test',
         extractors: [
           {
             api_flavor: 'default',
-            mappings: [{ dest: 'imaginary_tokens', path: 'tokens', required: true }],
+            mappings: [{ dest: 'future_tokens', path: 'missing_tokens', required: true }],
             model_path: 'model',
             root: 'usage',
           },
@@ -325,10 +325,14 @@ describe('extractUsage', () => {
         models: [],
         name: 'Test',
       }
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
-      expect(() => extractUsage(provider, { model: 'test-model', usage: { tokens: 1 } })).toThrow(
-        'Invalid extractor destination for test/default mapping 0: imaginary_tokens'
-      )
+      expect(extractUsage(provider, { model: 'test-model', usage: {} })).toEqual({
+        model: 'test-model',
+        usage: {},
+      })
+      expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
+      warn.mockRestore()
     })
 
     it('should skip optional nested paths with the wrong intermediate shape', () => {
