@@ -12,6 +12,7 @@ import httpx2
 import pytest
 from inline_snapshot import snapshot
 
+import genai_prices.update_prices as update_prices_module
 from genai_prices import (
     UpdatePrices,
     Usage,
@@ -318,6 +319,28 @@ def test_update_prices_continues_after_interval_until_stopped():
         assert update_prices.count >= 2
     finally:
         update_prices.stop()
+
+
+def test_update_prices_background_task_exits_if_already_stopped() -> None:
+    update_prices = NullUpdatePrices()
+    update_prices._stop_event.set()
+
+    update_prices._background_task()
+
+    assert not update_prices._prices_updated.is_set()
+
+
+def test_update_prices_background_task_handles_lifecycle_refusal(monkeypatch: pytest.MonkeyPatch) -> None:
+    update_prices = NullUpdatePrices()
+
+    def refuse_update() -> None:
+        raise update_prices_module._UpdaterStoppingError('stopping')
+
+    monkeypatch.setattr(update_prices, '_update_prices', refuse_update)
+
+    update_prices._background_task()
+
+    assert not update_prices._prices_updated.is_set()
 
 
 def test_update_prices_concurrent_fetches_are_last_invocation_wins(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -995,24 +995,71 @@ def test_unit_registry_from_untrusted_accepts_published_projection() -> None:
     ('raw_units', 'message'),
     [
         ([], 'Unit definitions must be an object'),
+        ({1: {'per': 1_000, 'dimensions': {'family': 'widgets'}}}, 'Unit usage keys must be strings'),
         ({'widgets': []}, 'Unit definition for widgets must be an object'),
+        ({'widgets': {1: 2}}, 'Unit definition fields for widgets must be strings'),
         (
             {'widgets': {'per': 1_000, 'dimensions': {'family': 'widgets'}, 'unexpected': True}},
             'Unknown unit definition fields for widgets: unexpected',
+        ),
+        (
+            {'widgets': {'per': 1_000, 'price_key': 1, 'dimensions': {'family': 'widgets'}}},
+            'Unit price key for widgets must be a string',
         ),
         (
             {'widgets': {'per': True, 'dimensions': {'family': 'widgets'}}},
             'Unit per for widgets must be a positive integer',
         ),
         (
+            {'widgets': {'per': 1_000, 'dimensions': []}},
+            'Unit dimensions for widgets must be an object',
+        ),
+        (
             {'widgets': {'per': 1_000, 'dimensions': {'family': 1}}},
             'Unit dimensions for widgets must map strings to strings',
+        ),
+        (
+            {'constructor': {'per': 1_000, 'dimensions': {'family': 'widgets'}}},
+            "Invalid unit usage key: 'constructor' is reserved",
         ),
     ],
 )
 def test_unit_registry_from_untrusted_rejects_invalid_shapes(raw_units: object, message: str) -> None:
     with pytest.raises(ValueError, match=message):
         UnitRegistry.from_untrusted(raw_units)
+
+
+def test_unit_registry_from_untrusted_rejects_missing_inferred_intermediate() -> None:
+    with pytest.raises(ValueError, match='Missing intermediate unit dimensions'):
+        UnitRegistry.from_untrusted(
+            {
+                'input_audio_tool_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {
+                        'family': 'tokens',
+                        'direction': 'input',
+                        'modality': 'audio',
+                        'token_type': 'tool',
+                    },
+                },
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'output_audio_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio'},
+                },
+                'output_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'output'},
+                },
+                'output_tool_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'output', 'token_type': 'tool'},
+                },
+            }
+        )
 
 
 def test_decode_v2_payload_accepts_published_data() -> None:
@@ -1368,6 +1415,45 @@ def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_sche
     assert injected[1] == {'id': 'without-extractors'}
     assert injected[2]['extractors'][0] is invalid_extractor
     assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+
+def test_runtime_provider_projection_preserves_malformed_shapes_for_schema_validation() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            }
+        }
+    )
+    invalid_provider = object()
+    invalid_extractor = object()
+    invalid_mapping = object()
+    raw_providers: list[Any] = [
+        invalid_provider,
+        {
+            'id': 'testing',
+            'extractors': [
+                invalid_extractor,
+                {'mappings': [invalid_mapping, {'dest': 1}, {'dest': 'input_tokens'}]},
+                {'mappings': object()},
+            ],
+        },
+    ]
+
+    assert runtime_types._project_provider_data({}, registry) == {}
+    projected = runtime_types._project_provider_data(raw_providers, registry)
+    assert projected[0] is invalid_provider
+    assert projected[1]['extractors'][0] is invalid_extractor
+    assert projected[1]['extractors'][1]['mappings'] == [
+        invalid_mapping,
+        {'dest': 1},
+        {'dest': 'input_tokens'},
+    ]
+    assert not isinstance(projected[1]['extractors'][2]['mappings'], list)
 
 
 def test_runtime_provider_projection_omits_unsupported_dynamic_fields_without_mutating_input() -> None:
@@ -1942,6 +2028,26 @@ def test_runtime_data_rejects_stale_activation() -> None:
     runtime_state.begin_update()
 
     assert runtime_state.activate_runtime_data(stale_generation, initial) is False
+    assert runtime_state.get_runtime_data() is initial
+
+
+def test_runtime_data_lazy_initialization_observes_state_populated_before_lock(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from genai_prices import runtime_state
+
+    initial = runtime_state.get_runtime_data()
+
+    class PopulateOnEnter:
+        def __enter__(self) -> None:
+            runtime_state._runtime_data = initial
+
+        def __exit__(self, *_args: object) -> None:
+            pass
+
+    monkeypatch.setattr(runtime_state, '_runtime_data', None)
+    monkeypatch.setattr(runtime_state, '_lock', PopulateOnEnter())
+
     assert runtime_state.get_runtime_data() is initial
 
 

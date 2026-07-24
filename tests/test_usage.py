@@ -37,6 +37,26 @@ def test_usage_direct_construction_warns_for_unknown_keywords() -> None:
     assert repr(usage) == 'Usage()'
 
 
+def test_usage_internal_construction_warns_for_unknown_values() -> None:
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            }
+        }
+    )
+
+    with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: imaginary_tokens'):
+        usage = Usage._from_values_with_registry(
+            {'input_tokens': 1, 'imaginary_tokens': 2},
+            registry,
+        )
+
+    assert usage.__dict__ == {'input_tokens': 1, 'imaginary_tokens': 2}
+
+
 def test_usage_direct_construction_warns_for_pricing_only_requests() -> None:
     with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: requests'):
         usage = Usage(requests=1)
@@ -103,6 +123,13 @@ def test_usage_reported_value_returns_stored_or_zero() -> None:
 
     assert usage.reported_value('input_tokens') == 7
     assert usage.reported_value('output_tokens') == 0
+
+
+def test_usage_internal_reported_values_uses_active_registry_by_default() -> None:
+    usage = Usage(input_tokens=7)
+    usage.imaginary_tokens = 9
+
+    assert usage._reported_values() == {'input_tokens': 7}
 
 
 def test_usage_radd_with_zero_returns_self_for_sum() -> None:
