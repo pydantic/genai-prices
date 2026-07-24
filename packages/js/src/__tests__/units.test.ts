@@ -218,6 +218,92 @@ describe('UnitRegistry', () => {
     expect(() => Object.assign(inputUnit.dimensions, { family: 'changed' })).toThrow(TypeError)
     expect(registry.getUnit('input_tokens')?.dimensions.family).toBe('tokens')
   })
+
+  it('validates untrusted unit dictionaries before indexing them', () => {
+    const registry = UnitRegistry.fromUntrusted({
+      widgets: {
+        dimensions: { family: 'widgets' },
+        per: 1_000,
+        price_key: 'widget_kcount',
+      },
+    })
+
+    expect(registry.getUnit('widgets')).toMatchObject({
+      dimensions: { family: 'widgets' },
+      per: 1_000,
+      priceKey: 'widget_kcount',
+      usageKey: 'widgets',
+    })
+  })
+
+  it.each([
+    ['_private_name', 'private_mtok', 'must not start'],
+    ['$input_tokens', 'input_mtok', 'not a public identifier'],
+    ['class', 'class_mtok', 'reserved keyword'],
+    ['def', 'def_mtok', 'reserved keyword'],
+    ['valid_usage', '_private_name', 'must not start'],
+    ['valid_usage', 'lambda', 'reserved keyword'],
+  ])('rejects unsafe untrusted public keys', (usageKey, priceKey, message) => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        [usageKey]: {
+          dimensions: { family: 'testing' },
+          per: 1,
+          price_key: priceKey,
+        },
+      })
+    ).toThrow(message)
+  })
+
+  it('rejects an untrusted compatible pair with a missing join', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        cache_write_tokens: {
+          dimensions: { cache: 'write', direction: 'input', family: 'tokens' },
+          per: 1_000_000,
+        },
+        input_audio_tokens: {
+          dimensions: { direction: 'input', family: 'tokens', modality: 'audio' },
+          per: 1_000_000,
+        },
+        input_tokens: {
+          dimensions: { direction: 'input', family: 'tokens' },
+          per: 1_000_000,
+        },
+      })
+    ).toThrow('Missing join unit dimensions between cache_write_tokens and input_audio_tokens')
+  })
+
+  it('rejects an untrusted registry with a missing intermediate unit', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        input_audio_tool_tokens: {
+          dimensions: { direction: 'input', family: 'tokens', modality: 'audio', token_type: 'tool' },
+          per: 1_000_000,
+        },
+        input_tokens: {
+          dimensions: { direction: 'input', family: 'tokens' },
+          per: 1_000_000,
+        },
+        output_audio_tokens: {
+          dimensions: { direction: 'output', family: 'tokens', modality: 'audio' },
+          per: 1_000_000,
+        },
+        output_tokens: {
+          dimensions: { direction: 'output', family: 'tokens' },
+          per: 1_000_000,
+        },
+        output_tool_tokens: {
+          dimensions: { direction: 'output', family: 'tokens', token_type: 'tool' },
+          per: 1_000_000,
+        },
+      })
+    ).toThrow('Missing intermediate unit dimensions')
+  })
+
+  it('accepts the complete bundled registry as untrusted data', () => {
+    expect(UnitRegistry.fromUntrusted(unitData).getAllUsageKeys()).toEqual(new Set(['requests', ...reportableUsageKeys]))
+  })
 })
 
 describe('generated unit registry', () => {
