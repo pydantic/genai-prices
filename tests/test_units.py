@@ -1684,6 +1684,41 @@ def test_custom_snapshots_do_not_carry_a_registry() -> None:
     assert not hasattr(snapshot, 'unit_registry')
 
 
+def test_runtime_data_activation_replaces_registry_and_snapshot_together() -> None:
+    from genai_prices import runtime_state
+
+    initial = runtime_state.get_runtime_data()
+    registry = UnitRegistry(
+        {
+            'widgets': {
+                'per': 1_000,
+                'dimensions': {'family': 'widgets'},
+            }
+        }
+    )
+    snapshot = DataSnapshot([], from_auto_update=True)
+    candidate = runtime_state.RuntimeData(registry=registry, snapshot=snapshot)
+    generation = runtime_state.begin_update()
+
+    try:
+        assert runtime_state.activate_runtime_data(generation, candidate) is True
+        assert runtime_state.get_runtime_data() is candidate
+    finally:
+        restore_generation = runtime_state.begin_update()
+        assert runtime_state.activate_runtime_data(restore_generation, initial) is True
+
+
+def test_runtime_data_rejects_stale_activation() -> None:
+    from genai_prices import runtime_state
+
+    initial = runtime_state.get_runtime_data()
+    stale_generation = runtime_state.begin_update()
+    runtime_state.begin_update()
+
+    assert runtime_state.activate_runtime_data(stale_generation, initial) is False
+    assert runtime_state.get_runtime_data() is initial
+
+
 def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
