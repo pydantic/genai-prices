@@ -1,0 +1,29 @@
+packages/python/genai_prices/data_snapshot.py
+  s_e007c5ed89566f::t_a7980277be934b 14,16,19-20,22
+packages/python/genai_prices/units.py
+  s_e007c5ed89566f::t_dbdc51a7b2df7d 90,92
+packages/python/genai_prices/runtime_state.py
+  s_e007c5ed89566f::t_dbdc51a7b2df7d 23-28,34,51-55
+  s_e007c5ed89566f::t_3bacf0208fddcf 22
+  s_e007c5ed89566f::t_478eba98d2d4d7 56-57
+tests/test_update_prices.py
+  s_e007c5ed89566f::t_d9df34f924906b 32
+  s_e007c5ed89566f::t_3a25f188e8b3d5 27-31,33-34,142,168,171,182,185,196,199,216,244,249,285,295,299,306,312
+  s_e007c5ed89566f::t_be4d4d327e5505 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "177ac3cf1dd0b4e2c11cf5eebd9de49a5bddc8d5",
+  "prompts": {},
+  "sessions": {
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
