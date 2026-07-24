@@ -1,10 +1,9 @@
-import { unitData } from './dataUnits'
-import { UnitRegistry } from './unitRegistry'
+import type { UnitRegistry } from './unitRegistry'
+
+import { getRuntimeData } from './runtimeState'
 
 export { isCompatible, isDescendantOrSelf, UnitRegistry } from './unitRegistry'
 
-const generatedRegistry = new UnitRegistry(unitData)
-
 export function getActiveRegistry(): UnitRegistry {
-  return generatedRegistry
+  return getRuntimeData().registry
 }

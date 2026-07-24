@@ -8,14 +8,13 @@ import type {
   Usage,
 } from './types'
 
-import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { activateRuntimeData, getRuntimeData } from './runtimeState'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json'
 
-let providerData: Provider[] = embeddedData
-let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(embeddedData)
+let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(getRuntimeData().providers)
 let autoUpdateCb: (() => void) | null = null
 
 function setProviderData(data: ProviderDataPayload) {
@@ -27,13 +26,13 @@ function setProviderData(data: ProviderDataPayload) {
     const updatePromise = data
       .then((data) => {
         if (data === null) {
-          return providerData
+          return getRuntimeData().providers
         }
         return activateProviderData(data)
       })
       .catch((error: unknown) => {
         if (providerDataPromise === updatePromise) {
-          providerDataPromise = Promise.resolve(providerData)
+          providerDataPromise = Promise.resolve(getRuntimeData().providers)
         }
         throw error
       })
@@ -48,8 +47,9 @@ function activateProviderData(data: Provider[]): Provider[] {
     throw new Error('Expected null or Provider[]')
   }
 
-  warnUnsupportedExtractorDestinations(data)
-  providerData = data
+  const active = getRuntimeData()
+  warnUnsupportedExtractorDestinations(data, active.registry)
+  activateRuntimeData({ providers: data, registry: active.registry })
   return data
 }
 
@@ -72,6 +72,7 @@ export function waitForUpdate() {
 
 export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions): PriceCalculationResult {
   autoUpdateCb?.()
+  const state = getRuntimeData()
   let lowerModelId = modelId.toLowerCase().trim()
   let providerId = options?.providerId
 
@@ -81,20 +82,20 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     const actualProviderId = lowerModelId.slice(0, slashIndex)
     const actualModelId = lowerModelId.slice(slashIndex + 1)
     // Only use the extracted provider if it exists
-    if (actualProviderId && actualModelId && matchProvider(providerData, { providerId: actualProviderId })) {
+    if (actualProviderId && actualModelId && matchProvider(state.providers, { providerId: actualProviderId })) {
       providerId = actualProviderId
       lowerModelId = actualModelId
     }
   }
 
   const provider =
-    options?.provider ?? matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
+    options?.provider ?? matchProvider(state.providers, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
-  const model = matchModelWithFallback(provider, lowerModelId, providerData)
+  const model = matchModelWithFallback(provider, lowerModelId, state.providers)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
   const modelPrice = getActiveModelPrice(model, timestamp)
-  const priceResult = calcPriceInternal(usage, modelPrice)
+  const priceResult = calcPriceInternal(usage, modelPrice, state.registry)
   return {
     auto_update_timestamp: undefined,
     model,
@@ -106,5 +107,5 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
 
 export function findProvider(options: ProviderFindOptions): Provider | undefined {
   autoUpdateCb?.()
-  return matchProvider(providerData, options)
+  return matchProvider(getRuntimeData().providers, options)
 }

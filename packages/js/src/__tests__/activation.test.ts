@@ -5,6 +5,7 @@ import type { Provider, ProviderDataValue } from '../types'
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
 import { extractUsage } from '../extractUsage'
+import { getRuntimeData } from '../runtimeState'
 import { getActiveRegistry } from '../units'
 
 afterEach(() => {
@@ -121,6 +122,7 @@ describe('provider activation', () => {
   })
 
   it('preserves provider-array update compatibility and the generated unit registry', async () => {
+    const beforeState = getRuntimeData()
     const beforeRegistry = getActiveRegistry()
     const beforeInputUnit = beforeRegistry.getUnit('input_tokens')
     const arrayProvider = providerFixture('array-provider')
@@ -130,6 +132,8 @@ describe('provider activation', () => {
     })
 
     await expect(waitForUpdate()).resolves.toEqual([arrayProvider])
+    expect(getRuntimeData()).not.toBe(beforeState)
+    expect(getRuntimeData()).toEqual({ providers: [arrayProvider], registry: beforeRegistry })
     expect(findProvider({ providerId: 'array-provider' })?.id).toBe('array-provider')
     expect(getActiveRegistry()).toBe(beforeRegistry)
     expect(getActiveRegistry().getUnit('input_tokens')).toBe(beforeInputUnit)
