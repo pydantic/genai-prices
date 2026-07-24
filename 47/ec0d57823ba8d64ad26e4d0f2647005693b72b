@@ -1,0 +1,21 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_19839d59d6ccf8::t_f0ac60300e784d 30,39,56
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_19839d59d6ccf8::t_60048a449b3211 39,66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "47ec0d57823ba8d64ad26e4d0f2647005693b72b",
+  "prompts": {},
+  "sessions": {
+    "s_19839d59d6ccf8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f8f81-1154-76d1-8a73-f70a1843679c",
+        "model": "unknown"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
