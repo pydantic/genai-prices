@@ -1,0 +1,31 @@
+specs/data-driven-unit-registry/algorithm.md
+  s_47de40883b950a::t_8f5e05e89303b9 1-134
+specs/data-driven-unit-registry/examples.md
+  s_47de40883b950a::t_4782c47dbe974e 1-136
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+  s_47de40883b950a::t_b46e75f3532c48 1-84
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/spec.md
+  s_47de40883b950a::t_cdeece51c30c2e 1-130
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_47de40883b950a::t_a910516468f440 1-56
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_47de40883b950a::t_3a6c5d8e4c9cdd 1-66
+specs/data-driven-unit-registry/spec.md
+  s_47de40883b950a::t_5c839b2185f6f6 1-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7b2e5f9dfc08ec89c669dbf6a28eb3b2b7bc71d4",
+  "prompts": {},
+  "sessions": {
+    "s_47de40883b950a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9561-d5d8-7a40-ae39-178aa884ad71",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
