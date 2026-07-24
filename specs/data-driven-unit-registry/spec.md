@@ -95,23 +95,23 @@ Registry work does not rename or restructure provider YAML for its own sake. Pro
 **Generated runtime outputs contain only runtime-semantic data.** _(from "Units are data, not handwritten runtime fields", "The runtime compatibility surface is deliberately minimal")_
 Generated package unit modules contain only usage identity, price identity, normalization, and dimensions. They omit `dimension_requirements` and any future source-only closure hints, authoring annotations, validation markers, trust flags, fingerprints, or build intermediates. Generated provider modules and runtime JSON artifacts likewise contain provider and price data needed by installed packages, not generated pricing behavior or build-validation machinery. Build-side schemas and diagnostics may retain richer metadata because they are replaceable authoring infrastructure rather than installed runtime contracts.
 
-**Remote contracts are versioned instead of repurposed.**
-Every package version keeps fetching a payload shape and unit vocabulary it understands. A new contract uses a new URL rather than changing the artifact consumed by already released auto-updaters.
+**Remote contracts are frozen when released.**
+Every released package version keeps fetching a payload shape and unit vocabulary it understands. An unreleased artifact may change before its first package release; after release, a new contract uses a new URL rather than changing the artifact consumed by existing auto-updaters.
 
-**The v1 provider artifacts remain unchanged by this work.** _(from "Remote contracts are versioned instead of repurposed")_
+**The v1 provider artifacts remain unchanged by this work.** _(from "Remote contracts are frozen when released")_
 Existing `data.json` and `data_slim.json` consumers continue receiving their provider-array contract and original unit vocabulary. The registry release does not wrap or add new unit-related fields to those artifacts.
 
-**Phase 1 delivers a releasable static registry through provider-array v2 data.** _(from "Remote contracts are versioned instead of repurposed", "Registry construction promotes raw data into immutable indexes")_
+**Phase 1 delivers a releasable static registry through provider-array v2 data.** _(from "Remote contracts are frozen when released", "Registry construction promotes raw data into immutable indexes")_
 [Phase 1: Static Unit Registry Release](phase-1-static-unit-registry-release/spec.md) ([code spec](phase-1-static-unit-registry-release/code-spec.md)) consolidates the completed Python, JavaScript, shared-registry, and polish work. Installed packages construct one bundled registry, auto-update providers from same-shape `data_v2.json`, include new modality pricing, and remove obvious repeated hot-path scans without cache state.
 
-**Phase 2 adds auto-updating unit definitions through wrapped v3 data.** _(from "Remote contracts are versioned instead of repurposed", "Phase 1 delivers a releasable static registry through provider-array v2 data")_
-[Phase 2: Auto-Updating Unit Definitions](phase-2-auto-updating-units/spec.md) ([code spec](phase-2-auto-updating-units/code-spec.md)) is a future independent PR. It publishes `data_v3.json` with units and providers, activates them atomically, and preserves v1/v2 URLs. It is not required for the Phase 1 release.
+**Phase 2 adds auto-updating unit definitions through wrapped v2 data.** _(from "Remote contracts are frozen when released", "Phase 1 delivers a releasable static registry through provider-array v2 data")_
+[Phase 2: Auto-Updating Unit Definitions](phase-2-auto-updating-units/spec.md) ([code spec](phase-2-auto-updating-units/code-spec.md)) is stacked on Phase 1 as an alternative pre-release boundary. It changes the unreleased `data_v2.json` root to publish units with providers and activates them atomically while preserving v1 URLs. Phase 1 remains independently releasable; if it is released alone, this v2-repurposing stack cannot merge.
 
-**Runtime custom units remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+**Runtime custom units remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v2 data")_
 Phase 1 supports repo-defined bundled units and Phase 2 supports publisher-defined remote units. Neither phase promises arbitrary caller-defined registry mutation as a public runtime feature.
 
 **Validation and decomposition caches remain deferred.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data")_
 Phase 1 removes repeated scans and allocations without cache lifecycle state. More elaborate validation or decomposition caches require a separate specification; they are not an active numbered phase.
 
-**Phase prose specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v3 data")_
+**Phase prose specs are the implementation source of truth.** _(from "Phase 1 delivers a releasable static registry through provider-array v2 data", "Phase 2 adds auto-updating unit definitions through wrapped v2 data")_
 The root spec defines shared invariants and delivery boundaries, while each numbered phase's `spec.md` contains that phase's complete requirements. A phase's `code-spec.md` is supporting implementation detail: it traces details to prose requirements but cannot introduce a requirement or expand release scope. Later requirements likewise do not expand an earlier phase's release scope.
