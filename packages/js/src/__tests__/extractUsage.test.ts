@@ -19,6 +19,10 @@ describe('extractUsage', () => {
         stop_sequence: null,
         type: 'message',
         usage: {
+          cache_creation: {
+            ephemeral_1h_input_tokens: 23,
+            ephemeral_5m_input_tokens: 100,
+          },
           cache_creation_input_tokens: 123,
           cache_read_input_tokens: 0,
           input_tokens: 504,
@@ -30,12 +34,21 @@ describe('extractUsage', () => {
       const { model, usage } = extractUsage(anthropicProvider, responseData)
 
       expect(model).toBe('claude-sonnet-4-20250514')
+      if (!model) throw new Error('Expected extracted model')
       expect(usage).toEqual({
         cache_read_tokens: 0,
+        cache_write_1h_tokens: 23,
+        cache_write_5m_tokens: 100,
         cache_write_tokens: 123,
         input_tokens: 627,
         output_tokens: 97,
       })
+
+      const price = calcPrice(usage, model, { providerId: 'anthropic' })
+      if (!price) throw new Error('Expected matched Anthropic price')
+      expect(price.input_price).toBeCloseTo(0.002025)
+      expect(price.output_price).toBeCloseTo(0.001455)
+      expect(price.total_price).toBeCloseTo(0.00348)
     })
 
     it('should extract basic usage without cache tokens', () => {
