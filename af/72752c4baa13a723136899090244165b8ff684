@@ -1,0 +1,39 @@
+README.md
+  s_47de40883b950a::t_9654747f09a417 86-91
+packages/js/README.md
+  s_47de40883b950a::t_1f420ac15f0cc5 34-39,42,44-47
+packages/js/src/__tests__/activation.test.ts
+  s_47de40883b950a::t_ba4bd077c3b1c0 22
+packages/js/src/api.ts
+  s_47de40883b950a::t_b8a17628cc2409 15
+packages/python/README.md
+  s_47de40883b950a::t_f3632bbebe1616 92-93,98,100-101
+packages/python/genai_prices/update_prices.py
+  s_47de40883b950a::t_a1ca4366155f6d 22
+prices/README.md
+  s_47de40883b950a::t_ed40b0011a7f3e 3,5-7,9-10,28,32-33
+prices/src/prices/package_data.py
+  s_47de40883b950a::t_44e77f287945eb 21,23-24
+tests/cassettes/test_update_prices/success.yaml
+  s_47de40883b950a::t_5afafbf77f59a6 16
+tests/test_units.py
+  s_47de40883b950a::t_b0414e48a4272f 1027,1034,1051-1052
+tests/test_update_prices.py
+  s_47de40883b950a::t_ce811e7d7d97b1 59,69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "af72752c4baa13a723136899090244165b8ff684",
+  "prompts": {},
+  "sessions": {
+    "s_47de40883b950a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9561-d5d8-7a40-ae39-178aa884ad71",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
