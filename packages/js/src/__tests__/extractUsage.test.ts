@@ -360,6 +360,20 @@ describe('extractUsage', () => {
       })
     })
 
+    it('should extract tool-use prompt audio tokens', () => {
+      const responseData = {
+        modelVersion: 'gemini-2.5-flash',
+        usageMetadata: {
+          toolUsePromptTokenCount: 25,
+          toolUsePromptTokensDetails: [{ modality: 'AUDIO', tokenCount: 5 }],
+        },
+      }
+      const { model, usage } = extractUsage(googleProvider, responseData)
+
+      expect(model).toBe('gemini-2.5-flash')
+      expect(usage).toEqual({ input_audio_tokens: 5, input_tokens: 25 })
+    })
+
     it('should have correct usage with caching', () => {
       const responseData = {
         modelVersion: 'gemini-2.5-flash',

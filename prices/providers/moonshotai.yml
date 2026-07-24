@@ -152,6 +152,21 @@ models:
       cache_read_mtok: 0.19
       output_mtok: 4.00
 
+  - id: kimi-k3
+    name: Kimi K3
+    description: >-
+      Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input,
+      tool use, and structured output. 2.8 trillion total parameters MoE.
+    match:
+      equals: kimi-k3
+    context_window: 1048576
+    prices_checked: "2026-07-16"
+    price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md"
+    prices:
+      input_mtok: 3.00
+      cache_read_mtok: 0.30
+      output_mtok: 15.00
+
   - id: moonshot-v1-128k
     name: Moonshot V1 128K
     match:

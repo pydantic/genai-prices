@@ -552,6 +552,21 @@ def test_google():
     assert usage == snapshot(('gemini-2.5-flash', Usage(input_tokens=100, output_tokens=162)))
 
 
+def test_google_extracts_tool_use_prompt_audio_tokens():
+    response_data = {
+        'usageMetadata': {
+            'toolUsePromptTokenCount': 25,
+            'toolUsePromptTokensDetails': [{'modality': 'AUDIO', 'tokenCount': 5}],
+        },
+        'modelVersion': 'gemini-2.5-flash',
+    }
+
+    assert google_provider.extract_usage(response_data) == (
+        'gemini-2.5-flash',
+        Usage(input_tokens=25, input_audio_tokens=5),
+    )
+
+
 gemini_response_data_caching = {
     'usageMetadata': {
         'promptTokenCount': 14152,

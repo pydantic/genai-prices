@@ -41,7 +41,7 @@ The following providers are currently supported:
 - [Deepseek](prices/providers/deepseek.yml) - 7 models
 - [Doubleword](prices/providers/doubleword.yml) - 16 models
 - [Fireworks](prices/providers/fireworks.yml) - 24 models
-- [Google](prices/providers/google.yml) - 39 models
+- [Google](prices/providers/google.yml) - 41 models
 - [Groq](prices/providers/groq.yml) - 29 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 1 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 3 models
@@ -56,10 +56,10 @@ The following providers are currently supported:
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 24 models
 - [MiniMax](prices/providers/minimax.yml) - 9 models
 - [Mistral](prices/providers/mistral.yml) - 31 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 12 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 13 models
 - [Novita](prices/providers/novita.yml) - 34 models
 - [OpenAI](prices/providers/openai.yml) - 85 models
-- [OpenRouter](prices/providers/openrouter.yml) - 687 models
+- [OpenRouter](prices/providers/openrouter.yml) - 688 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 15 models
 - [Perplexity](prices/providers/perplexity.yml) - 9 models
 - [Together AI](prices/providers/together.yml) - 72 models
@@ -120,6 +120,7 @@ dramatically improve the experience for developers using your API!
 Otherwise, to contribute:
 
 - See [`prices/README.md`](prices) for instructions on how to contribute to the price data.
+- See [`benchmarks/README.md`](benchmarks) for the pricing performance benchmark workflow.
 - Feel free to submit pull requests or issues about the Python and JS packages.
 - If you need a library for another language, please create an issue, we'd be happy to discuss building it, hosting it here,
   or helping you maintain it elsewhere.

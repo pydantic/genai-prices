@@ -3778,6 +3778,21 @@ export const data: Provider[] = [
             dest: 'input_tokens',
             required: false,
           },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
         ],
       },
       {
@@ -4539,7 +4554,17 @@ export const data: Provider[] = [
         description:
           "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
         match: {
-          starts_with: 'gemini-3.5-flash',
+          or: [
+            {
+              equals: 'gemini-3.5-flash',
+            },
+            {
+              starts_with: 'gemini-3.5-flash-preview',
+            },
+            {
+              regex: '^gemini-3\\.5-flash-\\d',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -4548,6 +4573,40 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_read_mtok: 0.15,
           output_mtok: 9,
+        },
+      },
+      {
+        id: 'gemini-3.5-flash-lite',
+        name: 'Gemini 3.5 Flash Lite',
+        description:
+          "Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
+        match: {
+          starts_with: 'gemini-3.5-flash-lite',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).',
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'gemini-3.6-flash',
+        name: 'Gemini 3.6 Flash',
+        description:
+          "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+        match: {
+          starts_with: 'gemini-3.6-flash',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented.',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.15,
+          output_mtok: 7.5,
         },
       },
       {
@@ -4639,17 +4698,22 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'gemini-live-2.5-flash-preview',
+        id: 'gemini-live-2.5-flash',
+        name: 'Gemini Live 2.5 Flash',
+        description:
+          "Google's Live API model for low-latency bidirectional voice and video interactions, GA on Vertex AI (model id `gemini-live-2.5-flash`, served from the `global` location). The prefix match also covers the AI Studio preview ids (`gemini-live-2.5-flash-preview*`).",
         match: {
           or: [
             {
-              starts_with: 'gemini-live-2.5-flash-preview',
+              starts_with: 'gemini-live-2.5-flash',
             },
             {
               starts_with: 'gemini-2.5-flash-native-audio-preview',
             },
           ],
         },
+        price_comments:
+          'See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
         prices: {
           input_mtok: 0.5,
           output_mtok: 2,
@@ -10103,6 +10167,22 @@ export const data: Provider[] = [
           input_mtok: 0.95,
           cache_read_mtok: 0.19,
           output_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        description:
+          "Kimi's flagship reasoning model with always-on thinking, native multimodal (image and video) input, tool use, and structured output. 2.8 trillion total parameters MoE.",
+        match: {
+          equals: 'kimi-k3',
+        },
+        context_window: 1048576,
+        price_comments: 'Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
@@ -17036,6 +17116,27 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           cache_read_mtok: 0.16,
           output_mtok: 3.5,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          or: [
+            {
+              equals: 'moonshotai/kimi-k3',
+            },
+            {
+              equals: 'moonshotai/kimi-k3-20260715',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments: 'Ref: https://openrouter.ai/api/v1/models',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
         },
       },
       {
