@@ -736,6 +736,7 @@ models:
       See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API)
       and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches
       the preview.
+    prices_checked: 2026-07-24
     prices:
       input_mtok: 0.5
       input_audio_mtok: 3
