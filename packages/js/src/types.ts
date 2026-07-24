@@ -104,6 +104,11 @@ export interface Provider {
   provider_match?: MatchLogic
 }
 
+export interface WrappedProviderData {
+  providers: Provider[]
+  units: RawUnitsDict
+}
+
 export interface ModelPriceCalculationResult {
   input_price: number
   output_price: number
