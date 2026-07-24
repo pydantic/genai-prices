@@ -83,6 +83,26 @@ describe('computeLeafValues', () => {
     })
   })
 
+  it('handles reasoning-modality overlap decomposition', () => {
+    expect(
+      computeLeafValues(
+        new Set(['output_reasoning_tokens', 'output_text_reasoning_tokens', 'output_text_tokens', 'output_tokens']),
+        normalizeUsage({
+          output_reasoning_tokens: 30,
+          output_text_reasoning_tokens: 20,
+          output_text_tokens: 60,
+          output_tokens: 100,
+        }),
+        getActiveRegistry()
+      )
+    ).toEqual({
+      output_reasoning_tokens: 10,
+      output_text_reasoning_tokens: 20,
+      output_text_tokens: 40,
+      output_tokens: 30,
+    })
+  })
+
   it('ignores unpriced reported descendants when priced ancestors cover them', () => {
     expect(
       computeLeafValues(

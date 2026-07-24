@@ -94,7 +94,14 @@ def test_openai_without_caching():
 
     extracted_usage = extract_usage(response, provider_id='openai', api_flavor='chat')
     assert extracted_usage.usage == snapshot(
-        Usage(input_tokens=131609, cache_read_tokens=0, output_tokens=610, input_audio_tokens=0, output_audio_tokens=0)
+        Usage(
+            input_tokens=131609,
+            cache_read_tokens=0,
+            output_tokens=610,
+            input_audio_tokens=0,
+            output_audio_tokens=0,
+            output_reasoning_tokens=0,
+        )
     )
     price = extracted_usage.calc_price()
     assert price.input_price == snapshot(Decimal('0.263218'))
@@ -127,6 +134,7 @@ def test_openai_caching():
             output_tokens=610,
             input_audio_tokens=0,
             output_audio_tokens=0,
+            output_reasoning_tokens=0,
         )
     )
     price = extracted_usage.calc_price()

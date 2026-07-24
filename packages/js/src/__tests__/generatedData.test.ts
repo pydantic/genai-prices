@@ -25,6 +25,11 @@ const tokenUsageKeys = [
   'output_video_tokens',
   'cache_video_read_tokens',
   'cache_video_write_tokens',
+  'output_reasoning_tokens',
+  'output_text_reasoning_tokens',
+  'output_audio_reasoning_tokens',
+  'output_image_reasoning_tokens',
+  'output_video_reasoning_tokens',
 ]
 
 describe('generated data split', () => {
@@ -45,7 +50,7 @@ describe('generated data split', () => {
     const registry = new UnitRegistry(unitData)
 
     expect(registry.getUnit('input_tokens')?.priceKey).toBe('input_mtok')
-    expect(registry.getAllUsageKeys().size).toBe(21)
+    expect(registry.getAllUsageKeys().size).toBe(tokenUsageKeys.length + 1)
     expect(registry.getUnitForPriceKey('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.getUnitForPriceKey('requests_kcount')?.usageKey).toBe('requests')
   })
