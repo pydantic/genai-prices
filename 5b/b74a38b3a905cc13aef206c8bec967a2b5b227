@@ -20,6 +20,11 @@ packages/python/genai_prices/decompose.py
   s_47de40883b950a::t_670b539018b8b6 16-19,23,25,27
 packages/python/genai_prices/types.py
   s_47de40883b950a::t_304a2d04e44c6e 12,247,253,262,276
+  s_ab6e77f33b432a::t_0a82e11bfad541 276
+  s_ab6e77f33b432a::t_1f0cc534ea444e 253
+  s_ab6e77f33b432a::t_52e6e1e5c8b912 247
+  s_ab6e77f33b432a::t_900f48cfe06ab5 262
+  h_d9dd17644dded9 12
 prices/data_v2.json
   s_47de40883b950a::t_b44ad7885c51a2 1
 prices/data_v2.schema.json
@@ -30,14 +35,20 @@ prices/providers/anthropic.yml
   s_47de40883b950a::t_a62f8bba8bb4ed 28-33,86,104,124,139,154,169,187,205,242,260,279,312-316,330,352,374,393,423-427,461-465,479,503,512
 prices/src/prices/export_validation.py
   s_47de40883b950a::t_6a35c473e0e29b 77,97-105,118,144-162,173-176,187-195
+  s_8199dd74cd04be::t_7701e0292a2010 77,97-102,104,118,159-162,173-175,187-193
+  s_8199dd74cd04be::t_a53a0718ed6ae8 194-195
 prices/src/prices/package_data.py
   s_47de40883b950a::t_013cbf0dc9946b 6,49,56,177,180,199-211
+  s_8199dd74cd04be::t_cbc3e17d9545a9 6,49,56,177,180,199-201,203-205,207-209
+  s_8199dd74cd04be::t_c33f48928b9985 202,206
+  s_8199dd74cd04be::t_4aae78225e0fed 210-211
 prices/units.yml
   s_47de40883b950a::t_06ac7a4dc92abc 17-26,43-52,69-78,95-104,121-130
 tests/dataset/usages.json
   s_47de40883b950a::t_4ccd36e72fd559 7826-7836,7919-7930
 tests/test_cli.py
   s_47de40883b950a::t_94d27d36b938e9 496
+  s_8199dd74cd04be::t_e22de4677d44a3 496
 tests/test_decompose.py
   s_47de40883b950a::t_553c6805abdeae 73-86
 tests/test_end_to_end.py
@@ -46,12 +57,23 @@ tests/test_price_regressions.py
   s_47de40883b950a::t_b168cdb566fe2b 166-183
 tests/test_units.py
   s_47de40883b950a::t_e8ceda7429ed03 40-41,46-47,52-53,58-59,64-65,88-89,94-95,100-101,106-107,112-113,232,241-242,589-645,673-674,682-692,1154-1155,1185-1191,1254,1287-1293
+  s_8199dd74cd04be::t_cbc3e17d9545a9 1154-1155,1185-1191,1254,1287-1293
+  s_8199dd74cd04be::t_7701e0292a2010 673-674,689,692
+packages/python/genai_prices/units.py
+  s_8199dd74cd04be::t_7701e0292a2010 4,18
+packages/js/src/units.ts
+  s_8199dd74cd04be::t_7701e0292a2010 111
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.16",
   "base_commit_sha": "5bb74a38b3a905cc13aef206c8bec967a2b5b227",
   "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
   "sessions": {
     "s_47de40883b950a": {
       "agent_id": {
@@ -66,6 +88,22 @@ tests/test_units.py
         "tool": "codex",
         "id": "019f9576-9ec1-7182-8c25-da67ac711a64",
         "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_ab6e77f33b432a": {
+      "agent_id": {
+        "tool": "github-copilot-jetbrains",
+        "id": "1784800848985",
+        "model": "unknown"
       },
       "human_author": "Alex Hall <alex.mojaki@gmail.com>"
     }
