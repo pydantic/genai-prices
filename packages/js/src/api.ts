@@ -1,56 +1,76 @@
+import type { RuntimeData } from './runtimeState'
 import type {
   PriceCalculationResult,
   PriceOptions,
   Provider,
   ProviderDataPayload,
+  ProviderDataValue,
   ProviderFindOptions,
   StorageFactoryParams,
   Usage,
 } from './types'
 
+import { decodeV2Payload } from './decodeProviderData'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { projectProviderData, validateProviderPriceCoverage } from './providerData'
 import { activateRuntimeData, getRuntimeData } from './runtimeState'
-import { warnUnsupportedExtractorDestinations } from './validation'
+import { UnitRegistry } from './unitRegistry'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json'
 
-let providerDataPromise: Promise<null | Provider[]> = Promise.resolve(getRuntimeData().providers)
+let providerDataPromise: Promise<Provider[]> = Promise.resolve(getRuntimeData().providers)
+let updateGeneration = 0
 let autoUpdateCb: (() => void) | null = null
 
 function setProviderData(data: ProviderDataPayload) {
-  // null means the update failed; keep existing data
+  const generation = ++updateGeneration
   if (data === null) {
+    providerDataPromise = Promise.resolve(getRuntimeData().providers)
     return
   }
   if (typeof data === 'object' && 'then' in data) {
     const updatePromise = data
       .then((data) => {
-        if (data === null) {
-          return getRuntimeData().providers
-        }
-        return activateProviderData(data)
+        if (data === null || generation !== updateGeneration) return getRuntimeData().providers
+        return prepareAndActivateProviderData(data, generation)
       })
       .catch((error: unknown) => {
-        if (providerDataPromise === updatePromise) {
+        if (generation === updateGeneration && providerDataPromise === updatePromise)
           providerDataPromise = Promise.resolve(getRuntimeData().providers)
-        }
         throw error
       })
     providerDataPromise = updatePromise
   } else {
-    providerDataPromise = Promise.resolve(activateProviderData(data))
+    try {
+      providerDataPromise = Promise.resolve(prepareAndActivateProviderData(data, generation))
+    } catch (error) {
+      providerDataPromise = Promise.resolve(getRuntimeData().providers)
+      throw error
+    }
   }
 }
 
-function activateProviderData(data: Provider[]): Provider[] {
-  if (!Array.isArray(data)) {
-    throw new Error('Expected null or Provider[]')
+function prepareAndActivateProviderData(data: Exclude<ProviderDataValue, null>, generation: number): Provider[] {
+  let candidate: RuntimeData
+  if (Array.isArray(data)) {
+    const active = getRuntimeData()
+    candidate = {
+      providers: projectProviderData(data, active.registry),
+      registry: active.registry,
+    }
+  } else {
+    const decoded = decodeV2Payload(data)
+    const registry = UnitRegistry.fromUntrusted(decoded.units)
+    candidate = {
+      providers: projectProviderData(decoded.providers, registry),
+      registry,
+    }
   }
 
-  const active = getRuntimeData()
-  warnUnsupportedExtractorDestinations(data, active.registry)
-  activateRuntimeData({ providers: data, registry: active.registry })
-  return data
+  validateProviderPriceCoverage(candidate.providers, candidate.registry)
+  if (generation !== updateGeneration) return getRuntimeData().providers
+  activateRuntimeData(candidate)
+  return candidate.providers
 }
 
 function onCalc(cb: () => void) {

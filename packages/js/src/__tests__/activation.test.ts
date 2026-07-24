@@ -4,11 +4,13 @@ import type { Provider, ProviderDataValue } from '../types'
 
 import { calcPrice, findProvider, updatePrices, waitForUpdate } from '../api'
 import { data } from '../data'
+import { unitData } from '../dataUnits'
 import { extractUsage } from '../extractUsage'
-import { getRuntimeData } from '../runtimeState'
+import { activateRuntimeData, bundledRuntimeData, getRuntimeData } from '../runtimeState'
 import { getActiveRegistry } from '../units'
 
 afterEach(() => {
+  activateRuntimeData(bundledRuntimeData)
   vi.restoreAllMocks()
 })
 
@@ -41,10 +43,13 @@ describe('provider activation', () => {
     updatePrices(({ setProviderData }) => {
       setProviderData([provider])
     })
-    await expect(waitForUpdate()).resolves.toEqual([provider])
+    const projected = await waitForUpdate()
+    expect(projected[0]?.extractors?.[0]?.mappings).toEqual([])
     expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
     expect(findProvider({ providerId: 'future-provider' })?.id).toBe('future-provider')
-    expect(extractUsage(provider, { model: 'future-model', usage: {} })).toEqual({
+    const activeProvider = findProvider({ providerId: 'future-provider' })
+    if (!activeProvider) throw new Error('Expected active future provider')
+    expect(extractUsage(activeProvider, { model: 'future-model', usage: {} })).toEqual({
       model: 'future-model',
       usage: {},
     })
@@ -77,7 +82,8 @@ describe('provider activation', () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(Promise.resolve([provider]))
     })
-    await expect(waitForUpdate()).resolves.toEqual([provider])
+    const projected = await waitForUpdate()
+    expect(projected[0]?.extractors?.[0]?.mappings).toEqual([])
     expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
     expect(findProvider({ providerId: 'future-async-provider' })?.id).toBe('future-async-provider')
     warn.mockRestore()
@@ -119,6 +125,96 @@ describe('provider activation', () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
     })
+  })
+
+  it('lets a later null update supersede an older pending update without replacing state', async () => {
+    const stableProvider = providerFixture('stable-provider')
+    updatePrices(({ setProviderData }) => {
+      setProviderData([stableProvider])
+    })
+    const stableState = getRuntimeData()
+
+    let resolveStale!: (data: ProviderDataValue) => void
+    const staleUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveStale = resolve
+    })
+    updatePrices(({ setProviderData }) => {
+      setProviderData(staleUpdate)
+    })
+    const stalePromise = waitForUpdate()
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(null)
+    })
+    await expect(waitForUpdate()).resolves.toEqual([stableProvider])
+
+    resolveStale([providerFixture('stale-provider')])
+    await expect(stalePromise).resolves.toEqual([stableProvider])
+    expect(getRuntimeData()).toBe(stableState)
+  })
+
+  it('lets a later failed update supersede an older pending update without replacing state', async () => {
+    const stableProvider = providerFixture('stable-provider')
+    updatePrices(({ setProviderData }) => {
+      setProviderData([stableProvider])
+    })
+    const stableState = getRuntimeData()
+
+    let resolveStale!: (data: ProviderDataValue) => void
+    let rejectNewer!: (error: Error) => void
+    const staleUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveStale = resolve
+    })
+    const newerUpdate = new Promise<ProviderDataValue>((_resolve, reject) => {
+      rejectNewer = reject
+    })
+    updatePrices(({ setProviderData }) => {
+      setProviderData(staleUpdate)
+    })
+    const stalePromise = waitForUpdate()
+    updatePrices(({ setProviderData }) => {
+      setProviderData(newerUpdate)
+    })
+    const newerPromise = waitForUpdate()
+
+    rejectNewer(new Error('newer update failed'))
+    await expect(newerPromise).rejects.toThrow('newer update failed')
+    resolveStale([providerFixture('stale-provider')])
+    await expect(stalePromise).resolves.toEqual([stableProvider])
+    expect(getRuntimeData()).toBe(stableState)
+  })
+
+  it('activates a wrapped registry and matching providers as one state', async () => {
+    const units = {
+      ...unitData,
+      widgets: {
+        dimensions: { family: 'widgets' },
+        per: 1_000,
+        price_key: 'widget_kcount',
+      },
+    }
+    const provider: Provider = {
+      api_pattern: 'testing',
+      id: 'testing',
+      models: [
+        {
+          id: 'widget-model',
+          match: { equals: 'widget-model' },
+          prices: { widget_kcount: 2 },
+        },
+      ],
+      name: 'Testing',
+    }
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData({ providers: [provider], units })
+    })
+
+    await expect(waitForUpdate()).resolves.toEqual([provider])
+    const state = getRuntimeData()
+    expect(state.registry.getUnit('widgets')?.priceKey).toBe('widget_kcount')
+    expect(state.providers[0]?.id).toBe('testing')
+    expect(calcPrice({ widgets: 2_000 }, 'widget-model', { providerId: 'testing' })?.total_price).toBe(4)
   })
 
   it('preserves provider-array update compatibility and the generated unit registry', async () => {
@@ -174,7 +270,7 @@ describe('provider activation', () => {
       updatePrices(({ setProviderData }) => {
         setProviderData('garbage' as unknown as ProviderDataValue)
       })
-    }).toThrow('Expected null or Provider[]')
+    }).toThrow('Expected v2 payload to be an object')
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
     expect(getActiveRegistry()).toBe(registry)
 
@@ -183,7 +279,8 @@ describe('provider activation', () => {
     })
   })
 
-  it('activates providers with invalid model prices and rejects them at price time', async () => {
+  it('rejects providers with invalid recognized price coverage before activation', () => {
+    const before = getRuntimeData()
     const provider = providerFixture('invalid-price-provider')
     provider.models = [
       {
@@ -195,19 +292,12 @@ describe('provider activation', () => {
       },
     ]
 
-    updatePrices(({ setProviderData }) => {
-      setProviderData([provider])
-    })
-
-    await expect(waitForUpdate()).resolves.toEqual([provider])
-    expect(findProvider({ providerId: 'invalid-price-provider' })?.id).toBe('invalid-price-provider')
-    expect(() => calcPrice({ cache_read_tokens: 100 }, 'bad-model', { providerId: 'invalid-price-provider' })).toThrow(
-      'Missing ancestor price key input_mtok for cache_read_mtok'
-    )
-
-    updatePrices(({ setProviderData }) => {
-      setProviderData(data)
-    })
+    expect(() => {
+      updatePrices(({ setProviderData }) => {
+        setProviderData([provider])
+      })
+    }).toThrow('Invalid price coverage for invalid-price-provider/bad-model: Missing ancestor price key input_mtok for cache_read_mtok')
+    expect(getRuntimeData()).toBe(before)
   })
 })
 

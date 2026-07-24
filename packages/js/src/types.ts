@@ -133,7 +133,7 @@ export interface PriceDataStorage {
   set: (data: string) => Promise<void>
 }
 
-export type ProviderDataValue = null | Provider[]
+export type ProviderDataValue = null | Provider[] | WrappedProviderData
 export type ProviderDataPayload = Promise<ProviderDataValue> | ProviderDataValue
 
 export interface StorageFactoryParams {
