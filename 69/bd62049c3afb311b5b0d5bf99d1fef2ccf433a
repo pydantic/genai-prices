@@ -1,0 +1,26 @@
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_e007c5ed89566f::t_56a7aa73c4203b 18
+  s_e007c5ed89566f::t_b9b99078ec2953 8-9,11-12,14-15,17,20,23,26-27,29-30,32,35-36,41,44-45,47,50-51,53-54,56,62-63
+specs/data-driven-unit-registry/spec.md
+  s_e007c5ed89566f::t_56d613f70af54e 101
+  s_e007c5ed89566f::t_56a7aa73c4203b 110,116
+  s_e007c5ed89566f::t_b9b99078ec2953 98-99,104,107-108
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_e007c5ed89566f::t_56a7aa73c4203b 5-6,8-9,18,20-21,23,26-27,29,32,35-36,38,43,46-47,49-50,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "69bd62049c3afb311b5b0d5bf99d1fef2ccf433a",
+  "prompts": {},
+  "sessions": {
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
