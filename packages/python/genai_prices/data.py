@@ -320,6 +320,27 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-5'),
+                        ClauseStartsWith(starts_with='claude-opus-5.0'),
+                        ClauseStartsWith(starts_with='claude-5-opus'),
+                        ClauseStartsWith(starts_with='claude-5.0-opus'),
+                    ]
+                ),
+                name='Claude Opus 5',
+                description='For complex agentic coding and enterprise work',
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-sonnet-4-0',
                 match=ClauseOr(
                     or_=[
