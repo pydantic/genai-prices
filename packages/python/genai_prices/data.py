@@ -1458,9 +1458,7 @@ providers: list[Provider] = [
                 name='Phi 4 Mini Instruct',
                 description='Phi-4-mini-instruct is a lightweight open model built upon synthetic data and filtered publicly available websites, with a focus on high-quality, reasoning-dense data.',
                 price_comments='Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.08'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('0.35')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.35')),
             ),
             ModelInfo(
                 id='phi-4-multimodal-instruct',
@@ -6489,9 +6487,7 @@ providers: list[Provider] = [
                 name='gpt 4o audio preview',
                 description='Audio model for gpt-4o',
                 context_window=128000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.5'), output_mtok=Decimal('10'), input_audio_mtok=Decimal('2.5')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='gpt-4o-mini',
@@ -6521,9 +6517,7 @@ providers: list[Provider] = [
                 match=ClauseStartsWith(starts_with='gpt-4o-mini-audio'),
                 name='gpt 4o mini audio preview',
                 description='Audio model for gpt-4o mini',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6'), input_audio_mtok=Decimal('0.15')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='gpt-4o-mini-realtime-preview',
@@ -6545,9 +6539,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-4o-mini-tts',
                 match=ClauseEquals(equals='gpt-4o-mini-tts'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.6'), output_mtok=Decimal('12'), output_audio_mtok=Decimal('12')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('12')),
             ),
             ModelInfo(
                 id='gpt-4o-realtime-preview',
@@ -7795,9 +7787,7 @@ providers: list[Provider] = [
                 id='bytedance/ui-tars-1.5-7b',
                 match=ClauseEquals(equals='bytedance/ui-tars-1.5-7b'),
                 name='UI-TARS 7B',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('0.2')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
                 id='caller-large',
@@ -8945,9 +8935,7 @@ providers: list[Provider] = [
                 id='ibm-granite/granite-4.1-8b',
                 match=ClauseEquals(equals='ibm-granite/granite-4.1-8b'),
                 name='Granite 4.1 8B',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('0.1')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='inception/mercury-2',
@@ -9466,9 +9454,7 @@ providers: list[Provider] = [
                 id='microsoft/phi-4-mini-instruct',
                 match=ClauseEquals(equals='microsoft/phi-4-mini-instruct'),
                 name='Phi 4 Mini Instruct',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.08'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('0.35')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.35')),
             ),
             ModelInfo(
                 id='microsoft/phi-4-multimodal-instruct',
@@ -10960,9 +10946,7 @@ providers: list[Provider] = [
                 id='qwen/qwen3-235b-a22b-thinking-2507',
                 match=ClauseEquals(equals='qwen/qwen3-235b-a22b-thinking-2507'),
                 name='Qwen3 235B A22B Thinking 2507',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='qwen/qwen3-30b-a3b',
@@ -10980,9 +10964,7 @@ providers: list[Provider] = [
                 id='qwen/qwen3-30b-a3b-thinking-2507',
                 match=ClauseEquals(equals='qwen/qwen3-30b-a3b-thinking-2507'),
                 name='Qwen3 30B A3B Thinking 2507',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.08'), cache_read_mtok=Decimal('0.08'), output_mtok=Decimal('0.4')
-                ),
+                prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='qwen/qwen3-32b',

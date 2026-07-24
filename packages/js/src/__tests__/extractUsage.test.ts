@@ -262,6 +262,27 @@ describe('extractUsage', () => {
       )
     })
 
+    it('should reject an invalid destination on a direct custom provider', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [{ dest: 'imaginary_tokens', path: 'tokens', required: true }],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+
+      expect(() => extractUsage(provider, { model: 'test-model', usage: { tokens: 1 } })).toThrow(
+        'Invalid extractor destination for test/default mapping 0: imaginary_tokens'
+      )
+    })
+
     it('should skip optional nested paths with the wrong intermediate shape', () => {
       const provider: Provider = {
         api_pattern: 'test',

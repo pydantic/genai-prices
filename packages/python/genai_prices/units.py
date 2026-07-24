@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+from types import MappingProxyType
 from typing import Any, cast
 
 
@@ -18,14 +19,18 @@ class UnitDef:
 
 
 class UnitRegistry:
-    units: dict[str, UnitDef]
+    units: Mapping[str, UnitDef]
+    _all_usage_keys: frozenset[str]
+    _all_price_keys: frozenset[str]
+    _reported_usage_keys: frozenset[str]
+    _reported_usage_keys_in_order: tuple[str, ...]
     _units_by_price_key: dict[str, UnitDef]
     _units_by_dimension: dict[frozenset[tuple[str, str]], UnitDef]
     _ancestor_usage_keys: dict[str, frozenset[str]]
 
     def __init__(self, raw_units: Mapping[str, Mapping[str, Any]] | None = None) -> None:
         """Parse raw unit dictionaries into indexed runtime objects."""
-        self.units = {}
+        units: dict[str, UnitDef] = {}
         self._units_by_price_key = {}
         self._units_by_dimension = {}
         self._ancestor_usage_keys = {}
@@ -41,24 +46,26 @@ class UnitRegistry:
 
             dimension_set = _dimension_set(unit)
 
-            self.units[usage_key] = unit
+            units[usage_key] = unit
             self._units_by_price_key[unit.price_key] = unit
             self._units_by_dimension[dimension_set] = unit
 
-        for usage_key, unit in self.units.items():
+        for usage_key, unit in units.items():
             self._ancestor_usage_keys[usage_key] = frozenset(
                 maybe_ancestor.usage_key
-                for maybe_ancestor in self.units.values()
+                for maybe_ancestor in units.values()
                 if maybe_ancestor is not unit and _is_dimension_subset(maybe_ancestor, unit)
             )
+
+        self.units = MappingProxyType(units)
+        self._all_usage_keys = frozenset(units)
+        self._all_price_keys = frozenset(self._units_by_price_key)
+        self._reported_usage_keys_in_order = tuple(usage_key for usage_key in units if usage_key != 'requests')
+        self._reported_usage_keys = frozenset(self._reported_usage_keys_in_order)
 
     def unit_for_price_key(self, price_key: str) -> UnitDef:
         """Return the registered unit priced by price_key."""
         return self._units_by_price_key[price_key]
-
-    def reported_usage_keys(self) -> frozenset[str]:
-        """Return registered keys callers may report, excluding the pricing-only requests unit."""
-        return frozenset(usage_key for usage_key in self.units if usage_key != 'requests')
 
     def ancestor_usage_keys(self, usage_key: str) -> frozenset[str]:
         return self._ancestor_usage_keys[usage_key]

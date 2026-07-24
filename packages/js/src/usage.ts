@@ -8,7 +8,7 @@ export function normalizeUsage(obj: unknown, registry: UnitRegistry = getActiveR
   if (!isPlainObject(obj)) return {}
 
   const usage: NormalizedUsage = {}
-  for (const usageKey of registry.reportedUsageKeys) {
+  for (const usageKey of registry.reportedUsageKeys()) {
     const value = obj[usageKey]
     if (typeof value === 'number') {
       usage[usageKey] = validateUsageValue(usageKey, value)
@@ -87,7 +87,7 @@ function isComparable(registry: UnitRegistry, left: UnitDef, right: UnitDef): bo
 }
 
 function unitForUsageKey(registry: UnitRegistry, usageKey: string): UnitDef {
-  const unit = registry.units.get(usageKey)
+  const unit = registry.getUnit(usageKey)
   if (!unit) {
     throw new Error(`Unknown unit usage key: ${usageKey}`)
   }
@@ -95,5 +95,5 @@ function unitForUsageKey(registry: UnitRegistry, usageKey: string): UnitDef {
 }
 
 function unitForOptionalUsageKey(registry: UnitRegistry, usageKey: string): undefined | UnitDef {
-  return registry.units.get(usageKey)
+  return registry.getUnit(usageKey)
 }

@@ -2440,7 +2440,6 @@ export const data: Provider[] = [
         price_comments: 'Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
         prices: {
           input_mtok: 0.08,
-          cache_read_mtok: 0.08,
           output_mtok: 0.35,
         },
       },
@@ -11341,7 +11340,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
-          input_audio_mtok: 2.5,
         },
       },
       {
@@ -11393,7 +11391,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
-          input_audio_mtok: 0.15,
         },
       },
       {
@@ -11429,7 +11426,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           output_mtok: 12,
-          output_audio_mtok: 12,
         },
       },
       {
@@ -13707,7 +13703,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: 0.1,
           output_mtok: 0.2,
         },
       },
@@ -15563,7 +15558,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.05,
-          cache_read_mtok: 0.05,
           output_mtok: 0.1,
         },
       },
@@ -16451,7 +16445,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.08,
-          cache_read_mtok: 0.08,
           output_mtok: 0.35,
         },
       },
@@ -19058,7 +19051,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: 0.1,
           output_mtok: 0.1,
         },
       },
@@ -19092,7 +19084,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.08,
-          cache_read_mtok: 0.08,
           output_mtok: 0.4,
         },
       },

@@ -8,13 +8,11 @@ import { getUsageValue } from './usage'
 export function computeLeafValues(
   pricedUsageKeys: Set<string>,
   usage: NormalizedUsage,
-  unitsByUsageKey: Map<string, UnitDef>,
   registry: UnitRegistry = getActiveRegistry()
 ): Record<string, number> {
   const pricedUnits = [...pricedUsageKeys]
-    .filter((usageKey) => unitsByUsageKey.has(usageKey))
     .sort()
-    .map((usageKey) => unitsByUsageKey.get(usageKey))
+    .map((usageKey) => registry.getUnit(usageKey))
     .filter((unit): unit is UnitDef => unit !== undefined)
   const leafValues: Record<string, number> = {}
 
