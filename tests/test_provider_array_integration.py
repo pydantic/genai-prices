@@ -6,14 +6,13 @@ from decimal import Decimal
 import httpx2
 import pytest
 
-from genai_prices import UpdatePrices, calc_price
-from genai_prices.data_snapshot import set_custom_snapshot
+from genai_prices import UpdatePrices, calc_price, data_units, runtime_state
 from genai_prices.types import Usage
 
 
-def test_python_provider_array_dynamic_price_key_flow(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_python_wrapped_v2_dynamic_price_key_flow(monkeypatch: pytest.MonkeyPatch) -> None:
     class Response:
-        content = json.dumps(_provider_array()).encode()
+        content = json.dumps({'units': data_units.unit_data, 'providers': _provider_array()}).encode()
 
         def raise_for_status(self) -> None:
             pass
@@ -25,9 +24,9 @@ def test_python_provider_array_dynamic_price_key_flow(monkeypatch: pytest.Monkey
 
     monkeypatch.setattr(httpx2, 'get', fake_get)
 
-    snapshot = UpdatePrices(url='https://example.test/prices.json').fetch()
+    initial = runtime_state.get_runtime_data()
     try:
-        set_custom_snapshot(snapshot)
+        UpdatePrices(url='https://example.test/prices.json').fetch()
         price = calc_price(
             Usage(
                 cache_image_read_tokens=1_000_000,
@@ -41,7 +40,8 @@ def test_python_provider_array_dynamic_price_key_flow(monkeypatch: pytest.Monkey
 
         assert price.total_price == Decimal('4')
     finally:
-        set_custom_snapshot(None)
+        generation = runtime_state.begin_update()
+        runtime_state.activate_runtime_data(generation, initial)
 
 
 def _provider_array() -> list[object]:

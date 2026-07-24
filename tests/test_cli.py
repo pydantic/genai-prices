@@ -8,7 +8,6 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 from dirty_equals import IsStr
@@ -16,7 +15,7 @@ from inline_snapshot import snapshot
 from rich.console import Console
 
 import genai_prices._cli as cli_module
-from genai_prices import update_prices
+from genai_prices import runtime_state, update_prices
 from genai_prices._cli import (
     _collect_model_price_fields,
     _format_model_price_value,
@@ -40,8 +39,17 @@ from genai_prices.units import UnitDef, UnitRegistry
 
 @contextmanager
 def _use_registry(registry: UnitRegistry) -> Iterator[None]:
-    with patch('genai_prices.units._get_registry', return_value=registry):
+    initial = runtime_state.get_runtime_data()
+    generation = runtime_state.begin_update()
+    runtime_state.activate_runtime_data(
+        generation,
+        runtime_state.RuntimeData(registry=registry, snapshot=initial.snapshot),
+    )
+    try:
         yield
+    finally:
+        generation = runtime_state.begin_update()
+        runtime_state.activate_runtime_data(generation, initial)
 
 
 def _find_model_ref(predicate: Callable[[ModelPrice], bool], *, exclude: Collection[str] = frozenset()) -> str:
@@ -104,7 +112,7 @@ def test_cli_no_subcommand_help(capsys: pytest.CaptureFixture[str]):
 
 
 def test_parse_cli_none(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(cli_module.sys, 'argv', [cli_module.PROGRAM_NAME, '--version'])
+    monkeypatch.setattr(sys, 'argv', [cli_module.PROGRAM_NAME, '--version'])
     cli = _parse_cli(None)
     assert cli.version is True
 
