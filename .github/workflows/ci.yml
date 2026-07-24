@@ -133,19 +133,36 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
 
+  v2-compatibility:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          # Read artifacts from the exact pull-request base object.
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
+      - run: uv sync --frozen --all-packages
+      - run: uv run --no-sync python .github/scripts/check_v2_compatibility.py "${BASE_SHA}"
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+
   # https://github.com/marketplace/actions/alls-green#why used for branch protection checks
   check:
     if: always()
-    needs: [pre-commit, test-python, coverage, test-js, version-guard]
+    needs: [pre-commit, test-python, coverage, test-js, version-guard, v2-compatibility]
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}
-          # version-guard only runs on pull_request; it is (correctly) skipped on
-          # push/tag runs, so don't let that skip fail the gate.
-          allowed-skips: version-guard
+          # These guards only run on pull_request; they are (correctly) skipped
+          # on push/tag runs, so don't let those skips fail the gate.
+          allowed-skips: version-guard, v2-compatibility
 
   release-pypi:
     needs: [check]
