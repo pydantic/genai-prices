@@ -360,16 +360,16 @@ def test_requests_kcount_prices():
     assert price.provider.name == snapshot('Perplexity')
 
 
-def test_distinct_reasoning_price_replaces_aggregate_output_rate():
+def test_distinct_output_category_prices_replace_aggregate_output_rate():
     price = calc_price(
-        Usage(output_tokens=100, output_reasoning_tokens=25),
+        Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
         model_ref='sonar-deep-research',
         provider_id='perplexity',
     )
 
-    # 75 ordinary output tokens at $8/MTok + 25 reasoning tokens at $3/MTok.
-    assert price.output_price == Decimal('0.000675')
-    assert price.total_price == Decimal('0.000675')
+    # 65 ordinary tokens at $8/MTok + 25 reasoning at $3/MTok + 10 citations at $2/MTok.
+    assert price.output_price == Decimal('0.000615')
+    assert price.total_price == Decimal('0.000615')
 
 
 def test_custom_model_price_can_override_reasoning_rate():

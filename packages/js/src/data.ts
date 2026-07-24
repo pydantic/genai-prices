@@ -44,6 +44,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['server_tool_use', 'web_search_requests'],
+            dest: 'web_searches',
+            required: false,
+          },
+          {
             path: ['output_tokens_details', 'thinking_tokens'],
             dest: 'output_reasoning_tokens',
             required: false,
@@ -120,6 +125,7 @@ export const data: Provider[] = [
           cache_write_mtok: 1,
           cache_read_mtok: 0.08,
           output_mtok: 4,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -143,6 +149,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -172,6 +179,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -236,6 +244,7 @@ export const data: Provider[] = [
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -264,6 +273,7 @@ export const data: Provider[] = [
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -292,6 +302,7 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -314,6 +325,7 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -342,6 +354,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -404,6 +417,7 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              web_searches_kcount: 10,
             },
           },
           {
@@ -416,6 +430,7 @@ export const data: Provider[] = [
               cache_write_mtok: 6.25,
               cache_read_mtok: 0.5,
               output_mtok: 25,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -448,6 +463,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -478,6 +494,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -509,6 +526,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -563,6 +581,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 10,
         },
       },
       {
@@ -619,6 +638,7 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              web_searches_kcount: 10,
             },
           },
           {
@@ -631,6 +651,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -665,6 +686,7 @@ export const data: Provider[] = [
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
               output_mtok: 10,
+              web_searches_kcount: 10,
             },
           },
           {
@@ -677,6 +699,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -3939,22 +3962,17 @@ export const data: Provider[] = [
           },
           {
             path: 'thoughtsTokenCount',
-            dest: 'output_text_tokens',
-            required: false,
-          },
-          {
-            path: 'thoughtsTokenCount',
             dest: 'output_reasoning_tokens',
-            required: false,
-          },
-          {
-            path: 'thoughtsTokenCount',
-            dest: 'output_text_reasoning_tokens',
             required: false,
           },
           {
             path: 'toolUsePromptTokenCount',
             dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'toolUsePromptTokenCount',
+            dest: 'input_tool_tokens',
             required: false,
           },
           {
@@ -3979,12 +3997,42 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_text_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'AUDIO',
                 },
               },
               'tokenCount',
             ],
             dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_audio_tool_tokens',
             required: false,
           },
           {
@@ -4009,6 +4057,21 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'DOCUMENT',
                 },
               },
@@ -4024,12 +4087,42 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'VIDEO',
                 },
               },
               'tokenCount',
             ],
             dest: 'input_video_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_video_tool_tokens',
             required: false,
           },
         ],
@@ -4839,7 +4932,17 @@ export const data: Provider[] = [
         description:
           "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
         match: {
-          starts_with: 'gemini-3.5-flash',
+          or: [
+            {
+              equals: 'gemini-3.5-flash',
+            },
+            {
+              starts_with: 'gemini-3.5-flash-preview',
+            },
+            {
+              regex: '^gemini-3\\.5-flash-\\d',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
@@ -4848,6 +4951,40 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_read_mtok: 0.15,
           output_mtok: 9,
+        },
+      },
+      {
+        id: 'gemini-3.5-flash-lite',
+        name: 'Gemini 3.5 Flash Lite',
+        description:
+          "Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
+        match: {
+          starts_with: 'gemini-3.5-flash-lite',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).',
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'gemini-3.6-flash',
+        name: 'Gemini 3.6 Flash',
+        description:
+          "Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+        match: {
+          starts_with: 'gemini-3.6-flash',
+        },
+        context_window: 1000000,
+        price_comments:
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented.',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.15,
+          output_mtok: 7.5,
         },
       },
       {
@@ -4955,17 +5092,22 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'gemini-live-2.5-flash-preview',
+        id: 'gemini-live-2.5-flash',
+        name: 'Gemini Live 2.5 Flash',
+        description:
+          "Google's Live API model for low-latency bidirectional voice and video interactions, GA on Vertex AI (model id `gemini-live-2.5-flash`, served from the `global` location). The prefix match also covers the AI Studio preview ids (`gemini-live-2.5-flash-preview*`).",
         match: {
           or: [
             {
-              starts_with: 'gemini-live-2.5-flash-preview',
+              starts_with: 'gemini-live-2.5-flash',
             },
             {
               starts_with: 'gemini-2.5-flash-native-audio-preview',
             },
           ],
         },
+        price_comments:
+          'See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
         prices: {
           input_mtok: 0.5,
           output_mtok: 2,
@@ -21286,6 +21428,21 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'citation_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'citation_tokens',
+            dest: 'output_citation_tokens',
+            required: false,
+          },
+          {
+            path: 'num_search_queries',
+            dest: 'web_searches',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -21355,11 +21512,14 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-deep-research',
         },
-        price_comments: 'Perplexity lists reasoning tokens separately at $3 per million tokens.',
+        price_comments:
+          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
           output_reasoning_mtok: 3,
+          output_citation_mtok: 2,
+          web_searches_kcount: 5,
         },
       },
       {

@@ -27,6 +27,9 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(
+                        path=['server_tool_use', 'web_search_requests'], dest='web_searches', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['output_tokens_details', 'thinking_tokens'],
                         dest='output_reasoning_tokens',
                         required=False,
@@ -72,6 +75,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
                     output_mtok=Decimal('4'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -90,6 +94,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -110,6 +115,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -163,6 +169,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('1'),
                     output_mtok=Decimal('50'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -183,6 +190,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('5'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -203,6 +211,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -221,6 +230,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -241,6 +251,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -269,6 +280,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -278,6 +290,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('6.25'),
                             cache_read_mtok=Decimal('0.5'),
                             output_mtok=Decimal('25'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -301,6 +314,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -322,6 +336,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -343,6 +358,7 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -363,6 +379,7 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -389,6 +406,7 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -398,6 +416,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -423,6 +442,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
                             output_mtok=Decimal('10'),
+                            web_searches_kcount=Decimal('10'),
                         )
                     ),
                     ConditionalPrice(
@@ -432,6 +452,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            web_searches_kcount=Decimal('10'),
                         ),
                     ),
                 ],
@@ -2353,12 +2374,9 @@ providers: list[Provider] = [
                     ),
                     UsageExtractorMapping(path='candidatesTokenCount', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_tokens', required=False),
-                    UsageExtractorMapping(path='thoughtsTokenCount', dest='output_text_tokens', required=False),
                     UsageExtractorMapping(path='thoughtsTokenCount', dest='output_reasoning_tokens', required=False),
-                    UsageExtractorMapping(
-                        path='thoughtsTokenCount', dest='output_text_reasoning_tokens', required=False
-                    ),
                     UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='toolUsePromptTokenCount', dest='input_tool_tokens', required=False),
                     UsageExtractorMapping(
                         path=[
                             'toolUsePromptTokensDetails',
@@ -2366,6 +2384,15 @@ providers: list[Provider] = [
                             'tokenCount',
                         ],
                         dest='input_text_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='TEXT')),
+                            'tokenCount',
+                        ],
+                        dest='input_text_tool_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
@@ -2380,10 +2407,28 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='AUDIO')),
+                            'tokenCount',
+                        ],
+                        dest='input_audio_tool_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
                             'tokenCount',
                         ],
                         dest='input_image_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='IMAGE')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tool_tokens',
                         required=False,
                     ),
                     UsageExtractorMapping(
@@ -2398,10 +2443,28 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path=[
                             'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='DOCUMENT')),
+                            'tokenCount',
+                        ],
+                        dest='input_image_tool_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
                             ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
                             'tokenCount',
                         ],
                         dest='input_video_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=[
+                            'toolUsePromptTokensDetails',
+                            ArrayMatch(type='array-match', field='modality', match=ClauseEquals(equals='VIDEO')),
+                            'tokenCount',
+                        ],
+                        dest='input_video_tool_tokens',
                         required=False,
                     ),
                 ],
@@ -2871,12 +2934,40 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.5-flash',
-                match=ClauseStartsWith(starts_with='gemini-3.5-flash'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.5-flash'),
+                        ClauseStartsWith(starts_with='gemini-3.5-flash-preview'),
+                        ClauseRegex(regex='^gemini-3\\.5-flash-\\d'),
+                    ]
+                ),
                 name='Gemini 3.5 Flash',
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
                 price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount on input/output.',
                 prices=ModelPrice(input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('9')),
+            ),
+            ModelInfo(
+                id='gemini-3.5-flash-lite',
+                match=ClauseStartsWith(starts_with='gemini-3.5-flash-lite'),
+                name='Gemini 3.5 Flash Lite',
+                description="Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate).',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('2.5')
+                ),
+            ),
+            ModelInfo(
+                id='gemini-3.6-flash',
+                match=ClauseStartsWith(starts_with='gemini-3.6-flash'),
+                name='Gemini 3.6 Flash',
+                description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
+                context_window=1000000,
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('7.5')
+                ),
             ),
             ModelInfo(
                 id='gemini-embedding-001',
@@ -2927,13 +3018,16 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='gemini-live-2.5-flash-preview',
+                id='gemini-live-2.5-flash',
                 match=ClauseOr(
                     or_=[
-                        ClauseStartsWith(starts_with='gemini-live-2.5-flash-preview'),
+                        ClauseStartsWith(starts_with='gemini-live-2.5-flash'),
                         ClauseStartsWith(starts_with='gemini-2.5-flash-native-audio-preview'),
                     ]
                 ),
+                name='Gemini Live 2.5 Flash',
+                description="Google's Live API model for low-latency bidirectional voice and video interactions, GA on Vertex AI (model id `gemini-live-2.5-flash`, served from the `global` location). The prefix match also covers the AI Studio preview ids (`gemini-live-2.5-flash-preview*`).",
+                price_comments='See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API) and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches the preview.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.5'),
                     output_mtok=Decimal('2'),
@@ -12321,6 +12415,9 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
                     UsageExtractorMapping(path='reasoning_tokens', dest='output_tokens', required=False),
                     UsageExtractorMapping(path='reasoning_tokens', dest='output_reasoning_tokens', required=False),
+                    UsageExtractorMapping(path='citation_tokens', dest='output_tokens', required=False),
+                    UsageExtractorMapping(path='citation_tokens', dest='output_citation_tokens', required=False),
+                    UsageExtractorMapping(path='num_search_queries', dest='web_searches', required=False),
                     UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
@@ -12361,9 +12458,13 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='sonar-deep-research'),
                 name='Sonar Deep Research',
                 description='Sonar Deep Research is a research-focused model designed for multi-step retrieval, synthesis, and reasoning across complex topics. It autonomously searches, reads, and evaluates sources, refining its approach as it gathers information. This enables comprehensive report generation across domains like finance, technology, health, and current events.',
-                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens.',
+                price_comments='Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
                 prices=ModelPrice(
-                    input_mtok=Decimal('2'), output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')
+                    input_mtok=Decimal('2'),
+                    output_mtok=Decimal('8'),
+                    output_reasoning_mtok=Decimal('3'),
+                    output_citation_mtok=Decimal('2'),
+                    web_searches_kcount=Decimal('5'),
                 ),
             ),
             ModelInfo(

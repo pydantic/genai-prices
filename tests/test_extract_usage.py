@@ -665,9 +665,9 @@ def test_google():
                 input_tokens=100,
                 output_tokens=162,
                 input_text_tokens=75,
-                output_text_tokens=162,
+                output_text_tokens=18,
+                input_tool_tokens=25,
                 output_reasoning_tokens=144,
-                output_text_reasoning_tokens=144,
             ),
         )
     )
@@ -698,13 +698,12 @@ def test_google_caching():
             output_tokens=129,
             cache_read_tokens=12239,
             input_text_tokens=14002,
-            output_text_tokens=119,
+            output_text_tokens=50,
             cache_text_read_tokens=12110,
             input_audio_tokens=150,
             output_audio_tokens=10,
             cache_audio_read_tokens=129,
             output_reasoning_tokens=69,
-            output_text_reasoning_tokens=69,
         ),
     )
     assert model is not None
@@ -720,13 +719,12 @@ def test_google_caching_public_extraction_parity():
             output_tokens=129,
             cache_read_tokens=12239,
             input_text_tokens=14002,
-            output_text_tokens=119,
+            output_text_tokens=50,
             cache_text_read_tokens=12110,
             input_audio_tokens=150,
             output_audio_tokens=10,
             cache_audio_read_tokens=129,
             output_reasoning_tokens=69,
-            output_text_reasoning_tokens=69,
         )
     )
     assert extracted_usage.model is not None
@@ -813,12 +811,16 @@ def test_google_extracts_tool_use_modalities_from_details():
             input_tokens=35,
             output_tokens=7,
             input_text_tokens=20,
-            output_text_tokens=7,
+            output_text_tokens=3,
             input_audio_tokens=5,
+            input_audio_tool_tokens=5,
             input_image_tokens=9,
+            input_image_tool_tokens=9,
             input_video_tokens=3,
+            input_video_tool_tokens=3,
+            input_tool_tokens=25,
+            input_text_tool_tokens=10,
             output_reasoning_tokens=4,
-            output_text_reasoning_tokens=4,
         ),
     )
 
@@ -1052,9 +1054,9 @@ def test_accumulate_extracted_usage():
         input_tokens=100,
         output_tokens=162,
         input_text_tokens=75,
-        output_text_tokens=162,
+        output_text_tokens=18,
+        input_tool_tokens=25,
         output_reasoning_tokens=144,
-        output_text_reasoning_tokens=144,
     )
     with pytest.raises(TypeError):
         _ = extracted + 1
@@ -1076,12 +1078,12 @@ def test_accumulate_extracted_usage():
         input_tokens=100 * 2,
         output_tokens=162 * 2,
         input_text_tokens=75 * 2,
-        output_text_tokens=162 * 2,
+        output_text_tokens=18 * 2,
+        input_tool_tokens=25 * 2,
         output_reasoning_tokens=144 * 2,
-        output_text_reasoning_tokens=144 * 2,
     )
     assert repr(double_extracted) == snapshot(
-        "ExtractedUsage(usage=Usage(input_tokens=200, output_tokens=324, input_text_tokens=150, output_text_tokens=324, output_reasoning_tokens=288, output_text_reasoning_tokens=288), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
+        "ExtractedUsage(usage=Usage(input_tokens=200, output_tokens=324, input_text_tokens=150, output_text_tokens=36, input_tool_tokens=50, output_reasoning_tokens=288), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
     )
     assert repr(double_extracted.calc_price()) == snapshot(
         "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $2.5/output MTok, $0.03/cache read MTok, $1/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
@@ -1131,21 +1133,29 @@ def test_openai_compatible_reasoning_tokens(provider_id: str):
     )
 
 
-def test_perplexity_additive_reasoning_tokens():
+def test_perplexity_additive_output_categories():
     response_data = {
         'model': 'sonar-deep-research',
         'usage': {
-            'prompt_tokens': 10,
-            'completion_tokens': 8,
-            'total_tokens': 18,
-            'reasoning_tokens': 6,
+            'prompt_tokens': 33,
+            'completion_tokens': 11_395,
+            'total_tokens': 11_428,
+            'citation_tokens': 19_028,
+            'num_search_queries': 21,
+            'reasoning_tokens': 193_947,
         },
     }
 
     extracted = extract_usage(response_data, provider_id='perplexity')
 
-    assert extracted.usage == Usage(input_tokens=10, output_tokens=14, output_reasoning_tokens=6)
+    assert extracted.usage == Usage(
+        input_tokens=33,
+        output_tokens=224_370,
+        output_reasoning_tokens=193_947,
+        output_citation_tokens=19_028,
+        web_searches=21,
+    )
     price = extracted.calc_price()
-    assert price.input_price == Decimal('0.00002')
-    assert price.output_price == Decimal('0.000082')
-    assert price.total_price == Decimal('0.000102')
+    assert price.input_price == Decimal('0.000066')
+    assert price.output_price == Decimal('0.711057')
+    assert price.total_price == Decimal('0.816123')

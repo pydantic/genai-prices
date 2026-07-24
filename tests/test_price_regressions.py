@@ -39,10 +39,8 @@ def test_google_image_models_price_unclassified_output_as_text(
 ) -> None:
     usage = Usage(
         output_tokens=2_309,
-        output_text_tokens=529,
         output_image_tokens=1_120,
         output_reasoning_tokens=529,
-        output_text_reasoning_tokens=529,
     )
 
     price = calc_price(usage, model_ref=model_ref, provider_id='google')
@@ -336,6 +334,16 @@ def test_model_price_prices_requests_only_in_total() -> None:
         'input_price': Decimal('0'),
         'output_price': Decimal('0'),
         'total_price': expected_total,
+    }
+
+
+def test_model_price_prices_reported_web_searches_only_in_total() -> None:
+    price = ModelPrice(web_searches_kcount=Decimal('10')).calc_price(Usage(web_searches=2))
+
+    assert price == {
+        'input_price': Decimal('0'),
+        'output_price': Decimal('0'),
+        'total_price': Decimal('0.02'),
     }
 
 
