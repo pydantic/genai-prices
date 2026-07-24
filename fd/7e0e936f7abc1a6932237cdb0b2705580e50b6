@@ -1,0 +1,37 @@
+.gitattributes
+  s_e007c5ed89566f::t_b89943eea039b4 2-4
+package-lock.json
+  s_e007c5ed89566f::t_0d8e8e8c01722e 7582
+packages/js/package.json
+  s_e007c5ed89566f::t_ad73a307b80717 3
+packages/python/genai_prices/data.py
+  s_e007c5ed89566f::t_47f9a951048002 3058,3061,3065-3067
+packages/python/pyproject.toml
+  s_e007c5ed89566f::t_a682b1ee060f77 7
+prices/data.json
+  s_e007c5ed89566f::t_2803846c6f87ec 1
+prices/data_slim.json
+  s_e007c5ed89566f::t_dafb0ea07a7b92 1
+prices/data_v2.json
+  s_e007c5ed89566f::t_5772a363846e61 1
+prices/providers/google.yml
+  s_e007c5ed89566f::t_429b6055fc5471 970-976,979,981-985
+uv.lock
+  s_e007c5ed89566f::t_d4c59f397df581 329
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "fd7e0e936f7abc1a6932237cdb0b2705580e50b6",
+  "prompts": {},
+  "sessions": {
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
