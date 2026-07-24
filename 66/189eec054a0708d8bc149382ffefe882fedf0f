@@ -8,6 +8,8 @@ packages/js/src/__tests__/calcPrice.test.ts
   s_47de40883b950a::t_829acc8818caaa 268-277
 packages/js/src/__tests__/dataset.test.ts
   s_47de40883b950a::t_d710463df5f739 76,101-103,107
+  s_8199dd74cd04be::t_c070559ede0937 76,101-103
+  s_8199dd74cd04be::t_f8e9baa59ddb93 107
 packages/js/src/__tests__/extractUsage.test.ts
   s_47de40883b950a::t_f4a7c70449d676 209,213-218,226-230,235-237,416,418,455,484,486,488,490,492,494
 packages/js/src/__tests__/generatedData.test.ts
@@ -16,6 +18,7 @@ packages/js/src/__tests__/units.test.ts
   s_47de40883b950a::t_5866305ff3f433 29-33,39-43,67-71,77-81,84-85,91,93,148-163,238,247,251,256-257
 packages/python/genai_prices/_cli.py
   s_47de40883b950a::t_bb6be785c79532 630
+  s_8199dd74cd04be::t_913ca07c860df2 630
 prices/data_v2.json
   s_47de40883b950a::t_4dc2b25127fde0 1
 prices/providers/anthropic.yml
@@ -24,16 +27,21 @@ prices/providers/google.yml
   s_47de40883b950a::t_bcb010f4b03e30 178-180,190-198,208-216,226-234,244-252,262-270,849-852,863-894,970-976,979,981-985
 prices/providers/perplexity.yml
   s_47de40883b950a::t_31a9bd3656159b 22-30,93-96,101-102
+  s_8199dd74cd04be::t_1b8c71997a1408 93
 prices/units.yml
   s_47de40883b950a::t_12cd258a72a4b7 12,16,28,32,44,48,60,64,76,80-100,104,108,112,116,120-144
 tests/dataset/extract_usages.py
   s_47de40883b950a::t_26024dde4c7268 122-123
+  s_8199dd74cd04be::t_c070559ede0937 122-123
 tests/dataset/usages.json
   s_47de40883b950a::t_c5c3b1d41c78b9 2800,2802,2979,2981,3025,3027,3508-3519,4173,4175,4546,4548,4592,4594,10523-10534,10611-10622,10847-10858,11097,11099,49085
+  s_8199dd74cd04be::t_2145b1d80827f2 3508-3519,10523-10534,10611-10622,10847-10858
 tests/test_cli.py
   s_47de40883b950a::t_55980651140757 149,232,245,502-504,530
+  s_8199dd74cd04be::t_913ca07c860df2 504
 tests/test_end_to_end.py
   s_47de40883b950a::t_0992f15bf75ea1 78-106
+  s_8199dd74cd04be::t_1a170f8e546147 92-99,102-104
 tests/test_google_extractors.py
   s_47de40883b950a::t_8b345eae363147 15,47-49,51,74,81-89,113,118-119
 tests/test_price_calc.py
@@ -65,6 +73,14 @@ prices/providers/.schema.json
       "agent_id": {
         "tool": "codex",
         "id": "019f9561-d5d8-7a40-ae39-178aa884ad71",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_8199dd74cd04be": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f853c-506e-7783-ab5a-64de863d5591",
         "model": "gpt-5.6-sol"
       },
       "human_author": "Alex Hall <alex.mojaki@gmail.com>"
