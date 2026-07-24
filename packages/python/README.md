@@ -89,19 +89,17 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
+`UpdatePrices` periodically updates the price data by downloading it from GitHub.
 
 Please note:
 
 - this functionality is explicitly opt-in
 - we download data directly from GitHub (`https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json`) so we don't and can't monitor requests or gather telemetry
 
-At the time of writing, the `data.json` file
-downloaded by `UpdatePrices` is around 26KB when compressed, so is generally very quick to download.
+At the time of writing, the `data.json` file downloaded is around 26KB when compressed, so is generally very
+quick to download. By default the first fetch happens immediately in the background, then every hour after that.
 
-By default `UpdatePrices` downloads price data immediately after it's started in the background, then every hour after that.
-
-Usage with `UpdatePrices` as as context manager:
+Usage as a context manager:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
@@ -112,21 +110,45 @@ with UpdatePrices() as update_prices:
     print(p)
 ```
 
-Usage with `UpdatePrices` as a simple class:
+Or by calling `start()` / `stop()` yourself:
 
 ```py
 from genai_prices import UpdatePrices, Usage, calc_price
 
 update_prices = UpdatePrices()
-update_prices.start(wait=True)  # start updating prices, optionally wait for prices to have updated
+update_prices.start(wait=True)  # optionally wait for the first update
 p = calc_price(Usage(input_tokens=123, output_tokens=456), 'gpt-5')
 print(p)
-update_prices.stop()  # stop updating prices
+update_prices.stop()
 ```
 
-Only one `UpdatePrices` instance can be running at a time.
+A single shared, process-wide updater backs every `UpdatePrices` instance. Starting an instance acquires shared
+ownership rather than creating a private thread: the first `start()` launches the updater, compatible later
+instances join it, and the last `stop()` shuts it down and restores the data bundled with the installed package.
+This lets libraries such as Logfire and Pydantic AI opt in independently without creating duplicate threads.
 
-If you'd like to wait for prices to be updated without access to the `UpdatePrices` instance, you can use the `wait_prices_updated_sync` function:
+The active updater's `url`, `update_interval`, and `request_timeout` must match. A second instance with different
+settings raises `RuntimeError` instead of silently ignoring its configuration. The first owner also supplies the
+`fetch()` implementation, so subclasses continue to work while later instances are ownership claims only.
+Applications that need custom behavior should start their updater before integrations initialize and retain it
+until shutdown.
+
+The last `stop()` keeps the existing shutdown behavior: it waits for an in-flight fetch to finish, then restores
+the bundled snapshot. Background failures remain process-wide and are raised once by the first `wait()` or
+`stop()` that observes them. `calc_price()` does not acquire either updater lock.
+
+As with other background threads, start the updater only after calling `os.fork()`; inheriting a running updater
+in a child process is unsupported.
+
+`start()` does not wait for the download (unless you pass `wait`). Until the first fetch completes, `calc_price`
+keeps using the data bundled with the installed package, so prices for models released after that snapshot may be
+missing for the first moments of the process. Once the fetch lands, every subsequent calculation uses the fresh
+data — prices computed before then are not recalculated. If you need fresh prices before calculating (e.g. in a
+short-lived script), pass `wait` to `start()`, or call `wait_prices_updated_sync()` /
+`wait_prices_updated_async()`. Fetch failures are raised by these methods, matching `UpdatePrices.wait()`.
+
+You can wait for prices to be updated from anywhere — without access to the `UpdatePrices` instance — with
+`wait_prices_updated_sync`:
 
 ```py
 from genai_prices import wait_prices_updated_sync
@@ -135,7 +157,7 @@ wait_prices_updated_sync()
 ...
 ```
 
-Or it's async variant, `wait_prices_updated_async`.
+Or its async variant, `wait_prices_updated_async`.
 
 ### CLI Usage
 
