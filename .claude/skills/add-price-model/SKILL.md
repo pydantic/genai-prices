@@ -12,6 +12,26 @@ description: >-
 Never edit `prices/data.json` / `prices/data_slim.json` by hand — they are generated. Edit the
 provider YAML in `prices/providers/<provider>.yml`, then `make build-prices`.
 
+## 0. Scope: every provider that hosts this model, not just the one you were named
+
+A model rarely lives on one provider. The big vendors' flagships are resold across clouds and
+aggregators, and each needs **its own YAML entry** — the same request "add the new Claude" means
+`anthropic.yml` **and** `aws.yml` (Bedrock) **and** `google.yml` (Vertex) **and** `openrouter.yml`.
+Adding only the direct-vendor entry is the most common miss (it's what happened for Opus 5 in #501,
+requiring the follow-up #502). Before editing, list every provider that hosts the model and cover
+them in one PR:
+
+- **Direct vendor** — `anthropic.yml`, `openai.yml`, `google.yml` (Gemini), `x_ai.yml`, etc.
+- **Aggregators/gateways** — `openrouter.yml` (usually day-one; often exposes `-fast`/`:beta` variants).
+- **Cloud resellers** — `aws.yml` (Bedrock: `global.*` + `regional.*` split, regional ~+10%),
+  `google.yml` (Vertex Claude entries live here too, separate from Gemini), Azure (`azure.yml` is
+  Azure **OpenAI** only — Claude on Foundry is out of scope there; note it, don't force it).
+
+Confirm hosting from each provider's docs/model list; don't assume. If a reseller genuinely hasn't
+shipped it yet, that's the **only** reason to defer a provider — say which one and why in the PR, and
+follow up when it lands (see "Provider rollout timing" below). "I was only asked about provider X" is
+not a reason to skip the others.
+
 ## 1. Branch
 
 Contribute via a branch on `origin` (this repo is `pydantic/genai-prices`, no fork). Always base off
@@ -135,5 +155,7 @@ addressed or dismissed (see `AGENTS.md`). Unresolved review threads mean the PR 
 
 ## Provider rollout timing
 
-OpenRouter usually lists new models day-one — add them in the same PR. Bedrock / Vertex lag; poll and
-follow up in a later PR rather than blocking.
+This is the escape hatch for step 0, not a reason to default to a single-provider PR. Cover every
+provider that already hosts the model in the same PR. OpenRouter usually lists new models day-one.
+Only when a reseller (Bedrock / Vertex) genuinely hasn't shipped yet do you defer _that_ provider —
+name it in the PR body and follow up in a later PR once it lands, rather than blocking the rest.
