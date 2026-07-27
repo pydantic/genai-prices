@@ -7,6 +7,7 @@ import pytest
 from genai_prices.data_units import unit_data
 from genai_prices.units import UnitRegistry
 from prices.build import load_units
+from prices.export_validation import validate_units
 
 
 def test_units_yml_defines_pre_expansion_registry() -> None:
@@ -67,3 +68,103 @@ def test_unit_registry_units_mapping_is_immutable() -> None:
 
     with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
         cast(dict[str, Any], registry.units)['new_unit'] = registry.units['input_tokens']
+
+
+@pytest.mark.parametrize(
+    ('usage_key', 'price_key', 'message'),
+    [
+        ('_private_name', 'private_mtok', 'must not start'),
+        ('$input_tokens', 'input_mtok', 'is not a public identifier'),
+        ('class', 'class_mtok', 'is a reserved keyword'),
+        ('valid_usage', 'function', 'is a reserved keyword'),
+    ],
+)
+def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        validate_units(
+            {
+                usage_key: {
+                    'per': 1_000_000,
+                    'price_key': price_key,
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
+def test_validate_units_rejects_duplicate_price_keys_and_dimensions() -> None:
+    with pytest.raises(ValueError, match='Duplicate unit price key: input_mtok'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'input_audio_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+                },
+            }
+        )
+
+    with pytest.raises(ValueError, match='Duplicate unit dimensions: input_tokens and prompt_tokens'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'prompt_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'prompt_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
+def test_validate_units_rejects_open_intervals_and_missing_joins() -> None:
+    with pytest.raises(ValueError, match='Missing intermediate unit dimensions'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'cache_read_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_read_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+                },
+                'cache_video_read_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_video_read_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
+                },
+            }
+        )
+
+    with pytest.raises(ValueError, match='Missing join unit dimensions'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'cache_write_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_write_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+                },
+                'input_audio_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_audio_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+                },
+            }
+        )

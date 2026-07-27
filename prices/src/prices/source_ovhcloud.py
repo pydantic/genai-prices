@@ -97,7 +97,9 @@ def main():
     )
 
     # Convert to YAML format
-    yaml_data = cast(ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True))
+    yaml_data = cast(
+        ProviderYamlDict, provider_info.model_dump(mode='json', exclude_none=True, by_alias=True, warnings=False)
+    )
 
     yaml_string = (
         '# yaml-language-server: $schema=.schema.json\n'
