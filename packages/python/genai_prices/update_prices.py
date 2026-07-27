@@ -19,7 +19,7 @@ __all__ = (
 )
 
 logger = logging.getLogger('genai-prices')
-DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data.json'
+DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
 _global_update_prices: UpdatePrices | None = None
 
 
@@ -115,7 +115,7 @@ class UpdatePrices:
             self._stop_event.set()
             self._thread.join()
             self._thread = None
-        # Clear after the thread exits so an in-flight fetch cannot reinstall a snapshot after stop().
+        # Clear after the thread exits so an in-flight fetch cannot reinstall fetched state after stop().
         data_snapshot.set_custom_snapshot(None)
         if self._background_exc:
             exc = self._background_exc
@@ -168,4 +168,5 @@ class UpdatePrices:
         if not isinstance(raw_payload, list):
             raise ValueError('Expected fetched prices payload to be a provider array')
 
-        return data_snapshot.DataSnapshot(_providers_from_raw(raw_payload), from_auto_update=True)
+        providers = _providers_from_raw(raw_payload)
+        return data_snapshot.DataSnapshot(providers, from_auto_update=True)
