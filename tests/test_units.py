@@ -1245,6 +1245,39 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
     assert 'transient_tokens' not in bundled_registry.units
 
 
+def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'transient_tokens': {
+                'per': 1_000_000,
+                'price_key': 'transient_mtok',
+                'dimensions': {'family': 'transient'},
+            },
+        }
+    )
+    provider = runtime_types._providers_from_raw(
+        [
+            {
+                'id': 'testing',
+                'name': 'Testing',
+                'api_pattern': 'testing',
+                'extractors': [
+                    {
+                        'root': 'usage',
+                        'mappings': [{'path': 'value', 'dest': 'transient_tokens', 'required': True}],
+                    },
+                ],
+            },
+        ],
+        registry,
+    )[0]
+
+    assert provider.extractors is not None
+    assert provider.extractors[0]._reported_usage_keys == frozenset({'transient_tokens'})
+
+
 def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
