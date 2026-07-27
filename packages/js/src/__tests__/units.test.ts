@@ -301,6 +301,20 @@ describe('UnitRegistry', () => {
     ).toThrow('Missing intermediate unit dimensions')
   })
 
+  it('closes many coupled dimensions without enumerating subsets', () => {
+    const descendantDimensions: Record<string, string> = { family: 'wide' }
+    for (let index = 0; index < 12; index++) {
+      descendantDimensions[`dimension_${index.toString()}`] = 'value'
+    }
+
+    const registry = UnitRegistry.fromUntrusted({
+      base: { dimensions: { family: 'wide' }, per: 1 },
+      descendant: { dimensions: descendantDimensions, per: 1 },
+    })
+
+    expect(registry.getUnit('descendant')?.dimensions).toEqual(descendantDimensions)
+  })
+
   it('accepts the complete bundled registry as untrusted data', () => {
     expect(UnitRegistry.fromUntrusted(unitData).getAllUsageKeys()).toEqual(new Set(['requests', ...reportableUsageKeys]))
   })

@@ -281,15 +281,24 @@ function validateIntervalClosure(registry: UnitRegistry): void {
     for (const descendant of units) {
       if (ancestor === descendant || !isDimensionSubset(ancestor, descendant)) continue
 
-      const addedDimensions = Object.entries(descendant.dimensions).filter(([key, value]) => ancestor.dimensions[key] !== value)
-      for (const addedSubset of properNonemptySubsets(addedDimensions)) {
-        const requiredDimensions = { ...ancestor.dimensions, ...Object.fromEntries(addedSubset) }
-        const requiredDimensionKeys = new Set(Object.entries(requiredDimensions).map(dimensionEntryKey))
-        const requirementsSatisfied = [...requiredDimensionKeys].every((entryKey) => {
-          const entryRequirements = requirements.get(entryKey)
-          return entryRequirements !== undefined && isSubset(entryRequirements, requiredDimensionKeys)
-        })
-        if (!requirementsSatisfied || availableDimensions.has(dimensionKey(requiredDimensions))) continue
+      const ancestorDimensionKeys = new Set(Object.entries(ancestor.dimensions).map(dimensionEntryKey))
+      const descendantEntries = Object.entries(descendant.dimensions)
+      const descendantEntriesByKey = new Map(descendantEntries.map((entry) => [dimensionEntryKey(entry), entry]))
+      const descendantDimensionKeys = new Set(descendantEntriesByKey.keys())
+      const addedDimensionKeys = [...descendantDimensionKeys].filter((entryKey) => !ancestorDimensionKeys.has(entryKey))
+      for (const addedDimensionKey of addedDimensionKeys) {
+        const initialDimensionKeys = new Set(ancestorDimensionKeys)
+        initialDimensionKeys.add(addedDimensionKey)
+        const requiredDimensionKeys = requirementClosure(initialDimensionKeys, requirements)
+        if (setsEqual(requiredDimensionKeys, descendantDimensionKeys)) continue
+        const requiredDimensions = Object.fromEntries(
+          [...requiredDimensionKeys].map((entryKey) => {
+            const entry = descendantEntriesByKey.get(entryKey)
+            if (!entry) throw new Error(`Missing inferred dimension entry: ${entryKey}`)
+            return entry
+          })
+        )
+        if (availableDimensions.has(dimensionKey(requiredDimensions))) continue
 
         throw new Error(
           `Missing intermediate unit dimensions between ${ancestor.usageKey} and ${descendant.usageKey}: ${formatDimensions(requiredDimensions)}`
@@ -326,6 +335,23 @@ function inferDimensionRequirements(units: UnitDef[]): Map<string, Set<string>> 
   return requirements
 }
 
+function requirementClosure(initialDimensions: Set<string>, requirements: Map<string, Set<string>>): Set<string> {
+  const closedDimensions = new Set(initialDimensions)
+  const pendingDimensions = [...initialDimensions]
+  while (pendingDimensions.length) {
+    const dimension = pendingDimensions.pop()
+    if (!dimension) continue
+    const dimensionRequirements = requirements.get(dimension)
+    if (!dimensionRequirements) throw new Error(`Missing inferred requirements for dimension: ${dimension}`)
+    for (const requirement of dimensionRequirements) {
+      if (closedDimensions.has(requirement)) continue
+      closedDimensions.add(requirement)
+      pendingDimensions.push(requirement)
+    }
+  }
+  return closedDimensions
+}
+
 function validateJoinClosedness(registry: UnitRegistry): void {
   const units = registryUnits(registry)
   const availableDimensions = new Set(units.map((unit) => dimensionKey(unit.dimensions)))
@@ -348,21 +374,16 @@ function registryUnits(registry: UnitRegistry): UnitDef[] {
   return [...registry.getAllUsageKeys()].map((usageKey) => registry.getUnit(usageKey)).filter((unit): unit is UnitDef => unit !== undefined)
 }
 
-function properNonemptySubsets<T>(values: T[]): T[][] {
-  const subsets: T[][] = []
-  const finalMask = 2 ** values.length - 1
-  for (let mask = 1; mask < finalMask; mask++) {
-    subsets.push(values.filter((_value, index) => (mask & (1 << index)) !== 0))
-  }
-  return subsets
-}
-
 function dimensionEntryKey([key, value]: [string, string]): string {
   return JSON.stringify([key, value])
 }
 
 function isSubset<T>(subset: Set<T>, superset: Set<T>): boolean {
   return [...subset].every((value) => superset.has(value))
+}
+
+function setsEqual<T>(left: Set<T>, right: Set<T>): boolean {
+  return left.size === right.size && isSubset(left, right)
 }
 
 function formatDimensions(dimensions: Readonly<Record<string, string>>): string {

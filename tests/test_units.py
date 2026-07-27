@@ -1062,6 +1062,19 @@ def test_unit_registry_from_untrusted_rejects_missing_inferred_intermediate() ->
         )
 
 
+def test_unit_registry_from_untrusted_closes_many_coupled_dimensions_without_enumerating_subsets() -> None:
+    descendant_dimensions = {'family': 'wide'} | {f'dimension_{index}': 'value' for index in range(12)}
+
+    registry = UnitRegistry.from_untrusted(
+        {
+            'base': {'per': 1, 'dimensions': {'family': 'wide'}},
+            'descendant': {'per': 1, 'dimensions': descendant_dimensions},
+        }
+    )
+
+    assert registry.units['descendant'].dimensions == descendant_dimensions
+
+
 def test_decode_v2_payload_accepts_published_data() -> None:
     from genai_prices.decode_provider_data import decode_v2_payload
 

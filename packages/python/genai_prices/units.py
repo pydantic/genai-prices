@@ -262,27 +262,37 @@ def _validate_interval_closure(
             if ancestor is descendant or not _is_dimension_subset(ancestor, descendant):
                 continue
 
-            added_dimensions = descendant.dimensions.items() - ancestor.dimensions.items()
-            for size in range(1, len(added_dimensions)):
-                for added_subset in combinations(added_dimensions, size):
-                    required_dimensions = frozenset(ancestor.dimensions.items() | set(added_subset))
-                    if not _inferred_requirements_are_satisfied(required_dimensions, requirements):
-                        continue
-                    if required_dimensions in registry._units_by_dimension:  # pyright: ignore[reportPrivateUsage]
-                        continue
+            ancestor_dimensions = _dimension_set(ancestor)
+            descendant_dimensions = _dimension_set(descendant)
+            for added_dimension in descendant_dimensions - ancestor_dimensions:
+                required_dimensions = _requirement_closure(
+                    ancestor_dimensions | {added_dimension},
+                    requirements,
+                )
+                if required_dimensions == descendant_dimensions:
+                    continue
+                if required_dimensions in registry._units_by_dimension:  # pyright: ignore[reportPrivateUsage]
+                    continue
 
-                    missing_dimensions = ', '.join(f'{key}={value}' for key, value in sorted(required_dimensions))
-                    raise ValueError(
-                        f'Missing intermediate unit dimensions between {ancestor.usage_key} and '
-                        f'{descendant.usage_key}: {missing_dimensions}'
-                    )
+                missing_dimensions = ', '.join(f'{key}={value}' for key, value in sorted(required_dimensions))
+                raise ValueError(
+                    f'Missing intermediate unit dimensions between {ancestor.usage_key} and '
+                    f'{descendant.usage_key}: {missing_dimensions}'
+                )
 
 
-def _inferred_requirements_are_satisfied(
+def _requirement_closure(
     dimensions: frozenset[tuple[str, str]],
     requirements: Mapping[tuple[str, str], frozenset[tuple[str, str]]],
-) -> bool:
-    return all(requirements[dimension] <= dimensions for dimension in dimensions)
+) -> frozenset[tuple[str, str]]:
+    closed_dimensions = set(dimensions)
+    pending_dimensions = list(dimensions)
+    while pending_dimensions:
+        dimension = pending_dimensions.pop()
+        for requirement in requirements[dimension] - closed_dimensions:
+            closed_dimensions.add(requirement)
+            pending_dimensions.append(requirement)
+    return frozenset(closed_dimensions)
 
 
 def _validate_join_closedness(registry: UnitRegistry) -> None:
