@@ -1,0 +1,62 @@
+.claude/skills/add-price-model/SKILL.md
+  s_e007c5ed89566f::t_96d26e1e509d1d 15-34,158-161
+prices/providers/google.yml
+  s_e007c5ed89566f::t_96d26e1e509d1d 480-498
+packages/js/src/__tests__/calcPrice.test.ts
+  s_e007c5ed89566f::t_ea89b4e788f204 3,5
+  s_e007c5ed89566f::t_96d26e1e509d1d 77-131
+  s_e007c5ed89566f::t_8a04b77b256ed1 132-133
+prices/providers/openrouter.yml
+  s_e007c5ed89566f::t_96d26e1e509d1d 434-464
+prices/providers/anthropic.yml
+  s_e007c5ed89566f::t_96d26e1e509d1d 378-397
+packages/js/src/timeOfDay.ts
+  s_e007c5ed89566f::t_96d26e1e509d1d 1-17
+README.md
+  s_e007c5ed89566f::t_96d26e1e509d1d 35,37
+  s_e007c5ed89566f::t_f31b4863383073 44,62
+packages/js/src/engine.ts
+  s_e007c5ed89566f::t_ea89b4e788f204 2
+  s_e007c5ed89566f::t_96d26e1e509d1d 128-130,146-152,157,162
+packages/js/src/types.ts
+  s_e007c5ed89566f::t_96d26e1e509d1d 32-33
+packages/python/genai_prices/data.py
+  s_e007c5ed89566f::t_96d26e1e509d1d 369-389,740-749,1275-1294,2759-2777,8027-8053
+  s_03b91a730483ad::t_27541530aae674 8054-8056
+prices/providers/aws.yml
+  s_e007c5ed89566f::t_96d26e1e509d1d 222-231,818-831
+  s_e007c5ed89566f::t_fad706ceacb2e6 832-836
+prices/data_v2.json
+  s_e007c5ed89566f::t_f31b4863383073 1
+packages/js/src/data.ts
+  s_e007c5ed89566f::t_96d26e1e509d1d 533-562,1152-1163,2038-2070,4579-4606,13970-14001,14006-14007
+  s_03b91a730483ad::t_7b14aaded61717 14002-14005
+prices/data.json
+  s_e007c5ed89566f::t_99d3f5196b2cab 1
+prices/data_slim.json
+  s_e007c5ed89566f::t_9d13b43370c429 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "cb4c8cb086cd9b9a802f9613d67bbf96bca69efc",
+  "prompts": {},
+  "sessions": {
+    "s_03b91a730483ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1e994a3b-6d5e-496f-92ef-f610a90753f7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
