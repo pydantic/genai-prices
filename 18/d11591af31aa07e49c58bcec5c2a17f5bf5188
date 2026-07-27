@@ -1,0 +1,39 @@
+tests/test_package_schema.py
+  s_6ad3cfa10f0d70::t_64b09bad425ed5 1,4-18,20-24,26-57
+prices/src/prices/prices_types.py
+  s_6ad3cfa10f0d70::t_64b09bad425ed5 12,17-18,23,132,157-169,185,202,246-249,276-277
+  s_6ad3cfa10f0d70::t_02829a804afa03 278
+prices/src/prices/build.py
+  s_6ad3cfa10f0d70::t_e4887315c0b8b4 37,60-65
+  s_6ad3cfa10f0d70::t_8b8a6115a3a88b 3,15,31,33,38,59,66-88,91-95,99-100,102,108-115
+  s_6ad3cfa10f0d70::t_5d5b36818aa3d3 36
+tests/test_units.py
+  s_6ad3cfa10f0d70::t_f912645d6bc6fb 10,71-170
+prices/src/prices/source_ovhcloud.py
+  s_6ad3cfa10f0d70::t_64b09bad425ed5 100-102
+prices/src/prices/export_validation.py
+  s_6ad3cfa10f0d70::t_64b09bad425ed5 1-170
+prices/src/prices/package_data.py
+  s_6ad3cfa10f0d70::t_e4887315c0b8b4 21
+  s_6ad3cfa10f0d70::t_8b8a6115a3a88b 1-2,6,8,11,14-18,23-24,27,32-36,38,48-56,61-86,98,106-107,109,112-113,115-123,125-167,170,174,176
+prices/src/prices/source_huggingface.py
+  s_6ad3cfa10f0d70::t_64b09bad425ed5 77-79
+prices/providers/.schema.json
+  s_6ad3cfa10f0d70::t_8f0f0f3b3fdaea 327,341-350,441-570,763-764,766-769,771-775,777-786
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "18d11591af31aa07e49c58bcec5c2a17f5bf5188",
+  "prompts": {},
+  "sessions": {
+    "s_6ad3cfa10f0d70": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa3c3-41b3-7ba2-aafb-be012db9c345",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
