@@ -947,7 +947,7 @@ def test_build_loads_units() -> None:
     assert set(build_module.load_units()) == ALL_USAGE_KEYS
 
 
-def test_package_data_surfaces_registry_structural_errors(
+def test_build_validation_surfaces_registry_structural_errors(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -969,27 +969,168 @@ prompt_tokens:
         ValueError,
         match='Duplicate unit dimensions: input_tokens and prompt_tokens',
     ):
-        package_data.load_unit_registry(build_module.load_units())
+        export_validation.validate_units(build_module.load_units())
 
 
-def test_package_data_load_unit_registry_delegates_to_export_validator(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_package_data_load_unit_registry_trusts_built_projection() -> None:
     raw_units: dict[str, Any] = {
         'widgets': {
             'per': 1_000_000,
             'dimensions': {'family': 'widgets'},
         }
     }
-    expected_registry = UnitRegistry(raw_units)
-    calls: list[dict[str, Any]] = []
 
-    def validate(raw_units_arg: dict[str, Any]) -> UnitRegistry:
-        calls.append(raw_units_arg)
-        return expected_registry
+    registry = package_data.load_unit_registry(raw_units)
 
-    monkeypatch.setattr(export_validation, 'validate_units', validate)
+    assert registry.units['widgets'].per == 1_000_000
 
-    assert package_data.load_unit_registry(raw_units) is expected_registry
-    assert calls == [raw_units]
+
+def test_unit_registry_from_untrusted_accepts_published_projection() -> None:
+    registry = UnitRegistry.from_untrusted(build_module.runtime_unit_data(load_units()))
+
+    assert set(registry.units) == ALL_USAGE_KEYS
+
+
+@pytest.mark.parametrize(
+    ('raw_units', 'message'),
+    [
+        ([], 'Unit definitions must be an object'),
+        ({1: {'per': 1_000, 'dimensions': {'family': 'widgets'}}}, 'Unit usage keys must be strings'),
+        ({'widgets': []}, 'Unit definition for widgets must be an object'),
+        ({'widgets': {1: 2}}, 'Unit definition fields for widgets must be strings'),
+        (
+            {'widgets': {'per': 1_000, 'dimensions': {'family': 'widgets'}, 'unexpected': True}},
+            'Unknown unit definition fields for widgets: unexpected',
+        ),
+        (
+            {'widgets': {'per': 1_000, 'price_key': 1, 'dimensions': {'family': 'widgets'}}},
+            'Unit price key for widgets must be a string',
+        ),
+        (
+            {'widgets': {'per': True, 'dimensions': {'family': 'widgets'}}},
+            'Unit per for widgets must be a positive integer',
+        ),
+        (
+            {'widgets': {'per': 1_000, 'dimensions': []}},
+            'Unit dimensions for widgets must be an object',
+        ),
+        (
+            {'widgets': {'per': 1_000, 'dimensions': {'family': 1}}},
+            'Unit dimensions for widgets must map strings to strings',
+        ),
+        (
+            {'constructor': {'per': 1_000, 'dimensions': {'family': 'widgets'}}},
+            "Invalid unit usage key: 'constructor' is reserved",
+        ),
+        (
+            {'reported_value': {'per': 1_000, 'dimensions': {'family': 'widgets'}}},
+            "Invalid unit usage key: 'reported_value' shadows a public Python API",
+        ),
+        (
+            {
+                'widgets': {
+                    'per': 1_000,
+                    'price_key': 'calc_price',
+                    'dimensions': {'family': 'widgets'},
+                }
+            },
+            "Invalid unit price key: 'calc_price' shadows a public Python API",
+        ),
+    ],
+)
+def test_unit_registry_from_untrusted_rejects_invalid_shapes(raw_units: object, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        UnitRegistry.from_untrusted(raw_units)
+
+
+def test_unit_registry_from_untrusted_rejects_missing_inferred_intermediate() -> None:
+    with pytest.raises(ValueError, match='Missing intermediate unit dimensions'):
+        UnitRegistry.from_untrusted(
+            {
+                'input_audio_tool_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {
+                        'family': 'tokens',
+                        'direction': 'input',
+                        'modality': 'audio',
+                        'token_type': 'tool',
+                    },
+                },
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'output_audio_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio'},
+                },
+                'output_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'output'},
+                },
+                'output_tool_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'family': 'tokens', 'direction': 'output', 'token_type': 'tool'},
+                },
+            }
+        )
+
+
+def test_unit_registry_from_untrusted_closes_many_coupled_dimensions_without_enumerating_subsets() -> None:
+    descendant_dimensions = {'family': 'wide'} | {f'dimension_{index}': 'value' for index in range(12)}
+
+    registry = UnitRegistry.from_untrusted(
+        {
+            'base': {'per': 1, 'dimensions': {'family': 'wide'}},
+            'descendant': {'per': 1, 'dimensions': descendant_dimensions},
+        }
+    )
+
+    assert registry.units['descendant'].dimensions == descendant_dimensions
+
+
+def test_decode_v2_payload_accepts_published_data() -> None:
+    from genai_prices.decode_provider_data import decode_v2_payload
+
+    raw_payload = json.loads(Path('prices/data_v2.json').read_bytes())
+    decoded = decode_v2_payload(raw_payload)
+
+    assert set(decoded) == {'units', 'providers'}
+    assert decoded['units']
+    assert decoded['providers']
+
+
+@pytest.mark.parametrize(
+    'case',
+    [
+        'wrapper-field',
+        'unit-field',
+        'provider-field',
+        'model-field',
+        'price-value',
+    ],
+)
+def test_decode_v2_payload_rejects_unknown_fields_and_invalid_nested_values(case: str) -> None:
+    from pydantic import ValidationError
+
+    from genai_prices.decode_provider_data import decode_v2_payload
+
+    raw_payload = cast(dict[str, Any], json.loads(Path('prices/data_v2.json').read_bytes()))
+    provider = cast(dict[str, Any], raw_payload['providers'][0])
+    model = cast(dict[str, Any], provider['models'][0])
+    if case == 'wrapper-field':
+        raw_payload['unexpected'] = True
+    elif case == 'unit-field':
+        cast(dict[str, Any], raw_payload['units']['input_tokens'])['unexpected'] = True
+    elif case == 'provider-field':
+        provider['unexpected'] = True
+    elif case == 'model-field':
+        model['unexpected'] = True
+    else:
+        cast(dict[str, Any], model['prices'])['input_mtok'] = '1'
+
+    with pytest.raises(ValidationError):
+        decode_v2_payload(raw_payload)
 
 
 def test_runtime_packages_do_not_define_unit_publication_validators() -> None:
@@ -1015,15 +1156,17 @@ def test_package_generation_no_longer_reloads_units_yml() -> None:
     assert references == set()
 
 
-def test_package_provider_data_rejects_non_array_root(tmp_path: Path) -> None:
+def test_package_provider_data_rejects_non_wrapped_root(tmp_path: Path) -> None:
     data_path = tmp_path / 'data_v2.json'
-    data_path.write_text('{"providers": []}')
+    data_path.write_text('[]')
 
-    with pytest.raises(ValueError, match=r'Expected .* to contain a provider array'):
-        package_data._load_provider_data(data_path)
+    with pytest.raises(ValueError, match=r'Expected .* to contain exactly units and providers'):
+        package_data._load_wrapped_data(data_path)
 
 
-def test_package_data_loads_providers_and_units_independently(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_package_data_loads_providers_and_units_from_wrapped_v2(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     provider_data: list[package_data.JsonData] = [{'id': 'testing', 'name': 'Testing', 'models': []}]
     units: dict[str, Any] = {
         'widgets': {
@@ -1031,7 +1174,7 @@ def test_package_data_loads_providers_and_units_independently(monkeypatch: pytes
             'dimensions': {'family': 'widgets'},
         }
     }
-    (tmp_path / 'data_v2.json').write_text(json.dumps(provider_data))
+    (tmp_path / 'data_v2.json').write_text(json.dumps({'units': units, 'providers': provider_data}))
     calls: list[tuple[str, list[package_data.JsonData], dict[str, Any]]] = []
 
     def generate_python(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
@@ -1041,7 +1184,6 @@ def test_package_data_loads_providers_and_units_independently(monkeypatch: pytes
         calls.append(('typescript', providers, raw_units))
 
     monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
-    monkeypatch.setattr(package_data, 'load_units', lambda: units)
     monkeypatch.setattr(package_data, 'package_python_data', generate_python)
     monkeypatch.setattr(package_data, 'package_ts_data', generate_typescript)
 
@@ -1070,6 +1212,95 @@ def test_validate_export_payload_returns_validated_unit_registry() -> None:
 
     assert isinstance(registry, UnitRegistry)
     assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
+
+
+def test_validate_unit_evolution_accepts_unchanged_units_and_new_descendant() -> None:
+    previous = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        }
+    }
+    candidate = {
+        **previous,
+        'input_mochaccino_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mochaccino_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input', 'flavor': 'mochaccino'},
+        },
+    }
+
+    export_validation.validate_unit_evolution(previous, candidate)
+
+
+@pytest.mark.parametrize(
+    ('candidate', 'message'),
+    [
+        ({}, 'Published unit removed: input_tokens'),
+        (
+            {'input_tokens': {'per': 1_000, 'price_key': 'input_mtok', 'dimensions': {'family': 'tokens'}}},
+            'Published unit changed: input_tokens',
+        ),
+        (
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'renamed_mtok',
+                    'dimensions': {'family': 'tokens'},
+                }
+            },
+            'Published unit changed: input_tokens',
+        ),
+        (
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                }
+            },
+            'Published unit changed: input_tokens',
+        ),
+    ],
+)
+def test_validate_unit_evolution_rejects_removed_or_changed_units(
+    candidate: dict[str, dict[str, Any]], message: str
+) -> None:
+    previous = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens'},
+        }
+    }
+
+    with pytest.raises(ValueError, match=message):
+        export_validation.validate_unit_evolution(previous, candidate)
+
+
+def test_validate_unit_evolution_rejects_new_ancestor() -> None:
+    previous = {
+        'input_image_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_image_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image'},
+        }
+    }
+    candidate = {
+        **previous,
+        'image_tokens': {
+            'per': 1_000_000,
+            'price_key': 'image_mtok',
+            'dimensions': {'family': 'tokens', 'modality': 'image'},
+        },
+    }
+
+    with pytest.raises(
+        ValueError,
+        match='New unit image_tokens would become an ancestor of published unit input_image_tokens',
+    ):
+        export_validation.validate_unit_evolution(previous, candidate)
 
 
 def test_validate_export_payload_rejects_unknown_price_key() -> None:
@@ -1211,6 +1442,197 @@ def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_sche
     assert injected[1] == {'id': 'without-extractors'}
     assert injected[2]['extractors'][0] is invalid_extractor
     assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+
+def test_runtime_provider_projection_preserves_malformed_shapes_for_schema_validation() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            }
+        }
+    )
+    invalid_provider = object()
+    invalid_extractor = object()
+    invalid_mapping = object()
+    raw_providers: list[Any] = [
+        invalid_provider,
+        {
+            'id': 'testing',
+            'extractors': [
+                invalid_extractor,
+                {'mappings': [invalid_mapping, {'dest': 1}, {'dest': 'input_tokens'}]},
+                {'mappings': object()},
+            ],
+        },
+    ]
+
+    assert runtime_types._project_provider_data({}, registry) == {}
+    projected = runtime_types._project_provider_data(raw_providers, registry)
+    assert projected[0] is invalid_provider
+    assert projected[1]['extractors'][0] is invalid_extractor
+    assert projected[1]['extractors'][1]['mappings'] == [
+        invalid_mapping,
+        {'dest': 1},
+        {'dest': 'input_tokens'},
+    ]
+    assert not isinstance(projected[1]['extractors'][2]['mappings'], list)
+
+
+def test_runtime_provider_projection_omits_unsupported_dynamic_fields_without_mutating_input() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            }
+        }
+    )
+    raw_providers: list[dict[str, Any]] = [
+        {
+            'id': 'testing',
+            'name': 'Testing',
+            'api_pattern': 'testing',
+            'extractors': [
+                {
+                    'root': 'usage',
+                    'mappings': [
+                        {'path': 'input_tokens', 'dest': 'input_tokens'},
+                        {'path': 'unknown_tokens', 'dest': 'unknown_tokens'},
+                    ],
+                }
+            ],
+            'models': [
+                {
+                    'id': 'model',
+                    'match': {'equals': 'model'},
+                    'prices': {'input_mtok': 1, 'unknown_mtok': 2},
+                },
+                {
+                    'id': 'conditional',
+                    'match': {'equals': 'conditional'},
+                    'prices': [
+                        {
+                            'prices': {'input_mtok': 3, 'another_unknown_mtok': 4},
+                            'constraint': None,
+                        }
+                    ],
+                },
+            ],
+        }
+    ]
+
+    with pytest.warns() as warning_records:
+        providers = runtime_types._providers_from_raw(raw_providers, registry)
+
+    assert [str(record.message) for record in warning_records] == [
+        'Unsupported price key for standard pricing: another_unknown_mtok, unknown_mtok',
+        'Unsupported extractor destination for standard extraction: unknown_tokens',
+    ]
+    raw_models = cast(list[dict[str, Any]], raw_providers[0]['models'])
+    raw_extractors = cast(list[dict[str, Any]], raw_providers[0]['extractors'])
+    assert raw_models[0]['prices'] == {'input_mtok': 1, 'unknown_mtok': 2}
+    assert cast(list[dict[str, Any]], raw_extractors[0]['mappings'])[-1]['dest'] == 'unknown_tokens'
+
+    provider = providers[0]
+    assert provider.extractors is not None
+    assert [mapping.dest for mapping in provider.extractors[0].mappings] == ['input_tokens']
+    direct_prices = provider.models[0].prices
+    assert isinstance(direct_prices, ModelPrice)
+    assert direct_prices.__dict__ == {'input_mtok': Decimal('1')}
+    conditional_prices = provider.models[1].prices
+    assert isinstance(conditional_prices, list)
+    assert conditional_prices[0].prices.__dict__ == {'input_mtok': Decimal('3')}
+
+
+def test_runtime_provider_price_coverage_validates_every_recognized_price_set() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_read_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_read_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+            },
+        }
+    )
+    providers = runtime_types._providers_from_raw(
+        [
+            {
+                'id': 'testing',
+                'name': 'Testing',
+                'api_pattern': 'testing',
+                'models': [
+                    {
+                        'id': 'conditional',
+                        'match': {'equals': 'conditional'},
+                        'prices': [
+                            {'prices': {'input_mtok': 1}},
+                            {'prices': {'cache_read_mtok': 2}},
+                        ],
+                    }
+                ],
+            }
+        ],
+        registry,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid price coverage for testing/conditional: Missing ancestor price for cache_read_tokens: input_tokens',
+    ):
+        runtime_types._validate_provider_price_coverage(providers, registry)
+
+
+def test_runtime_provider_price_coverage_accepts_complete_coverage() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_read_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_read_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+            },
+        }
+    )
+    providers = runtime_types._providers_from_raw(
+        [
+            {
+                'id': 'testing',
+                'name': 'Testing',
+                'api_pattern': 'testing',
+                'models': [
+                    {
+                        'id': 'model',
+                        'match': {'equals': 'model'},
+                        'prices': {'input_mtok': 1, 'cache_read_mtok': 2},
+                    }
+                ],
+            }
+        ],
+        registry,
+    )
+
+    runtime_types._validate_provider_price_coverage(providers, registry)
 
 
 def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
@@ -1599,6 +2021,61 @@ def test_custom_snapshots_do_not_carry_a_registry() -> None:
     snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
 
     assert not hasattr(snapshot, 'unit_registry')
+
+
+def test_runtime_data_activation_replaces_registry_and_snapshot_together() -> None:
+    from genai_prices import runtime_state
+
+    initial = runtime_state.get_runtime_data()
+    registry = UnitRegistry(
+        {
+            'widgets': {
+                'per': 1_000,
+                'dimensions': {'family': 'widgets'},
+            }
+        }
+    )
+    snapshot = DataSnapshot([], from_auto_update=True)
+    candidate = runtime_state.RuntimeData(registry=registry, snapshot=snapshot)
+    generation = runtime_state.begin_update()
+
+    try:
+        assert runtime_state.activate_runtime_data(generation, candidate) is True
+        assert runtime_state.get_runtime_data() is candidate
+    finally:
+        restore_generation = runtime_state.begin_update()
+        assert runtime_state.activate_runtime_data(restore_generation, initial) is True
+
+
+def test_runtime_data_rejects_stale_activation() -> None:
+    from genai_prices import runtime_state
+
+    initial = runtime_state.get_runtime_data()
+    stale_generation = runtime_state.begin_update()
+    runtime_state.begin_update()
+
+    assert runtime_state.activate_runtime_data(stale_generation, initial) is False
+    assert runtime_state.get_runtime_data() is initial
+
+
+def test_runtime_data_lazy_initialization_observes_state_populated_before_lock(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from genai_prices import runtime_state
+
+    initial = runtime_state.get_runtime_data()
+
+    class PopulateOnEnter:
+        def __enter__(self) -> None:
+            runtime_state._runtime_data = initial
+
+        def __exit__(self, *_args: object) -> None:
+            pass
+
+    monkeypatch.setattr(runtime_state, '_runtime_data', None)
+    monkeypatch.setattr(runtime_state, '_lock', PopulateOnEnter())
+
+    assert runtime_state.get_runtime_data() is initial
 
 
 def test_set_custom_snapshot_does_not_validate_model_prices() -> None:

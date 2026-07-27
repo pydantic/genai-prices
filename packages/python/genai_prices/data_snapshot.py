@@ -3,36 +3,23 @@ from __future__ import annotations as _annotations
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from functools import cache
 from typing import Any
 
 from . import types
 
 __all__ = 'DataSnapshot', 'set_custom_snapshot'
 
-# snapshot set by UpdatePrices, or manually by the user
-_custom_snapshot: DataSnapshot | None = None
-
 
 def get_snapshot() -> DataSnapshot:
-    if _custom_snapshot is not None:
-        return _custom_snapshot
-    return _bundled_snapshot()
+    from .runtime_state import get_runtime_data
+
+    return get_runtime_data().snapshot
 
 
-@cache
-def _bundled_snapshot() -> DataSnapshot:
-    from .data import providers
+def set_custom_snapshot(snapshot: DataSnapshot | None) -> None:
+    from .runtime_state import replace_snapshot
 
-    return DataSnapshot(
-        providers=providers,
-        from_auto_update=False,
-    )
-
-
-def set_custom_snapshot(snapshot: DataSnapshot | None):
-    global _custom_snapshot
-    _custom_snapshot = snapshot
+    replace_snapshot(snapshot)
 
 
 @dataclass
@@ -57,12 +44,33 @@ class DataSnapshot:
         genai_request_timestamp: datetime | None,
     ) -> types.PriceCalculation:
         """Calculate the price for the given usage."""
+        from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return self._calc_with_registry(
+            usage,
+            model_ref,
+            provider_id,
+            provider_api_url,
+            genai_request_timestamp,
+            _get_registry(),
+        )
+
+    def _calc_with_registry(
+        self,
+        usage: types.AbstractUsage,
+        model_ref: str,
+        provider_id: str | None,
+        provider_api_url: str | None,
+        genai_request_timestamp: datetime | None,
+        registry: types.UnitRegistry,
+    ) -> types.PriceCalculation:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         provider, model = self.find_provider_model(model_ref, None, provider_id, provider_api_url)
-        return model.calc_price(
+        return model._calc_price_with_registry(  # pyright: ignore[reportPrivateUsage]
             usage,
             provider,
+            registry,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.timestamp if self.from_auto_update else None,
         )
@@ -74,8 +82,28 @@ class DataSnapshot:
         provider_api_url: str | None = None,
         api_flavor: str = 'default',
     ) -> types.ExtractedUsage:
+        from .units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return self._extract_usage_with_registry(
+            response_data,
+            provider_id,
+            provider_api_url,
+            api_flavor,
+            _get_registry(),
+        )
+
+    def _extract_usage_with_registry(
+        self,
+        response_data: Any,
+        provider_id: types.ProviderID | str | None,
+        provider_api_url: str | None,
+        api_flavor: str,
+        registry: types.UnitRegistry,
+    ) -> types.ExtractedUsage:
         provider = self.find_provider(None, provider_id, provider_api_url)
-        model_ref, usage = provider.extract_usage(response_data, api_flavor=api_flavor)
+        model_ref, usage = provider._extract_usage_with_registry(  # pyright: ignore[reportPrivateUsage]
+            response_data, api_flavor, registry
+        )
         if model_ref is not None:
             _, model = self.find_provider_model(model_ref, provider, None, None)
         else:

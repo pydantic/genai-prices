@@ -198,7 +198,10 @@ class Usage:
     """Simple token usage container."""
 
     def __init__(self, **kwargs: int | None) -> None:
-        reported_usage_keys = _reported_usage_keys()
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
+        reported_usage_keys = registry._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
         unknown_keys = kwargs.keys() - reported_usage_keys
         if unknown_keys:
             bad_keys = ', '.join(sorted(unknown_keys))
@@ -212,27 +215,57 @@ class Usage:
 
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return cls._from_raw_with_registry(obj, _get_registry())
+
+    @classmethod
+    def _from_raw_with_registry(cls, obj: object, registry: UnitRegistry) -> Usage:
         if isinstance(obj, Usage):
             return obj
 
         values: dict[str, int] = {}
-        for key in _reported_usage_keys():
+        for key in registry._reported_usage_keys:  # pyright: ignore[reportPrivateUsage]
             value = _raw_usage_value(obj, key)
             if value is not None:
                 values[key] = value
 
-        return cls(**values)
+        return cls._from_values_with_registry(values, registry)
+
+    @classmethod
+    def _from_values_with_registry(cls, values: Mapping[str, int | None], registry: UnitRegistry) -> Self:
+        unknown_keys = values.keys() - registry._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
+        if unknown_keys:
+            bad_keys = ', '.join(sorted(unknown_keys))
+            warnings.warn(
+                f'Unsupported usage key for standard pricing: {bad_keys}',
+                UserWarning,
+                stacklevel=3,
+            )
+
+        usage = cls.__new__(cls)
+        usage._store_values(values)
+        return usage
 
     def __setattr__(self, name: str, value: int | None) -> None:
-        if name in _reported_usage_keys():
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
+        if name in registry._reported_usage_keys:  # pyright: ignore[reportPrivateUsage]
             self._store_values({name: value})
         else:
             object.__setattr__(self, name, value)
 
     def __getattr__(self, name: str) -> int:
-        if name in _reported_usage_keys():
-            return self._infer_missing_value(name)
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
+        return self._get_value_with_registry(name, _get_registry())
+
+    def _get_value_with_registry(self, name: str, registry: UnitRegistry) -> int:
+        if name in registry._reported_usage_keys:  # pyright: ignore[reportPrivateUsage]
+            if name in self.__dict__:
+                return cast(int, self.__dict__[name])
+            return self._infer_missing_value(name, registry)
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
     def _store_values(self, values: Mapping[str, int | None]) -> None:
@@ -242,24 +275,35 @@ class Usage:
             else:
                 self.__dict__[key] = value
 
-    def _reported_values(self) -> dict[str, int]:
-        reported_usage_keys = _reported_usage_keys()
+    def _reported_values(self, registry: UnitRegistry | None = None) -> dict[str, int]:
+        if registry is None:
+            from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+            registry = _get_registry()
+        reported_usage_keys = registry._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
         return {key: cast(int, value) for key, value in self.__dict__.items() if key in reported_usage_keys}
 
     def reported_value(self, usage_key: str) -> int:
-        return self._reported_values().get(usage_key, 0)
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
+        return self._reported_values(registry).get(usage_key, 0)
 
     def __add__(self, other: Usage | Any) -> Self:
         if not isinstance(other, Usage):
             return NotImplemented
 
-        self_values = self._reported_values()
-        other_values = other._reported_values()
-        return type(self)(
-            **{
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        registry = _get_registry()
+        self_values = self._reported_values(registry)
+        other_values = other._reported_values(registry)
+        return type(self)._from_values_with_registry(
+            {
                 key: self_values.get(key, 0) + other_values.get(key, 0)
                 for key in self_values.keys() | other_values.keys()
-            }
+            },
+            registry,
         )
 
     def __radd__(self, other: Usage | int) -> Usage:
@@ -274,23 +318,30 @@ class Usage:
         if not isinstance(other, Usage):
             return NotImplemented
 
-        return self._reported_values() == other._reported_values()
-
-    def __repr__(self) -> str:
-        values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values())
-        return f'{type(self).__name__}({values})'
-
-    def _ordered_values(self) -> list[tuple[str, int]]:
-        values = self._reported_values()
-        return [(key, values[key]) for key in _reported_usage_key_order() if key in values]
-
-    def _infer_missing_value(self, usage_key: str) -> int:
-        from genai_prices.decompose import is_descendant_or_self
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
 
         registry = _get_registry()
+        return self._reported_values(registry) == other._reported_values(registry)
+
+    def __repr__(self) -> str:
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        values = ', '.join(f'{key}={value!r}' for key, value in self._ordered_values(_get_registry()))
+        return f'{type(self).__name__}({values})'
+
+    def _ordered_values(self, registry: UnitRegistry) -> list[tuple[str, int]]:
+        values = self._reported_values(registry)
+        return [
+            (key, values[key])
+            for key in registry._reported_usage_keys_in_order  # pyright: ignore[reportPrivateUsage]
+            if key in values
+        ]
+
+    def _infer_missing_value(self, usage_key: str, registry: UnitRegistry) -> int:
+        from genai_prices.decompose import is_descendant_or_self
+
         requested_unit = registry.units[usage_key]
-        reported_values = self._reported_values()
+        reported_values = self._reported_values(registry)
         descendant_keys = [
             unit.usage_key
             for reported_key, value in reported_values.items()
@@ -400,6 +451,13 @@ class Provider:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return self._extract_usage_with_registry(response_data, api_flavor, _get_registry())
+
+    def _extract_usage_with_registry(
+        self, response_data: Any, api_flavor: str, registry: UnitRegistry
+    ) -> tuple[str | None, Usage]:
         if self.extractors is None:
             raise ValueError('No extraction logic defined for this provider')
 
@@ -409,7 +467,7 @@ class Provider:
             fs = ', '.join(e.api_flavor for e in self.extractors)
             raise ValueError(f'Unknown api_flavor {api_flavor!r}, allowed values: {fs}') from e
 
-        return extractor.extract(response_data)
+        return extractor._extract_with_registry(response_data, registry)  # pyright: ignore[reportPrivateUsage]
 
     def summary(self) -> str:
         return f'Provider(id={self.id!r}, name={self.name!r}, ...)'
@@ -472,6 +530,11 @@ class UsageExtractor:
         Returns:
             tuple[str, Usage]: The extracted model name and usage information.
         """
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return self._extract_with_registry(response_data, _get_registry())
+
+    def _extract_with_registry(self, response_data: Any, registry: UnitRegistry) -> tuple[str | None, Usage]:
         model_name = _extract_path(self.model_path, response_data, str, False, [])
 
         root = self.root
@@ -484,7 +547,7 @@ class UsageExtractor:
         values_set = False
         supported_mappings = 0
         for mapping in self.mappings:
-            if mapping.dest not in self._reported_usage_keys:
+            if mapping.dest not in registry._reported_usage_keys:  # pyright: ignore[reportPrivateUsage]
                 continue
             supported_mappings += 1
             value = _extract_path(mapping.path, usage_obj, int, mapping.required, root)
@@ -493,7 +556,9 @@ class UsageExtractor:
                 values_set = True
         if supported_mappings and not values_set:
             raise ValueError(f'No usage information found at {self.root}')
-        return model_name, Usage(**values)
+        return model_name, Usage._from_values_with_registry(  # pyright: ignore[reportPrivateUsage]
+            values, registry
+        )
 
 
 E = TypeVar('E')
@@ -608,12 +673,6 @@ def _reported_usage_keys() -> frozenset[str]:
     return _get_registry()._reported_usage_keys  # pyright: ignore[reportPrivateUsage]
 
 
-def _reported_usage_key_order() -> tuple[str, ...]:
-    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
-
-    return _get_registry()._reported_usage_keys_in_order  # pyright: ignore[reportPrivateUsage]
-
-
 def _raw_usage_value(obj: object, key: str) -> int | None:
     value = getattr(obj, key, None)
     if value is None:
@@ -671,10 +730,32 @@ class ModelInfo:
         auto_update_timestamp: datetime | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
+        from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return self._calc_price_with_registry(
+            usage,
+            provider,
+            _get_registry(),
+            genai_request_timestamp=genai_request_timestamp,
+            auto_update_timestamp=auto_update_timestamp,
+        )
+
+    def _calc_price_with_registry(
+        self,
+        usage: AbstractUsage,
+        provider: Provider,
+        registry: UnitRegistry,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        auto_update_timestamp: datetime | None = None,
+    ) -> PriceCalculation:
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
         model_price = self.get_prices(genai_request_timestamp)
-        price = model_price.calc_price(usage)
+        if type(model_price).calc_price is ModelPrice.calc_price:
+            price = model_price._calc_price_with_registry(usage, registry)  # pyright: ignore[reportPrivateUsage]
+        else:
+            price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
             output_price=price['output_price'],
@@ -712,14 +793,17 @@ class ModelPrice:
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+        return self._calc_price_with_registry(usage, _get_registry())
+
+    def _calc_price_with_registry(self, usage: AbstractUsage, registry: UnitRegistry) -> CalcPrice:
         from genai_prices.validation import validate_priced_units
 
-        registry = _get_registry()
         resolved_prices = _collect_resolved_model_prices(self, registry)
         validate_priced_units(tuple(unit for unit, _ in resolved_prices), registry)
 
-        usage_data = Usage.from_raw(usage)
-        priced_counts = _compute_registry_priced_counts(resolved_prices, usage_data)
+        usage_data = Usage._from_raw_with_registry(usage, registry)  # pyright: ignore[reportPrivateUsage]
+        priced_counts = _compute_registry_priced_counts(resolved_prices, usage_data, registry)
 
         input_price = Decimal(0)
         output_price = Decimal(0)
@@ -851,14 +935,19 @@ def _collect_resolved_model_prices(
 
 
 def _compute_registry_priced_counts(
-    resolved_prices: Sequence[tuple[UnitDef, Decimal | TieredPrices]], usage: Usage
+    resolved_prices: Sequence[tuple[UnitDef, Decimal | TieredPrices]],
+    usage: Usage,
+    registry: UnitRegistry | None = None,
 ) -> dict[str, int]:
     from genai_prices.decompose import compute_leaf_values
+    from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
+
+    registry = registry or _get_registry()
 
     counts: dict[str, int] = {}
     priced_units_by_usage_key = {unit.usage_key: unit for unit, _ in resolved_prices if unit.usage_key != 'requests'}
     if priced_units_by_usage_key:
-        counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key))
+        counts.update(compute_leaf_values(set(priced_units_by_usage_key), usage, priced_units_by_usage_key, registry))
     if any(unit.usage_key == 'requests' for unit, _ in resolved_prices):
         counts['requests'] = 1
 
@@ -1024,10 +1113,114 @@ _providers_schema = pydantic.TypeAdapter(
 
 
 def _providers_from_raw(raw_providers: Any, registry: UnitRegistry | None = None) -> list[Provider]:  # pyright: ignore[reportUnusedFunction]
+    if registry is not None:
+        raw_providers = _project_provider_data(raw_providers, registry)
     normalized = _normalize_model_prices(raw_providers)
     if registry is not None:
         normalized = _inject_extractor_registry(normalized, registry)
     return _providers_schema.validate_python(normalized)
+
+
+def _validate_provider_price_coverage(  # pyright: ignore[reportUnusedFunction]
+    providers: Sequence[Provider], registry: UnitRegistry
+) -> None:
+    from genai_prices.validation import validate_priced_units
+
+    for provider in providers:
+        for model in provider.models:
+            model_prices = (
+                [model.prices]
+                if isinstance(model.prices, ModelPrice)
+                else [conditional.prices for conditional in model.prices]
+            )
+            for model_price in model_prices:
+                resolved_prices = _collect_resolved_model_prices(model_price, registry)
+                try:
+                    validate_priced_units(tuple(unit for unit, _ in resolved_prices), registry)
+                except ValueError as exc:
+                    raise ValueError(f'Invalid price coverage for {provider.id}/{model.id}: {exc}') from exc
+
+
+def _project_provider_data(raw_providers: Any, registry: UnitRegistry) -> Any:
+    unsupported_price_keys: set[str] = set()
+    projected = _project_model_prices(raw_providers, registry, unsupported_price_keys)
+
+    unsupported_destinations: set[str] = set()
+    if isinstance(projected, list):
+        providers: list[Any] = []
+        for raw_provider in cast(list[Any], projected):
+            if not isinstance(raw_provider, Mapping):
+                providers.append(raw_provider)
+                continue
+
+            provider = dict(cast(Mapping[str, Any], raw_provider))
+            raw_extractors = provider.get('extractors')
+            if isinstance(raw_extractors, list):
+                extractors: list[Any] = []
+                for raw_extractor in cast(list[Any], raw_extractors):
+                    if not isinstance(raw_extractor, Mapping):
+                        extractors.append(raw_extractor)
+                        continue
+
+                    extractor = dict(cast(Mapping[str, Any], raw_extractor))
+                    raw_mappings = extractor.get('mappings')
+                    if isinstance(raw_mappings, list):
+                        mappings: list[Any] = []
+                        for raw_mapping in cast(list[Any], raw_mappings):
+                            if not isinstance(raw_mapping, Mapping):
+                                mappings.append(raw_mapping)
+                                continue
+
+                            typed_mapping = cast(Mapping[str, Any], raw_mapping)
+                            destination = cast(str | None, typed_mapping.get('dest'))
+                            if isinstance(destination, str) and destination not in registry._reported_usage_keys:  # pyright: ignore[reportPrivateUsage]
+                                unsupported_destinations.add(destination)
+                                continue
+                            mappings.append(typed_mapping)
+                        extractor['mappings'] = mappings
+                    extractors.append(extractor)
+                provider['extractors'] = extractors
+            providers.append(provider)
+        projected = providers
+
+    if unsupported_price_keys:
+        bad_keys = ', '.join(sorted(unsupported_price_keys))
+        warnings.warn(
+            f'Unsupported price key for standard pricing: {bad_keys}',
+            UserWarning,
+            stacklevel=3,
+        )
+    if unsupported_destinations:
+        bad_keys = ', '.join(sorted(unsupported_destinations))
+        warnings.warn(
+            f'Unsupported extractor destination for standard extraction: {bad_keys}',
+            UserWarning,
+            stacklevel=3,
+        )
+
+    return projected
+
+
+def _project_model_prices(value: Any, registry: UnitRegistry, unsupported_price_keys: set[str]) -> Any:
+    if isinstance(value, list):
+        return [_project_model_prices(item, registry, unsupported_price_keys) for item in cast(list[Any], value)]
+    if not isinstance(value, Mapping):
+        return value
+
+    projected: dict[str, Any] = {}
+    raw_mapping = cast(Mapping[str, Any], value)
+    for key, raw_value in raw_mapping.items():
+        if key == 'prices' and isinstance(raw_value, Mapping):
+            projected_prices: dict[str, Any] = {}
+            for price_key, price_value in cast(Mapping[str, Any], raw_value).items():
+                if price_key in registry._all_price_keys:  # pyright: ignore[reportPrivateUsage]
+                    projected_prices[price_key] = price_value
+                else:
+                    unsupported_price_keys.add(price_key)
+            projected[key] = projected_prices
+        else:
+            projected[key] = _project_model_prices(raw_value, registry, unsupported_price_keys)
+    return projected
 
 
 def _inject_extractor_registry(raw_providers: Any, registry: UnitRegistry) -> Any:

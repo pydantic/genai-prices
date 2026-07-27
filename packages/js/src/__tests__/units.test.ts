@@ -218,6 +218,125 @@ describe('UnitRegistry', () => {
     expect(() => Object.assign(inputUnit.dimensions, { family: 'changed' })).toThrow(TypeError)
     expect(registry.getUnit('input_tokens')?.dimensions.family).toBe('tokens')
   })
+
+  it('validates untrusted unit dictionaries before indexing them', () => {
+    const registry = UnitRegistry.fromUntrusted({
+      widgets: {
+        dimensions: { family: 'widgets' },
+        per: 1_000,
+        price_key: 'widget_kcount',
+      },
+    })
+
+    expect(registry.getUnit('widgets')).toMatchObject({
+      dimensions: { family: 'widgets' },
+      per: 1_000,
+      priceKey: 'widget_kcount',
+      usageKey: 'widgets',
+    })
+  })
+
+  it.each(['constructor', 'toString', '__proto__'])('treats inherited property name %s as an ordinary dimension', (dimensionName) => {
+    const specializedDimensions = Object.fromEntries([
+      ['family', 'testing'],
+      [dimensionName, 'specialized'],
+    ])
+    const registry = UnitRegistry.fromUntrusted({
+      base: { dimensions: { family: 'testing' }, per: 1 },
+      specialized: { dimensions: specializedDimensions, per: 1 },
+    })
+    const base = registry.getUnit('base')
+    const specialized = registry.getUnit('specialized')
+    if (!base || !specialized) throw new Error('Expected prototype-key units')
+
+    expect(registry.ancestorUsageKeys('specialized')).toEqual(new Set(['base']))
+    expect(registry.findJoin(base, specialized)).toBe(specialized)
+    expect(registry.findJoin(specialized, base)).toBe(specialized)
+    expect(Object.prototype.hasOwnProperty.call(specialized.dimensions, dimensionName)).toBe(true)
+  })
+
+  it.each([
+    ['_private_name', 'private_mtok', 'must not start'],
+    ['$input_tokens', 'input_mtok', 'not a public identifier'],
+    ['class', 'class_mtok', 'reserved keyword'],
+    ['def', 'def_mtok', 'reserved keyword'],
+    ['valid_usage', '_private_name', 'must not start'],
+    ['valid_usage', 'lambda', 'reserved keyword'],
+  ])('rejects unsafe untrusted public keys', (usageKey, priceKey, message) => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        [usageKey]: {
+          dimensions: { family: 'testing' },
+          per: 1,
+          price_key: priceKey,
+        },
+      })
+    ).toThrow(message)
+  })
+
+  it('rejects an untrusted compatible pair with a missing join', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        cache_write_tokens: {
+          dimensions: { cache: 'write', direction: 'input', family: 'tokens' },
+          per: 1_000_000,
+        },
+        input_audio_tokens: {
+          dimensions: { direction: 'input', family: 'tokens', modality: 'audio' },
+          per: 1_000_000,
+        },
+        input_tokens: {
+          dimensions: { direction: 'input', family: 'tokens' },
+          per: 1_000_000,
+        },
+      })
+    ).toThrow('Missing join unit dimensions between cache_write_tokens and input_audio_tokens')
+  })
+
+  it('rejects an untrusted registry with a missing intermediate unit', () => {
+    expect(() =>
+      UnitRegistry.fromUntrusted({
+        input_audio_tool_tokens: {
+          dimensions: { direction: 'input', family: 'tokens', modality: 'audio', token_type: 'tool' },
+          per: 1_000_000,
+        },
+        input_tokens: {
+          dimensions: { direction: 'input', family: 'tokens' },
+          per: 1_000_000,
+        },
+        output_audio_tokens: {
+          dimensions: { direction: 'output', family: 'tokens', modality: 'audio' },
+          per: 1_000_000,
+        },
+        output_tokens: {
+          dimensions: { direction: 'output', family: 'tokens' },
+          per: 1_000_000,
+        },
+        output_tool_tokens: {
+          dimensions: { direction: 'output', family: 'tokens', token_type: 'tool' },
+          per: 1_000_000,
+        },
+      })
+    ).toThrow('Missing intermediate unit dimensions')
+  })
+
+  it('closes many coupled dimensions without enumerating subsets', () => {
+    const descendantDimensions: Record<string, string> = { family: 'wide' }
+    for (let index = 0; index < 12; index++) {
+      descendantDimensions[`dimension_${index.toString()}`] = 'value'
+    }
+
+    const registry = UnitRegistry.fromUntrusted({
+      base: { dimensions: { family: 'wide' }, per: 1 },
+      descendant: { dimensions: descendantDimensions, per: 1 },
+    })
+
+    expect(registry.getUnit('descendant')?.dimensions).toEqual(descendantDimensions)
+  })
+
+  it('accepts the complete bundled registry as untrusted data', () => {
+    expect(UnitRegistry.fromUntrusted(unitData).getAllUsageKeys()).toEqual(new Set(['requests', ...reportableUsageKeys]))
+  })
 })
 
 describe('generated unit registry', () => {

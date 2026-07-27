@@ -104,6 +104,32 @@ export interface Provider {
   provider_match?: MatchLogic
 }
 
+export type WireStartDateConstraint = Omit<StartDateConstraint, 'type'>
+export type WireTimeOfDateConstraint = Omit<TimeOfDateConstraint, 'type'>
+
+export interface WireConditionalPrice {
+  constraint?: WireStartDateConstraint | WireTimeOfDateConstraint
+  prices: ModelPrice
+}
+
+export type WireModelInfo = Omit<ModelInfo, 'prices'> & {
+  prices: ModelPrice | WireConditionalPrice[]
+}
+
+export type WireProvider = Omit<Provider, 'models'> & {
+  models: WireModelInfo[]
+}
+
+export interface WrappedProviderData {
+  providers: WireProvider[]
+  units: RawUnitsDict
+}
+
+export interface DecodedProviderData {
+  providers: Provider[]
+  units: RawUnitsDict
+}
+
 export interface ModelPriceCalculationResult {
   input_price: number
   output_price: number
@@ -128,7 +154,7 @@ export interface PriceDataStorage {
   set: (data: string) => Promise<void>
 }
 
-export type ProviderDataValue = null | Provider[]
+export type ProviderDataValue = null | Provider[] | WrappedProviderData
 export type ProviderDataPayload = Promise<ProviderDataValue> | ProviderDataValue
 
 export interface StorageFactoryParams {

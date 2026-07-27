@@ -7,10 +7,12 @@ from inline_snapshot import snapshot
 
 from genai_prices import Usage, calc_price, extract_usage
 from genai_prices.data import providers
+from genai_prices.data_snapshot import DataSnapshot
 from genai_prices.types import (
     ArrayMatch,
     ClauseEquals,
     ExtractedUsage,
+    ModelInfo,
     ModelPrice,
     Provider,
     UsageExtractor,
@@ -21,6 +23,35 @@ from genai_prices.units import UnitRegistry
 
 class MyMapping(dict[str, Any]):
     pass
+
+
+def test_detached_snapshot_extract_usage_captures_active_registry() -> None:
+    provider = Provider(
+        id='testing',
+        name='Testing',
+        api_pattern='testing',
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='input_tokens', dest='input_tokens')],
+            )
+        ],
+        models=[
+            ModelInfo(
+                id='model',
+                match=ClauseEquals('model'),
+                prices=ModelPrice(input_mtok=Decimal('1')),
+            )
+        ],
+    )
+    detached_snapshot = DataSnapshot([provider], from_auto_update=False)
+
+    extracted = detached_snapshot.extract_usage(
+        {'model': 'model', 'usage': {'input_tokens': 7}},
+        provider_id='testing',
+    )
+
+    assert extracted.usage == Usage(input_tokens=7)
 
 
 @pytest.mark.parametrize(

@@ -39,6 +39,30 @@ def test_sync_success_with_provider():
     assert price.auto_update_timestamp is None
 
 
+def test_detached_snapshot_calc_captures_active_registry() -> None:
+    detached_snapshot = DataSnapshot(
+        providers=[
+            Provider(
+                id='testing',
+                name='Testing',
+                api_pattern='testing',
+                models=[
+                    ModelInfo(
+                        id='model',
+                        match=ClauseEquals('model'),
+                        prices=ModelPrice(input_mtok=Decimal('2')),
+                    )
+                ],
+            )
+        ],
+        from_auto_update=False,
+    )
+
+    price = detached_snapshot.calc(Usage(input_tokens=1_000_000), 'model', 'testing', None, None)
+
+    assert price.total_price == Decimal('2')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'expected_input_price'),
     [

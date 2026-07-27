@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 import pytest
 
 from genai_prices import Usage
@@ -92,6 +94,16 @@ def test_compute_leaf_values_handles_output_audio_decomposition() -> None:
         Usage(output_tokens=700, output_audio_tokens=200),
         registry.units,
     ) == {'output_audio_tokens': 200, 'output_tokens': 500}
+
+
+def test_compute_leaf_values_accepts_usage_like_objects() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert compute_leaf_values(
+        {'input_tokens', 'cache_read_tokens'},
+        SimpleNamespace(input_tokens=1_000, cache_read_tokens=250),
+        registry.units,
+    ) == {'cache_read_tokens': 250, 'input_tokens': 750}
 
 
 def test_compute_leaf_values_ignores_unpriced_reported_descendants() -> None:

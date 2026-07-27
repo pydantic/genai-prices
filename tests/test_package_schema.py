@@ -55,3 +55,15 @@ def test_provider_yaml_schema_suggests_extractor_dests_from_reported_registry_un
     dest_schema = schema['$defs']['UsageExtractorMapping']['properties']['dest']
     assert dest_schema['enum'] == ['input_tokens', 'sausage_tokens']
     assert 'requests' not in dest_schema['enum']
+
+
+def test_wrapped_data_schema_keeps_dynamic_unit_references_open() -> None:
+    schema = build_module._wrapped_data_schema()
+
+    assert schema['additionalProperties'] is False
+    assert schema['required'] == ['units', 'providers']
+    assert schema['properties']['units']['additionalProperties']['additionalProperties'] is False
+    assert schema['$defs']['ModelPrice']['additionalProperties'] == {
+        'anyOf': [{'type': 'number'}, {'$ref': '#/$defs/TieredPrices'}]
+    }
+    assert 'enum' not in schema['$defs']['UsageExtractorMapping']['properties']['dest']
