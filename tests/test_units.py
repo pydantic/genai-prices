@@ -1022,6 +1022,20 @@ def test_unit_registry_from_untrusted_accepts_published_projection() -> None:
             {'constructor': {'per': 1_000, 'dimensions': {'family': 'widgets'}}},
             "Invalid unit usage key: 'constructor' is reserved",
         ),
+        (
+            {'reported_value': {'per': 1_000, 'dimensions': {'family': 'widgets'}}},
+            "Invalid unit usage key: 'reported_value' shadows a public Python API",
+        ),
+        (
+            {
+                'widgets': {
+                    'per': 1_000,
+                    'price_key': 'calc_price',
+                    'dimensions': {'family': 'widgets'},
+                }
+            },
+            "Invalid unit price key: 'calc_price' shadows a public Python API",
+        ),
     ],
 )
 def test_unit_registry_from_untrusted_rejects_invalid_shapes(raw_units: object, message: str) -> None:

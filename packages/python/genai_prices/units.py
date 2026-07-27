@@ -4,6 +4,7 @@ import keyword
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass
+from functools import cache
 from itertools import combinations
 from types import MappingProxyType
 from typing import Any, cast
@@ -233,6 +234,16 @@ def _validate_public_key(kind: str, key: str) -> None:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is a reserved keyword')
     if key in _RESERVED_PUBLIC_KEYS:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is reserved')
+    if key in _reserved_python_api_keys(kind):
+        raise ValueError(f'Invalid unit {kind} key: {key!r} shadows a public Python API')
+
+
+@cache
+def _reserved_python_api_keys(kind: str) -> frozenset[str]:
+    from genai_prices.types import ModelPrice, Usage
+
+    public_type = Usage if kind == 'usage' else ModelPrice
+    return frozenset(name for base in public_type.__mro__ for name in vars(base) if not name.startswith('_'))
 
 
 def _infer_dimension_requirements(
