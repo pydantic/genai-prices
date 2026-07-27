@@ -74,6 +74,7 @@ class UpdatePrices:
     _lifecycle_lock: threading.RLock = field(default_factory=threading.RLock)
     _thread: threading.Thread | None = field(default=None, init=False)
     _background_exc: Exception | None = field(default=None, init=False)
+    _initial_attempt_completed: bool = field(default=False, init=False)
     _stopping: bool = field(default=False, init=False)
 
     def start(self, *, wait: bool | float = False) -> None:
@@ -100,6 +101,7 @@ class UpdatePrices:
             self._initial_attempt_started.clear()
             self._stop_event.clear()
             self._background_exc = None
+            self._initial_attempt_completed = False
             self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
             self._thread.start()
         self._initial_attempt_started.wait()
@@ -112,12 +114,12 @@ class UpdatePrices:
         Args:
             timeout: The maximum time to wait for the prices to be updated in seconds.
         """
-        prices_updated = self._prices_updated.wait(timeout=timeout)
+        update_finished = self._prices_updated.wait(timeout=timeout)
         exc = self._background_exc
         if exc:
             self._background_exc = None
             raise exc
-        return prices_updated
+        return update_finished and self._initial_attempt_completed
 
     def stop(self) -> None:
         """Stop the background task."""
@@ -156,10 +158,12 @@ class UpdatePrices:
             while not self._stop_event.is_set():
                 try:
                     self._update_prices()
-                    self._prices_updated.set()
                     self._background_exc = None
+                    self._initial_attempt_completed = True
+                    self._prices_updated.set()
                 except _UpdaterStoppingError:
                     self._initial_attempt_started.set()
+                    self._prices_updated.set()
                     break
                 except Exception as e:
                     self._initial_attempt_started.set()

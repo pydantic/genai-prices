@@ -341,7 +341,7 @@ def test_update_prices_background_task_handles_lifecycle_refusal(monkeypatch: py
 
     update_prices._background_task()
 
-    assert not update_prices._prices_updated.is_set()
+    assert update_prices.wait(timeout=0) is False
 
 
 def test_update_prices_concurrent_fetches_are_last_invocation_wins(monkeypatch: pytest.MonkeyPatch) -> None:
