@@ -1,0 +1,37 @@
+.claude/skills/add-price-model/SKILL.md
+  s_e007c5ed89566f::t_e4d49ab91fc308 15-34,158-161
+README.md
+  s_e007c5ed89566f::t_6ebccdd1904fc2 35,37,44,62
+packages/js/src/types.ts
+  s_e007c5ed89566f::t_f4c78877414583 32-33
+prices/data.json
+  s_e007c5ed89566f::t_ce6fb654b25891 1
+prices/data_slim.json
+  s_e007c5ed89566f::t_c5a03703b1737b 1
+prices/data_v2.json
+  s_e007c5ed89566f::t_927192e39c9ef3 1
+prices/providers/anthropic.yml
+  s_e007c5ed89566f::t_de2b8b48146161 378-397
+prices/providers/aws.yml
+  s_e007c5ed89566f::t_2d28c7c1a5fc60 222-231,818-836
+prices/providers/google.yml
+  s_e007c5ed89566f::t_f88b2c50654c9a 480-498
+prices/providers/openrouter.yml
+  s_e007c5ed89566f::t_c249a90ddb4624 434-464
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e9bec75ac39a89de971e4b420d2e24c0e7916336",
+  "prompts": {},
+  "sessions": {
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
