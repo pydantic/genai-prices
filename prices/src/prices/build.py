@@ -25,6 +25,11 @@ yaml = ruamel.yaml.YAML(typ='safe')
 yaml.constructor.add_constructor('tag:yaml.org,2002:float', decimal_constructor)  # pyright: ignore[reportUnknownMemberType]
 
 
+def load_units() -> dict[str, Any]:
+    with (package_dir / 'units.yml').open() as f:
+        return cast(dict[str, Any], yaml.load(f))  # pyright: ignore[reportUnknownMemberType]
+
+
 def build():
     """Build providers/.schema.json and data.json and data_schema.json."""
     # write the schema JSON file used by the yaml language server
