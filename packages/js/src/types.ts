@@ -80,6 +80,15 @@ export interface UsageExtractorMapping {
   path: ExtractPath
   required: boolean
 }
+
+export interface RawUnitData {
+  dimensions: Record<string, string>
+  per: number
+  price_key?: string
+}
+
+export type RawUnitsDict = Record<string, RawUnitData>
+
 export interface UsageExtractor {
   api_flavor: string
   mappings: UsageExtractorMapping[]
