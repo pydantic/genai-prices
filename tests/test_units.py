@@ -211,26 +211,6 @@ def test_model_price_str_includes_unregistered_candidate_keys() -> None:
     assert str(ModelPrice(hovercraft_mtok=Decimal('1'))) == '$1/hovercraft MTok'
 
 
-def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
-    from genai_prices import types as runtime_types
-
-    registry = UnitRegistry({})
-    invalid_provider = object()
-    invalid_extractor = object()
-    raw_providers: list[Any] = [
-        invalid_provider,
-        {'id': 'without-extractors'},
-        {'id': 'with-extractors', 'extractors': [invalid_extractor, {'mappings': []}]},
-    ]
-
-    assert runtime_types._inject_extractor_registry({}, registry) == {}
-    injected = runtime_types._inject_extractor_registry(raw_providers, registry)
-    assert injected[0] is invalid_provider
-    assert injected[1] == {'id': 'without-extractors'}
-    assert injected[2]['extractors'][0] is invalid_extractor
-    assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
-
-
 def test_package_python_data_accepts_separated_inputs_without_units_yml(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -271,6 +251,26 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     unit_data_content = (py_package_dir / 'data_units.py').read_text()
     generated_units = ast.literal_eval(unit_data_content.split('unit_data: dict[str, Any] = ', 1)[1])
     assert generated_units == units
+
+
+def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry({})
+    invalid_provider = object()
+    invalid_extractor = object()
+    raw_providers: list[Any] = [
+        invalid_provider,
+        {'id': 'without-extractors'},
+        {'id': 'with-extractors', 'extractors': [invalid_extractor, {'mappings': []}]},
+    ]
+
+    assert runtime_types._inject_extractor_registry({}, registry) == {}
+    injected = runtime_types._inject_extractor_registry(raw_providers, registry)
+    assert injected[0] is invalid_provider
+    assert injected[1] == {'id': 'without-extractors'}
+    assert injected[2]['extractors'][0] is invalid_extractor
+    assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
 
 
 def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
