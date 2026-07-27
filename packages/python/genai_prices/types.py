@@ -709,6 +709,16 @@ class ModelPrice:
         parts = [f'{key}={value!r}' for key, value in self.__dict__.items() if value is not None]
         return f'{type(self).__name__}({", ".join(parts)})'
 
+    def __eq__(self, other: object) -> Any:
+        if type(other) is not type(self):
+            return NotImplemented
+
+        assert isinstance(other, ModelPrice)
+        return self._comparable_values() == other._comparable_values()
+
+    def _comparable_values(self) -> dict[str, object]:
+        return {key: value for key, value in self.__dict__.items() if not key.startswith('_') and value is not None}
+
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
