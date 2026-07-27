@@ -7,9 +7,44 @@ import pytest
 
 from genai_prices.data_units import unit_data
 from genai_prices.types import ModelPrice
-from genai_prices.units import UnitRegistry
+from genai_prices.units import UnitRegistry, _get_registry
+from prices import package_data, prices_types as build_types
 from prices.build import load_units
 from prices.export_validation import validate_units
+
+
+def _build_provider_prices(
+    prices: build_types.ModelPrice | list[build_types.ConditionalPrice],
+    *,
+    extractors: list[build_types.UsageExtractor] | None = None,
+    model_id: str = 'model',
+) -> build_types.Provider:
+    return build_types.Provider(
+        id='testing',
+        name='Testing',
+        api_pattern='testing',
+        extractors=extractors,
+        models=[
+            build_types.ModelInfo(
+                id=model_id,
+                match=build_types.ClauseEquals(equals=model_id),
+                prices=prices,
+            )
+        ],
+    )
+
+
+def _build_extractor(dest: str) -> build_types.UsageExtractor:
+    return build_types.UsageExtractor.model_construct(
+        root='usage',
+        mappings=[_build_extractor_mapping('value', dest)],
+        api_flavor='default',
+        model_path='model',
+    )
+
+
+def _build_extractor_mapping(path: str, dest: str, *, required: bool = True) -> build_types.UsageExtractorMapping:
+    return build_types.UsageExtractorMapping.model_construct(path=path, dest=dest, required=required)
 
 
 def test_units_yml_defines_pre_expansion_registry() -> None:
@@ -194,3 +229,77 @@ def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_sche
     assert injected[1] == {'id': 'without-extractors'}
     assert injected[2]['extractors'][0] is invalid_extractor
     assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+
+def test_package_python_data_accepts_separated_inputs_without_units_yml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from genai_prices import types as runtime_types
+
+    units = {
+        'transient_tokens': {
+            'per': 1_000_000,
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient'},
+        },
+    }
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'transient_mtok': '1'}),
+        extractors=[_build_extractor('transient_tokens')],
+    )
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
+
+    py_package_dir = tmp_path / 'genai_prices'
+    py_package_dir.mkdir()
+    monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
+    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+
+    def skip_format_generated_python_data(_path: Path, *, post_process_provider_reprs: bool = False) -> None:
+        _ = post_process_provider_reprs
+
+    monkeypatch.setattr(package_data, '_format_generated_python_data', skip_format_generated_python_data)
+
+    package_data.package_python_data(provider_data, units)
+
+    assert (py_package_dir / 'data.py').exists()
+    unit_data_content = (py_package_dir / 'data_units.py').read_text()
+    generated_units = ast.literal_eval(unit_data_content.split('unit_data: dict[str, Any] = ', 1)[1])
+    assert generated_units == units
+
+
+def test_package_python_data_preserves_bundled_registry_if_runtime_provider_validation_fails(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from genai_prices import types as runtime_types
+
+    class RuntimeProviderValidationError(RuntimeError):
+        pass
+
+    bundled_registry = _get_registry()
+    units = {
+        'transient_tokens': {
+            'per': 1_000_000,
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient'},
+        },
+    }
+    py_package_dir = tmp_path / 'genai_prices'
+    py_package_dir.mkdir()
+    monkeypatch.setattr(runtime_types, '__file__', str(py_package_dir / 'types.py'))
+
+    def fail_runtime_provider_validation(_provider_data: Any, _registry: UnitRegistry) -> list[runtime_types.Provider]:
+        raise RuntimeProviderValidationError('sentinel runtime provider validation failure')
+
+    monkeypatch.setattr(runtime_types, '_providers_from_raw', fail_runtime_provider_validation)
+
+    with pytest.raises(RuntimeProviderValidationError, match='sentinel runtime provider validation failure'):
+        package_data.package_python_data([], units)
+
+    assert _get_registry() is bundled_registry
+    assert 'transient_tokens' not in bundled_registry.units
