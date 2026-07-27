@@ -531,6 +531,36 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-5',
+        name: 'Claude Opus 5',
+        description: 'For complex agentic coding and enterprise work',
+        match: {
+          or: [
+            {
+              starts_with: 'claude-opus-5',
+            },
+            {
+              starts_with: 'claude-opus-5.0',
+            },
+            {
+              starts_with: 'claude-5-opus',
+            },
+            {
+              starts_with: 'claude-5.0-opus',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'claude-sonnet-4-0',
         name: 'Claude Sonnet 4',
         description: 'Optimal balance of intelligence, cost, and speed',
@@ -1111,6 +1141,18 @@ export const data: Provider[] = [
         id: 'global.anthropic.claude-opus-4-8-v1:0',
         match: {
           contains: 'global.anthropic.claude-opus-4-8',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'global.anthropic.claude-opus-5',
+        match: {
+          contains: 'global.anthropic.claude-opus-5',
         },
         prices: {
           input_mtok: 5,
@@ -1986,6 +2028,39 @@ export const data: Provider[] = [
             },
           ],
         },
+        prices: {
+          input_mtok: 5.5,
+          cache_write_mtok: 6.875,
+          cache_read_mtok: 0.55,
+          output_mtok: 27.5,
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-opus-5',
+        match: {
+          or: [
+            {
+              starts_with: 'anthropic.claude-opus-5',
+            },
+            {
+              starts_with: 'claude-opus-5',
+            },
+            {
+              contains: 'us.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'au.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'eu.anthropic.claude-opus-5',
+            },
+            {
+              contains: 'jp.anthropic.claude-opus-5',
+            },
+          ],
+        },
+        price_comments:
+          'Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
         prices: {
           input_mtok: 5.5,
           cache_write_mtok: 6.875,
@@ -4494,6 +4569,34 @@ export const data: Provider[] = [
         context_window: 1000000,
         price_comments:
           'Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'claude-opus-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-5-opus',
+            },
+            {
+              contains: 'claude-opus-5',
+            },
+            {
+              contains: 'claude-5.0-opus',
+            },
+            {
+              contains: 'claude-opus-5.0',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -13857,6 +13960,44 @@ export const data: Provider[] = [
         match: {
           equals: 'anthropic/claude-opus-4.8-fast',
         },
+        prices: {
+          input_mtok: 10,
+          cache_write_mtok: 12.5,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-5',
+        match: {
+          or: [
+            {
+              equals: 'anthropic/claude-opus-5',
+            },
+            {
+              equals: 'anthropic/claude-opus-5:beta',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
+        id: 'anthropic/claude-opus-5-fast',
+        name: 'Claude Opus 5 (Fast)',
+        match: {
+          equals: 'anthropic/claude-opus-5-fast',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Fast mode premium pricing, applies across the full context window. Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,

@@ -219,6 +219,16 @@ models:
       cache_read_mtok: 0.50
       output_mtok: 25
 
+  - id: global.anthropic.claude-opus-5
+    prices_checked: 2026-07-25
+    match:
+      contains: global.anthropic.claude-opus-5
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
   - id: global.anthropic.claude-sonnet-4-20250514-v1:0
     match:
       contains: global.anthropic.claude-sonnet-4-20250514
@@ -799,6 +809,25 @@ models:
         - contains: au.anthropic.claude-opus-4-8
         - contains: eu.anthropic.claude-opus-4-8
         - contains: jp.anthropic.claude-opus-4-8
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
+
+  - id: regional.anthropic.claude-opus-5
+    prices_checked: 2026-07-25
+    price_comments: >-
+      Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-5
+        - starts_with: claude-opus-5
+        - contains: us.anthropic.claude-opus-5
+        - contains: au.anthropic.claude-opus-5
+        - contains: eu.anthropic.claude-opus-5
+        - contains: jp.anthropic.claude-opus-5
     prices:
       input_mtok: 5.5
       cache_write_mtok: 6.875

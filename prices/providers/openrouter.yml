@@ -431,6 +431,37 @@ models:
       cache_read_mtok: 1
       output_mtok: 50
 
+  - id: anthropic/claude-opus-5
+    match:
+      or:
+        - equals: anthropic/claude-opus-5
+        - equals: anthropic/claude-opus-5:beta
+    context_window: 1000000
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      cache_write_mtok: 6.25
+      output_mtok: 25
+    prices_checked: 2026-07-25
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+
+  - id: anthropic/claude-opus-5-fast
+    name: Claude Opus 5 (Fast)
+    match:
+      equals: anthropic/claude-opus-5-fast
+    context_window: 1000000
+    prices:
+      input_mtok: 10
+      cache_write_mtok: 12.5
+      cache_read_mtok: 1
+      output_mtok: 50
+    prices_checked: 2026-07-25
+    price_comments: >-
+      Fast mode premium pricing, applies across the full context window.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+
   - id: anthropic/claude-sonnet-4
     name: Claude Sonnet 4
     match:
