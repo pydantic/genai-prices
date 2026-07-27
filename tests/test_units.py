@@ -93,3 +93,36 @@ def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_sche
     assert injected[1] == {'id': 'without-extractors'}
     assert injected[2]['extractors'][0] is invalid_extractor
     assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+
+def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry(
+        {
+            'transient_tokens': {
+                'per': 1_000_000,
+                'price_key': 'transient_mtok',
+                'dimensions': {'family': 'transient'},
+            },
+        }
+    )
+    provider = runtime_types._providers_from_raw(
+        [
+            {
+                'id': 'testing',
+                'name': 'Testing',
+                'api_pattern': 'testing',
+                'extractors': [
+                    {
+                        'root': 'usage',
+                        'mappings': [{'path': 'value', 'dest': 'transient_tokens', 'required': True}],
+                    },
+                ],
+            },
+        ],
+        registry,
+    )[0]
+
+    assert provider.extractors is not None
+    assert provider.extractors[0]._reported_usage_keys == frozenset({'transient_tokens'})
