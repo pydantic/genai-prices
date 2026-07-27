@@ -1,4 +1,5 @@
 import ast
+from dataclasses import FrozenInstanceError
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
@@ -7,7 +8,7 @@ import pytest
 
 from genai_prices.data_units import unit_data
 from genai_prices.types import ModelPrice
-from genai_prices.units import UnitRegistry
+from genai_prices.units import UnitDef, UnitRegistry
 from prices.build import load_units
 
 
@@ -69,6 +70,25 @@ def test_unit_registry_units_mapping_is_immutable() -> None:
 
     with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
         cast(dict[str, Any], registry.units)['new_unit'] = registry.units['input_tokens']
+
+
+def test_unit_registry_definitions_are_immutable() -> None:
+    registry = UnitRegistry(unit_data)
+    unit = registry.units['input_tokens']
+
+    with pytest.raises(FrozenInstanceError, match='cannot assign to field'):
+        cast(Any, unit).per = 1
+    with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
+        cast(dict[str, str], unit.dimensions)['modality'] = 'audio'
+
+
+def test_unit_definition_copies_dimensions_before_freezing() -> None:
+    dimensions = {'family': 'tokens'}
+    unit = UnitDef('tokens', 'mtok', 1_000_000, dimensions)
+
+    dimensions['direction'] = 'input'
+
+    assert unit.dimensions == {'family': 'tokens'}
 
 
 def test_model_price_str_includes_unregistered_candidate_keys() -> None:
