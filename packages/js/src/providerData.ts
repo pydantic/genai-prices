@@ -46,8 +46,9 @@ export function validateProviderPriceCoverage(providers: Provider[], registry: U
     for (const model of provider.models) {
       const modelPrices = Array.isArray(model.prices) ? model.prices.map(({ prices }) => prices) : [model.prices]
       for (const modelPrice of modelPrices) {
-        const units = Object.keys(modelPrice)
-          .map((priceKey) => registry.getUnitForPriceKey(priceKey))
+        const units = Object.entries(modelPrice)
+          .filter(([, price]) => price !== undefined)
+          .map(([priceKey]) => registry.getUnitForPriceKey(priceKey))
           .filter((unit) => unit !== undefined)
         try {
           validatePricedUnits(units, registry)

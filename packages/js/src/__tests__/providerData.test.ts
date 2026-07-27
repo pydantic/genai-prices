@@ -48,6 +48,17 @@ describe('remote provider preparation', () => {
       validateProviderPriceCoverage(providers, registry)
     }).toThrow('Invalid price coverage for testing/conditional: Missing ancestor price key input_mtok for cache_read_mtok')
   })
+
+  it('ignores undefined optional prices during coverage validation', () => {
+    const providers = [providerFixture()]
+    const model = providers[0]?.models[0]
+    if (!model) throw new Error('Expected direct price fixture')
+    model.prices = { cache_read_mtok: undefined }
+
+    expect(() => {
+      validateProviderPriceCoverage(providers, registry)
+    }).not.toThrow()
+  })
 })
 
 function providerFixture(): Provider {
