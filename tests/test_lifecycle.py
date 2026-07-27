@@ -85,6 +85,10 @@ def test_v2_remote_payload_is_provider_array_with_static_unit_vocabulary():
     extractor_destinations = schema['$defs']['UsageExtractorMapping']['properties']['dest']['enum']
     assert 'input_image_tokens' in extractor_destinations
 
+    google = next(provider for provider in payload if provider['id'] == 'google')
+    destinations = {mapping['dest'] for extractor in google['extractors'] for mapping in extractor['mappings']}
+    assert 'input_image_tokens' in destinations
+
 
 def test_python_unit_data_is_separate_from_provider_data():
     """Unit registry data is bundled separately from provider-heavy Python data."""
