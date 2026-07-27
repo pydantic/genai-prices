@@ -1,3 +1,4 @@
+import { utcTimeOfDaySeconds } from './timeOfDay'
 import { MatchLogic, ModelInfo, ModelPrice, ModelPriceCalculationResult, Provider, ProviderFindOptions, TieredPrices, Usage } from './types'
 
 /**
@@ -120,6 +121,9 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
   if (!Array.isArray(model.prices)) {
     return model.prices
   }
+  if (Number.isNaN(timestamp.getTime())) {
+    throw new RangeError('Invalid time value')
+  }
   // Conditional prices: last active wins
   for (let i = model.prices.length - 1; i >= 0; i--) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -135,20 +139,23 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
         return cond.prices
       }
     } else {
-      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
-      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
-      const startTime = constraint.start_time
-      const endTime = constraint.end_time
+      const time =
+        timestamp.getUTCHours() * 3_600 +
+        timestamp.getUTCMinutes() * 60 +
+        timestamp.getUTCSeconds() +
+        timestamp.getUTCMilliseconds() / 1_000
+      const startTime = utcTimeOfDaySeconds(constraint.start_time)
+      const endTime = utcTimeOfDaySeconds(constraint.end_time)
 
       // Handle time ranges that span midnight (end time < start time)
       if (endTime < startTime) {
         // Time is in range if it's >= start OR < end
-        if (t >= startTime || t < endTime) {
+        if (time >= startTime || time < endTime) {
           return cond.prices
         }
       } else {
         // Normal time range (start <= time < end)
-        if (t >= startTime && t < endTime) {
+        if (time >= startTime && time < endTime) {
           return cond.prices
         }
       }
