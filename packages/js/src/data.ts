@@ -44,6 +44,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['server_tool_use', 'web_search_requests'],
+            dest: 'web_searches',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'thinking_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
@@ -115,6 +125,7 @@ export const data: Provider[] = [
           cache_write_mtok: 1,
           cache_read_mtok: 0.08,
           output_mtok: 4,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -138,6 +149,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -167,6 +179,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -231,6 +244,7 @@ export const data: Provider[] = [
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -259,6 +273,7 @@ export const data: Provider[] = [
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -287,6 +302,7 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -309,6 +325,7 @@ export const data: Provider[] = [
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -337,6 +354,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -399,6 +417,7 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              web_searches_kcount: 10,
             },
           },
           {
@@ -411,6 +430,7 @@ export const data: Provider[] = [
               cache_write_mtok: 6.25,
               cache_read_mtok: 0.5,
               output_mtok: 25,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -443,6 +463,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -473,6 +494,7 @@ export const data: Provider[] = [
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -534,6 +556,7 @@ export const data: Provider[] = [
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -588,6 +611,7 @@ export const data: Provider[] = [
               },
             ],
           },
+          web_searches_kcount: 10,
         },
       },
       {
@@ -644,6 +668,7 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              web_searches_kcount: 10,
             },
           },
           {
@@ -656,6 +681,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -690,6 +716,7 @@ export const data: Provider[] = [
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
               output_mtok: 10,
+              web_searches_kcount: 10,
             },
           },
           {
@@ -702,6 +729,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              web_searches_kcount: 10,
             },
           },
         ],
@@ -2187,6 +2215,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -2206,6 +2239,11 @@ export const data: Provider[] = [
           {
             path: ['input_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -2515,7 +2553,6 @@ export const data: Provider[] = [
         price_comments: 'Imported from OpenRouter pricing; verify against Azure AI Foundry when native pricing is published.',
         prices: {
           input_mtok: 0.08,
-          cache_read_mtok: 0.08,
           output_mtok: 0.35,
         },
       },
@@ -3770,12 +3807,87 @@ export const data: Provider[] = [
                 type: 'array-match',
                 field: 'modality',
                 match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_text_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
                   equals: 'AUDIO',
                 },
               },
               'tokenCount',
             ],
             dest: 'cache_audio_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'cacheTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'cache_video_read_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_text_tokens',
             required: false,
           },
           {
@@ -3795,6 +3907,66 @@ export const data: Provider[] = [
           },
           {
             path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'promptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_video_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: [
               'candidatesTokensDetails',
               {
                 type: 'array-match',
@@ -3809,6 +3981,51 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'candidatesTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'output_video_tokens',
+            required: false,
+          },
+          {
             path: 'candidatesTokenCount',
             dest: 'output_tokens',
             required: false,
@@ -3819,8 +4036,48 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'thoughtsTokenCount',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'toolUsePromptTokenCount',
             dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'toolUsePromptTokenCount',
+            dest: 'input_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'TEXT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_text_tool_tokens',
             required: false,
           },
           {
@@ -3836,6 +4093,111 @@ export const data: Provider[] = [
               'tokenCount',
             ],
             dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'AUDIO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_audio_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'IMAGE',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'DOCUMENT',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_image_tool_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_video_tokens',
+            required: false,
+          },
+          {
+            path: [
+              'toolUsePromptTokensDetails',
+              {
+                type: 'array-match',
+                field: 'modality',
+                match: {
+                  equals: 'VIDEO',
+                },
+              },
+              'tokenCount',
+            ],
+            dest: 'input_video_tool_tokens',
             required: false,
           },
         ],
@@ -3900,6 +4262,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -4155,34 +4522,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'claude-opus-5',
-        match: {
-          or: [
-            {
-              contains: 'claude-5-opus',
-            },
-            {
-              contains: 'claude-opus-5',
-            },
-            {
-              contains: 'claude-5.0-opus',
-            },
-            {
-              contains: 'claude-opus-5.0',
-            },
-          ],
-        },
-        context_window: 1000000,
-        price_comments:
-          'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
-        prices: {
-          input_mtok: 5,
-          cache_write_mtok: 6.25,
-          cache_read_mtok: 0.5,
-          output_mtok: 25,
-        },
-      },
-      {
         id: 'gemini-1.0-pro-vision-001',
         name: 'gemini 1.0 pro vision',
         description:
@@ -4356,10 +4695,11 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-flash-image. Image output is priced at $30 per 1M tokens, with each 1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.',
         prices: {
           input_mtok: 0.3,
-          output_mtok: 30,
+          output_mtok: 2.5,
+          output_image_mtok: 30,
         },
       },
       {
@@ -4490,19 +4830,20 @@ export const data: Provider[] = [
         match: {
           or: [
             {
-              starts_with: 'gemini-3-pro-image-preview',
+              equals: 'gemini-3-pro-image',
             },
             {
-              equals: 'gemini-3-pro-image-preview',
+              starts_with: 'gemini-3-pro-image-preview',
             },
           ],
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text.',
         prices: {
           input_mtok: 2,
-          output_mtok: 120,
+          output_mtok: 12,
+          output_image_mtok: 120,
         },
       },
       {
@@ -4555,14 +4896,22 @@ export const data: Provider[] = [
         description:
           "Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation. Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately from image output tokens.",
         match: {
-          starts_with: 'gemini-3.1-flash-image-preview',
+          or: [
+            {
+              equals: 'gemini-3.1-flash-image',
+            },
+            {
+              starts_with: 'gemini-3.1-flash-image-preview',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per 1M tokens and is the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens. Preview model - pricing may change.',
         prices: {
           input_mtok: 0.5,
-          output_mtok: 60,
+          output_mtok: 3,
+          output_image_mtok: 60,
         },
       },
       {
@@ -4571,7 +4920,7 @@ export const data: Provider[] = [
         description:
           "Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          starts_with: 'gemini-3.1-flash-lite',
+          regex: '^gemini-3\\.1-flash-lite(?!-image)',
         },
         context_window: 1000000,
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing.',
@@ -4581,6 +4930,37 @@ export const data: Provider[] = [
           output_mtok: 1.5,
           input_audio_mtok: 0.5,
           cache_audio_read_mtok: 0.05,
+        },
+      },
+      {
+        id: 'gemini-3.1-flash-lite-image',
+        name: 'Gemini 3.1 Flash Lite Image',
+        description: "Google's low-latency, cost-efficient image generation and editing model.",
+        match: {
+          starts_with: 'gemini-3.1-flash-lite-image',
+        },
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite-image.',
+        prices: {
+          input_mtok: 0.25,
+          output_mtok: 1.5,
+          output_image_mtok: 30,
+        },
+      },
+      {
+        id: 'gemini-3.1-flash-live-preview',
+        name: 'Gemini 3.1 Flash Live Preview',
+        description: "Google's low-latency audio-to-audio model with multimodal input support.",
+        match: {
+          starts_with: 'gemini-3.1-flash-live-preview',
+        },
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-live-preview.',
+        prices: {
+          input_mtok: 0.75,
+          output_mtok: 4.5,
+          input_audio_mtok: 3,
+          output_audio_mtok: 12,
+          input_image_mtok: 1,
+          input_video_mtok: 1,
         },
       },
       {
@@ -4692,6 +5072,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-embedding-2',
+        name: 'Gemini Embedding 2',
+        description: "Google's multimodal embedding model for text, images, audio, video, and documents.",
+        match: {
+          equals: 'gemini-embedding-2',
+        },
+        context_window: 8192,
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2.',
+        prices: {
+          input_mtok: 0.2,
+          input_audio_mtok: 6.5,
+          input_image_mtok: 0.45,
+          input_video_mtok: 12,
+        },
+      },
+      {
         id: 'gemini-flash-1.5',
         name: 'Gemini 1.5 Flash',
         description:
@@ -4792,6 +5188,20 @@ export const data: Provider[] = [
           output_mtok: 2,
           input_audio_mtok: 3,
           output_audio_mtok: 12,
+        },
+      },
+      {
+        id: 'gemini-omni-flash-preview',
+        name: 'Gemini Omni Flash Preview',
+        description: "Google's video generation and editing model with multimodal input.",
+        match: {
+          starts_with: 'gemini-omni-flash-preview',
+        },
+        price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing#gemini-omni-flash-preview.',
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 9,
+          output_video_mtok: 17.5,
         },
       },
       {
@@ -4963,6 +5373,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
         ],
@@ -10729,6 +11144,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -10756,9 +11176,113 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'realtime',
+        root: ['response', 'usage'],
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'audio_tokens'],
+            dest: 'input_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'image_tokens'],
+            dest: 'input_image_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'text_tokens'],
+            dest: 'cache_text_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'audio_tokens'],
+            dest: 'cache_audio_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_token_details', 'cached_tokens_details', 'image_tokens'],
+            dest: 'cache_image_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'text_tokens'],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: ['output_token_details', 'audio_tokens'],
+            dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+        ],
+      },
+      {
+        api_flavor: 'images',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'text_tokens'],
+            dest: 'input_text_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'image_tokens'],
+            dest: 'input_image_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+          {
+            path: ['output_tokens_details', 'text_tokens'],
+            dest: 'output_text_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'image_tokens'],
+            dest: 'output_image_tokens',
+            required: false,
           },
         ],
       },
@@ -11247,7 +11771,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,
-          input_audio_mtok: 2.5,
         },
       },
       {
@@ -11299,7 +11822,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
-          input_audio_mtok: 0.15,
         },
       },
       {
@@ -11335,7 +11857,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.6,
           output_mtok: 12,
-          output_audio_mtok: 12,
         },
       },
       {
@@ -12194,6 +12715,22 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-image-1',
+        name: 'GPT Image 1',
+        description: "OpenAI's previous image generation model.",
+        match: {
+          equals: 'gpt-image-1',
+        },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-1.',
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 1.25,
+          output_mtok: 40,
+          input_image_mtok: 10,
+          cache_image_read_mtok: 2.5,
+        },
+      },
+      {
         id: 'gpt-image-1-mini',
         name: 'GPT Image 1 Mini',
         description: 'A cost-efficient image generation model from OpenAI with text input pricing.',
@@ -12204,9 +12741,13 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-1-mini.',
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.2,
+          output_mtok: 8,
+          input_image_mtok: 2.5,
+          cache_image_read_mtok: 0.25,
         },
       },
       {
@@ -12223,10 +12764,14 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-1.5.',
         prices: {
           input_mtok: 5,
           cache_read_mtok: 1.25,
           output_mtok: 10,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
+          output_image_mtok: 32,
         },
       },
       {
@@ -12243,9 +12788,13 @@ export const data: Provider[] = [
             },
           ],
         },
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-image-2.',
         prices: {
           input_mtok: 5,
           cache_read_mtok: 1.25,
+          output_mtok: 30,
+          input_image_mtok: 8,
+          cache_image_read_mtok: 2,
         },
       },
       {
@@ -12306,7 +12855,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        price_comments: "Missing image token prices which we don't support yet",
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime.',
         prices: {
           input_mtok: 4,
           cache_read_mtok: 0.4,
@@ -12314,6 +12863,8 @@ export const data: Provider[] = [
           input_audio_mtok: 32,
           cache_audio_read_mtok: 0.4,
           output_audio_mtok: 64,
+          input_image_mtok: 5,
+          cache_image_read_mtok: 0.5,
         },
       },
       {
@@ -12323,9 +12874,12 @@ export const data: Provider[] = [
             {
               equals: 'gpt-realtime-2',
             },
+            {
+              equals: 'gpt-realtime-2.1',
+            },
           ],
         },
-        price_comments: "Missing image token prices which we don't support yet",
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.',
         prices: {
           input_mtok: 4,
           cache_read_mtok: 0.4,
@@ -12333,6 +12887,8 @@ export const data: Provider[] = [
           input_audio_mtok: 32,
           cache_audio_read_mtok: 0.4,
           output_audio_mtok: 64,
+          input_image_mtok: 5,
+          cache_image_read_mtok: 0.5,
         },
       },
       {
@@ -12343,6 +12899,9 @@ export const data: Provider[] = [
               equals: 'gpt-realtime-mini',
             },
             {
+              equals: 'gpt-realtime-2.1-mini',
+            },
+            {
               equals: 'gpt-realtime-mini-2025-12-15',
             },
             {
@@ -12350,7 +12909,7 @@ export const data: Provider[] = [
             },
           ],
         },
-        price_comments: "Missing image token prices which we don't support yet",
+        price_comments: 'See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini.',
         prices: {
           input_mtok: 0.6,
           cache_read_mtok: 0.06,
@@ -12358,6 +12917,8 @@ export const data: Provider[] = [
           input_audio_mtok: 10,
           cache_audio_read_mtok: 0.3,
           output_audio_mtok: 20,
+          input_image_mtok: 0.8,
+          cache_image_read_mtok: 0.08,
         },
       },
       {
@@ -12677,6 +13238,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {
@@ -13651,7 +14217,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: 0.1,
           output_mtok: 0.2,
         },
       },
@@ -15507,7 +16072,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.05,
-          cache_read_mtok: 0.05,
           output_mtok: 0.1,
         },
       },
@@ -16395,7 +16959,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.08,
-          cache_read_mtok: 0.08,
           output_mtok: 0.35,
         },
       },
@@ -18498,6 +19061,7 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 8,
+          output_reasoning_mtok: 3,
         },
       },
       {
@@ -19002,7 +19566,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.1,
-          cache_read_mtok: 0.1,
           output_mtok: 0.1,
         },
       },
@@ -19036,7 +19599,6 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.08,
-          cache_read_mtok: 0.08,
           output_mtok: 0.4,
         },
       },
@@ -20953,10 +21515,54 @@ export const data: Provider[] = [
   {
     id: 'perplexity',
     name: 'Perplexity',
-    pricing_urls: ['https://docs.perplexity.ai/guides/pricing'],
+    pricing_urls: ['https://docs.perplexity.ai/docs/getting-started/pricing'],
     api_pattern: 'https://api\\.perplexity\\.ai',
     price_comments:
       'Prices per request vary based on usage, this is not represented here, instead we just take the highest price shown for `requests_kcount`.',
+    extractors: [
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'reasoning_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'reasoning_tokens',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'citation_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'citation_tokens',
+            dest: 'output_citation_tokens',
+            required: false,
+          },
+          {
+            path: 'num_search_queries',
+            dest: 'web_searches',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
     models: [
       {
         id: 'llama-3.1-sonar-large-128k-online',
@@ -21019,9 +21625,14 @@ export const data: Provider[] = [
         match: {
           equals: 'sonar-deep-research',
         },
+        price_comments:
+          'Perplexity lists reasoning tokens separately at $3 per million tokens and citation tokens at $2 per million tokens. Search queries cost $5 per thousand.',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
+          output_reasoning_mtok: 3,
+          output_citation_mtok: 2,
+          web_searches_kcount: 5,
         },
       },
       {
@@ -22155,6 +22766,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: 'reasoning_tokens',
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'completion_tokens',
             dest: 'output_tokens',
             required: true,
@@ -22179,6 +22795,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
             required: false,
           },
           {

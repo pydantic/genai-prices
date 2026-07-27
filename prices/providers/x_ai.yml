@@ -19,6 +19,9 @@ extractors:
       - path: cached_prompt_text_tokens
         dest: cache_read_tokens
         required: false
+      - path: reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
       - path: completion_tokens
         dest: output_tokens
   # OpenAI-compatible chat completions format
@@ -32,6 +35,9 @@ extractors:
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
         required: false
       - path: completion_tokens
         dest: output_tokens
