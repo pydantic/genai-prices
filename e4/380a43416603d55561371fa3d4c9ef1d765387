@@ -1,0 +1,22 @@
+tests/test_decompose.py
+  s_53c9260fe934fb::t_e39c2fb010fe35 3-4,85-107
+  s_53c9260fe934fb::t_dc7b52707d9b80 108-109
+packages/python/genai_prices/decompose.py
+  s_53c9260fe934fb::t_e39c2fb010fe35 16-19,23,25,27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e4380a43416603d55561371fa3d4c9ef1d765387",
+  "prompts": {},
+  "sessions": {
+    "s_53c9260fe934fb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa42d-bd72-76b2-851e-e2da51950bb5",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
