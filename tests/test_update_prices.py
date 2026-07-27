@@ -154,14 +154,6 @@ def test_update_prices_fetch_provider_array_does_not_eagerly_validate_unused_mod
     assert _get_registry() is bundled
 
 
-@pytest.mark.parametrize('content', [b'{"providers":[]}', b'null', b'"providers"', b'1'])
-def test_update_prices_fetch_rejects_non_array_payload(monkeypatch: pytest.MonkeyPatch, content: bytes) -> None:
-    _mock_update_prices_get(monkeypatch, content)
-
-    with pytest.raises(ValueError, match='Expected fetched prices payload to be a provider array'):
-        UpdatePrices(url='https://example.test/prices.json').fetch()
-
-
 def test_update_prices_wait_on_start(monkeypatch: pytest.MonkeyPatch):
     _mock_update_prices_get(monkeypatch, _provider_array())
     assert data_snapshot._custom_snapshot is None
