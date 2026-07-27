@@ -70,6 +70,20 @@ def test_compute_leaf_values_handles_cached_audio_overlap() -> None:
     }
 
 
+def test_compute_leaf_values_handles_conditional_dimension_chain() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert compute_leaf_values(
+        {'input_tokens', 'cache_write_tokens', 'cache_write_1h_tokens'},
+        Usage(input_tokens=400, cache_write_tokens=300, cache_write_1h_tokens=100),
+        registry.units,
+    ) == {
+        'cache_write_1h_tokens': 100,
+        'cache_write_tokens': 200,
+        'input_tokens': 100,
+    }
+
+
 def test_compute_leaf_values_handles_output_audio_decomposition() -> None:
     registry = UnitRegistry(load_units())
 

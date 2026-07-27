@@ -25,6 +25,16 @@ unit_data: dict[str, Any] = {
         'price_key': 'cache_write_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write'},
     },
+    'cache_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_write_5m_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write', 'cache_ttl': '5m'},
+    },
+    'cache_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_write_1h_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write', 'cache_ttl': '1h'},
+    },
     'input_text_tokens': {
         'per': 1000000,
         'price_key': 'input_text_mtok',
@@ -44,6 +54,28 @@ unit_data: dict[str, Any] = {
         'per': 1000000,
         'price_key': 'cache_text_write_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'cache_write'},
+    },
+    'cache_text_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_text_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'text',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_text_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_text_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'text',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
     },
     'input_audio_tokens': {
         'per': 1000000,
@@ -65,6 +97,28 @@ unit_data: dict[str, Any] = {
         'price_key': 'cache_audio_write_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'cache_write'},
     },
+    'cache_audio_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_audio_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'audio',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_audio_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_audio_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'audio',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
+    },
     'input_image_tokens': {
         'per': 1000000,
         'price_key': 'input_image_mtok',
@@ -85,6 +139,28 @@ unit_data: dict[str, Any] = {
         'price_key': 'cache_image_write_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'cache_write'},
     },
+    'cache_image_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_image_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'image',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_image_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_image_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'image',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
+    },
     'input_video_tokens': {
         'per': 1000000,
         'price_key': 'input_video_mtok',
@@ -104,6 +180,28 @@ unit_data: dict[str, Any] = {
         'per': 1000000,
         'price_key': 'cache_video_write_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'cache_write'},
+    },
+    'cache_video_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_video_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'video',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_video_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_video_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'video',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
     },
     'input_tool_tokens': {
         'per': 1000000,
