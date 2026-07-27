@@ -36,6 +36,10 @@ class MyMapping(dict[str, Any]):
                 'stop_sequence': None,
                 'usage': {
                     'input_tokens': 504,
+                    'cache_creation': {
+                        'ephemeral_5m_input_tokens': 100,
+                        'ephemeral_1h_input_tokens': 23,
+                    },
                     'cache_creation_input_tokens': 123,
                     'cache_read_input_tokens': 0,
                     'output_tokens': 97,
@@ -43,8 +47,17 @@ class MyMapping(dict[str, Any]):
                 },
             },
             snapshot('claude-sonnet-4-20250514'),
-            snapshot(Usage(input_tokens=627, cache_write_tokens=123, cache_read_tokens=0, output_tokens=97)),
-            snapshot(Decimal('0.00342825')),
+            snapshot(
+                Usage(
+                    input_tokens=627,
+                    cache_write_tokens=123,
+                    cache_write_5m_tokens=100,
+                    cache_write_1h_tokens=23,
+                    cache_read_tokens=0,
+                    output_tokens=97,
+                )
+            ),
+            snapshot(Decimal('0.00348')),
         ),
         (
             {
