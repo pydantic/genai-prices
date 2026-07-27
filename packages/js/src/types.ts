@@ -29,8 +29,8 @@ export interface StartDateConstraint {
 }
 
 export interface TimeOfDateConstraint {
-  end_time: string // HH:MM:SS
-  start_time: string // HH:MM:SS
+  end_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
+  start_time: string // HH:MM:SS[.fraction](Z|±HH:MM)
   type: 'time_of_date'
 }
 

@@ -367,6 +367,27 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='claude-opus-5'),
+                        ClauseStartsWith(starts_with='claude-opus-5.0'),
+                        ClauseStartsWith(starts_with='claude-5-opus'),
+                        ClauseStartsWith(starts_with='claude-5.0-opus'),
+                    ]
+                ),
+                name='Claude Opus 5',
+                description='For complex agentic coding and enterprise work',
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-sonnet-4-0',
                 match=ClauseOr(
                     or_=[
@@ -709,6 +730,16 @@ providers: list[Provider] = [
             ModelInfo(
                 id='global.anthropic.claude-opus-4-8-v1:0',
                 match=ClauseContains(contains='global.anthropic.claude-opus-4-8'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
+                id='global.anthropic.claude-opus-5',
+                match=ClauseContains(contains='global.anthropic.claude-opus-5'),
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -1234,6 +1265,26 @@ providers: list[Provider] = [
                         ClauseContains(contains='jp.anthropic.claude-opus-4-8'),
                     ]
                 ),
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.5'),
+                    cache_write_mtok=Decimal('6.875'),
+                    cache_read_mtok=Decimal('0.55'),
+                    output_mtok=Decimal('27.5'),
+                ),
+            ),
+            ModelInfo(
+                id='regional.anthropic.claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='anthropic.claude-opus-5'),
+                        ClauseStartsWith(starts_with='claude-opus-5'),
+                        ClauseContains(contains='us.anthropic.claude-opus-5'),
+                        ClauseContains(contains='au.anthropic.claude-opus-5'),
+                        ClauseContains(contains='eu.anthropic.claude-opus-5'),
+                        ClauseContains(contains='jp.anthropic.claude-opus-5'),
+                    ]
+                ),
+                price_comments='Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint. Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions',
                 prices=ModelPrice(
                     input_mtok=Decimal('5.5'),
                     cache_write_mtok=Decimal('6.875'),
@@ -2698,6 +2749,25 @@ providers: list[Provider] = [
                 ),
                 context_window=1000000,
                 price_comments='Flat pricing across full 1M context window. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
+                id='claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-5-opus'),
+                        ClauseContains(contains='claude-opus-5'),
+                        ClauseContains(contains='claude-5.0-opus'),
+                        ClauseContains(contains='claude-opus-5.0'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -7950,6 +8020,36 @@ providers: list[Provider] = [
                 id='anthropic/claude-opus-4.8-fast',
                 match=ClauseEquals(equals='anthropic/claude-opus-4.8-fast'),
                 name='Claude Opus 4.8 (Fast)',
+                prices=ModelPrice(
+                    input_mtok=Decimal('10'),
+                    cache_write_mtok=Decimal('12.5'),
+                    cache_read_mtok=Decimal('1'),
+                    output_mtok=Decimal('50'),
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='anthropic/claude-opus-5'),
+                        ClauseEquals(equals='anthropic/claude-opus-5:beta'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-5-fast',
+                match=ClauseEquals(equals='anthropic/claude-opus-5-fast'),
+                name='Claude Opus 5 (Fast)',
+                context_window=1000000,
+                price_comments='Fast mode premium pricing, applies across the full context window. Ref: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
