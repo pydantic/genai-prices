@@ -1,0 +1,21 @@
+prices/providers/openai.yml
+  s_6ad3cfa10f0d70::t_910ba1811ede94 443-444,483-484,513-514
+tests/test_lifecycle.py
+  s_6ad3cfa10f0d70::t_910ba1811ede94 88-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e2eb16e1ad7a26017fb5f91be47da8a9c5dd1d71",
+  "prompts": {},
+  "sessions": {
+    "s_6ad3cfa10f0d70": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa3c3-41b3-7ba2-aafb-be012db9c345",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
