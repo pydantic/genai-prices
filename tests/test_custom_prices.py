@@ -323,3 +323,4 @@ def test_model_price_equality_uses_dynamic_price_values() -> None:
         hovercraft_mtok=Decimal('3'),
     )
     assert types.ModelPrice() == types.ModelPrice(input_mtok=None)
+    assert types.ModelPrice() != object()
