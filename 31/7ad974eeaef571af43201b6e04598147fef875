@@ -1,0 +1,37 @@
+prices/providers/anthropic.yml
+  s_6ad3cfa10f0d70::t_0c2ff6cfcdd86a 28-33,86,104,124,139,154,169,187,205,242,260,279,312-316,330,352,374,413,443-447,481-485,499,523,532
+tests/dataset/usages.json
+  s_6ad3cfa10f0d70::t_0c2ff6cfcdd86a 7826-7836,7919-7930
+packages/js/src/__tests__/extractUsage.test.ts
+  s_6ad3cfa10f0d70::t_0c2ff6cfcdd86a 26-29,41,44-45,50-55
+tests/test_cli.py
+  s_6ad3cfa10f0d70::t_0c2ff6cfcdd86a 496
+prices/data_v2.json
+  s_6ad3cfa10f0d70::t_547488acc257b1 1
+packages/js/src/data.ts
+  s_6ad3cfa10f0d70::t_547488acc257b1 41-50,138,163,194,211,228,245,263,293,323,347,377,441-449,463,497,529,592,648-656,714-722,736,772,786
+tests/test_price_regressions.py
+  s_6ad3cfa10f0d70::t_0c2ff6cfcdd86a 166-183
+tests/test_extract_usage.py
+  s_6ad3cfa10f0d70::t_167456616c5b3c 39-42,50-60
+tests/test_end_to_end.py
+  s_6ad3cfa10f0d70::t_0c2ff6cfcdd86a 55-88
+packages/python/genai_prices/data.py
+  s_6ad3cfa10f0d70::t_547488acc257b1 28-37,88,108,130,145,159,173,188,210,232,252,274,304-306,317,342,365,409,431-433,461-463,474,501,512
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "317ad974eeaef571af43201b6e04598147fef875",
+  "prompts": {},
+  "sessions": {
+    "s_6ad3cfa10f0d70": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa3c3-41b3-7ba2-aafb-be012db9c345",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
