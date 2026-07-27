@@ -22,10 +22,9 @@ export function decodeV2Payload(raw: unknown): DecodedProviderData {
   const rawProviders = arrayValue(wrapper.providers, 'v2 payload.providers')
   const rawUnits = objectValue(wrapper.units, 'v2 payload.units')
 
-  const units: RawUnitsDict = {}
-  for (const [usageKey, rawUnit] of Object.entries(rawUnits)) {
-    units[usageKey] = decodeUnit(rawUnit, `v2 payload.units.${usageKey}`)
-  }
+  const units: RawUnitsDict = Object.fromEntries(
+    Object.entries(rawUnits).map(([usageKey, rawUnit]) => [usageKey, decodeUnit(rawUnit, `v2 payload.units.${usageKey}`)])
+  )
 
   return {
     providers: rawProviders.map((provider, index) => decodeProvider(provider, `v2 payload.providers[${index.toString()}]`)),
@@ -36,10 +35,9 @@ export function decodeV2Payload(raw: unknown): DecodedProviderData {
 function decodeUnit(raw: unknown, path: string): RawUnitData {
   const unit = exactObject(raw, ['dimensions', 'per', 'price_key'], ['dimensions', 'per'], path)
   const rawDimensions = objectValue(unit.dimensions, `${path}.dimensions`)
-  const dimensions: Record<string, string> = {}
-  for (const [key, value] of Object.entries(rawDimensions)) {
-    dimensions[key] = stringValue(value, `${path}.dimensions.${key}`)
-  }
+  const dimensions: Record<string, string> = Object.fromEntries(
+    Object.entries(rawDimensions).map(([key, value]) => [key, stringValue(value, `${path}.dimensions.${key}`)])
+  )
 
   return {
     dimensions,

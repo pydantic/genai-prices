@@ -33,6 +33,20 @@ describe('decodeV2Payload', () => {
     expect(constraints.some((constraint) => constraint.type === 'time_of_date')).toBe(true)
   })
 
+  it('preserves own __proto__ unit dimensions for semantic validation', () => {
+    const dimensions = Object.fromEntries([
+      ['family', 'testing'],
+      ['__proto__', 'specialized'],
+    ])
+    const decoded = decodeV2Payload({
+      providers: [],
+      units: { specialized: { dimensions, per: 1 } },
+    })
+
+    expect(decoded.units.specialized?.dimensions).toEqual(dimensions)
+    expect(Object.prototype.hasOwnProperty.call(decoded.units.specialized?.dimensions, '__proto__')).toBe(true)
+  })
+
   it.each([
     ['start_time', 'not-a-time'],
     ['start_time', '25:00:00Z'],

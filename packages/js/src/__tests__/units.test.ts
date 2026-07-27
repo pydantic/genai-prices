@@ -236,6 +236,25 @@ describe('UnitRegistry', () => {
     })
   })
 
+  it.each(['constructor', 'toString', '__proto__'])('treats inherited property name %s as an ordinary dimension', (dimensionName) => {
+    const specializedDimensions = Object.fromEntries([
+      ['family', 'testing'],
+      [dimensionName, 'specialized'],
+    ])
+    const registry = UnitRegistry.fromUntrusted({
+      base: { dimensions: { family: 'testing' }, per: 1 },
+      specialized: { dimensions: specializedDimensions, per: 1 },
+    })
+    const base = registry.getUnit('base')
+    const specialized = registry.getUnit('specialized')
+    if (!base || !specialized) throw new Error('Expected prototype-key units')
+
+    expect(registry.ancestorUsageKeys('specialized')).toEqual(new Set(['base']))
+    expect(registry.findJoin(base, specialized)).toBe(specialized)
+    expect(registry.findJoin(specialized, base)).toBe(specialized)
+    expect(Object.prototype.hasOwnProperty.call(specialized.dimensions, dimensionName)).toBe(true)
+  })
+
   it.each([
     ['_private_name', 'private_mtok', 'must not start'],
     ['$input_tokens', 'input_mtok', 'not a public identifier'],

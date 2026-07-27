@@ -172,7 +172,9 @@ function dimensionKey(dimensions: Readonly<Record<string, string>>): string {
 }
 
 function isDimensionSubset(maybeAncestor: UnitDef, unit: UnitDef): boolean {
-  return Object.entries(maybeAncestor.dimensions).every(([key, value]) => unit.dimensions[key] === value)
+  return Object.entries(maybeAncestor.dimensions).every(
+    ([key, value]) => hasOwnDimension(unit.dimensions, key) && unit.dimensions[key] === value
+  )
 }
 
 export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): boolean {
@@ -180,7 +182,11 @@ export function isDescendantOrSelf(ancestor: UnitDef, descendant: UnitDef): bool
 }
 
 export function isCompatible(left: UnitDef, right: UnitDef): boolean {
-  return Object.entries(left.dimensions).every(([key, value]) => right.dimensions[key] === undefined || right.dimensions[key] === value)
+  return Object.entries(left.dimensions).every(([key, value]) => !hasOwnDimension(right.dimensions, key) || right.dimensions[key] === value)
+}
+
+function hasOwnDimension(dimensions: Readonly<Record<string, string>>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(dimensions, key)
 }
 
 function validateRawUnits(raw: unknown): RawUnitsDict {
@@ -220,13 +226,14 @@ function validateRawUnits(raw: unknown): RawUnitsDict {
     if (!isPlainObject(rawDimensions)) {
       throw new Error(`Unit dimensions for ${usageKey} must be an object`)
     }
-    const dimensions: Record<string, string> = {}
-    for (const [key, value] of Object.entries(rawDimensions)) {
-      if (typeof value !== 'string') {
-        throw new Error(`Unit dimensions for ${usageKey} must map strings to strings`)
-      }
-      dimensions[key] = value
-    }
+    const dimensions = Object.fromEntries(
+      Object.entries(rawDimensions).map(([key, value]): [string, string] => {
+        if (typeof value !== 'string') {
+          throw new Error(`Unit dimensions for ${usageKey} must map strings to strings`)
+        }
+        return [key, value]
+      })
+    )
 
     const family = dimensions.family
     if (family === undefined) {
