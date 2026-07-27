@@ -730,6 +730,17 @@ def test_google_anthropic():
     )
 
 
+@pytest.mark.parametrize('dest', ['imaginary_tokens', 'input_mtok', 'requests'])
+def test_extractor_warns_and_skips_invalid_destination_string(dest: str) -> None:
+    with pytest.warns(UserWarning, match=f'Unsupported extractor destination for standard extraction: {dest}'):
+        extractor = UsageExtractor(
+            root='usage',
+            mappings=[UsageExtractorMapping(path='missing_tokens', dest=dest)],
+        )
+
+    assert extractor.extract({'model': 'test-model', 'usage': {}}) == ('test-model', Usage())
+
+
 def test_extractor_accumulates_by_destination_string() -> None:
     extractor = UsageExtractor(
         root='usage',
@@ -805,7 +816,7 @@ def test_extractor_stores_registered_contradictions_until_pricing_interprets_the
 
     assert usage == Usage(input_tokens=50, input_audio_tokens=100)
     assert usage.input_tokens == 50
-    with pytest.raises(ValueError, match='negative|Impossible usage data'):
+    with pytest.raises(ValueError, match='negative|Impossible usage data|Invalid usage data'):
         ModelPrice(input_mtok=Decimal('1'), input_audio_mtok=Decimal('2')).calc_price(usage)
 
 
@@ -830,10 +841,10 @@ def test_accumulate_extracted_usage():
     double_extracted = extracted + extracted
     assert double_extracted.usage == Usage(input_tokens=100 * 2, output_tokens=162 * 2)
     assert repr(double_extracted) == snapshot(
-        "ExtractedUsage(usage=Usage(input_tokens=200, cache_write_tokens=None, cache_read_tokens=None, output_tokens=324, input_audio_tokens=None, cache_audio_read_tokens=None, output_audio_tokens=None), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
+        "ExtractedUsage(usage=Usage(input_tokens=200, output_tokens=324), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), auto_update_timestamp=None)"
     )
     assert repr(double_extracted.calc_price()) == snapshot(
-        "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $0.03/cache read MTok, $2.5/output MTok, $1/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
+        "PriceCalculation(input_price=Decimal('0.00006'), output_price=Decimal('0.00081'), total_price=Decimal('0.00087'), model=Model(id='gemini-2.5-flash', name='Gemini 2.5 Flash', ...), provider=Provider(id='google', name='Google', ...), model_price=ModelPrice($0.3/input MTok, $2.5/output MTok, $0.03/cache read MTok, $1/input audio MTok, $0.1/cache audio read MTok), auto_update_timestamp=None)"
     )
     assert Usage(input_tokens=10, output_tokens=10) + Usage(output_tokens=10) == Usage(
         input_tokens=10, output_tokens=20

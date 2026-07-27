@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from dataclasses import dataclass
 from decimal import Decimal
@@ -12,9 +13,17 @@ from genai_prices.data_snapshot import DataSnapshot, set_custom_snapshot
 from genai_prices.update_prices import UpdatePrices
 
 
-@dataclass
 class CustomModelPrice(types.ModelPrice):
     sausage_price: Decimal | None = None
+
+    def __init__(
+        self,
+        *,
+        sausage_price: Decimal | None = None,
+        **prices: Decimal | types.TieredPrices | None,
+    ) -> None:
+        super().__init__(**prices)
+        self.sausage_price = sausage_price
 
     def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
         price = super().calc_price(usage)
@@ -163,3 +172,142 @@ def test_extra_source_sausage():
         assert price.model.name == snapshot('gpt-4o Custom')
         assert price.provider.id == snapshot('openai')
         assert price.auto_update_timestamp is None
+
+
+def test_custom_price_override_gets_original_usage_and_super_prices_registered_fields() -> None:
+    @dataclass
+    class BonusUsage:
+        input_tokens: int
+        bonus_units: int
+
+    class BonusModelPrice(types.ModelPrice):
+        bonus_price: Decimal | None = None
+
+        def __init__(
+            self,
+            *,
+            bonus_price: Decimal | None = None,
+            **prices: Decimal | types.TieredPrices | None,
+        ) -> None:
+            super().__init__(**prices)
+            self.bonus_price = bonus_price
+
+        def calc_price(self, usage: types.AbstractUsage) -> types.CalcPrice:
+            price = super().calc_price(usage)
+            if isinstance(usage, BonusUsage) and self.bonus_price is not None:
+                price['total_price'] += self.bonus_price * usage.bonus_units
+            return price
+
+    provider = types.Provider(id='testing', name='Testing', api_pattern='testing', models=[])
+    model = types.ModelInfo(
+        id='bonus',
+        match=types.ClauseEquals('bonus'),
+        prices=BonusModelPrice(input_mtok=Decimal('1'), bonus_price=Decimal('2')),
+    )
+
+    price = model.calc_price(BonusUsage(input_tokens=1_000_000, bonus_units=3), provider)
+
+    assert price.input_price == Decimal('1')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('7')
+
+    # A non-BonusUsage skips the bonus branch, returning only the super() prices.
+    plain_price = model.calc_price(types.Usage(input_tokens=1_000_000), provider)
+    assert plain_price.total_price == Decimal('1')
+
+
+def test_base_model_price_accepts_registry_price_kwargs() -> None:
+    price = types.ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_image_read_mtok=Decimal('0.5'),
+    )
+
+    assert price.input_mtok == Decimal('1')
+    assert price.cache_image_read_mtok == Decimal('0.5')
+
+
+def test_provider_parsing_preserves_dynamic_model_price_keys() -> None:
+    providers = types._providers_from_raw(
+        json.loads(
+            json.dumps(
+                [
+                    {
+                        'id': 'testing',
+                        'name': 'Testing',
+                        'api_pattern': 'testing',
+                        'models': [
+                            {
+                                'id': 'model',
+                                'match': {'equals': 'model'},
+                                'prices': {
+                                    'input_mtok': 1,
+                                    'cache_image_read_mtok': 0.5,
+                                },
+                            }
+                        ],
+                    }
+                ]
+            )
+        )
+    )
+
+    price = providers[0].models[0].prices
+    assert isinstance(price, types.ModelPrice)
+    assert price.input_mtok == Decimal('1')
+    assert price.cache_image_read_mtok == Decimal('0.5')
+
+
+def test_provider_parsing_preserves_tiered_model_prices() -> None:
+    providers = types._providers_from_raw(
+        json.loads(
+            json.dumps(
+                [
+                    {
+                        'id': 'testing',
+                        'name': 'Testing',
+                        'api_pattern': 'testing',
+                        'models': [
+                            {
+                                'id': 'model',
+                                'match': {'equals': 'model'},
+                                'prices': {
+                                    'input_mtok': {
+                                        'base': 1,
+                                        'tiers': [{'start': 100_000, 'price': 2}],
+                                    },
+                                },
+                            }
+                        ],
+                    }
+                ]
+            )
+        )
+    )
+
+    price = providers[0].models[0].prices
+    assert isinstance(price, types.ModelPrice)
+    assert isinstance(price.input_mtok, types.TieredPrices)
+    assert price.input_mtok.base == Decimal('1')
+    assert price.input_mtok.tiers[0].price == Decimal('2')
+
+
+def test_model_price_normalization_preserves_instances_and_normalizes_conditional_lists() -> None:
+    price = types.ModelPrice(input_mtok=Decimal('1'))
+    assert types._normalize_prices_field(price) is price
+
+    normalized = types._normalize_prices_field([{'constraint': None, 'prices': {'input_mtok': 1}}])
+    assert isinstance(normalized, list)
+    assert isinstance(normalized[0]['prices'], types.ModelPrice)
+    assert normalized[0]['prices'].input_mtok == Decimal('1')
+
+
+def test_custom_model_price_constructor_accepts_custom_fields() -> None:
+    price = CustomModelPrice(
+        input_mtok=Decimal('1'),
+        output_mtok=Decimal('2'),
+        sausage_price=Decimal('3'),
+    )
+
+    assert price.input_mtok == Decimal('1')
+    assert price.output_mtok == Decimal('2')
+    assert price.sausage_price == Decimal('3')
