@@ -70,6 +70,7 @@ class UpdatePrices:
     """The timeout for HTTP requests."""
     _stop_event: threading.Event = field(default_factory=threading.Event)
     _prices_updated: threading.Event = field(default_factory=threading.Event)
+    _initial_attempt_started: threading.Event = field(default_factory=threading.Event)
     _lifecycle_lock: threading.RLock = field(default_factory=threading.RLock)
     _thread: threading.Thread | None = field(default=None, init=False)
     _background_exc: Exception | None = field(default=None, init=False)
@@ -96,10 +97,12 @@ class UpdatePrices:
             _global_update_prices = self
             self._stopping = False
             self._prices_updated.clear()
+            self._initial_attempt_started.clear()
             self._stop_event.clear()
             self._background_exc = None
             self._thread = threading.Thread(target=self._background_task, daemon=True, name='genai_prices:update')
             self._thread.start()
+        self._initial_attempt_started.wait()
         if wait:
             self.wait(timeout=30 if wait is True else wait)
 
@@ -156,8 +159,10 @@ class UpdatePrices:
                     self._prices_updated.set()
                     self._background_exc = None
                 except _UpdaterStoppingError:
+                    self._initial_attempt_started.set()
                     break
                 except Exception as e:
+                    self._initial_attempt_started.set()
                     self._background_exc = e
                     self._prices_updated.set()
                     logger.error('Error updating genai-prices in the background (%s): %s', type(e).__name__, e)
@@ -210,4 +215,6 @@ class UpdatePrices:
         with self._lifecycle_lock:
             if self._stopping:
                 raise _UpdaterStoppingError('UpdatePrices is stopping and cannot start another fetch')
-            return runtime_state.begin_update()
+            generation = runtime_state.begin_update()
+            self._initial_attempt_started.set()
+            return generation

@@ -302,6 +302,7 @@ def test_update_prices_start_waits_and_rejects_second_start():
     update_prices = NullUpdatePrices(update_interval=3600)
     update_prices.start(wait=True)
     try:
+        assert update_prices._initial_attempt_started.is_set()
         assert _active_snapshot() is _bundled_snapshot()
         with pytest.raises(RuntimeError, match='UpdatePrices background task already started'):
             update_prices.start()
