@@ -125,6 +125,9 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
   if (!Array.isArray(model.prices)) {
     return model.prices
   }
+  if (Number.isNaN(timestamp.getTime())) {
+    throw new RangeError('Invalid time value')
+  }
   // Conditional prices: last active wins
   for (let i = model.prices.length - 1; i >= 0; i--) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

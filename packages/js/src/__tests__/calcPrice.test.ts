@@ -119,6 +119,16 @@ describe('getActiveModelPrice', () => {
 
     expect(() => getActiveModelPrice(model, new Date('2025-01-01T12:00:00Z'))).toThrow('Invalid time-of-day constraint: 25:00:00Z')
   })
+
+  it('rejects an invalid timestamp for conditional prices', () => {
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [{ prices: { input_mtok: 1 } }],
+    }
+
+    expect(() => getActiveModelPrice(model, new Date(Number.NaN))).toThrow(new RangeError('Invalid time value'))
+  })
 })
 
 describe('Core Price Calculation Function', () => {
