@@ -1,0 +1,27 @@
+packages/js/src/engine.ts
+  s_e007c5ed89566f::t_276b5dff88727d 2
+packages/js/src/timeOfDay.ts
+  s_e007c5ed89566f::t_276b5dff88727d 1-17
+packages/js/src/decodeProviderData.ts
+  s_e007c5ed89566f::t_276b5dff88727d 17,154-155,160-167
+  s_e007c5ed89566f::t_df78069626581d 168-169
+packages/js/src/__tests__/decodeProviderData.test.ts
+  s_e007c5ed89566f::t_276b5dff88727d 36-41,44-59
+  s_e007c5ed89566f::t_61ea2ab7b3c133 42-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5da5a4ecfdb03ed0a3d3202d4e26dc6fe460dd56",
+  "prompts": {},
+  "sessions": {
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
