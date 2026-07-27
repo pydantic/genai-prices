@@ -1,10 +1,12 @@
 import ast
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
 
 import pytest
 
 from genai_prices.data_units import unit_data
+from genai_prices.types import ModelPrice
 from genai_prices.units import UnitRegistry
 from prices.build import load_units
 
@@ -67,3 +69,32 @@ def test_unit_registry_units_mapping_is_immutable() -> None:
 
     with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
         cast(dict[str, Any], registry.units)['new_unit'] = registry.units['input_tokens']
+
+
+def test_model_price_str_includes_unregistered_candidate_keys() -> None:
+    assert str(ModelPrice(hovercraft_mtok=Decimal('1'))) == '$1/hovercraft MTok'
+
+
+def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
+    from genai_prices import types as runtime_types
+
+    registry = UnitRegistry({})
+    invalid_provider = object()
+    invalid_extractor = object()
+    raw_providers: list[Any] = [
+        invalid_provider,
+        {'id': 'without-extractors'},
+        {'id': 'with-extractors', 'extractors': [invalid_extractor, {'mappings': []}]},
+    ]
+
+    assert runtime_types._inject_extractor_registry({}, registry) == {}
+    injected = runtime_types._inject_extractor_registry(raw_providers, registry)
+    assert injected[0] is invalid_provider
+    assert injected[1] == {'id': 'without-extractors'}
+    assert injected[2]['extractors'][0] is invalid_extractor
+    assert injected[2]['extractors'][1] == {'mappings': [], '_registry': registry}
+
+    provider = runtime_types._providers_from_raw(
+        [{'id': 'valid', 'name': 'Valid', 'api_pattern': 'https://example.test', 'extractors': []}], registry
+    )[0]
+    assert provider.id == 'valid'
