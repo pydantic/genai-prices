@@ -14,6 +14,7 @@ import type {
   UsageExtractorMapping,
 } from './types'
 
+import { utcTimeOfDaySeconds } from './timeOfDay'
 import { TieredPrices } from './types'
 
 export function decodeV2Payload(raw: unknown): DecodedProviderData {
@@ -150,10 +151,20 @@ function decodeConstraint(raw: unknown, path: string): NonNullable<ConditionalPr
 
   const timeOfDate = exactObject(constraint, ['end_time', 'start_time'], ['end_time', 'start_time'], path)
   return {
-    end_time: stringValue(timeOfDate.end_time, `${path}.end_time`),
-    start_time: stringValue(timeOfDate.start_time, `${path}.start_time`),
+    end_time: timeOfDayValue(timeOfDate.end_time, `${path}.end_time`),
+    start_time: timeOfDayValue(timeOfDate.start_time, `${path}.start_time`),
     type: 'time_of_date',
   }
+}
+
+function timeOfDayValue(raw: unknown, path: string): string {
+  const value = stringValue(raw, path)
+  try {
+    utcTimeOfDaySeconds(value)
+  } catch {
+    throw new Error(`Expected ${path} to use a valid HH:MM:SS[.fraction](Z|±HH:MM) time`)
+  }
+  return value
 }
 
 function decodeModelPrice(raw: unknown, path: string): ModelPrice {

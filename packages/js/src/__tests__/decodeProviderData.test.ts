@@ -33,6 +33,30 @@ describe('decodeV2Payload', () => {
     expect(constraints.some((constraint) => constraint.type === 'time_of_date')).toBe(true)
   })
 
+  it.each([
+    ['start_time', 'not-a-time'],
+    ['start_time', '25:00:00Z'],
+    ['end_time', '16:30:00+24:00'],
+  ])('rejects malformed %s constraints during decoding', (field, value) => {
+    const constraint = {
+      end_time: field === 'end_time' ? value : '16:30:00Z',
+      start_time: field === 'start_time' ? value : '00:30:00Z',
+    }
+    const raw = {
+      providers: [
+        {
+          api_pattern: 'testing',
+          id: 'testing',
+          models: [{ id: 'model', match: { equals: 'model' }, prices: [{ constraint, prices: {} }] }],
+          name: 'Testing',
+        },
+      ],
+      units: {},
+    }
+
+    expect(() => decodeV2Payload(raw)).toThrow(`Expected v2 payload.providers[0].models[0].prices[0].constraint.${field}`)
+  })
+
   it('rejects unknown fields at every structural level', () => {
     const raw = structuredClone(publishedPayload) as {
       providers: { models: { prices: Record<string, unknown> }[] }[]
