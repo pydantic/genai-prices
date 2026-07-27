@@ -556,3 +556,35 @@ def test_update_prices_multiple(monkeypatch: pytest.MonkeyPatch):
             match='UpdatePrices global task already started, only one UpdatePrices can be active at a time',
         ):
             UpdatePrices().start()
+
+
+def test_concurrent_update_prices_instances_only_start_one_global_worker() -> None:
+    barrier = threading.Barrier(3)
+    first = NullUpdatePrices()
+    second = NullUpdatePrices()
+
+    def start_after_barrier(update_prices: UpdatePrices) -> Exception | None:
+        barrier.wait()
+        try:
+            update_prices.start()
+        except Exception as exc:
+            return exc
+        return None
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        first_future = executor.submit(start_after_barrier, first)
+        second_future = executor.submit(start_after_barrier, second)
+        barrier.wait()
+        results = [first_future.result(timeout=5), second_future.result(timeout=5)]
+
+    try:
+        assert sum(result is None for result in results) == 1
+        rejected = next(result for result in results if result is not None)
+        assert isinstance(rejected, RuntimeError)
+        assert (
+            str(rejected) == 'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+        )
+    finally:
+        for update_prices in (first, second):
+            if update_prices._thread is not None:
+                update_prices.stop()

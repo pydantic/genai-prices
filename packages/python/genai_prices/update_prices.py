@@ -23,6 +23,7 @@ __all__ = (
 logger = logging.getLogger('genai-prices')
 DEFAULT_UPDATE_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json'
 _global_update_prices: UpdatePrices | None = None
+_global_update_prices_lock = threading.Lock()
 
 
 class _UpdaterStoppingError(RuntimeError):
@@ -90,12 +91,13 @@ class UpdatePrices:
             if self._thread is not None:
                 raise RuntimeError('UpdatePrices background task already started')
 
-            if _global_update_prices is not None:
-                raise RuntimeError(
-                    'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
-                )
+            with _global_update_prices_lock:
+                if _global_update_prices is not None:
+                    raise RuntimeError(
+                        'UpdatePrices global task already started, only one UpdatePrices can be active at a time'
+                    )
+                _global_update_prices = self
 
-            _global_update_prices = self
             self._stopping = False
             self._prices_updated.clear()
             self._initial_attempt_started.clear()
@@ -130,8 +132,9 @@ class UpdatePrices:
             stop_generation = runtime_state.begin_update()
             self._stop_event.set()
             thread = self._thread
-            if _global_update_prices is self:
-                _global_update_prices = None
+            with _global_update_prices_lock:
+                if _global_update_prices is self:
+                    _global_update_prices = None
 
         if thread is not None:
             thread.join()
