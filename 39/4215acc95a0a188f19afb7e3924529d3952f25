@@ -1,0 +1,28 @@
+tests/test_units.py
+  s_6ad3cfa10f0d70::t_adc7a32dc239a9 256-273
+  s_03b91a730483ad::t_d52c5750adafe7 274-275
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "394215acc95a0a188f19afb7e3924529d3952f25",
+  "prompts": {},
+  "sessions": {
+    "s_03b91a730483ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1e994a3b-6d5e-496f-92ef-f610a90753f7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_6ad3cfa10f0d70": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa3c3-41b3-7ba2-aafb-be012db9c345",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
