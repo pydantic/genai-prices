@@ -1,0 +1,55 @@
+prices/src/prices/export_validation.py
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 77,97-105,118,144-162,173-176,187-193
+  s_6ad3cfa10f0d70::t_00f6b43e0b7fdf 194-195
+packages/js/src/__tests__/generatedData.test.ts
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 12-13,18-19,24-25,30-31,36-37
+tests/test_decompose.py
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 73-86
+packages/js/src/__tests__/decompose.test.ts
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 70-87
+prices/src/prices/package_data.py
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 6,50,57,178,181,200-210
+  s_6ad3cfa10f0d70::t_852a3d4d807487 211-212
+packages/python/genai_prices/decompose.py
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 16-19,23,25,27
+packages/js/src/decompose.ts
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 16-19,23,25-30
+packages/js/src/__tests__/units.test.ts
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 13-14,19-20,25-26,31-32,37-38,61-62,67-68,73-74,79-80,85-86
+prices/units.yml
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 17-26,43-52,69-78,95-104,121-130
+tests/test_units.py
+  s_6ad3cfa10f0d70::t_f693d25e3bf1c8 40-41,46-47,52-53,58-59,64-65,88-89,94-95,100-101,106-107,112-113,232,241-242,589-645,673-674,682-692,1156-1157,1187-1193,1256,1289-1295
+packages/js/src/dataUnits.ts
+  s_e007c5ed89566f::t_0583747a6347fe 14-35,56-77,107-128,149-170,181-200
+packages/python/genai_prices/data_units.py
+  s_e007c5ed89566f::t_b48df4d64e4bb6 28-37,58-79,100-121,142-163,184-205
+prices/data_v2.schema.json
+  s_e007c5ed89566f::t_7959b2d4568f26 418-437,478-497,508-527,568-587,628-647,1136-1137,1140-1141,1145-1146,1149-1150,1152-1153
+prices/providers/.schema.json
+  s_e007c5ed89566f::t_ff71156d8a28d2 442-461,502-521,532-551,592-611,652-671,1027-1028,1031-1032,1036-1037,1040-1041,1043-1044
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "856e59f3210cdbf8950275cb819e16f5452cf52b",
+  "prompts": {},
+  "sessions": {
+    "s_6ad3cfa10f0d70": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa3c3-41b3-7ba2-aafb-be012db9c345",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_e007c5ed89566f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f9509-b278-7053-a973-6d1a3958c9c6",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
