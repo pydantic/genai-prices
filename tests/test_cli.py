@@ -536,6 +536,14 @@ def test_format_model_prices_preserves_tier_text() -> None:
     assert _format_model_prices(price, split_lines=False, use_color=False).plain == '$1/input MTok (+tiers)'
 
 
+def test_format_model_prices_preserves_unregistered_candidate_keys() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
+
+    assert _format_model_prices(price, split_lines=False, use_color=False).plain == (
+        '$1/input MTok, $2/hovercraft MTok'
+    )
+
+
 def test_format_model_prices_uses_custom_registry_metadata() -> None:
     registry = UnitRegistry(
         {
