@@ -1,14 +1,71 @@
 import { describe, expect, it } from 'vitest'
 
-import type { ModelPrice, Usage } from '../types'
+import type { ModelInfo, ModelPrice, Usage } from '../types'
 
-import { calcPrice } from '../engine'
+import { calcPrice, getActiveModelPrice } from '../engine'
 
 const MILLION = 1_000_000
 
 function mtok(rate: number, tokens: number): number {
   return (rate * tokens) / MILLION
 }
+
+describe('getActiveModelPrice', () => {
+  it('uses timezone-aware half-open daily constraints', () => {
+    const offPeak = { input_mtok: 1 }
+    const standard = { input_mtok: 2 }
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [
+        { prices: offPeak },
+        {
+          constraint: {
+            end_time: '16:30:00Z',
+            start_time: '01:30:00+01:00',
+            type: 'time_of_date',
+          },
+          prices: standard,
+        },
+      ],
+    }
+
+    expect(getActiveModelPrice(model, new Date('2025-01-01T00:29:59.999Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2025-01-01T00:30:00.000Z'))).toBe(standard)
+    expect(getActiveModelPrice(model, new Date('2025-01-01T16:29:59.999Z'))).toBe(standard)
+    expect(getActiveModelPrice(model, new Date('2025-01-01T16:30:00.000Z'))).toBe(offPeak)
+  })
+
+  it('rejects malformed time constraints', () => {
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [
+        { prices: { input_mtok: 1 } },
+        {
+          constraint: {
+            end_time: '16:30:00Z',
+            start_time: '25:00:00Z',
+            type: 'time_of_date',
+          },
+          prices: { input_mtok: 2 },
+        },
+      ],
+    }
+
+    expect(() => getActiveModelPrice(model, new Date('2025-01-01T12:00:00Z'))).toThrow('Invalid time-of-day constraint: 25:00:00Z')
+  })
+
+  it('rejects an invalid timestamp for conditional prices', () => {
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [{ prices: { input_mtok: 1 } }],
+    }
+
+    expect(() => getActiveModelPrice(model, new Date(Number.NaN))).toThrow(new RangeError('Invalid time value'))
+  })
+})
 
 describe('Core Price Calculation Function', () => {
   describe('calcPrice with separated input/output prices', () => {
