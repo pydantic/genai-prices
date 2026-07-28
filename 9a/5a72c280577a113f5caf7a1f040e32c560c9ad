@@ -1,0 +1,23 @@
+packages/js/src/__tests__/decompose.test.ts
+  s_34422a3983f2c3::t_0256df7186927f 6,86-131
+  s_34422a3983f2c3::t_dcda2d98217a94 132-133
+packages/js/src/decompose.ts
+  s_34422a3983f2c3::t_0256df7186927f 16-19,23,25
+  s_34422a3983f2c3::t_fd3afef36f51a5 27-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9a5a72c280577a113f5caf7a1f040e32c560c9ad",
+  "prompts": {},
+  "sessions": {
+    "s_34422a3983f2c3": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa8ba-89b5-7143-9daa-e9a659afc61a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
