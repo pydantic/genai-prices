@@ -1,0 +1,21 @@
+packages/js/src/__tests__/activation.test.ts
+  s_fb12e63df3c91f::t_c615e1a34f7d3a 123-158
+packages/js/src/api.ts
+  s_fb12e63df3c91f::t_c615e1a34f7d3a 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "43abfe76733bd2f04ae60ea0635f63de13841fae",
+  "prompts": {},
+  "sessions": {
+    "s_fb12e63df3c91f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa954-72e0-7761-9cc5-c16aad4e6b84",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
