@@ -6,7 +6,7 @@ import subprocess
 import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
-from dataclasses import fields
+from dataclasses import FrozenInstanceError, fields
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
@@ -26,7 +26,7 @@ from genai_prices.types import (
     _collect_resolved_model_prices,
     _compute_registry_priced_counts,
 )
-from genai_prices.units import UnitRegistry, _get_registry
+from genai_prices.units import UnitDef, UnitRegistry, _get_registry
 from prices import build as build_module, export_validation, package_data, prices_types as build_types
 from prices.export_validation import validate_export_payload, validate_units
 
@@ -560,6 +560,20 @@ def test_unit_registry_allows_same_dimension_set_across_families() -> None:
     )
 
 
+@pytest.mark.parametrize('per', [0, -1, 1.5, True, '1000000'])
+def test_validate_units_rejects_invalid_per(per: Any) -> None:
+    with pytest.raises(ValueError, match='expected a positive integer'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': per,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
 def test_validate_units_rejects_skipped_intermediate_dimension_sets() -> None:
     with pytest.raises(
         ValueError,
@@ -757,6 +771,25 @@ def test_model_price_str_includes_dynamic_extras() -> None:
     )
 
     assert str(price) == '$1/input MTok, $0.5/cache image read MTok'
+
+
+def test_unit_registry_definitions_are_immutable() -> None:
+    registry = UnitRegistry(data_units.unit_data)
+    unit = registry.units['input_tokens']
+
+    with pytest.raises(FrozenInstanceError, match='cannot assign to field'):
+        cast(Any, unit).per = 1
+    with pytest.raises(TypeError, match="'mappingproxy' object does not support item assignment"):
+        cast(dict[str, str], unit.dimensions)['modality'] = 'audio'
+
+
+def test_unit_definition_copies_dimensions_before_freezing() -> None:
+    dimensions = {'family': 'tokens'}
+    unit = UnitDef('tokens', 'mtok', 1_000_000, dimensions)
+
+    dimensions['direction'] = 'input'
+
+    assert unit.dimensions == {'family': 'tokens'}
 
 
 def test_model_price_str_includes_unregistered_candidate_keys() -> None:

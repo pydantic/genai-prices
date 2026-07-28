@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import type { ModelPrice, TieredPrices, Usage } from '../types'
+import type { ModelInfo, ModelPrice, TieredPrices, Usage } from '../types'
 
-import { calcPrice, collectResolvedModelPrices } from '../engine'
+import { calcPrice, collectResolvedModelPrices, getActiveModelPrice } from '../engine'
 import { getActiveRegistry, UnitRegistry } from '../units'
 
 const MILLION = 1_000_000
@@ -58,6 +58,64 @@ describe('collectResolvedModelPrices', () => {
     ])
   })
 
+  it('rejects invalid recognized flat price values', () => {
+    for (const price of [Number.NaN, Number.POSITIVE_INFINITY, -1, null, '1']) {
+      expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
+        'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
+      )
+    }
+  })
+
+  it('rejects malformed recognized tiered price values', () => {
+    for (const price of [
+      { base: Number.NaN, tiers: [] },
+      { base: 1, tiers: null },
+      { base: 1, tiers: [{ price: 2, start: -1 }] },
+      { base: 1, tiers: [{ price: 2, start: 1.5 }] },
+      { base: 1, tiers: [{ price: Number.POSITIVE_INFINITY, start: 100 }] },
+    ]) {
+      expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
+        'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
+      )
+    }
+  })
+
+  it('normalizes unsorted tiered prices without mutating caller data', () => {
+    const tieredPrice = {
+      base: 1,
+      tiers: [
+        { price: 3, start: 200 },
+        { price: 2, start: 100 },
+      ],
+    }
+
+    expect(collectResolvedModelPrices({ input_mtok: tieredPrice }, registry)).toEqual([
+      {
+        price: {
+          base: 1,
+          tiers: [
+            { price: 2, start: 100 },
+            { price: 3, start: 200 },
+          ],
+        },
+        unit: registry.getUnit('input_tokens'),
+      },
+    ])
+    expect(tieredPrice.tiers.map(({ start }) => start)).toEqual([200, 100])
+  })
+
+  it('retains zero flat and tiered price values', () => {
+    const tieredPrice: TieredPrices = {
+      base: 0,
+      tiers: [{ price: 0, start: 100_000 }],
+    }
+
+    expect(collectResolvedModelPrices({ input_mtok: 0, output_mtok: tieredPrice }, registry)).toEqual([
+      { price: 0, unit: registry.getUnit('input_tokens') },
+      { price: tieredPrice, unit: registry.getUnit('output_tokens') },
+    ])
+  })
+
   it('uses the explicit registry and warns for unknown keys', () => {
     const customRegistry = new UnitRegistry({
       widgets: {
@@ -74,6 +132,63 @@ describe('collectResolvedModelPrices', () => {
   })
 })
 
+describe('getActiveModelPrice', () => {
+  it('uses timezone-aware half-open daily constraints', () => {
+    const offPeak = { input_mtok: 1 }
+    const standard = { input_mtok: 2 }
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [
+        { prices: offPeak },
+        {
+          constraint: {
+            end_time: '16:30:00Z',
+            start_time: '01:30:00+01:00',
+            type: 'time_of_date',
+          },
+          prices: standard,
+        },
+      ],
+    }
+
+    expect(getActiveModelPrice(model, new Date('2025-01-01T00:29:59.999Z'))).toBe(offPeak)
+    expect(getActiveModelPrice(model, new Date('2025-01-01T00:30:00.000Z'))).toBe(standard)
+    expect(getActiveModelPrice(model, new Date('2025-01-01T16:29:59.999Z'))).toBe(standard)
+    expect(getActiveModelPrice(model, new Date('2025-01-01T16:30:00.000Z'))).toBe(offPeak)
+  })
+
+  it('rejects malformed time constraints', () => {
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [
+        { prices: { input_mtok: 1 } },
+        {
+          constraint: {
+            end_time: '16:30:00Z',
+            start_time: '25:00:00Z',
+            type: 'time_of_date',
+          },
+          prices: { input_mtok: 2 },
+        },
+      ],
+    }
+
+    expect(() => getActiveModelPrice(model, new Date('2025-01-01T12:00:00Z'))).toThrow('Invalid time-of-day constraint: 25:00:00Z')
+  })
+
+  it('rejects an invalid timestamp for conditional prices', () => {
+    const model: ModelInfo = {
+      id: 'conditional',
+      match: { equals: 'conditional' },
+      prices: [{ prices: { input_mtok: 1 } }],
+    }
+
+    expect(() => getActiveModelPrice(model, new Date(Number.NaN))).toThrow(new RangeError('Invalid time value'))
+  })
+})
+
 describe('Core Price Calculation Function', () => {
   it('warns and ignores unsupported usage and price keys', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
@@ -85,6 +200,21 @@ describe('Core Price Calculation Function', () => {
     })
     expect(warn).toHaveBeenNthCalledWith(1, 'Unsupported usage key for standard pricing: future_tokens')
     expect(warn).toHaveBeenNthCalledWith(2, 'Unsupported price key for standard pricing: future_mtok')
+    warn.mockRestore()
+  })
+
+  it('warns once per unsupported usage key on reused usage objects', () => {
+    const usage: Usage = { future_tokens: 500, input_tokens: 1_000 }
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    calcPrice(usage, { input_mtok: 1 })
+    calcPrice(usage, { input_mtok: 1 })
+    usage.later_tokens = 200
+    calcPrice(usage, { input_mtok: 1 })
+
+    expect(warn).toHaveBeenCalledTimes(2)
+    expect(warn).toHaveBeenNthCalledWith(1, 'Unsupported usage key for standard pricing: future_tokens')
+    expect(warn).toHaveBeenNthCalledWith(2, 'Unsupported usage key for standard pricing: later_tokens')
     warn.mockRestore()
   })
 
@@ -303,6 +433,28 @@ describe('Core Price Calculation Function', () => {
         input_price: 0,
         output_price: 0,
         total_price: 0.0005,
+      })
+      expect(warn).toHaveBeenCalledWith('Unsupported usage key for standard pricing: requests')
+      warn.mockRestore()
+    })
+
+    it('should ignore invalid caller-provided requests during token usage reads', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+      const result = calcPrice(
+        {
+          input_tokens: 1_000,
+          requests: Number.NaN,
+        },
+        {
+          input_mtok: 1,
+          output_mtok: 2,
+        }
+      )
+
+      expect(result).toEqual({
+        input_price: 0.001,
+        output_price: 0,
+        total_price: 0.001,
       })
       expect(warn).toHaveBeenCalledWith('Unsupported usage key for standard pricing: requests')
       warn.mockRestore()

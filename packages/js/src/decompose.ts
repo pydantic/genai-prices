@@ -20,14 +20,22 @@ export function computeLeafValues(
   const leafValues: Record<string, number> = {}
 
   for (const unit of pricedUnits) {
-    let leafValue = getUsageValue(usage, unit.usageKey, registry)
+    const unitValue = getUsageValue(usage, unit.usageKey, registry)
+    let descendantLeafTotal = 0
     for (const descendant of pricedUnits) {
       if (descendant === unit || !isDescendantOrSelf(unit, descendant)) continue
+
       const descendantLeafValue = leafValues[descendant.usageKey]
       if (descendantLeafValue === undefined) {
-        throw new Error(`Descendant unit ${descendant.usageKey} was not decomposed before ${unit.usageKey}`)
+        throw new Error(`Missing computed leaf value for ${descendant.usageKey}`)
       }
-      leafValue -= descendantLeafValue
+      descendantLeafTotal += descendantLeafValue
+    }
+
+    let leafValue = unitValue - descendantLeafTotal
+    const roundingTolerance = Number.EPSILON * Math.max(1, Math.abs(unitValue), Math.abs(descendantLeafTotal)) * (pricedUnits.length + 1)
+    if (leafValue < 0 && Math.abs(leafValue) <= roundingTolerance) {
+      leafValue = 0
     }
 
     if (leafValue < 0) {
