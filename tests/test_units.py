@@ -164,6 +164,20 @@ def test_validate_units_rejects_duplicate_price_keys_and_dimensions() -> None:
         )
 
 
+@pytest.mark.parametrize('per', [0, -1, 1.5, True, '1000000'])
+def test_validate_units_rejects_invalid_per(per: Any) -> None:
+    with pytest.raises(ValueError, match='expected a positive integer'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': per,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
 def test_validate_units_rejects_open_intervals_and_missing_joins() -> None:
     with pytest.raises(ValueError, match='Missing intermediate unit dimensions'):
         validate_units(
