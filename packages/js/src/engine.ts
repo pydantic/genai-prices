@@ -7,6 +7,7 @@ import {
   ModelPriceCalculationResult,
   Provider,
   ProviderFindOptions,
+  Tier,
   TieredPrices,
   UnitDef,
   Usage,
@@ -45,17 +46,17 @@ function validatePriceValue(priceKey: string, price: unknown): number | TieredPr
     throw invalidPriceValueError(priceKey)
   }
 
-  let previousStart = -1
+  const tiers: Tier[] = []
   for (const tier of price.tiers) {
     if (!isRecord(tier)) throw invalidPriceValueError(priceKey)
     const { price: tierPrice, start } = tier
-    if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || start < previousStart || !isValidPriceNumber(tierPrice)) {
+    if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || !isValidPriceNumber(tierPrice)) {
       throw invalidPriceValueError(priceKey)
     }
-    previousStart = start
+    tiers.push({ price: tierPrice, start })
   }
 
-  return price as unknown as TieredPrices
+  return new TieredPrices({ base: price.base, tiers })
 }
 
 function invalidPriceValueError(priceKey: string): Error {

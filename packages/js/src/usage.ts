@@ -4,11 +4,17 @@ import { getActiveRegistry, isCompatible, UnitRegistry } from './units'
 
 export type NormalizedUsage = Usage
 
+const warnedUsageKeys = new WeakMap<Usage, Set<string>>()
+
 export function warnUnsupportedUsageKeys(usage: Usage, registry: UnitRegistry = getActiveRegistry()): void {
+  const previouslyWarned = warnedUsageKeys.get(usage)
   const unsupportedUsageKeys = Object.keys(usage)
-    .filter((usageKey) => !registry.isReportedUsageKey(usageKey))
+    .filter((usageKey) => !registry.isReportedUsageKey(usageKey) && !previouslyWarned?.has(usageKey))
     .sort()
   if (unsupportedUsageKeys.length) {
+    const warned = previouslyWarned ?? new Set<string>()
+    for (const usageKey of unsupportedUsageKeys) warned.add(usageKey)
+    warnedUsageKeys.set(usage, warned)
     console.warn(`Unsupported usage key for standard pricing: ${unsupportedUsageKeys.join(', ')}`)
   }
 }
