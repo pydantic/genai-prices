@@ -1,0 +1,28 @@
+prices/data.schema.json
+  s_eed050a0254107::t_f5aaa73e934666 426-428,438-440,450-452,462-464,474-476,486-488,498-500,510-512,522-524,534-536,546-548,558-560,570-572
+prices/src/prices/build.py
+  s_eed050a0254107::t_4533157b5a4fd6 16,87,97-103
+  s_eed050a0254107::t_f5cf15cc64f444 104-105
+prices/data_slim.schema.json
+  s_eed050a0254107::t_f5aaa73e934666 408-410,420-422,432-434,444-446,456-458,468-470,480-482,492-494,504-506,516-518,528-530,540-542,552-554
+prices/providers/.schema.json
+  s_eed050a0254107::t_f5aaa73e934666 450-452,462-464,474-476,486-488,498-500,510-512,522-524,534-536,546-548,558-560,570-572,582-584,594-596
+tests/test_package_schema.py
+  s_eed050a0254107::t_4533157b5a4fd6 23-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8856ca281a407e29179232efe48822c371e1a4ac",
+  "prompts": {},
+  "sessions": {
+    "s_eed050a0254107": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa8ec-d8b6-7193-8735-21a39ac30a3c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
