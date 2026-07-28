@@ -120,9 +120,6 @@ class Provider(_Model):
     def exclude_removed(self):
         self.models[:] = [model for model in self.models if not model.removed]
 
-    def exclude_free(self):
-        self.models[:] = [model for model in self.models if not model.is_free()]
-
 
 class UsageExtractorMapping(_Model):
     """Mappings from used to build usage."""
