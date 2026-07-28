@@ -26,7 +26,7 @@ function setProviderData(data: ProviderDataPayload) {
   if (typeof data === 'object' && 'then' in data) {
     const updatePromise = data
       .then((data) => {
-        if (data === null) {
+        if (data === null || providerDataPromise !== updatePromise) {
           return providerData
         }
         return activateProviderData(data)

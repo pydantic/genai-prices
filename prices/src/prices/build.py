@@ -60,8 +60,8 @@ def build():
         provider.exclude_removed()
     validate_export_payload(providers, units)
 
-    # Write the authoring schema and keep regenerating the v1 publication
-    # artifacts until the v2 publication path exists.
+    # Write only the authoring schema. The legacy v1 publication artifacts are
+    # pinned and remain byte-for-byte unchanged.
     schema_json_path = package_dir / 'providers' / '.schema.json'
     schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
     print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
