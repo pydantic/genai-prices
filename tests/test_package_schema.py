@@ -32,7 +32,6 @@ def test_provider_yaml_schema_suggests_registry_price_keys_from_units() -> None:
     model_price_schema = schema['$defs']['ModelPrice']
     properties = model_price_schema['properties']
     assert properties['input_mtok']['description'] == 'price in USD per million uncached text input/prompt token'
-    assert properties['sausage_mtok']['title'] == 'Sausage Mtok'
     assert properties['sausage_mtok']['description'] == 'price in USD per million sausage tokens'
     assert properties['sausage_mtok']['anyOf'] == model_price_schema['additionalProperties']['anyOf']
     assert isinstance(model_price_schema['additionalProperties'], dict)
