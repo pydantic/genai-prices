@@ -311,3 +311,16 @@ def test_custom_model_price_constructor_accepts_custom_fields() -> None:
     assert price.input_mtok == Decimal('1')
     assert price.output_mtok == Decimal('2')
     assert price.sausage_price == Decimal('3')
+
+
+def test_model_price_equality_uses_dynamic_price_values() -> None:
+    assert types.ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2')) == types.ModelPrice(
+        input_mtok=Decimal('1'),
+        hovercraft_mtok=Decimal('2'),
+    )
+    assert types.ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2')) != types.ModelPrice(
+        input_mtok=Decimal('1'),
+        hovercraft_mtok=Decimal('3'),
+    )
+    assert types.ModelPrice() == types.ModelPrice(input_mtok=None)
+    assert types.ModelPrice() != object()

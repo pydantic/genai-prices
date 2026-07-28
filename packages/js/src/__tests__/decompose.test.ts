@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { UnitDef } from '../types'
 
 import { computeLeafValues } from '../decompose'
-import { getActiveRegistry, isDescendantOrSelf } from '../units'
+import { getActiveRegistry, isDescendantOrSelf, UnitRegistry } from '../units'
 import { normalizeUsage } from '../usage'
 
 describe('isDescendantOrSelf', () => {
@@ -80,6 +80,72 @@ describe('computeLeafValues', () => {
     ).toEqual({
       output_audio_tokens: 200,
       output_tokens: 500,
+    })
+  })
+
+  it('handles conditional-dimension chains without parity assumptions', () => {
+    const registry = new UnitRegistry({
+      cache_write_1h_tokens: {
+        dimensions: {
+          cache_ttl: '1h',
+          direction: 'input',
+          family: 'tokens',
+          token_type: 'cache_write',
+        },
+        per: 1,
+      },
+      cache_write_tokens: {
+        dimensions: {
+          direction: 'input',
+          family: 'tokens',
+          token_type: 'cache_write',
+        },
+        per: 1,
+      },
+      input_tokens: {
+        dimensions: {
+          direction: 'input',
+          family: 'tokens',
+        },
+        per: 1,
+      },
+    })
+
+    expect(
+      computeLeafValues(
+        new Set(['cache_write_1h_tokens', 'cache_write_tokens', 'input_tokens']),
+        normalizeUsage(
+          {
+            cache_write_1h_tokens: 20,
+            cache_write_tokens: 60,
+            input_tokens: 100,
+          },
+          registry
+        ),
+        registry
+      )
+    ).toEqual({
+      cache_write_1h_tokens: 20,
+      cache_write_tokens: 40,
+      input_tokens: 40,
+    })
+  })
+
+  it('normalizes negligible floating-point residuals to zero', () => {
+    expect(
+      computeLeafValues(
+        new Set(['input_audio_tokens', 'input_image_tokens', 'input_tokens']),
+        normalizeUsage({
+          input_audio_tokens: 0.2,
+          input_image_tokens: 0.1,
+          input_tokens: 0.3,
+        }),
+        getActiveRegistry()
+      )
+    ).toEqual({
+      input_audio_tokens: 0.2,
+      input_image_tokens: 0.1,
+      input_tokens: 0,
     })
   })
 
