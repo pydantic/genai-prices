@@ -355,6 +355,28 @@ describe('Core Price Calculation Function', () => {
       warn.mockRestore()
     })
 
+    it('should ignore invalid caller-provided requests during token usage reads', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+      const result = calcPrice(
+        {
+          input_tokens: 1_000,
+          requests: Number.NaN,
+        },
+        {
+          input_mtok: 1,
+          output_mtok: 2,
+        }
+      )
+
+      expect(result).toEqual({
+        input_price: 0.001,
+        output_price: 0,
+        total_price: 0.001,
+      })
+      expect(warn).toHaveBeenCalledWith('Unsupported usage key for standard pricing: requests')
+      warn.mockRestore()
+    })
+
     it('should price custom active-registry usage from the original caller object', () => {
       const registry = new UnitRegistry({
         premium_widgets: {

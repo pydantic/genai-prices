@@ -104,5 +104,5 @@ function unitForUsageKey(registry: UnitRegistry, usageKey: string): UnitDef {
 }
 
 function unitForOptionalUsageKey(registry: UnitRegistry, usageKey: string): undefined | UnitDef {
-  return registry.getUnit(usageKey)
+  return registry.isReportedUsageKey(usageKey) ? registry.getUnit(usageKey) : undefined
 }
