@@ -1,0 +1,24 @@
+packages/js/src/__tests__/calcPrice.test.ts
+  s_eed050a0254107::t_ef7927544b98df 74,83-106,206-217
+  s_eed050a0254107::t_50245a6bbb37ac 218-220
+packages/js/src/usage.ts
+  s_eed050a0254107::t_ef7927544b98df 7-8,10,12,15-17
+packages/js/src/engine.ts
+  s_eed050a0254107::t_ef7927544b98df 10,49,53,56,59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "980b97f790f79b794e082f6b13a5ff08fe9654ce",
+  "prompts": {},
+  "sessions": {
+    "s_eed050a0254107": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa8ec-d8b6-7193-8735-21a39ac30a3c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
