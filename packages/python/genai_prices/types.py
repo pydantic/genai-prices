@@ -213,6 +213,7 @@ class Usage:
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
         if isinstance(obj, Usage):
+            obj._reported_values()
             return obj
 
         values: dict[str, int] = {}
@@ -236,15 +237,20 @@ class Usage:
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
     def _store_values(self, values: Mapping[str, int | None]) -> None:
+        reported_usage_keys = _reported_usage_keys()
         for key, value in values.items():
             if value is None:
                 self.__dict__.pop(key, None)
+            elif key in reported_usage_keys:
+                self.__dict__[key] = _validate_usage_value(key, value)
             else:
                 self.__dict__[key] = value
 
     def _reported_values(self) -> dict[str, int]:
         reported_usage_keys = _reported_usage_keys()
-        return {key: cast(int, value) for key, value in self.__dict__.items() if key in reported_usage_keys}
+        return {
+            key: _validate_usage_value(key, value) for key, value in self.__dict__.items() if key in reported_usage_keys
+        }
 
     def reported_value(self, usage_key: str) -> int:
         return self._reported_values().get(usage_key, 0)
@@ -322,6 +328,12 @@ class Usage:
             f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
             f'require explicit {usage_key}'
         )
+
+
+def _validate_usage_value(usage_key: str, value: object) -> int:
+    if type(value) is not int or value < 0:
+        raise ValueError(f'Invalid usage value for {usage_key}: expected a non-negative integer')
+    return value
 
 
 def _reported_overlap_keys_for_join(

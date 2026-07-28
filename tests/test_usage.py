@@ -28,6 +28,12 @@ def test_usage_direct_construction_is_strict_for_reported_usage_keys() -> None:
     assert usage.output_tokens == 0
 
 
+@pytest.mark.parametrize('value', [-1, 1.5, float('NaN'), float('Infinity'), True])
+def test_usage_direct_construction_rejects_invalid_reported_values(value: Any) -> None:
+    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+        Usage(input_tokens=value)
+
+
 def test_usage_direct_construction_warns_for_unknown_keywords() -> None:
     with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: imaginary_tokens'):
         usage = Usage(imaginary_tokens=1)
@@ -68,6 +74,13 @@ def test_usage_assignment_updates_registered_reported_values() -> None:
     usage.input_tokens = None
     assert 'input_tokens' not in usage.__dict__
     assert usage.input_tokens == 0
+
+
+def test_usage_assignment_rejects_invalid_reported_values() -> None:
+    usage = Usage()
+
+    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+        usage.input_tokens = -1
 
 
 def test_usage_missing_registered_reads_return_zero() -> None:
@@ -156,6 +169,19 @@ def test_usage_from_raw_reads_known_object_attributes() -> None:
     usage = Usage.from_raw(SimpleNamespace(input_tokens=100, output_tokens=50))
 
     assert usage == Usage(input_tokens=100, output_tokens=50)
+
+
+def test_usage_from_raw_rejects_invalid_known_object_attributes() -> None:
+    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+        Usage.from_raw(SimpleNamespace(input_tokens=1.5))
+
+
+def test_usage_from_raw_revalidates_existing_usage_storage() -> None:
+    usage = Usage()
+    usage.__dict__['input_tokens'] = 1.5
+
+    with pytest.raises(ValueError, match='Invalid usage value for input_tokens: expected a non-negative integer'):
+        Usage.from_raw(usage)
 
 
 def test_usage_from_raw_reads_known_dataclass_attributes() -> None:
