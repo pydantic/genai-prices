@@ -71,19 +71,37 @@ describe('collectResolvedModelPrices', () => {
       { base: Number.NaN, tiers: [] },
       { base: 1, tiers: null },
       { base: 1, tiers: [{ price: 2, start: -1 }] },
+      { base: 1, tiers: [{ price: 2, start: 1.5 }] },
       { base: 1, tiers: [{ price: Number.POSITIVE_INFINITY, start: 100 }] },
-      {
-        base: 1,
-        tiers: [
-          { price: 3, start: 200 },
-          { price: 2, start: 100 },
-        ],
-      },
     ]) {
       expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
         'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
       )
     }
+  })
+
+  it('normalizes unsorted tiered prices without mutating caller data', () => {
+    const tieredPrice = {
+      base: 1,
+      tiers: [
+        { price: 3, start: 200 },
+        { price: 2, start: 100 },
+      ],
+    }
+
+    expect(collectResolvedModelPrices({ input_mtok: tieredPrice }, registry)).toEqual([
+      {
+        price: {
+          base: 1,
+          tiers: [
+            { price: 2, start: 100 },
+            { price: 3, start: 200 },
+          ],
+        },
+        unit: registry.getUnit('input_tokens'),
+      },
+    ])
+    expect(tieredPrice.tiers.map(({ start }) => start)).toEqual([200, 100])
   })
 
   it('retains zero flat and tiered price values', () => {
