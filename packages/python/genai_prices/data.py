@@ -2730,6 +2730,19 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-3.1-flash-live-preview',
+                match=ClauseEquals(equals='gemini-3.1-flash-live-preview'),
+                name='Gemini 3.1 Flash Live Preview',
+                description="Google's low-latency audio-to-audio model for real-time dialogue with acoustic nuance detection, numeric precision, and multimodal awareness.",
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.75'),
+                    output_mtok=Decimal('4.5'),
+                    input_audio_mtok=Decimal('3'),
+                    output_audio_mtok=Decimal('12'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-3.1-pro-preview',
                 match=ClauseStartsWith(starts_with='gemini-3.1-pro-preview'),
                 name='Gemini 3.1 Pro Preview',
@@ -2817,6 +2830,7 @@ providers: list[Provider] = [
                     or_=[
                         ClauseStartsWith(starts_with='gemini-live-2.5-flash'),
                         ClauseStartsWith(starts_with='gemini-2.5-flash-native-audio-preview'),
+                        ClauseEquals(equals='gemini-2.5-flash-native-audio-latest'),
                     ]
                 ),
                 name='Gemini Live 2.5 Flash',
@@ -6995,8 +7009,8 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-realtime-2',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-realtime-2')]),
-                price_comments="Missing image token prices which we don't support yet",
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-realtime-2'), ClauseEquals(equals='gpt-realtime-2.1')]),
+                price_comments="Missing image token prices which we don't support yet. See https://developers.openai.com/api/docs/models/gpt-realtime-2 and https://developers.openai.com/api/docs/models/gpt-realtime-2.1.",
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_read_mtok=Decimal('0.4'),
@@ -7004,6 +7018,19 @@ providers: list[Provider] = [
                     input_audio_mtok=Decimal('32'),
                     cache_audio_read_mtok=Decimal('0.4'),
                     output_audio_mtok=Decimal('64'),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-realtime-2.1-mini',
+                match=ClauseEquals(equals='gpt-realtime-2.1-mini'),
+                price_comments='See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'),
+                    cache_read_mtok=Decimal('0.06'),
+                    output_mtok=Decimal('2.4'),
+                    input_audio_mtok=Decimal('10'),
+                    cache_audio_read_mtok=Decimal('0.3'),
+                    output_audio_mtok=Decimal('20'),
                 ),
             ),
             ModelInfo(

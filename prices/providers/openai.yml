@@ -1091,8 +1091,12 @@ models:
     match:
       or:
         - equals: gpt-realtime-2
-    price_comments: Missing image token prices which we don't support yet
-    prices_checked: 2026-06-26
+        - equals: gpt-realtime-2.1
+    price_comments: >-
+      Missing image token prices which we don't support yet. See
+      https://developers.openai.com/api/docs/models/gpt-realtime-2 and
+      https://developers.openai.com/api/docs/models/gpt-realtime-2.1.
+    prices_checked: 2026-07-28
     prices:
       input_mtok: 4
       cache_read_mtok: 0.4
@@ -1100,6 +1104,20 @@ models:
       input_audio_mtok: 32
       cache_audio_read_mtok: 0.4
       output_audio_mtok: 64
+
+  - id: gpt-realtime-2.1-mini
+    match:
+      equals: gpt-realtime-2.1-mini
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini
+    prices_checked: 2026-07-28
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.06
+      output_mtok: 2.4
+      input_audio_mtok: 10
+      cache_audio_read_mtok: 0.3
+      output_audio_mtok: 20
 
   - id: gpt-realtime-mini
     match:
