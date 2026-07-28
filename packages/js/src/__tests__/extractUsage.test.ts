@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { Provider } from '../types'
 
@@ -7,6 +7,10 @@ import { data } from '../data'
 import { extractUsage } from '../index'
 
 const anthropicProvider: Provider = data.find((provider) => provider.id === 'anthropic')!
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('extractUsage', () => {
   describe('successful extraction', () => {
@@ -260,6 +264,35 @@ describe('extractUsage', () => {
       expect(() => extractUsage(provider, { model: 'test-model', usage: { totals: 1 } })).toThrow(
         'Expected `usage.totals` value to be a mapping, got number'
       )
+    })
+
+    it('should warn and skip an unsupported destination before reading its required path', () => {
+      const provider: Provider = {
+        api_pattern: 'test',
+        extractors: [
+          {
+            api_flavor: 'default',
+            mappings: [{ dest: 'future_tokens', path: 'missing_tokens', required: true }],
+            model_path: 'model',
+            root: 'usage',
+          },
+        ],
+        id: 'test',
+        models: [],
+        name: 'Test',
+      }
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+      expect(extractUsage(provider, { model: 'test-model', usage: {} })).toEqual({
+        model: 'test-model',
+        usage: {},
+      })
+      expect(extractUsage(provider, { model: 'test-model', usage: {} })).toEqual({
+        model: 'test-model',
+        usage: {},
+      })
+      expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
+      expect(warn).toHaveBeenCalledTimes(1)
     })
 
     it('should skip optional nested paths with the wrong intermediate shape', () => {
