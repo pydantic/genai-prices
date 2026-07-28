@@ -203,6 +203,21 @@ describe('Core Price Calculation Function', () => {
     warn.mockRestore()
   })
 
+  it('warns once per unsupported usage key on reused usage objects', () => {
+    const usage: Usage = { future_tokens: 500, input_tokens: 1_000 }
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    calcPrice(usage, { input_mtok: 1 })
+    calcPrice(usage, { input_mtok: 1 })
+    usage.later_tokens = 200
+    calcPrice(usage, { input_mtok: 1 })
+
+    expect(warn).toHaveBeenCalledTimes(2)
+    expect(warn).toHaveBeenNthCalledWith(1, 'Unsupported usage key for standard pricing: future_tokens')
+    expect(warn).toHaveBeenNthCalledWith(2, 'Unsupported usage key for standard pricing: later_tokens')
+    warn.mockRestore()
+  })
+
   describe('calcPrice with separated input/output prices', () => {
     it('should calculate input and output prices separately', () => {
       const usage: Usage = {
