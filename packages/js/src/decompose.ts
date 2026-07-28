@@ -11,18 +11,31 @@ export function computeLeafValues(
   registry: UnitRegistry = getActiveRegistry()
 ): Record<string, number> {
   const pricedUnits = [...pricedUsageKeys]
-    .sort()
     .map((usageKey) => registry.getUnit(usageKey))
     .filter((unit): unit is UnitDef => unit !== undefined)
+    .sort(
+      (left, right) =>
+        Object.keys(right.dimensions).length - Object.keys(left.dimensions).length || left.usageKey.localeCompare(right.usageKey)
+    )
   const leafValues: Record<string, number> = {}
 
   for (const unit of pricedUnits) {
-    let leafValue = 0
+    const unitValue = getUsageValue(usage, unit.usageKey, registry)
+    let descendantLeafTotal = 0
     for (const descendant of pricedUnits) {
-      if (!isDescendantOrSelf(unit, descendant)) continue
+      if (descendant === unit || !isDescendantOrSelf(unit, descendant)) continue
 
-      const sign = (Object.keys(descendant.dimensions).length - Object.keys(unit.dimensions).length) % 2 === 0 ? 1 : -1
-      leafValue += sign * getUsageValue(usage, descendant.usageKey, registry)
+      const descendantLeafValue = leafValues[descendant.usageKey]
+      if (descendantLeafValue === undefined) {
+        throw new Error(`Missing computed leaf value for ${descendant.usageKey}`)
+      }
+      descendantLeafTotal += descendantLeafValue
+    }
+
+    let leafValue = unitValue - descendantLeafTotal
+    const roundingTolerance = Number.EPSILON * Math.max(1, Math.abs(unitValue), Math.abs(descendantLeafTotal)) * (pricedUnits.length + 1)
+    if (leafValue < 0 && Math.abs(leafValue) <= roundingTolerance) {
+      leafValue = 0
     }
 
     if (leafValue < 0) {

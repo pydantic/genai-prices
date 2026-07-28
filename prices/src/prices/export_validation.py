@@ -86,7 +86,9 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
 
         if 'per' not in raw_unit:
             raise ValueError(f'Missing per for unit {usage_key}')
-        per = cast(int, raw_unit['per'])
+        per = raw_unit['per']
+        if isinstance(per, bool) or not isinstance(per, int) or per <= 0:
+            raise ValueError(f'Invalid per for unit {usage_key}: expected a positive integer, got {per!r}')
 
         dimensions = dict(cast(Mapping[str, str], raw_unit.get('dimensions', {})))
         family_value = dimensions.get('family')

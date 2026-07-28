@@ -11,7 +11,9 @@ from typing import Any, cast
 import pydantic_core
 import ruamel.yaml
 from pydantic import ValidationError
+from pydantic.main import IncEx
 
+from genai_prices.units import UnitDef
 from prices.export_validation import validate_export_payload, validate_units
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
@@ -79,7 +81,7 @@ def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[
     model_price_properties = cast(dict[str, Any], model_price_schema['properties'])
     additional_price_schema = cast(dict[str, Any], model_price_schema['additionalProperties'])
     for unit in registry.units.values():
-        model_price_properties.setdefault(unit.price_key, copy.deepcopy(additional_price_schema))
+        model_price_properties.setdefault(unit.price_key, _unit_price_schema(unit, additional_price_schema))
 
     extractor_mapping_schema = cast(dict[str, Any], json_schema['$defs']['UsageExtractorMapping'])
     extractor_mapping_properties = cast(dict[str, Any], extractor_mapping_schema['properties'])
@@ -89,31 +91,54 @@ def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[
     return json_schema
 
 
+def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -> dict[str, Any]:
+    schema = copy.deepcopy(additional_price_schema)
+    schema['title'] = unit.price_key.replace('_', ' ').title()
+    normalization = {1_000: 'thousand', 1_000_000: 'million'}.get(unit.per, f'{unit.per:,}')
+    usage_name = unit.usage_key.replace('_', ' ')
+    schema['description'] = f'price in USD per {normalization} {usage_name}'
+    return schema
+
+
 def write_prices(
     providers: list[Provider],
     units: dict[str, Any],
     prices_file: str,
-):
+    *,
+    slim: bool = False,
+) -> None:
     print('')
     prices_json_path = package_dir / prices_file
 
-    providers_json_schema = providers_schema.json_schema(mode='serialization')
-    providers_json_schema = simplify_json_schema(providers_json_schema)
-
+    providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
     data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)
+
+    if slim:
+        provider_properties = cast(dict[str, Any], data_json_schema['$defs']['Provider']['properties'])
+        provider_properties.pop('pricing_urls')
+        provider_properties.pop('description')
+        provider_properties.pop('price_comments')
+        model_properties = cast(dict[str, Any], data_json_schema['$defs']['ModelInfo']['properties'])
+        model_properties.pop('name')
+        model_properties.pop('description')
+        model_properties.pop('price_comments')
 
     prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
     prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
     print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
 
-    provider_data = providers_schema.dump_python(
-        providers,
-        mode='json',
-        by_alias=True,
-        exclude_none=True,
-        warnings=False,
-    )
-    json_data = pydantic_core.to_json(provider_data) + b'\n'
+    exclude: IncEx | None = None
+    if slim:
+        exclude = {
+            '__all__': {
+                'pricing_url': True,
+                'description': True,
+                'price_comments': True,
+                'models': {'__all__': {'name', 'description', 'price_comments'}},
+            }
+        }
+
+    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
     current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
     if json_data != current_data:
         if current_data is not None:
