@@ -6,6 +6,7 @@ from typing import Any, cast
 
 import pytest
 
+import prices.build as build_module
 from genai_prices.data_units import unit_data
 from genai_prices.types import ModelPrice
 from genai_prices.units import UnitDef, UnitRegistry, _get_registry
@@ -84,6 +85,31 @@ def test_generated_unit_modules_are_separate_from_provider_data() -> None:
 def test_generated_unit_modules_contain_only_raw_data_types() -> None:
     assert 'UnitRegistry' not in Path('packages/python/genai_prices/data_units.py').read_text()
     assert 'UnitRegistry' not in Path('packages/js/src/dataUnits.ts').read_text()
+
+
+def test_build_keeps_writing_v1_until_v2_exists(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+    (tmp_path / 'units.yml').write_text('{}')
+    (providers_dir / 'testing.yml').write_text('id: testing\nname: Testing\napi_pattern: testing\nmodels: []\n')
+    write_calls: list[tuple[str, bool]] = []
+
+    def record_write(
+        _providers: list[build_types.Provider],
+        _units: dict[str, Any],
+        prices_file: str,
+        *,
+        slim: bool = False,
+    ) -> None:
+        write_calls.append((prices_file, slim))
+
+    monkeypatch.setattr(build_module, 'package_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'root_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'write_prices', record_write)
+
+    build_module.build()
+
+    assert write_calls == [('data.json', False), ('data_slim.json', True)]
 
 
 def test_unit_registry_indexes_bundled_units() -> None:

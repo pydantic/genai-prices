@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import copy
+import difflib
+import gzip
+import io
 from decimal import Decimal
 from operator import attrgetter
 from typing import Any, cast
@@ -8,10 +11,11 @@ from typing import Any, cast
 import pydantic_core
 import ruamel.yaml
 from pydantic import ValidationError
+from pydantic.main import IncEx
 
 from prices.export_validation import validate_export_payload, validate_units
-from prices.prices_types import Provider
-from prices.utils import package_dir, root_dir, simplify_json_schema
+from prices.prices_types import Provider, providers_schema
+from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
 
 
 def decimal_constructor(loader: ruamel.yaml.SafeLoader, node: ruamel.yaml.ScalarNode) -> Decimal:
@@ -60,6 +64,10 @@ def build():
     schema_json_path = package_dir / 'providers' / '.schema.json'
     schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
     print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
+    write_prices(providers, units, 'data.json')
+    for provider in providers:
+        provider.exclude_free()
+    write_prices(providers, units, 'data_slim.json', slim=True)
 
 
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
@@ -83,6 +91,82 @@ def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[
     dest_schema['enum'] = sorted(registry._reported_usage_keys)  # pyright: ignore[reportPrivateUsage]
 
     return json_schema
+
+
+def write_prices(
+    providers: list[Provider],
+    units: dict[str, Any],
+    prices_file: str,
+    *,
+    slim: bool = False,
+) -> None:
+    print('')
+    prices_json_path = package_dir / prices_file
+
+    providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
+    data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)
+
+    if slim:
+        provider_properties = cast(dict[str, Any], data_json_schema['$defs']['Provider']['properties'])
+        provider_properties.pop('pricing_urls')
+        provider_properties.pop('description')
+        provider_properties.pop('price_comments')
+        model_properties = cast(dict[str, Any], data_json_schema['$defs']['ModelInfo']['properties'])
+        model_properties.pop('name')
+        model_properties.pop('description')
+        model_properties.pop('price_comments')
+
+    prices_json_schema_path = prices_json_path.with_suffix('.schema.json')
+    prices_json_schema_path.write_bytes(pydantic_core.to_json(data_json_schema, indent=2) + b'\n')
+    print(f'Prices data JSON schema written to {prices_json_schema_path.relative_to(root_dir)}')
+
+    exclude: IncEx | None = None
+    if slim:
+        exclude = {
+            '__all__': {
+                'pricing_url': True,
+                'description': True,
+                'price_comments': True,
+                'models': {'__all__': {'name', 'description', 'price_comments'}},
+            }
+        }
+
+    json_data = providers_schema.dump_json(providers, by_alias=True, exclude_none=True, exclude=exclude) + b'\n'
+    current_data = prices_json_path.read_bytes() if prices_json_path.exists() else None
+    if json_data != current_data:
+        if current_data is not None:
+            diff = difflib.unified_diff(
+                pretty_providers_json(current_data),
+                pretty_providers_json(json_data),
+                fromfile='current_prices',
+                tofile='new_prices',
+            )
+            diff_str = ''.join(diff)
+            if diff_str:
+                print('Prices have the following changes:')
+                print('=' * 80)
+                print(diff_str)
+                print('=' * 80)
+            else:
+                print('Prices have whitespace/dict ordering changes')
+
+        prices_json_path.write_bytes(json_data)
+        action = 'updated'
+    else:
+        action = 'unchanged'
+
+    buffer = io.BytesIO()
+    with gzip.GzipFile(fileobj=buffer, mode='wb') as f:
+        f.write(json_data)
+    gz_len = len(buffer.getvalue())
+    print(
+        f'Prices data file {prices_json_path.relative_to(root_dir)} {action} '
+        f'({pretty_size(len(json_data))}, {pretty_size(gz_len)} gzipped)'
+    )
+
+
+def pretty_providers_json(compact_json: bytes) -> list[str]:
+    return pydantic_core.to_json(pydantic_core.from_json(compact_json), indent=2).decode().splitlines(keepends=True)
 
 
 if __name__ == '__main__':
