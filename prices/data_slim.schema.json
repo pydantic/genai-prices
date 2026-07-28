@@ -405,7 +405,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Input Text Mtok",
+          "description": "price in USD per million input text tokens"
         },
         "output_text_mtok": {
           "anyOf": [
@@ -415,7 +417,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Output Text Mtok",
+          "description": "price in USD per million output text tokens"
         },
         "cache_text_read_mtok": {
           "anyOf": [
@@ -425,7 +429,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Text Read Mtok",
+          "description": "price in USD per million cache text read tokens"
         },
         "cache_text_write_mtok": {
           "anyOf": [
@@ -435,7 +441,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Text Write Mtok",
+          "description": "price in USD per million cache text write tokens"
         },
         "cache_audio_write_mtok": {
           "anyOf": [
@@ -445,7 +453,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Audio Write Mtok",
+          "description": "price in USD per million cache audio write tokens"
         },
         "input_image_mtok": {
           "anyOf": [
@@ -455,7 +465,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Input Image Mtok",
+          "description": "price in USD per million input image tokens"
         },
         "output_image_mtok": {
           "anyOf": [
@@ -465,7 +477,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Output Image Mtok",
+          "description": "price in USD per million output image tokens"
         },
         "cache_image_read_mtok": {
           "anyOf": [
@@ -475,7 +489,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Image Read Mtok",
+          "description": "price in USD per million cache image read tokens"
         },
         "cache_image_write_mtok": {
           "anyOf": [
@@ -485,7 +501,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Image Write Mtok",
+          "description": "price in USD per million cache image write tokens"
         },
         "input_video_mtok": {
           "anyOf": [
@@ -495,7 +513,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Input Video Mtok",
+          "description": "price in USD per million input video tokens"
         },
         "output_video_mtok": {
           "anyOf": [
@@ -505,7 +525,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Output Video Mtok",
+          "description": "price in USD per million output video tokens"
         },
         "cache_video_read_mtok": {
           "anyOf": [
@@ -515,7 +537,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Video Read Mtok",
+          "description": "price in USD per million cache video read tokens"
         },
         "cache_video_write_mtok": {
           "anyOf": [
@@ -525,7 +549,9 @@
             {
               "$ref": "#/$defs/TieredPrices"
             }
-          ]
+          ],
+          "title": "Cache Video Write Mtok",
+          "description": "price in USD per million cache video write tokens"
         }
       },
       "title": "ModelPrice",

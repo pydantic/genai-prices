@@ -13,6 +13,7 @@ import ruamel.yaml
 from pydantic import ValidationError
 from pydantic.main import IncEx
 
+from genai_prices.units import UnitDef
 from prices.export_validation import validate_export_payload, validate_units
 from prices.prices_types import Provider, providers_schema
 from prices.utils import package_dir, pretty_size, root_dir, simplify_json_schema
@@ -83,7 +84,7 @@ def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[
     model_price_properties = cast(dict[str, Any], model_price_schema['properties'])
     additional_price_schema = cast(dict[str, Any], model_price_schema['additionalProperties'])
     for unit in registry.units.values():
-        model_price_properties.setdefault(unit.price_key, copy.deepcopy(additional_price_schema))
+        model_price_properties.setdefault(unit.price_key, _unit_price_schema(unit, additional_price_schema))
 
     extractor_mapping_schema = cast(dict[str, Any], json_schema['$defs']['UsageExtractorMapping'])
     extractor_mapping_properties = cast(dict[str, Any], extractor_mapping_schema['properties'])
@@ -91,6 +92,15 @@ def _add_unit_vocabulary_to_schema(json_schema: dict[str, Any], raw_units: dict[
     dest_schema['enum'] = sorted(registry._reported_usage_keys)  # pyright: ignore[reportPrivateUsage]
 
     return json_schema
+
+
+def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -> dict[str, Any]:
+    schema = copy.deepcopy(additional_price_schema)
+    schema['title'] = unit.price_key.replace('_', ' ').title()
+    normalization = {1_000: 'thousand', 1_000_000: 'million'}.get(unit.per, f'{unit.per:,}')
+    usage_name = unit.usage_key.replace('_', ' ')
+    schema['description'] = f'price in USD per {normalization} {usage_name}'
+    return schema
 
 
 def write_prices(
