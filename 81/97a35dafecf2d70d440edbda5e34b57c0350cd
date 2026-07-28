@@ -1,0 +1,21 @@
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+  s_eed050a0254107::t_af4a37a1025bed 13
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/spec.md
+  s_eed050a0254107::t_af4a37a1025bed 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "8197a35dafecf2d70d440edbda5e34b57c0350cd",
+  "prompts": {},
+  "sessions": {
+    "s_eed050a0254107": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa8ec-d8b6-7193-8735-21a39ac30a3c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
