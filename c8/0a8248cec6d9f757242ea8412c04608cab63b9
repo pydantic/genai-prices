@@ -1,0 +1,21 @@
+tests/test_units.py
+  s_eed050a0254107::t_e08beafe1f6b69 167-180
+prices/src/prices/export_validation.py
+  s_eed050a0254107::t_e08beafe1f6b69 89-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c80a8248cec6d9f757242ea8412c04608cab63b9",
+  "prompts": {},
+  "sessions": {
+    "s_eed050a0254107": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa8ec-d8b6-7193-8735-21a39ac30a3c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
