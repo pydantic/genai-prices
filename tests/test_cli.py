@@ -536,6 +536,19 @@ def test_format_model_prices_preserves_tier_text() -> None:
     assert _format_model_prices(price, split_lines=False, use_color=False).plain == '$1/input MTok (+tiers)'
 
 
+def test_format_model_prices_preserves_unregistered_candidate_keys(monkeypatch: pytest.MonkeyPatch) -> None:
+    price = ModelPrice(input_mtok=Decimal('1'), hovercraft_mtok=Decimal('2'))
+
+    assert _format_model_prices(price, split_lines=False, use_color=False).plain == (
+        '$1/input MTok, $2/hovercraft MTok'
+    )
+
+    monkeypatch.setitem(cli_module._PRICE_STYLES, 'hovercraft_mtok', 'red')
+    formatted = _format_model_prices(ModelPrice(hovercraft_mtok=Decimal('2')), split_lines=False, use_color=True)
+    assert formatted.plain == '$2/hovercraft MTok'
+    assert formatted.spans[0].style == 'red'
+
+
 def test_format_model_prices_uses_custom_registry_metadata() -> None:
     registry = UnitRegistry(
         {
