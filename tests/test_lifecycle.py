@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 
 from genai_prices.data import providers
 
@@ -62,3 +64,32 @@ def test_remote_payloads_remain_provider_arrays():
         assert isinstance(payload, list)
         assert payload
         assert all(isinstance(provider, dict) for provider in payload)
+
+
+def test_get_registry_does_not_import_provider_data():
+    """Building the active unit registry does not import the generated provider list."""
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            (
+                'import sys; '
+                'from genai_prices.units import _get_registry; '
+                '_get_registry(); '
+                "assert 'genai_prices.data' not in sys.modules"
+            ),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_generated_provider_data_import_succeeds_with_extractor_validation():
+    """Generated provider data can construct extractors while destination validation is enabled."""
+    subprocess.run(
+        [sys.executable, '-c', 'import genai_prices.data; assert genai_prices.data.providers'],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

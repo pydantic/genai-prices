@@ -61,25 +61,38 @@ def test_model_info_uses_first_conditional_price_when_none_are_active() -> None:
 @pytest.mark.parametrize(
     'model_price,usage,message',
     [
+        # Impossible usage is rejected by the registry's leaf decomposition (a descendant usage key
+        # exceeding its ancestor yields a negative leaf value). Prices carry full ancestor coverage so
+        # validation reaches the usage check rather than failing earlier on missing ancestor prices.
         (
-            ModelPrice(input_audio_mtok=Decimal('1'), cache_audio_read_mtok=Decimal('1')),
-            Usage(input_audio_tokens=1, cache_audio_read_tokens=2),
-            'cache_audio_read_tokens cannot be greater than input_audio_tokens',
+            ModelPrice(
+                input_mtok=Decimal('1'),
+                cache_read_mtok=Decimal('2'),
+                input_audio_mtok=Decimal('3'),
+                cache_audio_read_mtok=Decimal('4'),
+            ),
+            Usage(input_tokens=10, cache_read_tokens=5, input_audio_tokens=1, cache_audio_read_tokens=2),
+            r'cache_audio_read_tokens \(2\) cannot exceed input_audio_tokens \(1\)',
         ),
         (
-            ModelPrice(cache_read_mtok=Decimal('1'), cache_audio_read_mtok=Decimal('1')),
-            Usage(cache_read_tokens=1, cache_audio_read_tokens=2),
-            'cache_audio_read_tokens cannot be greater than cache_read_tokens',
+            ModelPrice(
+                input_mtok=Decimal('1'),
+                cache_read_mtok=Decimal('2'),
+                input_audio_mtok=Decimal('3'),
+                cache_audio_read_mtok=Decimal('4'),
+            ),
+            Usage(input_tokens=10, cache_read_tokens=1, input_audio_tokens=5, cache_audio_read_tokens=2),
+            r'cache_audio_read_tokens \(2\) cannot exceed cache_read_tokens \(1\)',
         ),
         (
             ModelPrice(input_mtok=Decimal('1'), cache_write_mtok=Decimal('1')),
             Usage(input_tokens=1, cache_write_tokens=2),
-            'Uncached text input tokens cannot be negative',
+            r'cache_write_tokens \(2\) cannot exceed input_tokens \(1\)',
         ),
         (
             ModelPrice(output_mtok=Decimal('1'), output_audio_mtok=Decimal('1')),
             Usage(output_tokens=1, output_audio_tokens=2),
-            'output_audio_tokens cannot be greater than output_tokens',
+            r'output_audio_tokens \(2\) cannot exceed output_tokens \(1\)',
         ),
     ],
 )
@@ -237,26 +250,35 @@ def test_model_price_charges_unpriced_descendants_through_parent() -> None:
     }
 
 
-def test_cache_audio_read_without_specific_price_uses_one_parent_bucket() -> None:
+def test_cache_audio_read_without_specific_price_requires_join_price() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Missing join price for cache_read_tokens and input_audio_tokens: cache_audio_read_tokens',
+    ):
+        ModelPrice(
+            input_mtok=Decimal('1'),
+            cache_read_mtok=Decimal('2'),
+            input_audio_mtok=Decimal('3'),
+        ).calc_price(
+            Usage(
+                input_tokens=1_000,
+                cache_read_tokens=400,
+                input_audio_tokens=300,
+                cache_audio_read_tokens=100,
+            )
+        )
+
+
+def test_pricing_rejects_missing_join_usage_when_join_is_priced() -> None:
     price = ModelPrice(
         input_mtok=Decimal('1'),
         cache_read_mtok=Decimal('2'),
         input_audio_mtok=Decimal('3'),
-    ).calc_price(
-        Usage(
-            input_tokens=1_000,
-            cache_read_tokens=400,
-            input_audio_tokens=300,
-            cache_audio_read_tokens=100,
-        )
+        cache_audio_read_mtok=Decimal('4'),
     )
 
-    expected_input = mtok('1', 400) + mtok('2', 400) + mtok('3', 200)
-    assert price == {
-        'input_price': expected_input,
-        'output_price': Decimal('0'),
-        'total_price': expected_input,
-    }
+    with pytest.raises(ValueError, match='Missing usage for cache_audio_read_tokens'):
+        price.calc_price(Usage(input_tokens=1_000, cache_read_tokens=400, input_audio_tokens=300))
 
 
 def test_tiered_price_regression_uses_provided_input_token_threshold() -> None:
