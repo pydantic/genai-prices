@@ -58,6 +58,46 @@ describe('collectResolvedModelPrices', () => {
     ])
   })
 
+  it('rejects invalid recognized flat price values', () => {
+    for (const price of [Number.NaN, Number.POSITIVE_INFINITY, -1, null, '1']) {
+      expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
+        'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
+      )
+    }
+  })
+
+  it('rejects malformed recognized tiered price values', () => {
+    for (const price of [
+      { base: Number.NaN, tiers: [] },
+      { base: 1, tiers: null },
+      { base: 1, tiers: [{ price: 2, start: -1 }] },
+      { base: 1, tiers: [{ price: Number.POSITIVE_INFINITY, start: 100 }] },
+      {
+        base: 1,
+        tiers: [
+          { price: 3, start: 200 },
+          { price: 2, start: 100 },
+        ],
+      },
+    ]) {
+      expect(() => collectResolvedModelPrices({ input_mtok: price } as ModelPrice, registry)).toThrow(
+        'Invalid price value for input_mtok: expected a finite non-negative number or valid tiered prices'
+      )
+    }
+  })
+
+  it('retains zero flat and tiered price values', () => {
+    const tieredPrice: TieredPrices = {
+      base: 0,
+      tiers: [{ price: 0, start: 100_000 }],
+    }
+
+    expect(collectResolvedModelPrices({ input_mtok: 0, output_mtok: tieredPrice }, registry)).toEqual([
+      { price: 0, unit: registry.getUnit('input_tokens') },
+      { price: tieredPrice, unit: registry.getUnit('output_tokens') },
+    ])
+  })
+
   it('uses the explicit registry and warns for unknown keys', () => {
     const customRegistry = new UnitRegistry({
       widgets: {

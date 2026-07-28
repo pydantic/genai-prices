@@ -31,12 +31,43 @@ export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: Uni
       unsupportedPriceKeys.push(priceKey)
       continue
     }
-    resolvedPrices.push({ price, unit })
+    resolvedPrices.push({ price: validatePriceValue(priceKey, price), unit })
   }
   if (unsupportedPriceKeys.length) {
     console.warn(`Unsupported price key for standard pricing: ${unsupportedPriceKeys.sort().join(', ')}`)
   }
   return resolvedPrices
+}
+
+function validatePriceValue(priceKey: string, price: unknown): number | TieredPrices {
+  if (isValidPriceNumber(price)) return price
+  if (!isRecord(price) || !isValidPriceNumber(price.base) || !Array.isArray(price.tiers)) {
+    throw invalidPriceValueError(priceKey)
+  }
+
+  let previousStart = -1
+  for (const tier of price.tiers) {
+    if (!isRecord(tier)) throw invalidPriceValueError(priceKey)
+    const { price: tierPrice, start } = tier
+    if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || start < previousStart || !isValidPriceNumber(tierPrice)) {
+      throw invalidPriceValueError(priceKey)
+    }
+    previousStart = start
+  }
+
+  return price as unknown as TieredPrices
+}
+
+function invalidPriceValueError(priceKey: string): Error {
+  return new Error(`Invalid price value for ${priceKey}: expected a finite non-negative number or valid tiered prices`)
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function isValidPriceNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0
 }
 
 /**
