@@ -324,7 +324,7 @@
         },
         "removed": {
           "default": false,
-          "description": "Flag indicating this model has been removed and is no longer available. Excluded from data.json.",
+          "description": "Flag indicating this model has been removed and is no longer available. Excluded from generated price data.",
           "title": "Removed",
           "type": "boolean"
         }
@@ -338,7 +338,16 @@
       "type": "object"
     },
     "ModelPrice": {
-      "additionalProperties": false,
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "$ref": "#/$defs/TieredPrices"
+          }
+        ]
+      },
       "description": "Set of prices for using a model",
       "properties": {
         "input_mtok": {
@@ -429,6 +438,162 @@
           "type": "number",
           "description": "price in USD per thousand requests",
           "title": "Requests Kcount"
+        },
+        "input_text_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Text Mtok",
+          "description": "price in USD per million input text tokens"
+        },
+        "output_text_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Text Mtok",
+          "description": "price in USD per million output text tokens"
+        },
+        "cache_text_read_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Text Read Mtok",
+          "description": "price in USD per million cache text read tokens"
+        },
+        "cache_text_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Text Write Mtok",
+          "description": "price in USD per million cache text write tokens"
+        },
+        "cache_audio_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Audio Write Mtok",
+          "description": "price in USD per million cache audio write tokens"
+        },
+        "input_image_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Image Mtok",
+          "description": "price in USD per million input image tokens"
+        },
+        "output_image_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Image Mtok",
+          "description": "price in USD per million output image tokens"
+        },
+        "cache_image_read_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Image Read Mtok",
+          "description": "price in USD per million cache image read tokens"
+        },
+        "cache_image_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Image Write Mtok",
+          "description": "price in USD per million cache image write tokens"
+        },
+        "input_video_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Video Mtok",
+          "description": "price in USD per million input video tokens"
+        },
+        "output_video_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Video Mtok",
+          "description": "price in USD per million output video tokens"
+        },
+        "cache_video_read_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Video Read Mtok",
+          "description": "price in USD per million cache video read tokens"
+        },
+        "cache_video_write_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Cache Video Write Mtok",
+          "description": "price in USD per million cache video write tokens"
         }
       },
       "title": "ModelPrice",
@@ -621,17 +786,30 @@
         },
         "dest": {
           "description": "Destination field to store the extracted value.\n\nIf multiple mappings point to the same destination, the values are summed.",
-          "enum": [
-            "input_tokens",
-            "cache_write_tokens",
-            "cache_read_tokens",
-            "output_tokens",
-            "input_audio_tokens",
-            "cache_audio_read_tokens",
-            "output_audio_tokens"
-          ],
           "title": "Dest",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "cache_audio_read_tokens",
+            "cache_audio_write_tokens",
+            "cache_image_read_tokens",
+            "cache_image_write_tokens",
+            "cache_read_tokens",
+            "cache_text_read_tokens",
+            "cache_text_write_tokens",
+            "cache_video_read_tokens",
+            "cache_video_write_tokens",
+            "cache_write_tokens",
+            "input_audio_tokens",
+            "input_image_tokens",
+            "input_text_tokens",
+            "input_tokens",
+            "input_video_tokens",
+            "output_audio_tokens",
+            "output_image_tokens",
+            "output_text_tokens",
+            "output_tokens",
+            "output_video_tokens"
+          ]
         },
         "required": {
           "default": true,
