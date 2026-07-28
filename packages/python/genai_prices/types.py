@@ -854,10 +854,37 @@ def _collect_resolved_model_prices(
         )
 
     return tuple(
-        (registry.unit_for_price_key(price_key), cast(Decimal | TieredPrices, value))
+        (registry.unit_for_price_key(price_key), _validate_model_price_value(price_key, value))
         for price_key, value in stored_prices
         if price_key not in unknown_price_keys
     )
+
+
+def _validate_model_price_value(price_key: str, value: object) -> Decimal | TieredPrices:
+    if _is_valid_price_decimal(value):
+        return value
+    if isinstance(value, TieredPrices):
+        previous_start = -1
+        for tier in value.tiers:
+            if (
+                type(tier.start) is not int
+                or tier.start < 0
+                or tier.start < previous_start
+                or not _is_valid_price_decimal(tier.price)
+            ):
+                break
+            previous_start = tier.start
+        else:
+            if _is_valid_price_decimal(value.base):
+                return value
+
+    raise ValueError(
+        f'Invalid price value for {price_key}: expected a finite non-negative Decimal or valid tiered prices'
+    )
+
+
+def _is_valid_price_decimal(value: object) -> TypeGuard[Decimal]:
+    return isinstance(value, Decimal) and value.is_finite() and value >= 0
 
 
 def _compute_registry_priced_counts(

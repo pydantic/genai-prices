@@ -311,7 +311,7 @@ def test_model_price_str_requests_and_private_state() -> None:
 
 
 def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
-    price = ModelPrice(hovercraft_mtok=Decimal('1'))
+    price = ModelPrice(hovercraft_mtok=Decimal('NaN'))
 
     with pytest.warns(UserWarning, match='Unsupported price key for standard pricing: hovercraft_mtok'):
         result = price.calc_price(Usage(input_tokens=1))
@@ -321,6 +321,33 @@ def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
         'output_price': Decimal(0),
         'total_price': Decimal(0),
     }
+
+
+@pytest.mark.parametrize('price', [Decimal('-1'), Decimal('NaN'), Decimal('Infinity')])
+def test_calc_price_rejects_invalid_recognized_flat_price(price: Decimal) -> None:
+    with pytest.raises(
+        ValueError,
+        match='Invalid price value for input_mtok: expected a finite non-negative Decimal or valid tiered prices',
+    ):
+        ModelPrice(input_mtok=price).calc_price(Usage(input_tokens=1))
+
+
+@pytest.mark.parametrize(
+    'price',
+    [
+        TieredPrices(base=Decimal('-1'), tiers=[]),
+        TieredPrices(base=Decimal('NaN'), tiers=[]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=-1, price=Decimal('2'))]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('-2'))]),
+        TieredPrices(base=Decimal('1'), tiers=[Tier(start=100, price=Decimal('Infinity'))]),
+    ],
+)
+def test_calc_price_rejects_invalid_recognized_tiered_price(price: TieredPrices) -> None:
+    with pytest.raises(
+        ValueError,
+        match='Invalid price value for input_mtok: expected a finite non-negative Decimal or valid tiered prices',
+    ):
+        ModelPrice(input_mtok=price).calc_price(Usage(input_tokens=1))
 
 
 def test_calc_price_rejects_dynamic_descendant_without_ancestors() -> None:
