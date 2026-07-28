@@ -131,6 +131,24 @@ describe('computeLeafValues', () => {
     })
   })
 
+  it('normalizes negligible floating-point residuals to zero', () => {
+    expect(
+      computeLeafValues(
+        new Set(['input_audio_tokens', 'input_image_tokens', 'input_tokens']),
+        normalizeUsage({
+          input_audio_tokens: 0.2,
+          input_image_tokens: 0.1,
+          input_tokens: 0.3,
+        }),
+        getActiveRegistry()
+      )
+    ).toEqual({
+      input_audio_tokens: 0.2,
+      input_image_tokens: 0.1,
+      input_tokens: 0,
+    })
+  })
+
   it('ignores unpriced reported descendants when priced ancestors cover them', () => {
     expect(
       computeLeafValues(
