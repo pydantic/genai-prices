@@ -1,0 +1,19 @@
+prices/src/prices/build.py
+  s_510cc7527ddb30::t_720bdd57b0fe1d 63-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "014357919e853d6ac24011aac653e27aa3a04f33",
+  "prompts": {},
+  "sessions": {
+    "s_510cc7527ddb30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa949-342f-7000-b5a3-dd759c1a7049",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
