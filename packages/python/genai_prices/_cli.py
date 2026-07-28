@@ -665,13 +665,28 @@ def _format_model_price_value(model_price: ModelPrice, field_name: str, *, use_c
 
 def _format_model_prices(model_price: ModelPrice, *, split_lines: bool, use_color: bool) -> Text:
     parts = Text()
-    for unit in _iter_model_price_units(model_price):
+    priced_units = _iter_model_price_units(model_price)
+    for unit in priced_units:
         value = getattr(model_price, unit.price_key)
         if parts:
             parts.append('\n' if split_lines else ', ')
 
         style = _PRICE_STYLES.get(unit.price_key) if use_color else None
         text = _format_model_price_line(value, unit)
+        if style:
+            parts.append(text, style=style)
+        else:
+            parts.append(text)
+
+    registered_price_keys = {unit.price_key for unit in priced_units}
+    for price_key, value in _iter_extra_model_price_items(model_price):
+        if value is None or price_key in registered_price_keys:
+            continue
+        if parts:
+            parts.append('\n' if split_lines else ', ')
+
+        style = _PRICE_STYLES.get(price_key) if use_color else None
+        text = _format_unregistered_model_price_line(value, price_key)
         if style:
             parts.append(text, style=style)
         else:
@@ -694,6 +709,13 @@ def _format_model_price_line(value: object, unit: UnitDef) -> str:
     if unit.dimensions.get('family') == 'requests':
         return f'${base_value} / {per_label} {unit_name}{suffix}'
     return f'${base_value}/{unit_name} {per_label}{suffix}'
+
+
+def _format_unregistered_model_price_line(value: object, price_key: str) -> str:
+    base_value = value.base if isinstance(value, TieredPrices) else value
+    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
+    name = price_key.replace('_mtok', '').replace('_', ' ')
+    return f'${base_value}/{name} MTok{suffix}'
 
 
 def _unit_for_price_key(price_key: str) -> UnitDef | None:

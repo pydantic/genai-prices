@@ -1,4 +1,16 @@
+from pydantic_core import from_json
+
+from genai_prices.types import _providers_from_raw
 from prices import build as build_module
+from prices.utils import package_dir as prices_package_dir
+
+
+def test_legacy_provider_payload_remains_runtime_compatible() -> None:
+    raw_providers = from_json((prices_package_dir / 'data.json').read_bytes())
+    providers = _providers_from_raw(raw_providers)
+
+    assert providers
+    assert all(provider.id for provider in providers)
 
 
 def test_provider_yaml_schema_suggests_registry_price_keys_from_units() -> None:
@@ -20,7 +32,9 @@ def test_provider_yaml_schema_suggests_registry_price_keys_from_units() -> None:
     model_price_schema = schema['$defs']['ModelPrice']
     properties = model_price_schema['properties']
     assert properties['input_mtok']['description'] == 'price in USD per million uncached text input/prompt token'
-    assert properties['sausage_mtok'] == model_price_schema['additionalProperties']
+    assert properties['sausage_mtok']['title'] == 'Sausage Mtok'
+    assert properties['sausage_mtok']['description'] == 'price in USD per million sausage tokens'
+    assert properties['sausage_mtok']['anyOf'] == model_price_schema['additionalProperties']['anyOf']
     assert isinstance(model_price_schema['additionalProperties'], dict)
 
 

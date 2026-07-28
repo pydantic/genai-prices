@@ -7,6 +7,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
+from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
@@ -213,6 +214,7 @@ class Usage:
     @classmethod
     def from_raw(cls, obj: object) -> Usage:
         if isinstance(obj, Usage):
+            obj._reported_values()
             return obj
 
         values: dict[str, int] = {}
@@ -236,15 +238,20 @@ class Usage:
         raise AttributeError(f'{type(self).__name__!r} object has no attribute {name!r}')
 
     def _store_values(self, values: Mapping[str, int | None]) -> None:
+        reported_usage_keys = _reported_usage_keys()
         for key, value in values.items():
             if value is None:
                 self.__dict__.pop(key, None)
+            elif key in reported_usage_keys:
+                self.__dict__[key] = _validate_usage_value(key, value)
             else:
                 self.__dict__[key] = value
 
     def _reported_values(self) -> dict[str, int]:
         reported_usage_keys = _reported_usage_keys()
-        return {key: cast(int, value) for key, value in self.__dict__.items() if key in reported_usage_keys}
+        return {
+            key: _validate_usage_value(key, value) for key, value in self.__dict__.items() if key in reported_usage_keys
+        }
 
     def reported_value(self, usage_key: str) -> int:
         return self._reported_values().get(usage_key, 0)
@@ -322,6 +329,12 @@ class Usage:
             f'Missing usage for {usage_key}: reported descendant usage keys {reported_keys} '
             f'require explicit {usage_key}'
         )
+
+
+def _validate_usage_value(usage_key: str, value: object) -> int:
+    if isinstance(value, bool) or not isinstance(value, Integral) or value < 0:
+        raise ValueError(f'Invalid usage value for {usage_key}: expected a non-negative integer')
+    return int(value)
 
 
 def _reported_overlap_keys_for_join(
@@ -709,6 +722,16 @@ class ModelPrice:
         parts = [f'{key}={value!r}' for key, value in self.__dict__.items() if value is not None]
         return f'{type(self).__name__}({", ".join(parts)})'
 
+    def __eq__(self, other: object) -> Any:
+        if type(other) is not type(self):
+            return NotImplemented
+
+        assert isinstance(other, ModelPrice)
+        return self._comparable_values() == other._comparable_values()
+
+    def _comparable_values(self) -> dict[str, object]:
+        return {key: value for key, value in self.__dict__.items() if not key.startswith('_') and value is not None}
+
     def calc_price(self, usage: AbstractUsage) -> CalcPrice:
         """Calculate the price of usage in USD with this model price."""
         from genai_prices.units import _get_registry  # pyright: ignore[reportPrivateUsage]
@@ -844,10 +867,37 @@ def _collect_resolved_model_prices(
         )
 
     return tuple(
-        (registry.unit_for_price_key(price_key), cast(Decimal | TieredPrices, value))
+        (registry.unit_for_price_key(price_key), _validate_model_price_value(price_key, value))
         for price_key, value in stored_prices
         if price_key not in unknown_price_keys
     )
+
+
+def _validate_model_price_value(price_key: str, value: object) -> Decimal | TieredPrices:
+    if _is_valid_price_decimal(value):
+        return value
+    if isinstance(value, TieredPrices):
+        previous_start = -1
+        for tier in value.tiers:
+            if (
+                type(tier.start) is not int
+                or tier.start < 0
+                or tier.start < previous_start
+                or not _is_valid_price_decimal(tier.price)
+            ):
+                break
+            previous_start = tier.start
+        else:
+            if _is_valid_price_decimal(value.base):
+                return value
+
+    raise ValueError(
+        f'Invalid price value for {price_key}: expected a finite non-negative Decimal or valid tiered prices'
+    )
+
+
+def _is_valid_price_decimal(value: object) -> TypeGuard[Decimal]:
+    return isinstance(value, Decimal) and value.is_finite() and value >= 0
 
 
 def _compute_registry_priced_counts(

@@ -1,4 +1,5 @@
 import { computeLeafValues } from './decompose'
+import { utcTimeOfDaySeconds } from './timeOfDay'
 import {
   MatchLogic,
   ModelInfo,
@@ -6,6 +7,7 @@ import {
   ModelPriceCalculationResult,
   Provider,
   ProviderFindOptions,
+  Tier,
   TieredPrices,
   UnitDef,
   Usage,
@@ -30,12 +32,43 @@ export function collectResolvedModelPrices(modelPrice: ModelPrice, registry: Uni
       unsupportedPriceKeys.push(priceKey)
       continue
     }
-    resolvedPrices.push({ price, unit })
+    resolvedPrices.push({ price: validatePriceValue(priceKey, price), unit })
   }
   if (unsupportedPriceKeys.length) {
     console.warn(`Unsupported price key for standard pricing: ${unsupportedPriceKeys.sort().join(', ')}`)
   }
   return resolvedPrices
+}
+
+function validatePriceValue(priceKey: string, price: unknown): number | TieredPrices {
+  if (isValidPriceNumber(price)) return price
+  if (!isRecord(price) || !isValidPriceNumber(price.base) || !Array.isArray(price.tiers)) {
+    throw invalidPriceValueError(priceKey)
+  }
+
+  const tiers: Tier[] = []
+  for (const tier of price.tiers) {
+    if (!isRecord(tier)) throw invalidPriceValueError(priceKey)
+    const { price: tierPrice, start } = tier
+    if (typeof start !== 'number' || !Number.isSafeInteger(start) || start < 0 || !isValidPriceNumber(tierPrice)) {
+      throw invalidPriceValueError(priceKey)
+    }
+    tiers.push({ price: tierPrice, start })
+  }
+
+  return new TieredPrices({ base: price.base, tiers })
+}
+
+function invalidPriceValueError(priceKey: string): Error {
+  return new Error(`Invalid price value for ${priceKey}: expected a finite non-negative number or valid tiered prices`)
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function isValidPriceNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0
 }
 
 /**
@@ -124,6 +157,9 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
   if (!Array.isArray(model.prices)) {
     return model.prices
   }
+  if (Number.isNaN(timestamp.getTime())) {
+    throw new RangeError('Invalid time value')
+  }
   // Conditional prices: last active wins
   for (let i = model.prices.length - 1; i >= 0; i--) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -139,20 +175,23 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
         return cond.prices
       }
     } else {
-      // Extract UTC time to match constraint times which are in UTC (with 'Z' suffix)
-      const t = timestamp.toISOString().slice(11, 19) // Get "HH:MM:SS" from ISO string
-      const startTime = constraint.start_time
-      const endTime = constraint.end_time
+      const time =
+        timestamp.getUTCHours() * 3_600 +
+        timestamp.getUTCMinutes() * 60 +
+        timestamp.getUTCSeconds() +
+        timestamp.getUTCMilliseconds() / 1_000
+      const startTime = utcTimeOfDaySeconds(constraint.start_time)
+      const endTime = utcTimeOfDaySeconds(constraint.end_time)
 
       // Handle time ranges that span midnight (end time < start time)
       if (endTime < startTime) {
         // Time is in range if it's >= start OR < end
-        if (t >= startTime || t < endTime) {
+        if (time >= startTime || time < endTime) {
           return cond.prices
         }
       } else {
         // Normal time range (start <= time < end)
-        if (t >= startTime && t < endTime) {
+        if (time >= startTime && time < endTime) {
           return cond.prices
         }
       }
