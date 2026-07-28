@@ -1,0 +1,55 @@
+packages/js/src/__tests__/usage.test.ts
+  s_eed050a0254107::t_adc00c8eaee28b 141-143,146,155
+packages/js/src/__tests__/decompose.test.ts
+  s_eed050a0254107::t_adc00c8eaee28b 6,86-150
+  s_eed050a0254107::t_c643a0034494f9 151
+packages/js/src/usage.ts
+  s_eed050a0254107::t_adc00c8eaee28b 102-104,109
+packages/python/genai_prices/_cli.py
+  s_eed050a0254107::t_adc00c8eaee28b 674-675,686-699,720-724
+  s_eed050a0254107::t_65e2c65400ad74 725-726
+packages/python/genai_prices/units.py
+  s_eed050a0254107::t_adc00c8eaee28b 9,14-17
+tests/test_custom_prices.py
+  s_eed050a0254107::t_adc00c8eaee28b 314-326
+packages/js/src/types.ts
+  s_eed050a0254107::t_adc00c8eaee28b 32-33
+tests/test_cli.py
+  s_eed050a0254107::t_adc00c8eaee28b 539-551
+packages/js/src/__tests__/calcPrice.test.ts
+  s_eed050a0254107::t_adc00c8eaee28b 3,5,61-100,117-173,398-414
+  s_eed050a0254107::t_9d12e50229fffc 415-419
+tests/test_decompose.py
+  s_eed050a0254107::t_adc00c8eaee28b 3-4,85-107
+  s_eed050a0254107::t_0f17a863a4c1a9 108-109
+packages/python/genai_prices/types.py
+  s_eed050a0254107::t_adc00c8eaee28b 712-721
+packages/python/genai_prices/decompose.py
+  s_eed050a0254107::t_adc00c8eaee28b 16-19,23,25,27
+tests/test_units.py
+  s_eed050a0254107::t_adc00c8eaee28b 2,211-227
+  s_eed050a0254107::t_f374e9cdee0e6e 11
+  s_eed050a0254107::t_e346f5f61a1b55 228-229
+packages/js/src/decompose.ts
+  s_eed050a0254107::t_adc00c8eaee28b 16-19,23-24,26,28-38
+packages/js/src/timeOfDay.ts
+  s_eed050a0254107::t_adc00c8eaee28b 1-17
+packages/js/src/engine.ts
+  s_eed050a0254107::t_adc00c8eaee28b 2,34,42-72,159-161,177-183,188,193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "9f38d57d24752e1d8e6d6919bd3d2517b3e7f400",
+  "prompts": {},
+  "sessions": {
+    "s_eed050a0254107": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa8ec-d8b6-7193-8735-21a39ac30a3c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
