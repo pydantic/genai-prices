@@ -34,6 +34,16 @@ def test_usage_direct_construction_rejects_invalid_reported_values(value: Any) -
         Usage(input_tokens=value)
 
 
+def test_usage_direct_construction_normalizes_integer_subclasses() -> None:
+    class TokenCount(int):
+        pass
+
+    usage = Usage(input_tokens=TokenCount(100))
+
+    assert usage.input_tokens == 100
+    assert type(usage.input_tokens) is int
+
+
 def test_usage_direct_construction_warns_for_unknown_keywords() -> None:
     with pytest.warns(UserWarning, match='Unsupported usage key for standard pricing: imaginary_tokens'):
         usage = Usage(imaginary_tokens=1)

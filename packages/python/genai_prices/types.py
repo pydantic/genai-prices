@@ -7,6 +7,7 @@ from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
+from numbers import Integral
 from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, cast, overload
 
 import pydantic
@@ -331,9 +332,9 @@ class Usage:
 
 
 def _validate_usage_value(usage_key: str, value: object) -> int:
-    if type(value) is not int or value < 0:
+    if isinstance(value, bool) or not isinstance(value, Integral) or value < 0:
         raise ValueError(f'Invalid usage value for {usage_key}: expected a non-negative integer')
-    return value
+    return int(value)
 
 
 def _reported_overlap_keys_for_join(
