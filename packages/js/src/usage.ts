@@ -27,7 +27,6 @@ export function normalizeUsage(obj: unknown, registry: UnitRegistry = getActiveR
 }
 
 export function getUsageValue(usage: NormalizedUsage, usageKey: string, registry: UnitRegistry = getActiveRegistry()): number {
-  if (usageKey === 'requests') return 1
   const requestedUnit = unitForUsageKey(registry, usageKey)
 
   const storedValue = validateOptionalUsageValue(usageKey, usage[usageKey])
@@ -99,6 +98,9 @@ function unitForUsageKey(registry: UnitRegistry, usageKey: string): UnitDef {
   const unit = registry.getUnit(usageKey)
   if (!unit) {
     throw new Error(`Unknown unit usage key: ${usageKey}`)
+  }
+  if (!registry.isReportedUsageKey(usageKey)) {
+    throw new Error(`Unsupported usage key for standard pricing: ${usageKey}`)
   }
   return unit
 }
