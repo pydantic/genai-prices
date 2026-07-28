@@ -138,12 +138,12 @@ describe('getUsageValue', () => {
     expect(getUsageValue(usage, 'input_tokens')).toBe(0)
   })
 
-  it('returns one for pricing-only requests regardless of caller values', () => {
-    expect(getUsageValue({}, 'requests')).toBe(1)
-    expect(getUsageValue({ requests: 500 }, 'requests')).toBe(1)
+  it('rejects direct reads of pricing-only requests', () => {
+    expect(() => getUsageValue({}, 'requests')).toThrow('Unsupported usage key for standard pricing: requests')
+    expect(() => getUsageValue({ requests: 500 }, 'requests')).toThrow('Unsupported usage key for standard pricing: requests')
   })
 
-  it('returns one for pricing-only requests when an explicit registry has no requests unit', () => {
+  it('rejects requests as unknown when an explicit registry has no requests unit', () => {
     const registry = new UnitRegistry({
       input_tokens: {
         dimensions: { direction: 'input', family: 'tokens' },
@@ -152,7 +152,7 @@ describe('getUsageValue', () => {
       },
     })
 
-    expect(getUsageValue({}, 'requests', registry)).toBe(1)
+    expect(() => getUsageValue({}, 'requests', registry)).toThrow('Unknown unit usage key: requests')
   })
 
   it('raises for missing ancestors with positive reported descendants', () => {

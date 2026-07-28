@@ -6,12 +6,15 @@ from types import MappingProxyType
 from typing import Any, cast
 
 
-@dataclass
+@dataclass(frozen=True)
 class UnitDef:
     usage_key: str
     price_key: str
     per: int
-    dimensions: dict[str, str]
+    dimensions: Mapping[str, str]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, 'dimensions', MappingProxyType(dict(self.dimensions)))
 
     def is_compatible_with(self, other: UnitDef) -> bool:
         """Return whether two units can overlap without conflicting dimensions."""
