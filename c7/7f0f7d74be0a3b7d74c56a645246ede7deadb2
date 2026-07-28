@@ -1,0 +1,65 @@
+packages/js/src/__tests__/calcPrice.test.ts
+  s_d3709b710b77c5::t_b4b0dc05af6d81 3,5,61-118,135-191,206-220,441-462
+packages/js/src/__tests__/decompose.test.ts
+  s_d3709b710b77c5::t_3b5c2e9cf40cab 6,124-189
+packages/js/src/__tests__/usage.test.ts
+  s_d3709b710b77c5::t_50ba8c8ba170f6 141-143,146,155
+packages/js/src/decompose.ts
+  s_d3709b710b77c5::t_7fa19b8e59f6c0 23-24,27,30,32-38
+packages/js/src/engine.ts
+  s_d3709b710b77c5::t_f88c06bbdd6df7 2,10,35,43-73,160-162,178-184,189,194
+packages/js/src/timeOfDay.ts
+  s_d3709b710b77c5::t_260faba16a5656 1-17
+packages/js/src/types.ts
+  s_d3709b710b77c5::t_131516688980cc 32-33
+packages/js/src/usage.ts
+  s_d3709b710b77c5::t_4ce433279e828a 7-8,10,12,15-17,108-110,115
+packages/python/genai_prices/_cli.py
+  s_d3709b710b77c5::t_52f72f7039346f 668-669,680-693,714-720
+packages/python/genai_prices/types.py
+  s_d3709b710b77c5::t_8bdc924e9e5e8a 10,217,241,245-246,252-254,334-339,725-734,870,876-902
+packages/python/genai_prices/units.py
+  s_d3709b710b77c5::t_fd93e7de5c6add 9,14-17
+prices/data_v2.schema.json
+  s_d3709b710b77c5::t_35a7cfb22a7732 426-428,438-440,450-452,462-464,474-476,486-488,498-500,510-512,522-524,534-536,546-548,558-560,570-572,582-584,594-596,606-608,618-620,630-632,642-644,654-656,666-668,678-680,690-692,702-704,714-716,726-728,738-740,750-752,762-764,774-776,786-788,798-800,810-812,822-824,834-836,846-848,858-860,870-872,882-884
+prices/providers/.schema.json
+  s_d3709b710b77c5::t_dd0cb9613d3ee3 450-452,462-464,474-476,486-488,498-500,510-512,522-524,534-536,546-548,558-560,570-572,582-584,594-596,606-608,618-620,630-632,642-644,654-656,666-668,678-680,690-692,702-704,714-716,726-728,738-740,750-752,762-764,774-776,786-788,798-800,810-812,822-824,834-836,846-848,858-860,870-872,882-884,894-896,906-908
+prices/src/prices/build.py
+  s_d3709b710b77c5::t_17abde6a8121da 14,16,63-64,84,94-102,107-109,113,116-125,130-141
+prices/src/prices/export_validation.py
+  s_d3709b710b77c5::t_8c5c854ab1b64a 90-92
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+  s_d3709b710b77c5::t_56129907bfab68 13,33
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/spec.md
+  s_d3709b710b77c5::t_2c600312fd35cd 40,96,106
+tests/test_cli.py
+  s_d3709b710b77c5::t_72d7561dd24de0 540-552
+tests/test_custom_prices.py
+  s_d3709b710b77c5::t_9cdc0fc9d4947d 314-326
+tests/test_decompose.py
+  s_d3709b710b77c5::t_d62e468d2c40c0 3-4,99-123
+tests/test_package_schema.py
+  s_d3709b710b77c5::t_88271ec274004d 1-3,5-13,35-37
+tests/test_price_calc.py
+  s_d3709b710b77c5::t_8f25ec26054d42 314,326-352
+tests/test_units.py
+  s_d3709b710b77c5::t_448566515756d3 9,29,563-576,776-794,1281-1313
+tests/test_usage.py
+  s_d3709b710b77c5::t_55fb786d23a2bb 31-46,89-95,184-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c77f0f7d74be0a3b7d74c56a645246ede7deadb2",
+  "prompts": {},
+  "sessions": {
+    "s_d3709b710b77c5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa964-2881-7123-a8fa-50c1a9b41375",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
