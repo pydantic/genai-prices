@@ -120,6 +120,42 @@ describe('provider activation', () => {
     })
   })
 
+  it('does not let a stale successful async update overwrite newer provider data', async () => {
+    let resolveStale!: (data: ProviderDataValue) => void
+    let resolveNewer!: (data: ProviderDataValue) => void
+    const staleUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveStale = resolve
+    })
+    const newerUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveNewer = resolve
+    })
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(staleUpdate)
+    })
+    const stalePromise = waitForUpdate()
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(newerUpdate)
+    })
+    const newerPromise = waitForUpdate()
+
+    const newerProvider = providerFixture('newer-provider')
+    resolveNewer([newerProvider])
+    await expect(newerPromise).resolves.toEqual([newerProvider])
+
+    const staleProvider = providerFixture('stale-provider')
+    resolveStale([staleProvider])
+    await expect(stalePromise).resolves.toEqual([newerProvider])
+    expect(waitForUpdate()).toBe(newerPromise)
+    expect(findProvider({ providerId: 'newer-provider' })?.id).toBe('newer-provider')
+    expect(findProvider({ providerId: 'stale-provider' })).toBeUndefined()
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data)
+    })
+  })
+
   it('preserves provider-array update compatibility and the generated unit registry', async () => {
     const beforeRegistry = getActiveRegistry()
     const beforeInputUnit = beforeRegistry.getUnit('input_tokens')
