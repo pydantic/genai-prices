@@ -1327,6 +1327,20 @@ providers: list[Provider] = [
                     ),
                 ],
             ),
+            ModelInfo(
+                id='writer.palmyra-x4-v1:0',
+                match=ClauseContains(contains='writer.palmyra-x4'),
+                name='Palmyra X4',
+                price_comments="Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+                prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='writer.palmyra-x5-v1:0',
+                match=ClauseContains(contains='writer.palmyra-x5'),
+                name='Palmyra X5',
+                price_comments="Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions. Ref: https://aws.amazon.com/bedrock/pricing/",
+                prices=ModelPrice(input_mtok=Decimal('0.6'), output_mtok=Decimal('6')),
+            ),
         ],
     ),
     Provider(

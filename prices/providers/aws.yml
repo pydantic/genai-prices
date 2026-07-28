@@ -916,3 +916,29 @@ models:
           cache_write_mtok: 4.125
           cache_read_mtok: 0.33
           output_mtok: 16.5
+
+  - id: writer.palmyra-x4-v1:0
+    name: Palmyra X4
+    prices_checked: 2026-07-29
+    match:
+      contains: writer.palmyra-x4
+    price_comments: >-
+      Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference
+      arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions.
+      Ref: https://aws.amazon.com/bedrock/pricing/
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: writer.palmyra-x5-v1:0
+    name: Palmyra X5
+    prices_checked: 2026-07-29
+    match:
+      contains: writer.palmyra-x5
+    price_comments: >-
+      Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference
+      arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions.
+      Ref: https://aws.amazon.com/bedrock/pricing/
+    prices:
+      input_mtok: 0.6
+      output_mtok: 6
