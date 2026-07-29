@@ -1,0 +1,34 @@
+packages/js/src/__tests__/generatedData.test.ts
+  s_6e08ade950de43::t_a36d7634590dde 85-87
+packages/js/src/__tests__/units.test.ts
+  s_6e08ade950de43::t_a36d7634590dde 105,108,112
+tests/test_package_schema.py
+  s_6e08ade950de43::t_e3ea1506851341 46-48
+tests/test_units.py
+  s_6e08ade950de43::t_a36d7634590dde 127-128,132-133,137-138,355
+packages/python/genai_prices/_cli.py
+  s_6e08ade950de43::t_a36d7634590dde 647-648
+tests/test_cli.py
+  s_6e08ade950de43::t_6acf504d38ff52 652
+  s_6e08ade950de43::t_a36d7634590dde 505-507
+prices/units.yml
+  s_6e08ade950de43::t_a36d7634590dde 196-197,200-201,204-205
+prices/src/prices/build.py
+  s_6e08ade950de43::t_e3ea1506851341 100-105,107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "22bf34ae1a5176b8e650e5519367aa7e62bc29a9",
+  "prompts": {},
+  "sessions": {
+    "s_6e08ade950de43": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fae45-56c7-7393-8a75-8ceac3106f17",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
