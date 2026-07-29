@@ -4948,7 +4948,14 @@ export const data: Provider[] = [
         description:
           "Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          regex: '^gemini-3\\.1-flash-lite(?!-image)',
+          or: [
+            {
+              equals: 'gemini-3.1-flash-lite',
+            },
+            {
+              starts_with: 'gemini-3.1-flash-lite-preview',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing.',

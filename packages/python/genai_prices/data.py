@@ -2953,7 +2953,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.1-flash-lite',
-                match=ClauseRegex(regex='^gemini-3\\.1-flash-lite(?!-image)'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.1-flash-lite'),
+                        ClauseStartsWith(starts_with='gemini-3.1-flash-lite-preview'),
+                    ]
+                ),
                 name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
