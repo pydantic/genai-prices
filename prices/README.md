@@ -6,8 +6,8 @@ The four v1 files — `data.json`, `data.schema.json`, `data_slim.json`, and `da
 compatibility artifacts. Do not move, edit, or regenerate them; existing consumers may depend on both their URLs and
 their frozen content.
 
-Current builds generate `data_v2.json`, `data_v2.schema.json`, and the Python and JavaScript package data. The v2 data
-is the provider array consumed by packages that bundle their own static unit registry.
+Current builds generate `data_v2.json`, `data_v2.schema.json`, and the Python and JavaScript package data. Packages that
+consume v2 data bundle their own static unit registry.
 
 ## Contributing
 

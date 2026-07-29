@@ -83,7 +83,7 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 
 Price data is available in the following files:
 
-- [`prices/data_v2.json`](prices/data_v2.json) - current generated provider array for packages that bundle the static unit registry
+- [`prices/data_v2.json`](prices/data_v2.json) - current generated pricing data for packages that bundle the static unit registry
 - [`prices/data_v2.schema.json`](prices/data_v2.schema.json) - JSON Schema for `prices/data_v2.json`
 - [`prices/data.json`](prices/data.json) - pinned v1 compatibility provider and model pricing data
 - [`prices/data.schema.json`](prices/data.schema.json) - pinned v1 JSON Schema for `prices/data.json`
