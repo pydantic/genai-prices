@@ -4522,6 +4522,34 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-5-opus',
+            },
+            {
+              contains: 'claude-opus-5',
+            },
+            {
+              contains: 'claude-5.0-opus',
+            },
+            {
+              contains: 'claude-opus-5.0',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'gemini-1.0-pro-vision-001',
         name: 'gemini 1.0 pro vision',
         description:
