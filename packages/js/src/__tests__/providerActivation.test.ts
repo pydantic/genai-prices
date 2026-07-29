@@ -71,6 +71,94 @@ describe('provider activation', () => {
     await expect(waitForUpdate()).rejects.toThrow('Expected null or Provider[]')
     expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
   })
+
+  it('keeps active providers when an asynchronous update returns null', async () => {
+    const stableProvider = providerFixture('stable-provider')
+    updatePrices(({ setProviderData }) => {
+      setProviderData([stableProvider])
+    })
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(Promise.resolve(null))
+    })
+
+    await expect(waitForUpdate()).resolves.toEqual([stableProvider])
+    expect(findProvider({ providerId: 'stable-provider' })?.id).toBe('stable-provider')
+  })
+
+  it('recovers waitForUpdate after the latest asynchronous update rejects', async () => {
+    const stableProvider = providerFixture('stable-provider')
+    updatePrices(({ setProviderData }) => {
+      setProviderData([stableProvider])
+    })
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(Promise.reject(new Error('update failed')))
+    })
+    const failedWait = waitForUpdate()
+
+    await expect(failedWait).rejects.toThrow('update failed')
+    await expect(waitForUpdate()).resolves.toEqual([stableProvider])
+  })
+
+  it('does not let a stale rejected update hide a newer in-flight update', async () => {
+    let rejectStale!: (error: Error) => void
+    let resolveNewer!: (data: ProviderDataValue) => void
+    const staleUpdate = new Promise<ProviderDataValue>((_resolve, reject) => {
+      rejectStale = reject
+    })
+    const newerUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveNewer = resolve
+    })
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(staleUpdate)
+    })
+    const staleWait = waitForUpdate()
+    updatePrices(({ setProviderData }) => {
+      setProviderData(newerUpdate)
+    })
+    const newerWait = waitForUpdate()
+
+    rejectStale(new Error('stale update failed'))
+    await expect(staleWait).rejects.toThrow('stale update failed')
+    expect(waitForUpdate()).toBe(newerWait)
+
+    const newerProvider = providerFixture('newer-provider')
+    resolveNewer([newerProvider])
+    await expect(newerWait).resolves.toEqual([newerProvider])
+    expect(findProvider({ providerId: 'newer-provider' })?.id).toBe('newer-provider')
+  })
+
+  it('does not let a stale successful update overwrite newer provider data', async () => {
+    let resolveStale!: (data: ProviderDataValue) => void
+    let resolveNewer!: (data: ProviderDataValue) => void
+    const staleUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveStale = resolve
+    })
+    const newerUpdate = new Promise<ProviderDataValue>((resolve) => {
+      resolveNewer = resolve
+    })
+
+    updatePrices(({ setProviderData }) => {
+      setProviderData(staleUpdate)
+    })
+    const staleWait = waitForUpdate()
+    updatePrices(({ setProviderData }) => {
+      setProviderData(newerUpdate)
+    })
+    const newerWait = waitForUpdate()
+
+    const newerProvider = providerFixture('newer-provider')
+    resolveNewer([newerProvider])
+    await expect(newerWait).resolves.toEqual([newerProvider])
+
+    resolveStale([providerFixture('stale-provider')])
+    await expect(staleWait).resolves.toEqual([newerProvider])
+    expect(waitForUpdate()).toBe(newerWait)
+    expect(findProvider({ providerId: 'newer-provider' })?.id).toBe('newer-provider')
+    expect(findProvider({ providerId: 'stale-provider' })).toBeUndefined()
+  })
 })
 
 function providerFixture(providerId: string, dest = 'input_tokens'): Provider {
