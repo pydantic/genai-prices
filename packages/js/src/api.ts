@@ -10,6 +10,7 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data.json'
 
@@ -22,18 +23,21 @@ function setProviderData(data: ProviderDataPayload) {
   if (data === null) {
     return
   }
-  if ('then' in data) {
-    providerDataPromise = data
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    data.then((data) => {
-      if (data !== null) {
-        providerData = data
-      }
-    })
+  if (typeof data === 'object' && 'then' in data) {
+    providerDataPromise = data.then((data) => (data === null ? null : activateProviderData(data)))
   } else {
-    providerDataPromise = Promise.resolve(data)
-    providerData = data
+    providerDataPromise = Promise.resolve(activateProviderData(data))
   }
+}
+
+function activateProviderData(data: Provider[]): Provider[] {
+  if (!Array.isArray(data)) {
+    throw new Error('Expected null or Provider[]')
+  }
+
+  warnUnsupportedExtractorDestinations(data)
+  providerData = data
+  return data
 }
 
 function onCalc(cb: () => void) {
