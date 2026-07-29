@@ -1,13 +1,10 @@
 # Pricing data for `genai-prices`
 
-## Pinned v1 compatibility artifacts
+## DO NOT MOVE `data.json`, `data_slim.json`, `data_v2.json`, OR `data_v2_slim.json`!
 
-The four v1 files — `data.json`, `data.schema.json`, `data_slim.json`, and `data_slim.schema.json` — are pinned
-compatibility artifacts. Do not move, edit, or regenerate them; existing consumers may depend on both their URLs and
-their frozen content.
+Or associated `.schema.json` files.
 
-Current builds generate `data_v2.json`, `data_v2.schema.json`, and the Python and JavaScript package data. Packages that
-consume v2 data bundle their own static unit registry.
+These files are downloaded by packages to auto-update prices, so their URLs must not change.
 
 ## Contributing
 
