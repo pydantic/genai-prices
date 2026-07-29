@@ -1175,13 +1175,19 @@ def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.Mo
         build_module.build()
 
 
-def test_build_writes_only_v2_price_artifacts(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_build_writes_v2_price_artifacts(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     providers_dir = tmp_path / 'providers'
     providers_dir.mkdir()
-    writes: list[str] = []
+    writes: list[tuple[str, bool]] = []
 
-    def record_write(_providers: list[build_types.Provider], _units: dict[str, Any], filename: str) -> None:
-        writes.append(filename)
+    def record_write(
+        _providers: list[build_types.Provider],
+        _units: dict[str, Any],
+        filename: str,
+        *,
+        slim: bool = False,
+    ) -> None:
+        writes.append((filename, slim))
 
     monkeypatch.setattr(build_module, 'package_dir', tmp_path)
     monkeypatch.setattr(build_module, 'root_dir', tmp_path)
@@ -1190,7 +1196,10 @@ def test_build_writes_only_v2_price_artifacts(monkeypatch: pytest.MonkeyPatch, t
 
     build_module.build()
 
-    assert writes == ['data_v2.json']
+    assert writes == [
+        ('data_v2.json', False),
+        ('data_v2_slim.json', True),
+    ]
 
 
 def test_package_ts_data_accepts_separated_inputs_without_units_yml(
