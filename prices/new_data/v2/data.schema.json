@@ -546,6 +546,198 @@
           ],
           "title": "Cache Video Write Mtok",
           "description": "price in USD per million cache video write tokens"
+        },
+        "input_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Tool Mtok",
+          "description": "price in USD per million input tool tokens"
+        },
+        "input_text_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Text Tool Mtok",
+          "description": "price in USD per million input text tool tokens"
+        },
+        "input_audio_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Audio Tool Mtok",
+          "description": "price in USD per million input audio tool tokens"
+        },
+        "input_image_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Image Tool Mtok",
+          "description": "price in USD per million input image tool tokens"
+        },
+        "input_video_tool_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Video Tool Mtok",
+          "description": "price in USD per million input video tool tokens"
+        },
+        "output_reasoning_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Reasoning Mtok",
+          "description": "price in USD per million output reasoning tokens"
+        },
+        "output_text_reasoning_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Text Reasoning Mtok",
+          "description": "price in USD per million output text reasoning tokens"
+        },
+        "output_audio_reasoning_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Audio Reasoning Mtok",
+          "description": "price in USD per million output audio reasoning tokens"
+        },
+        "output_image_reasoning_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Image Reasoning Mtok",
+          "description": "price in USD per million output image reasoning tokens"
+        },
+        "output_video_reasoning_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Video Reasoning Mtok",
+          "description": "price in USD per million output video reasoning tokens"
+        },
+        "output_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Citation Mtok",
+          "description": "price in USD per million output citation tokens"
+        },
+        "output_text_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Text Citation Mtok",
+          "description": "price in USD per million output text citation tokens"
+        },
+        "output_audio_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Audio Citation Mtok",
+          "description": "price in USD per million output audio citation tokens"
+        },
+        "output_image_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Image Citation Mtok",
+          "description": "price in USD per million output image citation tokens"
+        },
+        "output_video_citation_mtok": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Video Citation Mtok",
+          "description": "price in USD per million output video citation tokens"
+        },
+        "web_searches_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Web Searches Kcount",
+          "description": "price in USD per thousand web searches"
         }
       },
       "title": "ModelPrice",
@@ -866,15 +1058,31 @@
             "cache_video_write_tokens",
             "cache_write_tokens",
             "input_audio_tokens",
+            "input_audio_tool_tokens",
             "input_image_tokens",
+            "input_image_tool_tokens",
             "input_text_tokens",
+            "input_text_tool_tokens",
             "input_tokens",
+            "input_tool_tokens",
             "input_video_tokens",
+            "input_video_tool_tokens",
+            "output_audio_citation_tokens",
+            "output_audio_reasoning_tokens",
             "output_audio_tokens",
+            "output_citation_tokens",
+            "output_image_citation_tokens",
+            "output_image_reasoning_tokens",
             "output_image_tokens",
+            "output_reasoning_tokens",
+            "output_text_citation_tokens",
+            "output_text_reasoning_tokens",
             "output_text_tokens",
             "output_tokens",
-            "output_video_tokens"
+            "output_video_citation_tokens",
+            "output_video_reasoning_tokens",
+            "output_video_tokens",
+            "web_searches"
           ]
         },
         "required": {
