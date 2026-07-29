@@ -110,7 +110,7 @@ def test_v2_slim_payload_is_exact_projection_of_full_payload() -> None:
             exclude_none=True,
             exclude={
                 '__all__': {
-                    'pricing_url': True,
+                    'pricing_urls': True,
                     'description': True,
                     'price_comments': True,
                     'models': {'__all__': {'name', 'description', 'price_comments'}},
@@ -120,6 +120,7 @@ def test_v2_slim_payload_is_exact_projection_of_full_payload() -> None:
     )
 
     assert slim_payload == expected_slim_payload
+    assert all('pricing_urls' not in provider for provider in slim_payload)
 
 
 def test_python_unit_data_is_separate_from_provider_data():

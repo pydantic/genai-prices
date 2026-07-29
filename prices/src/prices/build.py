@@ -142,7 +142,7 @@ def write_prices(
     if slim:
         exclude = {
             '__all__': {
-                'pricing_url': True,
+                'pricing_urls': True,
                 'description': True,
                 'price_comments': True,
                 'models': {'__all__': {'name', 'description', 'price_comments'}},
