@@ -615,10 +615,12 @@ def _price_field_label(field_name: str) -> str:
 
 def _unit_display_name(unit: UnitDef) -> str:
     dimensions = unit.dimensions
+    family = dimensions.get('family')
     direction = dimensions.get('direction')
     modality = dimensions.get('modality')
     parts: list[str]
-    if dimensions.get('family') in {'requests', 'tool_calls'}:
+    use_usage_key = family == 'tool_calls' or (family != 'tokens' and direction is not None and modality is None)
+    if use_usage_key:
         parts = [unit.usage_key]
     else:
         parts = []
@@ -627,7 +629,7 @@ def _unit_display_name(unit: UnitDef) -> str:
         if modality is not None:
             parts.append(modality)
 
-    handled_dimensions = {'family', 'direction', 'modality', 'tool_type'}
+    handled_dimensions = set(dimensions) if use_usage_key else {'family', 'direction', 'modality'}
     parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
     if not parts:
         parts.append(unit.usage_key)
@@ -640,6 +642,10 @@ def _unit_per_label(unit: UnitDef) -> str:
         return 'MTok'
     if family == 'requests' and unit.per == 1_000:
         return 'K'
+    if family == 'durations' and unit.per == 60:
+        return 'Min'
+    if unit.per == 1_000_000_000:
+        return 'G'
     if unit.per == 1_000_000:
         return 'M'
     if unit.per == 1_000:
