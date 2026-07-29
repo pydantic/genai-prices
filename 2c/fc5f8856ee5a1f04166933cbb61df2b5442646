@@ -1,0 +1,91 @@
+tests/test_units.py
+  s_b03a1accada02c::t_e9173a1612980c 4,11-12,20-22,264-271,275-284,289,293,300-301,306,309,312-313,315-316,319-329,332,334,341,358,389-390,518-527,530-542
+  s_b03a1accada02c::t_bd6d50b63b2068 272-274
+  s_b03a1accada02c::t_b205fdf80b294c 543,547
+.prettierignore
+  s_b03a1accada02c::t_89087c354d8d1c 4
+README.md
+  s_b03a1accada02c::t_a080456c6a0f48 44,86-93
+package-lock.json
+  s_b03a1accada02c::t_c6faa71ba80bc9 7582
+packages/js/README.md
+  s_b03a1accada02c::t_5d5672b417aa11 34,37,39
+packages/js/package.json
+  s_b03a1accada02c::t_0e7a98a42ee853 3
+packages/js/src/__tests__/updatePricesUrl.test.ts
+  s_b03a1accada02c::t_2571a4805946b4 1,3,5,13
+packages/js/src/api.ts
+  s_b03a1accada02c::t_8f36a7f343de10 14,25-32,34-35
+packages/python/README.md
+  s_b03a1accada02c::t_913765308e832b 92,97,99-100
+packages/python/genai_prices/update_prices.py
+  s_b03a1accada02c::t_e83e30209e955e 22-24
+packages/python/pyproject.toml
+  s_b03a1accada02c::t_41aa47d616e503 7
+prices/README.md
+  s_b03a1accada02c::t_544e1fe5156853 3,5-7,9,32
+prices/new_data/v2/data.json
+  s_b03a1accada02c::t_9abbf9f0b321b8 1
+prices/new_data/v2/data_slim.json
+  s_b03a1accada02c::t_d9bfcd69cd1be9 1
+prices/new_data/v2/data_slim.schema.json
+  s_b03a1accada02c::t_cdb7edc928cab3 1-1239
+prices/providers/anthropic.yml
+  s_b03a1accada02c::t_a62c0b37f35d22 363,366-367,373
+prices/providers/google.yml
+  s_b03a1accada02c::t_bcbb7060681f57 480-498,799-801
+prices/providers/openrouter.yml
+  s_b03a1accada02c::t_f885be71c16e58 4046-4049
+prices/providers/perplexity.yml
+  s_b03a1accada02c::t_66f919ed0c984b 12-15
+prices/src/prices/build.py
+  s_b03a1accada02c::t_1f69b550e99d80 66-69,113
+prices/src/prices/package_data.py
+  s_b03a1accada02c::t_fac072f850d33e 21
+prices/src/prices/source_litellm.py
+  s_b03a1accada02c::t_b084727aa15be3 11,25
+prices/src/prices/source_openrouter.py
+  s_b03a1accada02c::t_66e326caf966fb 14,87
+prices/src/prices/utils.py
+  s_b03a1accada02c::t_eb2a09c427a8dd 28-34
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/code-spec.md
+  s_b03a1accada02c::t_b28f3c9e60ab96 33,35-36,38-39,41-45,79,82
+specs/data-driven-unit-registry/phase-1-static-unit-registry-release/spec.md
+  s_b03a1accada02c::t_9b78c474895719 106,108-109,111-114,117,120,129-130
+specs/data-driven-unit-registry/phase-2-auto-updating-units/code-spec.md
+  s_b03a1accada02c::t_8ed4bf7a7eac23 6,8-9,11-12,21,30,39,50,53
+specs/data-driven-unit-registry/phase-2-auto-updating-units/spec.md
+  s_b03a1accada02c::t_a87343f1a71d9e 12,14-15,17-18,30,32,35,54,65
+specs/data-driven-unit-registry/spec.md
+  s_b03a1accada02c::t_f3f1f577e7762a 101-102,104-105,107-108,110-113,116,119
+tests/cassettes/test_update_prices/success.yaml
+  s_b03a1accada02c::t_2890bbfc144509 16
+tests/test_extract_usage.py
+  s_b03a1accada02c::t_276e08914cd518 1138,1164-1178
+tests/test_lifecycle.py
+  s_b03a1accada02c::t_b8d19b479c0574 10,72,76-79,81-89,91-97,99-122
+tests/test_model_matching.py
+  s_b03a1accada02c::t_b93606a3f5da3b 16-18
+tests/test_price_calc.py
+  s_b03a1accada02c::t_7317c595cd8599 396-401
+tests/test_update_prices.py
+  s_b03a1accada02c::t_37101c97c66204 58
+uv.lock
+  s_b03a1accada02c::t_dec520730f6a0f 320
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2cfc5f8856ee5a1f04166933cbb61df2b5442646",
+  "prompts": {},
+  "sessions": {
+    "s_b03a1accada02c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fae4d-38df-7552-b133-8e1eddbed964",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
