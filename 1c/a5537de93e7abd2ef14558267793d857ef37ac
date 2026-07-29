@@ -1,0 +1,19 @@
+prices/README.md
+  s_fb12e63df3c91f::t_5d6910a616cd91 3,5,7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "1ca5537de93e7abd2ef14558267793d857ef37ac",
+  "prompts": {},
+  "sessions": {
+    "s_fb12e63df3c91f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa954-72e0-7761-9cc5-c16aad4e6b84",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
