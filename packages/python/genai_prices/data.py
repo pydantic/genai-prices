@@ -2720,6 +2720,25 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-5-opus'),
+                        ClauseContains(contains='claude-opus-5'),
+                        ClauseContains(contains='claude-5.0-opus'),
+                        ClauseContains(contains='claude-opus-5.0'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-1.0-pro-vision-001',
                 match=ClauseEquals(equals='gemini-1.0-pro-vision-001'),
                 name='gemini 1.0 pro vision',
