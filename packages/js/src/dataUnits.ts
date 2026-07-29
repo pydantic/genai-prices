@@ -303,6 +303,15 @@ export const unitData: RawUnitsDict = {
     per: 1000000000,
     price_key: 'input_gpixels',
   },
+  input_text_messages: {
+    dimensions: {
+      direction: 'input',
+      family: 'messages',
+      modality: 'text',
+    },
+    per: 1000,
+    price_key: 'input_text_messages_kcount',
+  },
   input_text_tokens: {
     dimensions: {
       direction: 'input',

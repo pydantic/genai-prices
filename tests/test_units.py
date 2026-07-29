@@ -123,6 +123,11 @@ NON_TOKEN_REPORTABLE_UNITS: dict[str, dict[str, Any]] = {
         'price_key': 'input_mchars',
         'dimensions': {'family': 'characters', 'direction': 'input'},
     },
+    'input_text_messages': {
+        'per': 1_000,
+        'price_key': 'input_text_messages_kcount',
+        'dimensions': {'family': 'messages', 'direction': 'input', 'modality': 'text'},
+    },
     'audio_seconds': {
         'per': 3_600,
         'price_key': 'audio_hours',
@@ -352,6 +357,7 @@ def test_unit_registry_indexes_bundled_units() -> None:
     assert registry._reported_usage_keys == frozenset(REPORTABLE_USAGE_KEYS)
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
     assert registry.unit_for_price_key('web_searches_kcount') is registry.units['web_searches']
+    assert registry.unit_for_price_key('input_text_messages_kcount') is registry.units['input_text_messages']
     assert registry.unit_for_price_key('input_audio_hours') is registry.units['input_audio_seconds']
     assert (
         registry.unit_for_price_key('input_annotated_document_kpages')

@@ -865,6 +865,18 @@
           "title": "Input Mchars",
           "description": "price in USD per million input characters"
         },
+        "input_text_messages_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Text Messages Kcount",
+          "description": "price in USD per thousand input text messages"
+        },
         "audio_hours": {
           "anyOf": [
             {
@@ -1332,6 +1344,7 @@
             "input_image_tokens",
             "input_image_tool_tokens",
             "input_pixels",
+            "input_text_messages",
             "input_text_tokens",
             "input_text_tool_tokens",
             "input_tokens",

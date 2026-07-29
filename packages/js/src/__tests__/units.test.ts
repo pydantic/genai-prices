@@ -109,6 +109,7 @@ const nonTokenReportableUnits = {
   input_characters: 'input_mchars',
   input_document_pages: 'input_document_kpages',
   input_pixels: 'input_gpixels',
+  input_text_messages: 'input_text_messages_kcount',
   output_audio_seconds: 'output_audio_hours',
   rerank_searches: 'rerank_searches_kcount',
   social_searches: 'social_searches_kcount',

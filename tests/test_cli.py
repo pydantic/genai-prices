@@ -505,6 +505,7 @@ def test_price_field_label_uses_bundled_registry_metadata() -> None:
     assert _price_field_label('audio_hours') == 'Audio/Hour'
     assert _price_field_label('input_audio_hours') == 'Input Audio/Hour'
     assert _price_field_label('output_audio_hours') == 'Output Audio/Hour'
+    assert _price_field_label('input_text_messages_kcount') == 'Input Text Messages/K'
     assert _price_field_label('input_gpixels') == 'Input Pixels/G'
     assert _price_field_label('input_document_kpages') == 'Input Document Pages/K'
     assert _price_field_label('input_annotated_document_kpages') == 'Input Annotated Document Pages/K'

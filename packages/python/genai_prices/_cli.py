@@ -628,6 +628,8 @@ def _unit_display_name(unit: UnitDef) -> str:
             parts.append(direction)
         if modality is not None:
             parts.append(modality)
+        if family == 'messages':
+            parts.append(family)
 
     handled_dimensions = set(dimensions) if use_usage_key else {'family', 'direction', 'modality'}
     parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
