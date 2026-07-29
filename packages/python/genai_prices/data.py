@@ -11059,6 +11059,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='perplexity/sonar-deep-research',
                 match=ClauseEquals(equals='perplexity/sonar-deep-research'),
+                price_comments='OpenRouter reports internal reasoning as a distinct $3 per million-token charge. Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'), output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')
                 ),

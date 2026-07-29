@@ -19094,6 +19094,8 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar-deep-research',
         },
+        price_comments:
+          'OpenRouter reports internal reasoning as a distinct $3 per million-token charge. Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
