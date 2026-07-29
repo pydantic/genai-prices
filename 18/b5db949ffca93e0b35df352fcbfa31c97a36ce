@@ -1,0 +1,31 @@
+tests/test_price_calc.py
+  s_a794008b85811c::t_3d2e752d8d0c29 396-401
+prices/providers/anthropic.yml
+  s_a794008b85811c::t_b79c34185ed630 363,366-367,373
+prices/data_v2.json
+  s_a794008b85811c::t_5bd0101bdff98c 1
+prices/data_v2_slim.json
+  s_a794008b85811c::t_a20a0e3717939c 1
+prices/new_data/v2/data.json
+  s_a794008b85811c::t_7e5ac2594652c6 510,515-516
+prices/new_data/v2/data_slim.json
+  s_a794008b85811c::t_f1d08b05f1e326 479-480
+packages/python/genai_prices/data.py
+  s_a794008b85811c::t_ad1fc3a8cb3556 355,361
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "18b5db949ffca93e0b35df352fcbfa31c97a36ce",
+  "prompts": {},
+  "sessions": {
+    "s_a794008b85811c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fae25-5543-78b3-892f-6d5f07fe8798",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
