@@ -352,12 +352,13 @@ providers: list[Provider] = [
                 name='Claude Opus 5',
                 description='For complex agentic coding and enterprise work',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    web_searches_kcount=Decimal('10'),
                 ),
             ),
             ModelInfo(
@@ -2720,6 +2721,25 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-opus-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseContains(contains='claude-5-opus'),
+                        ClauseContains(contains='claude-opus-5'),
+                        ClauseContains(contains='claude-5.0-opus'),
+                        ClauseContains(contains='claude-opus-5.0'),
+                    ]
+                ),
+                context_window=1000000,
+                price_comments='Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5'),
+                    cache_write_mtok=Decimal('6.25'),
+                    cache_read_mtok=Decimal('0.5'),
+                    output_mtok=Decimal('25'),
+                ),
+            ),
+            ModelInfo(
                 id='gemini-1.0-pro-vision-001',
                 match=ClauseEquals(equals='gemini-1.0-pro-vision-001'),
                 name='gemini 1.0 pro vision',
@@ -2934,7 +2954,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gemini-3.1-flash-lite',
-                match=ClauseRegex(regex='^gemini-3\\.1-flash-lite(?!-image)'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-3.1-flash-lite'),
+                        ClauseStartsWith(starts_with='gemini-3.1-flash-lite-preview'),
+                    ]
+                ),
                 name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
@@ -11034,6 +11059,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='perplexity/sonar-deep-research',
                 match=ClauseEquals(equals='perplexity/sonar-deep-research'),
+                price_comments='OpenRouter reports internal reasoning as a distinct $3 per million-token charge. Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('2'), output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')
                 ),
