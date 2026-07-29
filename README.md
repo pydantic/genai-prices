@@ -83,14 +83,14 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 
 Price data is available in the following files:
 
-- [`prices/data_v2.json`](prices/data_v2.json) - current generated pricing data for packages that bundle the static unit registry
-- [`prices/data_v2.schema.json`](prices/data_v2.schema.json) - JSON Schema for `prices/data_v2.json`
-- [`prices/data_v2_slim.json`](prices/data_v2_slim.json) - compact v2 pricing data with free models and long metadata removed
-- [`prices/data_v2_slim.schema.json`](prices/data_v2_slim.schema.json) - JSON Schema for `prices/data_v2_slim.json`
-- [`prices/data.json`](prices/data.json) - pinned v1 compatibility provider and model pricing data
-- [`prices/data.schema.json`](prices/data.schema.json) - pinned v1 JSON Schema for `prices/data.json`
-- [`prices/data_slim.json`](prices/data_slim.json) - pinned slim v1 compatibility data with long fields and free models removed
-- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - pinned v1 JSON Schema for `prices/data_slim.json`
+- [`prices/new_data/v2/data.json`](prices/new_data/v2/data.json) - current generated pricing data for packages that bundle the static unit registry
+- [`prices/new_data/v2/data.schema.json`](prices/new_data/v2/data.schema.json) - JSON Schema for the full v2 data
+- [`prices/new_data/v2/data_slim.json`](prices/new_data/v2/data_slim.json) - compact v2 pricing data with free models and long metadata removed
+- [`prices/new_data/v2/data_slim.schema.json`](prices/new_data/v2/data_slim.schema.json) - JSON Schema for the slim v2 data
+- [`prices/data.json`](prices/data.json) - v1-compatible provider and model pricing data
+- [`prices/data.schema.json`](prices/data.schema.json) - v1 JSON Schema for `prices/data.json`
+- [`prices/data_slim.json`](prices/data_slim.json) - slim v1-compatible data with long fields and free models removed
+- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - v1 JSON Schema for `prices/data_slim.json`
 
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.

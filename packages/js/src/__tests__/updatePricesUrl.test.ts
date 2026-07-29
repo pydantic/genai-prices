@@ -10,6 +10,6 @@ describe('updatePrices', () => {
       remoteDataUrl = options.remoteDataUrl
     })
 
-    expect(remoteDataUrl).toBe('https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/data_v2.json')
+    expect(remoteDataUrl).toBe('https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json')
   })
 })

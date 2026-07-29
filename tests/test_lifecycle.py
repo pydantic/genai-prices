@@ -73,9 +73,10 @@ def test_v2_remote_payloads_are_provider_arrays_with_static_unit_vocabulary():
     """V2 publishes current providers without embedding mutable unit registry state."""
     from prices.utils import package_dir
 
-    for stem in ('data_v2', 'data_v2_slim'):
-        payload = cast(list[dict[str, Any]], json.loads((package_dir / f'{stem}.json').read_bytes()))
-        schema = cast(dict[str, Any], json.loads((package_dir / f'{stem}.schema.json').read_bytes()))
+    v2_dir = package_dir / 'new_data' / 'v2'
+    for stem in ('data', 'data_slim'):
+        payload = cast(list[dict[str, Any]], json.loads((v2_dir / f'{stem}.json').read_bytes()))
+        schema = cast(dict[str, Any], json.loads((v2_dir / f'{stem}.schema.json').read_bytes()))
 
         assert isinstance(payload, list)
         assert payload
@@ -95,8 +96,9 @@ def test_v2_remote_payloads_are_provider_arrays_with_static_unit_vocabulary():
 def test_v2_slim_payload_is_exact_projection_of_full_payload() -> None:
     from prices.utils import package_dir
 
-    full_payload = json.loads((package_dir / 'data_v2.json').read_bytes())
-    slim_payload = json.loads((package_dir / 'data_v2_slim.json').read_bytes())
+    v2_dir = package_dir / 'new_data' / 'v2'
+    full_payload = json.loads((v2_dir / 'data.json').read_bytes())
+    slim_payload = json.loads((v2_dir / 'data_slim.json').read_bytes())
     build_providers = providers_schema.validate_python(full_payload)
     for provider in build_providers:
         provider.exclude_free()
