@@ -3,9 +3,10 @@ from __future__ import annotations
 import ast
 import json
 import subprocess
+import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, fields
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
@@ -13,10 +14,14 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from genai_prices import data
+from genai_prices import calc_price, data, data_units
+from genai_prices.data_snapshot import DataSnapshot, get_snapshot, set_custom_snapshot
 from genai_prices.data_units import unit_data
 from genai_prices.types import (
+    ClauseEquals,
+    ModelInfo,
     ModelPrice,
+    Provider,
     TieredPrices,
     Usage,
     _collect_resolved_model_prices,
@@ -1446,3 +1451,139 @@ def test_package_data_extractor_validation_reports_multiple_invalid_destinations
         match='Invalid extractor destination for testing/default: Invalid extractor destination: input_mtok, requests',
     ):
         package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+@pytest.mark.parametrize('filename', ['prices/data.json', 'prices/data_slim.json'])
+def test_v1_remote_payload_roots_are_provider_arrays(filename: str) -> None:
+    payload_obj = json.loads((Path(__file__).parent.parent / filename).read_text())
+
+    assert isinstance(payload_obj, list)
+    providers = cast(list[object], payload_obj)
+    assert providers
+    assert all(isinstance(provider, dict) for provider in providers)
+
+
+def test_data_snapshot_has_no_unit_registry_field() -> None:
+    snapshot = get_snapshot()
+
+    assert 'unit_registry' not in {field.name for field in fields(DataSnapshot)}
+    assert not hasattr(snapshot, 'unit_registry')
+
+
+def test_bundled_snapshot_lookup_helpers_still_work() -> None:
+    snapshot = get_snapshot()
+
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
+
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'
+
+
+def test_get_registry_returns_generated_unit_data_registry() -> None:
+    registry = _get_registry()
+
+    assert isinstance(registry, UnitRegistry)
+    assert set(registry.units) == set(data_units.unit_data)
+    assert registry.unit_for_price_key('input_mtok').usage_key == 'input_tokens'
+    assert _get_registry() is registry
+
+
+def test_constructed_registry_is_independent_from_bundled_singleton() -> None:
+    bundled = _get_registry()
+    custom = _custom_price_key_registry()
+
+    assert custom is not bundled
+    assert custom.units != bundled.units
+    assert _get_registry() is bundled
+
+
+def test_get_registry_does_not_call_data_snapshot_get_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fail_get_snapshot() -> None:
+        raise AssertionError('get_snapshot should not be called')  # pragma: no cover
+
+    monkeypatch.setattr('genai_prices.data_snapshot.get_snapshot', fail_get_snapshot)
+    registry = _get_registry()
+
+    assert isinstance(registry, UnitRegistry)
+
+
+def test_unit_registry_construction_avoids_active_snapshot_import_cycle() -> None:
+    subprocess.run(
+        [
+            sys.executable,
+            '-c',
+            (
+                'from genai_prices.units import UnitRegistry; '
+                "UnitRegistry({'widgets': {'per': 1, 'dimensions': {'family': 'widgets'}}})"
+            ),
+        ],
+        check=True,
+    )
+
+
+def test_custom_snapshots_do_not_carry_a_registry() -> None:
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    assert not hasattr(snapshot, 'unit_registry')
+
+
+def test_set_custom_snapshot_does_not_validate_model_prices() -> None:
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+    finally:
+        set_custom_snapshot(None)
+
+
+def test_set_custom_snapshot_does_not_touch_bundled_registry() -> None:
+    registry = _get_registry()
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert _get_registry() is registry
+
+        set_custom_snapshot(None)
+        assert _get_registry() is registry
+    finally:
+        set_custom_snapshot(None)
+
+
+def test_model_price_validation_runs_on_base_calc_not_snapshot_activation() -> None:
+    snapshot = DataSnapshot(
+        providers=[
+            Provider(
+                id='testing',
+                name='Testing',
+                api_pattern='testing',
+                models=[
+                    ModelInfo(
+                        id='bad-cache-price',
+                        match=ClauseEquals('bad-cache-price'),
+                        prices=ModelPrice(cache_read_mtok=Decimal('1')),
+                    )
+                ],
+            )
+        ],
+        from_auto_update=False,
+    )
+
+    try:
+        set_custom_snapshot(snapshot)
+        assert get_snapshot() is snapshot
+
+        with pytest.raises(ValueError, match='Missing ancestor price for cache_read_tokens: input_tokens'):
+            calc_price(Usage(cache_read_tokens=100), model_ref='bad-cache-price', provider_id='testing')
+    finally:
+        set_custom_snapshot(None)
+
+
+def test_inactive_snapshot_lookup_helpers_continue_to_work() -> None:
+    snapshot = DataSnapshot(providers=data.providers, from_auto_update=False)
+
+    provider, model = snapshot.find_provider_model('gpt-4o-mini', None, 'openai', None)
+
+    assert provider.id == 'openai'
+    assert model.id == 'gpt-4o-mini'
