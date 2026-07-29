@@ -396,6 +396,8 @@ def test_requests_kcount_prices():
 def test_claude_opus_5_web_search_price():
     price = calc_price(Usage(web_searches=2), model_ref='claude-opus-5', provider_id='anthropic')
 
+    assert price.input_price == Decimal('0')
+    assert price.output_price == Decimal('0')
     assert price.total_price == Decimal('0.02')
 
 
