@@ -30,7 +30,7 @@
 
 The following providers are currently supported:
 
-[comment]: <> (providers-start)
+[comment]: <> 'providers-start'
 
 - [Anthropic](prices/providers/anthropic.yml) - 23 models
 - [Avian](prices/providers/avian.yml) - 4 models
@@ -67,7 +67,7 @@ The following providers are currently supported:
 - [X AI](prices/providers/x_ai.yml) - 17 models
 - [Zhipu AI](prices/providers/zhipuai.yml) - 13 models
 
-[comment]: <> (providers-end)
+[comment]: <> 'providers-end'
 
 ## Usage
 
@@ -85,7 +85,7 @@ Price data is available in the following files:
 
 - [`prices/data_v2.json`](prices/data_v2.json) - current generated provider array for packages that bundle the static unit registry
 - [`prices/data_v2.schema.json`](prices/data_v2.schema.json) - JSON Schema for `prices/data_v2.json`
-- [`prices/data.json`](prices/data.json) - pinned v1 compatibility data with all prices and unit definitions
+- [`prices/data.json`](prices/data.json) - pinned v1 compatibility provider and model pricing data
 - [`prices/data.schema.json`](prices/data.schema.json) - pinned v1 JSON Schema for `prices/data.json`
 - [`prices/data_slim.json`](prices/data_slim.json) - pinned slim v1 compatibility data with long fields and free models removed
 - [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - pinned v1 JSON Schema for `prices/data_slim.json`
