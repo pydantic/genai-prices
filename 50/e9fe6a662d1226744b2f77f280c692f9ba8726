@@ -1,0 +1,21 @@
+prices/data_v2_slim.json
+  s_fbf2d367eb2947::t_b120384b21b9c9 1
+prices/data_v2_slim.schema.json
+  s_fbf2d367eb2947::t_75ef0e5d10033d 555-746,1063,1065,1067,1069,1071-1073,1075-1077,1079-1081,1084-1087
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "50e9fe6a662d1226744b2f77f280c692f9ba8726",
+  "prompts": {},
+  "sessions": {
+    "s_fbf2d367eb2947": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa970-a03c-7532-ad37-52d1271a0f23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
