@@ -618,8 +618,8 @@ def _unit_display_name(unit: UnitDef) -> str:
     direction = dimensions.get('direction')
     modality = dimensions.get('modality')
     parts: list[str]
-    if dimensions.get('family') == 'requests':
-        parts = ['requests']
+    if dimensions.get('family') in {'requests', 'tool_calls'}:
+        parts = [unit.usage_key]
     else:
         parts = []
         if direction is not None:
@@ -627,7 +627,7 @@ def _unit_display_name(unit: UnitDef) -> str:
         if modality is not None:
             parts.append(modality)
 
-    handled_dimensions = {'family', 'direction', 'modality'}
+    handled_dimensions = {'family', 'direction', 'modality', 'tool_type'}
     parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
     if not parts:
         parts.append(unit.usage_key)
