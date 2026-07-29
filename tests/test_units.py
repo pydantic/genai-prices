@@ -123,10 +123,25 @@ NON_TOKEN_REPORTABLE_UNITS: dict[str, dict[str, Any]] = {
         'price_key': 'input_mchars',
         'dimensions': {'family': 'characters', 'direction': 'input'},
     },
+    'input_text_messages': {
+        'per': 1_000,
+        'price_key': 'input_text_messages_kcount',
+        'dimensions': {'family': 'messages', 'direction': 'input', 'modality': 'text'},
+    },
+    'audio_seconds': {
+        'per': 3_600,
+        'price_key': 'audio_hours',
+        'dimensions': {'family': 'durations', 'modality': 'audio'},
+    },
     'input_audio_seconds': {
-        'per': 60,
-        'price_key': 'input_audio_minutes',
+        'per': 3_600,
+        'price_key': 'input_audio_hours',
         'dimensions': {'family': 'durations', 'direction': 'input', 'modality': 'audio'},
+    },
+    'output_audio_seconds': {
+        'per': 3_600,
+        'price_key': 'output_audio_hours',
+        'dimensions': {'family': 'durations', 'direction': 'output', 'modality': 'audio'},
     },
     'input_pixels': {
         'per': 1_000_000_000,
@@ -342,7 +357,8 @@ def test_unit_registry_indexes_bundled_units() -> None:
     assert registry._reported_usage_keys == frozenset(REPORTABLE_USAGE_KEYS)
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
     assert registry.unit_for_price_key('web_searches_kcount') is registry.units['web_searches']
-    assert registry.unit_for_price_key('input_audio_minutes') is registry.units['input_audio_seconds']
+    assert registry.unit_for_price_key('input_text_messages_kcount') is registry.units['input_text_messages']
+    assert registry.unit_for_price_key('input_audio_hours') is registry.units['input_audio_seconds']
     assert (
         registry.unit_for_price_key('input_annotated_document_kpages')
         is registry.units['input_annotated_document_pages']
@@ -370,8 +386,11 @@ def test_unit_registry_indexes_bundled_units() -> None:
 def test_bundled_non_token_unit_relationships() -> None:
     registry = UnitRegistry(load_units())
 
+    assert registry.ancestor_usage_keys('input_audio_seconds') == frozenset({'audio_seconds'})
+    assert registry.ancestor_usage_keys('output_audio_seconds') == frozenset({'audio_seconds'})
     assert registry.ancestor_usage_keys('input_annotated_document_pages') == frozenset({'input_document_pages'})
     assert registry.ancestor_usage_keys('web_searches') == frozenset()
+    assert not registry.units['input_audio_seconds'].is_compatible_with(registry.units['output_audio_seconds'])
     assert not registry.units['web_searches'].is_compatible_with(registry.units['social_searches'])
     assert not registry.units['storage_searches'].is_compatible_with(registry.units['code_executions'])
 

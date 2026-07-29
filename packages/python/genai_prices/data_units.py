@@ -283,10 +283,25 @@ unit_data: dict[str, Any] = {
         'price_key': 'input_mchars',
         'dimensions': {'family': 'characters', 'direction': 'input'},
     },
+    'input_text_messages': {
+        'per': 1000,
+        'price_key': 'input_text_messages_kcount',
+        'dimensions': {'family': 'messages', 'direction': 'input', 'modality': 'text'},
+    },
+    'audio_seconds': {
+        'per': 3600,
+        'price_key': 'audio_hours',
+        'dimensions': {'family': 'durations', 'modality': 'audio'},
+    },
     'input_audio_seconds': {
-        'per': 60,
-        'price_key': 'input_audio_minutes',
+        'per': 3600,
+        'price_key': 'input_audio_hours',
         'dimensions': {'family': 'durations', 'direction': 'input', 'modality': 'audio'},
+    },
+    'output_audio_seconds': {
+        'per': 3600,
+        'price_key': 'output_audio_hours',
+        'dimensions': {'family': 'durations', 'direction': 'output', 'modality': 'audio'},
     },
     'input_pixels': {
         'per': 1000000000,

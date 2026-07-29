@@ -502,7 +502,10 @@ def test_price_field_label_uses_bundled_registry_metadata() -> None:
     assert _price_field_label('cache_read_mtok') == 'Input Cache Read/MTok'
     assert _price_field_label('cache_audio_read_mtok') == 'Input Audio Cache Read/MTok'
     assert _price_field_label('input_mchars') == 'Input Characters/M'
-    assert _price_field_label('input_audio_minutes') == 'Input Audio/Min'
+    assert _price_field_label('audio_hours') == 'Audio/Hour'
+    assert _price_field_label('input_audio_hours') == 'Input Audio/Hour'
+    assert _price_field_label('output_audio_hours') == 'Output Audio/Hour'
+    assert _price_field_label('input_text_messages_kcount') == 'Input Text Messages/K'
     assert _price_field_label('input_gpixels') == 'Input Pixels/G'
     assert _price_field_label('input_document_kpages') == 'Input Document Pages/K'
     assert _price_field_label('input_annotated_document_kpages') == 'Input Annotated Document Pages/K'
@@ -647,6 +650,7 @@ def test_unknown_price_field_fallbacks() -> None:
     ('unit', 'display_name', 'per_label'),
     [
         (UnitDef('audio_seconds', 'audio_second', 1, {'family': 'time', 'modality': 'audio'}), 'Audio', '1'),
+        (UnitDef('audio_seconds', 'audio_minutes', 60, {'family': 'durations', 'modality': 'audio'}), 'Audio', 'Min'),
         (UnitDef('characters', 'characters_million', 1_000_000, {'family': 'characters'}), 'Characters', 'M'),
         (UnitDef('images', 'images_kcount', 1_000, {'family': 'images'}), 'Images', 'K'),
     ],

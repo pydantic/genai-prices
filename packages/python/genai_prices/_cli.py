@@ -628,6 +628,8 @@ def _unit_display_name(unit: UnitDef) -> str:
             parts.append(direction)
         if modality is not None:
             parts.append(modality)
+        if family == 'messages':
+            parts.append(family)
 
     handled_dimensions = set(dimensions) if use_usage_key else {'family', 'direction', 'modality'}
     parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
@@ -644,6 +646,8 @@ def _unit_per_label(unit: UnitDef) -> str:
         return 'K'
     if family == 'durations' and unit.per == 60:
         return 'Min'
+    if family == 'durations' and unit.per == 3_600:
+        return 'Hour'
     if unit.per == 1_000_000_000:
         return 'G'
     if unit.per == 1_000_000:

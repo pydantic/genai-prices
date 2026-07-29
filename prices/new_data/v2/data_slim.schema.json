@@ -865,7 +865,7 @@
           "title": "Input Mchars",
           "description": "price in USD per million input characters"
         },
-        "input_audio_minutes": {
+        "input_text_messages_kcount": {
           "anyOf": [
             {
               "type": "number"
@@ -874,8 +874,44 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ],
-          "title": "Input Audio Minutes",
-          "description": "price in USD per input audio minute"
+          "title": "Input Text Messages Kcount",
+          "description": "price in USD per thousand input text messages"
+        },
+        "audio_hours": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Audio Hours",
+          "description": "price in USD per audio hour"
+        },
+        "input_audio_hours": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Audio Hours",
+          "description": "price in USD per input audio hour"
+        },
+        "output_audio_hours": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Audio Hours",
+          "description": "price in USD per output audio hour"
         },
         "input_gpixels": {
           "anyOf": [
@@ -1277,6 +1313,7 @@
           "title": "Dest",
           "type": "string",
           "enum": [
+            "audio_seconds",
             "cache_audio_read_tokens",
             "cache_audio_write_1h_tokens",
             "cache_audio_write_5m_tokens",
@@ -1307,6 +1344,7 @@
             "input_image_tokens",
             "input_image_tool_tokens",
             "input_pixels",
+            "input_text_messages",
             "input_text_tokens",
             "input_text_tool_tokens",
             "input_tokens",
@@ -1315,6 +1353,7 @@
             "input_video_tool_tokens",
             "output_audio_citation_tokens",
             "output_audio_reasoning_tokens",
+            "output_audio_seconds",
             "output_audio_tokens",
             "output_citation_tokens",
             "output_image_citation_tokens",
