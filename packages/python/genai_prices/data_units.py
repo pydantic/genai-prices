@@ -18,12 +18,22 @@ unit_data: dict[str, Any] = {
     'cache_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_read'},
     },
     'cache_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write'},
+    },
+    'cache_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_write_5m_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write', 'cache_ttl': '5m'},
+    },
+    'cache_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_write_1h_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write', 'cache_ttl': '1h'},
     },
     'input_text_tokens': {
         'per': 1000000,
@@ -38,12 +48,34 @@ unit_data: dict[str, Any] = {
     'cache_text_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_text_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'cache_read'},
     },
     'cache_text_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_text_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'cache_write'},
+    },
+    'cache_text_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_text_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'text',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_text_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_text_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'text',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
     },
     'input_audio_tokens': {
         'per': 1000000,
@@ -58,12 +90,34 @@ unit_data: dict[str, Any] = {
     'cache_audio_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_audio_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'cache_read'},
     },
     'cache_audio_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_audio_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'cache_write'},
+    },
+    'cache_audio_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_audio_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'audio',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_audio_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_audio_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'audio',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
     },
     'input_image_tokens': {
         'per': 1000000,
@@ -78,12 +132,34 @@ unit_data: dict[str, Any] = {
     'cache_image_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_image_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'cache_read'},
     },
     'cache_image_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_image_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'cache_write'},
+    },
+    'cache_image_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_image_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'image',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_image_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_image_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'image',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
     },
     'input_video_tokens': {
         'per': 1000000,
@@ -98,12 +174,110 @@ unit_data: dict[str, Any] = {
     'cache_video_read_tokens': {
         'per': 1000000,
         'price_key': 'cache_video_read_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'cache_read'},
     },
     'cache_video_write_tokens': {
         'per': 1000000,
         'price_key': 'cache_video_write_mtok',
-        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'write'},
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'cache_write'},
     },
+    'cache_video_write_5m_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_video_write_5m_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'video',
+            'token_type': 'cache_write',
+            'cache_ttl': '5m',
+        },
+    },
+    'cache_video_write_1h_tokens': {
+        'per': 1000000,
+        'price_key': 'cache_video_write_1h_mtok',
+        'dimensions': {
+            'family': 'tokens',
+            'direction': 'input',
+            'modality': 'video',
+            'token_type': 'cache_write',
+            'cache_ttl': '1h',
+        },
+    },
+    'input_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'tool'},
+    },
+    'input_text_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_text_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'text', 'token_type': 'tool'},
+    },
+    'input_audio_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_audio_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio', 'token_type': 'tool'},
+    },
+    'input_image_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_image_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'image', 'token_type': 'tool'},
+    },
+    'input_video_tool_tokens': {
+        'per': 1000000,
+        'price_key': 'input_video_tool_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'token_type': 'tool'},
+    },
+    'output_reasoning_tokens': {
+        'per': 1000000,
+        'price_key': 'output_reasoning_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'token_type': 'reasoning'},
+    },
+    'output_text_reasoning_tokens': {
+        'per': 1000000,
+        'price_key': 'output_text_reasoning_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'text', 'token_type': 'reasoning'},
+    },
+    'output_audio_reasoning_tokens': {
+        'per': 1000000,
+        'price_key': 'output_audio_reasoning_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio', 'token_type': 'reasoning'},
+    },
+    'output_image_reasoning_tokens': {
+        'per': 1000000,
+        'price_key': 'output_image_reasoning_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'image', 'token_type': 'reasoning'},
+    },
+    'output_video_reasoning_tokens': {
+        'per': 1000000,
+        'price_key': 'output_video_reasoning_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'reasoning'},
+    },
+    'output_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'token_type': 'citation'},
+    },
+    'output_text_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_text_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'text', 'token_type': 'citation'},
+    },
+    'output_audio_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_audio_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'audio', 'token_type': 'citation'},
+    },
+    'output_image_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_image_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'image', 'token_type': 'citation'},
+    },
+    'output_video_citation_tokens': {
+        'per': 1000000,
+        'price_key': 'output_video_citation_mtok',
+        'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'citation'},
+    },
+    'web_searches': {'per': 1000, 'price_key': 'web_searches_kcount', 'dimensions': {'family': 'tool_calls'}},
     'requests': {'per': 1000, 'price_key': 'requests_kcount', 'dimensions': {'family': 'requests'}},
 }

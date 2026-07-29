@@ -393,6 +393,45 @@ def test_requests_kcount_prices():
     assert price.provider.name == snapshot('Perplexity')
 
 
+def test_claude_opus_5_web_search_price():
+    price = calc_price(Usage(web_searches=2), model_ref='claude-opus-5', provider_id='anthropic')
+
+    assert price.input_price == Decimal('0')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('0.02')
+
+
+def test_claude_opus_5_one_hour_cache_write_price():
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_1h_tokens=1_000_000),
+        model_ref='claude-opus-5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == Decimal('10')
+
+
+def test_distinct_output_category_prices_replace_aggregate_output_rate():
+    price = calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
+        model_ref='sonar-deep-research',
+        provider_id='perplexity',
+    )
+
+    # 65 ordinary tokens at $8/MTok + 25 reasoning at $3/MTok + 10 citations at $2/MTok.
+    assert price.output_price == Decimal('0.000615')
+    assert price.total_price == Decimal('0.000615')
+
+
+def test_custom_model_price_can_override_reasoning_rate():
+    price = ModelPrice(output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')).calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25)
+    )
+
+    assert price['output_price'] == Decimal('0.000675')
+    assert price['total_price'] == Decimal('0.000675')
+
+
 def test_calc_unit_price_matches_mtok_wrapper() -> None:
     assert calc_unit_price(Decimal('2.5'), 500_000, total_input_tokens=0, per=1_000_000) == calc_mtok_price(
         Decimal('2.5'), 500_000, total_input_tokens=0

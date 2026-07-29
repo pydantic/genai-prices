@@ -88,6 +88,10 @@ def test_v2_remote_payloads_are_provider_arrays_with_static_unit_vocabulary():
         extractor_destinations = schema['$defs']['UsageExtractorMapping']['properties']['dest']['enum']
         assert 'input_image_tokens' in extractor_destinations
 
+        google = next(provider for provider in payload if provider['id'] == 'google')
+        destinations = {mapping['dest'] for extractor in google['extractors'] for mapping in extractor['mappings']}
+        assert 'input_image_tokens' in destinations
+
 
 def test_v2_slim_payload_is_exact_projection_of_full_payload() -> None:
     from prices.utils import package_dir

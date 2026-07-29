@@ -3,98 +3,206 @@ import type { RawUnitsDict } from './types'
 export const unitData: RawUnitsDict = {
   cache_audio_read_tokens: {
     dimensions: {
-      cache: 'read',
       direction: 'input',
       family: 'tokens',
       modality: 'audio',
+      token_type: 'cache_read',
     },
     per: 1000000,
     price_key: 'cache_audio_read_mtok',
   },
-  cache_audio_write_tokens: {
+  cache_audio_write_1h_tokens: {
     dimensions: {
-      cache: 'write',
+      cache_ttl: '1h',
       direction: 'input',
       family: 'tokens',
       modality: 'audio',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_audio_write_1h_mtok',
+  },
+  cache_audio_write_5m_tokens: {
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_audio_write_5m_mtok',
+  },
+  cache_audio_write_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'cache_write',
     },
     per: 1000000,
     price_key: 'cache_audio_write_mtok',
   },
   cache_image_read_tokens: {
     dimensions: {
-      cache: 'read',
       direction: 'input',
       family: 'tokens',
       modality: 'image',
+      token_type: 'cache_read',
     },
     per: 1000000,
     price_key: 'cache_image_read_mtok',
   },
-  cache_image_write_tokens: {
+  cache_image_write_1h_tokens: {
     dimensions: {
-      cache: 'write',
+      cache_ttl: '1h',
       direction: 'input',
       family: 'tokens',
       modality: 'image',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_image_write_1h_mtok',
+  },
+  cache_image_write_5m_tokens: {
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_image_write_5m_mtok',
+  },
+  cache_image_write_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'cache_write',
     },
     per: 1000000,
     price_key: 'cache_image_write_mtok',
   },
   cache_read_tokens: {
     dimensions: {
-      cache: 'read',
       direction: 'input',
       family: 'tokens',
+      token_type: 'cache_read',
     },
     per: 1000000,
     price_key: 'cache_read_mtok',
   },
   cache_text_read_tokens: {
     dimensions: {
-      cache: 'read',
       direction: 'input',
       family: 'tokens',
       modality: 'text',
+      token_type: 'cache_read',
     },
     per: 1000000,
     price_key: 'cache_text_read_mtok',
   },
-  cache_text_write_tokens: {
+  cache_text_write_1h_tokens: {
     dimensions: {
-      cache: 'write',
+      cache_ttl: '1h',
       direction: 'input',
       family: 'tokens',
       modality: 'text',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_text_write_1h_mtok',
+  },
+  cache_text_write_5m_tokens: {
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_text_write_5m_mtok',
+  },
+  cache_text_write_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'cache_write',
     },
     per: 1000000,
     price_key: 'cache_text_write_mtok',
   },
   cache_video_read_tokens: {
     dimensions: {
-      cache: 'read',
       direction: 'input',
       family: 'tokens',
       modality: 'video',
+      token_type: 'cache_read',
     },
     per: 1000000,
     price_key: 'cache_video_read_mtok',
   },
-  cache_video_write_tokens: {
+  cache_video_write_1h_tokens: {
     dimensions: {
-      cache: 'write',
+      cache_ttl: '1h',
       direction: 'input',
       family: 'tokens',
       modality: 'video',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_video_write_1h_mtok',
+  },
+  cache_video_write_5m_tokens: {
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_video_write_5m_mtok',
+  },
+  cache_video_write_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'cache_write',
     },
     per: 1000000,
     price_key: 'cache_video_write_mtok',
   },
-  cache_write_tokens: {
+  cache_write_1h_tokens: {
     dimensions: {
-      cache: 'write',
+      cache_ttl: '1h',
       direction: 'input',
       family: 'tokens',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_write_1h_mtok',
+  },
+  cache_write_5m_tokens: {
+    dimensions: {
+      cache_ttl: '5m',
+      direction: 'input',
+      family: 'tokens',
+      token_type: 'cache_write',
+    },
+    per: 1000000,
+    price_key: 'cache_write_5m_mtok',
+  },
+  cache_write_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      token_type: 'cache_write',
     },
     per: 1000000,
     price_key: 'cache_write_mtok',
@@ -108,6 +216,16 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'input_audio_mtok',
   },
+  input_audio_tool_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'tool',
+    },
+    per: 1000000,
+    price_key: 'input_audio_tool_mtok',
+  },
   input_image_tokens: {
     dimensions: {
       direction: 'input',
@@ -116,6 +234,16 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'input_image_mtok',
+  },
+  input_image_tool_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'tool',
+    },
+    per: 1000000,
+    price_key: 'input_image_tool_mtok',
   },
   input_text_tokens: {
     dimensions: {
@@ -126,6 +254,16 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'input_text_mtok',
   },
+  input_text_tool_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'tool',
+    },
+    per: 1000000,
+    price_key: 'input_text_tool_mtok',
+  },
   input_tokens: {
     dimensions: {
       direction: 'input',
@@ -133,6 +271,15 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'input_mtok',
+  },
+  input_tool_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      token_type: 'tool',
+    },
+    per: 1000000,
+    price_key: 'input_tool_mtok',
   },
   input_video_tokens: {
     dimensions: {
@@ -143,6 +290,36 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'input_video_mtok',
   },
+  input_video_tool_tokens: {
+    dimensions: {
+      direction: 'input',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'tool',
+    },
+    per: 1000000,
+    price_key: 'input_video_tool_mtok',
+  },
+  output_audio_citation_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'citation',
+    },
+    per: 1000000,
+    price_key: 'output_audio_citation_mtok',
+  },
+  output_audio_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'audio',
+      token_type: 'reasoning',
+    },
+    per: 1000000,
+    price_key: 'output_audio_reasoning_mtok',
+  },
   output_audio_tokens: {
     dimensions: {
       direction: 'output',
@@ -152,6 +329,35 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'output_audio_mtok',
   },
+  output_citation_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      token_type: 'citation',
+    },
+    per: 1000000,
+    price_key: 'output_citation_mtok',
+  },
+  output_image_citation_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'citation',
+    },
+    per: 1000000,
+    price_key: 'output_image_citation_mtok',
+  },
+  output_image_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'image',
+      token_type: 'reasoning',
+    },
+    per: 1000000,
+    price_key: 'output_image_reasoning_mtok',
+  },
   output_image_tokens: {
     dimensions: {
       direction: 'output',
@@ -160,6 +366,35 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'output_image_mtok',
+  },
+  output_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      token_type: 'reasoning',
+    },
+    per: 1000000,
+    price_key: 'output_reasoning_mtok',
+  },
+  output_text_citation_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'citation',
+    },
+    per: 1000000,
+    price_key: 'output_text_citation_mtok',
+  },
+  output_text_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'text',
+      token_type: 'reasoning',
+    },
+    per: 1000000,
+    price_key: 'output_text_reasoning_mtok',
   },
   output_text_tokens: {
     dimensions: {
@@ -178,6 +413,26 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'output_mtok',
   },
+  output_video_citation_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'citation',
+    },
+    per: 1000000,
+    price_key: 'output_video_citation_mtok',
+  },
+  output_video_reasoning_tokens: {
+    dimensions: {
+      direction: 'output',
+      family: 'tokens',
+      modality: 'video',
+      token_type: 'reasoning',
+    },
+    per: 1000000,
+    price_key: 'output_video_reasoning_mtok',
+  },
   output_video_tokens: {
     dimensions: {
       direction: 'output',
@@ -193,5 +448,12 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000,
     price_key: 'requests_kcount',
+  },
+  web_searches: {
+    dimensions: {
+      family: 'tool_calls',
+    },
+    per: 1000,
+    price_key: 'web_searches_kcount',
   },
 }
