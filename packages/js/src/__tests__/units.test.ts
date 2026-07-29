@@ -196,7 +196,7 @@ describe('UnitRegistry', () => {
     expect(registry.findJoin(reasoning, citation)).toBeUndefined()
   })
 
-  it('indexes non-token relationships and discriminates tool calls', () => {
+  it('indexes non-token relationships', () => {
     const registry = new UnitRegistry(unitData)
     const documentPages = registry.getUnit('input_document_pages')
     const annotatedDocumentPages = registry.getUnit('input_annotated_document_pages')
