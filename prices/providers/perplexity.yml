@@ -9,6 +9,10 @@ price_comments: >-
   instead we just take the highest price shown for `requests_kcount`.
 extractors:
   # https://docs.perplexity.ai/api-reference/sonar-post
+  # https://docs.perplexity.ai/docs/getting-started/pricing documents reasoning and citation tokens as separate
+  # billable categories only for Sonar Deep Research. Sonar Reasoning Pro includes its <think> content in
+  # completion_tokens and does not return separate reasoning or citation fields:
+  # https://docs.perplexity.ai/docs/sonar/models/sonar-reasoning-pro
   - root: usage
     mappings:
       - path: prompt_tokens
