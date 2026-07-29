@@ -101,14 +101,29 @@ const tokenPriceKeys = [
   'output_video_citation_mtok',
 ]
 
-const reportableUsageKeys = [...tokenUsageKeys, 'web_searches']
+const nonTokenReportableUnits = {
+  code_executions: 'code_executions_kcount',
+  input_annotated_document_pages: 'input_annotated_document_kpages',
+  input_audio_seconds: 'input_audio_minutes',
+  input_characters: 'input_mchars',
+  input_document_pages: 'input_document_kpages',
+  input_pixels: 'input_gpixels',
+  rerank_searches: 'rerank_searches_kcount',
+  social_searches: 'social_searches_kcount',
+  storage_searches: 'storage_searches_kcount',
+  web_searches: 'web_searches_kcount',
+} as const
+
+const reportableUsageKeys = [...tokenUsageKeys, ...Object.keys(nonTokenReportableUnits)]
 
 describe('UnitRegistry', () => {
   it('constructs generated flat units into indexed runtime objects', () => {
     const registry = new UnitRegistry(unitData)
 
     expect(new Set(tokenUsageKeys.map((usageKey) => registry.getUnit(usageKey)?.usageKey))).toEqual(new Set(tokenUsageKeys))
-    expect(registry.getUnit('web_searches')?.priceKey).toBe('web_searches_kcount')
+    expect(
+      Object.fromEntries(Object.keys(nonTokenReportableUnits).map((usageKey) => [usageKey, registry.getUnit(usageKey)?.priceKey]))
+    ).toEqual(nonTokenReportableUnits)
     expect(registry.getUnit('requests')?.priceKey).toBe('requests_kcount')
     expect(registry.getAllUsageKeys().size).toBe(reportableUsageKeys.length + 1)
     expect(registry.getUnitForPriceKey('input_mtok')).toBe(registry.getUnit('input_tokens'))
@@ -179,6 +194,25 @@ describe('UnitRegistry', () => {
 
     expect(registry.findJoin(cacheRead, tool)).toBeUndefined()
     expect(registry.findJoin(reasoning, citation)).toBeUndefined()
+  })
+
+  it('indexes non-token relationships and discriminates tool calls', () => {
+    const registry = new UnitRegistry(unitData)
+    const documentPages = registry.getUnit('input_document_pages')
+    const annotatedDocumentPages = registry.getUnit('input_annotated_document_pages')
+    const webSearches = registry.getUnit('web_searches')
+    const socialSearches = registry.getUnit('social_searches')
+    expect(documentPages).toBeDefined()
+    expect(annotatedDocumentPages).toBeDefined()
+    expect(webSearches).toBeDefined()
+    expect(socialSearches).toBeDefined()
+    if (!documentPages || !annotatedDocumentPages || !webSearches || !socialSearches) {
+      throw new Error('Expected generated non-token units')
+    }
+
+    expect(registry.ancestorUsageKeys('input_annotated_document_pages')).toEqual(new Set(['input_document_pages']))
+    expect(registry.ancestorUsageKeys('web_searches')).toEqual(new Set())
+    expect(registry.findJoin(webSearches, socialSearches)).toBeUndefined()
   })
 
   it('keeps construction independent of generated data fixtures', () => {
@@ -268,7 +302,9 @@ describe('generated unit registry', () => {
   })
 
   it('returns the generated full price-key set', () => {
-    expect(getActiveRegistry().getAllPriceKeys()).toEqual(new Set(['requests_kcount', 'web_searches_kcount', ...tokenPriceKeys]))
+    expect(getActiveRegistry().getAllPriceKeys()).toEqual(
+      new Set(['requests_kcount', ...Object.values(nonTokenReportableUnits), ...tokenPriceKeys])
+    )
   })
 
   it('returns externally reported usage keys without pricing-only requests', () => {

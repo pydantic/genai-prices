@@ -278,6 +278,51 @@ unit_data: dict[str, Any] = {
         'price_key': 'output_video_citation_mtok',
         'dimensions': {'family': 'tokens', 'direction': 'output', 'modality': 'video', 'token_type': 'citation'},
     },
-    'web_searches': {'per': 1000, 'price_key': 'web_searches_kcount', 'dimensions': {'family': 'tool_calls'}},
+    'input_characters': {
+        'per': 1000000,
+        'price_key': 'input_mchars',
+        'dimensions': {'family': 'characters', 'direction': 'input'},
+    },
+    'input_audio_seconds': {
+        'per': 60,
+        'price_key': 'input_audio_minutes',
+        'dimensions': {'family': 'durations', 'direction': 'input', 'modality': 'audio'},
+    },
+    'input_pixels': {
+        'per': 1000000000,
+        'price_key': 'input_gpixels',
+        'dimensions': {'family': 'pixels', 'direction': 'input'},
+    },
+    'input_document_pages': {
+        'per': 1000,
+        'price_key': 'input_document_kpages',
+        'dimensions': {'family': 'document_pages', 'direction': 'input'},
+    },
+    'input_annotated_document_pages': {
+        'per': 1000,
+        'price_key': 'input_annotated_document_kpages',
+        'dimensions': {'family': 'document_pages', 'direction': 'input', 'page_type': 'annotated'},
+    },
+    'rerank_searches': {'per': 1000, 'price_key': 'rerank_searches_kcount', 'dimensions': {'family': 'rerank'}},
+    'web_searches': {
+        'per': 1000,
+        'price_key': 'web_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'web_search'},
+    },
+    'social_searches': {
+        'per': 1000,
+        'price_key': 'social_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'social_search'},
+    },
+    'storage_searches': {
+        'per': 1000,
+        'price_key': 'storage_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'storage_search'},
+    },
+    'code_executions': {
+        'per': 1000,
+        'price_key': 'code_executions_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'code_execution'},
+    },
     'requests': {'per': 1000, 'price_key': 'requests_kcount', 'dimensions': {'family': 'requests'}},
 }

@@ -207,6 +207,32 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'cache_write_mtok',
   },
+  code_executions: {
+    dimensions: {
+      family: 'tool_calls',
+      tool_type: 'code_execution',
+    },
+    per: 1000,
+    price_key: 'code_executions_kcount',
+  },
+  input_annotated_document_pages: {
+    dimensions: {
+      direction: 'input',
+      family: 'document_pages',
+      page_type: 'annotated',
+    },
+    per: 1000,
+    price_key: 'input_annotated_document_kpages',
+  },
+  input_audio_seconds: {
+    dimensions: {
+      direction: 'input',
+      family: 'durations',
+      modality: 'audio',
+    },
+    per: 60,
+    price_key: 'input_audio_minutes',
+  },
   input_audio_tokens: {
     dimensions: {
       direction: 'input',
@@ -226,6 +252,22 @@ export const unitData: RawUnitsDict = {
     per: 1000000,
     price_key: 'input_audio_tool_mtok',
   },
+  input_characters: {
+    dimensions: {
+      direction: 'input',
+      family: 'characters',
+    },
+    per: 1000000,
+    price_key: 'input_mchars',
+  },
+  input_document_pages: {
+    dimensions: {
+      direction: 'input',
+      family: 'document_pages',
+    },
+    per: 1000,
+    price_key: 'input_document_kpages',
+  },
   input_image_tokens: {
     dimensions: {
       direction: 'input',
@@ -244,6 +286,14 @@ export const unitData: RawUnitsDict = {
     },
     per: 1000000,
     price_key: 'input_image_tool_mtok',
+  },
+  input_pixels: {
+    dimensions: {
+      direction: 'input',
+      family: 'pixels',
+    },
+    per: 1000000000,
+    price_key: 'input_gpixels',
   },
   input_text_tokens: {
     dimensions: {
@@ -449,9 +499,33 @@ export const unitData: RawUnitsDict = {
     per: 1000,
     price_key: 'requests_kcount',
   },
+  rerank_searches: {
+    dimensions: {
+      family: 'rerank',
+    },
+    per: 1000,
+    price_key: 'rerank_searches_kcount',
+  },
+  social_searches: {
+    dimensions: {
+      family: 'tool_calls',
+      tool_type: 'social_search',
+    },
+    per: 1000,
+    price_key: 'social_searches_kcount',
+  },
+  storage_searches: {
+    dimensions: {
+      family: 'tool_calls',
+      tool_type: 'storage_search',
+    },
+    per: 1000,
+    price_key: 'storage_searches_kcount',
+  },
   web_searches: {
     dimensions: {
       family: 'tool_calls',
+      tool_type: 'web_search',
     },
     per: 1000,
     price_key: 'web_searches_kcount',

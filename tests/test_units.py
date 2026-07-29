@@ -117,9 +117,65 @@ TOKEN_PRICE_KEYS = {
     'output_video_citation_mtok',
 }
 
-REPORTABLE_USAGE_KEYS = TOKEN_USAGE_KEYS | {'web_searches'}
+NON_TOKEN_REPORTABLE_UNITS: dict[str, dict[str, Any]] = {
+    'input_characters': {
+        'per': 1_000_000,
+        'price_key': 'input_mchars',
+        'dimensions': {'family': 'characters', 'direction': 'input'},
+    },
+    'input_audio_seconds': {
+        'per': 60,
+        'price_key': 'input_audio_minutes',
+        'dimensions': {'family': 'durations', 'direction': 'input', 'modality': 'audio'},
+    },
+    'input_pixels': {
+        'per': 1_000_000_000,
+        'price_key': 'input_gpixels',
+        'dimensions': {'family': 'pixels', 'direction': 'input'},
+    },
+    'input_document_pages': {
+        'per': 1_000,
+        'price_key': 'input_document_kpages',
+        'dimensions': {'family': 'document_pages', 'direction': 'input'},
+    },
+    'input_annotated_document_pages': {
+        'per': 1_000,
+        'price_key': 'input_annotated_document_kpages',
+        'dimensions': {'family': 'document_pages', 'direction': 'input', 'page_type': 'annotated'},
+    },
+    'rerank_searches': {
+        'per': 1_000,
+        'price_key': 'rerank_searches_kcount',
+        'dimensions': {'family': 'rerank'},
+    },
+    'web_searches': {
+        'per': 1_000,
+        'price_key': 'web_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'web_search'},
+    },
+    'social_searches': {
+        'per': 1_000,
+        'price_key': 'social_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'social_search'},
+    },
+    'storage_searches': {
+        'per': 1_000,
+        'price_key': 'storage_searches_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'storage_search'},
+    },
+    'code_executions': {
+        'per': 1_000,
+        'price_key': 'code_executions_kcount',
+        'dimensions': {'family': 'tool_calls', 'tool_type': 'code_execution'},
+    },
+}
+
+REPORTABLE_USAGE_KEYS = TOKEN_USAGE_KEYS | set(NON_TOKEN_REPORTABLE_UNITS)
 ALL_USAGE_KEYS = REPORTABLE_USAGE_KEYS | {'requests'}
-ALL_PRICE_KEYS = TOKEN_PRICE_KEYS | {'web_searches_kcount', 'requests_kcount'}
+ALL_PRICE_KEYS = TOKEN_PRICE_KEYS | {
+    *(unit['price_key'] for unit in NON_TOKEN_REPORTABLE_UNITS.values()),
+    'requests_kcount',
+}
 
 
 def _build_provider_prices(
@@ -171,10 +227,7 @@ def test_units_yml_defines_current_python_unit_surface() -> None:
     assert request_unit['dimensions'] == {'family': 'requests'}
     assert request_unit['price_key'] == 'requests_kcount'
 
-    web_search_unit = raw_units['web_searches']
-    assert web_search_unit['per'] == 1_000
-    assert web_search_unit['dimensions'] == {'family': 'tool_calls'}
-    assert web_search_unit['price_key'] == 'web_searches_kcount'
+    assert {usage_key: raw_units[usage_key] for usage_key in NON_TOKEN_REPORTABLE_UNITS} == NON_TOKEN_REPORTABLE_UNITS
 
 
 def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
@@ -289,6 +342,11 @@ def test_unit_registry_indexes_bundled_units() -> None:
     assert registry._reported_usage_keys == frozenset(REPORTABLE_USAGE_KEYS)
     assert registry.unit_for_price_key('input_mtok') is registry.units['input_tokens']
     assert registry.unit_for_price_key('web_searches_kcount') is registry.units['web_searches']
+    assert registry.unit_for_price_key('input_audio_minutes') is registry.units['input_audio_seconds']
+    assert (
+        registry.unit_for_price_key('input_annotated_document_kpages')
+        is registry.units['input_annotated_document_pages']
+    )
     assert registry.unit_for_price_key('requests_kcount') is registry.units['requests']
     assert registry.ancestor_usage_keys('cache_audio_read_tokens') == frozenset(
         {'input_tokens', 'cache_read_tokens', 'input_audio_tokens'}
@@ -307,6 +365,15 @@ def test_unit_registry_indexes_bundled_units() -> None:
         {'output_tokens', 'output_text_tokens', 'output_reasoning_tokens'}
     )
     assert registry.find_join(registry.units['input_tokens'], registry.units['output_tokens']) is None
+
+
+def test_bundled_non_token_unit_relationships() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert registry.ancestor_usage_keys('input_annotated_document_pages') == frozenset({'input_document_pages'})
+    assert registry.ancestor_usage_keys('web_searches') == frozenset()
+    assert not registry.units['web_searches'].is_compatible_with(registry.units['social_searches'])
+    assert not registry.units['storage_searches'].is_compatible_with(registry.units['code_executions'])
 
 
 def test_unit_registry_units_mapping_is_immutable() -> None:
