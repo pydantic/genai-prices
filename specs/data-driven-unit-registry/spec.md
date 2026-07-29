@@ -98,8 +98,8 @@ Generated package unit modules contain only usage identity, price identity, norm
 **Remote contracts are versioned instead of repurposed.**
 Every package version keeps fetching a payload shape and unit vocabulary it understands. A new contract uses a new URL rather than changing the artifact consumed by already released auto-updaters.
 
-**The v1 provider artifacts remain unchanged by this work.** _(from "Remote contracts are versioned instead of repurposed")_
-Existing `data.json` and `data_slim.json` consumers continue receiving their provider-array contract and original unit vocabulary. The registry release does not wrap or add new unit-related fields to those artifacts.
+**The v1 provider artifacts retain their released-client compatibility contract.** _(from "Remote contracts are versioned instead of repurposed")_
+Existing `data.json` and `data_slim.json` consumers continue receiving provider arrays at the same URLs using only the structure and unit vocabulary understood by released v1 clients. Exact byte identity is not part of this contract: deliberate maintenance may update compatible provider, model, and pricing data, but must not repurpose either artifact with a wrapped root, new unit-related fields, or unsupported price keys or extractor destinations.
 
 **Phase 1 delivers a releasable static registry through full and slim provider-array v2 data.** _(from "Remote contracts are versioned instead of repurposed", "Registry construction promotes raw data into immutable indexes")_
 [Phase 1: Static Unit Registry Release](phase-1-static-unit-registry-release/spec.md) ([code spec](phase-1-static-unit-registry-release/code-spec.md)) consolidates the completed Python, JavaScript, shared-registry, and polish work. Installed packages construct one bundled registry, auto-update providers from full same-shape `data_v2.json`, include new modality pricing, and remove obvious repeated hot-path scans without cache state. Phase 1 also publishes a compatible slim projection for consumers that choose the smaller artifact.
