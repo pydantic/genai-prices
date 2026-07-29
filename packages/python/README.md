@@ -89,8 +89,7 @@ print(price.total_price)
 
 ### `UpdatePrices`
 
-`UpdatePrices` can periodically replace the provider and model price data by downloading the v2 provider array from
-GitHub. Updates never replace the static unit registry bundled with the installed package.
+`UpdatePrices` can be used to periodically update the price data by downloading it from GitHub
 
 Please note:
 
