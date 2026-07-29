@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import ast
 from dataclasses import FrozenInstanceError
 from decimal import Decimal
@@ -16,8 +18,9 @@ from genai_prices.types import (
 )
 from genai_prices.units import UnitDef, UnitRegistry, _get_registry
 from prices import package_data, prices_types as build_types
-from prices.build import load_units
 from prices.export_validation import validate_units
+
+from .unit_registry_helpers import load_units
 
 TOKEN_USAGE_KEYS = {
     'input_tokens',
@@ -289,62 +292,6 @@ def test_unit_registry_units_mapping_is_immutable() -> None:
         cast(dict[str, Any], registry.units)['new_unit'] = registry.units['input_tokens']
 
 
-@pytest.mark.parametrize(
-    ('usage_key', 'price_key', 'message'),
-    [
-        ('_private_name', 'private_mtok', 'must not start'),
-        ('$input_tokens', 'input_mtok', 'is not a public identifier'),
-        ('class', 'class_mtok', 'is a reserved keyword'),
-        ('valid_usage', 'function', 'is a reserved keyword'),
-    ],
-)
-def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
-    with pytest.raises(ValueError, match=message):
-        validate_units(
-            {
-                usage_key: {
-                    'per': 1_000_000,
-                    'price_key': price_key,
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-            }
-        )
-
-
-def test_validate_units_rejects_duplicate_price_keys_and_dimensions() -> None:
-    with pytest.raises(ValueError, match='Duplicate unit price key: input_mtok'):
-        validate_units(
-            {
-                'input_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-                'input_audio_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
-                },
-            }
-        )
-
-    with pytest.raises(ValueError, match='Duplicate unit dimensions: input_tokens and prompt_tokens'):
-        validate_units(
-            {
-                'input_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-                'prompt_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'prompt_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-            }
-        )
-
-
 @pytest.mark.parametrize('per', [0, -1, 1.5, True, '1000000'])
 def test_validate_units_rejects_invalid_per(per: Any) -> None:
     with pytest.raises(ValueError, match='expected a positive integer'):
@@ -354,50 +301,6 @@ def test_validate_units_rejects_invalid_per(per: Any) -> None:
                     'per': per,
                     'price_key': 'input_mtok',
                     'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-            }
-        )
-
-
-def test_validate_units_rejects_open_intervals_and_missing_joins() -> None:
-    with pytest.raises(ValueError, match='Missing intermediate unit dimensions'):
-        validate_units(
-            {
-                'input_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-                'cache_read_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'cache_read_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
-                },
-                'cache_video_read_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'cache_video_read_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
-                },
-            }
-        )
-
-    with pytest.raises(ValueError, match='Missing join unit dimensions'):
-        validate_units(
-            {
-                'input_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input'},
-                },
-                'cache_write_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'cache_write_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
-                },
-                'input_audio_tokens': {
-                    'per': 1_000_000,
-                    'price_key': 'input_audio_mtok',
-                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
                 },
             }
         )
@@ -596,3 +499,272 @@ def test_package_data_accepts_current_provider_extractor_destinations() -> None:
     registry = UnitRegistry(load_units())
 
     package_data.validate_provider_extractor_destinations(data.providers, registry)
+
+
+def test_unit_registry_sets_unit_per_and_family_dimension() -> None:
+    registry = UnitRegistry(load_units())
+
+    input_unit = registry.units['input_tokens']
+
+    assert input_unit.dimensions['family'] == 'tokens'
+    assert input_unit.per == 1_000_000
+
+
+def test_unit_registry_defaults_missing_price_key_to_usage_key() -> None:
+    registry = UnitRegistry(
+        {
+            'input_characters': {
+                'per': 1_000,
+                'dimensions': {'family': 'characters', 'direction': 'input'},
+            },
+        }
+    )
+
+    assert registry.units['input_characters'].price_key == 'input_characters'
+    assert registry.unit_for_price_key('input_characters') is registry.units['input_characters']
+
+
+def test_unit_registry_indexes_units_by_dimension_set() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert (
+        registry._units_by_dimension[frozenset({('family', 'tokens'), ('direction', 'input')})]
+        is registry.units['input_tokens']
+    )
+    assert (
+        registry._units_by_dimension[frozenset({('family', 'tokens'), ('direction', 'input'), ('modality', 'audio')})]
+        is registry.units['input_audio_tokens']
+    )
+
+
+def test_unit_registry_compatibility_rejects_cross_family_units() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert not registry.units['input_tokens'].is_compatible_with(registry.units['requests'])
+
+
+def test_unit_registry_compatibility_rejects_conflicting_dimensions() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert not registry.units['input_tokens'].is_compatible_with(registry.units['output_tokens'])
+
+
+def test_unit_registry_compatibility_accepts_parent_child_pairs() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert registry.units['input_tokens'].is_compatible_with(registry.units['cache_read_tokens'])
+    assert registry.units['cache_read_tokens'].is_compatible_with(registry.units['input_tokens'])
+
+
+def test_unit_registry_compatibility_accepts_overlapping_pairs() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert registry.units['cache_read_tokens'].is_compatible_with(registry.units['input_audio_tokens'])
+    assert registry.units['input_audio_tokens'].is_compatible_with(registry.units['cache_read_tokens'])
+
+
+def test_unit_registry_join_lookup_returns_descendant_for_parent_child_pair() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert (
+        registry.find_join(registry.units['input_tokens'], registry.units['cache_audio_read_tokens'])
+        is registry.units['cache_audio_read_tokens']
+    )
+
+
+def test_unit_registry_join_lookup_returns_registered_cache_write_overlap() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert (
+        registry.find_join(registry.units['cache_write_tokens'], registry.units['input_audio_tokens'])
+        is registry.units['cache_audio_write_tokens']
+    )
+
+
+def test_unit_registry_key_indexes_are_immutable_and_reused() -> None:
+    raw_units = load_units()
+    registry = UnitRegistry(raw_units)
+
+    assert isinstance(registry._all_usage_keys, frozenset)
+    assert isinstance(registry._all_price_keys, frozenset)
+    assert isinstance(registry._reported_usage_keys, frozenset)
+    assert isinstance(registry._reported_usage_keys_in_order, tuple)
+    assert registry._reported_usage_keys_in_order == tuple(key for key in raw_units if key != 'requests')
+    assert registry._reported_usage_keys is registry._reported_usage_keys
+    assert registry._reported_usage_keys_in_order is registry._reported_usage_keys_in_order
+
+
+def test_validate_units_rejects_missing_family_dimension() -> None:
+    with pytest.raises(ValueError, match='Missing required family dimension for unit input_tokens'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {'direction': 'input'},
+                },
+            }
+        )
+
+
+def test_validate_units_rejects_inconsistent_per_within_family_dimension() -> None:
+    with pytest.raises(ValueError, match='Inconsistent per for family dimension tokens'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'output_tokens': {
+                    'per': 1_000,
+                    'price_key': 'output_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'output'},
+                },
+            }
+        )
+
+
+def test_validate_units_rejects_duplicate_price_keys() -> None:
+    with pytest.raises(ValueError, match='Duplicate unit price key: input_mtok'):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'input_audio_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+                },
+            }
+        )
+
+
+def test_validate_units_rejects_duplicate_dimension_sets_within_family_dimension() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Duplicate unit dimensions: input_tokens and prompt_tokens',
+    ):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'prompt_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'prompt_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
+
+
+def test_unit_registry_allows_same_dimension_set_across_families() -> None:
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'input_characters': {
+                'per': 1_000,
+                'price_key': 'input_kchar',
+                'dimensions': {'family': 'characters', 'direction': 'input'},
+            },
+        }
+    )
+
+    assert (
+        registry.units['input_tokens'].dimensions['direction']
+        == registry.units['input_characters'].dimensions['direction']
+    )
+    assert (
+        registry.units['input_tokens'].dimensions['family'] != registry.units['input_characters'].dimensions['family']
+    )
+
+
+def test_validate_units_rejects_skipped_intermediate_dimension_sets() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Missing intermediate unit dimensions between input_tokens and cache_video_read_tokens',
+    ):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'cache_read_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_read_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'read'},
+                },
+                'cache_video_read_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_video_read_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'video', 'cache': 'read'},
+                },
+            }
+        )
+
+
+def test_validate_units_rejects_compatible_pair_with_missing_join() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Missing join unit dimensions between cache_write_tokens and input_audio_tokens',
+    ):
+        validate_units(
+            {
+                'input_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+                'cache_write_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'cache_write_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+                },
+                'input_audio_tokens': {
+                    'per': 1_000_000,
+                    'price_key': 'input_audio_mtok',
+                    'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+                },
+            }
+        )
+
+
+@pytest.mark.parametrize(
+    ('usage_key', 'price_key', 'message'),
+    [
+        ('_private_name', 'private_mtok', "Invalid unit usage key: '_private_name' must not start"),
+        ('$input_tokens', 'input_mtok', r"Invalid unit usage key: '\$input_tokens' is not a public identifier"),
+        ('class', 'class_mtok', "Invalid unit usage key: 'class' is a reserved keyword"),
+        ('def', 'def_mtok', "Invalid unit usage key: 'def' is a reserved keyword"),
+        ('function', 'function_mtok', "Invalid unit usage key: 'function' is a reserved keyword"),
+        ('café_tokens', 'cafe_mtok', "Invalid unit usage key: 'café_tokens' is not a public identifier"),
+        ('valid_usage', '_private_name', "Invalid unit price key: '_private_name' must not start"),
+        ('valid_usage', '$input_mtok', r"Invalid unit price key: '\$input_mtok' is not a public identifier"),
+        ('valid_usage', 'class', "Invalid unit price key: 'class' is a reserved keyword"),
+        ('valid_usage', 'lambda', "Invalid unit price key: 'lambda' is a reserved keyword"),
+        ('valid_usage', 'function', "Invalid unit price key: 'function' is a reserved keyword"),
+        ('valid_usage', 'café_mtok', "Invalid unit price key: 'café_mtok' is not a public identifier"),
+    ],
+)
+def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: str, message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        validate_units(
+            {
+                usage_key: {
+                    'per': 1_000_000,
+                    'price_key': price_key,
+                    'dimensions': {'family': 'tokens', 'direction': 'input'},
+                },
+            }
+        )
