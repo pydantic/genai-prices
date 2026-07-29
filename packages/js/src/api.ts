@@ -37,6 +37,10 @@ function setProviderData(data: ProviderDataPayload) {
         }
         throw error
       })
+    // Updates may be fire-and-forget. Observe failures without changing the
+    // original promise returned by waitForUpdate() to callers that do await it.
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    updatePromise.catch(() => undefined)
     providerDataPromise = updatePromise
   } else {
     providerDataPromise = Promise.resolve(activateProviderData(data))
