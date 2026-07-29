@@ -1,0 +1,21 @@
+prices/providers/perplexity.yml
+  s_a794008b85811c::t_3f0337dd30d399 12-15
+tests/test_extract_usage.py
+  s_a794008b85811c::t_3f0337dd30d399 1138,1164-1178
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "21f5b96678b1607921f422f4dbce97620d9df203",
+  "prompts": {},
+  "sessions": {
+    "s_a794008b85811c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fae25-5543-78b3-892f-6d5f07fe8798",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
