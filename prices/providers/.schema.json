@@ -917,7 +917,7 @@
             }
           ],
           "title": "Input Audio Minutes",
-          "description": "price in USD per 60 input audio seconds"
+          "description": "price in USD per input audio minute"
         },
         "input_gpixels": {
           "anyOf": [
