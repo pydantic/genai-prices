@@ -425,7 +425,7 @@
             }
           ],
           "title": "Cache Write 5M Mtok",
-          "description": "price in USD per million cache write 5m tokens"
+          "description": "price in USD per million tokens written to the cache with a 5-minute TTL"
         },
         "cache_write_1h_mtok": {
           "anyOf": [
@@ -437,7 +437,7 @@
             }
           ],
           "title": "Cache Write 1H Mtok",
-          "description": "price in USD per million cache write 1h tokens"
+          "description": "price in USD per million tokens written to the cache with a 1-hour TTL"
         },
         "input_text_mtok": {
           "anyOf": [
