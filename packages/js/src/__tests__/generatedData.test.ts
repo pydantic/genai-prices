@@ -53,11 +53,13 @@ const tokenUsageKeys = [
 ]
 
 const nonTokenUsageKeys = [
+  'audio_seconds',
   'input_characters',
   'input_audio_seconds',
   'input_pixels',
   'input_document_pages',
   'input_annotated_document_pages',
+  'output_audio_seconds',
   'rerank_searches',
   'web_searches',
   'social_searches',
@@ -80,7 +82,9 @@ describe('generated data split', () => {
     expect(unitData.web_searches?.dimensions.family).toBe('tool_calls')
     expect(unitData.web_searches?.dimensions.tool_type).toBe('web_search')
     expect(unitData.web_searches?.price_key).toBe('web_searches_kcount')
+    expect(unitData.audio_seconds?.price_key).toBe('audio_minutes')
     expect(unitData.input_audio_seconds?.price_key).toBe('input_audio_minutes')
+    expect(unitData.output_audio_seconds?.price_key).toBe('output_audio_minutes')
     expect(unitData.input_annotated_document_pages?.dimensions.page_type).toBe('annotated')
     expect(unitData.requests?.dimensions.family).toBe('requests')
     expect(unitData.requests?.price_key).toBe('requests_kcount')

@@ -123,10 +123,20 @@ NON_TOKEN_REPORTABLE_UNITS: dict[str, dict[str, Any]] = {
         'price_key': 'input_mchars',
         'dimensions': {'family': 'characters', 'direction': 'input'},
     },
+    'audio_seconds': {
+        'per': 60,
+        'price_key': 'audio_minutes',
+        'dimensions': {'family': 'durations', 'modality': 'audio'},
+    },
     'input_audio_seconds': {
         'per': 60,
         'price_key': 'input_audio_minutes',
         'dimensions': {'family': 'durations', 'direction': 'input', 'modality': 'audio'},
+    },
+    'output_audio_seconds': {
+        'per': 60,
+        'price_key': 'output_audio_minutes',
+        'dimensions': {'family': 'durations', 'direction': 'output', 'modality': 'audio'},
     },
     'input_pixels': {
         'per': 1_000_000_000,
@@ -370,8 +380,11 @@ def test_unit_registry_indexes_bundled_units() -> None:
 def test_bundled_non_token_unit_relationships() -> None:
     registry = UnitRegistry(load_units())
 
+    assert registry.ancestor_usage_keys('input_audio_seconds') == frozenset({'audio_seconds'})
+    assert registry.ancestor_usage_keys('output_audio_seconds') == frozenset({'audio_seconds'})
     assert registry.ancestor_usage_keys('input_annotated_document_pages') == frozenset({'input_document_pages'})
     assert registry.ancestor_usage_keys('web_searches') == frozenset()
+    assert not registry.units['input_audio_seconds'].is_compatible_with(registry.units['output_audio_seconds'])
     assert not registry.units['web_searches'].is_compatible_with(registry.units['social_searches'])
     assert not registry.units['storage_searches'].is_compatible_with(registry.units['code_executions'])
 

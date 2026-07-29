@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { RawUnitsDict } from '../types'
 
 import { unitData } from '../dataUnits'
-import { getActiveRegistry, UnitRegistry } from '../units'
+import { getActiveRegistry, isCompatible, UnitRegistry } from '../units'
 
 const tokenUsageKeys = [
   'input_tokens',
@@ -102,12 +102,14 @@ const tokenPriceKeys = [
 ]
 
 const nonTokenReportableUnits = {
+  audio_seconds: 'audio_minutes',
   code_executions: 'code_executions_kcount',
   input_annotated_document_pages: 'input_annotated_document_kpages',
   input_audio_seconds: 'input_audio_minutes',
   input_characters: 'input_mchars',
   input_document_pages: 'input_document_kpages',
   input_pixels: 'input_gpixels',
+  output_audio_seconds: 'output_audio_minutes',
   rerank_searches: 'rerank_searches_kcount',
   social_searches: 'social_searches_kcount',
   storage_searches: 'storage_searches_kcount',
@@ -132,6 +134,19 @@ describe('UnitRegistry', () => {
     expect(registry.getAllPriceKeys()).toContain('input_mtok')
     expect(new Set(registry.reportedUsageKeys())).toContain('input_tokens')
     expect(new Set(registry.reportedUsageKeys())).not.toContain('requests')
+  })
+
+  it('models directional audio durations as children of total audio duration', () => {
+    const registry = new UnitRegistry(unitData)
+    const inputAudio = registry.getUnit('input_audio_seconds')
+    const outputAudio = registry.getUnit('output_audio_seconds')
+    expect(inputAudio).toBeDefined()
+    expect(outputAudio).toBeDefined()
+    if (!inputAudio || !outputAudio) throw new Error('Expected directional audio duration units')
+
+    expect(registry.ancestorUsageKeys('input_audio_seconds')).toEqual(new Set(['audio_seconds']))
+    expect(registry.ancestorUsageKeys('output_audio_seconds')).toEqual(new Set(['audio_seconds']))
+    expect(isCompatible(inputAudio, outputAudio)).toBe(false)
   })
 
   it('defaults missing price keys to the usage key', () => {

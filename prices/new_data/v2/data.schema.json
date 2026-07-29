@@ -883,6 +883,18 @@
           "title": "Input Mchars",
           "description": "price in USD per million input characters"
         },
+        "audio_minutes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Audio Minutes",
+          "description": "price in USD per audio minute"
+        },
         "input_audio_minutes": {
           "anyOf": [
             {
@@ -894,6 +906,18 @@
           ],
           "title": "Input Audio Minutes",
           "description": "price in USD per input audio minute"
+        },
+        "output_audio_minutes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Output Audio Minutes",
+          "description": "price in USD per output audio minute"
         },
         "input_gpixels": {
           "anyOf": [
@@ -1318,6 +1342,7 @@
           "title": "Dest",
           "type": "string",
           "enum": [
+            "audio_seconds",
             "cache_audio_read_tokens",
             "cache_audio_write_1h_tokens",
             "cache_audio_write_5m_tokens",
@@ -1356,6 +1381,7 @@
             "input_video_tool_tokens",
             "output_audio_citation_tokens",
             "output_audio_reasoning_tokens",
+            "output_audio_seconds",
             "output_audio_tokens",
             "output_citation_tokens",
             "output_image_citation_tokens",
