@@ -96,7 +96,16 @@ def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -
     schema = copy.deepcopy(additional_price_schema)
     schema['title'] = unit.price_key.replace('_', ' ').title()
     normalization = {1_000: 'thousand', 1_000_000: 'million'}.get(unit.per, f'{unit.per:,}')
-    usage_name = unit.usage_key.replace('_', ' ')
+    cache_ttl = unit.dimensions.get('cache_ttl')
+    if (
+        unit.dimensions.get('token_type') == 'cache_write'
+        and unit.dimensions.get('modality') is None
+        and cache_ttl is not None
+    ):
+        ttl_description = {'5m': '5-minute', '1h': '1-hour'}.get(cache_ttl, cache_ttl)
+        usage_name = f'tokens written to the cache with a {ttl_description} TTL'
+    else:
+        usage_name = unit.usage_key.replace('_', ' ')
     schema['description'] = f'price in USD per {normalization} {usage_name}'
     return schema
 

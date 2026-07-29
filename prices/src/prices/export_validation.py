@@ -96,12 +96,7 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
         if family_value is None:
             raise ValueError(f'Missing required family dimension for unit {usage_key}')
 
-        dimension_requirements = {
-            conditional_key: dict(required_dimensions)
-            for conditional_key, required_dimensions in cast(
-                Mapping[str, Mapping[str, str]], raw_unit.get('dimension_requirements', {})
-            ).items()
-        }
+        dimension_requirements = _parse_dimension_requirements(usage_key, raw_unit.get('dimension_requirements', {}))
         _validate_dimension_requirements(usage_key, dimensions, dimension_requirements)
         dimension_requirements_by_usage_key[usage_key] = dimension_requirements
 
@@ -141,6 +136,33 @@ def _validate_public_key(kind: str, key: str) -> None:
         raise ValueError(f'Invalid unit {kind} key: {key!r} must not start with "_"')
     if key in _RESERVED_PUBLIC_KEYS:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is reserved')
+
+
+def _parse_dimension_requirements(usage_key: str, raw_requirements: Any) -> dict[str, dict[str, str]]:
+    if not isinstance(raw_requirements, Mapping):
+        raise ValueError(f'Invalid dimension_requirements for unit {usage_key}: expected a mapping')
+
+    dimension_requirements: dict[str, dict[str, str]] = {}
+    for conditional_key, raw_required_dimensions in cast(Mapping[object, object], raw_requirements).items():
+        if not isinstance(conditional_key, str):
+            raise ValueError(f'Invalid dimension_requirements for unit {usage_key}: trigger keys must be strings')
+        if not isinstance(raw_required_dimensions, Mapping):
+            raise ValueError(
+                f'Invalid dimension_requirements for unit {usage_key}: '
+                f'requirement for {conditional_key!r} must be a mapping'
+            )
+
+        required_dimensions: dict[str, str] = {}
+        for dimension_key, dimension_value in cast(Mapping[object, object], raw_required_dimensions).items():
+            if not isinstance(dimension_key, str) or not isinstance(dimension_value, str):
+                raise ValueError(
+                    f'Invalid dimension_requirements for unit {usage_key}: '
+                    f'requirement for {conditional_key!r} must map string dimension keys to string values'
+                )
+            required_dimensions[dimension_key] = dimension_value
+        dimension_requirements[conditional_key] = required_dimensions
+
+    return dimension_requirements
 
 
 def _validate_dimension_requirements(

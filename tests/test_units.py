@@ -533,6 +533,37 @@ def test_validate_units_rejects_invalid_dimension_requirements(
         )
 
 
+@pytest.mark.parametrize(
+    ('requirements', 'message'),
+    [
+        ([], 'expected a mapping'),
+        ({1: {'token_type': 'cache_write'}}, 'trigger keys must be strings'),
+        ({'cache_ttl': []}, "requirement for 'cache_ttl' must be a mapping"),
+        ({'cache_ttl': {1: 'cache_write'}}, 'must map string dimension keys to string values'),
+        ({'cache_ttl': {'token_type': 1}}, 'must map string dimension keys to string values'),
+    ],
+)
+def test_validate_units_rejects_malformed_dimension_requirements(requirements: Any, message: str) -> None:
+    with pytest.raises(
+        ValueError,
+        match=message,
+    ):
+        validate_units(
+            {
+                'cache_write_1h_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': {
+                        'family': 'tokens',
+                        'direction': 'input',
+                        'token_type': 'cache_write',
+                        'cache_ttl': '1h',
+                    },
+                    'dimension_requirements': requirements,
+                }
+            }
+        )
+
+
 def test_validate_units_rejects_compatible_pair_with_missing_join() -> None:
     with pytest.raises(
         ValueError,
