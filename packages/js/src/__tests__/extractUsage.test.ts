@@ -341,7 +341,6 @@ describe('extractUsage', () => {
       })
       expect(warn).toHaveBeenCalledWith('Unsupported extractor destination for standard extraction: future_tokens')
       expect(warn).toHaveBeenCalledTimes(1)
-      warn.mockRestore()
     })
 
     it('should skip optional nested paths with the wrong intermediate shape', () => {
