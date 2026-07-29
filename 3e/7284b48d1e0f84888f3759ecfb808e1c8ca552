@@ -1,0 +1,19 @@
+tests/test_lifecycle.py
+  s_fb12e63df3c91f::t_bdb8a17d46f9c5 10,72,76-78,80-92,94-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "3e7284b48d1e0f84888f3759ecfb808e1c8ca552",
+  "prompts": {},
+  "sessions": {
+    "s_fb12e63df3c91f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa954-72e0-7761-9cc5-c16aad4e6b84",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
