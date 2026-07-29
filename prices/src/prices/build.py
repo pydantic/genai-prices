@@ -63,10 +63,10 @@ def build():
     schema_json_path = package_dir / 'providers' / '.schema.json'
     schema_json_path.write_bytes(pydantic_core.to_json(_provider_yaml_schema(units), indent=2) + b'\n')
     print('Providers JSON schema written to', schema_json_path.relative_to(root_dir))
-    write_prices(providers, units, 'data_v2.json')
+    write_prices(providers, units, 'new_data/v2/data.json')
     for provider in providers:
         provider.exclude_free()
-    write_prices(providers, units, 'data_v2_slim.json', slim=True)
+    write_prices(providers, units, 'new_data/v2/data_slim.json', slim=True)
 
 
 def _provider_yaml_schema(raw_units: dict[str, Any]) -> dict[str, Any]:
@@ -110,6 +110,7 @@ def write_prices(
 ) -> None:
     print('')
     prices_json_path = package_dir / prices_file
+    prices_json_path.parent.mkdir(parents=True, exist_ok=True)
 
     providers_json_schema = simplify_json_schema(providers_schema.json_schema(mode='serialization'))
     data_json_schema = _add_unit_vocabulary_to_schema(providers_json_schema, units)

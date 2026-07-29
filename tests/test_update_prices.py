@@ -55,7 +55,7 @@ def _mock_update_prices_get(monkeypatch: pytest.MonkeyPatch, content: bytes = _p
     def fake_get(url: str, timeout: httpx2.Timeout) -> Response:
         assert url in {
             'https://example.test/prices.json',
-            'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/data_v2.json',
+            'https://raw.githubusercontent.com/pydantic/genai-prices/refs/heads/main/prices/new_data/v2/data.json',
         }
         assert timeout is not None
         return Response(content)

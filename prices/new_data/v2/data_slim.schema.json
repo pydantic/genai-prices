@@ -39,7 +39,11 @@
           "title": "Match"
         }
       },
-      "required": ["type", "field", "match"],
+      "required": [
+        "type",
+        "field",
+        "match"
+      ],
       "title": "ArrayMatch",
       "type": "object"
     },
@@ -76,7 +80,9 @@
           "type": "array"
         }
       },
-      "required": ["and"],
+      "required": [
+        "and"
+      ],
       "title": "ClauseAnd",
       "type": "object"
     },
@@ -88,7 +94,9 @@
           "type": "string"
         }
       },
-      "required": ["contains"],
+      "required": [
+        "contains"
+      ],
       "title": "ClauseContains",
       "type": "object"
     },
@@ -100,7 +108,9 @@
           "type": "string"
         }
       },
-      "required": ["ends_with"],
+      "required": [
+        "ends_with"
+      ],
       "title": "ClauseEndsWith",
       "type": "object"
     },
@@ -112,7 +122,9 @@
           "type": "string"
         }
       },
-      "required": ["equals"],
+      "required": [
+        "equals"
+      ],
       "title": "ClauseEquals",
       "type": "object"
     },
@@ -149,7 +161,9 @@
           "type": "array"
         }
       },
-      "required": ["or"],
+      "required": [
+        "or"
+      ],
       "title": "ClauseOr",
       "type": "object"
     },
@@ -162,7 +176,9 @@
           "type": "string"
         }
       },
-      "required": ["regex"],
+      "required": [
+        "regex"
+      ],
       "title": "ClauseRegex",
       "type": "object"
     },
@@ -174,7 +190,9 @@
           "type": "string"
         }
       },
-      "required": ["starts_with"],
+      "required": [
+        "starts_with"
+      ],
       "title": "ClauseStartsWith",
       "type": "object"
     },
@@ -199,7 +217,9 @@
           "description": "Prices for this condition."
         }
       },
-      "required": ["prices"],
+      "required": [
+        "prices"
+      ],
       "title": "ConditionalPrice",
       "type": "object"
     },
@@ -267,7 +287,11 @@
           "title": "Deprecated"
         }
       },
-      "required": ["id", "match", "prices"],
+      "required": [
+        "id",
+        "match",
+        "prices"
+      ],
       "title": "ModelInfo",
       "type": "object"
     },
@@ -634,7 +658,12 @@
           "type": "array"
         }
       },
-      "required": ["id", "name", "api_pattern", "models"],
+      "required": [
+        "id",
+        "name",
+        "api_pattern",
+        "models"
+      ],
       "title": "Provider",
       "type": "object"
     },
@@ -649,7 +678,9 @@
           "type": "string"
         }
       },
-      "required": ["start_date"],
+      "required": [
+        "start_date"
+      ],
       "title": "StartDateConstraint",
       "type": "object"
     },
@@ -668,7 +699,10 @@
           "type": "number"
         }
       },
-      "required": ["start", "price"],
+      "required": [
+        "start",
+        "price"
+      ],
       "title": "Tier",
       "type": "object"
     },
@@ -690,7 +724,10 @@
           "type": "array"
         }
       },
-      "required": ["base", "tiers"],
+      "required": [
+        "base",
+        "tiers"
+      ],
       "title": "TieredPrices",
       "type": "object"
     },
@@ -711,7 +748,10 @@
           "type": "string"
         }
       },
-      "required": ["start_time", "end_time"],
+      "required": [
+        "start_time",
+        "end_time"
+      ],
       "title": "TimeOfDateConstraint",
       "type": "object"
     },
@@ -779,7 +819,10 @@
           "type": "array"
         }
       },
-      "required": ["root", "mappings"],
+      "required": [
+        "root",
+        "mappings"
+      ],
       "title": "UsageExtractor",
       "type": "object"
     },
@@ -843,7 +886,10 @@
           "type": "boolean"
         }
       },
-      "required": ["path", "dest"],
+      "required": [
+        "path",
+        "dest"
+      ],
       "title": "UsageExtractorMapping",
       "type": "object"
     }
