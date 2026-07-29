@@ -1,13 +1,12 @@
 # Pricing data for `genai-prices`
 
-## Pinned v1 compatibility artifacts
+## DO NOT MOVE PUBLISHED DATA ARTIFACTS!
 
-The four v1 files — `data.json`, `data.schema.json`, `data_slim.json`, and `data_slim.schema.json` — are pinned
-compatibility artifacts. Do not move, edit, or regenerate them; existing consumers may depend on both their URLs and
-their frozen content.
+The legacy v1 artifacts remain directly under `prices/`. New contracts live under versioned directories such as
+`prices/new_data/v2/`; later contracts should use a new `prices/new_data/v<version>/` directory rather than adding
+version-suffixed files to the flat `prices/` directory.
 
-Current builds generate `data_v2.json`, `data_v2.schema.json`, and the Python and JavaScript package data. The v2 data
-is the provider array consumed by packages that bundle their own static unit registry.
+These files are downloaded by packages to auto-update prices, so their URLs must not change.
 
 ## Contributing
 
@@ -30,7 +29,7 @@ When you edit the prices of a model, remember to:
 Please do not:
 
 - edit generated JSON files directly — edit the provider YAML and use `make build` instead
-- modify the four pinned v1 compatibility artifacts
+- modify the v1 compatibility artifacts in a way the baseline v1 clients cannot consume
 - add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
 - try to change the schema of providers or models without creating an issue to discuss the changes first
 - add new providers without creating an issue to discuss the changes first, adding models is fine

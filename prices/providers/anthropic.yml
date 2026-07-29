@@ -385,15 +385,18 @@ models:
         - starts_with: claude-5-opus
         - starts_with: claude-5.0-opus
     context_window: 1000000
-    prices_checked: 2026-07-24
+    prices_checked: 2026-07-29
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
-      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool
     prices:
       input_mtok: 5
       cache_read_mtok: 0.50
       cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
       output_mtok: 25
+      web_searches_kcount: 10
 
   - id: claude-sonnet-4-0
     name: Claude Sonnet 4

@@ -25,6 +25,13 @@ def mtok(v: Decimal | None) -> Decimal | None:
         return v * 1_000_000
 
 
+def distinct_mtok(v: Decimal | None, aggregate_v: Decimal | None) -> Decimal | None:
+    """Convert a token price to mtok when it is distinct from its aggregate price."""
+    if v == aggregate_v:
+        return None
+    return mtok(v)
+
+
 T = TypeVar('T')
 
 

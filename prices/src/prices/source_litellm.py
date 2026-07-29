@@ -8,7 +8,7 @@ from pydantic import BaseModel, OnErrorOmit, TypeAdapter
 from . import source_prices
 from .prices_types import ModelPrice
 from .update import get_providers_yaml
-from .utils import mtok
+from .utils import distinct_mtok, mtok
 
 
 class LiteLLMModel(BaseModel):
@@ -22,12 +22,7 @@ class LiteLLMModel(BaseModel):
     deprecation_date: str | None = None
 
     def model_price(self) -> ModelPrice:
-        reasoning_price = (
-            mtok(self.output_cost_per_reasoning_token)
-            if self.output_cost_per_reasoning_token is not None
-            and self.output_cost_per_reasoning_token != self.output_cost_per_token
-            else None
-        )
+        reasoning_price = distinct_mtok(self.output_cost_per_reasoning_token, self.output_cost_per_token)
         return ModelPrice(
             input_mtok=mtok(self.input_cost_per_token),
             output_mtok=mtok(self.output_cost_per_token),

@@ -552,12 +552,14 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
+          web_searches_kcount: 10,
         },
       },
       {
@@ -4577,6 +4579,34 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-opus-5',
+        match: {
+          or: [
+            {
+              contains: 'claude-5-opus',
+            },
+            {
+              contains: 'claude-opus-5',
+            },
+            {
+              contains: 'claude-5.0-opus',
+            },
+            {
+              contains: 'claude-opus-5.0',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint pricing, flat across the full 1M context window. Multi-region and regional endpoints carry a 10% premium. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models',
+        prices: {
+          input_mtok: 5,
+          cache_write_mtok: 6.25,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
+        },
+      },
+      {
         id: 'gemini-1.0-pro-vision-001',
         name: 'gemini 1.0 pro vision',
         description:
@@ -4975,7 +5005,14 @@ export const data: Provider[] = [
         description:
           "Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
         match: {
-          regex: '^gemini-3\\.1-flash-lite(?!-image)',
+          or: [
+            {
+              equals: 'gemini-3.1-flash-lite',
+            },
+            {
+              starts_with: 'gemini-3.1-flash-lite-preview',
+            },
+          ],
         },
         context_window: 1000000,
         price_comments: 'See https://ai.google.dev/gemini-api/docs/pricing.',
@@ -19113,6 +19150,8 @@ export const data: Provider[] = [
         match: {
           equals: 'perplexity/sonar-deep-research',
         },
+        price_comments:
+          'OpenRouter reports internal reasoning as a distinct $3 per million-token charge. Ref: https://openrouter.ai/perplexity/sonar-deep-research/pricing',
         prices: {
           input_mtok: 2,
           output_mtok: 8,
