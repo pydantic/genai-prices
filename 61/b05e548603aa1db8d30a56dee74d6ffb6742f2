@@ -1,0 +1,19 @@
+tests/test_price_calc.py
+  s_a794008b85811c::t_a6446f4dd8309d 399-400
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "61b05e548603aa1db8d30a56dee74d6ffb6742f2",
+  "prompts": {},
+  "sessions": {
+    "s_a794008b85811c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fae25-5543-78b3-892f-6d5f07fe8798",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
