@@ -1,0 +1,25 @@
+prices/new_data/v2/data.json
+  s_fb12e63df3c91f::t_92e4c38499f9e1 1-11190
+prices/new_data/v2/data.schema.json
+  s_fb12e63df3c91f::t_17116473365840 1-896
+prices/new_data/v2/data_slim.json
+  s_fb12e63df3c91f::t_a5593c4d765f2f 1-9018
+prices/new_data/v2/data_slim.schema.json
+  s_fb12e63df3c91f::t_29fb63c452acfb 1-855
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2e597219276355dbb00e6dec4664285adc6679f9",
+  "prompts": {},
+  "sessions": {
+    "s_fb12e63df3c91f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa954-72e0-7761-9cc5-c16aad4e6b84",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
