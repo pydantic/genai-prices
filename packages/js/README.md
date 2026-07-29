@@ -41,9 +41,8 @@ future versioned payload.
 ```ts
 import { calcPrice, updatePrices, waitForUpdate } from '@pydantic/genai-prices'
 
-updatePrices(async ({ remoteDataUrl, setProviderData }) => {
-  const response = await fetch(remoteDataUrl)
-  setProviderData(await response.json())
+updatePrices(({ remoteDataUrl, setProviderData }) => {
+  setProviderData(fetch(remoteDataUrl).then((response) => response.json()))
 })
 
 // ...
