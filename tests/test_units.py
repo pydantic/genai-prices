@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import ast
+import json
+import subprocess
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import FrozenInstanceError
@@ -21,8 +23,8 @@ from genai_prices.types import (
     _compute_registry_priced_counts,
 )
 from genai_prices.units import UnitDef, UnitRegistry, _get_registry
-from prices import package_data, prices_types as build_types
-from prices.export_validation import validate_units
+from prices import build as build_module, export_validation, package_data, prices_types as build_types
+from prices.export_validation import validate_export_payload, validate_units
 
 from .unit_registry_helpers import load_units
 
@@ -987,3 +989,460 @@ def test_model_price_calculation_resolves_each_stored_price_once(monkeypatch: py
         }
 
     unit_lookup.assert_called_once_with('input_mtok')
+
+
+def test_package_data_surfaces_registry_structural_errors(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    (tmp_path / 'units.yml').write_text(
+        """\
+input_tokens:
+  per: 1_000_000
+  price_key: input_mtok
+  dimensions: {family: tokens, direction: input}
+prompt_tokens:
+  per: 1_000_000
+  price_key: prompt_mtok
+  dimensions: {family: tokens, direction: input}
+"""
+    )
+    monkeypatch.setattr(build_module, 'package_dir', tmp_path)
+
+    with pytest.raises(
+        ValueError,
+        match='Duplicate unit dimensions: input_tokens and prompt_tokens',
+    ):
+        package_data.load_unit_registry(build_module.load_units())
+
+
+def test_package_data_load_unit_registry_delegates_to_export_validator(monkeypatch: pytest.MonkeyPatch) -> None:
+    raw_units: dict[str, Any] = {
+        'widgets': {
+            'per': 1_000_000,
+            'dimensions': {'family': 'widgets'},
+        }
+    }
+    expected_registry = UnitRegistry(raw_units)
+    calls: list[dict[str, Any]] = []
+
+    def validate(raw_units_arg: dict[str, Any]) -> UnitRegistry:
+        calls.append(raw_units_arg)
+        return expected_registry
+
+    monkeypatch.setattr(export_validation, 'validate_units', validate)
+
+    assert package_data.load_unit_registry(raw_units) is expected_registry
+    assert calls == [raw_units]
+
+
+def test_runtime_packages_do_not_define_unit_publication_validators() -> None:
+    runtime_files = [
+        *Path('packages/python/genai_prices').glob('*.py'),
+        *Path('packages/js/src').glob('*.ts'),
+    ]
+    forbidden_terms = {'validate_units', 'validateUnits'}
+    references = {
+        str(path): sorted(term for term in forbidden_terms if term in path.read_text()) for path in runtime_files
+    }
+
+    assert {path: terms for path, terms in references.items() if terms} == {}
+
+
+def test_package_generation_no_longer_reloads_units_yml() -> None:
+    references = {
+        path
+        for path in Path('prices/src/prices').glob('*.py')
+        if path.name != 'build.py' and 'units.yml' in path.read_text()
+    }
+
+    assert references == set()
+
+
+def test_package_provider_data_rejects_non_array_root(tmp_path: Path) -> None:
+    data_path = tmp_path / 'data_v2.json'
+    data_path.write_text('{"providers": []}')
+
+    with pytest.raises(ValueError, match=r'Expected .* to contain a provider array'):
+        package_data._load_provider_data(data_path)
+
+
+def test_package_data_loads_providers_and_units_independently(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    provider_data: list[package_data.JsonData] = [{'id': 'testing', 'name': 'Testing', 'models': []}]
+    units: dict[str, Any] = {
+        'widgets': {
+            'per': 1_000,
+            'dimensions': {'family': 'widgets'},
+        }
+    }
+    (tmp_path / 'data_v2.json').write_text(json.dumps(provider_data))
+    calls: list[tuple[str, list[package_data.JsonData], dict[str, Any]]] = []
+
+    def generate_python(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
+        calls.append(('python', providers, raw_units))
+
+    def generate_typescript(providers: list[package_data.JsonData], raw_units: dict[str, Any]) -> None:
+        calls.append(('typescript', providers, raw_units))
+
+    monkeypatch.setattr(package_data, 'this_package_dir', tmp_path)
+    monkeypatch.setattr(package_data, 'load_units', lambda: units)
+    monkeypatch.setattr(package_data, 'package_python_data', generate_python)
+    monkeypatch.setattr(package_data, 'package_ts_data', generate_typescript)
+
+    package_data.package_data()
+
+    assert calls == [
+        ('python', provider_data, units),
+        ('typescript', provider_data, units),
+    ]
+
+
+def test_package_data_accepts_valid_provider_model_prices() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), requests_kcount=Decimal('1'))
+    )
+
+    package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_validate_export_payload_returns_validated_unit_registry() -> None:
+    registry = validate_export_payload(
+        [_build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))],
+        load_units(),
+    )
+
+    assert isinstance(registry, UnitRegistry)
+    assert registry.unit_for_price_key('cache_image_write_mtok').usage_key == 'cache_image_write_tokens'
+
+
+def test_validate_export_payload_rejects_unknown_price_key() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'hovercraft_mtok': '1'}),
+        model_id='unknown-extra-price',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/unknown-extra-price: Unknown price key: hovercraft_mtok',
+    ):
+        validate_export_payload([provider], load_units())
+
+
+def test_validate_export_payload_rejects_unknown_extractor_destination() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('imaginary_tokens')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: imaginary_tokens',
+    ):
+        validate_export_payload([provider], load_units())
+
+
+def test_validate_export_payload_rejects_missing_dynamic_price_ancestor() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'cache_image_write_mtok': '1'}),
+        model_id='missing-dynamic-ancestor',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-dynamic-ancestor: Missing ancestor price for cache_image_write_tokens',
+    ):
+        validate_export_payload([provider], load_units())
+
+
+def test_build_propagates_export_payload_validator_errors(monkeypatch: pytest.MonkeyPatch) -> None:
+    from prices import build as build_module
+
+    class ExportValidationError(ValueError):
+        pass
+
+    def fail_export_validation(_providers: list[build_types.Provider], _units: dict[str, Any]) -> UnitRegistry:
+        raise ExportValidationError('sentinel export validation failure')
+
+    monkeypatch.setattr(build_module, 'validate_export_payload', fail_export_validation)
+
+    with pytest.raises(ExportValidationError, match='sentinel export validation failure'):
+        build_module.build()
+
+
+def test_build_writes_only_v2_price_artifacts(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    providers_dir = tmp_path / 'providers'
+    providers_dir.mkdir()
+    writes: list[str] = []
+
+    def record_write(_providers: list[build_types.Provider], _units: dict[str, Any], filename: str) -> None:
+        writes.append(filename)
+
+    monkeypatch.setattr(build_module, 'package_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'root_dir', tmp_path)
+    monkeypatch.setattr(build_module, 'load_units', load_units)
+    monkeypatch.setattr(build_module, 'write_prices', record_write)
+
+    build_module.build()
+
+    assert writes == ['data_v2.json']
+
+
+def test_package_ts_data_accepts_separated_inputs_without_units_yml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    units = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        },
+    }
+    provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
+
+    js_src_dir = tmp_path / 'packages' / 'js' / 'src'
+    js_src_dir.mkdir(parents=True)
+    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+
+    def skip_prettier(
+        args: list[str],
+        *,
+        cwd: str | None = None,
+        check: bool = False,
+        stdout: int | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        _ = cwd, check, stdout
+        return subprocess.CompletedProcess(args, 0)
+
+    monkeypatch.setattr(subprocess, 'run', skip_prettier)
+
+    package_data.package_ts_data(provider_data, units)
+
+    assert (js_src_dir / 'data.ts').exists()
+    unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
+    generated_json = unit_data_content.split('export const unitData: RawUnitsDict = ', 1)[1].removesuffix(';\n')
+    assert json.loads(generated_json) == units
+
+
+def test_build_model_price_accepts_typed_extra_price_keys() -> None:
+    price = build_types.ModelPrice.model_validate({'input_mtok': '1.0', 'cache_image_write_mtok': '0.5'})
+
+    assert price.input_mtok == Decimal('1.0')
+    assert price.model_extra == {'cache_image_write_mtok': Decimal('0.5')}
+    assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
+
+
+def test_runtime_model_price_repr_preserves_dynamic_price_keys() -> None:
+    price = ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))
+
+    assert repr(price) == "ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))"
+
+
+def test_build_model_price_extras_affect_is_free() -> None:
+    assert not build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}).is_free()
+    assert build_types.ModelPrice().is_free()
+
+
+def test_extras_only_paid_model_survives_slim_filtering() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}),
+        model_id='extras-only-paid',
+    )
+
+    provider.exclude_free()
+
+    assert [model.id for model in provider.models] == ['extras-only-paid']
+
+
+def test_package_data_validates_conditional_model_prices() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        [build_types.ConditionalPrice(prices=build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))]
+    )
+
+    package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_unknown_price_keys() -> None:
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+        }
+    )
+    provider = _build_provider_prices(build_types.ModelPrice(output_mtok=Decimal('1')), model_id='unknown-price')
+
+    with pytest.raises(
+        ValueError, match='Invalid model price for testing/unknown-price: Unknown price key: output_mtok'
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_missing_ancestors() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(build_types.ModelPrice(cache_read_mtok=Decimal('1')), model_id='missing-ancestor')
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-ancestor: Missing ancestor price for cache_read_tokens',
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_required_joins() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(
+            input_mtok=Decimal('1'),
+            cache_read_mtok=Decimal('0.5'),
+            input_audio_mtok=Decimal('2'),
+        ),
+        model_id='missing-join-price',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-join-price: Missing join price for cache_read_tokens',
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_missing_join_units_for_conditional_prices() -> None:
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_write_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+            },
+            'input_audio_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_audio_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+            },
+        }
+    )
+    provider = _build_provider_prices(
+        [
+            build_types.ConditionalPrice(
+                prices=build_types.ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('0.5'),
+                    input_audio_mtok=Decimal('2'),
+                )
+            )
+        ],
+        model_id='missing-join-unit',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Invalid model price for testing/missing-join-unit\\[0\\]: '
+            'Missing registered join unit for priced units cache_write_tokens and input_audio_tokens'
+        ),
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_accepts_valid_synthetic_extractor_destinations() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('input_tokens')],
+    )
+
+    package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_build_extractor_mapping_accepts_arbitrary_destinations_at_model_layer() -> None:
+    mapping = build_types.UsageExtractorMapping.model_validate({'path': 'value', 'dest': 'weird_unit'})
+
+    assert mapping.dest == 'weird_unit'
+
+
+def test_build_extractor_mapping_still_accepts_known_destinations() -> None:
+    mapping = build_types.UsageExtractorMapping.model_validate({'path': 'value', 'dest': 'input_tokens'})
+
+    assert mapping.dest == 'input_tokens'
+
+
+def test_package_data_extractor_validation_rejects_price_keys() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('input_mtok')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: input_mtok',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_package_data_extractor_validation_rejects_unknown_destinations() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('imaginary_tokens')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: imaginary_tokens',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_package_data_extractor_validation_rejects_pricing_only_requests() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[_build_extractor('requests')],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: requests',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
+
+
+def test_package_data_extractor_validation_reports_multiple_invalid_destinations() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(input_mtok=Decimal('1')),
+        extractors=[
+            build_types.UsageExtractor.model_construct(
+                root='usage',
+                mappings=[
+                    _build_extractor_mapping('prompt_tokens', 'input_mtok'),
+                    _build_extractor_mapping('requests', 'requests'),
+                ],
+                api_flavor='default',
+                model_path='model',
+            )
+        ],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid extractor destination for testing/default: Invalid extractor destination: input_mtok, requests',
+    ):
+        package_data.validate_provider_extractor_destinations([provider], registry)
