@@ -97,9 +97,14 @@ def _unit_price_schema(unit: UnitDef, additional_price_schema: dict[str, Any]) -
     schema['title'] = unit.price_key.replace('_', ' ').title()
     normalization = {1_000: 'thousand', 1_000_000: 'million'}.get(unit.per, f'{unit.per:,}')
     cache_ttl = unit.dimensions.get('cache_ttl')
-    if unit.per == 60 and unit.usage_key.endswith('_seconds') and unit.price_key.endswith('_minutes'):
+    duration_price_unit = {60: ('minutes', 'minute'), 3_600: ('hours', 'hour')}.get(unit.per)
+    if (
+        duration_price_unit is not None
+        and unit.usage_key.endswith('_seconds')
+        and unit.price_key.endswith(f'_{duration_price_unit[0]}')
+    ):
         normalization = ''
-        usage_name = f'{unit.usage_key.removesuffix("_seconds").replace("_", " ")} minute'
+        usage_name = f'{unit.usage_key.removesuffix("_seconds").replace("_", " ")} {duration_price_unit[1]}'
     elif (
         unit.dimensions.get('token_type') == 'cache_write'
         and unit.dimensions.get('modality') is None

@@ -43,8 +43,9 @@ def test_provider_yaml_schema_includes_current_dynamic_registry_price_keys() -> 
 
     properties = schema['$defs']['ModelPrice']['properties']
     assert 'cache_image_read_mtok' in properties
-    assert 'input_audio_minutes' in properties
-    assert properties['input_audio_minutes']['description'] == 'price in USD per input audio minute'
+    assert properties['audio_hours']['description'] == 'price in USD per audio hour'
+    assert properties['input_audio_hours']['description'] == 'price in USD per input audio hour'
+    assert properties['output_audio_hours']['description'] == 'price in USD per output audio hour'
     assert 'cache_write_5m_mtok' in properties
     assert (
         properties['cache_write_5m_mtok']['description']

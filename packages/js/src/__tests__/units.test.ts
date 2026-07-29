@@ -102,14 +102,14 @@ const tokenPriceKeys = [
 ]
 
 const nonTokenReportableUnits = {
-  audio_seconds: 'audio_minutes',
+  audio_seconds: 'audio_hours',
   code_executions: 'code_executions_kcount',
   input_annotated_document_pages: 'input_annotated_document_kpages',
-  input_audio_seconds: 'input_audio_minutes',
+  input_audio_seconds: 'input_audio_hours',
   input_characters: 'input_mchars',
   input_document_pages: 'input_document_kpages',
   input_pixels: 'input_gpixels',
-  output_audio_seconds: 'output_audio_minutes',
+  output_audio_seconds: 'output_audio_hours',
   rerank_searches: 'rerank_searches_kcount',
   social_searches: 'social_searches_kcount',
   storage_searches: 'storage_searches_kcount',

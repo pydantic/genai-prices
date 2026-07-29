@@ -907,7 +907,7 @@
           "title": "Input Mchars",
           "description": "price in USD per million input characters"
         },
-        "audio_minutes": {
+        "audio_hours": {
           "anyOf": [
             {
               "type": "number"
@@ -916,10 +916,10 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ],
-          "title": "Audio Minutes",
-          "description": "price in USD per audio minute"
+          "title": "Audio Hours",
+          "description": "price in USD per audio hour"
         },
-        "input_audio_minutes": {
+        "input_audio_hours": {
           "anyOf": [
             {
               "type": "number"
@@ -928,10 +928,10 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ],
-          "title": "Input Audio Minutes",
-          "description": "price in USD per input audio minute"
+          "title": "Input Audio Hours",
+          "description": "price in USD per input audio hour"
         },
-        "output_audio_minutes": {
+        "output_audio_hours": {
           "anyOf": [
             {
               "type": "number"
@@ -940,8 +940,8 @@
               "$ref": "#/$defs/TieredPrices"
             }
           ],
-          "title": "Output Audio Minutes",
-          "description": "price in USD per output audio minute"
+          "title": "Output Audio Hours",
+          "description": "price in USD per output audio hour"
         },
         "input_gpixels": {
           "anyOf": [

@@ -644,6 +644,8 @@ def _unit_per_label(unit: UnitDef) -> str:
         return 'K'
     if family == 'durations' and unit.per == 60:
         return 'Min'
+    if family == 'durations' and unit.per == 3_600:
+        return 'Hour'
     if unit.per == 1_000_000_000:
         return 'G'
     if unit.per == 1_000_000:

@@ -6,8 +6,8 @@ export const unitData: RawUnitsDict = {
       family: 'durations',
       modality: 'audio',
     },
-    per: 60,
-    price_key: 'audio_minutes',
+    per: 3600,
+    price_key: 'audio_hours',
   },
   cache_audio_read_tokens: {
     dimensions: {
@@ -238,8 +238,8 @@ export const unitData: RawUnitsDict = {
       family: 'durations',
       modality: 'audio',
     },
-    per: 60,
-    price_key: 'input_audio_minutes',
+    per: 3600,
+    price_key: 'input_audio_hours',
   },
   input_audio_tokens: {
     dimensions: {
@@ -384,8 +384,8 @@ export const unitData: RawUnitsDict = {
       family: 'durations',
       modality: 'audio',
     },
-    per: 60,
-    price_key: 'output_audio_minutes',
+    per: 3600,
+    price_key: 'output_audio_hours',
   },
   output_audio_tokens: {
     dimensions: {
