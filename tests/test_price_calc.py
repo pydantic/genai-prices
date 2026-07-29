@@ -399,6 +399,16 @@ def test_claude_opus_5_web_search_price():
     assert price.total_price == Decimal('0.02')
 
 
+def test_claude_opus_5_one_hour_cache_write_price():
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_1h_tokens=1_000_000),
+        model_ref='claude-opus-5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == Decimal('10')
+
+
 def test_distinct_output_category_prices_replace_aggregate_output_rate():
     price = calc_price(
         Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),

@@ -7823,7 +7823,17 @@
             "input_price": "0.00417525",
             "output_price": "0.005865",
             "provider_id": "anthropic"
-          },
+          }
+        ],
+        "usage": {
+          "cache_write_5m_tokens": 1111,
+          "cache_write_tokens": 1111,
+          "input_tokens": 1114,
+          "output_tokens": 391
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "input_price": "0.004592775",
@@ -7906,7 +7916,18 @@
             "input_price": "0.00185355",
             "output_price": "0.000495",
             "provider_id": "anthropic"
-          },
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 1111,
+          "cache_write_5m_tokens": 403,
+          "cache_write_tokens": 403,
+          "input_tokens": 1517,
+          "output_tokens": 33
+        }
+      },
+      {
+        "extractors": [
           {
             "api_flavor": "anthropic",
             "input_price": "0.002038905",

@@ -1,4 +1,6 @@
 import ast
+import json
+import subprocess
 from dataclasses import FrozenInstanceError
 from decimal import Decimal
 from pathlib import Path
@@ -24,22 +26,32 @@ TOKEN_USAGE_KEYS = {
     'output_tokens',
     'cache_read_tokens',
     'cache_write_tokens',
+    'cache_write_5m_tokens',
+    'cache_write_1h_tokens',
     'input_text_tokens',
     'output_text_tokens',
     'cache_text_read_tokens',
     'cache_text_write_tokens',
+    'cache_text_write_5m_tokens',
+    'cache_text_write_1h_tokens',
     'input_audio_tokens',
     'output_audio_tokens',
     'cache_audio_read_tokens',
     'cache_audio_write_tokens',
+    'cache_audio_write_5m_tokens',
+    'cache_audio_write_1h_tokens',
     'input_image_tokens',
     'output_image_tokens',
     'cache_image_read_tokens',
     'cache_image_write_tokens',
+    'cache_image_write_5m_tokens',
+    'cache_image_write_1h_tokens',
     'input_video_tokens',
     'output_video_tokens',
     'cache_video_read_tokens',
     'cache_video_write_tokens',
+    'cache_video_write_5m_tokens',
+    'cache_video_write_1h_tokens',
     'input_tool_tokens',
     'input_text_tool_tokens',
     'input_audio_tool_tokens',
@@ -62,22 +74,32 @@ TOKEN_PRICE_KEYS = {
     'output_mtok',
     'cache_read_mtok',
     'cache_write_mtok',
+    'cache_write_5m_mtok',
+    'cache_write_1h_mtok',
     'input_text_mtok',
     'output_text_mtok',
     'cache_text_read_mtok',
     'cache_text_write_mtok',
+    'cache_text_write_5m_mtok',
+    'cache_text_write_1h_mtok',
     'input_audio_mtok',
     'output_audio_mtok',
     'cache_audio_read_mtok',
     'cache_audio_write_mtok',
+    'cache_audio_write_5m_mtok',
+    'cache_audio_write_1h_mtok',
     'input_image_mtok',
     'output_image_mtok',
     'cache_image_read_mtok',
     'cache_image_write_mtok',
+    'cache_image_write_5m_mtok',
+    'cache_image_write_1h_mtok',
     'input_video_mtok',
     'output_video_mtok',
     'cache_video_read_mtok',
     'cache_video_write_mtok',
+    'cache_video_write_5m_mtok',
+    'cache_video_write_1h_mtok',
     'input_tool_mtok',
     'input_text_tool_mtok',
     'input_audio_tool_mtok',
@@ -170,6 +192,7 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
         direction = dimensions['direction']
         modality = dimensions.get('modality')
         token_type = dimensions.get('token_type')
+        cache_ttl = dimensions.get('cache_ttl')
         if token_type is None:
             expected_stem = f'{direction}_{modality}' if modality is not None else direction
         elif token_type in {'cache_read', 'cache_write'}:
@@ -178,6 +201,8 @@ def test_units_yml_token_unit_names_follow_builtin_conventions() -> None:
             expected_stem = (
                 f'cache_{modality}_{cache_operation}' if modality is not None else f'cache_{cache_operation}'
             )
+            if cache_ttl is not None:
+                expected_stem = f'{expected_stem}_{cache_ttl}'
         else:
             expected_stem = (
                 f'{direction}_{modality}_{token_type}' if modality is not None else f'{direction}_{token_type}'
@@ -244,7 +269,9 @@ def test_generated_unit_modules_are_separate_from_provider_data() -> None:
 
     assert 'unit_data' not in python_provider_data
     assert 'unitData' not in typescript_provider_data
-    assert ast.literal_eval(python_unit_data.split('unit_data: dict[str, Any] = ', 1)[1]) == load_units()
+    assert ast.literal_eval(
+        python_unit_data.split('unit_data: dict[str, Any] = ', 1)[1]
+    ) == package_data._runtime_unit_data(load_units())
     assert all(usage_key in typescript_unit_data for usage_key in load_units())
 
 
@@ -381,7 +408,69 @@ def test_validate_units_rejects_open_intervals_and_missing_joins() -> None:
             }
         )
 
-    with pytest.raises(ValueError, match='Missing join unit dimensions'):
+
+def test_validate_units_skips_intermediate_sets_for_unsatisfied_dimension_requirements() -> None:
+    registry = validate_units(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'token_type': 'cache_write'},
+            },
+            'cache_write_1h_tokens': {
+                'per': 1_000_000,
+                'dimensions': {
+                    'family': 'tokens',
+                    'direction': 'input',
+                    'token_type': 'cache_write',
+                    'cache_ttl': '1h',
+                },
+                'dimension_requirements': {'cache_ttl': {'token_type': 'cache_write'}},
+            },
+        }
+    )
+
+    assert registry.ancestor_usage_keys('cache_write_1h_tokens') == frozenset({'input_tokens', 'cache_write_tokens'})
+
+
+@pytest.mark.parametrize(
+    ('dimensions', 'requirements', 'message'),
+    [
+        (
+            {'family': 'tokens', 'direction': 'input'},
+            {'cache_ttl': {'token_type': 'cache_write'}},
+            'Dimension requirement trigger cache_ttl is not a dimension of unit cache_write_1h_tokens',
+        ),
+        (
+            {'family': 'tokens', 'direction': 'input', 'cache_ttl': '1h'},
+            {'cache_ttl': {'token_type': 'cache_write'}},
+            'Unsatisfied dimension requirement for unit cache_write_1h_tokens: token_type=cache_write',
+        ),
+    ],
+)
+def test_validate_units_rejects_invalid_dimension_requirements(
+    dimensions: dict[str, str], requirements: dict[str, dict[str, str]], message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        validate_units(
+            {
+                'cache_write_1h_tokens': {
+                    'per': 1_000_000,
+                    'dimensions': dimensions,
+                    'dimension_requirements': requirements,
+                }
+            }
+        )
+
+
+def test_validate_units_rejects_compatible_pair_with_missing_join() -> None:
+    with pytest.raises(
+        ValueError,
+        match='Missing join unit dimensions between cache_write_tokens and input_audio_tokens',
+    ):
         validate_units(
             {
                 'input_tokens': {
@@ -403,8 +492,9 @@ def test_validate_units_rejects_open_intervals_and_missing_joins() -> None:
         )
 
 
-def test_validate_units_accepts_bundled_token_type_units() -> None:
-    registry = validate_units(load_units())
+def test_validate_units_accepts_bundled_units() -> None:
+    raw_units = load_units()
+    registry = validate_units(raw_units)
 
     assert registry.units['cache_audio_read_tokens'].dimensions == {
         'family': 'tokens',
@@ -412,6 +502,17 @@ def test_validate_units_accepts_bundled_token_type_units() -> None:
         'modality': 'audio',
         'token_type': 'cache_read',
     }
+    assert registry.units['cache_audio_write_1h_tokens'].dimensions == {
+        'family': 'tokens',
+        'direction': 'input',
+        'modality': 'audio',
+        'token_type': 'cache_write',
+        'cache_ttl': '1h',
+    }
+    assert raw_units['cache_audio_write_1h_tokens']['dimension_requirements'] == {
+        'cache_ttl': {'token_type': 'cache_write'}
+    }
+    assert not hasattr(registry.units['cache_audio_write_1h_tokens'], 'dimension_requirements')
 
 
 def test_compute_registry_priced_counts_handles_reasoning_modality_overlap() -> None:
@@ -474,7 +575,8 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
         'transient_tokens': {
             'per': 1_000_000,
             'price_key': 'transient_mtok',
-            'dimensions': {'family': 'transient'},
+            'dimensions': {'family': 'transient', 'tier': 'fast'},
+            'dimension_requirements': {'tier': {'family': 'transient'}},
         },
     }
     provider = _build_provider_prices(
@@ -504,7 +606,13 @@ def test_package_python_data_accepts_separated_inputs_without_units_yml(
     assert (py_package_dir / 'data.py').exists()
     unit_data_content = (py_package_dir / 'data_units.py').read_text()
     generated_units = ast.literal_eval(unit_data_content.split('unit_data: dict[str, Any] = ', 1)[1])
-    assert generated_units == units
+    assert generated_units == {
+        'transient_tokens': {
+            'per': 1_000_000,
+            'price_key': 'transient_mtok',
+            'dimensions': {'family': 'transient', 'tier': 'fast'},
+        }
+    }
 
 
 def test_runtime_provider_registry_injection_preserves_malformed_shapes_for_schema_validation() -> None:
@@ -590,6 +698,185 @@ def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
 
     assert provider.extractors is not None
     assert provider.extractors[0]._reported_usage_keys == frozenset({'transient_tokens'})
+
+
+def test_package_ts_data_accepts_separated_inputs_without_units_yml(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    units = {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+            'dimension_requirements': {'direction': {'family': 'tokens'}},
+        },
+    }
+    provider = _build_provider_prices(build_types.ModelPrice(input_mtok=Decimal('1')))
+    provider_data = build_types.providers_schema.dump_python(
+        [provider],
+        mode='json',
+        by_alias=True,
+        exclude_none=True,
+        warnings=False,
+    )
+
+    js_src_dir = tmp_path / 'packages' / 'js' / 'src'
+    js_src_dir.mkdir(parents=True)
+    monkeypatch.setattr(package_data, 'root_dir', tmp_path)
+
+    def skip_prettier(
+        args: list[str],
+        *,
+        cwd: str | None = None,
+        check: bool = False,
+        stdout: int | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        _ = cwd, check, stdout
+        return subprocess.CompletedProcess(args, 0)
+
+    monkeypatch.setattr(subprocess, 'run', skip_prettier)
+
+    package_data.package_ts_data(provider_data, units)
+
+    assert (js_src_dir / 'data.ts').exists()
+    unit_data_content = (js_src_dir / 'dataUnits.ts').read_text()
+    generated_json = unit_data_content.split('export const unitData: RawUnitsDict = ', 1)[1].removesuffix(';\n')
+    assert json.loads(generated_json) == {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        }
+    }
+
+
+def test_build_model_price_accepts_typed_extra_price_keys() -> None:
+    price = build_types.ModelPrice.model_validate({'input_mtok': '1.0', 'cache_image_write_mtok': '0.5'})
+
+    assert price.input_mtok == Decimal('1.0')
+    assert price.model_extra == {'cache_image_write_mtok': Decimal('0.5')}
+    assert package_data._collect_model_price_keys(price) == {'input_mtok', 'cache_image_write_mtok'}
+
+
+def test_runtime_model_price_repr_preserves_dynamic_price_keys() -> None:
+    price = ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))
+
+    assert repr(price) == "ModelPrice(input_mtok=Decimal('2'), output_image_mtok=Decimal('120'))"
+
+
+def test_build_model_price_extras_affect_is_free() -> None:
+    assert not build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}).is_free()
+    assert build_types.ModelPrice().is_free()
+
+
+def test_extras_only_paid_model_survives_slim_filtering() -> None:
+    provider = _build_provider_prices(
+        build_types.ModelPrice.model_validate({'cache_image_write_mtok': '0.5'}),
+        model_id='extras-only-paid',
+    )
+
+    provider.exclude_free()
+
+    assert [model.id for model in provider.models] == ['extras-only-paid']
+
+
+def test_package_data_validates_conditional_model_prices() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        [build_types.ConditionalPrice(prices=build_types.ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')))]
+    )
+
+    package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_unknown_price_keys() -> None:
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+        }
+    )
+    provider = _build_provider_prices(build_types.ModelPrice(output_mtok=Decimal('1')), model_id='unknown-price')
+
+    with pytest.raises(
+        ValueError, match='Invalid model price for testing/unknown-price: Unknown price key: output_mtok'
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_missing_ancestors() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(build_types.ModelPrice(cache_read_mtok=Decimal('1')), model_id='missing-ancestor')
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-ancestor: Missing ancestor price for cache_read_tokens',
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_required_joins() -> None:
+    registry = UnitRegistry(load_units())
+    provider = _build_provider_prices(
+        build_types.ModelPrice(
+            input_mtok=Decimal('1'),
+            cache_read_mtok=Decimal('0.5'),
+            input_audio_mtok=Decimal('2'),
+        ),
+        model_id='missing-join-price',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match='Invalid model price for testing/missing-join-price: Missing join price for cache_read_tokens',
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
+
+
+def test_package_data_model_price_validation_rejects_missing_join_units_for_conditional_prices() -> None:
+    registry = UnitRegistry(
+        {
+            'input_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input'},
+            },
+            'cache_write_tokens': {
+                'per': 1_000_000,
+                'price_key': 'cache_write_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'cache': 'write'},
+            },
+            'input_audio_tokens': {
+                'per': 1_000_000,
+                'price_key': 'input_audio_mtok',
+                'dimensions': {'family': 'tokens', 'direction': 'input', 'modality': 'audio'},
+            },
+        }
+    )
+    provider = _build_provider_prices(
+        [
+            build_types.ConditionalPrice(
+                prices=build_types.ModelPrice(
+                    input_mtok=Decimal('1'),
+                    cache_write_mtok=Decimal('0.5'),
+                    input_audio_mtok=Decimal('2'),
+                )
+            )
+        ],
+        model_id='missing-join-unit',
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=(
+            'Invalid model price for testing/missing-join-unit\\[0\\]: '
+            'Missing registered join unit for priced units cache_write_tokens and input_audio_tokens'
+        ),
+    ):
+        package_data.validate_provider_model_prices([provider], registry)
 
 
 def test_package_data_accepts_current_provider_extractor_destinations() -> None:

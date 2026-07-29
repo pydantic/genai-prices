@@ -25,6 +25,16 @@ providers: list[Provider] = [
                     UsageExtractorMapping(
                         path='cache_creation_input_tokens', dest='cache_write_tokens', required=False
                     ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_5m_input_tokens'],
+                        dest='cache_write_5m_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(
+                        path=['cache_creation', 'ephemeral_1h_input_tokens'],
+                        dest='cache_write_1h_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
                     UsageExtractorMapping(
                         path=['server_tool_use', 'web_search_requests'], dest='web_searches', required=False
@@ -70,11 +80,13 @@ providers: list[Provider] = [
                 name='Claude Haiku 3.5',
                 description='Fastest, most cost-effective model',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.8'),
                     cache_write_mtok=Decimal('1'),
                     cache_read_mtok=Decimal('0.08'),
                     output_mtok=Decimal('4'),
+                    cache_write_1h_mtok=Decimal('1.6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -89,11 +101,13 @@ providers: list[Provider] = [
                 name='Claude Sonnet 3.5',
                 description='Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -110,11 +124,13 @@ providers: list[Provider] = [
                 name='Claude Sonnet 3.7',
                 description='Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities.',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -124,11 +140,13 @@ providers: list[Provider] = [
                 name='Claude Haiku 3',
                 description='Fastest, most cost-effective model',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_write_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
                     output_mtok=Decimal('1.25'),
+                    cache_write_1h_mtok=Decimal('0.5'),
                 ),
             ),
             ModelInfo(
@@ -137,11 +155,13 @@ providers: list[Provider] = [
                 name='Claude Opus 3',
                 description="Claude 3 Opus was Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.",
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    cache_write_1h_mtok=Decimal('30'),
                 ),
             ),
             ModelInfo(
@@ -150,11 +170,13 @@ providers: list[Provider] = [
                 name='Claude 3 Sonnet',
                 description='Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(
@@ -163,12 +185,13 @@ providers: list[Provider] = [
                 name='Claude Fable 5',
                 description="Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work",
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('10'),
                     cache_write_mtok=Decimal('12.5'),
                     cache_read_mtok=Decimal('1'),
                     output_mtok=Decimal('50'),
+                    cache_write_1h_mtok=Decimal('20'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -185,11 +208,13 @@ providers: list[Provider] = [
                 name='Claude Haiku 4.5',
                 description='Fastest and most intelligent Haiku model',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('1'),
                     cache_write_mtok=Decimal('1.25'),
                     cache_read_mtok=Decimal('0.1'),
                     output_mtok=Decimal('5'),
+                    cache_write_1h_mtok=Decimal('2'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -206,11 +231,13 @@ providers: list[Provider] = [
                 name='Claude Opus 4',
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    cache_write_1h_mtok=Decimal('30'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -225,11 +252,13 @@ providers: list[Provider] = [
                 name='Claude Opus 4.1',
                 description='Most intelligent model for complex tasks',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('15'),
                     cache_write_mtok=Decimal('18.75'),
                     cache_read_mtok=Decimal('1.5'),
                     output_mtok=Decimal('75'),
+                    cache_write_1h_mtok=Decimal('30'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -246,11 +275,13 @@ providers: list[Provider] = [
                 name='Claude Opus 4.5',
                 description='Premium model combining maximum intelligence with practical performance',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -267,6 +298,7 @@ providers: list[Provider] = [
                 name='Claude Opus 4.6',
                 description='Our most intelligent model for building agents and coding',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -280,6 +312,9 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('25'), tiers=[Tier(start=200000, price=Decimal('37.5'))]
                             ),
+                            cache_write_1h_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('20'))]
+                            ),
                             web_searches_kcount=Decimal('10'),
                         )
                     ),
@@ -290,6 +325,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('6.25'),
                             cache_read_mtok=Decimal('0.5'),
                             output_mtok=Decimal('25'),
+                            cache_write_1h_mtok=Decimal('10'),
                             web_searches_kcount=Decimal('10'),
                         ),
                     ),
@@ -308,12 +344,13 @@ providers: list[Provider] = [
                 name='Claude Opus 4.7',
                 description='Our most capable model for complex reasoning and agentic coding',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -330,12 +367,13 @@ providers: list[Provider] = [
                 name='Claude Opus 4.8',
                 description='Our most capable model for complex reasoning and agentic coding',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -352,12 +390,13 @@ providers: list[Provider] = [
                 name='Claude Opus 5',
                 description='For complex agentic coding and enterprise work',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
                     cache_read_mtok=Decimal('0.5'),
                     output_mtok=Decimal('25'),
+                    cache_write_1h_mtok=Decimal('10'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -375,11 +414,13 @@ providers: list[Provider] = [
                 name='Claude Sonnet 4',
                 description='Optimal balance of intelligence, cost, and speed',
                 context_window=200000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
+                    cache_write_1h_mtok=Decimal('6'),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -394,6 +435,7 @@ providers: list[Provider] = [
                 name='Claude Sonnet 4.5',
                 description='Our best combination of speed and intelligence',
                 context_window=1000000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('3'), tiers=[Tier(start=200000, price=Decimal('6'))]),
                     cache_write_mtok=TieredPrices(
@@ -401,6 +443,9 @@ providers: list[Provider] = [
                     ),
                     cache_read_mtok=TieredPrices(base=Decimal('0.3'), tiers=[Tier(start=200000, price=Decimal('0.6'))]),
                     output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]),
+                    cache_write_1h_mtok=TieredPrices(
+                        base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
+                    ),
                     web_searches_kcount=Decimal('10'),
                 ),
             ),
@@ -415,6 +460,7 @@ providers: list[Provider] = [
                 name='Claude Sonnet 4.6',
                 description='Our best combination of speed and intelligence',
                 context_window=1000000,
+                price_comments='One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -428,6 +474,9 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(
                                 base=Decimal('15'), tiers=[Tier(start=200000, price=Decimal('22.5'))]
                             ),
+                            cache_write_1h_mtok=TieredPrices(
+                                base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('12'))]
+                            ),
                             web_searches_kcount=Decimal('10'),
                         )
                     ),
@@ -438,6 +487,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            cache_write_1h_mtok=Decimal('6'),
                             web_searches_kcount=Decimal('10'),
                         ),
                     ),
@@ -456,7 +506,7 @@ providers: list[Provider] = [
                 name='Claude Sonnet 5',
                 description='Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5 Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -464,6 +514,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('2.5'),
                             cache_read_mtok=Decimal('0.2'),
                             output_mtok=Decimal('10'),
+                            cache_write_1h_mtok=Decimal('4'),
                             web_searches_kcount=Decimal('10'),
                         )
                     ),
@@ -474,6 +525,7 @@ providers: list[Provider] = [
                             cache_write_mtok=Decimal('3.75'),
                             cache_read_mtok=Decimal('0.3'),
                             output_mtok=Decimal('15'),
+                            cache_write_1h_mtok=Decimal('6'),
                             web_searches_kcount=Decimal('10'),
                         ),
                     ),

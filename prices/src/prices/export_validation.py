@@ -74,6 +74,7 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
     price_keys: set[str] = set()
     per_by_family: dict[str, int] = {}
     dimension_sets: dict[frozenset[tuple[str, str]], str] = {}
+    dimension_requirements_by_usage_key: dict[str, dict[str, dict[str, str]]] = {}
 
     for usage_key, raw_unit in raw_units.items():
         _validate_public_key('usage', usage_key)
@@ -95,6 +96,15 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
         if family_value is None:
             raise ValueError(f'Missing required family dimension for unit {usage_key}')
 
+        dimension_requirements = {
+            conditional_key: dict(required_dimensions)
+            for conditional_key, required_dimensions in cast(
+                Mapping[str, Mapping[str, str]], raw_unit.get('dimension_requirements', {})
+            ).items()
+        }
+        _validate_dimension_requirements(usage_key, dimensions, dimension_requirements)
+        dimension_requirements_by_usage_key[usage_key] = dimension_requirements
+
         existing_per = per_by_family.setdefault(family_value, per)
         if existing_per != per:
             raise ValueError(
@@ -107,7 +117,7 @@ def validate_units(raw_units: Mapping[str, Mapping[str, Any]]) -> UnitRegistry:
         dimension_sets[dimension_set] = usage_key
 
     registry = UnitRegistry(raw_units)
-    _validate_interval_closure(registry)
+    _validate_interval_closure(registry, dimension_requirements_by_usage_key)
     _validate_join_closedness(registry)
     return registry
 
@@ -133,7 +143,25 @@ def _validate_public_key(kind: str, key: str) -> None:
         raise ValueError(f'Invalid unit {kind} key: {key!r} is reserved')
 
 
-def _validate_interval_closure(registry: UnitRegistry) -> None:
+def _validate_dimension_requirements(
+    usage_key: str,
+    dimensions: Mapping[str, str],
+    dimension_requirements: Mapping[str, Mapping[str, str]],
+) -> None:
+    for conditional_key, required_dimensions in dimension_requirements.items():
+        if conditional_key not in dimensions:
+            raise ValueError(f'Dimension requirement trigger {conditional_key} is not a dimension of unit {usage_key}')
+        if not required_dimensions.items() <= dimensions.items():
+            missing = ', '.join(
+                f'{key}={value}' for key, value in sorted(required_dimensions.items() - dimensions.items())
+            )
+            raise ValueError(f'Unsatisfied dimension requirement for unit {usage_key}: {missing}')
+
+
+def _validate_interval_closure(
+    registry: UnitRegistry,
+    dimension_requirements_by_usage_key: Mapping[str, Mapping[str, Mapping[str, str]]],
+) -> None:
     units_by_dimension = registry._units_by_dimension  # pyright: ignore[reportPrivateUsage]
     for ancestor in registry.units.values():
         for descendant in registry.units.values():
@@ -144,6 +172,10 @@ def _validate_interval_closure(registry: UnitRegistry) -> None:
             for size in range(1, len(added_dimensions)):
                 for added_subset in combinations(added_dimensions, size):
                     required_dimensions = frozenset(ancestor.dimensions.items() | set(added_subset))
+                    if not _requirements_are_satisfied_by(
+                        dimension_requirements_by_usage_key[descendant.usage_key], dict(required_dimensions)
+                    ):
+                        continue
                     if required_dimensions in units_by_dimension:
                         continue
 
@@ -152,6 +184,15 @@ def _validate_interval_closure(registry: UnitRegistry) -> None:
                         f'Missing intermediate unit dimensions between {ancestor.usage_key} and '
                         f'{descendant.usage_key}: {missing_dimensions}'
                     )
+
+
+def _requirements_are_satisfied_by(
+    dimension_requirements: Mapping[str, Mapping[str, str]], dimensions: Mapping[str, str]
+) -> bool:
+    return all(
+        conditional_key not in dimensions or required_dimensions.items() <= dimensions.items()
+        for conditional_key, required_dimensions in dimension_requirements.items()
+    )
 
 
 def _validate_join_closedness(registry: UnitRegistry) -> None:
