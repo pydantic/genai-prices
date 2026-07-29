@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import ast
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import FrozenInstanceError
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, cast
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -12,6 +15,7 @@ from genai_prices import data
 from genai_prices.data_units import unit_data
 from genai_prices.types import (
     ModelPrice,
+    TieredPrices,
     Usage,
     _collect_resolved_model_prices,
     _compute_registry_priced_counts,
@@ -101,6 +105,32 @@ TOKEN_PRICE_KEYS = {
 REPORTABLE_USAGE_KEYS = TOKEN_USAGE_KEYS | {'web_searches'}
 ALL_USAGE_KEYS = REPORTABLE_USAGE_KEYS | {'requests'}
 ALL_PRICE_KEYS = TOKEN_PRICE_KEYS | {'web_searches_kcount', 'requests_kcount'}
+
+
+def _custom_price_key_units() -> dict[str, Any]:
+    return {
+        'input_tokens': {
+            'per': 1_000_000,
+            'price_key': 'input_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input'},
+        },
+        'sausage_tokens': {
+            'per': 1_000_000,
+            'price_key': 'sausage_mtok',
+            'dimensions': {'family': 'tokens', 'direction': 'input', 'ingredient': 'sausage'},
+        },
+    }
+
+
+def _custom_price_key_registry() -> UnitRegistry:
+    return UnitRegistry(_custom_price_key_units())
+
+
+@contextmanager
+def _use_registry(raw_units: dict[str, Any]) -> Iterator[UnitRegistry]:
+    registry = UnitRegistry(raw_units)
+    with patch('genai_prices.units._get_registry', return_value=registry):
+        yield registry
 
 
 def _build_provider_prices(
@@ -768,3 +798,192 @@ def test_validate_units_rejects_unsafe_public_keys(usage_key: str, price_key: st
                 },
             }
         )
+
+
+def test_model_price_stores_dynamic_prices_as_attributes() -> None:
+    price = ModelPrice(input_mtok=Decimal('1'))
+
+    assert price.__dict__ == {'input_mtok': Decimal('1')}
+    assert '_extra_prices' not in price.__dict__
+
+
+def test_model_price_getattr_returns_none_for_absent_registered_price_keys() -> None:
+    with _use_registry(_custom_price_key_units()):
+        assert ModelPrice().sausage_mtok is None
+
+
+def test_model_price_getattr_rejects_unknown_attributes() -> None:
+    with pytest.raises(AttributeError, match='imaginary_price'):
+        _ = ModelPrice().imaginary_price
+
+
+def test_model_price_getattr_preserves_subclass_only_fields() -> None:
+    class CustomModelPrice(ModelPrice):
+        pass
+
+    assert CustomModelPrice(sausage_price=Decimal('3')).sausage_price == Decimal('3')
+
+
+def test_model_price_getattr_does_not_change_string_rendering() -> None:
+    assert str(ModelPrice(input_mtok=Decimal('1'))) == '$1/input MTok'
+
+
+def test_model_price_str_includes_dynamic_extras() -> None:
+    price = ModelPrice(
+        input_mtok=Decimal('1'),
+        cache_image_read_mtok=Decimal('0.5'),
+    )
+
+    assert str(price) == '$1/input MTok, $0.5/cache image read MTok'
+
+
+def test_collect_resolved_model_prices_handles_empty_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(), registry) == ()
+
+
+def test_collect_resolved_model_prices_retains_units_and_current_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    resolved_prices = _collect_resolved_model_prices(
+        ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+        registry,
+    )
+
+    assert resolved_prices == (
+        (registry.units['input_tokens'], Decimal('1')),
+        (registry.units['output_tokens'], Decimal('2')),
+    )
+
+
+def test_collect_resolved_model_prices_handles_dynamic_registered_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(cache_image_read_mtok=Decimal('0.5')), registry) == (
+        (registry.units['cache_image_read_tokens'], Decimal('0.5')),
+    )
+
+
+def test_collect_resolved_model_prices_ignores_none_values() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(input_mtok=None), registry) == ()
+
+
+def test_collect_resolved_model_prices_warns_and_ignores_unknown_base_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    with pytest.warns(UserWarning, match='Unsupported price key for standard pricing: hovercraft_mtok'):
+        resolved_prices = _collect_resolved_model_prices(ModelPrice(hovercraft_mtok=Decimal('1')), registry)
+
+    assert resolved_prices == ()
+
+
+def test_collect_resolved_model_prices_handles_request_price() -> None:
+    registry = UnitRegistry(load_units())
+
+    assert _collect_resolved_model_prices(ModelPrice(requests_kcount=Decimal('3')), registry) == (
+        (registry.units['requests'], Decimal('3')),
+    )
+
+
+def test_collect_resolved_model_prices_retains_tiered_price() -> None:
+    registry = UnitRegistry(load_units())
+    tiered_price = TieredPrices(base=Decimal('1'), tiers=[])
+
+    assert _collect_resolved_model_prices(ModelPrice(input_mtok=tiered_price), registry) == (
+        (registry.units['input_tokens'], tiered_price),
+    )
+
+
+def test_collect_resolved_model_prices_includes_registered_subclass_price() -> None:
+    registry = _custom_price_key_registry()
+
+    class CustomModelPrice(ModelPrice):
+        pass
+
+    assert _collect_resolved_model_prices(CustomModelPrice(sausage_mtok=Decimal('2')), registry) == (
+        (registry.units['sausage_tokens'], Decimal('2')),
+    )
+
+
+def test_collect_resolved_model_prices_excludes_subclass_only_state() -> None:
+    registry = UnitRegistry(load_units())
+
+    class CustomModelPrice(ModelPrice):
+        pass
+
+    assert _collect_resolved_model_prices(
+        CustomModelPrice(input_mtok=Decimal('1'), sausage_price=Decimal('2')),
+        registry,
+    ) == ((registry.units['input_tokens'], Decimal('1')),)
+
+
+def test_compute_registry_priced_counts_handles_parent_child_token_counts() -> None:
+    registry = UnitRegistry(load_units())
+    resolved_prices = _collect_resolved_model_prices(
+        ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('2')), registry
+    )
+
+    assert _compute_registry_priced_counts(
+        resolved_prices,
+        Usage(input_tokens=1_000, cache_read_tokens=250),
+    ) == {'cache_read_tokens': 250, 'input_tokens': 750}
+
+
+def test_compute_registry_priced_counts_handles_cached_audio_overlap() -> None:
+    registry = UnitRegistry(load_units())
+    resolved_prices = _collect_resolved_model_prices(
+        ModelPrice(
+            input_mtok=Decimal('1'),
+            cache_read_mtok=Decimal('2'),
+            input_audio_mtok=Decimal('3'),
+            cache_audio_read_mtok=Decimal('4'),
+        ),
+        registry,
+    )
+
+    assert _compute_registry_priced_counts(
+        resolved_prices,
+        Usage(
+            input_tokens=1_000,
+            cache_read_tokens=400,
+            input_audio_tokens=300,
+            cache_audio_read_tokens=100,
+        ),
+    ) == {
+        'cache_audio_read_tokens': 100,
+        'cache_read_tokens': 300,
+        'input_audio_tokens': 200,
+        'input_tokens': 400,
+    }
+
+
+def test_compute_registry_priced_counts_handles_one_request_count() -> None:
+    registry = UnitRegistry(load_units())
+    resolved_prices = _collect_resolved_model_prices(ModelPrice(requests_kcount=Decimal('1')), registry)
+
+    assert _compute_registry_priced_counts(resolved_prices, Usage()) == {'requests': 1}
+
+
+def test_compute_registry_priced_counts_does_not_add_token_counts_for_request_only_prices() -> None:
+    registry = UnitRegistry(load_units())
+    resolved_prices = _collect_resolved_model_prices(ModelPrice(requests_kcount=Decimal('1')), registry)
+
+    assert set(_compute_registry_priced_counts(resolved_prices, Usage(input_tokens=100))) == {'requests'}
+
+
+def test_model_price_calculation_resolves_each_stored_price_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    registry = UnitRegistry(load_units())
+    unit_lookup = Mock(wraps=registry.unit_for_price_key)
+    monkeypatch.setattr(registry, 'unit_for_price_key', unit_lookup)
+
+    with patch('genai_prices.units._get_registry', return_value=registry):
+        assert ModelPrice(input_mtok=Decimal('2')).calc_price(Usage(input_tokens=1_000_000)) == {
+            'input_price': Decimal('2'),
+            'output_price': Decimal('0'),
+            'total_price': Decimal('2'),
+        }
+
+    unit_lookup.assert_called_once_with('input_mtok')
