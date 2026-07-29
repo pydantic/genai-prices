@@ -476,7 +476,8 @@
           "input_mtok": 5,
           "cache_write_mtok": 6.25,
           "cache_read_mtok": 0.5,
-          "output_mtok": 25
+          "output_mtok": 25,
+          "web_searches_kcount": 10
         }
       },
       {
