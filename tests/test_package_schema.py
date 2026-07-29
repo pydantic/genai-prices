@@ -43,6 +43,7 @@ def test_provider_yaml_schema_includes_current_dynamic_registry_price_keys() -> 
 
     properties = schema['$defs']['ModelPrice']['properties']
     assert 'cache_image_read_mtok' in properties
+    assert 'cache_write_5m_mtok' in properties
     assert (
         properties['cache_write_5m_mtok']['description']
         == 'price in USD per million tokens written to the cache with a 5-minute TTL'
