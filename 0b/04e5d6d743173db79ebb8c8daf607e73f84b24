@@ -1,0 +1,19 @@
+tests/test_units.py
+  s_fbf2d367eb2947::t_b3521a89e764fc 1178,1181,1183-1190,1199-1202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0b04e5d6d743173db79ebb8c8daf607e73f84b24",
+  "prompts": {},
+  "sessions": {
+    "s_fbf2d367eb2947": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fa970-a03c-7532-ad37-52d1271a0f23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
