@@ -1,0 +1,23 @@
+prices/src/prices/utils.py
+  s_a794008b85811c::t_97d34c831c0c1c 28-34
+prices/src/prices/source_litellm.py
+  s_a794008b85811c::t_97d34c831c0c1c 11,25
+prices/src/prices/source_openrouter.py
+  s_a794008b85811c::t_97d34c831c0c1c 14,87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "d7f84ccde55f7e5924cae4375e0e789f059dfbd3",
+  "prompts": {},
+  "sessions": {
+    "s_a794008b85811c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fae25-5543-78b3-892f-6d5f07fe8798",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
