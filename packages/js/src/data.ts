@@ -39,6 +39,16 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['cache_creation', 'ephemeral_5m_input_tokens'],
+            dest: 'cache_write_5m_tokens',
+            required: false,
+          },
+          {
+            path: ['cache_creation', 'ephemeral_1h_input_tokens'],
+            dest: 'cache_write_1h_tokens',
+            required: false,
+          },
+          {
             path: 'cache_read_input_tokens',
             dest: 'cache_read_tokens',
             required: false,
@@ -120,11 +130,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 0.8,
           cache_write_mtok: 1,
           cache_read_mtok: 0.08,
           output_mtok: 4,
+          cache_write_1h_mtok: 1.6,
           web_searches_kcount: 10,
         },
       },
@@ -144,11 +157,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
           web_searches_kcount: 10,
         },
       },
@@ -174,11 +190,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
           web_searches_kcount: 10,
         },
       },
@@ -190,11 +209,14 @@ export const data: Provider[] = [
           starts_with: 'claude-3-haiku',
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 0.25,
           cache_write_mtok: 0.3,
           cache_read_mtok: 0.03,
           output_mtok: 1.25,
+          cache_write_1h_mtok: 0.5,
         },
       },
       {
@@ -206,11 +228,14 @@ export const data: Provider[] = [
           starts_with: 'claude-3-opus',
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          cache_write_1h_mtok: 30,
         },
       },
       {
@@ -222,11 +247,14 @@ export const data: Provider[] = [
           starts_with: 'claude-3-sonnet',
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
         },
       },
       {
@@ -238,12 +266,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 10,
           cache_write_mtok: 12.5,
           cache_read_mtok: 1,
           output_mtok: 50,
+          cache_write_1h_mtok: 20,
           web_searches_kcount: 10,
         },
       },
@@ -268,11 +297,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 1,
           cache_write_mtok: 1.25,
           cache_read_mtok: 0.1,
           output_mtok: 5,
+          cache_write_1h_mtok: 2,
           web_searches_kcount: 10,
         },
       },
@@ -297,11 +329,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          cache_write_1h_mtok: 30,
           web_searches_kcount: 10,
         },
       },
@@ -320,11 +355,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 15,
           cache_write_mtok: 18.75,
           cache_read_mtok: 1.5,
           output_mtok: 75,
+          cache_write_1h_mtok: 30,
           web_searches_kcount: 10,
         },
       },
@@ -349,11 +387,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
       },
@@ -378,6 +419,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: [
           {
             prices: {
@@ -417,6 +460,15 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              cache_write_1h_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 20,
+                  },
+                ],
+              },
               web_searches_kcount: 10,
             },
           },
@@ -430,6 +482,7 @@ export const data: Provider[] = [
               cache_write_mtok: 6.25,
               cache_read_mtok: 0.5,
               output_mtok: 25,
+              cache_write_1h_mtok: 10,
               web_searches_kcount: 10,
             },
           },
@@ -457,12 +510,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
       },
@@ -488,12 +542,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
       },
@@ -519,12 +574,13 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool',
+          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
           cache_read_mtok: 0.5,
           output_mtok: 25,
+          cache_write_1h_mtok: 10,
           web_searches_kcount: 10,
         },
       },
@@ -552,11 +608,14 @@ export const data: Provider[] = [
           ],
         },
         context_window: 200000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: 3,
           cache_write_mtok: 3.75,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+          cache_write_1h_mtok: 6,
           web_searches_kcount: 10,
         },
       },
@@ -575,6 +634,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: {
           input_mtok: {
             base: 3,
@@ -612,6 +673,15 @@ export const data: Provider[] = [
               },
             ],
           },
+          cache_write_1h_mtok: {
+            base: 6,
+            tiers: [
+              {
+                start: 200000,
+                price: 12,
+              },
+            ],
+          },
           web_searches_kcount: 10,
         },
       },
@@ -630,6 +700,8 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1000000,
+        price_comments:
+          'One-hour cache writes cost 2x the base input price. Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: [
           {
             prices: {
@@ -669,6 +741,15 @@ export const data: Provider[] = [
                   },
                 ],
               },
+              cache_write_1h_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 12,
+                  },
+                ],
+              },
               web_searches_kcount: 10,
             },
           },
@@ -682,6 +763,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              cache_write_1h_mtok: 6,
               web_searches_kcount: 10,
             },
           },
@@ -709,7 +791,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5',
+          'Flat pricing across full 1M context window (no tiered pricing). Introductory pricing ($2/$10 per MTok) applies through 2026-08-31; standard pricing ($3/$15) applies from 2026-09-01. Ref: https://www.anthropic.com/news/claude-sonnet-5 Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
         prices: [
           {
             prices: {
@@ -717,6 +799,7 @@ export const data: Provider[] = [
               cache_write_mtok: 2.5,
               cache_read_mtok: 0.2,
               output_mtok: 10,
+              cache_write_1h_mtok: 4,
               web_searches_kcount: 10,
             },
           },
@@ -730,6 +813,7 @@ export const data: Provider[] = [
               cache_write_mtok: 3.75,
               cache_read_mtok: 0.3,
               output_mtok: 15,
+              cache_write_1h_mtok: 6,
               web_searches_kcount: 10,
             },
           },
