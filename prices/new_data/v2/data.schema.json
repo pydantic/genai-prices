@@ -871,6 +871,78 @@
           "title": "Output Video Citation Mtok",
           "description": "price in USD per million output video citation tokens"
         },
+        "input_mchars": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Mchars",
+          "description": "price in USD per million input characters"
+        },
+        "input_audio_minutes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Audio Minutes",
+          "description": "price in USD per 60 input audio seconds"
+        },
+        "input_gpixels": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Gpixels",
+          "description": "price in USD per 1,000,000,000 input pixels"
+        },
+        "input_document_kpages": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Document Kpages",
+          "description": "price in USD per thousand input document pages"
+        },
+        "input_annotated_document_kpages": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Input Annotated Document Kpages",
+          "description": "price in USD per thousand input annotated document pages"
+        },
+        "rerank_searches_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Rerank Searches Kcount",
+          "description": "price in USD per thousand rerank searches"
+        },
         "web_searches_kcount": {
           "anyOf": [
             {
@@ -882,6 +954,42 @@
           ],
           "title": "Web Searches Kcount",
           "description": "price in USD per thousand web searches"
+        },
+        "social_searches_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Social Searches Kcount",
+          "description": "price in USD per thousand social searches"
+        },
+        "storage_searches_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Storage Searches Kcount",
+          "description": "price in USD per thousand storage searches"
+        },
+        "code_executions_kcount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/$defs/TieredPrices"
+            }
+          ],
+          "title": "Code Executions Kcount",
+          "description": "price in USD per thousand code executions"
         }
       },
       "title": "ModelPrice",
@@ -1230,10 +1338,16 @@
             "cache_write_1h_tokens",
             "cache_write_5m_tokens",
             "cache_write_tokens",
+            "code_executions",
+            "input_annotated_document_pages",
+            "input_audio_seconds",
             "input_audio_tokens",
             "input_audio_tool_tokens",
+            "input_characters",
+            "input_document_pages",
             "input_image_tokens",
             "input_image_tool_tokens",
+            "input_pixels",
             "input_text_tokens",
             "input_text_tool_tokens",
             "input_tokens",
@@ -1255,6 +1369,9 @@
             "output_video_citation_tokens",
             "output_video_reasoning_tokens",
             "output_video_tokens",
+            "rerank_searches",
+            "social_searches",
+            "storage_searches",
             "web_searches"
           ]
         },

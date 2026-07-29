@@ -52,7 +52,20 @@ const tokenUsageKeys = [
   'output_video_citation_tokens',
 ]
 
-const reportableUsageKeys = [...tokenUsageKeys, 'web_searches']
+const nonTokenUsageKeys = [
+  'input_characters',
+  'input_audio_seconds',
+  'input_pixels',
+  'input_document_pages',
+  'input_annotated_document_pages',
+  'rerank_searches',
+  'web_searches',
+  'social_searches',
+  'storage_searches',
+  'code_executions',
+]
+
+const reportableUsageKeys = [...tokenUsageKeys, ...nonTokenUsageKeys]
 
 describe('generated data split', () => {
   it('keeps generated provider data separate from generated unit data', () => {
@@ -65,7 +78,10 @@ describe('generated data split', () => {
     expect(new Set(Object.keys(unitData))).toEqual(new Set(['requests', ...reportableUsageKeys]))
     expect(new Set(tokenUsageKeys.map((usageKey) => unitData[usageKey]?.dimensions.family))).toEqual(new Set(['tokens']))
     expect(unitData.web_searches?.dimensions.family).toBe('tool_calls')
+    expect(unitData.web_searches?.dimensions.tool_type).toBe('web_search')
     expect(unitData.web_searches?.price_key).toBe('web_searches_kcount')
+    expect(unitData.input_audio_seconds?.price_key).toBe('input_audio_minutes')
+    expect(unitData.input_annotated_document_pages?.dimensions.page_type).toBe('annotated')
     expect(unitData.requests?.dimensions.family).toBe('requests')
     expect(unitData.requests?.price_key).toBe('requests_kcount')
   })
