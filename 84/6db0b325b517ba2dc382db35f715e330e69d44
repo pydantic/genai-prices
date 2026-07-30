@@ -1,0 +1,25 @@
+packages/js/package.json
+  s_51c77fd4cbff4e::t_a72425ed5c5a58 3
+package-lock.json
+  s_51c77fd4cbff4e::t_66aad8afdabb8a 7582
+uv.lock
+  s_51c77fd4cbff4e::t_3c0b3d7b3b3c0c 320
+packages/python/pyproject.toml
+  s_51c77fd4cbff4e::t_e30906bdaeb230 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "846db0b325b517ba2dc382db35f715e330e69d44",
+  "prompts": {},
+  "sessions": {
+    "s_51c77fd4cbff4e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb2ae-9d98-7e60-8915-e39d31cb961e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  }
+}
