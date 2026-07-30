@@ -17,6 +17,7 @@ from .types import (
     PriceCalculation,
     Provider,
     TieredPrices,
+    _format_model_price_line,  # pyright: ignore[reportPrivateUsage]
     _iter_model_price_attr_items,  # pyright: ignore[reportPrivateUsage]
     _iter_priced_registered_units,  # pyright: ignore[reportPrivateUsage]
 )
@@ -669,16 +670,6 @@ def _iter_model_price_units(model_price: ModelPrice) -> list[UnitDef]:
 
     registry = _get_registry()
     return list(_iter_priced_registered_units(model_price, registry))
-
-
-def _format_model_price_line(value: object, unit: UnitDef) -> str:
-    base_value = value.base if isinstance(value, TieredPrices) else value
-    suffix = ' (+tiers)' if isinstance(value, TieredPrices) else ''
-    unit_name = _unit_display_name(unit).lower()
-    per_label = _unit_per_label(unit)
-    if unit.dimensions.get('family') == 'requests':
-        return f'${base_value} / {per_label} {unit_name}{suffix}'
-    return f'${base_value}/{unit_name} {per_label}{suffix}'
 
 
 def _format_unregistered_model_price_line(value: object, price_key: str) -> str:

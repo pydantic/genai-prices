@@ -310,6 +310,23 @@ def test_model_price_str_requests_and_private_state() -> None:
     assert str(model_price) == '$2 / K requests'
 
 
+@pytest.mark.parametrize(
+    ('price', 'expected'),
+    [
+        (ModelPrice(web_searches_kcount=Decimal('10')), '$10/web searches K'),
+        (ModelPrice(audio_hours=Decimal('1')), '$1/audio Hour'),
+        (ModelPrice(input_gpixels=Decimal('2')), '$2/input pixels G'),
+        (ModelPrice(input_document_kpages=Decimal('3')), '$3/input document pages K'),
+        (
+            ModelPrice(web_searches_kcount=TieredPrices(base=Decimal('10'), tiers=[])),
+            '$10/web searches K (+tiers)',
+        ),
+    ],
+)
+def test_model_price_str_uses_registered_unit_labels(price: ModelPrice, expected: str) -> None:
+    assert str(price) == expected
+
+
 def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
     price = ModelPrice(hovercraft_mtok=Decimal('NaN'))
 
