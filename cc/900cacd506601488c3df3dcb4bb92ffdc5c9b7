@@ -1,0 +1,46 @@
+pyproject.toml
+  h_d9dd17644dded9 117
+tests/dataset/extract_usages.py
+  s_00359029042742::t_eca4b0068c4265 132
+  h_d9dd17644dded9 97,101,103,133
+  s_d5207bd39ec8df::t_cd988ad181d5de 131
+  s_00359029042742::t_375bf9ca19035d 98-100,102,104-108
+tests/dataset/get_raw_bodies.py
+  s_00359029042742::t_5188ed860e9dce 22
+  s_00359029042742::t_20f30e37f095fa 24
+  h_d9dd17644dded9 25
+  s_00359029042742::t_1f4abe783c94de 19,26
+  s_00359029042742::t_400ca246cf0bcd 21
+  s_00359029042742::t_00571c94ebd251 20
+  s_00359029042742::t_319a74c2ea9df3 23
+  s_00359029042742::t_276955256443e3 27-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "cc900cacd506601488c3df3dcb4bb92ffdc5c9b7",
+  "prompts": {},
+  "humans": {
+    "h_d9dd17644dded9": {
+      "author": "Alex Hall <alex.mojaki@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_00359029042742": {
+      "agent_id": {
+        "tool": "github-copilot-jetbrains",
+        "id": "1785417819698",
+        "model": "unknown"
+      },
+      "human_author": "Alex Hall <alex.mojaki@gmail.com>"
+    },
+    "s_d5207bd39ec8df": {
+      "agent_id": {
+        "tool": "github-copilot-jetbrains",
+        "id": "1785330333014",
+        "model": "unknown"
+      },
+      "human_author": null
+    }
+  }
+}
