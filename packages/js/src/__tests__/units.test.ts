@@ -3,29 +3,54 @@ import { describe, expect, it } from 'vitest'
 import type { RawUnitsDict } from '../types'
 
 import { unitData } from '../dataUnits'
-import { getActiveRegistry, UnitRegistry } from '../units'
+import { getActiveRegistry, isCompatible, UnitRegistry } from '../units'
 
 const tokenUsageKeys = [
   'input_tokens',
   'output_tokens',
   'cache_read_tokens',
   'cache_write_tokens',
+  'cache_write_5m_tokens',
+  'cache_write_1h_tokens',
   'input_text_tokens',
   'output_text_tokens',
   'cache_text_read_tokens',
   'cache_text_write_tokens',
+  'cache_text_write_5m_tokens',
+  'cache_text_write_1h_tokens',
   'input_audio_tokens',
   'output_audio_tokens',
   'cache_audio_read_tokens',
   'cache_audio_write_tokens',
+  'cache_audio_write_5m_tokens',
+  'cache_audio_write_1h_tokens',
   'input_image_tokens',
   'output_image_tokens',
   'cache_image_read_tokens',
   'cache_image_write_tokens',
+  'cache_image_write_5m_tokens',
+  'cache_image_write_1h_tokens',
   'input_video_tokens',
   'output_video_tokens',
   'cache_video_read_tokens',
   'cache_video_write_tokens',
+  'cache_video_write_5m_tokens',
+  'cache_video_write_1h_tokens',
+  'input_tool_tokens',
+  'input_text_tool_tokens',
+  'input_audio_tool_tokens',
+  'input_image_tool_tokens',
+  'input_video_tool_tokens',
+  'output_reasoning_tokens',
+  'output_text_reasoning_tokens',
+  'output_audio_reasoning_tokens',
+  'output_image_reasoning_tokens',
+  'output_video_reasoning_tokens',
+  'output_citation_tokens',
+  'output_text_citation_tokens',
+  'output_audio_citation_tokens',
+  'output_image_citation_tokens',
+  'output_video_citation_tokens',
 ]
 
 const tokenPriceKeys = [
@@ -33,37 +58,96 @@ const tokenPriceKeys = [
   'output_mtok',
   'cache_read_mtok',
   'cache_write_mtok',
+  'cache_write_5m_mtok',
+  'cache_write_1h_mtok',
   'input_text_mtok',
   'output_text_mtok',
   'cache_text_read_mtok',
   'cache_text_write_mtok',
+  'cache_text_write_5m_mtok',
+  'cache_text_write_1h_mtok',
   'input_audio_mtok',
   'output_audio_mtok',
   'cache_audio_read_mtok',
   'cache_audio_write_mtok',
+  'cache_audio_write_5m_mtok',
+  'cache_audio_write_1h_mtok',
   'input_image_mtok',
   'output_image_mtok',
   'cache_image_read_mtok',
   'cache_image_write_mtok',
+  'cache_image_write_5m_mtok',
+  'cache_image_write_1h_mtok',
   'input_video_mtok',
   'output_video_mtok',
   'cache_video_read_mtok',
   'cache_video_write_mtok',
+  'cache_video_write_5m_mtok',
+  'cache_video_write_1h_mtok',
+  'input_tool_mtok',
+  'input_text_tool_mtok',
+  'input_audio_tool_mtok',
+  'input_image_tool_mtok',
+  'input_video_tool_mtok',
+  'output_reasoning_mtok',
+  'output_text_reasoning_mtok',
+  'output_audio_reasoning_mtok',
+  'output_image_reasoning_mtok',
+  'output_video_reasoning_mtok',
+  'output_citation_mtok',
+  'output_text_citation_mtok',
+  'output_audio_citation_mtok',
+  'output_image_citation_mtok',
+  'output_video_citation_mtok',
 ]
+
+const nonTokenReportableUnits = {
+  audio_seconds: 'audio_hours',
+  code_executions: 'code_executions_kcount',
+  input_annotated_document_pages: 'input_annotated_document_kpages',
+  input_audio_seconds: 'input_audio_hours',
+  input_characters: 'input_mchars',
+  input_document_pages: 'input_document_kpages',
+  input_pixels: 'input_gpixels',
+  input_text_messages: 'input_text_messages_kcount',
+  output_audio_seconds: 'output_audio_hours',
+  rerank_searches: 'rerank_searches_kcount',
+  social_searches: 'social_searches_kcount',
+  storage_searches: 'storage_searches_kcount',
+  web_searches: 'web_searches_kcount',
+} as const
+
+const reportableUsageKeys = [...tokenUsageKeys, ...Object.keys(nonTokenReportableUnits)]
 
 describe('UnitRegistry', () => {
   it('constructs generated flat units into indexed runtime objects', () => {
     const registry = new UnitRegistry(unitData)
 
     expect(new Set(tokenUsageKeys.map((usageKey) => registry.getUnit(usageKey)?.usageKey))).toEqual(new Set(tokenUsageKeys))
+    expect(
+      Object.fromEntries(Object.keys(nonTokenReportableUnits).map((usageKey) => [usageKey, registry.getUnit(usageKey)?.priceKey]))
+    ).toEqual(nonTokenReportableUnits)
     expect(registry.getUnit('requests')?.priceKey).toBe('requests_kcount')
-    expect(registry.getAllUsageKeys().size).toBe(21)
+    expect(registry.getAllUsageKeys().size).toBe(reportableUsageKeys.length + 1)
     expect(registry.getUnitForPriceKey('input_mtok')).toBe(registry.getUnit('input_tokens'))
     expect(registry.getUnitForPriceKey('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.getAllUsageKeys()).toContain('input_tokens')
     expect(registry.getAllPriceKeys()).toContain('input_mtok')
     expect(new Set(registry.reportedUsageKeys())).toContain('input_tokens')
     expect(new Set(registry.reportedUsageKeys())).not.toContain('requests')
+  })
+
+  it('models directional audio durations as children of total audio duration', () => {
+    const registry = new UnitRegistry(unitData)
+    const inputAudio = registry.getUnit('input_audio_seconds')
+    const outputAudio = registry.getUnit('output_audio_seconds')
+    expect(inputAudio).toBeDefined()
+    expect(outputAudio).toBeDefined()
+    if (!inputAudio || !outputAudio) throw new Error('Expected directional audio duration units')
+
+    expect(registry.ancestorUsageKeys('input_audio_seconds')).toEqual(new Set(['audio_seconds']))
+    expect(registry.ancestorUsageKeys('output_audio_seconds')).toEqual(new Set(['audio_seconds']))
+    expect(isCompatible(inputAudio, outputAudio)).toBe(false)
   })
 
   it('defaults missing price keys to the usage key', () => {
@@ -96,6 +180,55 @@ describe('UnitRegistry', () => {
       new Set(['cache_read_tokens', 'input_audio_tokens', 'input_tokens'])
     )
     expect(registry.ancestorUsageKeys('requests')).toEqual(new Set())
+  })
+
+  it('indexes reasoning-modality joins', () => {
+    const registry = new UnitRegistry(unitData)
+    const text = registry.getUnit('output_text_tokens')
+    const reasoning = registry.getUnit('output_reasoning_tokens')
+    expect(text).toBeDefined()
+    expect(reasoning).toBeDefined()
+    if (!text || !reasoning) throw new Error('Expected generated reasoning units')
+
+    expect(registry.findJoin(text, reasoning)).toBe(registry.getUnit('output_text_reasoning_tokens'))
+    expect(registry.ancestorUsageKeys('output_text_reasoning_tokens')).toEqual(
+      new Set(['output_reasoning_tokens', 'output_text_tokens', 'output_tokens'])
+    )
+  })
+
+  it('rejects joins between distinct token types', () => {
+    const registry = new UnitRegistry(unitData)
+    const cacheRead = registry.getUnit('cache_read_tokens')
+    const tool = registry.getUnit('input_tool_tokens')
+    const reasoning = registry.getUnit('output_reasoning_tokens')
+    const citation = registry.getUnit('output_citation_tokens')
+    expect(cacheRead).toBeDefined()
+    expect(tool).toBeDefined()
+    expect(reasoning).toBeDefined()
+    expect(citation).toBeDefined()
+    if (!cacheRead || !tool || !reasoning || !citation) throw new Error('Expected generated token-type units')
+
+    expect(registry.findJoin(cacheRead, tool)).toBeUndefined()
+    expect(registry.findJoin(reasoning, citation)).toBeUndefined()
+  })
+
+  it('indexes non-token relationships', () => {
+    const registry = new UnitRegistry(unitData)
+    const documentPages = registry.getUnit('input_document_pages')
+    const annotatedDocumentPages = registry.getUnit('input_annotated_document_pages')
+    const webSearches = registry.getUnit('web_searches')
+    const socialSearches = registry.getUnit('social_searches')
+    expect(documentPages).toBeDefined()
+    expect(annotatedDocumentPages).toBeDefined()
+    expect(webSearches).toBeDefined()
+    expect(socialSearches).toBeDefined()
+    if (!documentPages || !annotatedDocumentPages || !webSearches || !socialSearches) {
+      throw new Error('Expected generated non-token units')
+    }
+
+    expect(registry.ancestorUsageKeys('input_annotated_document_pages')).toEqual(new Set(['input_document_pages']))
+    expect(registry.ancestorUsageKeys('web_searches')).toEqual(new Set())
+    expect(registry.findJoin(webSearches, socialSearches)).toBeUndefined()
   })
 
   it('keeps construction independent of generated data fixtures', () => {
@@ -172,6 +305,7 @@ describe('generated unit registry', () => {
     const registry = getActiveRegistry()
     expect(registry.getUnitForPriceKey('input_mtok')).toBe(registry.getUnit('input_tokens'))
     expect(registry.getUnitForPriceKey('output_mtok')).toBe(registry.getUnit('output_tokens'))
+    expect(registry.getUnitForPriceKey('web_searches_kcount')).toBe(registry.getUnit('web_searches'))
     expect(registry.getUnitForPriceKey('requests_kcount')).toBe(registry.getUnit('requests'))
   })
 
@@ -180,16 +314,19 @@ describe('generated unit registry', () => {
   })
 
   it('returns the generated full usage-key set', () => {
-    expect(getActiveRegistry().getAllUsageKeys()).toEqual(new Set(['requests', ...tokenUsageKeys]))
+    expect(getActiveRegistry().getAllUsageKeys()).toEqual(new Set(['requests', ...reportableUsageKeys]))
   })
 
   it('returns the generated full price-key set', () => {
-    expect(getActiveRegistry().getAllPriceKeys()).toEqual(new Set(['requests_kcount', ...tokenPriceKeys]))
+    expect(getActiveRegistry().getAllPriceKeys()).toEqual(
+      new Set(['requests_kcount', ...Object.values(nonTokenReportableUnits), ...tokenPriceKeys])
+    )
   })
 
   it('returns externally reported usage keys without pricing-only requests', () => {
     expect(getActiveRegistry().getAllUsageKeys()).toContain('requests')
-    expect(new Set(getActiveRegistry().reportedUsageKeys())).toEqual(new Set(tokenUsageKeys))
+    expect(new Set(getActiveRegistry().reportedUsageKeys())).toEqual(new Set(reportableUsageKeys))
+    expect(getActiveRegistry().isReportedUsageKey('web_searches')).toBe(true)
     expect(getActiveRegistry().isReportedUsageKey('requests')).toBe(false)
   })
 })

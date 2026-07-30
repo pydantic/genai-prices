@@ -310,6 +310,29 @@ def test_model_price_str_requests_and_private_state() -> None:
     assert str(model_price) == '$2 / K requests'
 
 
+@pytest.mark.parametrize(
+    ('price', 'expected'),
+    [
+        (ModelPrice(web_searches_kcount=Decimal('10')), '$10/web searches K'),
+        (ModelPrice(audio_hours=Decimal('1')), '$1/audio Hour'),
+        (ModelPrice(input_gpixels=Decimal('2')), '$2/input pixels G'),
+        (ModelPrice(input_document_kpages=Decimal('3')), '$3/input document pages K'),
+        (
+            ModelPrice(web_searches_kcount=TieredPrices(base=Decimal('10'), tiers=[])),
+            '$10/web searches K (+tiers)',
+        ),
+    ],
+)
+def test_model_price_str_uses_registered_unit_labels(price: ModelPrice, expected: str) -> None:
+    assert str(price) == expected
+
+
+def test_model_price_str_preserves_tiered_unregistered_price_fallback() -> None:
+    price = ModelPrice(hovercraft_mtok=TieredPrices(base=Decimal('1'), tiers=[]))
+
+    assert str(price) == '$1/hovercraft MTok (+tiers)'
+
+
 def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
     price = ModelPrice(hovercraft_mtok=Decimal('NaN'))
 
@@ -391,6 +414,45 @@ def test_requests_kcount_prices():
     assert price.total_price == snapshot(Decimal('0.012'))
     assert price.model.name == snapshot('Sonar')
     assert price.provider.name == snapshot('Perplexity')
+
+
+def test_claude_opus_5_web_search_price():
+    price = calc_price(Usage(web_searches=2), model_ref='claude-opus-5', provider_id='anthropic')
+
+    assert price.input_price == Decimal('0')
+    assert price.output_price == Decimal('0')
+    assert price.total_price == Decimal('0.02')
+
+
+def test_claude_opus_5_one_hour_cache_write_price():
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_write_tokens=1_000_000, cache_write_1h_tokens=1_000_000),
+        model_ref='claude-opus-5',
+        provider_id='anthropic',
+    )
+
+    assert price.input_price == Decimal('10')
+
+
+def test_distinct_output_category_prices_replace_aggregate_output_rate():
+    price = calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25, output_citation_tokens=10),
+        model_ref='sonar-deep-research',
+        provider_id='perplexity',
+    )
+
+    # 65 ordinary tokens at $8/MTok + 25 reasoning at $3/MTok + 10 citations at $2/MTok.
+    assert price.output_price == Decimal('0.000615')
+    assert price.total_price == Decimal('0.000615')
+
+
+def test_custom_model_price_can_override_reasoning_rate():
+    price = ModelPrice(output_mtok=Decimal('8'), output_reasoning_mtok=Decimal('3')).calc_price(
+        Usage(output_tokens=100, output_reasoning_tokens=25)
+    )
+
+    assert price['output_price'] == Decimal('0.000675')
+    assert price['total_price'] == Decimal('0.000675')
 
 
 def test_calc_unit_price_matches_mtok_wrapper() -> None:

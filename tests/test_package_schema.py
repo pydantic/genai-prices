@@ -32,6 +32,7 @@ def test_provider_yaml_schema_suggests_registry_price_keys_from_units() -> None:
     model_price_schema = schema['$defs']['ModelPrice']
     properties = model_price_schema['properties']
     assert properties['input_mtok']['description'] == 'price in USD per million uncached text input/prompt token'
+    assert properties['sausage_mtok']['title'] == 'Sausage Mtok'
     assert properties['sausage_mtok']['description'] == 'price in USD per million sausage tokens'
     assert properties['sausage_mtok']['anyOf'] == model_price_schema['additionalProperties']['anyOf']
     assert isinstance(model_price_schema['additionalProperties'], dict)
@@ -42,6 +43,19 @@ def test_provider_yaml_schema_includes_current_dynamic_registry_price_keys() -> 
 
     properties = schema['$defs']['ModelPrice']['properties']
     assert 'cache_image_read_mtok' in properties
+    assert properties['audio_hours']['description'] == 'price in USD per audio hour'
+    assert properties['input_audio_hours']['description'] == 'price in USD per input audio hour'
+    assert properties['output_audio_hours']['description'] == 'price in USD per output audio hour'
+    assert properties['input_text_messages_kcount']['description'] == 'price in USD per thousand input text messages'
+    assert 'cache_write_5m_mtok' in properties
+    assert (
+        properties['cache_write_5m_mtok']['description']
+        == 'price in USD per million tokens written to the cache with a 5-minute TTL'
+    )
+    assert (
+        properties['cache_write_1h_mtok']['description']
+        == 'price in USD per million tokens written to the cache with a 1-hour TTL'
+    )
 
 
 def test_provider_yaml_schema_suggests_extractor_dests_from_reported_registry_units() -> None:

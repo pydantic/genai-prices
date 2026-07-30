@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from . import source_prices
 from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from .update import get_providers_yaml
-from .utils import mtok
+from .utils import distinct_mtok, mtok
 
 map_providers = {
     'mistralai': 'mistral',
@@ -84,11 +84,13 @@ class OpenRouterPricing(BaseModel, extra='forbid'):
     input_cache_read: Decimal | None = None
 
     def model_price(self) -> ModelPrice:
+        reasoning_price = distinct_mtok(self.internal_reasoning, self.completion)
         return ModelPrice(
             input_mtok=mtok(self.prompt),
             cache_write_mtok=mtok(self.input_cache_write),
             cache_read_mtok=mtok(self.input_cache_read),
             output_mtok=mtok(self.completion),
+            **({'output_reasoning_mtok': reasoning_price} if reasoning_price is not None else {}),
         )
 
     def has_negative_price(self) -> bool:
