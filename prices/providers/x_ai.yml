@@ -11,6 +11,8 @@ provider_match:
 extractors:
   # xAI native SDK format (xai-sdk) — protobuf SamplingUsage fields
   # https://github.com/xai-org/xai-sdk-python/blob/main/src/xai_sdk/proto/v6/usage_pb2.pyi
+  # xAI reports completion and reasoning as separate output counts, while both are billed at the output rate.
+  # https://docs.x.ai/developers/tools/tool-usage-details#understanding-token-usage
   - api_flavor: default
     root: usage
     mappings:
@@ -18,6 +20,9 @@ extractors:
         dest: input_tokens
       - path: cached_prompt_text_tokens
         dest: cache_read_tokens
+        required: false
+      - path: reasoning_tokens
+        dest: output_tokens
         required: false
       - path: reasoning_tokens
         dest: output_reasoning_tokens
@@ -35,6 +40,9 @@ extractors:
         required: false
       - path: [completion_tokens_details, audio_tokens]
         dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_tokens
         required: false
       - path: [completion_tokens_details, reasoning_tokens]
         dest: output_reasoning_tokens

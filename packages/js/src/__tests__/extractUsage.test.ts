@@ -220,6 +220,57 @@ describe('extractUsage', () => {
     })
   })
 
+  describe('xAI provider', () => {
+    const xaiProvider: Provider = data.find((provider) => provider.id === 'x-ai')!
+
+    it('should add native reasoning tokens to aggregate output', () => {
+      const responseData = {
+        model: 'grok-4-fast-reasoning',
+        usage: {
+          cached_prompt_text_tokens: 162,
+          completion_tokens: 27,
+          prompt_tokens: 181,
+          reasoning_tokens: 19,
+          total_tokens: 227,
+        },
+      }
+
+      const { model, usage } = extractUsage(xaiProvider, responseData)
+
+      expect(model).toBe('grok-4-fast-reasoning')
+      expect(usage).toEqual({
+        cache_read_tokens: 162,
+        input_tokens: 181,
+        output_reasoning_tokens: 19,
+        output_tokens: 46,
+      })
+
+      const price = calcPrice(usage, model!, { provider: xaiProvider })
+      expect(price).not.toBeNull()
+      expect(price!.total_price).toBeCloseTo(0.0000349, 12)
+    })
+
+    it('should add chat reasoning tokens to aggregate output', () => {
+      const responseData = {
+        model: 'grok-4-fast-reasoning',
+        usage: {
+          completion_tokens: 8,
+          completion_tokens_details: { reasoning_tokens: 6 },
+          prompt_tokens: 10,
+          total_tokens: 24,
+        },
+      }
+
+      const { usage } = extractUsage(xaiProvider, responseData, 'chat')
+
+      expect(usage).toEqual({
+        input_tokens: 10,
+        output_reasoning_tokens: 6,
+        output_tokens: 14,
+      })
+    })
+  })
+
   describe('Perplexity provider', () => {
     const perplexityProvider: Provider = data.find((provider) => provider.id === 'perplexity')!
 

@@ -6267,10 +6267,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -6382,6 +6378,20 @@
           "cache_read_tokens": 682,
           "input_tokens": 687,
           "output_tokens": 240
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "cache_read_tokens": 682,
+          "input_tokens": 687,
+          "output_reasoning_tokens": 165,
+          "output_tokens": 405
         }
       }
     ],
@@ -6686,10 +6696,6 @@
             "input_price": "0.00001025",
             "output_price": "0.002914",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -6715,6 +6721,19 @@
         ],
         "usage": {
           "input_tokens": 41
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 41,
+          "output_reasoning_tokens": 704,
+          "output_tokens": 2161
         }
       }
     ],
@@ -7016,10 +7035,6 @@
             "input_price": "0.00000425",
             "output_price": "0.00303",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -7045,6 +7060,19 @@
         ],
         "usage": {
           "input_tokens": 17
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17,
+          "output_reasoning_tokens": 704,
+          "output_tokens": 2219
         }
       }
     ],
@@ -7200,10 +7228,6 @@
             "input_price": "0.00000425",
             "output_price": "0.004354",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -7229,6 +7253,19 @@
         ],
         "usage": {
           "input_tokens": 17
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 17,
+          "output_reasoning_tokens": 960,
+          "output_tokens": 3137
         }
       }
     ],
@@ -15568,10 +15605,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -15601,6 +15634,19 @@
         ],
         "usage": {
           "input_tokens": 11
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 11,
+          "output_reasoning_tokens": 768,
+          "output_tokens": 1577
         }
       }
     ],
@@ -15997,10 +16043,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -16030,6 +16072,19 @@
         ],
         "usage": {
           "input_tokens": 13
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 13,
+          "output_reasoning_tokens": 192,
+          "output_tokens": 430
         }
       }
     ],
@@ -19807,10 +19862,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -19840,6 +19891,19 @@
         ],
         "usage": {
           "input_tokens": 577
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 577,
+          "output_reasoning_tokens": 1792,
+          "output_tokens": 4112
         }
       }
     ],
@@ -23279,10 +23343,6 @@
             "input_price": "0.000033",
             "output_price": "0.0009328",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -23312,6 +23372,19 @@
         ],
         "usage": {
           "input_tokens": 30
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 30,
+          "output_reasoning_tokens": 192,
+          "output_tokens": 404
         }
       }
     ],
@@ -23897,10 +23970,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -23930,6 +23999,19 @@
         ],
         "usage": {
           "input_tokens": 7
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7,
+          "output_reasoning_tokens": 64,
+          "output_tokens": 149
         }
       }
     ],
@@ -33529,10 +33611,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -33558,6 +33636,19 @@
         ],
         "usage": {
           "input_tokens": 12
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 12,
+          "output_reasoning_tokens": 415,
+          "output_tokens": 1204
         }
       }
     ],
@@ -45280,10 +45371,6 @@
           {
             "api_flavor": "chat",
             "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "chat",
-            "provider_id": "x-ai"
           }
         ],
         "usage": {
@@ -45313,6 +45400,19 @@
         ],
         "usage": {
           "input_tokens": 31
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "chat",
+            "provider_id": "x-ai"
+          }
+        ],
+        "usage": {
+          "input_tokens": 31,
+          "output_reasoning_tokens": 448,
+          "output_tokens": 915
         }
       }
     ],

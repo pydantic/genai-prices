@@ -1115,23 +1115,30 @@ def test_accumulate_extracted_usage():
 def test_xai_native():
     provider = next(provider for provider in providers if provider.id == 'x-ai')
     response_data = {
-        'model': 'grok-4-fast-non-reasoning',
+        'model': 'grok-4-fast-reasoning',
         'usage': {
             'prompt_tokens': 181,
             'cached_prompt_text_tokens': 162,
             'completion_tokens': 27,
             'reasoning_tokens': 19,
             'prompt_text_tokens': 181,
-            'total_tokens': 208,
+            'total_tokens': 227,
         },
     }
     model, usage = provider.extract_usage(response_data)
-    assert model == 'grok-4-fast-non-reasoning'
-    assert usage == Usage(input_tokens=181, cache_read_tokens=162, output_tokens=27, output_reasoning_tokens=19)
+    assert model == 'grok-4-fast-reasoning'
+    assert usage == Usage(input_tokens=181, cache_read_tokens=162, output_tokens=46, output_reasoning_tokens=19)
+
+    extracted_usage = extract_usage(response_data, provider_id='x-ai')
+    assert extracted_usage.usage == usage
+    assert extracted_usage.calc_price().total_price == Decimal('0.0000349')
 
 
-@pytest.mark.parametrize('provider_id', ['azure', 'google', 'x-ai'])
-def test_openai_compatible_reasoning_tokens(provider_id: str):
+@pytest.mark.parametrize(
+    ('provider_id', 'expected_output_tokens'),
+    [('azure', 8), ('google', 8), ('x-ai', 14)],
+)
+def test_openai_compatible_reasoning_tokens(provider_id: str, expected_output_tokens: int):
     provider = next(provider for provider in providers if provider.id == provider_id)
     response_data = {
         'model': 'reasoning-model',
@@ -1144,7 +1151,7 @@ def test_openai_compatible_reasoning_tokens(provider_id: str):
 
     assert provider.extract_usage(response_data, api_flavor='chat') == (
         'reasoning-model',
-        Usage(input_tokens=10, output_tokens=8, output_reasoning_tokens=6),
+        Usage(input_tokens=10, output_tokens=expected_output_tokens, output_reasoning_tokens=6),
     )
 
 

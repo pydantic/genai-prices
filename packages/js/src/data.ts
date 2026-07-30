@@ -22889,6 +22889,11 @@ export const data: Provider[] = [
           },
           {
             path: 'reasoning_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+          {
+            path: 'reasoning_tokens',
             dest: 'output_reasoning_tokens',
             required: false,
           },
@@ -22917,6 +22922,11 @@ export const data: Provider[] = [
           {
             path: ['completion_tokens_details', 'audio_tokens'],
             dest: 'output_audio_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_tokens',
             required: false,
           },
           {
