@@ -327,6 +327,12 @@ def test_model_price_str_uses_registered_unit_labels(price: ModelPrice, expected
     assert str(price) == expected
 
 
+def test_model_price_str_preserves_tiered_unregistered_price_fallback() -> None:
+    price = ModelPrice(hovercraft_mtok=TieredPrices(base=Decimal('1'), tiers=[]))
+
+    assert str(price) == '$1/hovercraft MTok (+tiers)'
+
+
 def test_calc_price_warns_and_ignores_unregistered_dynamic_extra() -> None:
     price = ModelPrice(hovercraft_mtok=Decimal('NaN'))
 
