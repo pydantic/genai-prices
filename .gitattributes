@@ -2,3 +2,6 @@
 
 prices/data.json linguist-generated=true
 prices/data_slim.json linguist-generated=true
+
+prices/new_data/v2/data.json linguist-generated=true
+prices/new_data/v2/data_slim.json linguist-generated=true
