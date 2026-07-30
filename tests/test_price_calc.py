@@ -43,8 +43,8 @@ def test_sync_success_with_provider():
     ('model_ref', 'expected_input_price'),
     [
         ('gpt-5.6-sol', Decimal('0.00625')),
-        ('gpt-5.6-terra', Decimal('0.003125')),
-        ('gpt-5.6-luna', Decimal('0.00125')),
+        ('gpt-5.6-terra', Decimal('0.0025')),
+        ('gpt-5.6-luna', Decimal('0.00025')),
     ],
 )
 def test_gpt_5_6_cache_write_price(model_ref: str, expected_input_price: Decimal):
@@ -63,8 +63,8 @@ def test_gpt_5_6_cache_write_price(model_ref: str, expected_input_price: Decimal
     ('model_ref', 'short_write_rate', 'long_write_rate'),
     [
         ('gpt-5.6-sol', Decimal('6.25'), Decimal('12.5')),
-        ('gpt-5.6-terra', Decimal('3.125'), Decimal('6.25')),
-        ('gpt-5.6-luna', Decimal('1.25'), Decimal('2.5')),
+        ('gpt-5.6-terra', Decimal('2.5'), Decimal('5')),
+        ('gpt-5.6-luna', Decimal('0.25'), Decimal('0.5')),
     ],
 )
 def test_gpt_5_6_cache_write_price_context_boundary(
@@ -89,8 +89,8 @@ def test_gpt_5_6_cache_write_price_context_boundary(
     ('model_ref', 'input_rate', 'cache_write_rate', 'cache_read_rate', 'output_rate'),
     [
         ('gpt-5.6-sol', Decimal('10'), Decimal('12.5'), Decimal('1'), Decimal('45')),
-        ('gpt-5.6-terra', Decimal('5'), Decimal('6.25'), Decimal('0.5'), Decimal('22.5')),
-        ('gpt-5.6-luna', Decimal('2'), Decimal('2.5'), Decimal('0.2'), Decimal('9')),
+        ('gpt-5.6-terra', Decimal('4'), Decimal('5'), Decimal('0.4'), Decimal('18')),
+        ('gpt-5.6-luna', Decimal('0.4'), Decimal('0.5'), Decimal('0.04'), Decimal('1.8')),
     ],
 )
 def test_gpt_5_6_long_context_mixed_price(

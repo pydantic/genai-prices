@@ -901,31 +901,32 @@ models:
         - equals: gpt-5.6-luna
         - equals: gpt-5-6-luna
     context_window: 1050000
-    prices_checked: 2026-07-10
+    prices_checked: 2026-07-30
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. Ref:
-      https://developers.openai.com/api/docs/guides/prompt-caching
+      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
+      (>272K input tokens) is 2x input and 1.5x output. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.6-luna
     prices:
       input_mtok:
-        base: 1
+        base: 0.2
         tiers:
           - start: 272000
-            price: 2
+            price: 0.4
       cache_write_mtok:
-        base: 1.25
+        base: 0.25
         tiers:
           - start: 272000
-            price: 2.5
+            price: 0.5
       cache_read_mtok:
-        base: 0.1
+        base: 0.02
         tiers:
           - start: 272000
-            price: 0.2
+            price: 0.04
       output_mtok:
-        base: 6
+        base: 1.2
         tiers:
           - start: 272000
-            price: 9
+            price: 1.8
 
   - id: gpt-5.6-sol
     name: GPT-5.6 Sol
@@ -938,10 +939,11 @@ models:
         - equals: gpt-5.6
         - equals: gpt-5-6
     context_window: 1050000
-    prices_checked: 2026-07-10
+    prices_checked: 2026-07-30
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. Ref:
-      https://developers.openai.com/api/docs/guides/prompt-caching
+      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
+      (>272K input tokens) is 2x input and 1.5x output. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.6-sol
     prices:
       input_mtok:
         base: 5
@@ -973,31 +975,32 @@ models:
         - equals: gpt-5.6-terra
         - equals: gpt-5-6-terra
     context_window: 1050000
-    prices_checked: 2026-07-10
+    prices_checked: 2026-07-30
     price_comments: >-
-      Cache writes are billed at 1.25x the uncached input rate. Ref:
-      https://developers.openai.com/api/docs/guides/prompt-caching
+      Cache writes are billed at 1.25x the uncached input rate. Long-context tier
+      (>272K input tokens) is 2x input and 1.5x output. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.6-terra
     prices:
       input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
         base: 2.5
         tiers:
           - start: 272000
             price: 5
-      cache_write_mtok:
-        base: 3.125
-        tiers:
-          - start: 272000
-            price: 6.25
       cache_read_mtok:
-        base: 0.25
+        base: 0.2
         tiers:
           - start: 272000
-            price: 0.5
+            price: 0.4
       output_mtok:
-        base: 15
+        base: 12
         tiers:
           - start: 272000
-            price: 22.5
+            price: 18
 
   - id: gpt-audio
     name: GPT Audio
