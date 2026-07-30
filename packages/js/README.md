@@ -97,11 +97,20 @@ const result = calcPrice(usage, 'my-new-model', { provider: customProvider })
 - `Provider`: `id`, `name`, `api_pattern`, and `models` array
 - `ModelInfo`: `id`, `match` (determines how the model ID is matched), and `prices`
 
-**Pricing fields** (all in cost per million tokens):
+**Pricing fields.** The full set is derived from
+[`prices/units.yml`](https://github.com/pydantic/genai-prices/blob/main/prices/units.yml); the common
+per-million-token ones are:
 
 - `input_mtok` / `output_mtok`: Text token pricing
 - `cache_read_mtok` / `cache_write_mtok`: Prompt caching pricing
 - `input_audio_mtok` / `output_audio_mtok`: Audio token pricing
+
+The key suffix tells you the unit, and **not every key is per million**: `_mtok` is per 1M tokens,
+`_kcount` per 1,000 (e.g. `requests_kcount`, `web_searches_kcount`), `_mchars` per 1M characters,
+`_hours` per 3,600 seconds, `_gpixels` per 1e9 pixels, `_kpages` per 1,000 pages.
+
+Prices must also cover their ancestors: a model priced with `cache_write_1h_mtok` needs
+`cache_write_mtok` as well, or pricing throws at runtime.
 
 ### Error Handling
 

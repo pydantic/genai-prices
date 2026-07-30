@@ -87,10 +87,14 @@ Price data is available in the following files:
 - [`prices/new_data/v2/data.schema.json`](prices/new_data/v2/data.schema.json) - JSON Schema for the full v2 data
 - [`prices/new_data/v2/data_slim.json`](prices/new_data/v2/data_slim.json) - compact v2 pricing data with free models and long metadata removed
 - [`prices/new_data/v2/data_slim.schema.json`](prices/new_data/v2/data_slim.schema.json) - JSON Schema for the slim v2 data
-- [`prices/data.json`](prices/data.json) - v1-compatible provider and model pricing data
-- [`prices/data.schema.json`](prices/data.schema.json) - v1 JSON Schema for `prices/data.json`
-- [`prices/data_slim.json`](prices/data_slim.json) - slim v1-compatible data with long fields and free models removed
-- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - v1 JSON Schema for `prices/data_slim.json`
+
+The v1 files below are **frozen**: they remain available so released clients keep working, but they no
+longer receive provider, model or price updates. Use the v2 files above for anything new.
+
+- [`prices/data.json`](prices/data.json) - frozen v1-compatible provider and model pricing data
+- [`prices/data.schema.json`](prices/data.schema.json) - JSON Schema published alongside frozen v1 `data.json`
+- [`prices/data_slim.json`](prices/data_slim.json) - frozen slim v1-compatible data with long fields and free models removed
+- [`prices/data_slim.schema.json`](prices/data_slim.schema.json) - JSON Schema published alongside frozen v1 `data_slim.json`
 
 Feel free to download these files and use them as you wish. We would be grateful if you would reference this
 project wherever you use it and [contribute](#contributing) back to the project if you find any errors.
