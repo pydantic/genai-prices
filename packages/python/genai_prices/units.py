@@ -81,6 +81,50 @@ class UnitRegistry:
         return self._units_by_dimension.get(frozenset(a.dimensions.items() | b.dimensions.items()))
 
 
+def _unit_display_name(unit: UnitDef) -> str:  # pyright: ignore[reportUnusedFunction]
+    dimensions = unit.dimensions
+    family = dimensions.get('family')
+    direction = dimensions.get('direction')
+    modality = dimensions.get('modality')
+    parts: list[str]
+    use_usage_key = family == 'tool_calls' or (family != 'tokens' and direction is not None and modality is None)
+    if use_usage_key:
+        parts = [unit.usage_key]
+    else:
+        parts = []
+        if direction is not None:
+            parts.append(direction)
+        if modality is not None:
+            parts.append(modality)
+        if family == 'messages':
+            parts.append(family)
+
+    handled_dimensions = set(dimensions) if use_usage_key else {'family', 'direction', 'modality'}
+    parts.extend(value for key, value in sorted(dimensions.items()) if key not in handled_dimensions)
+    if not parts:
+        parts.append(unit.usage_key)
+    return ' '.join(part.replace('_', ' ').title() for part in parts)
+
+
+def _unit_per_label(unit: UnitDef) -> str:  # pyright: ignore[reportUnusedFunction]
+    family = unit.dimensions.get('family')
+    if family == 'tokens' and unit.per == 1_000_000:
+        return 'MTok'
+    if family == 'requests' and unit.per == 1_000:
+        return 'K'
+    if family == 'durations' and unit.per == 60:
+        return 'Min'
+    if family == 'durations' and unit.per == 3_600:
+        return 'Hour'
+    if unit.per == 1_000_000_000:
+        return 'G'
+    if unit.per == 1_000_000:
+        return 'M'
+    if unit.per == 1_000:
+        return 'K'
+    return str(unit.per)
+
+
 def _dimension_set(unit: UnitDef) -> frozenset[tuple[str, str]]:
     return frozenset(unit.dimensions.items())
 
