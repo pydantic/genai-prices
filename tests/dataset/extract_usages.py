@@ -94,6 +94,18 @@ def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     in [
                         # https://github.com/pydantic/genai-prices/issues/232
                         'groq/compound',
+                        # new models with no prices yet
+                        'glm-4.6v',
+                        'gpt-oss:20b',
+                        'models/gemini-2.5-pro',
+                        'openai.gpt-5.6-luna',
+                        'openai.gpt-oss-120b',
+                        'openai.gpt-oss-safeguard-20b',
+                        'openai/gpt-5-mini-2025-08-07',
+                        'openai/gpt-5.6-sol',
+                        'qwen3:0.6b',
+                        'x-ai/grok-4',
+                        'zai-glm-4.7',
                     ]
                     # google-gla sometimes adding 'models/' prefix
                     or model.startswith('models/')
@@ -116,6 +128,9 @@ def case_to_result(case: Case, this_result: dict[str, Any]):
             )
         except LookupError:
             pass
+        except Exception as e:
+            message = f'Error calculating price for {case.provider_id}:{case.model_ref} with usage {case.usage_dict} and file {this_result["body"]["file"]}'
+            raise AssertionError(message) from e
         else:
             extractor_dict['input_price'] = str(price.input_price)
             extractor_dict['output_price'] = str(price.output_price)

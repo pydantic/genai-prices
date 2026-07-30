@@ -114,6 +114,7 @@ reportIncompatibleUnannotatedOverride = true
 reportImplicitAbstractClass = true
 include = ["prices/src", "packages/python", "benchmarks", "tests", ".github/scripts"]
 venv = ".venv"
+venvPath = "."
 executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
 
 [tool.codespell]
