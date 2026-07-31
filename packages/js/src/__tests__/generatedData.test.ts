@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { calcPrice } from '../api'
 import * as providerDataModule from '../data'
 import { unitData } from '../dataUnits'
 import { UnitRegistry } from '../units'
@@ -100,5 +101,52 @@ describe('generated data split', () => {
     expect(registry.getUnitForPriceKey('cache_image_write_mtok')?.usageKey).toBe('cache_image_write_tokens')
     expect(registry.getUnitForPriceKey('web_searches_kcount')?.usageKey).toBe('web_searches')
     expect(registry.getUnitForPriceKey('requests_kcount')?.usageKey).toBe('requests')
+  })
+
+  it.each([
+    {
+      expectedPrices: {
+        cache_read_mtok: { base: 0.1, tiers: [{ price: 0.2, start: 272_000 }] },
+        cache_write_mtok: { base: 1.25, tiers: [{ price: 2.5, start: 272_000 }] },
+        input_mtok: { base: 1, tiers: [{ price: 2, start: 272_000 }] },
+        output_mtok: { base: 6, tiers: [{ price: 9, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-luna',
+      timestamp: new Date('2026-07-29T23:59:59Z'),
+    },
+    {
+      expectedPrices: {
+        cache_read_mtok: { base: 0.02, tiers: [{ price: 0.04, start: 272_000 }] },
+        cache_write_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        input_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
+        output_mtok: { base: 1.2, tiers: [{ price: 1.8, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-luna',
+      timestamp: new Date('2026-07-30T00:00:00Z'),
+    },
+    {
+      expectedPrices: {
+        cache_read_mtok: { base: 0.25, tiers: [{ price: 0.5, start: 272_000 }] },
+        cache_write_mtok: { base: 3.125, tiers: [{ price: 6.25, start: 272_000 }] },
+        input_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        output_mtok: { base: 15, tiers: [{ price: 22.5, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-terra',
+      timestamp: new Date('2026-07-29T23:59:59Z'),
+    },
+    {
+      expectedPrices: {
+        cache_read_mtok: { base: 0.2, tiers: [{ price: 0.4, start: 272_000 }] },
+        cache_write_mtok: { base: 2.5, tiers: [{ price: 5, start: 272_000 }] },
+        input_mtok: { base: 2, tiers: [{ price: 4, start: 272_000 }] },
+        output_mtok: { base: 12, tiers: [{ price: 18, start: 272_000 }] },
+      },
+      model: 'gpt-5.6-terra',
+      timestamp: new Date('2026-07-30T00:00:00Z'),
+    },
+  ])('preserves $model prices at $timestamp', ({ expectedPrices, model, timestamp }) => {
+    const result = calcPrice({ input_tokens: 0 }, model, { providerId: 'openai', timestamp })
+
+    expect(result?.model_price).toEqual(expectedPrices)
   })
 })
