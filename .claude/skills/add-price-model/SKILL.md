@@ -1,10 +1,11 @@
 ---
 name: add-price-model
 description: >-
-  Add a new LLM model (or provider) to genai-prices pricing data. Use when asked to add/update
-  pricing for a model — e.g. "add grok 4.5", "add the new Claude", "update openai o5 prices". Covers
-  sourcing prices, probing OpenRouter for undocumented dated snapshot IDs, editing the provider YAML,
-  building, verifying resolution, and opening the PR.
+  Add a new LLM model (or provider) to genai-prices pricing data, or change the price of one that is
+  already there. Use when asked to add/update pricing for a model — e.g. "add grok 4.5", "add the new
+  Claude", "update openai o5 prices", "provider X cut its prices". Covers sourcing prices, probing
+  OpenRouter for undocumented dated snapshot IDs, editing the provider YAML, preserving price history
+  across a rate change, building, verifying resolution, and opening the PR.
 ---
 
 # Add a model to genai-prices
@@ -114,6 +115,57 @@ entry** (add it here, delete it there). First verify which model the vendor's al
 to — check the provider docs and, if you can, hit the API and read the response `model` field — then
 match that. Don't assume; the aliasing scheme is provider-specific (some vendors have no bare-family
 alias at all).
+
+## 4b. Changing the price of a model that already exists
+
+A provider changing its rates is **not** an edit to the existing `prices:` block. Overwriting those
+values re-prices every request the library ever priced for that model, so a request from before the
+change gets billed at the new rate. That is what happened to GPT-5.6 Luna and Terra in #531, and #535
+had to undo it.
+
+Add a dated entry instead. Convert `prices:` from a mapping to a list of conditional entries:
+
+```yaml
+prices:
+  - prices: # the rates that were already there, unchanged and unconstrained
+      input_mtok: 1
+      output_mtok: 6
+  - constraint:
+      # https://developers.openai.com/api/docs/changelog
+      start_date: 2026-07-30
+    prices: # the new rates
+      input_mtok: 0.2
+      output_mtok: 1.2
+```
+
+- Put the entry with no `constraint` **first**. Both engines scan the list backwards and take the
+  first entry whose constraint is active, so an unconstrained entry placed last would always win.
+- Set `start_date` to the date the provider's new price took effect, not to today. Cite the changelog
+  or announcement that states that date, in a YAML comment beside `start_date`.
+- Set `prices_checked` to today. It records when you verified the rates, which is a different fact
+  from when the rates changed.
+- Append one entry to a model that already uses a list. Leave the existing entries alone.
+
+Overwrite in place in exactly one case: the old value was wrong when it was written. A correction has
+no history worth preserving. State which of the two cases you are in, in the PR body.
+
+Verify both sides of the boundary:
+
+```bash
+uv run python -c "
+from datetime import datetime, timezone
+from genai_prices import calc_price, Usage
+u = Usage(input_tokens=1_000_000)
+for day in [(2026, 7, 29), (2026, 7, 30)]:
+    t = datetime(*day, tzinfo=timezone.utc)
+    r = calc_price(u, '<id>', provider_id='<provider_id>', genai_request_timestamp=t)
+    print(t.date(), '->', r.model_price.input_mtok, r.total_price)
+"
+```
+
+Then pin both sides in `tests/test_price_calc.py` — one assertion the day before the change, one on
+the day of. A test that only covers the current rate passes just as well against an overwritten
+history, which is why #531 went green.
 
 ## 5. Build + verify resolution
 

@@ -101,15 +101,28 @@ little, suspect the importer before the data.
 
 - **v2 is the live feed.** `prices/new_data/v2/data.json` is what the published packages auto-update
   from, and it goes live on merge to `main` — independent of any package release.
-- **v1 is frozen.** `prices/data.json` and `prices/data_slim.json` are compatibility snapshots for
-  pre-0.1.0 clients. No build step writes them any more, and they receive no provider, model or price
-  updates. Don't regenerate them, don't hand-edit them, and don't treat their stale `prices_checked`
-  dates as a bug.
+- **v1 is frozen.** `prices/data.json`, `prices/data_slim.json` and their two schemas are compatibility
+  snapshots for pre-0.1.0 clients. No build step writes them any more, and they receive no provider,
+  model or price updates. Don't regenerate them, don't hand-edit them, and don't treat their stale
+  `prices_checked` dates as a bug. `tests/test_frozen_v1_data.py` pins their sha256 digests, so an edit
+  fails the test suite — because no build step rewrites them, that test is the only thing that catches it.
 - **NEVER** hand-edit any generated file: the v2 payloads and schemas, `prices/providers/.schema.json`,
   or the bundled `data.py` / `data.ts` / `data_units.py` / `dataUnits.ts`. Edit the provider YAML or
-  `prices/units.yml` and run `make build`.
+  `prices/units.yml` and run `make build`. The pre-commit `build` hook regenerates all of these and
+  fails when the result differs, so CI catches an edit to any of them.
+- Every generated artifact is marked `linguist-generated` in `.gitattributes`, so GitHub collapses its
+  diff. Review the provider YAML and `units.yml`; trust the build hook and the digest test for the rest.
 - Published artifact URLs must not change — new contracts go in a new `prices/new_data/v<version>/`
   directory rather than moving or renaming existing files.
+- **Never overwrite a `prices:` block when a provider changes its rates.** Editing those values in
+  place re-prices every past request at the new rate — a request from before the change gets billed
+  at today's price. Add a dated conditional price entry instead: make `prices:` a list, keep the
+  existing rates as the first entry with no `constraint`, and append the new rates under
+  `constraint: { start_date: <date the new price took effect> }`. Both engines take the **last**
+  matching entry, so the dated entry goes at the end. `openai.yml` (o3) and `anthropic.yml`
+  (1M-context surcharge) show the shape. Overwrite in place only to correct a value that was already
+  wrong when it was written — a correction has no history worth keeping. The `/add-price-model` skill
+  covers the full procedure.
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
 
