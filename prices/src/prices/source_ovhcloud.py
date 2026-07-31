@@ -8,6 +8,7 @@ from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
+from prices.source_guard import check_no_sharp_drop, check_non_empty
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
 
 
@@ -59,14 +60,12 @@ def main():
     """Download and process OVHcloud AI Endpoints pricing data."""
     api_url = 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'
 
-    try:
-        response = httpx2.get(api_url, timeout=30.0)
-        response.raise_for_status()
-        data = response.json()
-        models = data.get('data', [])
-    except Exception as e:
-        print(f'Error fetching OVHcloud AI Endpoints models: {e}')
-        return
+    # Deliberately not wrapped in try/except: this used to swallow every exception into a silent
+    # `return`, so a failed fetch printed a line and exited 0 like a successful no-op.
+    response = httpx2.get(api_url, timeout=30.0)
+    response.raise_for_status()
+    models = response.json().get('data', [])
+    check_non_empty('ovhcloud', len(models))
 
     providers_dir = Path(__file__).parent / '../../providers'
 
@@ -108,8 +107,11 @@ def main():
         '# !!!!!!\n\n'
     ) + get_provider_yaml_string(yaml_data)
 
-    # Write to file
+    # Write to file. This overwrites tracked provider YAML, which the published artifacts are built
+    # from, so refuse a response that would silently delete most of what we already record.
     path = providers_dir / f'{provider_id}.yml'
+    existing_count = len(ProviderYaml(path).provider.models) if path.exists() else 0
+    check_no_sharp_drop('ovhcloud', provider_id, len(model_infos), existing_count)
     path.write_text(yaml_string)
     print(f'Created {path}')
 

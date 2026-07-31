@@ -60,7 +60,7 @@ lookup_provider = {
 def get_litellm_prices():
     """Get prices from LiteLLM code."""
     url = 'https://raw.githubusercontent.com/BerriAI/litellm/refs/heads/main/model_prices_and_context_window.json'
-    r = httpx2.get(url)
+    r = httpx2.get(url, timeout=30.0)
     r.raise_for_status()
     response_data = lite_llm_response_schema.validate_json(r.content)
 

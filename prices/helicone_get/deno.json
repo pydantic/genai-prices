@@ -1,6 +1,7 @@
 {
+  "//": "SECURITY: --allow-write is scoped to the one directory main.ts writes. main.ts imports Helicone's TypeScript, so that third-party code executes here; unscoped, a compromised upstream could write anywhere the invoking user can (a shell rc file, a git hook) and turn arbitrary write into code execution. Deno denies net/run/read/env by default, so with write scoped the worst case is bad numbers in a gitignored JSON file. Do not widen this. See README.md.",
   "tasks": {
-    "run": "deno run --unstable-sloppy-imports --allow-write main.ts"
+    "run": "deno run --unstable-sloppy-imports --allow-write=../source_prices main.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"

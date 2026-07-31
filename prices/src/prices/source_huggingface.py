@@ -7,6 +7,7 @@ from pydantic import HttpUrl
 
 from prices.collapse import collapse_provider
 from prices.prices_types import ClauseAnd, ClauseContains, ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Provider
+from prices.source_guard import check_no_sharp_drop, check_non_empty
 from prices.update import ProviderYaml, ProviderYamlDict, get_provider_yaml_string
 
 
@@ -41,7 +42,11 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
 
 
 def main():
-    models = httpx2.get('https://router.huggingface.co/v1/models').json()['data']
+    response = httpx2.get('https://router.huggingface.co/v1/models', timeout=30.0)
+    # Without this an error page becomes a KeyError on ['data'] rather than a legible failure.
+    response.raise_for_status()
+    models = response.json()['data']
+    check_non_empty('huggingface', len(models))
 
     providers = {p['provider'] for model in models for p in model['providers']}
     providers_dir = Path(__file__).parent / '../../providers'
@@ -86,6 +91,10 @@ def main():
         ) + get_provider_yaml_string(yaml_data)
 
         path = providers_dir / f'{provider_id}.yml'
+        # This overwrites tracked provider YAML, which the published artifacts are built from, so
+        # refuse an upstream response that would silently delete most of what we already record.
+        existing_count = len(ProviderYaml(path).provider.models) if path.exists() else 0
+        check_no_sharp_drop('huggingface', provider_id, len(model_infos), existing_count)
         path.write_text(yaml_string)
         provider_yaml = ProviderYaml(path)
         if collapse_provider(provider_yaml):

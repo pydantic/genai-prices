@@ -128,7 +128,7 @@ class OpenRouterResponse(BaseModel):
 
 def main(mode: Literal['metadata', 'prices']):  # noqa: C901
     """Update provider prices and metadata based on OpenRouter API."""
-    r = httpx2.get('https://openrouter.ai/api/v1/models')
+    r = httpx2.get('https://openrouter.ai/api/v1/models', timeout=30.0)
     r.raise_for_status()
 
     or_response = OpenRouterResponse.model_validate_json(r.content)
