@@ -101,13 +101,17 @@ little, suspect the importer before the data.
 
 - **v2 is the live feed.** `prices/new_data/v2/data.json` is what the published packages auto-update
   from, and it goes live on merge to `main` — independent of any package release.
-- **v1 is frozen.** `prices/data.json` and `prices/data_slim.json` are compatibility snapshots for
-  pre-0.1.0 clients. No build step writes them any more, and they receive no provider, model or price
-  updates. Don't regenerate them, don't hand-edit them, and don't treat their stale `prices_checked`
-  dates as a bug.
+- **v1 is frozen.** `prices/data.json`, `prices/data_slim.json` and their two schemas are compatibility
+  snapshots for pre-0.1.0 clients. No build step writes them any more, and they receive no provider,
+  model or price updates. Don't regenerate them, don't hand-edit them, and don't treat their stale
+  `prices_checked` dates as a bug. `tests/test_frozen_v1_data.py` pins their sha256 digests, so an edit
+  fails the test suite — because no build step rewrites them, that test is the only thing that catches it.
 - **NEVER** hand-edit any generated file: the v2 payloads and schemas, `prices/providers/.schema.json`,
   or the bundled `data.py` / `data.ts` / `data_units.py` / `dataUnits.ts`. Edit the provider YAML or
-  `prices/units.yml` and run `make build`.
+  `prices/units.yml` and run `make build`. The pre-commit `build` hook regenerates all of these and
+  fails when the result differs, so CI catches an edit to any of them.
+- Every generated artifact is marked `linguist-generated` in `.gitattributes`, so GitHub collapses its
+  diff. Review the provider YAML and `units.yml`; trust the build hook and the digest test for the rest.
 - Published artifact URLs must not change — new contracts go in a new `prices/new_data/v<version>/`
   directory rather than moving or renaming existing files.
 - When updating prices in YAML files, always update the `prices_checked` field to current date
