@@ -919,7 +919,7 @@ models:
 
   - id: writer.palmyra-x4-v1:0
     name: Palmyra X4
-    prices_checked: 2026-07-29
+    prices_checked: 2026-07-28
     match:
       contains: writer.palmyra-x4
     price_comments: >-
@@ -932,7 +932,7 @@ models:
 
   - id: writer.palmyra-x5-v1:0
     name: Palmyra X5
-    prices_checked: 2026-07-29
+    prices_checked: 2026-07-28
     match:
       contains: writer.palmyra-x5
     price_comments: >-
