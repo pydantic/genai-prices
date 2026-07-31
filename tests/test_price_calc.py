@@ -753,6 +753,29 @@ def test_time_of_date_constraint_spanning_midnight_reads_naive_timestamp_as_utc(
     assert model.get_prices(datetime(2026, 7, 30, 12)) == ModelPrice(input_mtok=Decimal('1'))
 
 
+@pytest.mark.parametrize('offset_hours', [-11, -5, 0, 5, 9, 14])
+@pytest.mark.parametrize('hour', range(24))
+def test_time_of_date_constraint_is_offset_independent(offset_hours: int, hour: int) -> None:
+    """The same instant must price the same however the caller's timezone expresses it.
+
+    Comparing an offset-aware `timetz()` directly does not survive an offset that crosses midnight,
+    which silently picked the wrong side of DeepSeek's off-peak window for non-UTC callers.
+    """
+    tz = timezone(timedelta(hours=offset_hours))
+    local = datetime(2026, 1, 15, hour, tzinfo=tz)
+
+    usage = Usage(input_tokens=1_000)
+    local_price = calc_price(usage, model_ref='deepseek-chat', provider_id='deepseek', genai_request_timestamp=local)
+    utc_price = calc_price(
+        usage,
+        model_ref='deepseek-chat',
+        provider_id='deepseek',
+        genai_request_timestamp=local.astimezone(timezone.utc),
+    )
+
+    assert local_price.total_price == utc_price.total_price
+
+
 # An unanchored `api_pattern` must not match a provider host that merely appears inside the URL.
 PROXIED_OPENAI_API_URL = 'http://localhost:8080/proxy?u=https://api.openai.com/v1'
 

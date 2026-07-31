@@ -175,4 +175,5 @@ def extract_and_check(body: dict[str, Any], extractor: UsageExtractor, provider:
     return Case(provider.id, flavor, model_ref, usage_dict)
 
 
-main()
+if __name__ == '__main__':
+    main()

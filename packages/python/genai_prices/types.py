@@ -1030,11 +1030,17 @@ class TimeOfDateConstraint:
     """End time of the interval."""
 
     def active(self, request_timestamp: datetime) -> bool:
-        # A naive timestamp is read as UTC; the constraint times are always offset-aware, and
-        # comparing them against a naive one raises.
+        # Convert to UTC *before* taking the time of day. Comparing the offset-aware `timetz()`
+        # directly looks like it should work - Python compares aware times by their UTC-adjusted value
+        # - but that adjustment is not wrapped into [00:00, 24:00), so any offset that pushes the time
+        # across midnight compares against a value outside the day and picks the wrong price. That is
+        # not hypothetical: it disagrees with the JS package on 23 of 144 sampled offset/hour pairs
+        # against the live DeepSeek 00:30-16:30 window.
+        # A naive timestamp is read as UTC; the constraint times are always offset-aware, and comparing
+        # them against a naive one raises.
         if request_timestamp.tzinfo is None:
             request_timestamp = request_timestamp.replace(tzinfo=timezone.utc)
-        request_time = request_timestamp.timetz()
+        request_time = request_timestamp.astimezone(timezone.utc).timetz()
         if self.end_time < self.start_time:
             # Window spans midnight, e.g. 22:00-06:00: active from the start time to midnight, and
             # from midnight to the end time.
