@@ -114,6 +114,15 @@ little, suspect the importer before the data.
   diff. Review the provider YAML and `units.yml`; trust the build hook and the digest test for the rest.
 - Published artifact URLs must not change — new contracts go in a new `prices/new_data/v<version>/`
   directory rather than moving or renaming existing files.
+- **Never overwrite a `prices:` block when a provider changes its rates.** Editing those values in
+  place re-prices every past request at the new rate — a request from before the change gets billed
+  at today's price. Add a dated conditional price entry instead: make `prices:` a list, keep the
+  existing rates as the first entry with no `constraint`, and append the new rates under
+  `constraint: { start_date: <date the new price took effect> }`. Both engines take the **last**
+  matching entry, so the dated entry goes at the end. `openai.yml` (o3) and `anthropic.yml`
+  (1M-context surcharge) show the shape. Overwrite in place only to correct a value that was already
+  wrong when it was written — a correction has no history worth keeping. The `/add-price-model` skill
+  covers the full procedure.
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
 
