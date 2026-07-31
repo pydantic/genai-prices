@@ -143,7 +143,7 @@ for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>', '<provider>-l
 
 ## 6. Commit, push, PR
 
-The pre-commit `build` hook regenerates nine paths, so the first `git commit` will abort after it
+The pre-commit `build` hook regenerates ten paths, so the first `git commit` will abort after it
 rewrites them; re-stage and commit again. Stage files explicitly — **never `git add -A`** (it leaks
 local/scratch files) — and never `--no-verify`, since that hook is what keeps the published data in
 sync with the YAML:

@@ -138,7 +138,7 @@ closure rules.
 ### Development Workflow
 
 - Use `uv` for dependency management (not pip/conda), `npm` for the JS workspace
-- The pre-commit `build` hook fires on any change under `prices/` and rewrites **nine** paths:
+- The pre-commit `build` hook fires on any change under `prices/` and rewrites **ten** paths:
   `prices/providers/.schema.json`, the four `prices/new_data/v2/*` files, `data.py`, `data_units.py`,
   `data.ts`, `dataUnits.ts`, plus `README.md` (provider list). Your first `git commit` will abort after
   it rewrites them — re-stage the regenerated files and commit again. Never reach for `--no-verify`:
