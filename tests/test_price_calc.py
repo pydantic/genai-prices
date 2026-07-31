@@ -119,9 +119,10 @@ def test_gpt_5_6_long_context_mixed_price(
 
 
 @pytest.mark.parametrize(
-    ('request_timestamp', 'expected_prices'),
+    ('model_ref', 'request_timestamp', 'expected_prices'),
     [
         (
+            'gpt-5.6-luna',
             datetime(2026, 7, 29, tzinfo=timezone.utc),
             ModelPrice(
                 input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272_000, price=Decimal('2'))]),
@@ -131,6 +132,7 @@ def test_gpt_5_6_long_context_mixed_price(
             ),
         ),
         (
+            'gpt-5.6-luna',
             datetime(2026, 7, 30, tzinfo=timezone.utc),
             ModelPrice(
                 input_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
@@ -139,12 +141,34 @@ def test_gpt_5_6_long_context_mixed_price(
                 output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=272_000, price=Decimal('1.8'))]),
             ),
         ),
+        (
+            'gpt-5.6-terra',
+            datetime(2026, 7, 29, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
+                cache_write_mtok=TieredPrices(
+                    base=Decimal('3.125'), tiers=[Tier(start=272_000, price=Decimal('6.25'))]
+                ),
+                cache_read_mtok=TieredPrices(base=Decimal('0.25'), tiers=[Tier(start=272_000, price=Decimal('0.5'))]),
+                output_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272_000, price=Decimal('22.5'))]),
+            ),
+        ),
+        (
+            'gpt-5.6-terra',
+            datetime(2026, 7, 30, tzinfo=timezone.utc),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272_000, price=Decimal('4'))]),
+                cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272_000, price=Decimal('5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=272_000, price=Decimal('0.4'))]),
+                output_mtok=TieredPrices(base=Decimal('12'), tiers=[Tier(start=272_000, price=Decimal('18'))]),
+            ),
+        ),
     ],
 )
-def test_gpt_5_6_luna_price_change(request_timestamp: datetime, expected_prices: ModelPrice) -> None:
+def test_gpt_5_6_price_change(model_ref: str, request_timestamp: datetime, expected_prices: ModelPrice) -> None:
     price = calc_price(
         Usage(input_tokens=0),
-        model_ref='gpt-5.6-luna',
+        model_ref=model_ref,
         provider_id='openai',
         genai_request_timestamp=request_timestamp,
     )
