@@ -3029,6 +3029,79 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'cursor',
+    name: 'Cursor',
+    pricing_urls: ['https://cursor.com/docs/models-and-pricing'],
+    api_pattern: 'https://(.*\\.)?cursor\\.(com|sh)',
+    model_match: {
+      or: [
+        {
+          starts_with: 'composer',
+        },
+        {
+          contains: 'grok-4.5',
+        },
+      ],
+    },
+    provider_match: {
+      contains: 'cursor',
+    },
+    models: [
+      {
+        id: 'composer-2.5',
+        name: 'Composer 2.5',
+        description: "Cursor's own agentic coding model.",
+        match: {
+          equals: 'composer-2.5',
+        },
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.2,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'composer-2.5-fast',
+        name: 'Composer 2.5 (Fast)',
+        description: 'Fast-mode variant of Composer 2.5.',
+        match: {
+          equals: 'composer-2.5-fast',
+        },
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.5,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'grok-4.5',
+        name: 'Grok 4.5',
+        description: 'Jointly trained by Cursor and SpaceXAI for long-running coding and knowledge work.',
+        match: {
+          equals: 'grok-4.5',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.5,
+          output_mtok: 6,
+        },
+      },
+      {
+        id: 'grok-4.5-fast',
+        name: 'Grok 4.5 (Fast)',
+        description: 'Fast-mode variant of Grok 4.5.',
+        match: {
+          equals: 'grok-4.5-fast',
+        },
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 1,
+          output_mtok: 18,
+        },
+      },
+    ],
+  },
+  {
     id: 'deepseek',
     name: 'Deepseek',
     pricing_urls: ['https://api-docs.deepseek.com/quick_start/pricing'],
