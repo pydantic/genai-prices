@@ -9,8 +9,9 @@ description: >-
 
 # Add a model to genai-prices
 
-Never edit `prices/data.json` / `prices/data_slim.json` by hand — they are generated. Edit the
-provider YAML in `prices/providers/<provider>.yml`, then `make build-prices`.
+Never hand-edit generated data. Edit the provider YAML in `prices/providers/<provider>.yml`, then
+`make build`. The live published payload is `prices/new_data/v2/data.json`; `prices/data.json` and
+`prices/data_slim.json` are **frozen v1** snapshots that no build step writes any more — leave them alone.
 
 ## 0. Scope: every provider that hosts this model, not just the one you were named
 
@@ -91,6 +92,16 @@ fields). Include:
 
 Add a `price_comments` field when a value needs explanation/reference.
 
+Those three keys cover the common case. The full vocabulary is derived from `prices/units.yml` — check
+it when the model bills for anything else (reasoning or citation tokens, per-modality rates, 1h cache
+writes, web searches, requests). **Not every key is per-Mtok:** `_kcount` is per 1,000, `_mchars` per
+1M characters, `_hours` per 3,600s, `_gpixels` per 1e9, `_kpages` per 1,000. A per-Mtok figure under a
+`_kcount` key is valid YAML and wrong by 1000×. Prices must also cover their ancestors — a model with
+`cache_write_1h_mtok` needs `cache_write_mtok` too; `make build` will tell you which key is missing.
+
+Do **not** add a new unit to `prices/units.yml` to make a model fit. That widens the published v2
+schema and is a v3 change — see `AGENTS.md` § "Adding a unit". Open an issue instead.
+
 **Migrate family-level `-latest` aliases when the new model is the current flagship.** Two kinds of
 `-latest` alias coexist, and they behave differently:
 
@@ -107,10 +118,10 @@ alias at all).
 ## 5. Build + verify resolution
 
 Use `make build`, not just `make build-prices`. The installed `genai_prices` package (and the JS
-package) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`)
-— NOT `prices/data.json`. `make build-prices` only writes `prices/data.json`, so a `calc_price` check
-run after it verifies **stale** package data and can silently show the wrong result. `make build` runs
-`build-prices` + `package-data` + `inject-providers`.
+package) read their **bundled** data (`packages/python/genai_prices/data.py`, `packages/js/src/data.ts`).
+`make build-prices` writes only `prices/new_data/v2/*` and `prices/providers/.schema.json` — it does not
+touch the bundled data, so a `calc_price` check run after it verifies **stale** package data and can
+silently show the wrong result. `make build` runs `build-prices` + `package-data` + `inject-providers`.
 
 ```bash
 make build    # build-prices + package-data + inject-providers
@@ -132,19 +143,27 @@ for m in ['<id>', '<id>-<YYYYMMDD>', '<provider>/<id>-<YYYYMMDD>', '<provider>-l
 
 ## 6. Commit, push, PR
 
-Pre-commit hooks regenerate more than the JSON — **README.md**, **packages/js/src/data.ts**, and
-**packages/python/genai_prices/data.py**. The first `git commit` will abort after the hooks rewrite
-these; re-stage the regenerated files and commit again.
-
-Stage files explicitly — **never `git add -A`** (it leaks local/scratch files):
+The pre-commit `build` hook regenerates ten paths, so the first `git commit` will abort after it
+rewrites them; re-stage and commit again. Stage files explicitly — **never `git add -A`** (it leaks
+local/scratch files) — and never `--no-verify`, since that hook is what keeps the published data in
+sync with the YAML:
 
 ```bash
-git add prices/providers/<provider>.yml prices/data.json prices/data_slim.json \
-        README.md packages/js/src/data.ts packages/python/genai_prices/data.py
+git add prices/providers/<provider>.yml \
+        prices/providers/.schema.json \
+        prices/new_data/v2/data.json prices/new_data/v2/data.schema.json \
+        prices/new_data/v2/data_slim.json prices/new_data/v2/data_slim.schema.json \
+        packages/python/genai_prices/data.py packages/python/genai_prices/data_units.py \
+        packages/js/src/data.ts packages/js/src/dataUnits.ts \
+        README.md
 git commit -m "Add <Provider> <Model> pricing"   # re-run once if hooks rewrite files
 git push -u origin <slug>
 gh pr create --base main --title "Add <Provider> <Model> pricing" --body "..."
 ```
+
+A plain price addition usually only dirties a subset of these — `git status` after the aborted commit
+tells you which. The schema and `*_units` files change only when `prices/units.yml` does, which a price
+addition should not do.
 
 Never force-push. PR body: pricing table, sources (provider docs + OpenRouter for cache rate), and
 scope notes (e.g. single variant / no cache-write / any `-latest` alias you moved, each with its

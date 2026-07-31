@@ -8,6 +8,10 @@ version-suffixed files to the flat `prices/` directory.
 
 These files are downloaded by packages to auto-update prices, so their URLs must not change.
 
+**v1 is frozen.** `prices/data.json` and `prices/data_slim.json` are compatibility snapshots for clients released
+before v2. No build step writes them, and they receive no provider, model or price updates. `prices/new_data/v2/`
+is the live feed.
+
 ## Contributing
 
 We welcome contributions from the community and especially model/inference providers!
@@ -29,7 +33,9 @@ When you edit the prices of a model, remember to:
 Please do not:
 
 - edit generated JSON files directly — edit the provider YAML and use `make build` instead
-- modify the v1 compatibility artifacts in a way the baseline v1 clients cannot consume
+- modify the frozen v1 compatibility artifacts at all
+- add a unit to `units.yml` to make a model fit — that widens the published v2 schema and is a v3 change,
+  see the header comment in that file
 - add verbose descriptions to providers or models, we only need enough detail to give the end user a rough idea of the model's capabilities
 - try to change the schema of providers or models without creating an issue to discuss the changes first
 - add new providers without creating an issue to discuss the changes first, adding models is fine
