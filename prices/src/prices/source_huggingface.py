@@ -42,7 +42,7 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
 
 
 def main():
-    response = httpx2.get('https://router.huggingface.co/v1/models', timeout=30.0)
+    response = httpx2.get('https://router.huggingface.co/v1/models')
     # Without this an error page becomes a KeyError on ['data'] rather than a legible failure.
     response.raise_for_status()
     models = response.json()['data']
