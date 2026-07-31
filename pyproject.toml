@@ -28,6 +28,8 @@ dev = [
     "boto3-stubs[bedrock,pricing]>=1.40.75",
     "boto3>=1.40.75",
     "packaging>=25.0",
+    "jsonschema>=4.26.0",
+    "types-jsonschema>=4.26.0.20260518",
 ]
 
 [tool.uv]
@@ -74,10 +76,19 @@ markers = [
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
-include = [
-    # "prices/src/prices/**/*.py",
-    "packages/python/**/*.py",
-    "tests/**/*.py",
+# `prices/src/prices` is measured but held to a lower bar than the published package — see the two
+# filtered `coverage report` invocations in the `coverage` CI job. It was excluded entirely until the
+# data pipeline turned out to be where the bugs were hiding (#533).
+source = [
+    "prices/src/prices",
+    "packages/python",
+    "tests",
+]
+# Both run only in a subprocess, so the tracer never sees them. `source` reports unimported files
+# (unlike `include`, which silently omits them), so they have to be named here.
+omit = [
+    "packages/python/genai_prices/__main__.py",
+    "tests/cli_missing_dependency_import.py",
 ]
 branch = true
 
@@ -115,11 +126,13 @@ reportImplicitAbstractClass = true
 include = ["prices/src", "packages/python", "benchmarks", "tests", ".github/scripts"]
 venv = ".venv"
 venvPath = "."
-executionEnvironments = [{ root = "tests", reportPrivateUsage = false }]
+# `tests/dataset/` is not a package - its scripts import each other by bare name and are run with that
+# directory on the path.
+executionEnvironments = [{ root = "tests", reportPrivateUsage = false, extraPaths = ["tests/dataset"] }]
 
 [tool.codespell]
 # Ref: https://github.com/codespell-project/codespell#using-a-config-file
-skip = "prices/data.json,package-lock.json"
+skip = "prices/data.json,prices/data_slim.json,prices/new_data/v2/data.json,prices/new_data/v2/data_slim.json,package-lock.json,tests/fixtures/*.json"
 
 [tool.inline-snapshot]
 format-command = "ruff format --stdin-filename {filename}"

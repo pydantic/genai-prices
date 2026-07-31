@@ -42,21 +42,29 @@ assert 'file' not in body_keys
 body_keys.add('file')
 
 
-def main():
+def rebuild_usages() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Recompute the dataset from the recorded bodies. Returns `(current, rebuilt)`; writes nothing."""
     usages_file = this_dir / 'usages.json'
-    current_result = json.loads(usages_file.read_text())
+    current_result: list[dict[str, Any]] = json.loads(usages_file.read_text())
     if raw_bodies_path.exists():
         bodies = json.loads(raw_bodies_path.read_text())
         result = get_usages(bodies)
     else:
         result = current_result
-    simplified_bodies = [r['body'] for r in result]
-    result = get_usages(simplified_bodies)
-    dumped = json.dumps(result, indent=2, sort_keys=True)
-    usages_file.write_text(dumped + '\n')
-    if result != current_result:
-        raise AssertionError('usages.json updated!!!')
-    print('usages.json is up to date.')
+    return current_result, get_usages([r['body'] for r in result])
+
+
+def main(*, write: bool = True):
+    # Compare before writing. This used to write first and compare after, so a failing run left the
+    # file rewritten and the *second* run always passed - which reads as "I fixed it" when nothing was.
+    current_result, result = rebuild_usages()
+    if result == current_result:
+        print('usages.json is up to date.')
+        return
+    if not write:
+        raise AssertionError('usages.json is out of date - run `python tests/dataset/extract_usages.py` and commit it.')
+    (this_dir / 'usages.json').write_text(json.dumps(result, indent=2, sort_keys=True) + '\n')
+    raise AssertionError('usages.json updated!!!')
 
 
 def get_usages(bodies: list[dict[str, Any]]) -> list[dict[str, Any]]:
