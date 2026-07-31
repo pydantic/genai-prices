@@ -46,7 +46,6 @@ def main():
     # Without this an error page becomes a KeyError on ['data'] rather than a legible failure.
     response.raise_for_status()
     models = response.json()['data']
-    check_non_empty('huggingface', len(models))
 
     providers = {p['provider'] for model in models for p in model['providers']}
     providers_dir = Path(__file__).parent / '../../providers'
@@ -55,7 +54,13 @@ def main():
     assert openai_extractors
     [chat_extractor] = [e for e in openai_extractors if e.api_flavor == 'chat']
 
-    for provider in providers:
+    # Build and validate every provider's output before writing any of it. Two reasons: a shape change
+    # upstream yields zero `ModelInfo`s from a large `models` list, so counting the raw response would
+    # not notice; and validating inside the write loop would leave earlier providers overwritten when a
+    # later one fails its check.
+    pending: list[tuple[Path, str, list[ModelInfo]]] = []
+
+    for provider in sorted(providers):
         provider_id = f'huggingface_{provider}'
         model_infos = sorted(get_model_infos(models, provider), key=attrgetter('id'))
         if not model_infos:
@@ -90,11 +95,16 @@ def main():
             '# !!!!!!\n\n'
         ) + get_provider_yaml_string(yaml_data)
 
-        path = providers_dir / f'{provider_id}.yml'
-        # This overwrites tracked provider YAML, which the published artifacts are built from, so
-        # refuse an upstream response that would silently delete most of what we already record.
+        pending.append((providers_dir / f'{provider_id}.yml', yaml_string, model_infos))
+
+    # These overwrite tracked provider YAML, which the published artifacts are built from, so refuse
+    # an upstream response that produced nothing usable or that would delete most of what we record.
+    check_non_empty('huggingface', sum(len(model_infos) for _, _, model_infos in pending))
+    for path, _, model_infos in pending:
         existing_count = len(ProviderYaml(path).provider.models) if path.exists() else 0
-        check_no_sharp_drop('huggingface', provider_id, len(model_infos), existing_count)
+        check_no_sharp_drop('huggingface', path.stem, len(model_infos), existing_count)
+
+    for path, yaml_string, _ in pending:
         path.write_text(yaml_string)
         provider_yaml = ProviderYaml(path)
         if collapse_provider(provider_yaml):

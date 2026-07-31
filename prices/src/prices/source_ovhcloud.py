@@ -65,7 +65,6 @@ def main():
     response = httpx2.get(api_url, timeout=30.0)
     response.raise_for_status()
     models = response.json().get('data', [])
-    check_non_empty('ovhcloud', len(models))
 
     providers_dir = Path(__file__).parent / '../../providers'
 
@@ -77,9 +76,10 @@ def main():
     # Extract and sort model information
     model_infos = sorted(get_model_infos(models), key=attrgetter('id'))
 
-    if not model_infos:
-        print('No valid models found with pricing information')
-        return
+    # Count what parsing actually yielded, not what the response contained: a pricing-shape change
+    # upstream produces zero usable models from a large response, and this used to print a line and
+    # return 0, which is indistinguishable from a successful import.
+    check_non_empty('ovhcloud', len(model_infos))
 
     provider_id = 'ovhcloud'
 
