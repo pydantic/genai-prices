@@ -88,7 +88,10 @@ jobs:
           enable-cache: true # zizmor: ignore[cache-poisoning] -- Job does not produce release artifacts and does not have sensitive permissions
       - run: uv sync --only-dev
       - run: uv run coverage combine coverage
-      - run: uv run coverage html --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
+      # Scoped to the strict tree: smokeshow reads this report's total and the public coverage badge has
+      # always meant "the published package is 100% covered". The pipeline's ratchet is enforced by its
+      # own `coverage report` run below rather than folded into the badge.
+      - run: uv run coverage html --include='packages/python/*,tests/*' --omit='tests/dataset/*' --show-contexts --title "genai-prices coverage for ${{ github.sha }}"
       - name: Store coverage html
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

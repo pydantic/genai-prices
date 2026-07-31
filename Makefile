@@ -102,7 +102,7 @@ test: ## Run tests and collect coverage data
 .PHONY: testcov
 testcov: test ## Run tests and generate an HTML coverage report
 	@echo "building coverage html"
-	@uv run coverage html
+	@uv run coverage html --fail-under=0
 
 .PHONY: test-all-python
 test-all-python: ## Run tests on Python 3.10 to 3.14
