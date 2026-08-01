@@ -11,6 +11,7 @@ import type {
 
 import { data as embeddedData } from './data'
 import { calcPrice as calcPriceInternal, getActiveModelPrice, matchModelWithFallback, matchProvider } from './engine'
+import { utcTimeOfDaySeconds } from './timeOfDay'
 import { warnUnsupportedExtractorDestinations } from './validation'
 
 export const REMOTE_DATA_JSON_URL = 'https://raw.githubusercontent.com/pydantic/genai-prices/main/prices/new_data/v2/data.json'
@@ -105,20 +106,20 @@ function normalizeConditionalPrice(
   if (constraint.type !== undefined) {
     // Already in the internal discriminated form; validate rather than rebuild.
     if (
-      (constraint.type === 'start_date' && typeof constraint.start_date === 'string') ||
-      (constraint.type === 'time_of_date' && typeof constraint.start_time === 'string' && typeof constraint.end_time === 'string')
+      (constraint.type === 'start_date' && isValidStartDate(constraint.start_date)) ||
+      (constraint.type === 'time_of_date' && isValidTimeOfDay(constraint.start_time) && isValidTimeOfDay(constraint.end_time))
     ) {
       return conditionalPrice as ConditionalPrice
     }
     throw invalidConstraintError(constraint, providerId, modelId)
   }
-  if (typeof constraint.start_date === 'string') {
+  if (isValidStartDate(constraint.start_date)) {
     return {
       constraint: { start_date: constraint.start_date, type: 'start_date' },
       prices: conditionalPrice.prices,
     }
   }
-  if (typeof constraint.start_time === 'string' && typeof constraint.end_time === 'string') {
+  if (isValidTimeOfDay(constraint.start_time) && isValidTimeOfDay(constraint.end_time)) {
     return {
       constraint: {
         end_time: constraint.end_time,
@@ -135,6 +136,30 @@ function invalidConstraintError(constraint: unknown, providerId: string, modelId
   return new Error(
     `Expected a start-date or time-of-day price constraint for provider '${providerId}' model '${modelId}', got: ${JSON.stringify(constraint)}`
   )
+}
+
+// Strict ISO calendar date: correct shape and a real date (rejects e.g.
+// '2025-02-30', which Date would silently roll over to March 2).
+function isValidStartDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false
+  }
+  const parsed = new Date(`${value}T00:00:00Z`)
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(value)
+}
+
+// Reuse the engine's parser so normalization accepts exactly what price
+// calculation can later evaluate.
+function isValidTimeOfDay(value: unknown): value is string {
+  if (typeof value !== 'string') {
+    return false
+  }
+  try {
+    utcTimeOfDaySeconds(value)
+    return true
+  } catch {
+    return false
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

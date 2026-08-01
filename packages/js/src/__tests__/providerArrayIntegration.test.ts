@@ -55,7 +55,15 @@ describe('provider array integration', () => {
     ).toBe(2)
   })
 
-  it('rejects malformed downloaded constraints without replacing active data', () => {
+  it.each([
+    ['non-record constraint', 'not-an-object'],
+    ['empty constraint', {}],
+    ['malformed start_date shape', { start_date: 'not-a-date' }],
+    ['impossible calendar date', { start_date: '2025-02-30' }],
+    ['out-of-range time-of-day', { end_time: '26:00:00Z', start_time: '25:00:00Z' }],
+    ['missing timezone on time-of-day', { end_time: '16:00:00', start_time: '08:00:00' }],
+    ['discriminated form with malformed values', { start_date: 'not-a-date', type: 'start_date' }],
+  ])('rejects %s without replacing active data', (_name, constraint) => {
     const stableProviders = providerArray()
     updatePrices(({ setProviderData }) => {
       setProviderData(stableProviders)
@@ -63,9 +71,9 @@ describe('provider array integration', () => {
 
     expect(() => {
       updatePrices(({ setProviderData }) => {
-        setProviderData(downloadedConditionalProviderArray({}))
+        setProviderData(downloadedConditionalProviderArray(constraint as Record<string, string>))
       })
-    }).toThrow("Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model', got: {}")
+    }).toThrow("Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'")
     expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
   })
 
