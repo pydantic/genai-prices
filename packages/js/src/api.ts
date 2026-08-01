@@ -86,11 +86,7 @@ function normalizeProviderData(data: Provider[]): Provider[] {
  * wire-to-internal translation; the code generator producing the bundled
  * `data.ts` is the build-time half, and the two must stay in agreement.
  */
-function normalizeConditionalPrice(
-  conditionalPrice: ConditionalPrice | WireConditionalPrice,
-  providerId: string,
-  modelId: string
-): ConditionalPrice {
+function normalizeConditionalPrice(conditionalPrice: WireConditionalPrice, providerId: string, modelId: string): ConditionalPrice {
   const constraint: unknown = conditionalPrice.constraint
   if (constraint === undefined) {
     return { prices: conditionalPrice.prices }

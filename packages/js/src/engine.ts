@@ -170,37 +170,45 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
       return cond.prices
     }
 
-    if (constraint.type === 'start_date') {
-      if (timestamp >= new Date(constraint.start_date)) {
-        return cond.prices
+    switch (constraint.type) {
+      case 'start_date': {
+        if (timestamp >= new Date(constraint.start_date)) {
+          return cond.prices
+        }
+        break
       }
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard against unnormalized data the types don't admit
-    } else if (constraint.type === 'time_of_date') {
-      const time =
-        timestamp.getUTCHours() * 3_600 +
-        timestamp.getUTCMinutes() * 60 +
-        timestamp.getUTCSeconds() +
-        timestamp.getUTCMilliseconds() / 1_000
-      const startTime = utcTimeOfDaySeconds(constraint.start_time)
-      const endTime = utcTimeOfDaySeconds(constraint.end_time)
+      case 'time_of_date': {
+        const time =
+          timestamp.getUTCHours() * 3_600 +
+          timestamp.getUTCMinutes() * 60 +
+          timestamp.getUTCSeconds() +
+          timestamp.getUTCMilliseconds() / 1_000
+        const startTime = utcTimeOfDaySeconds(constraint.start_time)
+        const endTime = utcTimeOfDaySeconds(constraint.end_time)
 
-      // Handle time ranges that span midnight (end time < start time)
-      if (endTime < startTime) {
-        // Time is in range if it's >= start OR < end
-        if (time >= startTime || time < endTime) {
-          return cond.prices
+        // Handle time ranges that span midnight (end time < start time)
+        if (endTime < startTime) {
+          // Time is in range if it's >= start OR < end
+          if (time >= startTime || time < endTime) {
+            return cond.prices
+          }
+        } else {
+          // Normal time range (start <= time < end)
+          if (time >= startTime && time < endTime) {
+            return cond.prices
+          }
         }
-      } else {
-        // Normal time range (start <= time < end)
-        if (time >= startTime && time < endTime) {
-          return cond.prices
-        }
+        break
       }
-    } else {
-      // Constraints are normalized into the discriminated form at activation
-      // (see normalizeProviderData in api.ts); anything else reaching this
-      // point is a representation leak, so fail with a diagnosable error.
-      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
+      default: {
+        // Exhaustive over the discriminated union at compile time (constraint
+        // is `never` here), and a runtime guard against a representation leak:
+        // constraints are normalized into the discriminated form at activation
+        // (see normalizeProviderData in api.ts), so anything else reaching
+        // this point is unnormalized data. Fail with a diagnosable error.
+        constraint satisfies never
+        throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
+      }
     }
   }
   // Fallback to first
