@@ -7,7 +7,6 @@ import type {
   ProviderFindOptions,
   StorageFactoryParams,
   Usage,
-  WireConditionalPrice,
 } from './types'
 
 import { data as embeddedData } from './data'
@@ -78,15 +77,24 @@ function normalizeProviderData(data: Provider[]): Provider[] {
 }
 
 /**
- * Convert a wire-format conditional price (see `WireConditionalPrice`) into the
- * internal discriminated representation `engine.ts` relies on.
+ * Convert a wire-format conditional price into the internal discriminated
+ * representation `engine.ts` relies on.
+ *
+ * The wire format (the published v2 feed) identifies a constraint structurally
+ * (`start_date`, or `start_time`/`end_time`) rather than with the `type`
+ * discriminator the internal `ConditionalPrice` uses, so the input's
+ * constraint is typed as `unknown` here rather than as the internal union.
  *
  * Already-discriminated constraints (bundled data re-activated at runtime) are
  * validated and passed through unchanged. This is the runtime half of the
  * wire-to-internal translation; the code generator producing the bundled
  * `data.ts` is the build-time half, and the two must stay in agreement.
  */
-function normalizeConditionalPrice(conditionalPrice: WireConditionalPrice, providerId: string, modelId: string): ConditionalPrice {
+function normalizeConditionalPrice(
+  conditionalPrice: { constraint?: unknown; prices: ConditionalPrice['prices'] },
+  providerId: string,
+  modelId: string
+): ConditionalPrice {
   const constraint: unknown = conditionalPrice.constraint
   if (constraint === undefined) {
     return { prices: conditionalPrice.prices }

@@ -34,19 +34,6 @@ export interface TimeOfDateConstraint {
   type: 'time_of_date'
 }
 
-/**
- * A conditional price as it appears on the wire (the published v2 feed).
- *
- * The wire format identifies a constraint structurally (`start_date`, or
- * `start_time`/`end_time`) rather than with the `type` discriminator the
- * internal representation uses. Downloaded data must be normalized into
- * `ConditionalPrice` before activation; see `normalizeProviderData` in api.ts.
- */
-export interface WireConditionalPrice {
-  constraint?: unknown
-  prices: ModelPrice
-}
-
 export type MatchLogic =
   | { and: MatchLogic[] }
   | { contains: string }
