@@ -65,15 +65,8 @@ function activateProviderData(data: Provider[]): Provider[] {
   return normalizedData
 }
 
-// Providers already produced by normalizeProvider, so caller-supplied
-// providers (see calcPrice's options.provider) are only normalized once.
-const normalizedProviders = new WeakSet<Provider>()
-
 function normalizeProvider(provider: Provider): Provider {
-  if (normalizedProviders.has(provider)) {
-    return provider
-  }
-  const normalized: Provider = {
+  return {
     ...provider,
     models: provider.models.map((model) => ({
       ...model,
@@ -82,8 +75,6 @@ function normalizeProvider(provider: Provider): Provider {
         : model.prices,
     })),
   }
-  normalizedProviders.add(normalized)
-  return normalized
 }
 
 /**
