@@ -7,9 +7,9 @@ That gate degrades exactly when it matters most - a large regenerated diff where
 among hundreds of legitimate ones.
 
 These guards move the failure earlier: refuse to write at all when the response does not look like a
-real one, rather than writing it and hoping the diff gets read. They are not a defence against a
-carefully-crafted malicious response - nothing here is - but they turn the two loudest upstream
-failure modes (an empty response, and a response that lost most of its models) into hard errors.
+real one, rather than writing it and hoping the diff gets read. They catch the two loudest upstream
+failure modes - an empty response, and a response that lost most of its models - and nothing subtler
+than that; a plausible-looking response with wrong numbers still needs a human to notice.
 
 Set `GENAI_PRICES_ALLOW_IMPLAUSIBLE_IMPORT=1` to override when a drop is genuinely expected, e.g. a
 provider really did retire most of its catalogue.
