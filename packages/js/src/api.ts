@@ -7,6 +7,7 @@ import type {
   ProviderFindOptions,
   StorageFactoryParams,
   Usage,
+  WireConditionalPrice,
 } from './types'
 
 import { data as embeddedData } from './data'
@@ -40,7 +41,13 @@ function setProviderData(data: ProviderDataPayload) {
       })
     // Updates may be fire-and-forget. Observe failures without changing the
     // original promise returned by waitForUpdate() to callers that do await it.
-    updatePromise.catch(() => undefined)
+    // A rejected update never replaces the active data, so warn to make the
+    // resulting staleness observable to fire-and-forget consumers.
+    updatePromise.catch((error: unknown) => {
+      console.warn(
+        `genai-prices: provider data update rejected; keeping previously active data: ${error instanceof Error ? error.message : String(error)}`
+      )
+    })
     providerDataPromise = updatePromise
   } else {
     providerDataPromise = Promise.resolve(activateProviderData(data))
@@ -63,33 +70,67 @@ function normalizeProviderData(data: Provider[]): Provider[] {
     ...provider,
     models: provider.models.map((model) => ({
       ...model,
-      prices: Array.isArray(model.prices) ? model.prices.map(normalizeConditionalPrice) : model.prices,
+      prices: Array.isArray(model.prices)
+        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
+        : model.prices,
     })),
   }))
 }
 
-function normalizeConditionalPrice(conditionalPrice: ConditionalPrice): ConditionalPrice {
+/**
+ * Convert a wire-format conditional price (see `WireConditionalPrice`) into the
+ * internal discriminated representation `engine.ts` relies on.
+ *
+ * Already-discriminated constraints (bundled data re-activated at runtime) are
+ * validated and passed through unchanged. This is the runtime half of the
+ * wire-to-internal translation; the code generator producing the bundled
+ * `data.ts` is the build-time half, and the two must stay in agreement.
+ */
+function normalizeConditionalPrice(
+  conditionalPrice: ConditionalPrice | WireConditionalPrice,
+  providerId: string,
+  modelId: string
+): ConditionalPrice {
   const constraint: unknown = conditionalPrice.constraint
   if (constraint === undefined) {
-    return conditionalPrice
+    return { prices: conditionalPrice.prices }
   }
-  if (isRecord(constraint) && typeof constraint.start_date === 'string') {
+  if (!isRecord(constraint)) {
+    throw invalidConstraintError(constraint, providerId, modelId)
+  }
+  if (constraint.type !== undefined) {
+    // Already in the internal discriminated form; validate rather than rebuild.
+    if (
+      (constraint.type === 'start_date' && typeof constraint.start_date === 'string') ||
+      (constraint.type === 'time_of_date' && typeof constraint.start_time === 'string' && typeof constraint.end_time === 'string')
+    ) {
+      return conditionalPrice as ConditionalPrice
+    }
+    throw invalidConstraintError(constraint, providerId, modelId)
+  }
+  if (typeof constraint.start_date === 'string') {
     return {
-      ...conditionalPrice,
       constraint: { start_date: constraint.start_date, type: 'start_date' },
+      prices: conditionalPrice.prices,
     }
   }
-  if (isRecord(constraint) && typeof constraint.start_time === 'string' && typeof constraint.end_time === 'string') {
+  if (typeof constraint.start_time === 'string' && typeof constraint.end_time === 'string') {
     return {
-      ...conditionalPrice,
       constraint: {
         end_time: constraint.end_time,
         start_time: constraint.start_time,
         type: 'time_of_date',
       },
+      prices: conditionalPrice.prices,
     }
   }
-  throw new Error('Expected a start-date or time-of-day price constraint')
+  throw invalidConstraintError(constraint, providerId, modelId)
+}
+
+function invalidConstraintError(constraint: unknown, providerId: string, modelId: string): Error {
+  return new Error(
+    `Expected a start-date or time-of-day price constraint for provider '${providerId}' model '${modelId}', got: ${JSON.stringify(constraint)}`
+  )
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

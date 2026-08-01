@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { ModelInfo, Provider } from '../types'
 
@@ -65,8 +65,35 @@ describe('provider array integration', () => {
       updatePrices(({ setProviderData }) => {
         setProviderData(downloadedConditionalProviderArray({}))
       })
-    }).toThrow('Expected a start-date or time-of-day price constraint')
+    }).toThrow("Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model', got: {}")
     expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
+  })
+
+  it('keeps active data and warns when an async update carries malformed constraints', async () => {
+    const stableProviders = providerArray()
+    updatePrices(({ setProviderData }) => {
+      setProviderData(stableProviders)
+    })
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    try {
+      updatePrices(({ setProviderData }) => {
+        setProviderData(Promise.resolve(downloadedConditionalProviderArray({})))
+      })
+      await expect(waitForUpdate()).rejects.toThrow('Expected a start-date or time-of-day price constraint')
+
+      expect(calcPrice({ input_tokens: 1_000_000 }, 'image-cache', { providerId: 'testing' })?.input_price).toBe(1)
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('keeping previously active data'))
+    } finally {
+      warnSpy.mockRestore()
+    }
+  })
+
+  it('re-activates the bundled data unchanged (round-trips already-discriminated constraints)', async () => {
+    updatePrices(({ setProviderData }) => {
+      setProviderData(data)
+    })
+    await expect(waitForUpdate()).resolves.toEqual(data)
   })
 
   it('activates every conditional price in the published v2 data', async () => {
@@ -86,6 +113,8 @@ describe('provider array integration', () => {
 
     expect(conditionalModels.length).toBeGreaterThan(0)
     for (const model of conditionalModels) {
+      // Reaching into engine internals is deliberate here: it is the cheapest
+      // way to sweep every conditional model in the published artifact.
       expect(() => getActiveModelPrice(model, new Date('2026-08-01T12:00:00Z'))).not.toThrow()
     }
   })
@@ -133,5 +162,7 @@ function downloadedConditionalProviderArray(constraint: Record<string, string>):
       ],
       name: 'Testing',
     },
+    // Deliberately wire-shaped data (constraints without the internal `type`
+    // discriminator), which the internal Provider type does not admit.
   ] as unknown as Provider[]
 }
