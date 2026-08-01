@@ -59,14 +59,21 @@ function activateProviderData(data: Provider[]): Provider[] {
     throw new Error('Expected null or Provider[]')
   }
 
-  const normalizedData = normalizeProviderData(data)
+  const normalizedData = data.map(normalizeProvider)
   warnUnsupportedExtractorDestinations(normalizedData)
   providerData = normalizedData
   return normalizedData
 }
 
-function normalizeProviderData(data: Provider[]): Provider[] {
-  return data.map((provider) => ({
+// Providers already produced by normalizeProvider, so caller-supplied
+// providers (see calcPrice's options.provider) are only normalized once.
+const normalizedProviders = new WeakSet<Provider>()
+
+function normalizeProvider(provider: Provider): Provider {
+  if (normalizedProviders.has(provider)) {
+    return provider
+  }
+  const normalized: Provider = {
     ...provider,
     models: provider.models.map((model) => ({
       ...model,
@@ -74,7 +81,9 @@ function normalizeProviderData(data: Provider[]): Provider[] {
         ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
         : model.prices,
     })),
-  }))
+  }
+  normalizedProviders.add(normalized)
+  return normalized
 }
 
 /**
@@ -90,6 +99,7 @@ function normalizeProviderData(data: Provider[]): Provider[] {
  * validated and passed through unchanged. This is the runtime half of the
  * wire-to-internal translation; the code generator producing the bundled
  * `data.ts` is the build-time half, and the two must stay in agreement.
+ * See `normalizeProvider` for the traversal that applies this per model.
  */
 function normalizeConditionalPrice(
   conditionalPrice: { constraint?: unknown; prices: ConditionalPrice['prices'] },
@@ -200,8 +210,11 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
     }
   }
 
-  const provider =
-    options?.provider ?? matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
+  // Caller-supplied providers bypass activation, so normalize them here to
+  // give them the same constraint handling as downloaded/bundled data.
+  const provider = options?.provider
+    ? normalizeProvider(options.provider)
+    : matchProvider(providerData, { modelId: lowerModelId, providerApiUrl: options?.providerApiUrl, providerId })
   if (!provider) return null
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null

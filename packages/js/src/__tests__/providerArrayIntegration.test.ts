@@ -97,6 +97,27 @@ describe('provider array integration', () => {
     }
   })
 
+  it('normalizes wire-format constraints on a caller-supplied provider', () => {
+    const [provider] = downloadedConditionalProviderArray({ start_date: '2025-01-01' })
+    if (provider === undefined) throw new Error('Expected a provider')
+
+    expect(
+      calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', {
+        provider,
+        timestamp: new Date('2025-01-02T00:00:00Z'),
+      })?.input_price
+    ).toBe(2)
+  })
+
+  it('rejects malformed wire-format constraints on a caller-supplied provider', () => {
+    const [provider] = downloadedConditionalProviderArray({ start_date: 'not-a-date' })
+    if (provider === undefined) throw new Error('Expected a provider')
+
+    expect(() => calcPrice({ input_tokens: 1_000_000 }, 'conditional-model', { provider })).toThrow(
+      "Expected a start-date or time-of-day price constraint for provider 'testing' model 'conditional-model'"
+    )
+  })
+
   it('re-activates the bundled data unchanged (round-trips already-discriminated constraints)', async () => {
     updatePrices(({ setProviderData }) => {
       setProviderData(data)
