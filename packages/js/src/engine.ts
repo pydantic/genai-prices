@@ -9,6 +9,7 @@ import {
   ProviderFindOptions,
   Tier,
   TieredPrices,
+  TimeOfDateConstraint,
   UnitDef,
   Usage,
 } from './types'
@@ -153,6 +154,10 @@ function isTieredPrice(price: number | TieredPrices | undefined): price is Tiere
   return typeof price === 'object'
 }
 
+function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateConstraint {
+  return typeof constraint === 'object' && constraint !== null && 'type' in constraint && constraint.type === 'time_of_date'
+}
+
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
   if (!Array.isArray(model.prices)) {
     return model.prices
@@ -170,45 +175,39 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
       return cond.prices
     }
 
-    switch (constraint.type) {
-      case 'start_date': {
-        if (timestamp >= new Date(constraint.start_date)) {
+    if (constraint.type === 'start_date') {
+      if (timestamp >= new Date(constraint.start_date)) {
+        return cond.prices
+      }
+    } else if (isTimeOfDateConstraint(constraint)) {
+      const time =
+        timestamp.getUTCHours() * 3_600 +
+        timestamp.getUTCMinutes() * 60 +
+        timestamp.getUTCSeconds() +
+        timestamp.getUTCMilliseconds() / 1_000
+      const startTime = utcTimeOfDaySeconds(constraint.start_time)
+      const endTime = utcTimeOfDaySeconds(constraint.end_time)
+
+      // Handle time ranges that span midnight (end time < start time)
+      if (endTime < startTime) {
+        // Time is in range if it's >= start OR < end
+        if (time >= startTime || time < endTime) {
           return cond.prices
         }
-        break
-      }
-      case 'time_of_date': {
-        const time =
-          timestamp.getUTCHours() * 3_600 +
-          timestamp.getUTCMinutes() * 60 +
-          timestamp.getUTCSeconds() +
-          timestamp.getUTCMilliseconds() / 1_000
-        const startTime = utcTimeOfDaySeconds(constraint.start_time)
-        const endTime = utcTimeOfDaySeconds(constraint.end_time)
-
-        // Handle time ranges that span midnight (end time < start time)
-        if (endTime < startTime) {
-          // Time is in range if it's >= start OR < end
-          if (time >= startTime || time < endTime) {
-            return cond.prices
-          }
-        } else {
-          // Normal time range (start <= time < end)
-          if (time >= startTime && time < endTime) {
-            return cond.prices
-          }
+      } else {
+        // Normal time range (start <= time < end)
+        if (time >= startTime && time < endTime) {
+          return cond.prices
         }
-        break
       }
-      default: {
-        // Exhaustive over the discriminated union at compile time (constraint
-        // is `never` here), and a runtime guard against a representation leak:
-        // constraints are normalized into the discriminated form at activation
-        // (see normalizeProviderData in api.ts), so anything else reaching
-        // this point is unnormalized data. Fail with a diagnosable error.
-        constraint satisfies never
-        throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
-      }
+    } else {
+      // Unreachable for well-typed data (constraint is `never` here): the two
+      // branches above cover the discriminated union. At runtime it guards
+      // against a representation leak - constraints are normalized into the
+      // discriminated form at activation (see normalizeProviderData in
+      // api.ts), so anything else reaching this point is unnormalized data.
+      constraint satisfies never
+      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
     }
   }
   // Fallback to first
