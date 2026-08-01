@@ -63,6 +63,9 @@ describe('provider array integration', () => {
     ['out-of-range time-of-day', { end_time: '26:00:00Z', start_time: '25:00:00Z' }],
     ['missing timezone on time-of-day', { end_time: '16:00:00', start_time: '08:00:00' }],
     ['discriminated form with malformed values', { start_date: 'not-a-date', type: 'start_date' }],
+    ['mixed start-date/time-of-day constraint', { end_time: '16:00:00Z', start_date: '2025-01-01', start_time: '08:00:00Z' }],
+    ['constraint with unknown extra fields', { start_date: '2025-01-01', tz: 'UTC' }],
+    ['year-zero start date', { start_date: '0000-01-01' }],
   ])('rejects %s without replacing active data', (_name, constraint) => {
     const stableProviders = providerArray()
     updatePrices(({ setProviderData }) => {

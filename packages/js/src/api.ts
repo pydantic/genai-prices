@@ -107,20 +107,27 @@ function normalizeConditionalPrice(
   if (constraint.type !== undefined) {
     // Already in the internal discriminated form; validate rather than rebuild.
     if (
-      (constraint.type === 'start_date' && isValidStartDate(constraint.start_date)) ||
-      (constraint.type === 'time_of_date' && isValidTimeOfDay(constraint.start_time) && isValidTimeOfDay(constraint.end_time))
+      (constraint.type === 'start_date' && hasExactKeys(constraint, ['start_date', 'type']) && isValidStartDate(constraint.start_date)) ||
+      (constraint.type === 'time_of_date' &&
+        hasExactKeys(constraint, ['end_time', 'start_time', 'type']) &&
+        isValidTimeOfDay(constraint.start_time) &&
+        isValidTimeOfDay(constraint.end_time))
     ) {
       return conditionalPrice as ConditionalPrice
     }
     throw invalidConstraintError(constraint, providerId, modelId)
   }
-  if (isValidStartDate(constraint.start_date)) {
+  if (hasExactKeys(constraint, ['start_date']) && isValidStartDate(constraint.start_date)) {
     return {
       constraint: { start_date: constraint.start_date, type: 'start_date' },
       prices: conditionalPrice.prices,
     }
   }
-  if (isValidTimeOfDay(constraint.start_time) && isValidTimeOfDay(constraint.end_time)) {
+  if (
+    hasExactKeys(constraint, ['end_time', 'start_time']) &&
+    isValidTimeOfDay(constraint.start_time) &&
+    isValidTimeOfDay(constraint.end_time)
+  ) {
     return {
       constraint: {
         end_time: constraint.end_time,
@@ -140,13 +147,22 @@ function invalidConstraintError(constraint: unknown, providerId: string, modelId
 }
 
 // Strict ISO calendar date: correct shape and a real date (rejects e.g.
-// '2025-02-30', which Date would silently roll over to March 2).
+// '2025-02-30', which Date would silently roll over to March 2). Years start
+// at 1, matching the feed's source `date` type (Python), which cannot
+// represent year zero.
 function isValidStartDate(value: unknown): value is string {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return false
   }
   const parsed = new Date(`${value}T00:00:00Z`)
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(value)
+  return !Number.isNaN(parsed.getTime()) && parsed.getUTCFullYear() >= 1 && parsed.toISOString().startsWith(value)
+}
+
+// Reject constraints carrying keys outside the expected shape, so a mixed or
+// misspelled constraint fails activation instead of silently losing fields.
+function hasExactKeys(value: Record<string, unknown>, keys: string[]): boolean {
+  const actual = Object.keys(value)
+  return actual.length === keys.length && actual.every((key) => keys.includes(key))
 }
 
 // Reuse the engine's parser so normalization accepts exactly what price
