@@ -1,4 +1,5 @@
 import type {
+  ConditionalPrice,
   PriceCalculationResult,
   PriceOptions,
   Provider,
@@ -39,7 +40,6 @@ function setProviderData(data: ProviderDataPayload) {
       })
     // Updates may be fire-and-forget. Observe failures without changing the
     // original promise returned by waitForUpdate() to callers that do await it.
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     updatePromise.catch(() => undefined)
     providerDataPromise = updatePromise
   } else {
@@ -52,9 +52,48 @@ function activateProviderData(data: Provider[]): Provider[] {
     throw new Error('Expected null or Provider[]')
   }
 
-  warnUnsupportedExtractorDestinations(data)
-  providerData = data
-  return data
+  const normalizedData = normalizeProviderData(data)
+  warnUnsupportedExtractorDestinations(normalizedData)
+  providerData = normalizedData
+  return normalizedData
+}
+
+function normalizeProviderData(data: Provider[]): Provider[] {
+  return data.map((provider) => ({
+    ...provider,
+    models: provider.models.map((model) => ({
+      ...model,
+      prices: Array.isArray(model.prices) ? model.prices.map(normalizeConditionalPrice) : model.prices,
+    })),
+  }))
+}
+
+function normalizeConditionalPrice(conditionalPrice: ConditionalPrice): ConditionalPrice {
+  const constraint: unknown = conditionalPrice.constraint
+  if (constraint === undefined) {
+    return conditionalPrice
+  }
+  if (isRecord(constraint) && typeof constraint.start_date === 'string') {
+    return {
+      ...conditionalPrice,
+      constraint: { start_date: constraint.start_date, type: 'start_date' },
+    }
+  }
+  if (isRecord(constraint) && typeof constraint.start_time === 'string' && typeof constraint.end_time === 'string') {
+    return {
+      ...conditionalPrice,
+      constraint: {
+        end_time: constraint.end_time,
+        start_time: constraint.start_time,
+        type: 'time_of_date',
+      },
+    }
+  }
+  throw new Error('Expected a start-date or time-of-day price constraint')
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
 function onCalc(cb: () => void) {
