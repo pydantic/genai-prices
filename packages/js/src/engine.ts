@@ -174,7 +174,8 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
       if (timestamp >= new Date(constraint.start_date)) {
         return cond.prices
       }
-    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- runtime guard against unnormalized data the types don't admit
+    } else if (constraint.type === 'time_of_date') {
       const time =
         timestamp.getUTCHours() * 3_600 +
         timestamp.getUTCMinutes() * 60 +
@@ -195,6 +196,11 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
           return cond.prices
         }
       }
+    } else {
+      // Constraints are normalized into the discriminated form at activation
+      // (see normalizeProviderData in api.ts); anything else reaching this
+      // point is a representation leak, so fail with a diagnosable error.
+      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
     }
   }
   // Fallback to first

@@ -96,6 +96,19 @@ describe('provider array integration', () => {
     await expect(waitForUpdate()).resolves.toEqual(data)
   })
 
+  it('fails with a diagnosable error when an unnormalized constraint reaches the engine', () => {
+    // Bypasses activation on purpose to simulate a representation leak.
+    const model = {
+      id: 'leaky-model',
+      match: { equals: 'leaky-model' },
+      prices: [{ constraint: { start_date: '2025-01-01' }, prices: { input_mtok: 1 } }],
+    } as unknown as ModelInfo
+
+    expect(() => getActiveModelPrice(model, new Date('2026-08-01T12:00:00Z'))).toThrow(
+      `Unknown price constraint for model 'leaky-model': {"start_date":"2025-01-01"}`
+    )
+  })
+
   it('activates every conditional price in the published v2 data', async () => {
     const v2Data = JSON.parse(readFileSync(new URL('../../../../prices/new_data/v2/data.json', import.meta.url), 'utf8')) as Provider[]
     updatePrices(({ setProviderData }) => {
