@@ -7242,7 +7242,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.6-luna',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-luna'), ClauseEquals(equals='gpt-5-6-luna')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.6-luna'),
+                        ClauseEquals(equals='gpt-5-6-luna'),
+                        ClauseRegex(regex='^gpt-5\\.6-luna-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-5-6-luna-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
                 name='GPT-5.6 Luna',
                 description='GPT-5.6 model optimized for cost-sensitive workloads.',
                 context_window=1050000,
@@ -7306,7 +7313,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='gpt-5.6-terra',
-                match=ClauseOr(or_=[ClauseEquals(equals='gpt-5.6-terra'), ClauseEquals(equals='gpt-5-6-terra')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-5.6-terra'),
+                        ClauseEquals(equals='gpt-5-6-terra'),
+                        ClauseRegex(regex='^gpt-5\\.6-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-5-6-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
                 name='GPT-5.6 Terra',
                 description='GPT-5.6 model that balances intelligence and cost.',
                 context_window=1050000,
