@@ -7287,6 +7287,8 @@ providers: list[Provider] = [
                         ClauseEquals(equals='gpt-5-6-sol'),
                         ClauseEquals(equals='gpt-5.6'),
                         ClauseEquals(equals='gpt-5-6'),
+                        ClauseRegex(regex='^gpt-5\\.6-sol-\\d{4}-\\d{2}-\\d{2}$'),
+                        ClauseRegex(regex='^gpt-5-6-sol-\\d{4}-\\d{2}-\\d{2}$'),
                     ]
                 ),
                 name='GPT-5.6 Sol',

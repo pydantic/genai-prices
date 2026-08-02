@@ -963,8 +963,10 @@ models:
         - equals: gpt-5-6-sol
         - equals: gpt-5.6
         - equals: gpt-5-6
+        - regex: ^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-sol-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-07-30
+    prices_checked: 2026-08-02
     price_comments: >-
       Cache writes are billed at 1.25x the uncached input rate. Long-context tier
       (>272K input tokens) is 2x input and 1.5x output. Ref:
