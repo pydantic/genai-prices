@@ -51,6 +51,37 @@ price_data = calc_price(
 print(f"Total Price: ${price_data.total_price} (input: ${price_data.input_price}, output: ${price_data.output_price})")
 ```
 
+### Pricing context (batch APIs and service tiers)
+
+Some requests are priced differently depending on how they were served. Pass `price_context` to say which:
+
+```python
+from genai_prices import Usage, calc_price
+
+price_data = calc_price(
+    Usage(input_tokens=1000, output_tokens=100),
+    model_ref='claude-opus-5',
+    provider_id='anthropic',
+    price_context={'service_tier': 'batch'},
+)
+```
+
+`service_tier` covers the mutually exclusive rate cards - `batch` for a request made through the provider's
+batch API (OpenAI's Batch API, Anthropic's Message Batches API, Gemini's Batch mode), and in future `flex` or
+`priority` for the synchronous tiers. Anthropic and Groq report it under exactly that name in their usage
+payloads, so it can be passed straight through:
+
+```python
+price = extracted_usage.calc_price(price_context={'service_tier': response['usage']['service_tier']})
+```
+
+`price_context` is also accepted by `ExtractedUsage.calc_price()` and `ModelInfo.calc_price()`, and the CLI
+takes `--price-context service_tier=batch`.
+
+A variant only replaces the prices it lists, so rates a provider does not discount - Anthropic's per-search
+web search fee, Google's cached input tokens on most models - stay at their standard price. A model with no
+prices for the given context is charged at its standard rates.
+
 ### `extract_usage`
 
 `extract_usage` can be used to extract usage data and the `model_ref` from response data,

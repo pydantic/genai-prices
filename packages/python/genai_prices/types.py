@@ -4,6 +4,7 @@ import dataclasses
 import re
 import warnings
 from collections.abc import Iterator, Mapping, Sequence
+from copy import copy
 from dataclasses import InitVar, dataclass, field
 from datetime import date, datetime, time, timezone
 from decimal import Decimal
@@ -31,6 +32,9 @@ __all__ = (
     'TieredPrices',
     'Tier',
     'ConditionalPrice',
+    'PriceVariant',
+    'PriceContext',
+    'PriceContextValue',
     'StartDateConstraint',
     'TimeOfDateConstraint',
     'ClauseStartsWith',
@@ -97,6 +101,10 @@ class ArrayMatch:
 
 ExtractPath = str | Sequence[str | ArrayMatch]
 
+PriceContextValue = str | bool | int
+PriceContext = Mapping[str, PriceContextValue]
+"""What a caller can report about a request, used to select a `PriceVariant`, e.g. `{'service_tier': 'batch'}`."""
+
 
 @dataclass(repr=False)
 class PriceCalculation:
@@ -129,7 +137,11 @@ class ExtractedUsage:
     auto_update_timestamp: datetime | None
 
     def calc_price(
-        self, *, genai_request_timestamp: datetime | None = None, model: ModelInfo | None = None
+        self,
+        *,
+        genai_request_timestamp: datetime | None = None,
+        model: ModelInfo | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage.
 
@@ -137,6 +149,7 @@ class ExtractedUsage:
             genai_request_timestamp: The timestamp of the request to the GenAI service, use `None` to use the current
                 time.
             model: The model to calculate the price for, if `None` the model from the response data is used.
+            price_context: What the request was priced under, e.g. `{'service_tier': 'batch'}`.
         """
         model = model or self.model
         if model is None:
@@ -147,6 +160,7 @@ class ExtractedUsage:
             self.provider,
             genai_request_timestamp=genai_request_timestamp,
             auto_update_timestamp=self.auto_update_timestamp,
+            price_context=price_context,
         )
 
     def __repr__(self) -> str:
@@ -661,19 +675,29 @@ class ModelInfo:
 
     If no conditional models match the conditions, the first one is used.
     """
+    price_variants: list[PriceVariant] | None = None
+    """Prices that apply only to requests made with a particular pricing context, e.g. through a batch API.
+
+    Variants whose `when` matches the request's pricing context override `prices` key by key, so a key
+    they omit is charged at its `prices` rate. Dated variants are resolved exactly as `prices` are.
+    """
 
     def is_match(self, model_ref: str) -> bool:
         return self.match.is_match(model_ref.lower())
 
-    def get_prices(self, request_timestamp: datetime) -> ModelPrice:
-        if isinstance(self.prices, ModelPrice):
-            return self.prices
-        else:
-            # reversed because the last price takes precedence
-            for conditional_price in reversed(self.prices):
-                if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
-                    return conditional_price.prices
-            return self.prices[0].prices
+    def get_prices(self, request_timestamp: datetime, *, price_context: PriceContext | None = None) -> ModelPrice:
+        prices = _resolve_conditional_prices(self.prices, request_timestamp)
+        if not price_context or not self.price_variants:
+            return prices
+
+        matching = [variant for variant in self.price_variants if _when_matches(variant.when, price_context)]
+        if not matching:
+            return prices
+
+        # The first matching `when` wins, so a more specific variant takes precedence by being listed
+        # first; its own entries are then resolved by date exactly as `prices` are.
+        group = [variant for variant in matching if variant.when == matching[0].when]
+        return _overlay_model_price(prices, _resolve_conditional_prices(group, request_timestamp))
 
     def calc_price(
         self,
@@ -682,11 +706,12 @@ class ModelInfo:
         *,
         genai_request_timestamp: datetime | None = None,
         auto_update_timestamp: datetime | None = None,
+        price_context: PriceContext | None = None,
     ) -> PriceCalculation:
         """Calculate the price for the given usage."""
         genai_request_timestamp = genai_request_timestamp or datetime.now(tz=timezone.utc)
 
-        model_price = self.get_prices(genai_request_timestamp)
+        model_price = self.get_prices(genai_request_timestamp, price_context=price_context)
         price = model_price.calc_price(usage)
         return PriceCalculation(
             input_price=price['input_price'],
@@ -700,6 +725,44 @@ class ModelInfo:
 
     def summary(self) -> str:
         return f'Model(id={self.id!r}, name={self.name!r}, ...)'
+
+
+def _resolve_conditional_prices(
+    prices: ModelPrice | Sequence[ConditionalPrice | PriceVariant], request_timestamp: datetime
+) -> ModelPrice:
+    if isinstance(prices, ModelPrice):
+        return prices
+
+    # reversed because the last price takes precedence
+    for conditional_price in reversed(prices):
+        if conditional_price.constraint is None or conditional_price.constraint.active(request_timestamp):
+            return conditional_price.prices
+    return prices[0].prices
+
+
+def _when_matches(when: Mapping[str, PriceContextValue | None], price_context: PriceContext) -> bool:
+    """Whether every parameter of a variant matches the request's pricing context.
+
+    `when` values are typed as optional because caller-supplied data can hold a `None` the published
+    schema forbids.
+
+    Values are compared by type as well as by equality, so a `1` in the context never matches a `True`,
+    and a variant expecting no value at all never matches, rather than matching every context missing it.
+    """
+    # a variant that names no parameter matches nothing, rather than every context
+    return bool(when) and all(
+        expected is not None and type(actual := price_context.get(parameter)) is type(expected) and actual == expected
+        for parameter, expected in when.items()
+    )
+
+
+def _overlay_model_price(base: ModelPrice, overlay: ModelPrice) -> ModelPrice:
+    """Return `base` with every price set on `overlay` replaced, keeping the type of `base`."""
+    merged = copy(base)
+    for price_key, price in overlay.__dict__.items():
+        if not price_key.startswith('_') and price is not None:
+            object.__setattr__(merged, price_key, price)
+    return merged
 
 
 class CalcPrice(TypedDict):
@@ -1002,6 +1065,21 @@ class ConditionalPrice:
 
     prices: ModelPrice
     """Prices for this condition."""
+
+
+@dataclass
+class PriceVariant:
+    """Prices that replace the standard ones for requests made with a particular pricing context."""
+
+    when: dict[str, PriceContextValue] = dataclasses.field(default_factory=dict)
+    """Pricing context this variant applies to, every entry must match the request's context."""
+    constraint: StartDateConstraint | TimeOfDateConstraint | None = None
+    """Timestamp when this variant's prices start, None means they are always valid."""
+
+    _: dataclasses.KW_ONLY
+
+    prices: ModelPrice
+    """Prices for this variant, applied over the standard prices key by key."""
 
 
 @dataclass

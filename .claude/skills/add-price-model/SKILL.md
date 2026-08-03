@@ -91,6 +91,14 @@ fields). Include:
 - `prices_checked:` **today's date** (check the `currentDate` system reminder)
 - `prices:` `input_mtok`, `cache_read_mtok` (omit if the provider has none), `output_mtok`
 
+- `price_variants:` only if the provider publishes rates for this model under a particular pricing
+  context - `- when: { service_tier: batch }` for its batch API, `flex`/`priority` for synchronous
+  tiers. List only the keys whose rate differs; a variant overrides `prices` key by key, so an omitted
+  key keeps its standard rate. Check the provider will actually accept the model that way (Groq and
+  xAI publish eligible-model lists); a model with no matching variant is charged its standard rates,
+  which is the right default. Discounts are not uniform: 50% for most providers, 20% for xAI, and some
+  units are not discounted at all.
+
 Add a `price_comments` field when a value needs explanation/reference.
 
 Those three keys cover the common case. The full vocabulary is derived from `prices/units.yml` — check
@@ -145,6 +153,9 @@ prices:
 - Set `prices_checked` to today. It records when you verified the rates, which is a different fact
   from when the rates changed.
 - Append one entry to a model that already uses a list. Leave the existing entries alone.
+- If the model has `price_variants`, add the same dated entry to each `when` group, with the rates that
+  took effect on that date. `make build` fails otherwise: variants are resolved by the same constraints
+  as `prices`, so a variant that skips the change would charge the new rate against older requests.
 
 Overwrite in place in exactly one case: the old value was wrong when it was written. A correction has
 no history worth preserving. State which of the two cases you are in, in the PR body.

@@ -26,6 +26,23 @@ if (result) {
 }
 ```
 
+### Pricing context (batch APIs and service tiers)
+
+Some requests are priced differently depending on how they were served. Pass `priceContext` to say which:
+
+```ts
+const result = calcPrice(usage, 'claude-opus-5', { priceContext: { service_tier: 'batch' }, providerId: 'anthropic' })
+```
+
+`service_tier` covers the mutually exclusive rate cards - `batch` for a request made through the provider's batch
+API (OpenAI's Batch API, Anthropic's Message Batches API, Gemini's Batch mode), and in future `flex` or `priority`
+for the synchronous tiers. Anthropic and Groq report it under exactly that name in their usage payloads, so it can
+be passed straight through. The CLI takes `--price-context service_tier=batch`.
+
+A variant only replaces the prices it lists, so rates a provider does not discount - Anthropic's per-search web
+search fee, Google's cached input tokens on most models - stay at their standard price. A model with no prices for
+the given context is charged at its standard rates.
+
 ### `updatePrices`
 
 You can optionally use `updatePrices` to implement logic that can periodically update the data used by `calcPrice`.

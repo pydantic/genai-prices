@@ -1,5 +1,6 @@
 import type {
   ConditionalPrice,
+  ModelPrice,
   PriceCalculationResult,
   PriceOptions,
   Provider,
@@ -70,11 +71,16 @@ function normalizeProvider(provider: Provider): Provider {
     ...provider,
     models: provider.models.map((model) => ({
       ...model,
-      prices: Array.isArray(model.prices)
-        ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
-        : model.prices,
+      ...(model.price_variants === undefined
+        ? {}
+        : { price_variants: model.price_variants.map((variant) => normalizeConditionalPrice(variant, provider.id, model.id)) }),
+      prices: normalizePrices(model.prices, provider.id, model.id),
     })),
   }
+}
+
+function normalizePrices(prices: ConditionalPrice[] | ModelPrice, providerId: string, modelId: string): ConditionalPrice[] | ModelPrice {
+  return Array.isArray(prices) ? prices.map((price) => normalizeConditionalPrice(price, providerId, modelId)) : prices
 }
 
 /**
@@ -92,14 +98,15 @@ function normalizeProvider(provider: Provider): Provider {
  * `data.ts` is the build-time half, and the two must stay in agreement.
  * See `normalizeProvider` for the traversal that applies this per model.
  */
-function normalizeConditionalPrice(
-  conditionalPrice: { constraint?: unknown; prices: ConditionalPrice['prices'] },
+function normalizeConditionalPrice<T extends { constraint?: unknown; prices: ConditionalPrice['prices'] }>(
+  conditionalPrice: T,
   providerId: string,
   modelId: string
-): ConditionalPrice {
+): T {
   const constraint: unknown = conditionalPrice.constraint
   if (constraint === undefined) {
-    return { prices: conditionalPrice.prices }
+    // spread rather than rebuild so a variant keeps its `when`
+    return conditionalPrice
   }
   if (!isRecord(constraint)) {
     throw invalidConstraintError(constraint, providerId, modelId)
@@ -113,15 +120,12 @@ function normalizeConditionalPrice(
         isValidTimeOfDay(constraint.start_time) &&
         isValidTimeOfDay(constraint.end_time))
     ) {
-      return conditionalPrice as ConditionalPrice
+      return conditionalPrice
     }
     throw invalidConstraintError(constraint, providerId, modelId)
   }
   if (hasExactKeys(constraint, ['start_date']) && isValidStartDate(constraint.start_date)) {
-    return {
-      constraint: { start_date: constraint.start_date, type: 'start_date' },
-      prices: conditionalPrice.prices,
-    }
+    return { ...conditionalPrice, constraint: { start_date: constraint.start_date, type: 'start_date' } }
   }
   if (
     hasExactKeys(constraint, ['end_time', 'start_time']) &&
@@ -129,12 +133,8 @@ function normalizeConditionalPrice(
     isValidTimeOfDay(constraint.end_time)
   ) {
     return {
-      constraint: {
-        end_time: constraint.end_time,
-        start_time: constraint.start_time,
-        type: 'time_of_date',
-      },
-      prices: conditionalPrice.prices,
+      ...conditionalPrice,
+      constraint: { end_time: constraint.end_time, start_time: constraint.start_time, type: 'time_of_date' },
     }
   }
   throw invalidConstraintError(constraint, providerId, modelId)
@@ -226,7 +226,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   const model = matchModelWithFallback(provider, lowerModelId, providerData)
   if (!model) return null
   const timestamp = options?.timestamp ?? new Date()
-  const modelPrice = getActiveModelPrice(model, timestamp)
+  const modelPrice = getActiveModelPrice(model, timestamp, options?.priceContext)
   const priceResult = calcPriceInternal(usage, modelPrice)
   return {
     auto_update_timestamp: undefined,

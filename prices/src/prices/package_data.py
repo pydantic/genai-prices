@@ -117,9 +117,9 @@ def validate_provider_model_prices(providers: Iterable[object], registry: UnitRe
         provider_id = cast(str, getattr(provider, 'id'))
         for model in cast(Iterable[object], getattr(provider, 'models')):
             model_id = cast(str, getattr(model, 'id'))
-            for label, model_price in _iter_model_prices(getattr(model, 'prices')):
+            for label, price_keys in _iter_priced_key_sets(model):
                 try:
-                    validate_model_price(_collect_model_price_keys(model_price), registry)
+                    validate_model_price(price_keys, registry)
                 except ValueError as exc:
                     raise ValueError(f'Invalid model price for {provider_id}/{model_id}{label}: {exc}') from exc
 
@@ -144,6 +144,19 @@ def validate_provider_extractor_destinations(providers: Iterable[object], regist
             except ValueError as exc:
                 api_flavor = getattr(extractor, 'api_flavor', index)
                 raise ValueError(f'Invalid extractor destination for {provider_id}/{api_flavor}: {exc}') from exc
+
+
+def _iter_priced_key_sets(model: object) -> Iterator[tuple[str, set[str]]]:
+    """Yield the price key sets the engine can resolve, including variants merged over the standard prices."""
+    standard = [
+        (label, _collect_model_price_keys(price)) for label, price in _iter_model_prices(getattr(model, 'prices'))
+    ]
+    yield from standard
+
+    for index, variant in enumerate(cast(list[Any], getattr(model, 'price_variants', None) or [])):
+        variant_keys = _collect_model_price_keys(getattr(variant, 'prices'))
+        for standard_label, standard_keys in standard:
+            yield f'.price_variants[{index}] over prices{standard_label}', standard_keys | variant_keys
 
 
 def _iter_model_prices(prices: object) -> Iterator[tuple[str, object]]:

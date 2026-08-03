@@ -30,6 +30,37 @@ When you edit the prices of a model, remember to:
 - have `pre-commit` installed (generally you'll just need to run `make install` from the root directory),
   which will update the v2 and package data when prices change. You can also run `make build` to update these files manually.
 
+### Prices that depend on the request
+
+Models priced differently depending on how the request was served carry `price_variants` alongside `prices`.
+Each variant names the pricing context it applies to and the prices that replace the standard ones:
+
+```yaml
+prices:
+  input_mtok: 5
+  output_mtok: 25
+  web_searches_kcount: 10
+price_variants:
+  - when: { service_tier: batch }
+    prices:
+      input_mtok: 2.5
+      output_mtok: 12.5
+```
+
+`service_tier` covers the mutually exclusive rate cards - `batch` for the provider's batch API, `flex` and
+`priority` for the synchronous tiers - and is the name Anthropic and Groq use in their own usage payloads.
+`speed` (Anthropic's fast mode) and `inference_geo` (data residency) are also available.
+
+A variant's prices override `prices` key by key, so only list the keys whose rate actually changes. Anything
+omitted keeps its standard rate - above, web searches are not discounted in batch, so they are left out rather
+than repeated. When `prices` carries a dated price history, each variant has to repeat those dates, since both
+are resolved by the same constraints; `make build` rejects a variant that skips one.
+
+Only add rates the provider publishes, and only for models it will actually serve that way: discounts are not
+uniform (xAI's batch discount is 20%, Google bills batch cache hits at the standard cache rate on most models,
+Groq's batch rate ignores caching entirely), and a model with no variant for a context is simply charged its
+standard rates.
+
 Please do not:
 
 - edit generated JSON files directly — edit the provider YAML and use `make build` instead

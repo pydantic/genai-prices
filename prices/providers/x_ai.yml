@@ -4,6 +4,10 @@ id: x-ai
 pricing_urls:
   - https://docs.x.ai/docs/models
 api_pattern: 'https://api\.x\.ai'
+price_comments: >-
+  The Batch API discount is 20%, not 50%, and applies to all token types including cached tokens, on the
+  models xAI lists as batch-eligible.
+  Ref: https://docs.x.ai/developers/pricing
 model_match:
   contains: grok
 provider_match:
@@ -236,13 +240,24 @@ models:
       Grok 4.20 is a reasoning model from xAI with industry-leading speed and agentic tool calling capabilities. It combines
       low hallucination rates with strict prompt adherence.
     match:
-      equals: grok-4.20
+      or:
+        - equals: grok-4.20
+        - equals: grok-4.20-0309-reasoning
+        - equals: grok-4.20-0309-non-reasoning
+        - equals: x-ai/grok-4.20
+        - equals: x-ai/grok-4.20-0309-reasoning
+        - equals: x-ai/grok-4.20-0309-non-reasoning
     prices_checked: 2026-06-09
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.16
+          output_mtok: 2
   - id: grok-4.20-multi-agent
     name: Grok 4.20 Multi-Agent
     description: >-
@@ -275,7 +290,12 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.2
       output_mtok: 2.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.16
+          output_mtok: 2
   - id: grok-4.5
     name: Grok 4.5
     description: >-

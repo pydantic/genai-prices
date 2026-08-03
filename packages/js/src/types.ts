@@ -23,6 +23,30 @@ export interface ConditionalPrice {
   prices: ModelPrice
 }
 
+export type PriceContextValue = boolean | number | string
+
+/**
+ * The pricing context parameters a `PriceVariant` can match on, named after the fields providers report
+ * them in: `service_tier` for the mutually exclusive rate cards (`batch`, `flex`, ...), `speed` for fast
+ * mode, `inference_geo` for data residency.
+ */
+export type WhenParameter = 'inference_geo' | 'service_tier' | 'speed'
+
+/**
+ * What a caller can report about a request, used to select a `PriceVariant`, e.g. `{service_tier: 'batch'}`.
+ *
+ * Deliberately wider than `WhenParameter` so a caller can pass a provider's usage payload through without
+ * filtering it; a parameter no variant matches on simply leaves the standard prices in place.
+ */
+export type PriceContext = Record<string, PriceContextValue | undefined>
+
+/** Prices that replace the standard ones for requests made with a particular pricing context. */
+export interface PriceVariant {
+  constraint?: StartDateConstraint | TimeOfDateConstraint
+  prices: ModelPrice
+  when: Partial<Record<WhenParameter, PriceContextValue>>
+}
+
 export interface StartDateConstraint {
   start_date: string // ISO date string
   type: 'start_date'
@@ -87,6 +111,7 @@ export interface ModelInfo {
   match: MatchLogic
   name?: string
   price_comments?: string
+  price_variants?: PriceVariant[]
   prices: ConditionalPrice[] | ModelPrice
 }
 
@@ -144,6 +169,8 @@ export interface ProviderFindOptions {
 }
 
 export interface PriceOptions {
+  /** What the request was priced under, e.g. `{service_tier: 'batch'}`. */
+  priceContext?: PriceContext
   provider?: Provider
   providerApiUrl?: string
   providerId?: string

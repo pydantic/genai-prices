@@ -299,6 +299,14 @@
           "description": "Set of prices for using this model.\n\nWhen multiple `ConditionalPrice`s are used, they are tried last to first to find a pricing model to use.\nE.g. later conditional prices take precedence over earlier ones.\n\nIf no conditional models match the conditions, the first one is used.",
           "title": "Prices"
         },
+        "price_variants": {
+          "items": {
+            "$ref": "#/$defs/PriceVariant"
+          },
+          "type": "array",
+          "description": "Prices that apply only to requests made with a particular pricing context, e.g. through a batch API.\n\nThe first variant whose `when` matches the request's pricing context wins, and its prices override\n`prices` key by key, so only the keys whose rate differs need to be listed; any key omitted is charged\nat its `prices` rate. A request whose context matches no variant is charged the `prices` rates.",
+          "title": "Price Variants"
+        },
         "price_discrepancies": {
           "additionalProperties": true,
           "type": "object",
@@ -1053,6 +1061,60 @@
         }
       },
       "title": "ModelPrice",
+      "type": "object"
+    },
+    "PriceVariant": {
+      "additionalProperties": false,
+      "description": "Prices that replace the standard ones for requests made with a particular pricing context.",
+      "properties": {
+        "when": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "description": "Pricing context this variant applies to, every entry must match the request's context.",
+          "minProperties": 1,
+          "propertyNames": {
+            "enum": [
+              "service_tier",
+              "speed",
+              "inference_geo"
+            ]
+          },
+          "title": "When",
+          "type": "object"
+        },
+        "constraint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StartDateConstraint"
+            },
+            {
+              "$ref": "#/$defs/TimeOfDateConstraint"
+            }
+          ],
+          "description": "Timestamp when this variant's prices start, None means they are always valid.",
+          "title": "Constraint"
+        },
+        "prices": {
+          "$ref": "#/$defs/ModelPrice",
+          "description": "Prices for this variant, applied over the standard prices key by key."
+        }
+      },
+      "required": [
+        "when",
+        "prices"
+      ],
+      "title": "PriceVariant",
       "type": "object"
     },
     "StartDateConstraint": {

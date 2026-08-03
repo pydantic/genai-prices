@@ -6,6 +6,11 @@ pricing_urls:
   - https://cloud.google.com/vertex-ai/generative-ai/pricing
   # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
 api_pattern: 'https://(.*\.)?googleapis\.com'
+price_comments: >-
+  Batch mode is 50% of the interactive price for input and output tokens of every modality. Cache hits are
+  billed "at the standard context caching rates" except on the models whose batch row publishes its own
+  cached figure, so the batch variant lists `cache_read_mtok` only for those.
+  Ref: https://ai.google.dev/gemini-api/docs/batch-api
 model_match:
   contains: gemini
 provider_match:
@@ -581,7 +586,12 @@ models:
       output_mtok: 0.4
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.175
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.05
+          input_audio_mtok: 0.35
+          output_mtok: 0.2
   - id: gemini-2.0-flash-lite
     name: gemini 2.0 flash lite
     description: >-
@@ -595,7 +605,11 @@ models:
     prices:
       input_mtok: 0.075
       output_mtok: 0.3
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.0375
+          output_mtok: 0.15
   - id: gemini-2.5-flash
     name: Gemini 2.5 Flash
     description: >-
@@ -614,7 +628,12 @@ models:
       cache_read_mtok: 0.03
       cache_audio_read_mtok: 0.1
       output_mtok: 2.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.15
+          input_audio_mtok: 0.5
+          output_mtok: 1.25
   - id: gemini-2.5-flash-image
     name: Gemini 2.5 Flash Image
     description: >-
@@ -633,7 +652,12 @@ models:
       input_mtok: 0.3
       output_mtok: 2.5
       output_image_mtok: 30
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.15
+          output_mtok: 1.25
+          output_image_mtok: 15
   - id: gemini-2.5-flash-lite
     name: Gemini 2.5 Flash Lite
     description: >-
@@ -654,7 +678,12 @@ models:
       cache_read_mtok: 0.01
       cache_audio_read_mtok: 0.03
       output_mtok: 0.4
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.05
+          input_audio_mtok: 0.15
+          output_mtok: 0.2
   - id: gemini-2.5-flash-preview
     name: Gemini 2.5 Flash Preview 05-20
     description: >-
@@ -703,7 +732,19 @@ models:
         tiers:
           - start: 200000
             price: 15
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok:
+            base: 0.625
+            tiers:
+              - start: 200000
+                price: 1.25
+          output_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 7.5
   - id: gemini-3-flash-preview
     name: Gemini 3 Flash Preview
     description: >-
@@ -723,7 +764,12 @@ models:
       cache_read_mtok: 0.05
       cache_audio_read_mtok: 0.1
       output_mtok: 3
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.25
+          input_audio_mtok: 0.5
+          output_mtok: 1.5
   - id: gemini-3-pro-image-preview
     name: Gemini 3 Pro Image Preview
     description: >-
@@ -742,7 +788,12 @@ models:
       input_mtok: 2
       output_mtok: 12
       output_image_mtok: 120
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 1
+          output_mtok: 6
+          output_image_mtok: 60
   - id: gemini-3-pro-preview
     name: Gemini 3 Pro Preview
     description:
@@ -769,7 +820,19 @@ models:
         tiers:
           - start: 200000
             price: 18
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 200000
+                price: 2
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 200000
+                price: 9
   - id: gemini-3.1-flash-image-preview
     name: Gemini 3.1 Flash Image Preview
     description: >-
@@ -789,7 +852,12 @@ models:
       input_mtok: 0.5
       output_mtok: 3
       output_image_mtok: 60
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 1.5
+          output_image_mtok: 30
   - id: gemini-3.1-flash-lite
     name: Gemini 3.1 Flash Lite
     description: >-
@@ -808,7 +876,14 @@ models:
       cache_read_mtok: 0.025
       cache_audio_read_mtok: 0.05
       output_mtok: 1.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.125
+          input_audio_mtok: 0.25
+          cache_read_mtok: 0.0125
+          cache_audio_read_mtok: 0.025
+          output_mtok: 0.75
   - id: gemini-3.1-flash-lite-image
     name: Gemini 3.1 Flash Lite Image
     description: >-
@@ -821,7 +896,12 @@ models:
       input_mtok: 0.25
       output_mtok: 1.5
       output_image_mtok: 30
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.125
+          output_mtok: 0.75
+          output_image_mtok: 15
   - id: gemini-3.1-flash-live-preview
     name: Gemini 3.1 Flash Live Preview
     description: Google's low-latency audio-to-audio model with multimodal input support.
@@ -860,7 +940,19 @@ models:
         tiers:
           - start: 200000
             price: 18
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 200000
+                price: 2
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 200000
+                price: 9
   - id: gemini-3.5-flash
     name: Gemini 3.5 Flash
     description: >-
@@ -880,7 +972,12 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 9
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 4.5
   - id: gemini-3.5-flash-lite
     name: Gemini 3.5 Flash Lite
     description: >-
@@ -896,7 +993,12 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 2.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.15
+          output_mtok: 1.25
+          cache_read_mtok: 0.02
   - id: gemini-3.6-flash
     name: Gemini 3.6 Flash
     description: >-
@@ -912,27 +1014,42 @@ models:
       input_mtok: 1.5
       cache_read_mtok: 0.15
       output_mtok: 7.5
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
   - id: gemini-embedding-001
     match:
       equals: gemini-embedding-001
+    prices_checked: 2026-08-03
     prices:
       input_mtok: 0.15
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.075
   - id: gemini-embedding-2
     name: Gemini Embedding 2
     description: Google's multimodal embedding model for text, images, audio, video, and documents.
     match:
       equals: gemini-embedding-2
     context_window: 8192
-    prices_checked: 2026-07-22
+    prices_checked: 2026-08-03
     price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2.
     prices:
       input_mtok: 0.2
       input_image_mtok: 0.45
       input_audio_mtok: 6.5
       input_video_mtok: 12
-
+    price_variants:
+      - when: { service_tier: batch }
+        prices:
+          input_mtok: 0.1
+          input_image_mtok: 0.225
+          input_audio_mtok: 3.25
+          input_video_mtok: 6
   - id: gemini-flash-1.5
     name: Gemini 1.5 Flash
     description: >-

@@ -1,10 +1,14 @@
 import { computeLeafValues } from './decompose'
 import { utcTimeOfDaySeconds } from './timeOfDay'
 import {
+  ConditionalPrice,
   MatchLogic,
   ModelInfo,
   ModelPrice,
   ModelPriceCalculationResult,
+  PriceContext,
+  PriceContextValue,
+  PriceVariant,
   Provider,
   ProviderFindOptions,
   Tier,
@@ -158,17 +162,68 @@ function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateCo
   return typeof constraint === 'object' && constraint !== null && 'type' in constraint && constraint.type === 'time_of_date'
 }
 
-export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPrice {
-  if (!Array.isArray(model.prices)) {
-    return model.prices
+export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceContext?: PriceContext): ModelPrice {
+  const prices = resolveConditionalPrices(model.prices, timestamp, model.id)
+  if (priceContext == null || model.price_variants == null) {
+    return prices
+  }
+
+  const matching = model.price_variants.filter((variant) => whenMatches(variant.when, priceContext))
+  if (matching.length === 0) {
+    return prices
+  }
+
+  // The first matching `when` wins, so a more specific variant takes precedence by being listed first;
+  // its own entries are then resolved by date exactly as `prices` are.
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const first = whenKey(matching[0]!.when)
+  const group = matching.filter((variant) => whenKey(variant.when) === first)
+
+  // A variant's prices override the standard ones key by key; keys they omit stay at the standard rate.
+  const variantPrices = resolveConditionalPrices(group, timestamp, model.id)
+  const merged: ModelPrice = { ...prices }
+  for (const [priceKey, price] of Object.entries(variantPrices)) {
+    if (price != null) merged[priceKey] = price
+  }
+  return merged
+}
+
+/** A stable key for a variant's `when`, so entries sharing one context group together. */
+function whenKey(when: PriceVariant['when']): string {
+  return JSON.stringify(Object.entries(when).sort(([a], [b]) => a.localeCompare(b)))
+}
+
+/**
+ * Whether every parameter of a variant matches the request's pricing context.
+ *
+ * Values are compared by type as well as by equality, so a `1` in the context never matches a `true`.
+ */
+function whenMatches(when: PriceVariant['when'], priceContext: PriceContext): boolean {
+  // `Object.entries` drops the `| undefined` a Partial record's values carry, and caller-supplied data can
+  // hold one, so restore it rather than trust the narrower inferred type.
+  const entries = Object.entries(when) as [string, PriceContextValue | undefined][]
+  // a variant that names no parameter matches nothing, rather than every context
+  return (
+    entries.length > 0 &&
+    entries.every(([parameter, expected]) => {
+      const actual = priceContext[parameter]
+      // a variant expecting no value never matches, rather than matching every context missing it
+      return expected !== undefined && typeof actual === typeof expected && actual === expected
+    })
+  )
+}
+
+function resolveConditionalPrices(prices: (ConditionalPrice | PriceVariant)[] | ModelPrice, timestamp: Date, modelId: string): ModelPrice {
+  if (!Array.isArray(prices)) {
+    return prices
   }
   if (Number.isNaN(timestamp.getTime())) {
     throw new RangeError('Invalid time value')
   }
   // Conditional prices: last active wins
-  for (let i = model.prices.length - 1; i >= 0; i--) {
+  for (let i = prices.length - 1; i >= 0; i--) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const cond = model.prices[i]!
+    const cond = prices[i]!
     const constraint = cond.constraint
 
     if (constraint === undefined) {
@@ -208,12 +263,12 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date): ModelPri
       // calcPrice (see normalizeProvider in
       // api.ts), so anything else reaching this point is unnormalized data.
       constraint satisfies never
-      throw new Error(`Unknown price constraint for model '${model.id}': ${JSON.stringify(constraint)}`)
+      throw new Error(`Unknown price constraint for model '${modelId}': ${JSON.stringify(constraint)}`)
     }
   }
   // Fallback to first
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return model.prices[0]!.prices
+  return prices[0]!.prices
 }
 
 export function matchLogic(logic: MatchLogic, text: string): boolean {

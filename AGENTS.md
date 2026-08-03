@@ -137,6 +137,20 @@ little, suspect the importer before the data.
   YAML and silently wrong by 1000×.
 - Prices must cover their **ancestors and joins**: a model priced with `cache_write_1h_mtok` also needs
   `cache_write_mtok`, and so on. `make build` enforces this; the error names the missing key.
+- `price_variants:` is an optional sibling of `prices:` holding prices that only apply to a particular
+  pricing context, selected by the caller's explicit `price_context` (there is deliberately no
+  provider-independent `batch` shorthand: it would make "no variant for this model" indistinguishable
+  from "verified to cost the same as standard"). Each entry has a `when` (from a fixed set:
+  `service_tier`, `speed`, `inference_geo`), an optional `constraint`, and `prices`. A variant
+  **overrides `prices` key by key**, so list only the keys whose rate changes - an omitted key keeps its
+  standard rate, which is how units a provider does not discount (Anthropic's `web_searches_kcount`,
+  Google's `cache_read_mtok` on most models) stay correct. Discounts are not uniform across providers, so
+  encode published rates rather than assuming a ratio: xAI's batch discount is 20%, Groq's batch rate
+  ignores cache status entirely, and a model with no matching variant is charged its standard rates.
+- **A dated price change has to be repeated in each `when` group.** Variants are resolved by the same
+  constraints as `prices`, so a variant that skips a change in `prices` charges the new rate against
+  requests from before it - the same hazard as overwriting a `prices` block. `make build` enforces this:
+  every constraint used by `prices` must also appear in every `when` group.
 
 ### Adding a unit
 

@@ -22,6 +22,7 @@ from genai_prices._cli import (
     _format_model_price_value,
     _format_model_prices,
     _parse_cli,
+    _parse_price_context,
     _price_field_label,
     _render_calc_error,
     _should_split_model_price_columns,
@@ -85,6 +86,34 @@ def test_version_plain(capsys: pytest.CaptureFixture[str]):
     out, err = capsys.readouterr()
     assert out == IsStr(regex=r'genai-prices .*\n')
     assert err == ''
+
+
+def test_parse_price_context():
+    assert _parse_price_context([]) == {}
+    assert _parse_price_context(['service_tier=batch']) == {'service_tier': 'batch'}
+    assert _parse_price_context(['service_tier=batch', 'inference_geo=us']) == {
+        'service_tier': 'batch',
+        'inference_geo': 'us',
+    }
+
+
+@pytest.mark.parametrize('pair', ['service_tier', '=batch', ''])
+def test_parse_price_context_rejects_malformed(pair: str):
+    with pytest.raises(SystemExit, match='expected `key=value`'):
+        _parse_price_context([pair])
+
+
+def test_parse_price_context_rejects_duplicate():
+    with pytest.raises(SystemExit, match='Duplicate --price-context'):
+        _parse_price_context(['service_tier=batch', 'service_tier=standard'])
+
+
+def test_calc_with_price_context(capsys: pytest.CaptureFixture[str]):
+    assert (
+        cli_module.cli_logic(['-p', 'calc', '-i', '1000000', '--price-context', 'service_tier=batch', 'claude-opus-5'])
+        == 0
+    )
+    assert 'Total Price: $2.5' in capsys.readouterr().out
 
 
 def test_cli_unknown_flag(capsys: pytest.CaptureFixture[str]):
