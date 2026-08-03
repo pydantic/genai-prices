@@ -91,6 +91,13 @@ fields). Include:
 - `prices_checked:` **today's date** (check the `currentDate` system reminder)
 - `prices:` `input_mtok`, `cache_read_mtok` (omit if the provider has none), `output_mtok`
 
+- `batch_prices:` only if the provider publishes batch rates for this model, and only the keys whose
+  rate differs in batch mode - it overrides `prices` key by key, so an omitted key keeps its standard
+  rate. Check the provider will actually accept the model for batch processing (Groq and xAI publish
+  eligible-model lists); a model with no `batch_prices` is charged its standard rates, which is the
+  right default. Discounts are not uniform: 50% for most providers, 20% for xAI, and some units are
+  not discounted at all.
+
 Add a `price_comments` field when a value needs explanation/reference.
 
 Those three keys cover the common case. The full vocabulary is derived from `prices/units.yml` — check
@@ -145,6 +152,9 @@ prices:
 - Set `prices_checked` to today. It records when you verified the rates, which is a different fact
   from when the rates changed.
 - Append one entry to a model that already uses a list. Leave the existing entries alone.
+- If the model has `batch_prices`, add the same dated entry there too, with the batch rates that took
+  effect on that date. `make build` fails otherwise: both fields are resolved by the same constraints,
+  so a batch block that skips the change would charge the new batch rate against older requests.
 
 Overwrite in place in exactly one case: the old value was wrong when it was written. A correction has
 no history worth preserving. State which of the two cases you are in, in the PR body.
