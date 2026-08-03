@@ -680,7 +680,8 @@ class ModelInfo:
 
     def get_prices(self, request_timestamp: datetime, *, batch: bool = False) -> ModelPrice:
         prices = _resolve_conditional_prices(self.prices, request_timestamp)
-        if batch and self.batch_prices is not None:
+        # an empty list of batch prices means the same thing as no batch prices at all
+        if batch and self.batch_prices:
             prices = _overlay_model_price(prices, _resolve_conditional_prices(self.batch_prices, request_timestamp))
         return prices
 

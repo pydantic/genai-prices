@@ -241,6 +241,18 @@ def test_batch_prices_resolve_conditionals_independently():
         set_custom_snapshot(None)
 
 
+@pytest.mark.parametrize('batch_prices', [None, [], ModelPrice()])
+def test_empty_batch_prices_use_standard_prices(batch_prices: object):
+    model = ModelInfo(
+        id='test',
+        match=ClauseEquals('test'),
+        prices=ModelPrice(input_mtok=Decimal(10)),
+        batch_prices=batch_prices,  # pyright: ignore[reportArgumentType]
+    )
+
+    assert model.get_prices(datetime.now(tz=timezone.utc), batch=True).input_mtok == Decimal(10)
+
+
 def test_batch_prices_override_key_by_key():
     model = ModelInfo(
         id='test',

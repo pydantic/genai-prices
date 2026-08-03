@@ -89,6 +89,12 @@ describe('batch prices', () => {
     expect(getActiveModelPrice(nullBatch, TIMESTAMP, true)).toEqual({ input_mtok: 10, output_mtok: 20 })
   })
 
+  it.each([[undefined], [null], [[]], [{}]])('uses the standard prices when batch prices are empty (%s)', (batchPrices) => {
+    const model = { batch_prices: batchPrices, id: 'test', match: { equals: 'test' }, prices: { input_mtok: 10 } } as unknown as ModelInfo
+
+    expect(getActiveModelPrice(model, TIMESTAMP, true)).toEqual({ input_mtok: 10 })
+  })
+
   it('resolves batch conditional prices independently of standard ones', () => {
     const model: ModelInfo = {
       batch_prices: [

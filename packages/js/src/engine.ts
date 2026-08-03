@@ -161,8 +161,8 @@ function isTimeOfDateConstraint(constraint: unknown): constraint is TimeOfDateCo
 
 export function getActiveModelPrice(model: ModelInfo, timestamp: Date, batch = false): ModelPrice {
   const prices = resolveConditionalPrices(model.prices, timestamp, model.id)
-  // `== null` so a JSON `null` behaves like an omitted value, as it does in the Python engine.
-  if (!batch || model.batch_prices == null) {
+  // A JSON `null` and an empty list both mean the same thing as no batch prices at all, as in the Python engine.
+  if (!batch || model.batch_prices == null || (Array.isArray(model.batch_prices) && model.batch_prices.length === 0)) {
     return prices
   }
 
