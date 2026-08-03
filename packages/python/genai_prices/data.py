@@ -3346,6 +3346,7 @@ providers: list[Provider] = [
                 id='gemini-embedding-001',
                 match=ClauseEquals(equals='gemini-embedding-001'),
                 prices=ModelPrice(input_mtok=Decimal('0.15')),
+                batch_prices=ModelPrice(input_mtok=Decimal('0.075')),
             ),
             ModelInfo(
                 id='gemini-embedding-2',
@@ -3359,6 +3360,12 @@ providers: list[Provider] = [
                     input_audio_mtok=Decimal('6.5'),
                     input_image_mtok=Decimal('0.45'),
                     input_video_mtok=Decimal('12'),
+                ),
+                batch_prices=ModelPrice(
+                    input_mtok=Decimal('0.1'),
+                    input_audio_mtok=Decimal('3.25'),
+                    input_image_mtok=Decimal('0.225'),
+                    input_video_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(
@@ -3521,32 +3528,27 @@ providers: list[Provider] = [
                 name='DeepSeek R1 Distill Llama 70B',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.75'), output_mtok=Decimal('0.99')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.375'), output_mtok=Decimal('0.495')),
             ),
             ModelInfo(
                 id='gemma-7b-it',
                 match=ClauseEquals(equals='gemma-7b-it'),
                 prices=ModelPrice(input_mtok=Decimal('0.07'), output_mtok=Decimal('0.07')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.035'), output_mtok=Decimal('0.035')),
             ),
             ModelInfo(
                 id='gemma2-9b-it',
                 match=ClauseOr(or_=[ClauseEquals(equals='gemma2-9b-it'), ClauseEquals(equals='gemma2-9b')]),
                 name='Gemma 2 9B 8k',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='llama-3.1-405b-reasoning',
                 match=ClauseEquals(equals='llama-3.1-405b-reasoning'),
                 prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.295'), output_mtok=Decimal('0.395')),
             ),
             ModelInfo(
                 id='llama-3.1-70b-versatile',
                 match=ClauseEquals(equals='llama-3.1-70b-versatile'),
                 prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.295'), output_mtok=Decimal('0.395')),
             ),
             ModelInfo(
                 id='llama-3.1-8b-instant',
@@ -3559,43 +3561,36 @@ providers: list[Provider] = [
                 id='llama-3.2-11b-text-preview',
                 match=ClauseEquals(equals='llama-3.2-11b-text-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.18'), output_mtok=Decimal('0.18')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.09')),
             ),
             ModelInfo(
                 id='llama-3.2-11b-vision-preview',
                 match=ClauseEquals(equals='llama-3.2-11b-vision-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.18'), output_mtok=Decimal('0.18')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.09'), output_mtok=Decimal('0.09')),
             ),
             ModelInfo(
                 id='llama-3.2-1b-preview',
                 match=ClauseEquals(equals='llama-3.2-1b-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.04')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.02'), output_mtok=Decimal('0.02')),
             ),
             ModelInfo(
                 id='llama-3.2-3b-preview',
                 match=ClauseEquals(equals='llama-3.2-3b-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.06')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.03')),
             ),
             ModelInfo(
                 id='llama-3.2-90b-text-preview',
                 match=ClauseEquals(equals='llama-3.2-90b-text-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='llama-3.2-90b-vision-preview',
                 match=ClauseEquals(equals='llama-3.2-90b-vision-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='llama-3.3-70b-specdec',
                 match=ClauseEquals(equals='llama-3.3-70b-specdec'),
                 prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.99')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.295'), output_mtok=Decimal('0.495')),
             ),
             ModelInfo(
                 id='llama-3.3-70b-versatile',
@@ -3608,37 +3603,31 @@ providers: list[Provider] = [
                 id='llama-guard-3-8b',
                 match=ClauseEquals(equals='llama-guard-3-8b'),
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='llama2-70b-4096',
                 match=ClauseEquals(equals='llama2-70b-4096'),
                 prices=ModelPrice(input_mtok=Decimal('0.7'), output_mtok=Decimal('0.8')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.35'), output_mtok=Decimal('0.4')),
             ),
             ModelInfo(
                 id='llama3-70b-8192',
                 match=ClauseEquals(equals='llama3-70b-8192'),
                 prices=ModelPrice(input_mtok=Decimal('0.59'), output_mtok=Decimal('0.79')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.295'), output_mtok=Decimal('0.395')),
             ),
             ModelInfo(
                 id='llama3-8b-8192',
                 match=ClauseEquals(equals='llama3-8b-8192'),
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.08')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.025'), output_mtok=Decimal('0.04')),
             ),
             ModelInfo(
                 id='llama3-groq-70b-8192-tool-use-preview',
                 match=ClauseEquals(equals='llama3-groq-70b-8192-tool-use-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.89'), output_mtok=Decimal('0.89')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.445'), output_mtok=Decimal('0.445')),
             ),
             ModelInfo(
                 id='llama3-groq-8b-8192-tool-use-preview',
                 match=ClauseEquals(equals='llama3-groq-8b-8192-tool-use-preview'),
                 prices=ModelPrice(input_mtok=Decimal('0.19'), output_mtok=Decimal('0.19')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.095'), output_mtok=Decimal('0.095')),
             ),
             ModelInfo(
                 id='meta-llama/llama-4-maverick-17b-128e-instruct',
@@ -3646,14 +3635,12 @@ providers: list[Provider] = [
                 name='Llama 4 Maverick 17B 128E',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='meta-llama/llama-4-scout-17b-16e-instruct',
                 match=ClauseEquals(equals='meta-llama/llama-4-scout-17b-16e-instruct'),
                 name='Llama 4 Scout (17Bx16E) 128k',
                 prices=ModelPrice(input_mtok=Decimal('0.11'), output_mtok=Decimal('0.34')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.055'), output_mtok=Decimal('0.17')),
             ),
             ModelInfo(
                 id='meta-llama/llama-guard-4-12b',
@@ -3667,13 +3654,11 @@ providers: list[Provider] = [
                 id='mistral-saba-24b',
                 match=ClauseEquals(equals='mistral-saba-24b'),
                 prices=ModelPrice(input_mtok=Decimal('0.79'), output_mtok=Decimal('0.79')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.395'), output_mtok=Decimal('0.395')),
             ),
             ModelInfo(
                 id='mixtral-8x7b-32768',
                 match=ClauseEquals(equals='mixtral-8x7b-32768'),
                 prices=ModelPrice(input_mtok=Decimal('0.24'), output_mtok=Decimal('0.24')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.12'), output_mtok=Decimal('0.12')),
             ),
             ModelInfo(
                 id='moonshotai/kimi-k2-instruct',
@@ -3686,9 +3671,6 @@ providers: list[Provider] = [
                 name='Kimi K2 1T 128k',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('3')),
-                batch_prices=ModelPrice(
-                    input_mtok=Decimal('0.5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')
-                ),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
@@ -3724,7 +3706,6 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='qwen/qwen3-32b'),
                 name='Qwen3 32B 131k',
                 prices=ModelPrice(input_mtok=Decimal('0.29'), output_mtok=Decimal('0.59')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.145'), output_mtok=Decimal('0.295')),
             ),
         ],
     ),
@@ -6237,7 +6218,6 @@ providers: list[Provider] = [
                 name='Devstral Small',
                 description='Devstral-Small-2505 is a 24B parameter agentic LLM fine-tuned from Mistral-Small-3.1, jointly developed by Mistral AI and All Hands AI for advanced software engineering tasks. It is optimized for codebase exploration, multi-file editing, and integration into coding agents, achieving state-of-the-art results on SWE-Bench Verified (46.8%).',
                 prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.12')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.03'), output_mtok=Decimal('0.06')),
             ),
             ModelInfo(
                 id='devstral-small:free',
@@ -6252,7 +6232,6 @@ providers: list[Provider] = [
                 name='Magistral Medium',
                 description="Magistral is Mistral's first reasoning model. It is ideal for general purpose use requiring longer thought processing and better accuracy than with non-reasoning LLMs. From legal research and financial forecasting to software development and creative storytelling — this model solves multi-step challenges where transparency and precision are critical.",
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('5')),
-                batch_prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2.5')),
             ),
             ModelInfo(
                 id='magistral-small',
@@ -6280,7 +6259,6 @@ providers: list[Provider] = [
                 name='Ministral 3B',
                 description="Ministral 3B is a 3B parameter model optimized for on-device and edge computing. It excels in knowledge, commonsense reasoning, and function-calling, outperforming larger models like Mistral 7B on most benchmarks. Supporting up to 128k context length, it's ideal for orchestrating agentic workflows and specialist tasks with efficient inference.",
                 prices=ModelPrice(input_mtok=Decimal('0.04'), output_mtok=Decimal('0.04')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.02'), output_mtok=Decimal('0.02')),
             ),
             ModelInfo(
                 id='ministral-3b-2512',
@@ -6307,7 +6285,6 @@ providers: list[Provider] = [
                 match=ClauseOr(or_=[ClauseEquals(equals='mistral-7b'), ClauseEquals(equals='open-mistral-7b')]),
                 name='Mistral 7B',
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.25')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.125'), output_mtok=Decimal('0.125')),
             ),
             ModelInfo(
                 id='mistral-embed',
@@ -6356,7 +6333,6 @@ providers: list[Provider] = [
                 name='Mistral NeMo',
                 description='A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.075')),
             ),
             ModelInfo(
                 id='mistral-nemo:free',
@@ -6371,7 +6347,6 @@ providers: list[Provider] = [
                 name='Mistral Saba',
                 description='Mistral Saba is a 24B-parameter language model specifically designed for the Middle East and South Asia, delivering accurate and contextually relevant responses while maintaining efficient performance. Trained on curated regional datasets, it supports multiple Indian-origin languages—including Tamil and Malayalam—alongside Arabic. This makes it a versatile option for a range of regional and multilingual applications. Read more at the blog post here',
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.3')),
             ),
             ModelInfo(
                 id='mistral-small-24b-instruct-2501',
@@ -6380,7 +6355,6 @@ providers: list[Provider] = [
                 description='Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released under the Apache 2.0 license, it features both pre-trained and instruction-tuned versions designed for efficient local deployment.',
                 price_comments="Can't find pricing on this model, so just trusting open router",
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.08')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.025'), output_mtok=Decimal('0.04')),
             ),
             ModelInfo(
                 id='mistral-small-24b-instruct-2501:free',
@@ -6408,7 +6382,6 @@ providers: list[Provider] = [
                 description='Mistral Small 3.1 24B Instruct is an upgraded variant of Mistral Small 3 (2501), featuring 24 billion parameters with advanced multimodal capabilities.',
                 price_comments='Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.351'), output_mtok=Decimal('0.555')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.1755'), output_mtok=Decimal('0.2775')),
             ),
             ModelInfo(
                 id='mistral-small-3.2-24b-instruct',
@@ -6417,7 +6390,6 @@ providers: list[Provider] = [
                 description='Mistral-Small-3.2-24B-Instruct-2506 is an updated 24B parameter model from Mistral optimized for instruction following, repetition reduction, and improved function calling.',
                 price_comments='Imported from OpenRouter pricing; verify against Mistral pricing when native API pricing is published.',
                 prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.2')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.0375'), output_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='mistral-small-latest',
@@ -6434,7 +6406,6 @@ providers: list[Provider] = [
                 description='Note: This model is being deprecated. Recommended replacement is the newer Ministral 8B',
                 deprecated=True,
                 prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.25')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.125'), output_mtok=Decimal('0.125')),
             ),
             ModelInfo(
                 id='mixtral-8x22b-instruct',
@@ -6442,7 +6413,6 @@ providers: list[Provider] = [
                 name='Mixtral 8x22B Instruct',
                 description="Mistral's official instruct fine-tuned version of Mixtral 8x22B. It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include:\n- strong math, coding, and reasoning\n- large context length (64k)\n- fluency in English, French, Italian, German, and Spanish",
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.45'), output_mtok=Decimal('0.45')),
             ),
             ModelInfo(
                 id='mixtral-8x7b',
@@ -6451,7 +6421,6 @@ providers: list[Provider] = [
                 ),
                 name='Mixtral 8x7B',
                 prices=ModelPrice(input_mtok=Decimal('0.7'), output_mtok=Decimal('0.7')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.35'), output_mtok=Decimal('0.35')),
             ),
             ModelInfo(
                 id='pixtral-12b',
@@ -6459,7 +6428,6 @@ providers: list[Provider] = [
                 name='Pixtral 12B',
                 description='The first multi-modal, text+image-to-text model from Mistral AI. Its weights were launched via torrent: https://x.com/mistralai/status/1833758285167722836.',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.15')),
-                batch_prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.075')),
             ),
             ModelInfo(
                 id='pixtral-large',
@@ -6469,7 +6437,6 @@ providers: list[Provider] = [
                 name='Pixtral Large 2411',
                 description='Pixtral Large is a 124B parameter, open-weight, multimodal model built on top of Mistral Large 2. The model is able to understand documents, charts and natural images.',
                 prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('6')),
-                batch_prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('3')),
             ),
             ModelInfo(
                 id='voxtral-small-24b-2507',
@@ -6478,9 +6445,6 @@ providers: list[Provider] = [
                 description='Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.3')
-                ),
-                batch_prices=ModelPrice(
-                    input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.15')
                 ),
             ),
         ],
@@ -7027,6 +6991,7 @@ providers: list[Provider] = [
                 description='GPT-3.5 Turbo offers a balance between cost and performance.',
                 context_window=16385,
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+                batch_prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.75')),
             ),
             ModelInfo(
                 id='gpt-3.5-turbo-0613',
@@ -7082,6 +7047,7 @@ providers: list[Provider] = [
                 description='GPT-4 is the latest and most advanced model in the GPT series, demonstrating sophisticated capabilities in complex reasoning, theory of mind, and narrative understanding.',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('30'), output_mtok=Decimal('60')),
+                batch_prices=ModelPrice(input_mtok=Decimal('15'), output_mtok=Decimal('30')),
             ),
             ModelInfo(
                 id='gpt-4-32k',
@@ -7114,6 +7080,7 @@ providers: list[Provider] = [
                 description='GPT-4 Turbo offers a balance between cost and performance.',
                 context_window=128000,
                 prices=ModelPrice(input_mtok=Decimal('10'), output_mtok=Decimal('30')),
+                batch_prices=ModelPrice(input_mtok=Decimal('5'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='gpt-4-vision-preview',
@@ -13980,9 +13947,6 @@ providers: list[Provider] = [
                 name='Grok 4.20 Multi-Agent',
                 description="Grok 4.20 Multi-Agent is a variant of xAI's Grok 4.20 designed for collaborative, agent-based workflows. Multiple agents operate in parallel to conduct deep research, coordinate tool use, and synthesize information.",
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('6')),
-                batch_prices=ModelPrice(
-                    input_mtok=Decimal('1.6'), cache_read_mtok=Decimal('0.16'), output_mtok=Decimal('4.8')
-                ),
             ),
             ModelInfo(
                 id='grok-4.3',

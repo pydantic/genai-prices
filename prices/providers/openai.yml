@@ -233,6 +233,9 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 1.5
+    batch_prices:
+      input_mtok: 0.25
+      output_mtok: 0.75
 
   - id: gpt-3.5-turbo-0613
     match:
@@ -300,6 +303,9 @@ models:
     prices:
       input_mtok: 30
       output_mtok: 60
+    batch_prices:
+      input_mtok: 15
+      output_mtok: 30
 
   - id: gpt-4-32k
     name: gpt 4
@@ -335,6 +341,9 @@ models:
     prices:
       input_mtok: 10
       output_mtok: 30
+    batch_prices:
+      input_mtok: 5
+      output_mtok: 15
 
   - id: gpt-4-vision-preview
     name: gpt 4 vision

@@ -5613,6 +5613,9 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
         },
+        batch_prices: {
+          input_mtok: 0.075,
+        },
       },
       {
         id: 'gemini-embedding-2',
@@ -5628,6 +5631,12 @@ export const data: Provider[] = [
           input_audio_mtok: 6.5,
           input_image_mtok: 0.45,
           input_video_mtok: 12,
+        },
+        batch_prices: {
+          input_mtok: 0.1,
+          input_audio_mtok: 3.25,
+          input_image_mtok: 0.225,
+          input_video_mtok: 6,
         },
       },
       {
@@ -5938,10 +5947,6 @@ export const data: Provider[] = [
           input_mtok: 0.75,
           output_mtok: 0.99,
         },
-        batch_prices: {
-          input_mtok: 0.375,
-          output_mtok: 0.495,
-        },
       },
       {
         id: 'gemma-7b-it',
@@ -5951,10 +5956,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.07,
           output_mtok: 0.07,
-        },
-        batch_prices: {
-          input_mtok: 0.035,
-          output_mtok: 0.035,
         },
       },
       {
@@ -5974,10 +5975,6 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           output_mtok: 0.2,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
-        },
       },
       {
         id: 'llama-3.1-405b-reasoning',
@@ -5988,10 +5985,6 @@ export const data: Provider[] = [
           input_mtok: 0.59,
           output_mtok: 0.79,
         },
-        batch_prices: {
-          input_mtok: 0.295,
-          output_mtok: 0.395,
-        },
       },
       {
         id: 'llama-3.1-70b-versatile',
@@ -6001,10 +5994,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.59,
           output_mtok: 0.79,
-        },
-        batch_prices: {
-          input_mtok: 0.295,
-          output_mtok: 0.395,
         },
       },
       {
@@ -6031,10 +6020,6 @@ export const data: Provider[] = [
           input_mtok: 0.18,
           output_mtok: 0.18,
         },
-        batch_prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.09,
-        },
       },
       {
         id: 'llama-3.2-11b-vision-preview',
@@ -6044,10 +6029,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.18,
           output_mtok: 0.18,
-        },
-        batch_prices: {
-          input_mtok: 0.09,
-          output_mtok: 0.09,
         },
       },
       {
@@ -6059,10 +6040,6 @@ export const data: Provider[] = [
           input_mtok: 0.04,
           output_mtok: 0.04,
         },
-        batch_prices: {
-          input_mtok: 0.02,
-          output_mtok: 0.02,
-        },
       },
       {
         id: 'llama-3.2-3b-preview',
@@ -6072,10 +6049,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.06,
           output_mtok: 0.06,
-        },
-        batch_prices: {
-          input_mtok: 0.03,
-          output_mtok: 0.03,
         },
       },
       {
@@ -6087,10 +6060,6 @@ export const data: Provider[] = [
           input_mtok: 0.9,
           output_mtok: 0.9,
         },
-        batch_prices: {
-          input_mtok: 0.45,
-          output_mtok: 0.45,
-        },
       },
       {
         id: 'llama-3.2-90b-vision-preview',
@@ -6101,10 +6070,6 @@ export const data: Provider[] = [
           input_mtok: 0.9,
           output_mtok: 0.9,
         },
-        batch_prices: {
-          input_mtok: 0.45,
-          output_mtok: 0.45,
-        },
       },
       {
         id: 'llama-3.3-70b-specdec',
@@ -6114,10 +6079,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.59,
           output_mtok: 0.99,
-        },
-        batch_prices: {
-          input_mtok: 0.295,
-          output_mtok: 0.495,
         },
       },
       {
@@ -6144,10 +6105,6 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           output_mtok: 0.2,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.1,
-        },
       },
       {
         id: 'llama2-70b-4096',
@@ -6157,10 +6114,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.7,
           output_mtok: 0.8,
-        },
-        batch_prices: {
-          input_mtok: 0.35,
-          output_mtok: 0.4,
         },
       },
       {
@@ -6172,10 +6125,6 @@ export const data: Provider[] = [
           input_mtok: 0.59,
           output_mtok: 0.79,
         },
-        batch_prices: {
-          input_mtok: 0.295,
-          output_mtok: 0.395,
-        },
       },
       {
         id: 'llama3-8b-8192',
@@ -6185,10 +6134,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.08,
-        },
-        batch_prices: {
-          input_mtok: 0.025,
-          output_mtok: 0.04,
         },
       },
       {
@@ -6200,10 +6145,6 @@ export const data: Provider[] = [
           input_mtok: 0.89,
           output_mtok: 0.89,
         },
-        batch_prices: {
-          input_mtok: 0.445,
-          output_mtok: 0.445,
-        },
       },
       {
         id: 'llama3-groq-8b-8192-tool-use-preview',
@@ -6213,10 +6154,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.19,
           output_mtok: 0.19,
-        },
-        batch_prices: {
-          input_mtok: 0.095,
-          output_mtok: 0.095,
         },
       },
       {
@@ -6230,10 +6167,6 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           output_mtok: 0.6,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.3,
-        },
       },
       {
         id: 'meta-llama/llama-4-scout-17b-16e-instruct',
@@ -6244,10 +6177,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.11,
           output_mtok: 0.34,
-        },
-        batch_prices: {
-          input_mtok: 0.055,
-          output_mtok: 0.17,
         },
       },
       {
@@ -6275,10 +6204,6 @@ export const data: Provider[] = [
           input_mtok: 0.79,
           output_mtok: 0.79,
         },
-        batch_prices: {
-          input_mtok: 0.395,
-          output_mtok: 0.395,
-        },
       },
       {
         id: 'mixtral-8x7b-32768',
@@ -6288,10 +6213,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.24,
           output_mtok: 0.24,
-        },
-        batch_prices: {
-          input_mtok: 0.12,
-          output_mtok: 0.12,
         },
       },
       {
@@ -6312,11 +6233,6 @@ export const data: Provider[] = [
           input_mtok: 1,
           cache_read_mtok: 0.5,
           output_mtok: 3,
-        },
-        batch_prices: {
-          input_mtok: 0.5,
-          cache_read_mtok: 0.5,
-          output_mtok: 1.5,
         },
       },
       {
@@ -6373,10 +6289,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.29,
           output_mtok: 0.59,
-        },
-        batch_prices: {
-          input_mtok: 0.145,
-          output_mtok: 0.295,
         },
       },
     ],
@@ -10755,10 +10667,6 @@ export const data: Provider[] = [
           input_mtok: 0.06,
           output_mtok: 0.12,
         },
-        batch_prices: {
-          input_mtok: 0.03,
-          output_mtok: 0.06,
-        },
       },
       {
         id: 'devstral-small:free',
@@ -10785,10 +10693,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 2,
           output_mtok: 5,
-        },
-        batch_prices: {
-          input_mtok: 1,
-          output_mtok: 2.5,
         },
       },
       {
@@ -10838,10 +10742,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.04,
           output_mtok: 0.04,
-        },
-        batch_prices: {
-          input_mtok: 0.02,
-          output_mtok: 0.02,
         },
       },
       {
@@ -10896,10 +10796,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.25,
           output_mtok: 0.25,
-        },
-        batch_prices: {
-          input_mtok: 0.125,
-          output_mtok: 0.125,
         },
       },
       {
@@ -11000,10 +10896,6 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           output_mtok: 0.15,
         },
-        batch_prices: {
-          input_mtok: 0.075,
-          output_mtok: 0.075,
-        },
       },
       {
         id: 'mistral-nemo:free',
@@ -11033,10 +10925,6 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           output_mtok: 0.6,
         },
-        batch_prices: {
-          input_mtok: 0.1,
-          output_mtok: 0.3,
-        },
       },
       {
         id: 'mistral-small-24b-instruct-2501',
@@ -11050,10 +10938,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.08,
-        },
-        batch_prices: {
-          input_mtok: 0.025,
-          output_mtok: 0.04,
         },
       },
       {
@@ -11098,10 +10982,6 @@ export const data: Provider[] = [
           input_mtok: 0.351,
           output_mtok: 0.555,
         },
-        batch_prices: {
-          input_mtok: 0.1755,
-          output_mtok: 0.2775,
-        },
       },
       {
         id: 'mistral-small-3.2-24b-instruct',
@@ -11115,10 +10995,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.075,
           output_mtok: 0.2,
-        },
-        batch_prices: {
-          input_mtok: 0.0375,
-          output_mtok: 0.1,
         },
       },
       {
@@ -11148,10 +11024,6 @@ export const data: Provider[] = [
           input_mtok: 0.25,
           output_mtok: 0.25,
         },
-        batch_prices: {
-          input_mtok: 0.125,
-          output_mtok: 0.125,
-        },
         deprecated: true,
       },
       {
@@ -11165,10 +11037,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.9,
           output_mtok: 0.9,
-        },
-        batch_prices: {
-          input_mtok: 0.45,
-          output_mtok: 0.45,
         },
       },
       {
@@ -11187,10 +11055,6 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.7,
           output_mtok: 0.7,
-        },
-        batch_prices: {
-          input_mtok: 0.35,
-          output_mtok: 0.35,
         },
       },
       {
@@ -11212,10 +11076,6 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           output_mtok: 0.15,
         },
-        batch_prices: {
-          input_mtok: 0.075,
-          output_mtok: 0.075,
-        },
       },
       {
         id: 'pixtral-large',
@@ -11236,10 +11096,6 @@ export const data: Provider[] = [
           input_mtok: 2,
           output_mtok: 6,
         },
-        batch_prices: {
-          input_mtok: 1,
-          output_mtok: 3,
-        },
       },
       {
         id: 'voxtral-small-24b-2507',
@@ -11253,11 +11109,6 @@ export const data: Provider[] = [
           input_mtok: 0.1,
           cache_read_mtok: 0.01,
           output_mtok: 0.3,
-        },
-        batch_prices: {
-          input_mtok: 0.05,
-          cache_read_mtok: 0.005,
-          output_mtok: 0.15,
         },
       },
     ],
@@ -12259,6 +12110,10 @@ export const data: Provider[] = [
           input_mtok: 0.5,
           output_mtok: 1.5,
         },
+        batch_prices: {
+          input_mtok: 0.25,
+          output_mtok: 0.75,
+        },
       },
       {
         id: 'gpt-3.5-turbo-0613',
@@ -12355,6 +12210,10 @@ export const data: Provider[] = [
           input_mtok: 30,
           output_mtok: 60,
         },
+        batch_prices: {
+          input_mtok: 15,
+          output_mtok: 30,
+        },
       },
       {
         id: 'gpt-4-32k',
@@ -12411,6 +12270,10 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 10,
           output_mtok: 30,
+        },
+        batch_prices: {
+          input_mtok: 5,
+          output_mtok: 15,
         },
       },
       {
@@ -24407,11 +24270,6 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.2,
           output_mtok: 6,
-        },
-        batch_prices: {
-          input_mtok: 1.6,
-          cache_read_mtok: 0.16,
-          output_mtok: 4.8,
         },
       },
       {
