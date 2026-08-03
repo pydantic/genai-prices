@@ -85,9 +85,6 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.12
-    batch_prices:
-      input_mtok: 0.03
-      output_mtok: 0.06
 
   - id: devstral-small:free
     name: Devstral Small (free)
@@ -114,9 +111,6 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 5
-    batch_prices:
-      input_mtok: 1
-      output_mtok: 2.5
 
   - id: magistral-small
     name: Magistral Small
@@ -163,9 +157,6 @@ models:
     prices:
       input_mtok: 0.04
       output_mtok: 0.04
-    batch_prices:
-      input_mtok: 0.02
-      output_mtok: 0.02
 
   - id: ministral-3b-2512
     name: Ministral 3 3B 2512
@@ -211,9 +202,6 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 0.25
-    batch_prices:
-      input_mtok: 0.125
-      output_mtok: 0.125
 
   - id: mistral-embed
     match:
@@ -291,9 +279,6 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.15
-    batch_prices:
-      input_mtok: 0.075
-      output_mtok: 0.075
 
   - id: mistral-nemo:free
     name: Mistral Nemo (free)
@@ -319,9 +304,6 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.6
-    batch_prices:
-      input_mtok: 0.1
-      output_mtok: 0.3
 
   - id: mistral-small-24b-instruct-2501
     name: Mistral Small 3
@@ -336,9 +318,6 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.08
-    batch_prices:
-      input_mtok: 0.025
-      output_mtok: 0.04
 
   - id: mistral-small-24b-instruct-2501:free
     name: Mistral Small 3 (free)
@@ -379,9 +358,6 @@ models:
     prices:
       input_mtok: 0.351
       output_mtok: 0.555
-    batch_prices:
-      input_mtok: 0.1755
-      output_mtok: 0.2775
 
   - id: mistral-small-3.2-24b-instruct
     name: Mistral Small 3.2 24B
@@ -395,9 +371,6 @@ models:
     prices:
       input_mtok: 0.075
       output_mtok: 0.2
-    batch_prices:
-      input_mtok: 0.0375
-      output_mtok: 0.1
 
   - id: mistral-small-latest
     description: SOTA. Multimodal. Multilingual. Apache 2.0.
@@ -422,9 +395,6 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 0.25
-    batch_prices:
-      input_mtok: 0.125
-      output_mtok: 0.125
 
   - id: mixtral-8x22b-instruct
     name: Mixtral 8x22B Instruct
@@ -442,9 +412,6 @@ models:
     prices:
       input_mtok: 0.9
       output_mtok: 0.9
-    batch_prices:
-      input_mtok: 0.45
-      output_mtok: 0.45
 
   - id: mixtral-8x7b
     name: Mixtral 8x7B
@@ -456,9 +423,6 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 0.7
-    batch_prices:
-      input_mtok: 0.35
-      output_mtok: 0.35
 
   - id: pixtral-12b
     name: Pixtral 12B
@@ -472,9 +436,6 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.15
-    batch_prices:
-      input_mtok: 0.075
-      output_mtok: 0.075
 
   - id: pixtral-large
     name: Pixtral Large 2411
@@ -488,9 +449,6 @@ models:
     prices:
       input_mtok: 2
       output_mtok: 6
-    batch_prices:
-      input_mtok: 1
-      output_mtok: 3
 
   - id: voxtral-small-24b-2507
     name: Voxtral Small 24B 2507
@@ -504,7 +462,3 @@ models:
       input_mtok: 0.1
       cache_read_mtok: 0.01
       output_mtok: 0.3
-    batch_prices:
-      input_mtok: 0.05
-      cache_read_mtok: 0.005
-      output_mtok: 0.15
