@@ -79,6 +79,20 @@ describe('price variants', () => {
     expect(getActiveModelPrice(model, TIMESTAMP, { inference_geo: 'us', service_tier: 'batch' })).toEqual({ input_mtok: 3 })
   })
 
+  it('never matches a variant that expects no value', () => {
+    // a `when` built from an absent provider field must not match every context lacking that parameter
+    const model = {
+      id: 'test',
+      match: { equals: 'test' },
+      price_variants: [{ prices: { input_mtok: 1 }, when: { service_tier: undefined } }],
+      prices: { input_mtok: 10 },
+    } as unknown as ModelInfo
+
+    expect(getActiveModelPrice(model, TIMESTAMP, { speed: 'fast' })).toEqual({ input_mtok: 10 })
+    expect(getActiveModelPrice(model, TIMESTAMP, {})).toEqual({ input_mtok: 10 })
+    expect(getActiveModelPrice(model, TIMESTAMP, BATCH)).toEqual({ input_mtok: 10 })
+  })
+
   it('overrides standard prices key by key', () => {
     const model: ModelInfo = {
       id: 'test',

@@ -188,19 +188,24 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceCont
   return merged
 }
 
+/** A stable key for a variant's `when`, so entries sharing one context group together. */
+function whenKey(when: PriceVariant['when']): string {
+  return JSON.stringify(Object.entries(when).sort(([a], [b]) => a.localeCompare(b)))
+}
+
 /**
  * Whether every parameter of a variant matches the request's pricing context.
  *
  * Values are compared by type as well as by equality, so a `1` in the context never matches a `true`.
  */
-function whenKey(when: Record<string, PriceContextValue>): string {
-  return JSON.stringify(Object.entries(when).sort(([a], [b]) => a.localeCompare(b)))
-}
-
-function whenMatches(when: Record<string, PriceContextValue>, priceContext: PriceContext): boolean {
-  return Object.entries(when).every(([parameter, expected]) => {
+function whenMatches(when: PriceVariant['when'], priceContext: PriceContext): boolean {
+  // `Object.entries` drops the `| undefined` a Partial record's values carry, and caller-supplied data can
+  // hold one, so restore it rather than trust the narrower inferred type.
+  const entries = Object.entries(when) as [string, PriceContextValue | undefined][]
+  return entries.every(([parameter, expected]) => {
     const actual = priceContext[parameter]
-    return typeof actual === typeof expected && actual === expected
+    // a variant expecting no value never matches, rather than matching every context missing that parameter
+    return expected !== undefined && typeof actual === typeof expected && actual === expected
   })
 }
 

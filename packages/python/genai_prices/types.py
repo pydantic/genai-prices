@@ -749,13 +749,17 @@ def price_context_for(price_context: PriceContext | None, batch: bool) -> PriceC
     return {'service_tier': 'batch', **(price_context or {})} if batch else price_context
 
 
-def _when_matches(when: Mapping[str, PriceContextValue], price_context: PriceContext) -> bool:
+def _when_matches(when: Mapping[str, PriceContextValue | None], price_context: PriceContext) -> bool:
     """Whether every parameter of a variant matches the request's pricing context.
 
-    Values are compared by type as well as by equality, so a `1` in the context never matches a `True`.
+    `when` values are typed as optional because caller-supplied data can hold a `None` the published
+    schema forbids.
+
+    Values are compared by type as well as by equality, so a `1` in the context never matches a `True`,
+    and a variant expecting no value at all never matches, rather than matching every context missing it.
     """
     return all(
-        type(actual := price_context.get(parameter)) is type(expected) and actual == expected
+        expected is not None and type(actual := price_context.get(parameter)) is type(expected) and actual == expected
         for parameter, expected in when.items()
     )
 

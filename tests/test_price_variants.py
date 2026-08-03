@@ -309,6 +309,20 @@ def test_first_matching_when_wins():
     ).input_mtok == Decimal(3)
 
 
+def test_variant_expecting_no_value_never_matches():
+    """A `when` built from an absent provider field must not match every context lacking it."""
+    model = ModelInfo(
+        id='test',
+        match=ClauseEquals('test'),
+        prices=ModelPrice(input_mtok=Decimal(10)),
+        price_variants=[PriceVariant({'service_tier': None}, prices=ModelPrice(input_mtok=Decimal(1)))],  # pyright: ignore[reportArgumentType]
+    )
+    timestamp = datetime.now(tz=timezone.utc)
+
+    assert model.get_prices(timestamp, price_context={'speed': 'fast'}).input_mtok == Decimal(10)
+    assert model.get_prices(timestamp, price_context={'service_tier': 'batch'}).input_mtok == Decimal(10)
+
+
 def test_variant_prices_override_key_by_key():
     model = ModelInfo(
         id='test',
