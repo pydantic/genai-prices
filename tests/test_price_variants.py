@@ -217,6 +217,12 @@ def test_variant_prices_resolve_conditionals_independently():
         ],
         price_variants=[
             PriceVariant({'service_tier': 'batch'}, prices=ModelPrice(input_mtok=Decimal(5))),
+            # the build requires a variant to repeat the standard prices' dates, so this shape is buildable
+            PriceVariant(
+                {'service_tier': 'batch'},
+                StartDateConstraint(datetime(2026, 1, 1).date()),
+                prices=ModelPrice(input_mtok=Decimal(7)),
+            ),
             PriceVariant(
                 {'service_tier': 'batch'},
                 StartDateConstraint(datetime(2026, 6, 1).date()),
@@ -230,7 +236,7 @@ def test_variant_prices_resolve_conditionals_independently():
         usage = Usage(input_tokens=1_000_000)
         for timestamp, expected_standard, expected_batch in (
             (datetime(2025, 6, 1, tzinfo=timezone.utc), Decimal(10), Decimal(5)),
-            (datetime(2026, 3, 1, tzinfo=timezone.utc), Decimal(20), Decimal(5)),
+            (datetime(2026, 3, 1, tzinfo=timezone.utc), Decimal(20), Decimal(7)),
             (datetime(2026, 8, 1, tzinfo=timezone.utc), Decimal(20), Decimal(8)),
         ):
             standard = calc_price(usage, model_ref='test', provider_id='test', genai_request_timestamp=timestamp)
@@ -282,6 +288,25 @@ def test_when_matching_is_type_strict():
 
     assert model.get_prices(timestamp, price_context={'service_tier': 1}).input_mtok == Decimal(10)
     assert model.get_prices(timestamp, price_context={'service_tier': True}).input_mtok == Decimal(5)
+
+
+def test_first_matching_when_wins():
+    """A more specific variant takes precedence by being listed first, whatever the list order after it."""
+    model = ModelInfo(
+        id='test',
+        match=ClauseEquals('test'),
+        prices=ModelPrice(input_mtok=Decimal(10)),
+        price_variants=[
+            PriceVariant({'service_tier': 'batch', 'inference_geo': 'us'}, prices=ModelPrice(input_mtok=Decimal(3))),
+            PriceVariant({'service_tier': 'batch'}, prices=ModelPrice(input_mtok=Decimal(5))),
+        ],
+    )
+    timestamp = datetime.now(tz=timezone.utc)
+
+    assert model.get_prices(timestamp, price_context={'service_tier': 'batch'}).input_mtok == Decimal(5)
+    assert model.get_prices(
+        timestamp, price_context={'service_tier': 'batch', 'inference_geo': 'us'}
+    ).input_mtok == Decimal(3)
 
 
 def test_variant_prices_override_key_by_key():

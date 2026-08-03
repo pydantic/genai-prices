@@ -696,7 +696,11 @@ class ModelInfo:
         matching = [variant for variant in self.price_variants if _when_matches(variant.when, price_context)]
         if not matching:
             return prices
-        return _overlay_model_price(prices, _resolve_conditional_prices(matching, request_timestamp))
+
+        # The first matching `when` wins, so a more specific variant takes precedence by being listed
+        # first; its own entries are then resolved by date exactly as `prices` are.
+        group = [variant for variant in matching if variant.when == matching[0].when]
+        return _overlay_model_price(prices, _resolve_conditional_prices(group, request_timestamp))
 
     def calc_price(
         self,

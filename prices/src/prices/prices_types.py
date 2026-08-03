@@ -191,7 +191,7 @@ def _price_constraints(prices: Any) -> set[str]:
 
 
 def _describe_when(when: Mapping[WhenParameter, PriceContextValue]) -> str:
-    return '{' + ', '.join(f'{key}: {value}' for key, value in sorted(when.items())) + '}'
+    return '{' + ', '.join(f'{key}: {value!r}' for key, value in sorted(when.items())) + '}'
 
 
 def _group_variants_by_when(variants: list[PriceVariant]) -> list[tuple[str, list[PriceVariant]]]:

@@ -173,8 +173,14 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceCont
     return prices
   }
 
+  // The first matching `when` wins, so a more specific variant takes precedence by being listed first;
+  // its own entries are then resolved by date exactly as `prices` are.
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const first = whenKey(matching[0]!.when)
+  const group = matching.filter((variant) => whenKey(variant.when) === first)
+
   // A variant's prices override the standard ones key by key; keys they omit stay at the standard rate.
-  const variantPrices = resolveConditionalPrices(matching, timestamp, model.id)
+  const variantPrices = resolveConditionalPrices(group, timestamp, model.id)
   const merged: ModelPrice = { ...prices }
   for (const [priceKey, price] of Object.entries(variantPrices)) {
     if (price != null) merged[priceKey] = price
@@ -187,6 +193,10 @@ export function getActiveModelPrice(model: ModelInfo, timestamp: Date, priceCont
  *
  * Values are compared by type as well as by equality, so a `1` in the context never matches a `true`.
  */
+function whenKey(when: Record<string, PriceContextValue>): string {
+  return JSON.stringify(Object.entries(when).sort(([a], [b]) => a.localeCompare(b)))
+}
+
 function whenMatches(when: Record<string, PriceContextValue>, priceContext: PriceContext): boolean {
   return Object.entries(when).every(([parameter, expected]) => {
     const actual = priceContext[parameter]

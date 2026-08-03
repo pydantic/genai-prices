@@ -63,6 +63,22 @@ describe('price variants', () => {
     expect(batch?.total_price).toBe(standard?.total_price)
   })
 
+  it('applies the first matching when group', () => {
+    // a more specific variant takes precedence by being listed first
+    const model: ModelInfo = {
+      id: 'test',
+      match: { equals: 'test' },
+      price_variants: [
+        { prices: { input_mtok: 3 }, when: { inference_geo: 'us', service_tier: 'batch' } },
+        { prices: { input_mtok: 5 }, when: { service_tier: 'batch' } },
+      ],
+      prices: { input_mtok: 10 },
+    }
+
+    expect(getActiveModelPrice(model, TIMESTAMP, BATCH)).toEqual({ input_mtok: 5 })
+    expect(getActiveModelPrice(model, TIMESTAMP, { inference_geo: 'us', service_tier: 'batch' })).toEqual({ input_mtok: 3 })
+  })
+
   it('overrides standard prices key by key', () => {
     const model: ModelInfo = {
       id: 'test',
